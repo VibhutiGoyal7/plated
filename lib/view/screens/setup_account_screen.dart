@@ -1,0 +1,197 @@
+import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/model/apis/api_response.dart';
+import 'package:mvvm_flutter_app/model/media.dart';
+import 'package:mvvm_flutter_app/model/setUpAccountRequest.dart';
+import 'package:mvvm_flutter_app/view/widgets/player_list_widget.dart';
+import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+
+import 'package:provider/provider.dart';
+
+import '../../model/signInWithPhoneNumber.dart';
+
+class SetUpAccountScreen extends StatefulWidget {
+
+  final String? userId; // Define the 'data' parameter here
+
+  SetUpAccountScreen({Key? key, this.userId}) : super(key: key);
+  @override
+  _SetUpAccountScreenState createState() => _SetUpAccountScreenState();
+}
+
+class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    }
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+    Media? mediaList = apiResponse.data as Media?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${mediaList?.mobileOtp}");
+        // Navigate to the new screen after receiving the response
+        Navigator.pushNamed(context, '/OtpVerify');
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildLabelText(context, "Almost Finish", 16, false),
+              SizedBox(height: 4),
+              _buildLabelText(context, "Set up your profile", 20, true),
+              SizedBox(height: 4),
+              _buildLabelText(context, "Tell us about yourself", 14, false),
+              SizedBox(height: 20),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildLabelText(context, "Have a promo code?", 14, false),
+                  _buildLabelText(context, "Redeem", 14, false),
+                ],
+              ),
+              SizedBox(height: 16),
+              _buildPhoneInput(context, "Name", _nameController),
+              SizedBox(height: 16),
+              _buildPhoneInput(context, "Last Name", _lastNameController),
+              SizedBox(height: 16),
+              _buildPhoneInput(context, "Email", _emailController),
+              SizedBox(height: 16),
+              _buildPhoneInput(context, "Password", _passwordController),
+              SizedBox(height: 16),
+              _buildPhoneInput(context, "Confirm password", _confirmPasswordController),
+              Spacer(),
+              _buildFooter(context, apiResponse),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildLabelText(BuildContext context, String text, int size, bool isBold) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: size.toDouble(),
+        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+      ),
+    );
+  }
+
+  Widget _buildPhoneInput(BuildContext context, String text, TextEditingController nameController) {
+    return Container(
+      height: 60,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 16),
+          Expanded(
+            child: TextField(
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black,
+              ),
+              controller: nameController,
+              onChanged: (value) {},
+              onSubmitted: (value) {
+                // if (value.isNotEmpty) {
+                //   Provider.of<MediaViewModel>(context, listen: false)
+                //       .setSelectedMedia(null);
+                //   Provider.of<MediaViewModel>(context, listen: false)
+                //       .fetchMediaData(value, phoneRequest);
+                // }
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: text,
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context, ApiResponse apiResponse) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () async {
+              print(_nameController.text);
+              SetUpAccountRequest request = SetUpAccountRequest(
+                  customer: CustomerDetail(
+                      email: _emailController.text,
+                      password:  _passwordController.text,
+                      firstName:  _nameController.text,
+                      lastName:  _lastNameController.text,
+                      dob: "17/07/1996",
+                  ));
+              // Make the API call to fetch media data
+              await Provider.of<MediaViewModel>(context, listen: false)
+                  .fetchSetUpScreenData(
+                  "/api/v1/customers/${widget.userId}", request);
+
+              // Now that the API call is complete, update the UI based on the response
+              ApiResponse apiResponse =
+                  Provider.of<MediaViewModel>(context, listen: false).response;
+              getMediaWidget(context, apiResponse);
+            },
+            child: Text("Confirm"),
+            style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: Colors.white,
+                elevation: 3,
+                shape: BeveledRectangleBorder(borderRadius:
+                BorderRadius.zero)
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Do you need any help?",
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[700],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

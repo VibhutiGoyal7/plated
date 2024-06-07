@@ -1,0 +1,226 @@
+import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/model/apis/api_response.dart';
+import 'package:mvvm_flutter_app/model/media.dart';
+import 'package:mvvm_flutter_app/utils/Helper.dart';
+import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../model/otpVerifyResponse.dart';
+import '../../model/signInWithPhoneNumber.dart';
+
+class OTPVerifyScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
+
+  OTPVerifyScreen({Key? key, this.data}) : super(key: key);
+
+  @override
+  _OTPVerifyScreenState createState() => _OTPVerifyScreenState();
+}
+
+class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
+  List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  List<TextEditingController> _controllers =
+      List.generate(6, (index) => TextEditingController());
+
+  String dropdownValue = "";
+
+  @override
+  void initState() {
+    super.initState();
+    for (var i = 0; i < _focusNodes.length; i++) {
+      _focusNodes[i].addListener(() {
+        if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
+          // Automatically select all text when the field gains focus
+          _controllers[i].selection = TextSelection(
+              baseOffset: 0, extentOffset: _controllers[i].text.length);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  final TextEditingController _inputController = TextEditingController();
+
+  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+    OtpVerifyResponse? mediaList = apiResponse.data as OtpVerifyResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("OtpVerify ${mediaList?.phoneNumber}");
+        final prefs = await SharedPreferences.getInstance();
+        String token = "${mediaList?.token}";
+        prefs.setString(Helper.pref_token , token);
+        // Navigate to the new screen after receiving the response
+        Navigator.pushNamed(
+            context,
+            '/SetUpAccount'
+        );
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildLabelText(context, "Welcome", 16, false),
+            SizedBox(height: 4),
+            _buildLabelText(context, "Enter the code", 20, true),
+            SizedBox(height: 4),
+            _buildLabelText(
+                context, "We sent you a code to ${widget.data}", 12, false),
+            SizedBox(height: 22),
+            _buildPhoneInput(context),
+            SizedBox(height: 18),
+            _buildLabelText(context, "Resend code in 00:00", 14, true),
+            Spacer(),
+            _buildFooter(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneInput(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          6,
+          (index) => Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            width: 50.0,
+            height: 50.0,
+            child: TextField(
+              controller: _controllers[index],
+              focusNode: _focusNodes[index],
+              autofocus: index == 0,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              maxLength: 1,
+              style: TextStyle(fontSize: 18),
+              onChanged: (value) {
+                _handleOnChange(index, value);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "By pressing validate you accept"
+                "our Terms and Conditions and Privacy Policy",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[700],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () async {
+              String otp =
+                  _controllers.map((controller) => controller.text).join();
+              PhoneRequest phoneRequest = PhoneRequest(
+                  customer: Customer(
+                      phoneNumber: widget.data.toString(), mobileOtp: otp));
+              // Make the API call to fetch media data
+              await Provider.of<MediaViewModel>(context, listen: false)
+                  .fetchOtpVerifyData(
+                      "/api/v1/temp_customers/verify_customer_mobile_otp_for_signup", phoneRequest);
+
+              // Now that the API call is complete, update the UI based on the response
+              ApiResponse apiResponse =
+                  Provider.of<MediaViewModel>(context, listen: false).response;
+              //getMediaWidget(context, apiResponse);
+              Navigator.pushNamed(
+                  context,
+                  '/SetUpAccount'
+              );
+            },
+            child: Text("Validate"),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              backgroundColor: Colors.white,
+              elevation: 3,
+              shape: BeveledRectangleBorder(borderRadius:
+              BorderRadius.zero)
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 24,
+        )
+      ],
+    );
+  }
+
+  void _handleOnChange(int index, String value) {
+    if (value.isNotEmpty) {
+      if (index < _focusNodes.length - 1) {
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      }
+    } else {
+      if (index > 0) {
+        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+      }
+    }
+  }
+
+  void _handleBackspace() {
+    for (int i = _controllers.length - 1; i >= 0; i--) {
+      if (_controllers[i].text.isNotEmpty) {
+        _controllers[i].text = '';
+        break;
+      } else if (i > 0 && _controllers[i].text.isEmpty) {
+        FocusScope.of(context).requestFocus(_focusNodes[i - 1]);
+        break;
+      }
+    }
+  }
+
+  _buildLabelText(BuildContext context, String text, int size, bool isBold) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: size.toDouble(),
+        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+      ),
+    );
+  }
+}

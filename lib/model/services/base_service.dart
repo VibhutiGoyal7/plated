@@ -1,6 +1,12 @@
-abstract class BaseService {
-  final String mediaBaseUrl = "https://itunes.apple.com/search?term=";
+import 'package:mvvm_flutter_app/model/signInWithPhoneNumber.dart';
 
-  Future<dynamic> getResponse(String url);
+abstract class BaseService {
+  final String mediaBaseUrl = "https://custapi.payorio.com/";
+
+  String getFullUrl(String endpoint) {
+    return "$mediaBaseUrl$endpoint";
+  }
+
+  Future<dynamic> getResponse(String url, dynamic phoneRequest);
 
 }

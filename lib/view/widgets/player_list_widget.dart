@@ -25,7 +25,7 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
             child: Container(
               width: 50,
               height: 50,
-              child: Image.network(media.artworkUrl ?? ''),
+              child: Image.network(media.phoneNumber ?? ''),
             ),
           ),
           SizedBox(
@@ -36,7 +36,7 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    media.trackName ?? '',
+                    media.phoneNumber ?? '',
                     style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w600,
@@ -48,7 +48,7 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
                     height: 6,
                   ),
                   Text(
-                    media.artistName ?? '',
+                    media.phoneNumber ?? '',
                     style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w400,
@@ -60,7 +60,7 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
                     height: 2,
                   ),
                   Text(
-                    media.collectionName ?? '',
+                    media.phoneNumber ?? '',
                     style: TextStyle(
                       fontSize: 10.0,
                       color: Colors.grey,
@@ -71,7 +71,7 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
                 ]),
           ),
           if (_selectedMedia != null &&
-              _selectedMedia.trackName == media.trackName)
+              _selectedMedia.phoneNumber == media.phoneNumber)
             Icon(
               Icons.play_circle_outline,
               color: Theme.of(context).primaryColor,
@@ -97,7 +97,7 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
             Media data = widget._mediaList[index];
             return InkWell(
               onTap: () {
-                if (null != data.artistName) {
+                if (null != data.phoneNumber) {
                   widget._function(data);
                 }
               },

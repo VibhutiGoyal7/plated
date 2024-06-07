@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
 import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/view/widgets/player_list_widget.dart';
-import 'package:mvvm_flutter_app/view/widgets/player_widget.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 
 import 'package:provider/provider.dart';
@@ -35,11 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
               flex: 2,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: PlayerWidget(
-                  function: () {
-                    setState(() {});
-                  },
-                ),
               ),
             ),
           ],
@@ -74,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 20.0),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor.withAlpha(50),
+                      color: Theme.of(context).colorScheme.secondary.withAlpha(50),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: TextField(
@@ -88,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (value.isNotEmpty) {
                             Provider.of<MediaViewModel>(context, listen: false)
                                 .setSelectedMedia(null);
-                            Provider.of<MediaViewModel>(context, listen: false)
-                                .fetchMediaData(value);
+                            // Provider.of<MediaViewModel>(context, listen: false)
+                            //     .fetchMediaData(value);
                           }
                         },
                         decoration: InputDecoration(

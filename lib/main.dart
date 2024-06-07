@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mvvm_flutter_app/view/screens/home_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
@@ -24,18 +24,27 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: MediaViewModel()),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Media Player',
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(),
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-        ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => HomeScreen(),
-        },
-      ),
+          debugShowCheckedModeBanner: false,
+          title: 'Media Player',
+          theme: ThemeData(
+            appBarTheme: AppBarTheme(),
+            primarySwatch: Colors.purple,
+            hintColor: Colors.deepOrange,
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => PhoneVerifyScreen(),
+            '/OtpVerify': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return OTPVerifyScreen(data: args);
+            },
+            '/SetUpAccount': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return SetUpAccountScreen(userId: args);
+            },
+          }),
     );
   }
 }

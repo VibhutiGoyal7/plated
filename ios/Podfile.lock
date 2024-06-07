@@ -1,28 +1,23 @@
 PODS:
-  - audioplayers (0.0.1):
-    - Flutter
   - Flutter (1.0.0)
-  - path_provider (0.0.1):
+  - shared_preferences_foundation (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
-  - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - Flutter (from `Flutter`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 EXTERNAL SOURCES:
-  audioplayers:
-    :path: ".symlinks/plugins/audioplayers/ios"
   Flutter:
     :path: Flutter
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
-  audioplayers: 53f0f30789b10ab2009771c6c79def00980945e4
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.14.3
