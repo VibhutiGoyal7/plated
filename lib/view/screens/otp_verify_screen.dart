@@ -55,10 +55,22 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("OtpVerify ${mediaList?.phoneNumber}");
+        print("OtpVerify ${mediaList?.token}");
         final prefs = await SharedPreferences.getInstance();
         String token = "${mediaList?.token}";
-        prefs.setString(Helper.pref_token , token);
+        // Save the token
+        bool isSaved = await Helper.saveUserToken(token);
+
+        // Check if the token was saved successfully
+        if (isSaved) {
+          print('Token saved successfully.');
+        } else {
+          print('Failed to save token.');
+        }
+        Helper.getUserToken();
+        // Retrieve the token
+        String? retrievedToken = await Helper.getUserToken();
+        print('Retrieved Token: $retrievedToken');
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(
             context,
@@ -162,16 +174,16 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               // Make the API call to fetch media data
               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
-                      "/api/v1/temp_customers/verify_customer_mobile_otp_for_signup", phoneRequest);
+                      "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup", phoneRequest);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              //getMediaWidget(context, apiResponse);
-              Navigator.pushNamed(
+              getMediaWidget(context, apiResponse);
+             /* Navigator.pushNamed(
                   context,
                   '/SetUpAccount'
-              );
+              );*/
             },
             child: Text("Validate"),
             style: ElevatedButton.styleFrom(

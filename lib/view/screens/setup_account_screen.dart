@@ -7,6 +7,7 @@ import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../model/setUpAccountResponse.dart';
 import '../../model/signInWithPhoneNumber.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
@@ -32,12 +33,12 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
-    Media? mediaList = apiResponse.data as Media?;
+    SetUpAccountResponse? mediaList = apiResponse.data as SetUpAccountResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.mobileOtp}");
+        print("rwrwr ${mediaList?.firstName}");
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/OtpVerify');
         return Container(); // Return an empty container as you'll navigate away
@@ -164,7 +165,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               // Make the API call to fetch media data
               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                  "/api/v1/customers/${widget.userId}", request);
+                  "/api/v1/app/customers/update_customer", request);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =

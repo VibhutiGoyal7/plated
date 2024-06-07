@@ -160,14 +160,12 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               // Make the API call to fetch media data
               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
-                      "/api/v1/temp_customers/initiate_customer", phoneRequest);
+                      "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              Navigator.pushNamed(context, '/OtpVerify',
-                  arguments: "${_inputController.text}");
-              //getMediaWidget(context, apiResponse);
+              getMediaWidget(context, apiResponse);
             },
             child: Text("Submit"),
             style: ElevatedButton.styleFrom(

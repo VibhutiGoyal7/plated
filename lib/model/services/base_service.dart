@@ -8,5 +8,6 @@ abstract class BaseService {
   }
 
   Future<dynamic> getResponse(String url, dynamic phoneRequest);
+  Future<dynamic> putResponse(String url, dynamic phoneRequest);
 
 }

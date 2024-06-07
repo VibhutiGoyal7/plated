@@ -11,6 +11,8 @@ class OtpVerifyResponse {
   final String? token;
   final String? status;
   final bool? isEmailVerified;
+  final String? mobileOtpExpireAt;
+  final String? mobileOtp;
 
   OtpVerifyResponse({
     this.firstName,
@@ -24,26 +26,30 @@ class OtpVerifyResponse {
     this.dob,
     this.status,
     this.isEmailVerified,
+    this.mobileOtpExpireAt,
+    this.mobileOtp,
     this.token,
   });
 
   factory OtpVerifyResponse.fromJson(Map<String, dynamic> json) {
     return OtpVerifyResponse(
-      firstName: json['customer']?['first_name'] as String?,
-      lastName: json['customer']?['last_name'] as String?,
-      id: json['customer']?['id'] as int?,
-      phoneNumber: json['customer']?['phone_number'] as String?,
-      createdAt: json['customer']?['created_at'] != null
-          ? DateTime.parse(json['customer']?['created_at'] as String)
+      firstName: json['data']['customer']?['first_name'] as String?,
+      lastName: json['data']['customer']?['last_name'] as String?,
+      id: json['data']['customer']?['id'] as int?,
+      phoneNumber: json['data']['customer']?['phone_number'] as String?,
+      createdAt: json['data']['customer']?['created_at'] != null
+          ? DateTime.parse(json['data']['customer']?['created_at'] as String)
           : null,
-      updatedAt: json['customer']?['updated_at'] != null
-          ? DateTime.parse(json['customer']?['updated_at'] as String)
+      updatedAt: json['data']['customer']?['updated_at'] != null
+          ? DateTime.parse(json['data']['customer']?['updated_at'] as String)
           : null,
-      email: json['customer']?['email'] as String?,
-      address:  json['customer']?['address'] as String?,
-      dob:  json['customer']?['dob'] as String?,
-      isEmailVerified:  json['customer']?['is_email_verified'] as bool?,
-      token:  json['token'] as String?,
+      email: json['data']['customer']?['email'] as String?,
+      address:  json['data']['customer']?['address'] as String?,
+      dob:  json['data']['customer']?['dob'] as String?,
+      isEmailVerified:  json['data']['customer']?['is_email_verified'] as bool?,
+      mobileOtpExpireAt:  json['data']['customer']?['mobile_otp_expire_at'] as String?,
+      mobileOtp:  json['data']['customer']?['mobile_otp'] as String?,
+      token:  json['data']['token'] as String?,
     );
   }
 }

@@ -15,12 +15,12 @@ class MediaService extends BaseService {
   Future<dynamic> getResponse(String url, dynamic requestBody) async {
     dynamic responseJson;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      var token = prefs.getString(Helper.pref_token);
+
+      String? retrievedToken = await Helper.getUserToken();
       final response = await http.post(Uri.parse(mediaBaseUrl + url),
         headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $retrievedToken',
       },
         body:jsonEncode(requestBody),
       );
@@ -31,6 +31,24 @@ class MediaService extends BaseService {
     return responseJson;
   }
 
+  @override
+  Future<dynamic> putResponse(String url, dynamic requestBody) async {
+    dynamic responseJson;
+    try {
+      String? retrievedToken = await Helper.getUserToken();
+      final response = await http.put(Uri.parse(mediaBaseUrl + url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $retrievedToken',
+        },
+        body:jsonEncode(requestBody),
+      );
+      responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+    return responseJson;
+  }
   @visibleForTesting
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
@@ -42,14 +60,18 @@ class MediaService extends BaseService {
         return responseJson;
       case 400:
         throw BadRequestException(response.body.toString());
+      case 422:
+        throw BadRequestException(response.body.toString());
       case 401:
+        throw UnauthorisedException(response.body.toString());
       case 403:
         throw UnauthorisedException(response.body.toString());
       case 500:
+        throw BadRequestException(response.body.toString());
       default:
         throw FetchDataException(
             'Error occured while communication with server' +
-                ' with status code : ${response.statusCode}');
+                ' with status code : ${response.statusCode} ${response.body.toString()}');
     }
   }
 }

@@ -11,7 +11,7 @@ class Helper {
   }
 
 // Read Data
-  static Future getUserToken() async {
+  static Future<String?> getUserToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(pref_token);
   }

@@ -35,7 +35,7 @@ class MediaRepository {
 
   Future<SetUpAccountResponse> fetchSetUpScreenData(String value, SetUpAccountRequest setUpAccountRequest) async {
     print(setUpAccountRequest);
-    dynamic response = await _mediaService.getResponse(value,setUpAccountRequest);
+    dynamic response = await _mediaService.putResponse(value,setUpAccountRequest);
     print(value);
     final jsonData = response['data'];
     print(jsonData);
