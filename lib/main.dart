@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mvvm_flutter_app/view/screens/account_detail_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/bottom_nav.dart';
+import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +50,31 @@ class MyApp extends StatelessWidget {
                   ModalRoute.of(context)!.settings.arguments as String?;
               return SetUpAccountScreen(userId: args);
             },
+            '/BottomNav': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return BottomNav();
+            },
+            '/ProfileScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return ProfileScreen();
+            },
+            '/PersonalInfoScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PersonalInformationScreen();
+            },
+            '/AccountDetailScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return AccountDetailScreen();
+            },
+            '/AddMoneyScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return AddMoneyScreen();
+            }
           }),
     );
   }
