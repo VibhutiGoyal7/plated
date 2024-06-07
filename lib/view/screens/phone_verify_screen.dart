@@ -13,15 +13,30 @@ class PhoneVerifyScreen extends StatefulWidget {
 class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   var mCities = ["+91", "+92", "+1", "+5", "+93"];
   String dropdownValue = "";
+  bool phoneNumberValid = false;
 
   @override
   void initState() {
     super.initState();
     dropdownValue =
         mCities.first; // Initialize dropdownValue within the state class
+    phoneNumberValid = false;
   }
 
   final TextEditingController _inputController = TextEditingController();
+
+  void _isValidPhoneNumber(String input) {
+    print(input);
+    if (input.isNotEmpty && input.length >= 10) {
+      setState(() {
+        phoneNumberValid = true;
+      });
+    } else {
+      setState(() {
+        phoneNumberValid = false;
+      });
+    }
+  }
 
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
     Media? mediaList = apiResponse.data as Media?;
@@ -126,7 +141,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 color: Colors.black,
               ),
               controller: _inputController,
-              onChanged: (value) {},
+              onChanged: _isValidPhoneNumber,
               onSubmitted: (value) {
                 // if (value.isNotEmpty) {
                 //   Provider.of<MediaViewModel>(context, listen: false)
@@ -160,21 +175,25 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               // Make the API call to fetch media data
               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
-                      "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
+                      "/api/v1/app/temp_customers/initiate_customer",
+                      phoneRequest);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
               getMediaWidget(context, apiResponse);
             },
-            child: Text("Submit"),
+            child: Text(
+              "Submit",
+              style: TextStyle(
+                  color: phoneNumberValid ? Colors.white : Colors.blueAccent),
+            ),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
-                backgroundColor: Colors.white,
+                backgroundColor:
+                    phoneNumberValid ? Colors.blueAccent : Colors.white,
                 elevation: 3,
-                shape: BeveledRectangleBorder(borderRadius:
-                BorderRadius.zero)
-            ),
+                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
         Padding(

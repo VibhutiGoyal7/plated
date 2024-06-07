@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/utils/Helper.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
@@ -22,12 +21,15 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
+  final List<String> _otp = List.generate(6, (_) => '');
 
   String dropdownValue = "";
+  bool isValid = false;
 
   @override
   void initState() {
     super.initState();
+    isValid = false;
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -47,9 +49,21 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     super.dispose();
   }
 
-  final TextEditingController _inputController = TextEditingController();
+  void _isValidOtp(String input) {
+    print(input);
+    if (input.isNotEmpty && input.length >= 10) {
+      setState(() {
+        isValid = true;
+      });
+    } else {
+      setState(() {
+        isValid = false;
+      });
+    }
+  }
 
-  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
     OtpVerifyResponse? mediaList = apiResponse.data as OtpVerifyResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -72,10 +86,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         String? retrievedToken = await Helper.getUserToken();
         print('Retrieved Token: $retrievedToken');
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(
-            context,
-            '/SetUpAccount'
-        );
+        Navigator.pushNamed(context, '/SetUpAccount');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -154,7 +165,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "By pressing validate you accept"
-                "our Terms and Conditions and Privacy Policy",
+            "our Terms and Conditions and Privacy Policy",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -174,25 +185,28 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               // Make the API call to fetch media data
               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
-                      "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup", phoneRequest);
+                      "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
+                      phoneRequest);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              getMediaWidget(context, apiResponse);
-             /* Navigator.pushNamed(
+              //getMediaWidget(context, apiResponse);
+               Navigator.pushNamed(
                   context,
                   '/SetUpAccount'
-              );*/
+              );
             },
-            child: Text("Validate"),
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              backgroundColor: Colors.white,
-              elevation: 3,
-              shape: BeveledRectangleBorder(borderRadius:
-              BorderRadius.zero)
+            child: Text(
+              "Validate",
+              style:
+                  TextStyle(color: isValid ? Colors.white : Colors.blueAccent),
             ),
+            style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: isValid ? Colors.blueAccent : Colors.white,
+                elevation: 3,
+                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
         SizedBox(
@@ -203,6 +217,9 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   }
 
   void _handleOnChange(int index, String value) {
+    setState(() {
+      _otp[index] = value;
+    });
     if (value.isNotEmpty) {
       if (index < _focusNodes.length - 1) {
         FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
@@ -211,6 +228,15 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       if (index > 0) {
         FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
       }
+    }
+
+    String otpString = _otp.join('');
+    if (otpString.length == 6) {
+      // OTP length is 6, perform your action
+      isValid = true;
+      // You can also validate the OTP here or enable a submit button
+    } else {
+      isValid = false;
     }
   }
 

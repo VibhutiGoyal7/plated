@@ -1,36 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/model/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/view/widgets/player_list_widget.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
-
 import 'package:provider/provider.dart';
 
 import '../../model/setUpAccountResponse.dart';
-import '../../model/signInWithPhoneNumber.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
-
   final String? userId; // Define the 'data' parameter here
 
   SetUpAccountScreen({Key? key, this.userId}) : super(key: key);
+
   @override
   _SetUpAccountScreenState createState() => _SetUpAccountScreenState();
 }
 
 class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
-
   @override
   void initState() {
     super.initState();
-    }
+  }
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
     SetUpAccountResponse? mediaList = apiResponse.data as SetUpAccountResponse?;
@@ -79,15 +75,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 ],
               ),
               SizedBox(height: 16),
-              _buildPhoneInput(context, "Name", _nameController),
+              _buildPhoneInput(context, "Name", _nameController, Icon(Icons.person, size: 20,)),
               SizedBox(height: 16),
-              _buildPhoneInput(context, "Last Name", _lastNameController),
+              _buildPhoneInput(context, "Last Name", _lastNameController, Icon(Icons.person, size: 20,)),
               SizedBox(height: 16),
-              _buildPhoneInput(context, "Email", _emailController),
+              _buildPhoneInput(context, "Email", _emailController, Icon(Icons.mail, size: 18,)),
               SizedBox(height: 16),
-              _buildPhoneInput(context, "Password", _passwordController),
+              _buildPhoneInput(context, "Password", _passwordController, Icon(Icons.password, size: 18,)),
               SizedBox(height: 16),
-              _buildPhoneInput(context, "Confirm password", _confirmPasswordController),
+              _buildPhoneInput(
+                  context, "Confirm Password", _confirmPasswordController, Icon(Icons.password, size: 18,)),
               Spacer(),
               _buildFooter(context, apiResponse),
             ],
@@ -107,7 +104,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     );
   }
 
-  Widget _buildPhoneInput(BuildContext context, String text, TextEditingController nameController) {
+  Widget _buildPhoneInput(
+      BuildContext context, String text, TextEditingController nameController, Icon icon ) {
     return Container(
       height: 60,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -126,19 +124,14 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               ),
               controller: nameController,
               onChanged: (value) {},
-              onSubmitted: (value) {
-                // if (value.isNotEmpty) {
-                //   Provider.of<MediaViewModel>(context, listen: false)
-                //       .setSelectedMedia(null);
-                //   Provider.of<MediaViewModel>(context, listen: false)
-                //       .fetchMediaData(value, phoneRequest);
-                // }
-              },
+              onSubmitted: (value) {},
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: text,
                 hintStyle: TextStyle(color: Colors.grey),
+                icon: icon,
               ),
+
             ),
           ),
         ],
@@ -156,16 +149,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               print(_nameController.text);
               SetUpAccountRequest request = SetUpAccountRequest(
                   customer: CustomerDetail(
-                      email: _emailController.text,
-                      password:  _passwordController.text,
-                      firstName:  _nameController.text,
-                      lastName:  _lastNameController.text,
-                      dob: "17/07/1996",
-                  ));
+                email: _emailController.text,
+                password: _passwordController.text,
+                firstName: _nameController.text,
+                lastName: _lastNameController.text,
+                dob: "17/07/1996",
+              ));
               // Make the API call to fetch media data
               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                  "/api/v1/app/customers/update_customer", request);
+                      "/api/v1/app/customers/update_customer", request);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
@@ -177,9 +170,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 backgroundColor: Colors.white,
                 elevation: 3,
-                shape: BeveledRectangleBorder(borderRadius:
-                BorderRadius.zero)
-            ),
+                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
         Padding(
