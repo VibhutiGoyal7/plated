@@ -36,7 +36,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/OtpVerify');
+        Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(

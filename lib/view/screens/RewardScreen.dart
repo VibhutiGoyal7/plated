@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+
+class RewardScreen extends StatefulWidget {
+  @override
+  _RewardScreenState createState() => _RewardScreenState();
+}
+
+class _RewardScreenState extends State<RewardScreen> {
+  double amount = 0.00;
+  String name = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+          child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("REWARDS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Available Payario Points", style: TextStyle(fontSize: 11.0),),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  children: [
+                                    Text("100",style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold), ),
+                                    Icon( Icons.arrow_forward_ios_rounded, color: Colors.black,)
+                                  ],
+                                ),
+                              ),
+                              Text("2000 Payario points available", style: TextStyle(fontSize: 10.0),),
+                              SizedBox(height: 8.0,),
+                              Container(color: Colors.black54,child: SizedBox(width: double.infinity,height: 1.0)),
+                              SizedBox(height: 8.0,),
+                              Row(
+                                children: [
+                                  Text("Standard", style: TextStyle(fontSize: 12.0,),),
+                                  Spacer(),
+                                  Icon(Icons.info_outline_rounded, size: 18.0,)
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                    child : Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Redeem for Balance", style: TextStyle(fontSize: 14.0)),
+                            Spacer(),
+                            Icon(Icons.arrow_forward_ios_rounded)
+                          ]
+                        )
+                      )
+                    ),
+                  )
+                ],
+              )
+          ),
+        )
+    );
+  }
+}

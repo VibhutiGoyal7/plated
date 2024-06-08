@@ -107,24 +107,26 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       appBar: AppBar(
         title: Text(''),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildLabelText(context, "Welcome", 16, false),
-            SizedBox(height: 4),
-            _buildLabelText(context, "Enter the code", 20, true),
-            SizedBox(height: 4),
-            _buildLabelText(
-                context, "We sent you a code to ${widget.data}", 12, false),
-            SizedBox(height: 22),
-            _buildPhoneInput(context),
-            SizedBox(height: 18),
-            _buildLabelText(context, "Resend code in 00:00", 14, true),
-            Spacer(),
-            _buildFooter(context),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildLabelText(context, "Welcome", 16, false),
+              SizedBox(height: 4),
+              _buildLabelText(context, "Enter the code", 20, true),
+              SizedBox(height: 4),
+              _buildLabelText(
+                  context, "We sent you a code to ${widget.data}", 12, false),
+              SizedBox(height: 22),
+              _buildPhoneInput(context),
+              SizedBox(height: 18),
+              _buildLabelText(context, "Resend code in 00:00", 14, true),
+              Spacer(),
+              _buildFooter(context),
+            ],
+          ),
         ),
       ),
     );
