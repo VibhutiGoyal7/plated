@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../model/apis/api_response.dart';
 import '../../utils/Helper.dart';
 import '../../view_model/media_view_model.dart';
+import 'package:mvvm_flutter_app/theme/AppColor.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -71,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 30,
+                    backgroundColor: AppColor.WHITE,
                     backgroundImage: AssetImage("assets/profile_user.png"),
                   ),
                   _buildLabelText(context, userName.toString()),
@@ -141,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text(text, style: TextStyle(fontSize: 14.0)),
             Icon(
               Icons.arrow_forward_ios_outlined,
-              color: Colors.black,
+              color: Theme.of(context).canvasColor,//Colors.black,
               size: 16,
             )
           ],

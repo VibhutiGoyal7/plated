@@ -40,7 +40,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                   padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 8.0),
                   child: GestureDetector(
                     onTap: () {
-                      //navController.navigateUp();
+                      Navigator.pop(context);
                     },
                     child:Icon(Icons.arrow_back_ios, color: Colors.black,),
                   ),

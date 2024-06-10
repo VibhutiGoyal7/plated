@@ -1,39 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/profileResponse.dart';
 import 'package:mvvm_flutter_app/utils/Helper.dart';
-import 'package:provider/provider.dart';
 
 class AccountDetailScreen extends StatefulWidget {
-
   @override
   _AccountDetailScreenState createState() => _AccountDetailScreenState();
 }
 
-class _AccountDetailScreenState extends State<AccountDetailScreen>{
+class _AccountDetailScreenState extends State<AccountDetailScreen> {
   //AccountDetailScreen({required this.navController});
   var password;
   var phoneNumber;
-  var userId ;
-  var isEmailVerified  ;
+  var userId;
+
+  var isEmailVerified;
 
   @override
   void initState() {
     super.initState();
-    password="";
-     phoneNumber="";
-     userId="" ;
-    isEmailVerified ="" ;
+    password = "";
+    phoneNumber = "";
+    userId = "";
+    isEmailVerified = "";
 
     _fetchData();
   }
-
 
   @override
   Widget build(BuildContext context) {
     // final mainViewModel = context.watch<DashBoardViewModel>();
     bool isPasswordVisible = false;
     //final password = mainViewModel.getUpdateUserRequest()?.customer?.password;
-
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -47,7 +44,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen>{
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
                   child: GestureDetector(
                     onTap: () {
-
+                      Navigator.pop(context);
                     },
                     child: Icon(
                       Icons.arrow_back_ios,
@@ -73,10 +70,10 @@ class _AccountDetailScreenState extends State<AccountDetailScreen>{
               },
             ),
             _buildDetailBox(
-                context: context,
-                label: 'Phone Number:',
-                value: phoneNumber ?? '',
-                ),
+              context: context,
+              label: 'Phone Number:',
+              value: phoneNumber ?? '',
+            ),
             _buildPasswordBox(
               context: context,
               isPasswordVisible: isPasswordVisible,
@@ -87,10 +84,10 @@ class _AccountDetailScreenState extends State<AccountDetailScreen>{
             ),
             _buildChangePassword(context),
             _buildDetailBox(
-                context: context,
-                label: 'User Id:',
-                value: userId.toString() ?? '',
-                ),
+              context: context,
+              label: 'User Id:',
+              value: userId.toString() ?? '',
+            ),
           ],
         ),
       ),
@@ -186,7 +183,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen>{
                 color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Text(
               value.isEmpty ? "XXXXXXXXXX" : value,
               style: TextStyle(
@@ -259,10 +258,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen>{
         Spacer(),
         GestureDetector(
           onTap: () {
-            {Navigator.pushNamed(
-                context,
-                '/ChangePasswordScreen'
-            );}
+            {
+              Navigator.pushNamed(context, '/ChangePasswordScreen');
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(6.0),
@@ -280,20 +278,71 @@ class _AccountDetailScreenState extends State<AccountDetailScreen>{
       ],
     );
   }
+}
 
-  Future<ProfileResponse?> _fetchData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    ProfileResponse? profileDetails = await Helper.getProfileDetails();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        phoneNumber = profileDetails?.phoneNumber;
-        userId= profileDetails?.userId;
-        isEmailVerified=profileDetails?.isEmailVerified;
-      });
-
+Future<ProfileResponse?> _fetchData() async {
+  await Future.delayed(Duration(milliseconds: 2));
+  ProfileResponse? profileDetails = await Helper.getProfileDetails();
+/*  WidgetsBinding.instance.addPostFrameCallback((_) {
+    setState(() {
+      phoneNumber = profileDetails?.phoneNumber;
+      userId = profileDetails?.userId;
+      isEmailVerified = profileDetails?.isEmailVerified;
     });
-    return profileDetails;
+  });*/
+  return profileDetails;
+}
+
+class NavController {
+  void navigateUp() {
+    // Implement navigation logic
   }
 
+  void navigate(String route) {
+    // Implement navigation logic
+  }
+}
 
+class DashBoardViewModel extends ChangeNotifier {
+  CustomerDetailsResponse? getCustomerDetailsSharedPreference() {
+    // Implement logic to retrieve customer details
+    return null;
+  }
+
+  UpdateUserRequest? getUpdateUserRequest() {
+    // Implement logic to retrieve user update request
+    return null;
+  }
+}
+
+class CustomerDetailsResponse {
+  bool? isEmailVerified;
+  String? phoneNumber;
+  int? userId;
+
+  CustomerDetailsResponse(
+      {this.isEmailVerified, this.phoneNumber, this.userId});
+}
+
+class UpdateUserRequest {
+  Customer? customer;
+
+  UpdateUserRequest({this.customer});
+}
+
+class Customer {
+  String? password;
+
+  Customer({this.password});
+}
+
+class Screen {
+  static const ProfileScreen = Screen._('ProfileScreen');
+  static const AddressScreen = Screen._('AddressScreen');
+  static const VerifyEmailScreen = Screen._('VerifyEmailScreen');
+  static const ChangePasswordScreen = Screen._('ChangePasswordScreen');
+
+  final String route;
+
+  const Screen._(this.route);
 }

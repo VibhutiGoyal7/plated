@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mvvm_flutter_app/theme/AppTheme.dart';
 import 'package:mvvm_flutter_app/view/screens/account_detail_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/address_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/bottom_nav.dart';
 import 'package:mvvm_flutter_app/view/screens/change_password_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/forgot_password_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
@@ -15,6 +16,9 @@ import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
+
+import 'Strings/AppLocalizationsDelegate.dart';
+import 'Strings/L10n.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,11 +40,20 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Media Player',
-          theme: ThemeData(
-            appBarTheme: AppBarTheme(),
-            primarySwatch: Colors.purple,
-            hintColor: Colors.deepOrange,
-          ),
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            // support localization string for Material Widget
+            GlobalCupertinoLocalizations.delegate,
+            // support localization string for Cupertino Widget
+            GlobalWidgetsLocalizations.delegate,
+            // support localization string for text format from right to left.
+            // Add your generated localization delegate here
+            AppLocalizationsDelegate()
+          ],
+          supportedLocales: L10n.all,
+          theme: AppTheme.getAppTheme(),
+          darkTheme: AppTheme.getDarkTheme(),
+          themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
             '/': (context) => PhoneVerifyScreen(),
@@ -56,50 +69,52 @@ class MyApp extends StatelessWidget {
             },
             '/BottomNav': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return BottomNav();
             },
             '/ProfileScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return ProfileScreen();
             },
             '/PersonalInfoScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return PersonalInformationScreen();
             },
             '/AccountDetailScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return AccountDetailScreen();
             },
             '/AddMoneyScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return AddMoneyScreen();
             },
             '/ChangePasswordScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return ChangePasswordScreen();
             },
             '/ForgotPasswordScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return ForgotPasswordScreen();
             },
             '/PersonalDataScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return PersonalDataScreen();
             },
             '/AddressScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return AddressScreen();
             }
           }),
     );
   }
+
+  static void setLocale(BuildContext context, Locale locale) {}
 }

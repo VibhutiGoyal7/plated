@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/AppColor.dart';
+
 class DashboardHomeScreen extends StatefulWidget {
   @override
   _DashboardHomeScreenState createState() => _DashboardHomeScreenState();
@@ -24,6 +26,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 IconButton(
                   icon: CircleAvatar(
                     radius: 20,
+                    backgroundColor: AppColor.WHITE,
                     backgroundImage: AssetImage("assets/profile_user.png"),
                   ),
                   onPressed: () {
@@ -32,7 +35,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 ),
                 SizedBox(width: 4), // Add space between avatar and text
                 Text(
-                  "HI, $name",
+                  "Hi, $name",
                   style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
@@ -84,7 +87,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               children: [
                 Text(
                   "TOTAL BALANCE",
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
                 Icon(Icons.remove_red_eye_rounded),
               ],
@@ -92,7 +95,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             SizedBox(height: 8), // Add space between text and amount
             Text(
               "INR $amount",
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 5), // Add space between sections
             Row(children: [
@@ -111,9 +117,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       Text(
                         "INR $amount",
                         style: TextStyle(
-                            fontSize: 26.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ]),
                   ),
@@ -136,9 +142,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       Text(
                         "USD $amount",
                         style: TextStyle(
-                            fontSize: 26.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ]),
                   ),
@@ -154,8 +160,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Row(children: [Icon(Icons.edit)]),
+                      padding: EdgeInsets.all(6.0),
+                      child: Row(children: [
+                        Icon(
+                          Icons.edit,
+                          size: 20,
+                        )
+                      ]),
                     ),
                   ),
                 ),
@@ -176,8 +187,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         child: Row(children: [
                           Text(
                             "Add Money",
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.black),
+                            style: TextStyle(fontSize: 12.0),
                           ),
                         ]),
                       ),
@@ -196,7 +206,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       child: Row(children: [
                         Text(
                           "Send",
-                          style: TextStyle(fontSize: 12.0, color: Colors.black),
+                          style: TextStyle(fontSize: 12.0),
                           textAlign: TextAlign.center,
                         ),
                       ]),
@@ -215,7 +225,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       child: Row(children: [
                         Text(
                           "Exchange",
-                          style: TextStyle(fontSize: 12.0, color: Colors.black),
+                          style: TextStyle(fontSize: 12.0),
                           textAlign: TextAlign.center,
                         ),
                       ]),
@@ -227,7 +237,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             SizedBox(height: 5.0),
             Text(
               "NEWS & PROMOTIONS",
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
             )
           ]),
         ),

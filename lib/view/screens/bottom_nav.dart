@@ -28,6 +28,7 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -52,8 +53,8 @@ class _BottomNavState extends State<BottomNav> {
           )
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[500],
-        unselectedItemColor: Colors.black45,
+        selectedItemColor: isDarkMode ? Colors.blue[500] : Colors.blue[500],
+        unselectedItemColor:  isDarkMode ? Colors.white70 :Colors.black45,
         onTap: _onItemTapped,
       ),
     );

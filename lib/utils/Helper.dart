@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:ui';
 
-import 'package:mvvm_flutter_app/model/profileResponse.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:mvvm_flutter_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/profileResponse.dart';
 
 class Helper {
   static String valueSharedPreferences = '';
   static String pref_token = 'token';
+  static const String prefSelectedLanguageCode = "SelectedLanguageCode";
 
 // Write DATA
   static Future<bool> saveUserToken(token) async {
@@ -36,4 +41,28 @@ class Helper {
 
     final Map<String, dynamic> ProfileDetailMap = jsonDecode(ProfileDetailJson);
     return ProfileResponse.fromJson(ProfileDetailMap);  }
+
+
+  Future<Locale> setLocale(String languageCode) async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    await _prefs.setString(prefSelectedLanguageCode, languageCode);
+    return _locale(languageCode);
+  }
+
+  Future<Locale> getLocale() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String languageCode = _prefs.getString(prefSelectedLanguageCode) ?? "en";
+    return _locale(languageCode);
+  }
+
+  Locale _locale(String languageCode) {
+    return languageCode != null && languageCode.isNotEmpty
+        ? Locale(languageCode, '')
+        : Locale('en', '');
+  }
+
+  void changeLanguage(BuildContext context, String selectedLanguageCode) async {
+    var _locale = await setLocale(selectedLanguageCode);
+    MyApp.setLocale(context, _locale);
+  }
 }
