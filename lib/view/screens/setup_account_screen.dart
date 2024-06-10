@@ -180,9 +180,10 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 dob: "17/07/1996",
               ));
               // Make the API call to fetch media data
-              await Provider.of<MediaViewModel>(context, listen: false)
+              /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);
+                      "/api/v1/app/customers/update_customer", request);*/
+              Navigator.pushNamed(context, '/BottomNav');
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =

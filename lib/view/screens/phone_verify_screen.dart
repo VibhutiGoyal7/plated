@@ -173,10 +173,11 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   customer: Customer(
                       phoneNumber: _inputController.text, mobileOtp: ""));
               // Make the API call to fetch media data
-              await Provider.of<MediaViewModel>(context, listen: false)
+              /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);
+                      phoneRequest);*/
+              Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =

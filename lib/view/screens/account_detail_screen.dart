@@ -236,7 +236,10 @@ class AccountDetailScreen extends StatelessWidget {
         Spacer(),
         GestureDetector(
           onTap: () {
-            //navController.navigate(Screen.ChangePasswordScreen.route);
+            {Navigator.pushNamed(
+                context,
+                '/ChangePasswordScreen'
+            );}
           },
           child: Padding(
             padding: const EdgeInsets.all(6.0),

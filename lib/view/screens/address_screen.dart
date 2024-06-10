@@ -1,0 +1,133 @@
+import 'package:flutter/material.dart';
+
+class AddressScreen extends StatefulWidget {
+  @override
+  _AddressScreenState createState() => _AddressScreenState();
+}
+
+class _AddressScreenState extends State<AddressScreen> {
+  String streetName = "";
+  String streetNumber = "";
+  String state = "";
+  String city = "";
+  String postCode = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          'Address Details',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildTextField("Street Name", streetName, (value) {
+              setState(() {
+                streetName = value;
+              });
+            }),
+            buildTextField("Street Number", streetNumber, (value) {
+              setState(() {
+                streetNumber = value;
+              });
+            }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: buildReadOnlyField("Country", "India"),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField("State", state, (value) {
+                    setState(() {
+                      state = value;
+                    });
+                  }),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: buildTextField("City", city, (value) {
+                    setState(() {
+                      city = value;
+                    });
+                  }),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  flex: 1,
+                  child: buildTextField("Postal Code", postCode, (value) {
+                    setState(() {
+                      postCode = value;
+                    });
+                  }),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String label, String value, Function(String) onChanged) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          labelText: label,
+          border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+
+  Widget buildReadOnlyField(String label, String value) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          Text(
+            value,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+          ),
+        ],
+      ),
+    );
+  }
+}

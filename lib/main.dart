@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_flutter_app/view/screens/account_detail_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/address_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/bottom_nav.dart';
+import 'package:mvvm_flutter_app/view/screens/change_password_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/forgot_password_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
@@ -74,6 +78,26 @@ class MyApp extends StatelessWidget {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return AddMoneyScreen();
+            },
+            '/ChangePasswordScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return ChangePasswordScreen();
+            },
+            '/ForgotPasswordScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return ForgotPasswordScreen();
+            },
+            '/PersonalDataScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PersonalDataScreen();
+            },
+            '/AddressScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return AddressScreen();
             }
           }),
     );

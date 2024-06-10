@@ -38,14 +38,14 @@ class PersonalInformationScreen extends StatelessWidget {
               context: context,
               text: 'Personal Data',
               onTap: () {
-                //navController.navigate(Screen.ProfileScreen.route);
+                  Navigator.pushNamed(context, '/PersonalDataScreen');
               },
             ),
             _buildMenuItem(
               context: context,
               text: 'Address',
               onTap: () {
-                //navController.navigate(Screen.AddressScreen.route);
+                  Navigator.pushNamed(context, '/AddressScreen');
               },
             ),
             Padding(
@@ -84,7 +84,7 @@ class PersonalInformationScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
+            //color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
@@ -94,7 +94,7 @@ class PersonalInformationScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  //color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
               Spacer(),
