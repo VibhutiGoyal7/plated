@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
 class AccountDetailScreen extends StatelessWidget {
-
   //AccountDetailScreen({required this.navController});
 
   @override
   Widget build(BuildContext context) {
-   // final mainViewModel = context.watch<DashBoardViewModel>();
-   // final customerDetailsResponse = mainViewModel.getCustomerDetailsSharedPreference();
+    // final mainViewModel = context.watch<DashBoardViewModel>();
+    // final customerDetailsResponse = mainViewModel.getCustomerDetailsSharedPreference();
     bool isPasswordVisible = false;
     //final password = mainViewModel.getUpdateUserRequest()?.customer?.password;
-    bool isEmailVerified =false; //customerDetailsResponse?.isEmailVerified ?? false;
+    bool isEmailVerified =
+        false; //customerDetailsResponse?.isEmailVerified ?? false;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -22,17 +20,25 @@ class AccountDetailScreen extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 8.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
                   child: GestureDetector(
                     onTap: () {
-                      //navController.navigateUp();
+                      NavController().navigateUp();
                     },
-                    child:Icon(Icons.arrow_back_ios, color: Colors.black,),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black,
+                      size: 18,
+                    ),
                   ),
                 ),
                 Text(
                   'Account Details',
-                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 18.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -44,24 +50,24 @@ class AccountDetailScreen extends StatelessWidget {
               },
             ),
             _buildDetailBox(
-              context: context,
-              label: 'Phone Number:',
-              value: ""//customerDetailsResponse?.phoneNumber ?? '',
-            ),
+                context: context,
+                label: 'Phone Number:',
+                value: "" //customerDetailsResponse?.phoneNumber ?? '',
+                ),
             _buildPasswordBox(
               context: context,
               isPasswordVisible: isPasswordVisible,
-              password: "",//password,
+              password: "", //password,
               onVisibilityToggle: () {
                 isPasswordVisible = !isPasswordVisible;
               },
             ),
             _buildChangePassword(context),
             _buildDetailBox(
-              context: context,
-              label: 'User Id:',
-              value: ""//customerDetailsResponse?.userId.toString() ?? '',
-            ),
+                context: context,
+                label: 'User Id:',
+                value: "" //customerDetailsResponse?.userId.toString() ?? '',
+                ),
           ],
         ),
       ),
@@ -91,7 +97,7 @@ class AccountDetailScreen extends StatelessWidget {
                 child: Text(
                   isEmailVerified ? 'Email Verified' : 'Verify your Email',
                   style: TextStyle(
-                    fontSize: 14.0,
+                    fontSize: 13.0,
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
@@ -101,26 +107,31 @@ class AccountDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 child: isEmailVerified
                     ? Text(
-                  'Your Email has been successfully verified via OTP which was sent on your email address',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                )
-                    : Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Click the following link to verify your email address and associate it with your Payario Account',
+                        'Your Email has been successfully verified via OTP which was sent on your email address',
                         style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 13.0,
                           color: Theme.of(context).colorScheme.onBackground,
                         ),
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Click the following link to verify your email address and associate it with your Payario Account',
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.black,
+                            size: 18,
+                          ),
+                        ],
                       ),
-                    ),
-                    Icon(Icons.arrow_forward_ios_rounded, color: Colors.black,),
-                  ],
-                ),
               ),
             ],
           ),
@@ -147,17 +158,20 @@ class AccountDetailScreen extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 13.0,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
+            SizedBox(width: 10,),
             Text(
-              value,
+              value.isEmpty ? "XXXXXXXXXX" : value,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: value.isEmpty
+                    ? Colors.grey
+                    : Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ],
@@ -181,17 +195,20 @@ class AccountDetailScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'Password: ',
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 13.0,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
             Text(
               isPasswordVisible ? password ?? '' : '********',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.bold,
@@ -201,7 +218,11 @@ class AccountDetailScreen extends StatelessWidget {
             Spacer(),
             GestureDetector(
               onTap: onVisibilityToggle,
-              child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black,),
+              child: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.black,
+                size: 16,
+              ),
             ),
           ],
         ),
@@ -218,12 +239,13 @@ class AccountDetailScreen extends StatelessWidget {
             //navController.navigate(Screen.ChangePasswordScreen.route);
           },
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(6.0),
             child: Text(
               'Change Password',
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
                 color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
@@ -261,7 +283,8 @@ class CustomerDetailsResponse {
   String? phoneNumber;
   int? userId;
 
-  CustomerDetailsResponse({this.isEmailVerified, this.phoneNumber, this.userId});
+  CustomerDetailsResponse(
+      {this.isEmailVerified, this.phoneNumber, this.userId});
 }
 
 class UpdateUserRequest {

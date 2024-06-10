@@ -181,7 +181,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              getMediaWidget(context, apiResponse);
+              //getMediaWidget(context, apiResponse);
+              Navigator.pushNamed(context, '/OtpVerify',
+                  arguments: "${_inputController.text}");
             },
             child: Text(
               "Submit",

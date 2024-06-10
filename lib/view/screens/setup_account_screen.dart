@@ -52,42 +52,67 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildLabelText(context, "Almost Finish", 16, false),
-              SizedBox(height: 4),
-              _buildLabelText(context, "Set up your profile", 20, true),
-              SizedBox(height: 4),
-              _buildLabelText(context, "Tell us about yourself", 14, false),
-              SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildLabelText(context, "Have a promo code?", 14, false),
-                  _buildLabelText(context, "Redeem", 14, false),
-                ],
-              ),
-              SizedBox(height: 16),
-              _buildPhoneInput(context, "Name", _nameController, Icon(Icons.person, size: 20,)),
-              SizedBox(height: 16),
-              _buildPhoneInput(context, "Last Name", _lastNameController, Icon(Icons.person, size: 20,)),
-              SizedBox(height: 16),
-              _buildPhoneInput(context, "Email", _emailController, Icon(Icons.mail, size: 18,)),
-              SizedBox(height: 16),
-              _buildPhoneInput(context, "Password", _passwordController, Icon(Icons.password, size: 18,)),
-              SizedBox(height: 16),
-              _buildPhoneInput(
-                  context, "Confirm Password", _confirmPasswordController, Icon(Icons.password, size: 18,)),
-              Spacer(),
-              _buildFooter(context, apiResponse),
-            ],
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: screenHeight * 0.95),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLabelText(context, "Almost Finish", 16, false),
+                        SizedBox(height: 4),
+                        _buildLabelText(
+                            context, "Set up your profile", 20, true),
+                        SizedBox(height: 4),
+                        _buildLabelText(
+                            context, "Tell us about yourself", 14, false),
+                        SizedBox(height: 20),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildLabelText(
+                                context, "Have a promo code?", 14, false),
+                            _buildLabelText(context, "Redeem", 14, false),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        _buildPhoneInput(context, "Name", _nameController,
+                            Icon(Icons.person, size: 20)),
+                        SizedBox(height: 10),
+                        _buildPhoneInput(context, "Last Name",
+                            _lastNameController, Icon(Icons.person, size: 20)),
+                        SizedBox(height: 10),
+                        _buildPhoneInput(context, "Email", _emailController,
+                            Icon(Icons.mail, size: 18)),
+                        SizedBox(height: 10),
+                        _buildPhoneInput(
+                            context,
+                            "Password",
+                            _passwordController,
+                            Icon(Icons.password, size: 18)),
+                        SizedBox(height: 10),
+                        _buildPhoneInput(
+                          context,
+                          "Confirm Password",
+                          _confirmPasswordController,
+                          Icon(Icons.password, size: 18),
+                        ),
+                      ],
+                    ),
+                    _buildFooter(context, apiResponse),
+                  ],
+                )),
           ),
         ),
       ),
@@ -104,8 +129,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     );
   }
 
-  Widget _buildPhoneInput(
-      BuildContext context, String text, TextEditingController nameController, Icon icon ) {
+  Widget _buildPhoneInput(BuildContext context, String text,
+      TextEditingController nameController, Icon icon) {
     return Container(
       height: 60,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -131,7 +156,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 hintStyle: TextStyle(color: Colors.grey),
                 icon: icon,
               ),
-
             ),
           ),
         ],
@@ -163,11 +187,12 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              getMediaWidget(context, apiResponse);
+              //getMediaWidget(context, apiResponse);
+              Navigator.pushNamed(context, '/BottomNav');
             },
             child: Text("Confirm"),
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
+                padding: EdgeInsets.symmetric(vertical: 14.0),
                 backgroundColor: Colors.white,
                 elevation: 3,
                 shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
@@ -178,7 +203,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           child: Text(
             "Do you need any help?",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.grey[700],
             ),
           ),
