@@ -27,62 +27,64 @@ class _AddressScreenState extends State<AddressScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildTextField("Street Name", streetName, (value) {
-              setState(() {
-                streetName = value;
-              });
-            }),
-            buildTextField("Street Number", streetNumber, (value) {
-              setState(() {
-                streetNumber = value;
-              });
-            }),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: buildReadOnlyField("Country", "India"),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: buildTextField("State", state, (value) {
-                    setState(() {
-                      state = value;
-                    });
-                  }),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: buildTextField("City", city, (value) {
-                    setState(() {
-                      city = value;
-                    });
-                  }),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 1,
-                  child: buildTextField("Postal Code", postCode, (value) {
-                    setState(() {
-                      postCode = value;
-                    });
-                  }),
-                ),
-              ],
-            ),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildTextField("Street Name", streetName, (value) {
+                setState(() {
+                  streetName = value;
+                });
+              }),
+              buildTextField("Street Number", streetNumber, (value) {
+                setState(() {
+                  streetNumber = value;
+                });
+              }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: buildReadOnlyField("Country", "India"),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 1,
+                    child: buildTextField("State", state, (value) {
+                      setState(() {
+                        state = value;
+                      });
+                    }),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: buildTextField("City", city, (value) {
+                      setState(() {
+                        city = value;
+                      });
+                    }),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 1,
+                    child: buildTextField("Postal Code", postCode, (value) {
+                      setState(() {
+                        postCode = value;
+                      });
+                    }),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -93,14 +95,17 @@ class _AddressScreenState extends State<AddressScreen> {
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: TextField(
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          labelText: label,
-          border: InputBorder.none,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: TextField(
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelText: label,
+            border: InputBorder.none,
+          ),
         ),
       ),
     );
@@ -111,22 +116,25 @@ class _AddressScreenState extends State<AddressScreen> {
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 5),
-          Text(
-            value,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              value,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+            ),
+          ],
+        ),
       ),
     );
   }

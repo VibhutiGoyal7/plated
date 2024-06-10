@@ -1,4 +1,11 @@
+
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/model/profileResponse.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/apis/api_response.dart';
+import '../../utils/Helper.dart';
+import '../../view_model/media_view_model.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -6,8 +13,54 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var userName;
+
+  @override
+  void initState() {
+    super.initState();
+    userName = "";
+    _fetchData();
+  }
+
+  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+    ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${mediaList?.firstName}");
+
+        // Defer the state update until the next frame
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            userName = mediaList?.firstName;
+          });
+
+    });
+
+        await Helper.saveProfileDetails(mediaList);
+
+        ProfileResponse? retrievedToken = await Helper.getProfileDetails();
+        print('Retrieved Token: ${retrievedToken}');
+
+        // Navigate to the new screen after receiving the response
+        //Navigator.pushNamed(context, '/BottomNav');
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -20,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     radius: 30,
                     backgroundImage: AssetImage("assets/profile_user.png"),
                   ),
-                  _buildLabelText(context, "Name"),
+                  _buildLabelText(context, userName.toString()),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -95,5 +148,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MediaViewModel>(context, listen: false)
+        .profileScreenData("/api/v1/app/customers/show_customer_details");
+    ApiResponse apiResponse =
+        Provider.of<MediaViewModel>(context, listen: false).response;
+    getMediaWidget(context, apiResponse);
   }
 }

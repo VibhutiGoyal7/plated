@@ -7,7 +7,9 @@ abstract class BaseService {
     return "$mediaBaseUrl$endpoint";
   }
 
-  Future<dynamic> getResponse(String url, dynamic phoneRequest);
+  Future<dynamic> postResponse(String url, dynamic phoneRequest);
   Future<dynamic> putResponse(String url, dynamic phoneRequest);
+  Future<dynamic> getResponse(String url);
+
 
 }

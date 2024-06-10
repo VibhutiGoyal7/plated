@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 
+import '../../model/profileResponse.dart';
+import '../../utils/Helper.dart';
+
 class PersonalDataScreen extends StatefulWidget {
   @override
   _PersonalDataScreenState createState() => _PersonalDataScreenState();
 }
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
-  String firstName = "";
-  String lastName = "";
-  String documentNumber = "";
+  var firstName ;
+  var lastName ;
+  var documentNumber;
+  var dob ;
+
   bool mExpanded = false;
   String mSelectedText = "";
   final List<String> mCities = ["Aadhar", "PanCard"];
   final TextEditingController documentNumberController = TextEditingController();
+
+
+  @override
+  void initState() {
+    super.initState();
+    firstName="";
+    lastName="";
+    dob="" ;
+    documentNumber ="" ;
+    _fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,47 +62,51 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   }
 
   Widget buildProfileSection(String label, String value) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        //color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 5),
-          Text(
-            value,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
-          ),
-        ],
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              value,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget buildBirthdateSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Birthdate',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        Icon(Icons.calendar_today),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Birthdate',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Icon(Icons.calendar_today),
+        ],
+      ),
     );
   }
 
   Widget buildDocumentDropdown() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -129,27 +149,43 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   }
 
   Widget buildDocumentNumberSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Document Number',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 5),
-        TextField(
-          controller: documentNumberController,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Document Number',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
-          onChanged: (value) {
-            setState(() {
-              documentNumber = value;
-            });
-          },
-        ),
-      ],
+          SizedBox(height: 5),
+          TextField(
+            controller: documentNumberController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            ),
+            onChanged: (value) {
+              setState(() {
+                documentNumber = value;
+              });
+            },
+          ),
+        ],
+      ),
     );
+  }
+  Future<ProfileResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileDetails = await Helper.getProfileDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        firstName = profileDetails?.firstName;
+        lastName= profileDetails?.lastName;
+        dob=profileDetails?.dob;
+      });
+
+    });
+    return profileDetails;
   }
 }

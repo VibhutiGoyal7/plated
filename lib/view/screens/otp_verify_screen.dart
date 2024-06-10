@@ -72,6 +72,10 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         print("OtpVerify ${mediaList?.token}");
         final prefs = await SharedPreferences.getInstance();
         String token = "${mediaList?.token}";
+        Navigator.pushNamed(
+            context,
+            '/SetUpAccount'
+        );
         // Save the token
         bool isSaved = await Helper.saveUserToken(token);
 
@@ -185,19 +189,19 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                   customer: Customer(
                       phoneNumber: widget.data.toString(), mobileOtp: otp));
               // Make the API call to fetch media data
-              /*await Provider.of<MediaViewModel>(context, listen: false)
+              await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                      phoneRequest);*/
+                      phoneRequest);
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              //getMediaWidget(context, apiResponse);
-               Navigator.pushNamed(
+              getMediaWidget(context, apiResponse);
+               /*Navigator.pushNamed(
                   context,
                   '/SetUpAccount'
-              );
+              );*/
             },
             child: Text(
               "Validate",

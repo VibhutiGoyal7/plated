@@ -1,16 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/model/profileResponse.dart';
+import 'package:mvvm_flutter_app/utils/Helper.dart';
+import 'package:provider/provider.dart';
 
-class AccountDetailScreen extends StatelessWidget {
+class AccountDetailScreen extends StatefulWidget {
+
+  @override
+  _AccountDetailScreenState createState() => _AccountDetailScreenState();
+}
+
+class _AccountDetailScreenState extends State<AccountDetailScreen>{
   //AccountDetailScreen({required this.navController});
+  var password;
+  var phoneNumber;
+  var userId ;
+  var isEmailVerified  ;
+
+  @override
+  void initState() {
+    super.initState();
+    password="";
+     phoneNumber="";
+     userId="" ;
+    isEmailVerified ="" ;
+
+    _fetchData();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     // final mainViewModel = context.watch<DashBoardViewModel>();
-    // final customerDetailsResponse = mainViewModel.getCustomerDetailsSharedPreference();
     bool isPasswordVisible = false;
     //final password = mainViewModel.getUpdateUserRequest()?.customer?.password;
-    bool isEmailVerified =
-        false; //customerDetailsResponse?.isEmailVerified ?? false;
+
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -24,7 +47,7 @@ class AccountDetailScreen extends StatelessWidget {
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
                   child: GestureDetector(
                     onTap: () {
-                      NavController().navigateUp();
+
                     },
                     child: Icon(
                       Icons.arrow_back_ios,
@@ -52,7 +75,7 @@ class AccountDetailScreen extends StatelessWidget {
             _buildDetailBox(
                 context: context,
                 label: 'Phone Number:',
-                value: "" //customerDetailsResponse?.phoneNumber ?? '',
+                value: phoneNumber ?? '',
                 ),
             _buildPasswordBox(
               context: context,
@@ -66,7 +89,7 @@ class AccountDetailScreen extends StatelessWidget {
             _buildDetailBox(
                 context: context,
                 label: 'User Id:',
-                value: "" //customerDetailsResponse?.userId.toString() ?? '',
+                value: userId.toString() ?? '',
                 ),
           ],
         ),
@@ -86,7 +109,7 @@ class AccountDetailScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
+            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Column(
@@ -150,7 +173,7 @@ class AccountDetailScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Theme.of(context).colorScheme.secondary.withAlpha(50),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
@@ -191,7 +214,7 @@ class AccountDetailScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Theme.of(context).colorScheme.secondary.withAlpha(50),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Row(
@@ -257,58 +280,20 @@ class AccountDetailScreen extends StatelessWidget {
       ],
     );
   }
-}
 
-class NavController {
-  void navigateUp() {
-    // Implement navigation logic
+  Future<ProfileResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileDetails = await Helper.getProfileDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        phoneNumber = profileDetails?.phoneNumber;
+        userId= profileDetails?.userId;
+        isEmailVerified=profileDetails?.isEmailVerified;
+      });
+
+    });
+    return profileDetails;
   }
 
-  void navigate(String route) {
-    // Implement navigation logic
-  }
-}
 
-class DashBoardViewModel extends ChangeNotifier {
-  CustomerDetailsResponse? getCustomerDetailsSharedPreference() {
-    // Implement logic to retrieve customer details
-    return null;
-  }
-
-  UpdateUserRequest? getUpdateUserRequest() {
-    // Implement logic to retrieve user update request
-    return null;
-  }
-}
-
-class CustomerDetailsResponse {
-  bool? isEmailVerified;
-  String? phoneNumber;
-  int? userId;
-
-  CustomerDetailsResponse(
-      {this.isEmailVerified, this.phoneNumber, this.userId});
-}
-
-class UpdateUserRequest {
-  Customer? customer;
-
-  UpdateUserRequest({this.customer});
-}
-
-class Customer {
-  String? password;
-
-  Customer({this.password});
-}
-
-class Screen {
-  static const ProfileScreen = Screen._('ProfileScreen');
-  static const AddressScreen = Screen._('AddressScreen');
-  static const VerifyEmailScreen = Screen._('VerifyEmailScreen');
-  static const ChangePasswordScreen = Screen._('ChangePasswordScreen');
-
-  final String route;
-
-  const Screen._(this.route);
 }

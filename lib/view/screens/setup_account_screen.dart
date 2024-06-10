@@ -180,16 +180,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 dob: "17/07/1996",
               ));
               // Make the API call to fetch media data
-              /*await Provider.of<MediaViewModel>(context, listen: false)
+              await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);*/
-              Navigator.pushNamed(context, '/BottomNav');
+                      "/api/v1/app/customers/update_customer", request);
+              //Navigator.pushNamed(context, '/BottomNav');
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              //getMediaWidget(context, apiResponse);
-              Navigator.pushNamed(context, '/BottomNav');
+              getMediaWidget(context, apiResponse);
+              //Navigator.pushNamed(context, '/BottomNav');
             },
             child: Text("Confirm"),
             style: ElevatedButton.styleFrom(

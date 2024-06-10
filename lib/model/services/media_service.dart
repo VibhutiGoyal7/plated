@@ -12,7 +12,7 @@ import '../../utils/Helper.dart';
 
 class MediaService extends BaseService {
   @override
-  Future<dynamic> getResponse(String url, dynamic requestBody) async {
+  Future<dynamic> postResponse(String url, dynamic requestBody) async {
     dynamic responseJson;
     try {
 
@@ -49,6 +49,24 @@ class MediaService extends BaseService {
     }
     return responseJson;
   }
+  @override
+  Future getResponse(String url) async {
+    dynamic responseJson;
+    try {
+      String? retrievedToken = await Helper.getUserToken();
+      final response = await http.get(Uri.parse(mediaBaseUrl + url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $retrievedToken',
+        }
+       // body:jsonEncode(requestBody),
+      );
+      responseJson = returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }
+    return responseJson;
+  }
   @visibleForTesting
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
@@ -74,4 +92,6 @@ class MediaService extends BaseService {
                 ' with status code : ${response.statusCode} ${response.body.toString()}');
     }
   }
+
+
 }
