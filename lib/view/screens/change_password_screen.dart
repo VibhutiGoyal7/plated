@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mvvm_flutter_app/model/changeOldPasswordRequest.dart';
+import 'package:mvvm_flutter_app/model/request/changeOldPasswordRequest.dart';
 import 'package:provider/provider.dart';
 
 import '../../Strings/Languages.dart';
@@ -18,13 +18,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  bool passwordVisible = false;
+  bool oldPasswordVisible = false;
+  bool newPasswordVisible = false;
   bool confirmPasswordVisible = false;
 
   @override
   void initState() {
     super.initState();
-    passwordVisible = true;
+    oldPasswordVisible = true;
+    newPasswordVisible= true;
     confirmPasswordVisible = true;
   }
 
@@ -94,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       size: 18,
                       color:
                       isDarkMode ? Colors.white : Colors.black),
-                  passwordVisible,
+                  oldPasswordVisible,
                   isDarkMode),
               _buildPasswordInput(
                   context,
@@ -104,7 +106,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       size: 18,
                       color:
                       isDarkMode ? Colors.white : Colors.black),
-                  passwordVisible,
+                  newPasswordVisible,
                   isDarkMode),
               _buildPasswordInput(
                   context,
@@ -114,7 +116,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       size: 18,
                       color:
                       isDarkMode ? Colors.white : Colors.black),
-                  passwordVisible,
+                  confirmPasswordVisible,
                   isDarkMode),
               Align(
                 alignment: Alignment.centerRight,
@@ -231,10 +233,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   onPressed: () {
                     setState(
                           () {
-                        if (text == "Password") {
-                          passwordVisible = !passwordVisible;
-                        } else {
+                        if (text == Languages.of(context)!.labelOldPass) {
+                          oldPasswordVisible = !oldPasswordVisible;
+                        } else if(text == Languages.of(context)!.labelNewPass){
+                          newPasswordVisible = !newPasswordVisible;
+                        }else{
                           confirmPasswordVisible = !confirmPasswordVisible;
+
                         }
                       },
                     );

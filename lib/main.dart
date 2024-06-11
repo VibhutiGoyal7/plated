@@ -14,6 +14,7 @@ import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -111,6 +112,11 @@ class MyApp extends StatelessWidget {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return AddressScreen();
+            },
+            '/VerifyEmail': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return VerifyEmailScreen();
             }
           }),
     );

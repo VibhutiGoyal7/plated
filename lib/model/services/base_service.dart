@@ -1,4 +1,4 @@
-import 'package:mvvm_flutter_app/model/signInWithPhoneNumber.dart';
+import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
 
 abstract class BaseService {
   final String mediaBaseUrl = "https://custapi.payorio.com/";

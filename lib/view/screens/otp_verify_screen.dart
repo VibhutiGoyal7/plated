@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Strings/Languages.dart';
-import '../../model/otpVerifyResponse.dart';
-import '../../model/signInWithPhoneNumber.dart';
+import '../../model/response/otpVerifyResponse.dart';
+import '../../model/request/signInWithPhoneNumber.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here

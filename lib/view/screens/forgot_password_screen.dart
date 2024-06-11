@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mvvm_flutter_app/model/createOtpChangePass.dart';
-import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
-import 'package:mvvm_flutter_app/model/verifyOtpChangePass.dart';
+import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:mvvm_flutter_app/model/request/verifyOtpChangePass.dart';
 import 'package:provider/provider.dart';
 
 import '../../Strings/Languages.dart';
 import '../../model/apis/api_response.dart';
+import '../../model/request/createOtpChangePass.dart';
+import '../../model/response/createOtpChangePassResponse.dart';
 import '../../view_model/media_view_model.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -65,6 +66,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.COMPLETED:
         print("rwrwr ${apiResponse?.data}");
         print("otp ${mediaList?.mobileOtp}");
+
+        setState(() {
+          isOtpBoxVisible = true;
+        });
+
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  Future<Widget> verifyOtpGetWidget(BuildContext context, ApiResponse apiResponse) async {
+    final mediaList = apiResponse.data ;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${apiResponse?.data}");
+        Navigator.pushNamed(context, '/AccountDetailScreen');
 
         setState(() {
           isOtpBoxVisible = true;
@@ -353,19 +380,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       padding: const EdgeInsets.all(15.0),
       child: ElevatedButton(
         onPressed: ()async {
+          String otp =
+          _controllers.map((controller) => controller.text).join();
           print(_phoneNumberController.text);
 
           VerifyOtChangePassRequest request = VerifyOtChangePassRequest(customer: CustomerVerifyOtpPass(
             phoneNumber: _phoneNumberController.text,
             password: _newPasswordController.text,
-            mobileOtp: _otpController.text
+            mobileOtp: otp
           ));
 
           await Provider.of<MediaViewModel>(context, listen: false)
               .VerifyOtpChangePass("/api/v1/app/customers/verify_otp_and_change_password",request);
           ApiResponse apiResponse =
               Provider.of<MediaViewModel>(context, listen: false).response;
-          getMediaWidget(context, apiResponse);
+          verifyOtpGetWidget(context, apiResponse);
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),

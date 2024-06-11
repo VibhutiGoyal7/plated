@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/profileResponse.dart';
+import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:provider/provider.dart';
 
 import '../../Strings/Languages.dart';
@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     userName = "";
     _fetchData();
+    print(Helper.getUserToken());
   }
 
   Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
@@ -154,6 +155,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _fetchData() async {
+    String? retrievedToken = await Helper.getUserToken();
+    print("Token $retrievedToken");
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
         .profileScreenData("/api/v1/app/customers/show_customer_details");

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/profileResponse.dart';
+import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/utils/Helper.dart';
 
 import '../../Strings/Languages.dart';
@@ -68,8 +68,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             isDarkMode: isDarkMode,
               isEmailVerified: isEmailVerified,
               onTap: () {
-                //navController.navigate(Screen.VerifyEmailScreen.route);
-              }
+                {
+                  Navigator.pushNamed(context, '/VerifyEmail');
+                }              }
             ),
             _buildDetailBox(
               context: context,

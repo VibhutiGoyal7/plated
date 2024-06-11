@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:mvvm_flutter_app/model/apis/app_exception.dart';
 import 'package:mvvm_flutter_app/model/services/base_service.dart';
-import 'package:mvvm_flutter_app/model/signInWithPhoneNumber.dart';
+import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/Helper.dart';
@@ -17,6 +17,7 @@ class MediaService extends BaseService {
     try {
 
       String? retrievedToken = await Helper.getUserToken();
+      print("Token $retrievedToken");
       final response = await http.post(Uri.parse(mediaBaseUrl + url),
         headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

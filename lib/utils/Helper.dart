@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mvvm_flutter_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/profileResponse.dart';
+import '../model/response/profileResponse.dart';
 
 class Helper {
   static String valueSharedPreferences = '';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/setUpAccountRequest.dart';
+import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../Strings/Languages.dart';
-import '../../model/setUpAccountResponse.dart';
+import '../../model/response/setUpAccountResponse.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
   final String? userId; // Define the 'data' parameter here

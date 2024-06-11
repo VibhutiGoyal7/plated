@@ -1,20 +1,23 @@
 import 'dart:convert';
 
-import 'package:mvvm_flutter_app/model/changeOldPasswordRequest.dart';
-import 'package:mvvm_flutter_app/model/createOtpChangePass.dart';
-import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
+import 'package:mvvm_flutter_app/model/request/changeOldPasswordRequest.dart';
+import 'package:mvvm_flutter_app/model/request/createOtpChangePass.dart';
+import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:mvvm_flutter_app/model/media.dart';
-import 'package:mvvm_flutter_app/model/profileResponse.dart';
+import 'package:mvvm_flutter_app/model/response/createOtpChangePassResponse.dart';
+import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/model/services/base_service.dart';
 import 'package:mvvm_flutter_app/model/services/media_service.dart';
-import 'package:mvvm_flutter_app/model/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/model/setUpAccountResponse.dart';
-import 'package:mvvm_flutter_app/model/signInWithPhoneNumber.dart';
-import 'package:mvvm_flutter_app/model/verifyOtpChangePass.dart';
+import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
+import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
+import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
+import 'package:mvvm_flutter_app/model/request/verifyOtpChangePass.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/Helper.dart';
-import 'otpVerifyResponse.dart';
+import 'response/otpVerifyResponse.dart';
 
 class MediaRepository {
   BaseService _mediaService = MediaService();
@@ -80,6 +83,27 @@ class MediaRepository {
   Future<dynamic> VerifyOtpChangePass(String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
     print(verifyOtChangePassRequest);
     dynamic response = await _mediaService.postResponse(value,verifyOtChangePassRequest);
+    print(value);
+    final jsonData = response['data'];
+    print(jsonData);
+    return response;
+  }
+
+  Future<CreateOtpVerifyEmailResponse> CreateOtpVerifyEmail(String value, CreateOtpEmailVerifyRequest createOtpEmailVerifyRequest) async {
+    print(createOtpEmailVerifyRequest);
+    dynamic response = await _mediaService.postResponse(value,createOtpEmailVerifyRequest);
+    print(value);
+    final jsonData = response['data'];
+    final jsonDat = response;
+    print(jsonDat);
+    CreateOtpVerifyEmailResponse mediaList = CreateOtpVerifyEmailResponse.fromJson(jsonData);
+    print(mediaList.mobileOtp);
+    return mediaList;
+  }
+
+  Future<dynamic> VerifyOtpVerifyEmail(String value, VerifyOtpEmailVerifyRequest verifyOtpEmailVerifyRequest) async {
+    print(verifyOtpEmailVerifyRequest);
+    dynamic response = await _mediaService.postResponse(value,verifyOtpEmailVerifyRequest);
     print(value);
     final jsonData = response['data'];
     print(jsonData);

@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
+import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/model/media_repository.dart';
-import 'package:mvvm_flutter_app/model/profileResponse.dart';
-import 'package:mvvm_flutter_app/model/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/model/setUpAccountResponse.dart';
-import 'package:mvvm_flutter_app/model/signInWithPhoneNumber.dart';
+import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
+import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
+import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
+import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
 
-import '../model/changeOldPasswordRequest.dart';
-import '../model/createOtpChangePass.dart';
-import '../model/otpVerifyResponse.dart';
-import '../model/verifyOtpChangePass.dart';
+import '../model/request/changeOldPasswordRequest.dart';
+import '../model/request/createOtpChangePass.dart';
+import '../model/request/createOtpEmailVerifyRequest.dart';
+import '../model/request/verifyOtpEmailVerifyRequest.dart';
+import '../model/response/createOtpChangePassResponse.dart';
+import '../model/response/otpVerifyResponse.dart';
+import '../model/request/verifyOtpChangePass.dart';
 
 class MediaViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
@@ -128,12 +131,38 @@ class MediaViewModel with ChangeNotifier {
 
   Future<void> VerifyOtpChangePass(String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
-    //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
     try {
-      //print(changeOldPassRequest.customer.email);
       final response = await MediaRepository().VerifyOtpChangePass(value, verifyOtChangePassRequest);
-      //print("Yess"+ setUpAccountResponse.email.toString());
+      _apiResponse = ApiResponse.completed(response);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> CreateOtpVerifyEmail(String value, CreateOtpEmailVerifyRequest createOtpEmailVerifyRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      print(createOtpEmailVerifyRequest.customer.phoneNumber);
+
+      CreateOtpVerifyEmailResponse createOtpVerifyEmailResponse = await MediaRepository().CreateOtpVerifyEmail(value, createOtpEmailVerifyRequest);
+      print("Yess"+ createOtpVerifyEmailResponse.mobileOtp);
+      _apiResponse = ApiResponse.completed(createOtpVerifyEmailResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> VerifyOtpVerifyEmail(String value, VerifyOtpEmailVerifyRequest verifyOtpEmailVerifyRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      final response = await MediaRepository().VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
       _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

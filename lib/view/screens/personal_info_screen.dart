@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../Strings/Languages.dart';
-import '../../model/profileResponse.dart';
+import '../../model/response/profileResponse.dart';
 import '../../utils/Helper.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
