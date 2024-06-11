@@ -5,6 +5,8 @@ import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/payment_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
 
+import '../../Strings/Languages.dart';
+
 
 class BottomNav extends StatefulWidget {
   @override
@@ -34,22 +36,22 @@ class _BottomNavState extends State<BottomNav> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: Languages.of(context)!.labelHome,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.money),
-            label: 'Transfer',
+            label: Languages.of(context)!.labelTransfer,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.card_giftcard),
-            label: 'Rewards',
+            label: Languages.of(context)!.labelRewards,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.payment),
-            label: 'Payment',
+            label: Languages.of(context)!.labelPayment,
           )
         ],
         currentIndex: _selectedIndex,

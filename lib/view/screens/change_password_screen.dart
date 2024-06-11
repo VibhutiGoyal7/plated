@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mvvm_flutter_app/model/changeOldPasswordRequest.dart';
 import 'package:provider/provider.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/apis/api_response.dart';
 import '../../utils/Helper.dart';
 import '../../view_model/media_view_model.dart';
@@ -16,6 +17,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+
+  bool passwordVisible = false;
+  bool confirmPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    passwordVisible = true;
+    confirmPasswordVisible = true;
+  }
 
   Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
     //ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
@@ -48,6 +59,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       //backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
@@ -64,7 +76,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     },
                   ),
                   Text(
-                    'Change Password',
+                    Languages.of(context)!.labelChangePass,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -74,33 +86,51 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ],
               ),
               Divider(color: Colors.grey),
-              _buildPasswordTextField(
-                controller: _oldPasswordController,
-                label: 'Old Password*',
-                placeholder: 'Enter Password',
-              ),
-              _buildPasswordTextField(
-                controller: _newPasswordController,
-                label: 'New Password*',
-                placeholder: 'Enter your Password',
-              ),
-              _buildPasswordTextField(
-                controller: _confirmPasswordController,
-                label: 'Confirm Password*',
-                placeholder: 'Enter Password Again',
-              ),
+              _buildPasswordInput(
+                  context,
+                  Languages.of(context)!.labelOldPass,
+                  _oldPasswordController,
+                  Icon(Icons.password,
+                      size: 18,
+                      color:
+                      isDarkMode ? Colors.white : Colors.black),
+                  passwordVisible,
+                  isDarkMode),
+              _buildPasswordInput(
+                  context,
+                  Languages.of(context)!.labelNewPass,
+                  _newPasswordController,
+                  Icon(Icons.password,
+                      size: 18,
+                      color:
+                      isDarkMode ? Colors.white : Colors.black),
+                  passwordVisible,
+                  isDarkMode),
+              _buildPasswordInput(
+                  context,
+                  Languages.of(context)!.labelConfirmPass,
+                  _confirmPasswordController,
+                  Icon(Icons.password,
+                      size: 18,
+                      color:
+                      isDarkMode ? Colors.white : Colors.black),
+                  passwordVisible,
+                  isDarkMode),
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
+                child: GestureDetector(
+                  onTap: () {
                     Navigator.pushNamed(context, '/ForgotPasswordScreen');
                   },
-                  child: Text(
-                    'Forgot Password',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      Languages.of(context)!.labelForgotPass,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                      ),
                     ),
                   ),
                 ),
@@ -140,7 +170,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Text('Proceed'),
+                      child: Text(Languages.of(context)!.labelProceed),
                     ),
                   ),
                 ),
@@ -159,28 +189,67 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _newPasswordController.text == _confirmPasswordController.text;
   }
 
-  Widget _buildPasswordTextField({
-    required TextEditingController controller,
-    required String label,
-    required String placeholder,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: placeholder,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildPasswordInput(
+      BuildContext context,
+      String text,
+      TextEditingController nameController,
+      Icon icon,
+      bool passwordVisibles
+      , bool isDarkMode,
+      ) {
+    return Container(
+      height: 60,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 16),
+          Expanded(
+            child: TextField(
+              style: TextStyle(fontSize: 16.0),
+              obscureText: passwordVisibles,
+              obscuringCharacter: "*",
+              controller: nameController,
+              onChanged: (value) {},
+              onSubmitted: (value) {},
+              keyboardType: TextInputType.visiblePassword,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: text,
+                hintStyle: TextStyle(color: Colors.grey),
+                icon: icon,
+                suffixIcon: IconButton(
+                  icon: Icon(passwordVisibles
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    size: 20,),
+                  onPressed: () {
+                    setState(
+                          () {
+                        if (text == "Password") {
+                          passwordVisible = !passwordVisible;
+                        } else {
+                          confirmPasswordVisible = !confirmPasswordVisible;
+                        }
+                      },
+                    );
+                  },
+                ),
+
+
+              ),
+            ),
           ),
-        ),
-        obscureText: true,
+        ],
       ),
     );
   }
   Future<void> _changePassword() async {
-   // await Future.delayed(Duration(milliseconds: 2));
     CustomerChangePassDetail customer = CustomerChangePassDetail
       (password: _oldPasswordController.text, newPassword: _newPasswordController.text);
     ChangeOldPassRequest request = ChangeOldPassRequest(customer: customer);

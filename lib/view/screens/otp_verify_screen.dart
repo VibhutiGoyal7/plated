@@ -5,6 +5,7 @@ import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/otpVerifyResponse.dart';
 import '../../model/signInWithPhoneNumber.dart';
 
@@ -106,37 +107,39 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildLabelText(context, "Welcome", 16, false),
-              SizedBox(height: 4),
-              _buildLabelText(context, "Enter the code", 20, true),
-              SizedBox(height: 4),
-              _buildLabelText(
-                  context, "We sent you a code to ${widget.data}", 12, false),
-              SizedBox(height: 22),
-              _buildPhoneInput(context),
-              SizedBox(height: 18),
-              _buildLabelText(context, "Resend code in 00:00", 14, true),
-              Spacer(),
-              _buildFooter(context),
-            ],
+      body: Container(
+        width: screenWidth,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildLabelText(context, Languages.of(context)!.labelWelcome, 16, false),
+                SizedBox(height: 4),
+                _buildLabelText(context, Languages.of(context)!.labelEnterCode, 20, true),
+                SizedBox(height: 4),
+                _buildLabelText(
+                    context, "${Languages.of(context)!.labelSentCode} ${widget.data}", 12, false),
+                SizedBox(height: 22),
+                _buildPhoneInput(context, screenWidth),
+                SizedBox(height: 18),
+                _buildLabelText(context, "${Languages.of(context)!.labelResendCode} 00:00", 14, true),
+                Spacer(),
+                _buildFooter(context),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildPhoneInput(BuildContext context) {
+  Widget _buildPhoneInput(BuildContext context, double screenWidth) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -144,8 +147,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: 50.0,
-            height: 50.0,
+            width: screenWidth/8.5,
+            height: 65.0,
             child: TextField(
               controller: _controllers[index],
               focusNode: _focusNodes[index],
@@ -170,8 +173,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "By pressing validate you accept"
-            "our Terms and Conditions and Privacy Policy",
+            Languages.of(context)!.labelTandC,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -198,13 +200,13 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
               getMediaWidget(context, apiResponse);
-               /*Navigator.pushNamed(
+               Navigator.pushNamed(
                   context,
                   '/SetUpAccount'
-              );*/
+              );
             },
             child: Text(
-              "Validate",
+              Languages.of(context)!.labelValidate,
               style:
                   TextStyle(color: isValid ? Colors.white : Colors.blueAccent),
             ),

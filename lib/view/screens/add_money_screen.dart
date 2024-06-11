@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../Strings/Languages.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
 class AddMoneyScreen extends StatefulWidget {
-  final NavController? navController;
-
-  AddMoneyScreen({this.navController});
-
   @override
   _AddMoneyScreenState createState() => _AddMoneyScreenState();
 }
@@ -38,7 +36,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 8.0),
                   child: GestureDetector(
                     onTap: () {
-                      widget.navController?.navigateUp();
                     },
                     child: Icon(Icons.arrow_back_ios)
                   ),
@@ -46,7 +43,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 Text(
                   'Add Money',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
                     fontFamily: 'popins',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -66,7 +62,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               child: Text(
                 'Enter amount',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onBackground,
                   fontFamily: 'popins',
                 ),
               ),
@@ -79,9 +74,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   labelStyle: TextStyle(fontFamily: 'popins'),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
+
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -96,7 +89,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     amount = value;
                   });
                 },
-                cursorColor: Theme.of(context).colorScheme.onBackground,
               ),
             ),
             Expanded(
@@ -109,7 +101,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     child: ElevatedButton(
                       onPressed: amount.isNotEmpty
                           ? () {
-                        widget.navController?.navigate(Screen.VerifyIdentityScreen.route);
                       }
                           : null,
                       style: ElevatedButton.styleFrom(
@@ -122,7 +113,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
                       ),
                       child: Text(
-                        'Continue',
+                        Languages.of(context)!.labelProceed,
                         style: TextStyle(fontFamily: 'popins'),
                       ),
                     ),
@@ -137,20 +128,3 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   }
 }
 
-class NavController {
-  void navigateUp() {
-    // Implement navigation logic
-  }
-
-  void navigate(String route) {
-    // Implement navigation logic
-  }
-}
-
-class Screen {
-  static const VerifyIdentityScreen = Screen._('VerifyIdentityScreen');
-
-  final String route;
-
-  const Screen._(this.route);
-}

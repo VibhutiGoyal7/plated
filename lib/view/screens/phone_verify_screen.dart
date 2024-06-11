@@ -188,21 +188,21 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   customer: Customer(
                       phoneNumber: _inputController.text, mobileOtp: ""));
               // Make the API call to fetch media data
-            /*  await Provider.of<MediaViewModel>(context, listen: false)
+              await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);*/
+                      phoneRequest);
               //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-             // getMediaWidget(context, apiResponse);
-              Navigator.pushNamed(context, '/OtpVerify',
-                  arguments: "${_inputController.text}");
+              getMediaWidget(context, apiResponse);
+             // Navigator.pushNamed(context, '/OtpVerify',
+                //  arguments: "${_inputController.text}");
             },
             child: Text(
-              "Submit",
+              Languages.of(context)!.labelSubmit,
               style: TextStyle(
                   color: phoneNumberValid ? Colors.white : Colors.blueAccent),
             ),
@@ -217,7 +217,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Do you need any help?",
+            Languages.of(context)!.labelNeedHelp,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[700],

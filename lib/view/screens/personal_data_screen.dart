@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/profileResponse.dart';
 import '../../utils/Helper.dart';
 
@@ -41,7 +42,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           },
         ),
         title: Text(
-          'Profile',
+          Languages.of(context)!.labelProfile,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -50,8 +51,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildProfileSection("First Name", firstName),
-            buildProfileSection("Last Name", lastName),
+            buildProfileSection(Languages.of(context)!.labelFirstname, firstName),
+            buildProfileSection(Languages.of(context)!.labelLastname, lastName),
             buildBirthdateSection(),
             buildDocumentDropdown(),
             buildDocumentNumberSection(),
@@ -95,7 +96,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Birthdate',
+            Languages.of(context)!.labelBirthdate,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Icon(Icons.calendar_today),
@@ -114,7 +115,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             readOnly: true,
             controller: TextEditingController(text: mSelectedText),
             decoration: InputDecoration(
-              labelText: 'Choose Document',
+              labelText: Languages.of(context)!.labelChooseDoc,
               suffixIcon: IconButton(
                 icon: Icon(mExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
                 onPressed: () {
@@ -155,7 +156,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Document Number',
+            Languages.of(context)!.labelDocNo,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 5),

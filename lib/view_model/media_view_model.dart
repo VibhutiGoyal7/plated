@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
+import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/model/media_repository.dart';
 import 'package:mvvm_flutter_app/model/profileResponse.dart';
@@ -98,9 +99,9 @@ class MediaViewModel with ChangeNotifier {
     notifyListeners();
     try {
       //print(changeOldPassRequest.customer.email);
-      await MediaRepository().ChangeWithOldPasswordData(value, changeOldPassRequest);
+      final response = await MediaRepository().ChangeWithOldPasswordData(value, changeOldPassRequest);
       //print("Yess"+ setUpAccountResponse.email.toString());
-      //_apiResponse = ApiResponse.completed();
+      _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -113,10 +114,11 @@ class MediaViewModel with ChangeNotifier {
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
     try {
-      //print(changeOldPassRequest.customer.email);
-      await MediaRepository().CreateOtpChangePass(value, createOtpChangePassRequest);
-      //print("Yess"+ setUpAccountResponse.email.toString());
-      //_apiResponse = ApiResponse.completed();
+      print(createOtpChangePassRequest.customer.phoneNumber);
+
+      CreateOtpChangePassResponse createOtpChangePassResponse = await MediaRepository().CreateOtpChangePass(value, createOtpChangePassRequest);
+      print("Yess"+ createOtpChangePassResponse.mobileOtp);
+      _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -130,9 +132,9 @@ class MediaViewModel with ChangeNotifier {
     notifyListeners();
     try {
       //print(changeOldPassRequest.customer.email);
-      await MediaRepository().VerifyOtpChangePass(value, verifyOtChangePassRequest);
+      final response = await MediaRepository().VerifyOtpChangePass(value, verifyOtChangePassRequest);
       //print("Yess"+ setUpAccountResponse.email.toString());
-      //_apiResponse = ApiResponse.completed();
+      _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

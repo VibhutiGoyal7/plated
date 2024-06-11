@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../Strings/Languages.dart';
+
 class AddressScreen extends StatefulWidget {
   @override
   _AddressScreenState createState() => _AddressScreenState();
@@ -23,7 +25,7 @@ class _AddressScreenState extends State<AddressScreen> {
           },
         ),
         title: Text(
-          'Address Details',
+          Languages.of(context)!.labelAddressDetails,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -33,12 +35,12 @@ class _AddressScreenState extends State<AddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildTextField("Street Name", streetName, (value) {
+              buildTextField(Languages.of(context)!.labelStreetName, streetName, (value) {
                 setState(() {
                   streetName = value;
                 });
               }),
-              buildTextField("Street Number", streetNumber, (value) {
+              buildTextField(Languages.of(context)!.labelStreetNo, streetNumber, (value) {
                 setState(() {
                   streetNumber = value;
                 });
@@ -48,12 +50,12 @@ class _AddressScreenState extends State<AddressScreen> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: buildReadOnlyField("Country", "India"),
+                    child: buildReadOnlyField(Languages.of(context)!.labelCountry, Languages.of(context)!.labelIndia),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     flex: 1,
-                    child: buildTextField("State", state, (value) {
+                    child: buildTextField(Languages.of(context)!.labelState, state, (value) {
                       setState(() {
                         state = value;
                       });
@@ -66,7 +68,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: buildTextField("City", city, (value) {
+                    child: buildTextField(Languages.of(context)!.labelCity, city, (value) {
                       setState(() {
                         city = value;
                       });
@@ -75,7 +77,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   SizedBox(width: 10),
                   Expanded(
                     flex: 1,
-                    child: buildTextField("Postal Code", postCode, (value) {
+                    child: buildTextField(Languages.of(context)!.labelPostalCode, postCode, (value) {
                       setState(() {
                         postCode = value;
                       });

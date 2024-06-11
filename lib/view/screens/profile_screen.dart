@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/profileResponse.dart';
 import 'package:provider/provider.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/apis/api_response.dart';
 import '../../utils/Helper.dart';
 import '../../view_model/media_view_model.dart';
@@ -83,35 +84,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, "Profile")),
+                            child: _buildLabelText(context, Languages.of(context)!.labelProfile)),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/AccountDetailScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, "Account Details"),
+                          child: _buildCard(context, Languages.of(context)!.labelAccountDetails),
                         ),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/PersonalInfoScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, "Personal Information"),
+                          child: _buildCard(context, Languages.of(context)!.labelPersonalInfo),
                         ),
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, "Security")),
-                        _buildCard(context, "2-step verification"),
+                            child: _buildLabelText(context, Languages.of(context)!.labelSecurity)),
+                        _buildCard(context, Languages.of(context)!.labelStepVerification),
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, "Payment Methods")),
-                        _buildCard(context, "Added Cards"),
+                            child: _buildLabelText(context, Languages.of(context)!.labelPaymentMethod)),
+                        _buildCard(context, Languages.of(context)!.labelAddedCard),
                         Container(
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, "Help & Support")),
-                        _buildCard(context, "Settings"),
+                            child: _buildLabelText(context, Languages.of(context)!.labelHelpSupport)),
+                        _buildCard(context, Languages.of(context)!.labelSettings),
                       ]),
                 ],
               ),

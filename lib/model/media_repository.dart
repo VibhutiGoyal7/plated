@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mvvm_flutter_app/model/changeOldPasswordRequest.dart';
 import 'package:mvvm_flutter_app/model/createOtpChangePass.dart';
+import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/model/profileResponse.dart';
 import 'package:mvvm_flutter_app/model/services/base_service.dart';
@@ -56,30 +57,32 @@ class MediaRepository {
     return mediaList;
   }
 
-  Future<void> ChangeWithOldPasswordData(String value, ChangeOldPassRequest changeOldPassRequest) async {
+  Future<dynamic> ChangeWithOldPasswordData(String value, ChangeOldPassRequest changeOldPassRequest) async {
     print(changeOldPassRequest);
     dynamic response = await _mediaService.putResponse(value,changeOldPassRequest);
     print(value);
     final jsonData = response['data'];
     print(jsonData);
+    return response;
     //SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
   }
 
-  Future<void> CreateOtpChangePass(String value, CreateOtpChangePassRequest createOtpChangePassRequest) async {
+  Future<CreateOtpChangePassResponse> CreateOtpChangePass(String value, CreateOtpChangePassRequest createOtpChangePassRequest) async {
     print(createOtpChangePassRequest);
     dynamic response = await _mediaService.postResponse(value,createOtpChangePassRequest);
     print(value);
     final jsonData = response['data'];
     print(jsonData);
-    //SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
+    CreateOtpChangePassResponse mediaList = CreateOtpChangePassResponse.fromJson(jsonData);
+    return mediaList;
   }
 
-  Future<void> VerifyOtpChangePass(String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
+  Future<dynamic> VerifyOtpChangePass(String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
     print(verifyOtChangePassRequest);
     dynamic response = await _mediaService.postResponse(value,verifyOtChangePassRequest);
     print(value);
     final jsonData = response['data'];
     print(jsonData);
-    //SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
+    return response;
   }
 }

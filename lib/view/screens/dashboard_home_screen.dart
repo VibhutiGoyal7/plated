@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../Strings/Languages.dart';
 import '../../theme/AppColor.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
@@ -35,7 +36,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 ),
                 SizedBox(width: 4), // Add space between avatar and text
                 Text(
-                  "Hi, $name",
+                  "${Languages.of(context)!.labelHi}, $name",
                   style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
@@ -58,7 +59,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 0),
                       child: Text(
-                        "Standard",
+                        Languages.of(context)!.labelStandard,
                         style: TextStyle(fontSize: 12.0),
                       ),
                     ),
@@ -86,7 +87,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "TOTAL BALANCE",
+                  Languages.of(context)!.labelTotalBalance,
                   style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
                 ),
                 Icon(Icons.remove_red_eye_rounded),
@@ -94,7 +95,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             ),
             SizedBox(height: 8), // Add space between text and amount
             Text(
-              "INR $amount",
+              "${Languages.of(context)!.labelINR} $amount",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -115,7 +116,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     child: Column(children: [
                       Spacer(),
                       Text(
-                        "INR $amount",
+                        "${Languages.of(context)!.labelINR} $amount",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,
@@ -140,7 +141,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     child: Column(children: [
                       Spacer(),
                       Text(
-                        "USD $amount",
+                        "${Languages.of(context)!.labelUSD} $amount",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,
@@ -186,7 +187,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             vertical: 8.0, horizontal: 6.0),
                         child: Row(children: [
                           Text(
-                            "Add Money",
+                            Languages.of(context)!.labelAddMoney,
                             style: TextStyle(fontSize: 12.0),
                           ),
                         ]),
@@ -224,7 +225,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       padding: EdgeInsets.all(8.0),
                       child: Row(children: [
                         Text(
-                          "Exchange",
+                          Languages.of(context)!.labelExchange,
                           style: TextStyle(fontSize: 12.0),
                           textAlign: TextAlign.center,
                         ),
@@ -236,7 +237,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             ),
             SizedBox(height: 5.0),
             Text(
-              "NEWS & PROMOTIONS",
+              Languages.of(context)!.labelNews,
               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
             )
           ]),

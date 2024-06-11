@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_flutter_app/model/createOtpChangePass.dart';
+import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/verifyOtpChangePass.dart';
 import 'package:provider/provider.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/apis/api_response.dart';
 import '../../view_model/media_view_model.dart';
 
@@ -19,19 +21,51 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
  // final TextEditingController _isOtpBoxVisible = TextEditingController();
 
+  final List<String> _otp = List.generate(6, (_) => '');
+  List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  List<TextEditingController> _controllers =
+  List.generate(6, (index) => TextEditingController());
+  String dropdownValue = "";
+  bool isValid = false;
+
   bool isLoading = false;
   bool isOtpBoxVisible = false;
   bool timerUp = false;
   String responseMessage = '';
   String otp = '';
 
+  @override
+  void initState() {
+    super.initState();
+    isValid = false;
+    for (var i = 0; i < _focusNodes.length; i++) {
+      _focusNodes[i].addListener(() {
+        if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
+          // Automatically select all text when the field gains focus
+          _controllers[i].selection = TextSelection(
+              baseOffset: 0, extentOffset: _controllers[i].text.length);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
-    //ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
+    CreateOtpChangePassResponse? mediaList = apiResponse.data as CreateOtpChangePassResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${apiResponse?.data}");
+        print("otp ${mediaList?.mobileOtp}");
+
         setState(() {
           isOtpBoxVisible = true;
 
@@ -40,7 +74,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         // Defer the state update until the next frame
 
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/AccountDetailScreen');
+        //Navigator.pushNamed(context, '/AccountDetailScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -92,6 +126,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       //backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
@@ -107,7 +142,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     },
                   ),
                   Text(
-                    'Forgot Password',
+                    Languages.of(context)!.labelForgotPass,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -117,7 +152,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               Divider(color: Colors.grey),
               _buildPhoneNumberTextField(),
-              if (isOtpBoxVisible) _buildOtpBox(),
+              if (isOtpBoxVisible) _buildPhoneInput(context, screenWidth),
               if (isOtpBoxVisible) _buildPasswordTextFields(),
               SizedBox(height: 25),
               if (isOtpBoxVisible) _buildSubmitButton(),
@@ -145,7 +180,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Text(
-              'Phone Number',
+              Languages.of(context)!.enterPhoneNumber,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
               ),
             ),
@@ -177,7 +212,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 getMediaWidget(context, apiResponse);
               },
               child: Text(
-                'Submit',
+                Languages.of(context)!.labelSubmit,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
                 ),
               ),
@@ -187,7 +222,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
-
+/*
   Widget _buildOtpBox() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +230,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Enter the OTP which we have sent to your phone number',
+            "${Languages.of(context)!.labelSentCode} ${_phoneNumberController}",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
 ),
           ),
@@ -228,7 +263,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Row(
             children: [
-              Text('You can resend code in ', style: TextStyle(fontSize: 14, color: Color(0XFF7f9391))),
+              Text(Languages.of(context)!.labelResendCode, style: TextStyle(fontSize: 14, color: Color(0XFF7f9391))),
               _CountdownTimerApp(onTimerUp: () {
                 setState(() {
                   timerUp = true;
@@ -249,7 +284,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ],
     );
-  }
+  }*/
 
   Widget _buildPasswordTextFields() {
     return Column(
@@ -259,7 +294,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: TextField(
             controller: _newPasswordController,
             decoration: InputDecoration(
-              labelText: 'New Password',
+              labelText: Languages.of(context)!.labelNewPass,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -272,7 +307,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: TextField(
             controller: _confirmPasswordController,
             decoration: InputDecoration(
-              labelText: 'Confirm Password',
+              labelText: Languages.of(context)!.labelConfirmPass,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -283,6 +318,35 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ],
     );
   }
+
+  Widget _buildPhoneInput(BuildContext context, double screenWidth) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          6,
+              (index) => Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            width: screenWidth/8.5,
+            height: 65.0,
+            child: TextField(
+              controller: _controllers[index],
+              focusNode: _focusNodes[index],
+              autofocus: index == 0,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              maxLength: 1,
+              style: TextStyle(fontSize: 18),
+              onChanged: (value) {
+                _handleOnChange(index, value);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   Widget _buildSubmitButton() {
     return Padding(
@@ -314,7 +378,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: Container(
           width: double.infinity,
           child: Text(
-            'Submit',
+            Languages.of(context)!.labelSubmit,
             style: TextStyle(
               color: Colors.white, // Ensure the text color contrasts with the button color
               fontSize: 16, // Adjust the font size as needed
@@ -325,6 +389,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
+  void _handleOnChange(int index, String value) {
+    setState(() {
+      _otp[index] = value;
+    });
+    if (value.isNotEmpty) {
+      if (index < _focusNodes.length - 1) {
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      }
+    } else {
+      if (index > 0) {
+        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+      }
+    }
+
+    String otpString = _otp.join('');
+    if (otpString.length == 6) {
+      // OTP length is 6, perform your action
+      isValid = true;
+      // You can also validate the OTP here or enable a submit button
+    } else {
+      isValid = false;
+    }
+  }
+
 }
 
 class _CountdownTimerApp extends StatelessWidget {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../Strings/Languages.dart';
+
 class RewardScreen extends StatefulWidget {
   @override
   _RewardScreenState createState() => _RewardScreenState();
@@ -18,7 +20,7 @@ class _RewardScreenState extends State<RewardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("REWARDS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),),
+                  Text(Languages.of(context)!.labelRewards, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Card(
@@ -29,7 +31,7 @@ class _RewardScreenState extends State<RewardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Available Payario Points", style: TextStyle(fontSize: 11.0),),
+                              Text(Languages.of(context)!.availablePayario, style: TextStyle(fontSize: 11.0),),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Row(
@@ -39,13 +41,13 @@ class _RewardScreenState extends State<RewardScreen> {
                                   ],
                                 ),
                               ),
-                              Text("2000 Payario points available", style: TextStyle(fontSize: 10.0),),
+                              Text("2000 ${Languages.of(context)!.labelPayarioPts}", style: TextStyle(fontSize: 10.0),),
                               SizedBox(height: 8.0,),
                               Container(color: Colors.black54,child: SizedBox(width: double.infinity,height: 1.0)),
                               SizedBox(height: 8.0,),
                               Row(
                                 children: [
-                                  Text("Standard", style: TextStyle(fontSize: 12.0,),),
+                                  Text(Languages.of(context)!.labelStandard, style: TextStyle(fontSize: 12.0,),),
                                   Spacer(),
                                   Icon(Icons.info_outline_rounded, size: 18.0,)
                                 ],
@@ -64,7 +66,7 @@ class _RewardScreenState extends State<RewardScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Redeem for Balance", style: TextStyle(fontSize: 14.0)),
+                            Text(Languages.of(context)!.labelRedeemBal, style: TextStyle(fontSize: 14.0)),
                             Spacer(),
                             Icon(Icons.arrow_forward_ios_rounded)
                           ]

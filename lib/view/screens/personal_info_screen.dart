@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/profileResponse.dart';
 import '../../utils/Helper.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
@@ -42,25 +43,25 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child:Icon(Icons.arrow_back_ios, color: Colors.black,),
+                    child:Icon(Icons.arrow_back_ios),
                   ),
                 ),
                 Text(
-                  'Personal Information',
-                  style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 18.0, fontWeight: FontWeight.bold),
+                  Languages.of(context)!.labelPersonalInfo,
+                  style: TextStyle( fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             _buildMenuItem(
               context: context,
-              text: 'Personal Data',
+              text: Languages.of(context)!.labelPersonalData,
               onTap: () {
                   Navigator.pushNamed(context, '/PersonalDataScreen');
               },
             ),
             _buildMenuItem(
               context: context,
-              text: 'Address',
+              text: Languages.of(context)!.labelAddress,
               onTap: () {
                   Navigator.pushNamed(context, '/AddressScreen');
               },
@@ -68,11 +69,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                'Complete your Profile',
+                Languages.of(context)!.completeProfile,
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
             ),
@@ -111,11 +111,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
-                    //color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ),
                 Spacer(),
-            Icon(Icons.arrow_forward_ios_rounded, color: Colors.black,),
+            Icon(Icons.arrow_forward_ios_rounded, ),
               ],
             ),
           ),
@@ -147,13 +146,12 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
-                      Text("Email Verified", style: TextStyle(fontWeight: FontWeight.bold),),
+                      Text(Languages.of(context)!.labelEmailVerified, style: TextStyle(fontWeight: FontWeight.bold),),
                       SizedBox(height: 5.0,),
                       Text(
-                                  'Your Email has been successfully verified via OTP which was sent on your email address',
-                                  style: TextStyle(
+                        Languages.of(context)!.labelEmailVerifiedContent,
+                        style: TextStyle(
                       fontSize: 14.0,
-                      color: Theme.of(context).colorScheme.onBackground,
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
@@ -166,11 +164,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Verify your Email',
+                    Languages.of(context)!.labelVerifyEmail,
                     style: TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
                 ),
@@ -180,14 +177,13 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Click the following link to verify your email address and associate it with your Payorio Account',
+                  Languages.of(context)!.labelVerifyEmailContent,
                           style: TextStyle(
                             fontSize: 14.0,
-                            color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios_rounded, color: Colors.black,),
+                      Icon(Icons.arrow_forward_ios_rounded),
                     ],
                   ),
                 ),

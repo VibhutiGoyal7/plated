@@ -4,6 +4,7 @@ import 'package:mvvm_flutter_app/model/setUpAccountRequest.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../Strings/Languages.dart';
 import '../../model/setUpAccountResponse.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
@@ -75,27 +76,27 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildLabelText(context, "Almost Finish", 16, false),
+                        _buildLabelText(context, Languages.of(context)!.labelAlmostFinish, 16, false),
                         SizedBox(height: 4),
                         _buildLabelText(
-                            context, "Set up your profile", 20, true),
+                            context, Languages.of(context)!.labelSetProfile, 20, true),
                         SizedBox(height: 4),
                         _buildLabelText(
-                            context, "Tell us about yourself", 14, false),
+                            context, Languages.of(context)!.labelTellAbtYourself, 14, false),
                         SizedBox(height: 20),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildLabelText(
-                                context, "Have a promo code?", 14, false),
-                            _buildLabelText(context, "Redeem", 14, false),
+                                context, Languages.of(context)!.labelPromoCode, 14, false),
+                            _buildLabelText(context, Languages.of(context)!.labelRedeem, 14, false),
                           ],
                         ),
                         SizedBox(height: 10),
                         _buildPhoneInput(
                             context,
-                            "Name",
+                            Languages.of(context)!.labelName,
                             _nameController,
                             Icon(
                               Icons.person,
@@ -105,7 +106,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         SizedBox(height: 10),
                         _buildPhoneInput(
                             context,
-                            "Last Name",
+                            Languages.of(context)!.labelLastname,
                             _lastNameController,
                             Icon(Icons.person,
                                 size: 20,
@@ -114,7 +115,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         SizedBox(height: 10),
                         _buildPhoneInput(
                             context,
-                            "Email",
+                            Languages.of(context)!.labelEmail,
                             _emailController,
                             Icon(Icons.mail,
                                 size: 18,
@@ -123,7 +124,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         SizedBox(height: 10),
                         _buildPasswordInput(
                             context,
-                            "Password",
+                            Languages.of(context)!.labelPassword,
                             _passwordController,
                             Icon(Icons.password,
                                 size: 18,
@@ -134,7 +135,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         SizedBox(height: 10),
                         _buildPasswordInput(
                             context,
-                            "Confirm Password",
+                            Languages.of(context)!.labelConfirmPass,
                             _confirmPasswordController,
                             Icon(Icons.password,
                                 size: 18,
@@ -288,7 +289,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               getMediaWidget(context, apiResponse);
               //Navigator.pushNamed(context, '/BottomNav');
             },
-            child: Text("Confirm"),
+            child: Text(Languages.of(context)!.labelConfirm),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 14.0),
                 backgroundColor: Colors.white,

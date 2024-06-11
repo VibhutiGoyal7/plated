@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/profileResponse.dart';
 import 'package:mvvm_flutter_app/utils/Helper.dart';
 
+import '../../Strings/Languages.dart';
+
 class AccountDetailScreen extends StatefulWidget {
   @override
   _AccountDetailScreenState createState() => _AccountDetailScreenState();
@@ -21,16 +23,15 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     password = "";
     phoneNumber = "";
     userId = "";
-    isEmailVerified = "";
+    isEmailVerified = false;
 
     _fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final mainViewModel = context.watch<DashBoardViewModel>();
     bool isPasswordVisible = false;
-    //final password = mainViewModel.getUpdateUserRequest()?.customer?.password;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -54,9 +55,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                   ),
                 ),
                 Text(
-                  'Account Details',
+                  Languages.of(context)!.labelAccountDetails,
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: isDarkMode ? Colors.white : Colors.black,
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -64,14 +65,15 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             ),
             _buildEmailVerification(
               context: context,
+            isDarkMode: isDarkMode,
               isEmailVerified: isEmailVerified,
               onTap: () {
                 //navController.navigate(Screen.VerifyEmailScreen.route);
-              },
+              }
             ),
             _buildDetailBox(
               context: context,
-              label: 'Phone Number:',
+              label: Languages.of(context)!.enterPhoneNumber,
               value: phoneNumber ?? '',
             ),
             _buildPasswordBox(
@@ -80,12 +82,12 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               password: "", //password,
               onVisibilityToggle: () {
                 isPasswordVisible = !isPasswordVisible;
-              },
+              }, isDarkMode: isDarkMode
             ),
             _buildChangePassword(context),
             _buildDetailBox(
               context: context,
-              label: 'User Id:',
+              label: Languages.of(context)!.labelUserId,
               value: userId.toString() ?? '',
             ),
           ],
@@ -98,62 +100,63 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     required BuildContext context,
     required bool isEmailVerified,
     required VoidCallback onTap,
+    required bool isDarkMode,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  isEmailVerified ? 'Email Verified' : 'Verify your Email',
-                  style: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onBackground,
+        child: Card(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            decoration: BoxDecoration(
+              //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    isEmailVerified ? 'Email Verified' : Languages.of(context)!.labelVerifyEmail,
+                    style: TextStyle(
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: isEmailVerified
-                    ? Text(
-                        'Your Email has been successfully verified via OTP which was sent on your email address',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                      )
-                    : Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Click the following link to verify your email address and associate it with your Payario Account',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: isEmailVerified
+                      ? Text(
+                          'Your Email has been successfully verified via OTP which was sent on your email address',
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                Languages.of(context)!.labelVerifyEmailContent,
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                ),
                               ),
                             ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: Colors.black,
-                            size: 18,
-                          ),
-                        ],
-                      ),
-              ),
-            ],
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.black,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -180,7 +183,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onBackground,
+                //color: isDarkMode ? Colors.white : Colors.black,
               ),
             ),
             SizedBox(
@@ -191,10 +194,10 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,
-                color: value.isEmpty
+               /* color: value.isEmpty
                     ? Colors.grey
-                    : Theme.of(context).colorScheme.onBackground,
-              ),
+                    : isDarkMode ? Colors.white : Colors.black,
+  */            ),
             ),
           ],
         ),
@@ -207,6 +210,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     required bool isPasswordVisible,
     required String? password,
     required VoidCallback onVisibilityToggle,
+    required bool isDarkMode
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
@@ -221,11 +225,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Password: ',
+              '${Languages.of(context)!.labelPassword}: ',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: isDarkMode ? Colors.white : Colors.black,
               ),
             ),
             Text(
@@ -234,7 +238,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               style: TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onBackground,
+                color: isDarkMode ? Colors.white : Colors.black,
               ),
             ),
             Spacer(),
@@ -265,12 +269,12 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
           child: Padding(
             padding: const EdgeInsets.all(6.0),
             child: Text(
-              'Change Password',
+              Languages.of(context)!.labelChangePass  ,
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
-                color: Theme.of(context).colorScheme.onBackground,
+                //color: isDarkMode ? Colors.white : Colors.black,
               ),
             ),
           ),
@@ -278,71 +282,17 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       ],
     );
   }
-}
-
-Future<ProfileResponse?> _fetchData() async {
-  await Future.delayed(Duration(milliseconds: 2));
-  ProfileResponse? profileDetails = await Helper.getProfileDetails();
-/*  WidgetsBinding.instance.addPostFrameCallback((_) {
-    setState(() {
-      phoneNumber = profileDetails?.phoneNumber;
-      userId = profileDetails?.userId;
-      isEmailVerified = profileDetails?.isEmailVerified;
+  Future<ProfileResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileDetails = await Helper.getProfileDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        phoneNumber = profileDetails?.phoneNumber;
+        userId = profileDetails?.userId;
+        isEmailVerified = profileDetails?.isEmailVerified;
+      });
     });
-  });*/
-  return profileDetails;
-}
-
-class NavController {
-  void navigateUp() {
-    // Implement navigation logic
-  }
-
-  void navigate(String route) {
-    // Implement navigation logic
+    return profileDetails;
   }
 }
 
-class DashBoardViewModel extends ChangeNotifier {
-  CustomerDetailsResponse? getCustomerDetailsSharedPreference() {
-    // Implement logic to retrieve customer details
-    return null;
-  }
-
-  UpdateUserRequest? getUpdateUserRequest() {
-    // Implement logic to retrieve user update request
-    return null;
-  }
-}
-
-class CustomerDetailsResponse {
-  bool? isEmailVerified;
-  String? phoneNumber;
-  int? userId;
-
-  CustomerDetailsResponse(
-      {this.isEmailVerified, this.phoneNumber, this.userId});
-}
-
-class UpdateUserRequest {
-  Customer? customer;
-
-  UpdateUserRequest({this.customer});
-}
-
-class Customer {
-  String? password;
-
-  Customer({this.password});
-}
-
-class Screen {
-  static const ProfileScreen = Screen._('ProfileScreen');
-  static const AddressScreen = Screen._('AddressScreen');
-  static const VerifyEmailScreen = Screen._('VerifyEmailScreen');
-  static const ChangePasswordScreen = Screen._('ChangePasswordScreen');
-
-  final String route;
-
-  const Screen._(this.route);
-}
