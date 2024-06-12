@@ -60,14 +60,23 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Row(children: [
                 Text(
                   Languages.of(context)!.labelLanguage,
-                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
                 ),
                 Spacer(),
-                SizedBox(
+                Container(
                   width: 100,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: isDarkMode ? Colors.white60 : Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                  ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
-                      alignment: Alignment.centerLeft,
+                      dropdownColor: isDarkMode ? Colors.grey : Colors.white,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(left: 10),
                       value: dropdownValue,
                       items: mCities.map((String items) {
                         return DropdownMenuItem(
@@ -75,21 +84,22 @@ class _SettingScreenState extends State<SettingScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(items,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                               )),
                         );
                       }).toList(),
                       onChanged: (String? newValue) async {
                         await Helper.setLocale(newValue!);
                         if (mounted) {
-                          setState(()  {
+                          setState(() {
                             dropdownValue = newValue!;
                           });
                         }
                         widget.setLocale(Locale(newValue, ''));
                         print(dropdownValue);
                       },
-                      style: TextStyle(),
+                      style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black),
                       hint: Text(
                         "en",
                       ),
