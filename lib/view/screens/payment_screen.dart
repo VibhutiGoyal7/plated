@@ -15,14 +15,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 25.0),
-              child: Center(
-                child: 
-                  Text(Languages.of(context)!.labelPaymentScreen, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),)
-              )
-          ),
-        )
-    );
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 25.0),
+          child: Center(
+              child: Text(
+            Languages.of(context)!.labelPaymentScreen,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+          ))),
+    ));
   }
 }

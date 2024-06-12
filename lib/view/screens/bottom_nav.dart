@@ -3,10 +3,8 @@ import 'package:mvvm_flutter_app/view/screens/RewardScreen.dart';
 import 'package:mvvm_flutter_app/view/screens/Transfer_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/payment_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
 
 import '../../Strings/Languages.dart';
-
 
 class BottomNav extends StatefulWidget {
   @override
@@ -22,6 +20,7 @@ class _BottomNavState extends State<BottomNav> {
     RewardScreen(),
     PaymentScreen()
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -56,7 +55,7 @@ class _BottomNavState extends State<BottomNav> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: isDarkMode ? Colors.blue[500] : Colors.blue[500],
-        unselectedItemColor:  isDarkMode ? Colors.white70 :Colors.black45,
+        unselectedItemColor: isDarkMode ? Colors.white70 : Colors.black45,
         onTap: _onItemTapped,
       ),
     );

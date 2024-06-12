@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mvvm_flutter_app/model/createOtpChangePass.dart';
 import 'package:mvvm_flutter_app/model/createOtpForChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/verifyOtpChangePass.dart';
@@ -18,13 +17,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
- // final TextEditingController _isOtpBoxVisible = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  // final TextEditingController _isOtpBoxVisible = TextEditingController();
 
   final List<String> _otp = List.generate(6, (_) => '');
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
   String dropdownValue = "";
   bool isValid = false;
 
@@ -57,8 +58,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
-    CreateOtpChangePassResponse? mediaList = apiResponse.data as CreateOtpChangePassResponse?;
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    CreateOtpChangePassResponse? mediaList =
+        apiResponse.data as CreateOtpChangePassResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -68,7 +71,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         setState(() {
           isOtpBoxVisible = true;
-
         });
 
         // Defer the state update until the next frame
@@ -87,8 +89,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         );
     }
   }
-
-
 
   void _submitOtp() {
     if (_otpController.text.isNotEmpty &&
@@ -161,7 +161,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Text(
                   responseMessage,
                   style: TextStyle(
-                    color: responseMessage.contains('successfully') ? Colors.green : Colors.red,
+                    color: responseMessage.contains('successfully')
+                        ? Colors.green
+                        : Colors.red,
                   ),
                 ),
             ],
@@ -181,7 +183,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             padding: const EdgeInsets.all(4.0),
             child: Text(
               Languages.of(context)!.enterPhoneNumber,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -198,22 +202,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: ()async {
+              onPressed: () async {
                 print(_phoneNumberController.text);
 
-                CreateOtpChangePassRequest request = CreateOtpChangePassRequest(customer: CustomerGetOtpPassDetail(
+                CreateOtpChangePassRequest request = CreateOtpChangePassRequest(
+                    customer: CustomerGetOtpPassDetail(
                   phoneNumber: _phoneNumberController.text,
                 ));
 
                 await Provider.of<MediaViewModel>(context, listen: false)
-                    .CreateOtpChangePass("/api/v1/app/customers/generate_otp_for_forget_password",request);
+                    .CreateOtpChangePass(
+                        "/api/v1/app/customers/generate_otp_for_forget_password",
+                        request);
                 ApiResponse apiResponse =
-                    Provider.of<MediaViewModel>(context, listen: false).response;
+                    Provider.of<MediaViewModel>(context, listen: false)
+                        .response;
                 getMediaWidget(context, apiResponse);
               },
               child: Text(
                 Languages.of(context)!.labelSubmit,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -222,6 +232,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
+
 /*
   Widget _buildOtpBox() {
     return Column(
@@ -325,9 +336,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => Container(
+          (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: screenWidth/8.5,
+            width: screenWidth / 8.5,
             height: 65.0,
             child: TextField(
               controller: _controllers[index],
@@ -347,28 +358,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-
   Widget _buildSubmitButton() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: ElevatedButton(
-        onPressed: ()async {
+        onPressed: () async {
           print(_phoneNumberController.text);
 
-          VerifyOtChangePassRequest request = VerifyOtChangePassRequest(customer: CustomerVerifyOtpPass(
-            phoneNumber: _phoneNumberController.text,
-            password: _newPasswordController.text,
-            mobileOtp: _otpController.text
-          ));
+          VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
+              customer: CustomerVerifyOtpPass(
+                  phoneNumber: _phoneNumberController.text,
+                  password: _newPasswordController.text,
+                  mobileOtp: _otpController.text));
 
           await Provider.of<MediaViewModel>(context, listen: false)
-              .VerifyOtpChangePass("/api/v1/app/customers/verify_otp_and_change_password",request);
+              .VerifyOtpChangePass(
+                  "/api/v1/app/customers/verify_otp_and_change_password",
+                  request);
           ApiResponse apiResponse =
               Provider.of<MediaViewModel>(context, listen: false).response;
           getMediaWidget(context, apiResponse);
         },
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
+          backgroundColor:
+              MaterialStateProperty.all(Theme.of(context).primaryColor),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
@@ -380,7 +393,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Text(
             Languages.of(context)!.labelSubmit,
             style: TextStyle(
-              color: Colors.white, // Ensure the text color contrasts with the button color
+              color: Colors.white,
+              // Ensure the text color contrasts with the button color
               fontSize: 16, // Adjust the font size as needed
             ),
             textAlign: TextAlign.center, // Ensure text is centered
@@ -389,6 +403,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
+
   void _handleOnChange(int index, String value) {
     setState(() {
       _otp[index] = value;
@@ -412,7 +427,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       isValid = false;
     }
   }
-
 }
 
 class _CountdownTimerApp extends StatelessWidget {

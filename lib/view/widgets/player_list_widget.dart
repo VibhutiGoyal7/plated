@@ -74,7 +74,6 @@ class _PlayerListWidgetState extends State<PlayerListWidget> {
               _selectedMedia.phoneNumber == media.phoneNumber)
             Icon(
               Icons.play_circle_outline,
-              color: Theme.of(context).primaryColor,
             ),
         ],
       ),

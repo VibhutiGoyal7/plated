@@ -33,12 +33,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 8.0),
                   child: GestureDetector(
-                    onTap: () {
-                    },
-                    child: Icon(Icons.arrow_back_ios)
-                  ),
+                      onTap: () {}, child: Icon(Icons.arrow_back_ios)),
                 ),
                 Text(
                   'Add Money',
@@ -74,7 +72,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   labelStyle: TextStyle(fontFamily: 'popins'),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
-
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -95,14 +92,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 12.0),
                   child: Container(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: amount.isNotEmpty
-                          ? () {
-                      }
-                          : null,
+                      onPressed: amount.isNotEmpty ? () {} : null,
                       style: ElevatedButton.styleFrom(
                         /*primary: amount.isNotEmpty
                             ? Theme.of(context).colorScheme.onBackground
@@ -110,7 +105,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 15.0),
                       ),
                       child: Text(
                         Languages.of(context)!.labelProceed,
@@ -127,4 +123,3 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     );
   }
 }
-

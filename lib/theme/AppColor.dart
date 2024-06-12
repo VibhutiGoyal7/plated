@@ -11,6 +11,4 @@ class AppColor {
   static const WHITE = Color(0xffffffff);
   static const DARK_BG_COLOR = Color(0xff000000);
   static const DARK_CARD_COLOR = Color(0xff202124);
-
-
 }

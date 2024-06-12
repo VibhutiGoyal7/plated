@@ -73,10 +73,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         print("OtpVerify ${mediaList?.token}");
         final prefs = await SharedPreferences.getInstance();
         String token = "${mediaList?.token}";
-        Navigator.pushNamed(
-            context,
-            '/SetUpAccount'
-        );
+        Navigator.pushNamed(context, '/SetUpAccount');
         // Save the token
         bool isSaved = await Helper.saveUserToken(token);
 
@@ -119,16 +116,25 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildLabelText(context, Languages.of(context)!.labelWelcome, 16, false),
-                SizedBox(height: 4),
-                _buildLabelText(context, Languages.of(context)!.labelEnterCode, 20, true),
+                _buildLabelText(
+                    context, Languages.of(context)!.labelWelcome, 16, false),
                 SizedBox(height: 4),
                 _buildLabelText(
-                    context, "${Languages.of(context)!.labelSentCode} ${widget.data}", 12, false),
+                    context, Languages.of(context)!.labelEnterCode, 20, true),
+                SizedBox(height: 4),
+                _buildLabelText(
+                    context,
+                    "${Languages.of(context)!.labelSentCode} ${widget.data}",
+                    12,
+                    false),
                 SizedBox(height: 22),
                 _buildPhoneInput(context, screenWidth),
                 SizedBox(height: 18),
-                _buildLabelText(context, "${Languages.of(context)!.labelResendCode} 00:00", 14, true),
+                _buildLabelText(
+                    context,
+                    "${Languages.of(context)!.labelResendCode} 00:00",
+                    14,
+                    true),
                 Spacer(),
                 _buildFooter(context),
               ],
@@ -147,7 +153,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: screenWidth/8.5,
+            width: screenWidth / 8.5,
             height: 65.0,
             child: TextField(
               controller: _controllers[index],
@@ -177,7 +183,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[700],
+              color: Colors.grey[400],
             ),
           ),
         ),
@@ -191,7 +197,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                   customer: Customer(
                       phoneNumber: widget.data.toString(), mobileOtp: otp));
               // Make the API call to fetch media data
-              await Provider.of<MediaViewModel>(context, listen: false)
+               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
                       phoneRequest);
@@ -200,10 +206,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
               getMediaWidget(context, apiResponse);
-               Navigator.pushNamed(
-                  context,
-                  '/SetUpAccount'
-              );
+              //Navigator.pushNamed(context, '/SetUpAccount');
             },
             child: Text(
               Languages.of(context)!.labelValidate,

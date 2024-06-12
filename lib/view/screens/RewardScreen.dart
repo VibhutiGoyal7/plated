@@ -13,6 +13,7 @@ class _RewardScreenState extends State<RewardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: SafeArea(
           child: Padding(
@@ -36,15 +37,16 @@ class _RewardScreenState extends State<RewardScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Row(
                                   children: [
-                                    Text("100",style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold), ),
-                                    Icon( Icons.arrow_forward_ios_rounded, color: Colors.black,)
+                                    Text("100",style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold)),
+                                    SizedBox(width: 10,),
+                                    Icon(Icons.arrow_forward_ios_rounded)
                                   ],
                                 ),
                               ),
                               Text("2000 ${Languages.of(context)!.labelPayarioPts}", style: TextStyle(fontSize: 10.0),),
-                              SizedBox(height: 8.0,),
-                              Container(color: Colors.black54,child: SizedBox(width: double.infinity,height: 1.0)),
-                              SizedBox(height: 8.0,),
+                              SizedBox(height: 12.0,),
+                              Container(color: isDarkMode? Colors.white60 :Colors.black54,child: SizedBox(width: double.infinity,height: 1.0)),
+                              SizedBox(height: 12.0,),
                               Row(
                                 children: [
                                   Text(Languages.of(context)!.labelStandard, style: TextStyle(fontSize: 12.0,),),

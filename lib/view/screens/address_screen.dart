@@ -35,12 +35,14 @@ class _AddressScreenState extends State<AddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildTextField(Languages.of(context)!.labelStreetName, streetName, (value) {
+              buildTextField(Languages.of(context)!.labelStreetName, streetName,
+                  (value) {
                 setState(() {
                   streetName = value;
                 });
               }),
-              buildTextField(Languages.of(context)!.labelStreetNo, streetNumber, (value) {
+              buildTextField(Languages.of(context)!.labelStreetNo, streetNumber,
+                  (value) {
                 setState(() {
                   streetNumber = value;
                 });
@@ -50,12 +52,15 @@ class _AddressScreenState extends State<AddressScreen> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: buildReadOnlyField(Languages.of(context)!.labelCountry, Languages.of(context)!.labelIndia),
+                    child: buildReadOnlyField(
+                        Languages.of(context)!.labelCountry,
+                        Languages.of(context)!.labelIndia),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     flex: 1,
-                    child: buildTextField(Languages.of(context)!.labelState, state, (value) {
+                    child: buildTextField(
+                        Languages.of(context)!.labelState, state, (value) {
                       setState(() {
                         state = value;
                       });
@@ -68,7 +73,8 @@ class _AddressScreenState extends State<AddressScreen> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: buildTextField(Languages.of(context)!.labelCity, city, (value) {
+                    child: buildTextField(
+                        Languages.of(context)!.labelCity, city, (value) {
                       setState(() {
                         city = value;
                       });
@@ -77,7 +83,9 @@ class _AddressScreenState extends State<AddressScreen> {
                   SizedBox(width: 10),
                   Expanded(
                     flex: 1,
-                    child: buildTextField(Languages.of(context)!.labelPostalCode, postCode, (value) {
+                    child: buildTextField(
+                        Languages.of(context)!.labelPostalCode, postCode,
+                        (value) {
                       setState(() {
                         postCode = value;
                       });
@@ -92,7 +100,8 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  Widget buildTextField(String label, String value, Function(String) onChanged) {
+  Widget buildTextField(
+      String label, String value, Function(String) onChanged) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.all(5),

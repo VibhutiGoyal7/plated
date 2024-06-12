@@ -70,7 +70,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back),
-                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -91,9 +90,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Languages.of(context)!.labelOldPass,
                   _oldPasswordController,
                   Icon(Icons.password,
-                      size: 18,
-                      color:
-                      isDarkMode ? Colors.white : Colors.black),
+                      size: 18
+                  ),
                   passwordVisible,
                   isDarkMode),
               _buildPasswordInput(
@@ -102,8 +100,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   _newPasswordController,
                   Icon(Icons.password,
                       size: 18,
-                      color:
-                      isDarkMode ? Colors.white : Colors.black),
+                      ),
                   passwordVisible,
                   isDarkMode),
               _buildPasswordInput(
@@ -111,9 +108,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Languages.of(context)!.labelConfirmPass,
                   _confirmPasswordController,
                   Icon(Icons.password,
-                      size: 18,
-                      color:
-                      isDarkMode ? Colors.white : Colors.black),
+                      size: 18,),
                   passwordVisible,
                   isDarkMode),
               Align(
@@ -226,7 +221,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   icon: Icon(passwordVisibles
                       ? Icons.visibility
                       : Icons.visibility_off,
-                    color: isDarkMode ? Colors.white : Colors.black,
                     size: 20,),
                   onPressed: () {
                     setState(

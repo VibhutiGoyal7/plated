@@ -1,7 +1,6 @@
 import 'Languages.dart';
 
 class LanguageAr extends Languages {
-
   @override
   String get appName => "متعدد اللغات";
 
@@ -16,7 +15,6 @@ class LanguageAr extends Languages {
 
   @override
   String get enterPhoneNumber => "Enter phone number";
-
 
   @override
   String get labelAccountDetails => "Account Details";
@@ -121,7 +119,8 @@ class LanguageAr extends Languages {
   String get labelSubmit => "Submit";
 
   @override
-  String get labelTandC => "By pressing validate you accept our Terms &Conditions and Privacy Policy";
+  String get labelTandC =>
+      "By pressing validate you accept our Terms &Conditions and Privacy Policy";
 
   @override
   String get labelTellAbtYourself => "Tell us about yourself";
@@ -145,11 +144,11 @@ class LanguageAr extends Languages {
   String get labelVerifyEmail => "Verify your email";
 
   @override
-  String get labelVerifyEmailContent => "Click the following link to verify your email address and associate it with your Payario Account";
+  String get labelVerifyEmailContent =>
+      "Click the following link to verify your email address and associate it with your Payario Account";
 
   @override
-  String get labelZero => "0.00" ;
-
+  String get labelZero => "0.00";
 
   @override
   String get labelChangePass => "Change Password";
@@ -182,7 +181,8 @@ class LanguageAr extends Languages {
   String get labelEmailVerified => "Email Verified";
 
   @override
-  String get labelEmailVerifiedContent => "Your Email has been successfully verified via OTP which was sent on your email address";
+  String get labelEmailVerifiedContent =>
+      "Your Email has been successfully verified via OTP which was sent on your email address";
 
   @override
   String get labelForgotPass => "Forgot Password";
@@ -227,8 +227,12 @@ class LanguageAr extends Languages {
   String get labelStreetNo => "Street Number";
 
   @override
-  String get labelTransferContent => "Currently you cannot send money because action is disabled";
+  String get labelTransferContent =>
+      "Currently you cannot send money because action is disabled";
 
   @override
   String get labelAddressDetails => "Address Details";
+
+  @override
+  String get labelLanguage => "Language";
 }
