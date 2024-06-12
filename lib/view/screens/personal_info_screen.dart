@@ -66,7 +66,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
               },
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(left: 14.0, top: 8.0),
               child: Text(
                 Languages.of(context)!.completeProfile,
                 style: TextStyle(
@@ -94,7 +94,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     required VoidCallback onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: GestureDetector(
         onTap: onTap,
         child: Card(
@@ -103,19 +103,19 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           ),
           child: Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
             child: Row(
               children: [
                 Text(
                   text,
                   style: TextStyle(
                     fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
+                  size: 18,
                 ),
               ],
             ),
@@ -132,7 +132,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   }) {
     bool emailVerified = true;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: GestureDetector(
         onTap: onTap,
         child: Card(
@@ -140,19 +140,21 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 5.0, vertical: 12.0),
             child: isEmailVerified == true
                 ? Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           Languages.of(context)!.labelEmailVerified,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                         SizedBox(
-                          height: 5.0,
+                          height: 2.0,
                         ),
                         Text(
                           Languages.of(context)!.labelEmailVerifiedContent,
@@ -168,17 +170,17 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(top: 2.0, left: 6),
                         child: Text(
                           Languages.of(context)!.labelVerifyEmail,
                           style: TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 15.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.only(top: 8.0, left: 6.0),
                         child: Row(
                           children: [
                             Expanded(
@@ -189,7 +191,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                 ),
                               ),
                             ),
-                            Icon(Icons.arrow_forward_ios_rounded),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 18,
+                            ),
                           ],
                         ),
                       ),

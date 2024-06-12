@@ -102,14 +102,13 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     required bool isDarkMode,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: GestureDetector(
         onTap: onTap,
         child: Card(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
             decoration: BoxDecoration(
-              //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Column(
@@ -165,37 +164,39 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     required String value,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Row(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.bold,
-                //color: isDarkMode ? Colors.white : Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+      child: Card(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Row(
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
+                  //color: isDarkMode ? Colors.white : Colors.black,
+                ),
               ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              value.isEmpty ? "XXXXXXXXXX" : value,
-              style: TextStyle(
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
-               /* color: value.isEmpty
-                    ? Colors.grey
-                    : isDarkMode ? Colors.white : Colors.black,
-  */            ),
-            ),
-          ],
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                value.isEmpty ? "XXXXXXXXXX" : value,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                 /* color: value.isEmpty
+                      ? Colors.grey
+                      : isDarkMode ? Colors.white : Colors.black,
+          */            ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -209,43 +210,46 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     required bool isDarkMode
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              '${Languages.of(context)!.labelPassword}: ',
-              style: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: Card(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '${Languages.of(context)!.labelPassword}: ',
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                ),
               ),
-            ),
-            Text(
-              isPasswordVisible ? password ?? '' : '********',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
+              SizedBox(width: 6.0,),
+              Text(
+                isPasswordVisible ? password ?? '' : '********',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                ),
               ),
-            ),
-            Spacer(),
-            GestureDetector(
-              onTap: onVisibilityToggle,
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 16,
+              Spacer(),
+              GestureDetector(
+                onTap: onVisibilityToggle,
+                child: Icon(
+                  Icons.remove_red_eye,
+                  size: 20,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -262,13 +266,15 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.all(6.0),
+            padding: const EdgeInsets.only(right: 18, bottom: 10.0),
             child: Text(
               Languages.of(context)!.labelChangePass  ,
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
+                decorationThickness: 2,
+                decorationColor: Colors.black
                 //color: isDarkMode ? Colors.white : Colors.black,
               ),
             ),
