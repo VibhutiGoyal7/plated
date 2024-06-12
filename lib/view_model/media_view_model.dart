@@ -55,7 +55,7 @@ class MediaViewModel with ChangeNotifier {
     try {
       print(phoneRequest.customer.phoneNumber);
       OtpVerifyResponse otpVerifyResponse = await MediaRepository().fetchOtpVerifyData(value,phoneRequest);
-      print("Yess"+ otpVerifyResponse.token.toString());
+      //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(otpVerifyResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

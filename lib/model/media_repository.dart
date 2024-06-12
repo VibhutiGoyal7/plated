@@ -27,6 +27,7 @@ class MediaRepository {
     dynamic response = await _mediaService.postResponse(value,phoneRequest);
     final jsonData = response['data'];
     print(jsonData);
+    print(response);
     Media mediaList = Media.fromJson(jsonData);
     return mediaList;
   }

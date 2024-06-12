@@ -253,6 +253,10 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               maxLength: 1,
+              decoration: InputDecoration(
+                counterText: "", // Remove the counter text
+                border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              ),
               style: TextStyle(fontSize: 18),
               onChanged: (value) {
                 _handleOnChange(index, value);

@@ -20,11 +20,33 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
 
+  bool inputValid = false;
+
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
     confirmPasswordVisible = true;
+    inputValid = false;
+  }
+
+  void _isValidInput() {
+    //print(input);
+    if (_emailController.text.isNotEmpty &&
+        _nameController.text.isNotEmpty &&
+        _lastNameController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty &&
+        _confirmPasswordController.text.isNotEmpty &&
+        _passwordController.text.length >= 8 &&
+        _passwordController.text == _confirmPasswordController.text) {
+      setState(() {
+        inputValid = true;
+      });
+    } else {
+      setState(() {
+        inputValid = false;
+      });
+    }
   }
 
   final TextEditingController _nameController = TextEditingController();
@@ -68,7 +90,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: screenHeight * 0.95),
             child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16),
+                padding: const EdgeInsets.only(left: 16.0, right: 16, top: 12),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,13 +98,20 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildLabelText(context, Languages.of(context)!.labelAlmostFinish, 16, false),
-                        SizedBox(height: 4),
+                        _buildLabelText(
+                            context,
+                            Languages.of(context)!.labelAlmostFinish,
+                            15,
+                            false),
+                        SizedBox(height: 1),
                         _buildLabelText(
                             context, Languages.of(context)!.labelSetProfile, 20, true),
-                        SizedBox(height: 4),
+                        SizedBox(height: 8),
                         _buildLabelText(
-                            context, Languages.of(context)!.labelTellAbtYourself, 14, false),
+                            context,
+                            Languages.of(context)!.labelTellAbtYourself,
+                            18,
+                            false),
                         SizedBox(height: 20),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -166,37 +195,40 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
   Widget _buildPhoneInput(BuildContext context, String text,
       TextEditingController nameController, Icon icon) {
-    return Container(
-      height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: 16),
-          Expanded(
-            child: TextField(
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-              obscureText: false,
-              obscuringCharacter: "*",
-              controller: nameController,
-              onChanged: (value) {},
-              onSubmitted: (value) {},
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: text,
-                hintStyle: TextStyle(color: Colors.grey),
-                icon: icon,
+    return Card(
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+                obscureText: false,
+                obscuringCharacter: "*",
+                controller: nameController,
+                onChanged: (value) {
+                  _isValidInput();
+                },
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: text,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  icon: icon,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -208,55 +240,58 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     Icon icon,
     bool passwordVisibles, bool isDarkMode,
   ) {
-    return Container(
-      height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: 16),
-          Expanded(
-            child: TextField(
-              style: TextStyle(fontSize: 16.0),
-              obscureText: passwordVisibles,
-              obscuringCharacter: "*",
-              controller: nameController,
-              onChanged: (value) {},
-              onSubmitted: (value) {},
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: text,
-                hintStyle: TextStyle(color: Colors.grey),
-                icon: icon,
-                suffixIcon: IconButton(
-                  icon: Icon(passwordVisibles
-                      ? Icons.visibility
-                      : Icons.visibility_off,
-                  size: 20,
-                    color: isDarkMode ? Colors.white60 : Colors.black45,),
-                  onPressed: () {
-                    setState(
-                      () {
-                        if (text == "Password") {
-                          passwordVisible = !passwordVisible;
-                        } else {
-                          confirmPasswordVisible = !confirmPasswordVisible;
-                        }
-                      },
-                    );
-                  },
+    return Card(
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                style: TextStyle(fontSize: 16.0),
+                obscureText: passwordVisibles,
+                obscuringCharacter: "*",
+                controller: nameController,
+                onChanged: (value) {
+                  _isValidInput();
+                },
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: text,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  icon: icon,
+                  suffixIcon: IconButton(
+                    icon: Icon(passwordVisibles
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    size: 20,
+                      color: isDarkMode ? Colors.white60 : Colors.black45,),
+                    onPressed: () {
+                      setState(
+                        () {
+                          if (text == "Password") {
+                            passwordVisible = !passwordVisible;
+                          } else {
+                            confirmPasswordVisible = !confirmPasswordVisible;
+                          }
+                        },
+                      );
+                    },
+                  ),
+      
+      
                 ),
-
-
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -268,14 +303,9 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () async {
+              _isValidInput();
               print(_nameController.text);
-              if (_emailController.text.isNotEmpty &&
-                  _nameController.text.isNotEmpty &&
-                  _lastNameController.text.isNotEmpty &&
-                  _passwordController.text.isNotEmpty &&
-                  _confirmPasswordController.text.isNotEmpty &&
-                  _passwordController.text.length >=8 &&
-              _passwordController.text == _confirmPasswordController.text) {
+              if (inputValid) {
                 SetUpAccountRequest request = SetUpAccountRequest(
                     customer: CustomerDetail(
                       email: _emailController.text,
@@ -284,22 +314,26 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       lastName: _lastNameController.text,
                       dob: "17/07/1996",
                     ));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);*/
+                      "/api/v1/app/customers/update_customer", request);
                 Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
+                getMediaWidget(context, apiResponse);
               }
             },
-            child: Text(Languages.of(context)!.labelConfirm),
+            child: Text(
+              Languages.of(context)!.labelConfirm,
+              style: TextStyle(
+                  color: inputValid ? Colors.white : Colors.blueAccent),
+            ),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 14.0),
-                backgroundColor: Colors.white,
+                backgroundColor: inputValid ? Colors.blueAccent : Colors.white,
                 elevation: 3,
                 shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),

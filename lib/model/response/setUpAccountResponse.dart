@@ -9,6 +9,8 @@ class SetUpAccountResponse {
   final String? address;
   final String? dob;
   final String? status;
+  final String? kycStatus;
+
   final bool? isEmailVerified;
 
   SetUpAccountResponse({
@@ -23,6 +25,7 @@ class SetUpAccountResponse {
     this.dob,
     this.status,
     this.isEmailVerified,
+    this.kycStatus
   });
 
   factory SetUpAccountResponse.fromJson(Map<String, dynamic> json) {
@@ -40,6 +43,7 @@ class SetUpAccountResponse {
       email: json['email'] as String?,
       address: json['address'] as String?,
       dob: json['dob'] as String?,
+      kycStatus: json['kyc_status'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }
