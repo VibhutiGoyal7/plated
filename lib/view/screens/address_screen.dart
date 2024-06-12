@@ -100,22 +100,21 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  Widget buildTextField(
-      String label, String value, Function(String) onChanged) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2.0),
-        child: TextField(
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            labelText: label,
-            border: InputBorder.none,
+  Widget buildTextField(String label, String value, Function(String) onChanged) {
+    return Card(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 2),
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          child: TextField(
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              labelText: label,
+            ),
           ),
         ),
       ),

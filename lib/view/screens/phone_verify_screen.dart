@@ -186,22 +186,26 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () async {
-              PhoneRequest phoneRequest = PhoneRequest(
-                  customer: Customer(
-                      phoneNumber: _inputController.text, mobileOtp: ""));
-              // Make the API call to fetch media data
-               await Provider.of<MediaViewModel>(context, listen: false)
+              if (phoneNumberValid) {
+                PhoneRequest phoneRequest = PhoneRequest(
+                    customer: Customer(
+                        phoneNumber: _inputController.text, mobileOtp: ""));
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);
-              //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
+                      phoneRequest);*/
+                Navigator.pushNamed(context, '/OtpVerify',
+                    arguments: "${_inputController.text}");
 
-              // Now that the API call is complete, update the UI based on the response
-              ApiResponse apiResponse =
-                  Provider.of<MediaViewModel>(context, listen: false).response;
-              getMediaWidget(context, apiResponse);
-              /*Navigator.pushNamed(context, '/OtpVerify',
-                  arguments: "${_inputController.text}");*/
+                ApiResponse apiResponse =
+                    Provider.of<MediaViewModel>(context, listen: false)
+                        .response;
+                //getMediaWidget(context, apiResponse);
+              }else{
+                SnackBar(
+                  content: Text("Enter valid Phone No"),
+                );
+              }
             },
             child: Text(
               Languages.of(context)!.labelSubmit,

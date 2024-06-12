@@ -108,6 +108,18 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelVerifyEmail,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
       body:  SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -115,15 +127,6 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    IconButton(icon: Icon(Icons.arrow_back), onPressed: () {}),
-                    Text(
-                      Languages.of(context)!.labelVerifyEmail,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 20),
                 Text(
                   "We need to verify your email",
@@ -135,38 +138,42 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                   style: TextStyle(fontSize: 15),
                 ),
                 SizedBox(height: 20),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: "Enter your email address",
-                    border: OutlineInputBorder(),
+                Container(
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: "Enter your email address",
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        if (emailController.text.isNotEmpty) {
-                          CreateOtpEmailVerifyRequest request =
-                          CreateOtpEmailVerifyRequest(
-                              customer: CustomerGetOtpEmailDetail(
-                                phoneNumber: phoneNumber,
-                                email: emailController.text,
-                              ));
-                          await Provider.of<MediaViewModel>(context, listen: false)
-                              .CreateOtpVerifyEmail(
-                              "/api/v1/app/customers/generate_otp_for_email",
-                              request);
-                          ApiResponse apiResponse =
-                              Provider.of<MediaViewModel>(context, listen: false)
-                                  .response;
-                          getMediaWidget(context, apiResponse);
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextButton(
+                        onPressed: () async {
+                          if (emailController.text.isNotEmpty) {
+                            CreateOtpEmailVerifyRequest request =
+                                CreateOtpEmailVerifyRequest(
+                                    customer: CustomerGetOtpEmailDetail(
+                              phoneNumber: phoneNumber,
+                              email: emailController.text,
+                            ));
+                            await Provider.of<MediaViewModel>(context,
+                                    listen: false)
+                                .CreateOtpVerifyEmail(
+                                    "/api/v1/app/customers/generate_otp_for_email",
+                                    request);
+                            ApiResponse apiResponse =
+                                Provider.of<MediaViewModel>(context,
+                                        listen: false)
+                                    .response;
+                            getMediaWidget(context, apiResponse);
+                          }
+                        },
                         child: Container(
                           child: Text(Languages.of(context)!.labelSubmit, style: TextStyle(fontWeight: FontWeight.bold),),
                         ),
@@ -174,9 +181,16 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 30.0,
+                ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Enter the OTP which we have sent to your email address"),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Enter the OTP sent to your email address"),
+                    ),
                     _buildPhoneInput(context, screenWidth),
                     SizedBox(height: 10.0,),
                     Padding(

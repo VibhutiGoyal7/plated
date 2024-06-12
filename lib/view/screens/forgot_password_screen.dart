@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:mvvm_flutter_app/model/request/verifyOtpChangePass.dart';
 import 'package:provider/provider.dart';
 
@@ -156,29 +154,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelForgotPass,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
       //backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Text(
-                    Languages.of(context)!.labelForgotPass,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Divider(color: Colors.grey),
               _buildPhoneNumberTextField(),
               if (isOtpBoxVisible) _buildPhoneInput(context, screenWidth),
               if (isOtpBoxVisible) _buildPasswordTextFields(),

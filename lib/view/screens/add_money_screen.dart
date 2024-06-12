@@ -26,28 +26,22 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelAddMoney,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 8.0),
-                  child: GestureDetector(
-                      onTap: () {}, child: Icon(Icons.arrow_back_ios)),
-                ),
-                Text(
-                  'Add Money',
-                  style: TextStyle(
-                    fontFamily: 'popins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
             SizedBox(
               width: double.infinity,
               height: 1.0,
@@ -59,17 +53,17 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'Enter amount',
-                style: TextStyle(
+                /*style: TextStyle(
                   fontFamily: 'popins',
-                ),
+                )*/
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(6.0),
               child: TextField(
                 decoration: InputDecoration(
-                  labelText: '0.0',
-                  labelStyle: TextStyle(fontFamily: 'popins'),
+                  labelText: Languages.of(context)!.labelZero,
+                  //labelStyle: TextStyle(fontFamily: 'popins'),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -88,6 +82,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 },
               ),
             ),
+            Spacer(),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -123,3 +118,4 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     );
   }
 }
+

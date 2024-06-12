@@ -28,29 +28,23 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     //final customerDetailsResponse = mainViewModel.getCustomerDetailsSharedPreference();
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelPersonalInfo,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.arrow_back_ios),
-                  ),
-                ),
-                Text(
-                  Languages.of(context)!.labelPersonalInfo,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
             _buildMenuItem(
               context: context,
               text: Languages.of(context)!.labelPersonalData,
@@ -79,7 +73,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
               context: context,
               //customerDetailsResponse: customerDetailsResponse,
               onTap: () {
-                //navController.navigate(Screen.VerifyEmailScreen.route);
+                Navigator.pushNamed(context, '/VerifyEmail');
               },
             ),
           ],

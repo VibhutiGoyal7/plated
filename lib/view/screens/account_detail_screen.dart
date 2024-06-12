@@ -25,7 +25,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     userId = "";
     isEmailVerified = false;
 
-    //_fetchData();
+    _fetchData();
   }
 
   @override
@@ -34,34 +34,22 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelAccountDetails,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 18,
-                    ),
-                  ),
-                ),
-                Text(
-                  Languages.of(context)!.labelAccountDetails,
-                  style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
             _buildEmailVerification(
               context: context,
             isDarkMode: isDarkMode,
@@ -119,7 +107,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
-                    isEmailVerified ? 'Email Verified' : Languages.of(context)!.labelVerifyEmail,
+                    isEmailVerified ? Languages.of(context)!.labelEmailVerified : Languages.of(context)!.labelVerifyEmail,
                     style: TextStyle(
                       fontSize: 13.0,
                       fontWeight: FontWeight.bold,
@@ -130,7 +118,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: isEmailVerified
                       ? Text(
-                          'Your Email has been successfully verified via OTP which was sent on your email address',
+                    Languages.of(context)!.labelEmailVerifiedContent,
                           style: TextStyle(
                             fontSize: 13.0,
                           ),
@@ -147,6 +135,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                             ),
                             Icon(
                               Icons.arrow_forward_ios_rounded,
+                              color: Colors.black,
                               size: 18,
                             ),
                           ],

@@ -44,7 +44,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           },
         ),
         title: Text(
-          Languages.of(context)!.labelProfile,
+          Languages.of(context)!.labelPersonalData,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),

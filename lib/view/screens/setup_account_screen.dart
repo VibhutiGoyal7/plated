@@ -269,25 +269,32 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           child: ElevatedButton(
             onPressed: () async {
               print(_nameController.text);
-              SetUpAccountRequest request = SetUpAccountRequest(
-                  customer: CustomerDetail(
-                email: _emailController.text,
-                password: _passwordController.text,
-                firstName: _nameController.text,
-                lastName: _lastNameController.text,
-                dob: "17/07/1996",
-              ));
-              // Make the API call to fetch media data
-              /*await Provider.of<MediaViewModel>(context, listen: false)
+              if (_emailController.text.isNotEmpty &&
+                  _nameController.text.isNotEmpty &&
+                  _lastNameController.text.isNotEmpty &&
+                  _passwordController.text.isNotEmpty &&
+                  _confirmPasswordController.text.isNotEmpty &&
+                  _passwordController.text.length >=8 &&
+              _passwordController.text == _confirmPasswordController.text) {
+                SetUpAccountRequest request = SetUpAccountRequest(
+                    customer: CustomerDetail(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      firstName: _nameController.text,
+                      lastName: _lastNameController.text,
+                      dob: "17/07/1996",
+                    ));
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
                       "/api/v1/app/customers/update_customer", request);*/
-              //Navigator.pushNamed(context, '/BottomNav');
+                Navigator.pushNamed(context, '/BottomNav');
 
-              // Now that the API call is complete, update the UI based on the response
-              ApiResponse apiResponse =
-                  Provider.of<MediaViewModel>(context, listen: false).response;
-              //getMediaWidget(context, apiResponse);
-              Navigator.pushNamed(context, '/BottomNav');
+                ApiResponse apiResponse =
+                    Provider
+                        .of<MediaViewModel>(context, listen: false)
+                        .response;
+                //getMediaWidget(context, apiResponse);
+              }
             },
             child: Text(Languages.of(context)!.labelConfirm),
             style: ElevatedButton.styleFrom(

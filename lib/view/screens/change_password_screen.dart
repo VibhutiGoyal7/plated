@@ -63,30 +63,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelChangePass,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ),
       //backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Text(
-                    Languages.of(context)!.labelChangePass,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-                    ),
-                  ),
-                ],
-              ),
-              Divider(color: Colors.grey),
               _buildPasswordInput(
                   context,
                   Languages.of(context)!.labelOldPass,
@@ -94,10 +87,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Icon(Icons.password,
                       size: 18
                   ),
-                  passwordVisible,
-                      size: 18,
-                      color:
-                      isDarkMode ? Colors.white : Colors.black),
                   oldPasswordVisible,
                   isDarkMode),
               _buildPasswordInput(
@@ -115,10 +104,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   _confirmPasswordController,
                   Icon(Icons.password,
                       size: 18,),
-                  passwordVisible,
-                      size: 18,
-                      color:
-                      isDarkMode ? Colors.white : Colors.black),
                   confirmPasswordVisible,
                   isDarkMode),
               Align(

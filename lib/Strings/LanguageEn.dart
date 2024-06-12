@@ -47,7 +47,7 @@ class LanguageEn extends Languages {
   String get labelHelpSupport => "Help & Support";
 
   @override
-  String get labelHi => "Hi,";
+  String get labelHi => "Hi";
 
   @override
   String get labelHome => "Home";

@@ -40,30 +40,21 @@ class _SettingScreenState extends State<SettingScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          Languages.of(context)!.labelSettings,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 18,
-                    ),
-                  ),
-                ),
-                Text(
-                  Languages.of(context)!.labelSettings,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
             Padding(
               padding: const EdgeInsets.only(left: 12.0, right: 12.0),
               child: Row(children: [
