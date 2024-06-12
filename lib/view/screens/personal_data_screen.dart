@@ -10,24 +10,26 @@ class PersonalDataScreen extends StatefulWidget {
 }
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
-  var firstName ;
-  var lastName ;
+  var firstName;
+
+  var lastName;
+
   var documentNumber;
-  var dob ;
+  var dob;
 
   bool mExpanded = false;
   String mSelectedText = "";
   final List<String> mCities = ["Aadhar", "PanCard"];
-  final TextEditingController documentNumberController = TextEditingController();
-
+  final TextEditingController documentNumberController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    firstName="";
-    lastName="";
-    dob="" ;
-    documentNumber ="" ;
+    firstName = "";
+    lastName = "";
+    dob = "";
+    documentNumber = "";
     _fetchData();
   }
 
@@ -51,7 +53,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildProfileSection(Languages.of(context)!.labelFirstname, firstName),
+            buildProfileSection(
+                Languages.of(context)!.labelFirstname, firstName),
             buildProfileSection(Languages.of(context)!.labelLastname, lastName),
             buildBirthdateSection(),
             buildDocumentDropdown(),
@@ -107,7 +110,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
   Widget buildDocumentDropdown() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -117,7 +120,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             decoration: InputDecoration(
               labelText: Languages.of(context)!.labelChooseDoc,
               suffixIcon: IconButton(
-                icon: Icon(mExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                icon: Icon(
+                    mExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
                 onPressed: () {
                   setState(() {
                     mExpanded = !mExpanded;
@@ -164,7 +168,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             controller: documentNumberController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             ),
             onChanged: (value) {
               setState(() {
@@ -176,16 +181,16 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       ),
     );
   }
+
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         firstName = profileDetails?.firstName;
-        lastName= profileDetails?.lastName;
-        dob=profileDetails?.dob;
+        lastName = profileDetails?.lastName;
+        dob = profileDetails?.dob;
       });
-
     });
     return profileDetails;
   }

@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -91,29 +91,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.pushNamed(context, '/AccountDetailScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, Languages.of(context)!.labelAccountDetails),
+                          child: _buildCard(context, Languages.of(context)!.labelAccountDetails, isDarkMode),
                         ),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/PersonalInfoScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, Languages.of(context)!.labelPersonalInfo),
+                          child: _buildCard(context, Languages.of(context)!.labelPersonalInfo, isDarkMode),
                         ),
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
                             child: _buildLabelText(context, Languages.of(context)!.labelSecurity)),
-                        _buildCard(context, Languages.of(context)!.labelStepVerification),
+                        _buildCard(context, Languages.of(context)!.labelStepVerification, isDarkMode),
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
                             child: _buildLabelText(context, Languages.of(context)!.labelPaymentMethod)),
-                        _buildCard(context, Languages.of(context)!.labelAddedCard),
+                        _buildCard(context, Languages.of(context)!.labelAddedCard, isDarkMode),
+
                         Container(
                             padding: EdgeInsets.all(6.0),
                             child: _buildLabelText(context, Languages.of(context)!.labelHelpSupport)),
-                        _buildCard(context, Languages.of(context)!.labelSettings),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/SettingScreen',
+                                arguments: "");
+                          },
+                          child: _buildCard(context, Languages.of(context)!.labelSettings, isDarkMode),
+                        ),
+
                       ]),
                 ],
               ),
@@ -130,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _buildCard(BuildContext context, String text) {
+  _buildCard(BuildContext context, String text, bool isDarkMode) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -145,7 +153,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text(text, style: TextStyle(fontSize: 14.0)),
             Icon(
               Icons.arrow_forward_ios_outlined,
-              color: Theme.of(context).canvasColor,//Colors.black,
               size: 16,
             )
           ],

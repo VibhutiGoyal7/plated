@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/utils/Helper.dart';
 
 import '../../Strings/Languages.dart';
 
-class AccountDetailScreen extends StatefulWidget {
+class SettingScreen extends StatefulWidget {
+  final Function(Locale) setLocale;
+
+  SettingScreen({required this.setLocale});
+
   @override
-  _AccountDetailScreenState createState() => _AccountDetailScreenState();
+  _SettingScreenState createState() => _SettingScreenState();
 }
 
-class _AccountDetailScreenState extends State<AccountDetailScreen> {
+class _SettingScreenState extends State<SettingScreen> {
   //AccountDetailScreen({required this.navController});
   var password;
   var phoneNumber;
   var userId;
 
   var isEmailVerified;
+  var mCities = ["en", "ar", "hi"];
+  String dropdownValue = "";
 
   @override
   void initState() {
@@ -24,8 +29,8 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     phoneNumber = "";
     userId = "";
     isEmailVerified = false;
-
-    //_fetchData();
+    dropdownValue = mCities.first;
+    _fetchData();
   }
 
   @override
@@ -54,36 +59,75 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                   ),
                 ),
                 Text(
-                  Languages.of(context)!.labelAccountDetails,
-                  style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
+                  Languages.of(context)!.labelSettings,
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            _buildEmailVerification(
-              context: context,
-            isDarkMode: isDarkMode,
-              isEmailVerified: isEmailVerified,
-              onTap: () {
-                {
-                  Navigator.pushNamed(context, '/VerifyEmail');
-                }              }
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+              child: Row(children: [
+                Text(
+                  Languages.of(context)!.labelLanguage,
+                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                SizedBox(
+                  width: 100,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      alignment: Alignment.centerLeft,
+                      value: dropdownValue,
+                      items: mCities.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          alignment: Alignment.centerLeft,
+                          child: Text(items,
+                              style: TextStyle(
+                                fontSize: 14,
+                              )),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) async {
+                        await Helper.setLocale(newValue!);
+                        if (mounted) {
+                          setState(()  {
+                            dropdownValue = newValue!;
+                          });
+                        }
+                        widget.setLocale(Locale(newValue, ''));
+                        print(dropdownValue);
+                      },
+                      style: TextStyle(),
+                      hint: Text(
+                        "en",
+                      ),
+                    ),
+                  ),
+                )
+              ]),
             ),
+            _buildEmailVerification(
+                context: context,
+                isDarkMode: isDarkMode,
+                isEmailVerified: isEmailVerified,
+                onTap: () {
+                  //navController.navigate(Screen.VerifyEmailScreen.route);
+                }),
             _buildDetailBox(
               context: context,
               label: Languages.of(context)!.enterPhoneNumber,
               value: phoneNumber ?? '',
             ),
             _buildPasswordBox(
-              context: context,
-              isPasswordVisible: isPasswordVisible,
-              password: "", //password,
-              onVisibilityToggle: () {
-                isPasswordVisible = !isPasswordVisible;
-              }, isDarkMode: isDarkMode
-            ),
+                context: context,
+                isPasswordVisible: isPasswordVisible,
+                password: "",
+                //password,
+                onVisibilityToggle: () {
+                  isPasswordVisible = !isPasswordVisible;
+                },
+                isDarkMode: isDarkMode),
             _buildChangePassword(context),
             _buildDetailBox(
               context: context,
@@ -103,12 +147,12 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     required bool isDarkMode,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 10.0),
       child: GestureDetector(
         onTap: onTap,
         child: Card(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
             decoration: BoxDecoration(
               //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
               borderRadius: BorderRadius.circular(8.0),
@@ -117,11 +161,14 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 2.0),
                   child: Text(
-                    isEmailVerified ? 'Email Verified' : Languages.of(context)!.labelVerifyEmail,
+                    isEmailVerified
+                        ? 'Email Verified'
+                        : Languages.of(context)!.labelVerifyEmail,
                     style: TextStyle(
-                      fontSize: 13.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -191,10 +238,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,
-               /* color: value.isEmpty
+                /* color: value.isEmpty
                     ? Colors.grey
                     : isDarkMode ? Colors.white : Colors.black,
-  */            ),
+  */
+              ),
             ),
           ],
         ),
@@ -202,13 +250,12 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     );
   }
 
-  Widget _buildPasswordBox({
-    required BuildContext context,
-    required bool isPasswordVisible,
-    required String? password,
-    required VoidCallback onVisibilityToggle,
-    required bool isDarkMode
-  }) {
+  Widget _buildPasswordBox(
+      {required BuildContext context,
+      required bool isPasswordVisible,
+      required String? password,
+      required VoidCallback onVisibilityToggle,
+      required bool isDarkMode}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       child: Container(
@@ -265,7 +312,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
           child: Padding(
             padding: const EdgeInsets.all(6.0),
             child: Text(
-              Languages.of(context)!.labelChangePass  ,
+              Languages.of(context)!.labelChangePass,
               style: TextStyle(
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,
@@ -278,17 +325,17 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       ],
     );
   }
-  Future<ProfileResponse?> _fetchData() async {
+
+  void _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
-    ProfileResponse? profileDetails = await Helper.getProfileDetails();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    var selectedLanguage = await Helper.getLocale();
+    print(selectedLanguage.languageCode);
+
+    // Ensure that setState is called synchronously after the async work is done
+    if (mounted) {
       setState(() {
-        phoneNumber = profileDetails?.phoneNumber;
-        userId = profileDetails?.userId;
-        isEmailVerified = profileDetails?.isEmailVerified;
+        dropdownValue = selectedLanguage.languageCode;
       });
-    });
-    return profileDetails;
+    }
   }
 }
-

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 abstract class Languages {
-
   static Languages? of(BuildContext context) {
     return Localizations.of<Languages>(context, Languages);
   }
@@ -100,7 +99,7 @@ abstract class Languages {
 
   String get labelVerifyEmail;
 
-  String get   labelVerifyEmailContent;
+  String get labelVerifyEmailContent;
 
   String get labelUserId;
 
@@ -158,5 +157,5 @@ abstract class Languages {
 
   String get labelAddressDetails;
 
-
+  String get labelLanguage;
 }

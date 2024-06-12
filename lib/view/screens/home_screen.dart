@@ -3,7 +3,6 @@ import 'package:mvvm_flutter_app/model/apis/api_response.dart';
 import 'package:mvvm_flutter_app/model/media.dart';
 import 'package:mvvm_flutter_app/view/widgets/player_list_widget.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
-
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,8 +11,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
     List<Media>? mediaList = apiResponse.data as List<Media>?;
     switch (apiResponse.status) {
@@ -27,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
               flex: 8,
               child: PlayerListWidget(mediaList!, (Media media) {
                 Provider.of<MediaViewModel>(context, listen: false)
-                .setSelectedMedia(media);
+                    .setSelectedMedia(media);
               }),
             ),
             Expanded(
@@ -68,7 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 20.0),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                      color:
+                          Theme.of(context).colorScheme.secondary.withAlpha(50),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: TextField(

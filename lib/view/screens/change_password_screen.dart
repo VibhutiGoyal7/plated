@@ -72,7 +72,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back),
-                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -93,6 +92,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Languages.of(context)!.labelOldPass,
                   _oldPasswordController,
                   Icon(Icons.password,
+                      size: 18
+                  ),
+                  passwordVisible,
                       size: 18,
                       color:
                       isDarkMode ? Colors.white : Colors.black),
@@ -104,8 +106,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   _newPasswordController,
                   Icon(Icons.password,
                       size: 18,
-                      color:
-                      isDarkMode ? Colors.white : Colors.black),
+                      ),
                   newPasswordVisible,
                   isDarkMode),
               _buildPasswordInput(
@@ -113,6 +114,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Languages.of(context)!.labelConfirmPass,
                   _confirmPasswordController,
                   Icon(Icons.password,
+                      size: 18,),
+                  passwordVisible,
                       size: 18,
                       color:
                       isDarkMode ? Colors.white : Colors.black),

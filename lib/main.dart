@@ -13,6 +13,7 @@ import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/setting_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
@@ -29,8 +30,21 @@ void main() {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  Locale _locale = const Locale('en');
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +55,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Media Player',
+          locale: _locale,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             // support localization string for Material Widget
@@ -113,6 +128,11 @@ class MyApp extends StatelessWidget {
                   ModalRoute.of(context)!.settings.arguments as String?;
               return AddressScreen();
             },
+            '/SettingScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return SettingScreen(setLocale: setLocale,);
+            },
             '/VerifyEmail': (context) {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
@@ -122,5 +142,4 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  static void setLocale(BuildContext context, Locale locale) {}
 }

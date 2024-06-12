@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 class PhoneVerifyScreen extends StatefulWidget {
   @override
   _PhoneVerifyScreenState createState() => _PhoneVerifyScreenState();
+
   static void setLocale(BuildContext context, Locale newLocale) {
     var state = context.findAncestorStateOfType<_PhoneVerifyScreenState>();
     state?.setLocale(newLocale);
@@ -16,7 +17,6 @@ class PhoneVerifyScreen extends StatefulWidget {
 }
 
 class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
-
   late Locale _locale;
 
   void setLocale(Locale locale) {
@@ -53,7 +53,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
-
     Media? mediaList = apiResponse.data as Media?;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -87,9 +86,11 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _buildLabelText(context, Languages.of(context)!.appName, 16, false),
+              _buildLabelText(
+                  context, Languages.of(context)!.appName, 16, false),
               SizedBox(height: 4),
-              _buildLabelText(context, Languages.of(context)!.enterPhoneNumber, 20, true),
+              _buildLabelText(
+                  context, Languages.of(context)!.enterPhoneNumber, 20, true),
               SizedBox(height: 16),
               _buildPhoneInput(context, isDarkMode),
               Spacer(),
@@ -123,7 +124,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         children: [
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              dropdownColor: isDarkMode ? Colors.grey: Colors.white,
+              dropdownColor: isDarkMode ? Colors.grey : Colors.white,
               alignment: Alignment.center,
               value: dropdownValue,
               items: mCities.map((String items) {
@@ -132,8 +133,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   alignment: Alignment.center,
                   child: Text(
                     items,
-                    style: TextStyle(fontSize: 14,
-                    color: isDarkMode ? Colors.white: Colors.black),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: isDarkMode ? Colors.white : Colors.black),
                   ),
                 );
               }).toList(),
@@ -188,7 +190,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   customer: Customer(
                       phoneNumber: _inputController.text, mobileOtp: ""));
               // Make the API call to fetch media data
-              await Provider.of<MediaViewModel>(context, listen: false)
+               await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
                       phoneRequest);
@@ -198,8 +200,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
               getMediaWidget(context, apiResponse);
-             // Navigator.pushNamed(context, '/OtpVerify',
-                //  arguments: "${_inputController.text}");
+              /*Navigator.pushNamed(context, '/OtpVerify',
+                  arguments: "${_inputController.text}");*/
             },
             child: Text(
               Languages.of(context)!.labelSubmit,
@@ -220,7 +222,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             Languages.of(context)!.labelNeedHelp,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.grey[700],
+              color: Colors.grey[400],
             ),
           ),
         ),

@@ -110,8 +110,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             _lastNameController,
                             Icon(Icons.person,
                                 size: 20,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black)),
+                              color: isDarkMode ? Colors.white : Colors.black,
+                               )),
                         SizedBox(height: 10),
                         _buildPhoneInput(
                             context,
@@ -119,8 +119,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             _emailController,
                             Icon(Icons.mail,
                                 size: 18,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black)),
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              )),
                         SizedBox(height: 10),
                         _buildPasswordInput(
                             context,
@@ -128,8 +128,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             _passwordController,
                             Icon(Icons.password,
                                 size: 18,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
+                              color: isDarkMode ? Colors.white : Colors.black,
+                                ),
                             passwordVisible,
                             isDarkMode),
                         SizedBox(height: 10),
@@ -139,8 +139,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             _confirmPasswordController,
                             Icon(Icons.password,
                                 size: 18,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
+                              color: isDarkMode ? Colors.white : Colors.black,
+                                ),
                             confirmPasswordVisible,
                             isDarkMode),
                       ],
@@ -237,8 +237,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                   icon: Icon(passwordVisibles
                       ? Icons.visibility
                       : Icons.visibility_off,
-                  color: isDarkMode ? Colors.white : Colors.black,
-                  size: 20,),
+                  size: 20,
+                    color: isDarkMode ? Colors.white60 : Colors.black45,),
                   onPressed: () {
                     setState(
                       () {
@@ -278,16 +278,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 dob: "17/07/1996",
               ));
               // Make the API call to fetch media data
-              await Provider.of<MediaViewModel>(context, listen: false)
+              /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);
+                      "/api/v1/app/customers/update_customer", request);*/
               //Navigator.pushNamed(context, '/BottomNav');
 
               // Now that the API call is complete, update the UI based on the response
               ApiResponse apiResponse =
                   Provider.of<MediaViewModel>(context, listen: false).response;
-              getMediaWidget(context, apiResponse);
-              //Navigator.pushNamed(context, '/BottomNav');
+              //getMediaWidget(context, apiResponse);
+              Navigator.pushNamed(context, '/BottomNav');
             },
             child: Text(Languages.of(context)!.labelConfirm),
             style: ElevatedButton.styleFrom(
@@ -303,7 +303,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
             "Do you need any help?",
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey[700],
+              color: Colors.grey[400],
             ),
           ),
         ),
