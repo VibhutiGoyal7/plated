@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'AppColor.dart';
 
 class AppTheme {
@@ -40,8 +39,8 @@ class AppTheme {
       iconTheme: IconThemeData(color: AppColor.BLACK),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(AppColor.BODY_COLOR),
-        foregroundColor: MaterialStateProperty.all<Color>(AppColor.WHITE),
+        backgroundColor: MaterialStateProperty.all<Color>(AppColor.BG_COLOR),
+        foregroundColor: MaterialStateProperty.all<Color>(AppColor.BLACK),
       )),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(

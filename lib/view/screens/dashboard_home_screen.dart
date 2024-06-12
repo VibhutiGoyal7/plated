@@ -104,8 +104,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             SizedBox(height: 5), // Add space between sections
             Row(children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.17,
-                width: MediaQuery.of(context).size.width * 0.4,
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width * 0.38,
                 child: Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -113,24 +113,39 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Column(children: [
-                      Spacer(),
-                      Text(
-                        "${Languages.of(context)!.labelINR} $amount",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image(
+                            alignment: Alignment.topLeft,
+                            image: AssetImage("assets/india_flag_icon.png"),
+                            width: 35,
+                            height: 60,
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "${Languages.of(context)!.labelINR} $amount",
+                                style: TextStyle(
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ]),
                   ),
                 ),
               ),
 
               SizedBox(width: 8), // Add space between cards
               Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: MediaQuery.of(context).size.height * 0.17,
+                width: MediaQuery.of(context).size.width * 0.38,
+                height: MediaQuery.of(context).size.height * 0.15,
                 child: Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -138,20 +153,39 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Column(children: [
-                      Spacer(),
-                      Text(
-                        "${Languages.of(context)!.labelUSD} $amount",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image(
+                            alignment: Alignment.topLeft,
+                            image: AssetImage(
+                                "assets/united_states_flag_icon.png"),
+                            width: 35,
+                            height: 60,
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "${Languages.of(context)!.labelUSD} $amount",
+                                style: TextStyle(
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ]),
                   ),
                 ),
               ),
             ]),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Container(
