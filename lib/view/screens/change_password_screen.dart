@@ -184,58 +184,63 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       bool passwordVisibles
       , bool isDarkMode,
       ) {
-    return Container(
-      height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: 16),
-          Expanded(
-            child: TextField(
-              style: TextStyle(fontSize: 16.0),
-              obscureText: passwordVisibles,
-              obscuringCharacter: "*",
-              controller: nameController,
-              onChanged: (value) {},
-              onSubmitted: (value) {},
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: text,
-                hintStyle: TextStyle(color: Colors.grey),
-                icon: icon,
-                suffixIcon: IconButton(
-                  icon: Icon(passwordVisibles
-                      ? Icons.visibility
-                      : Icons.visibility_off,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                    size: 20,),
-                  onPressed: () {
-                    setState(
-                          () {
-                        if (text == Languages.of(context)!.labelOldPass) {
-                          oldPasswordVisible = !oldPasswordVisible;
-                        } else if(text == Languages.of(context)!.labelNewPass){
-                          newPasswordVisible = !newPasswordVisible;
-                        }else{
-                          confirmPasswordVisible = !confirmPasswordVisible;
-
-                        }
-                      },
-                    );
-                  },
-                ),
-
-
-              ),
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6),
+      child: Card(
+        child: Container(
+          height: 60,
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+            borderRadius: BorderRadius.circular(10.0),
           ),
-        ],
+          child: Row(
+            children: [
+              SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  style: TextStyle(fontSize: 16.0),
+                  obscureText: passwordVisibles,
+                  obscuringCharacter: "*",
+                  controller: nameController,
+                  onChanged: (value) {},
+                  onSubmitted: (value) {},
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: text,
+                    hintStyle: TextStyle(color: Colors.grey),
+                    icon: icon,
+                    suffixIcon: IconButton(
+                      icon: Icon(passwordVisibles
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        size: 20,),
+                      onPressed: () {
+                        setState(
+                              () {
+                            if (text == Languages.of(context)!.labelOldPass) {
+                              oldPasswordVisible = !oldPasswordVisible;
+                            } else if(text == Languages.of(context)!.labelNewPass){
+                              newPasswordVisible = !newPasswordVisible;
+                            }else{
+                              confirmPasswordVisible = !confirmPasswordVisible;
+
+                            }
+                          },
+                        );
+                      },
+                    ),
+
+
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

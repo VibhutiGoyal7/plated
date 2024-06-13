@@ -33,18 +33,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
 
+        await Helper.saveProfileDetails(mediaList);
+
+        ProfileResponse? retrievedDetails = await Helper.getProfileDetails();
+        print('Retrieved Token: ${retrievedDetails}');
         // Defer the state update until the next frame
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            userName = mediaList?.firstName;
+            userName = "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
           });
 
     });
 
-        await Helper.saveProfileDetails(mediaList);
 
-        ProfileResponse? retrievedToken = await Helper.getProfileDetails();
-        print('Retrieved Token: ${retrievedToken}');
 
         // Navigate to the new screen after receiving the response
         //Navigator.pushNamed(context, '/BottomNav');

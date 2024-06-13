@@ -92,7 +92,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     child: Container(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: amount.isNotEmpty ? () {} : null,
+                        onPressed: amount.isNotEmpty ? () {
+                          Navigator.pushNamed(context, "/VerifyIdentityScreen");
+                        } : null,
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),

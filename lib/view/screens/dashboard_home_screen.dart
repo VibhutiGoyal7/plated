@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
 
 import '../../Strings/Languages.dart';
 import '../../theme/AppColor.dart';
+import '../../utils/Helper.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class DashboardHomeScreen extends StatefulWidget {
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   double amount = 0.00;
-  String name = "NAME";
+  String name = "";
   bool isAmountVisible = false;
   bool isUSDVisible = false;
 
@@ -20,6 +22,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     super.initState();
     isAmountVisible = true;
     isUSDVisible = false;
+    _fetchData();
   }
 
   @override
@@ -233,6 +236,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       height: 10,
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           child: Card(
@@ -251,8 +256,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                           ),
                         ),
-                        Expanded(
-                            child: GestureDetector(
+                        GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/AddMoneyScreen');
                           },
@@ -264,70 +268,83 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 6.0),
-                                child: Row(children: [
-                                  Text(
-                                    Languages.of(context)!.labelAddMoney,
-                                    style: TextStyle(fontSize: 14.0),
+                                    vertical: 8.0, horizontal: 4.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Text(
+                                      Languages.of(context)!.labelAddMoney,
+                                      style: TextStyle(fontSize: 14.0),
+                                    ),
                                   ),
-                                  Spacer(),
                                   Icon(
                                     Icons.add,
-                                    size: 18,
+                                    size: 16,
                                   )
                                 ]),
                               ),
                             ),
                           ),
-                        )),
-                        Expanded(
-                            child: Container(
+                        ),
+                        Container(
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Row(children: [
-                                Text(
-                                  "Send",
-                                  style: TextStyle(fontSize: 14.0),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.send,
-                                  size: 16,
-                                )
-                              ]),
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Text(
+                                        "Send",
+                                        style: TextStyle(fontSize: 14.0),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.send,
+                                      size: 16,
+                                    )
+                                  ]),
                             ),
                           ),
-                        )),
-                        Expanded(
-                            child: Container(
+                        ),
+                        Container(
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Row(children: [
-                                Text(
-                                  Languages.of(context)!.labelExchange,
-                                  style: TextStyle(fontSize: 14.0),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Spacer(),
-                                Icon(
-                                  Icons.currency_exchange,
-                                  size: 16,
-                                )
-                              ]),
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Text(
+                                        Languages.of(context)!.labelExchange,
+                                        style: TextStyle(fontSize: 14.0),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.currency_exchange,
+                                      size: 16,
+                                    )
+                                  ]),
                             ),
                           ),
-                        ))
+                        )
                       ],
                     ),
                     SizedBox(height: 5.0),
@@ -340,5 +357,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             ),
           ),
         ));
+  }
+  Future<SetUpAccountResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    SetUpAccountResponse? userDetails = await Helper.getUserDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        name = userDetails!.firstName!;
+
+      });
+    });
+    return userDetails;
   }
 }

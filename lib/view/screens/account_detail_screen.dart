@@ -25,7 +25,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     userId = "";
     isEmailVerified = false;
 
-    //_fetchData();
+    _fetchData();
   }
 
   @override
