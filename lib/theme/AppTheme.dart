@@ -12,7 +12,7 @@ class AppTheme {
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
       ),
-      cardTheme: const CardTheme(color: AppColor.WHITE),
+      cardTheme: const CardTheme(color: AppColor.WHITE4),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.BG_COLOR,

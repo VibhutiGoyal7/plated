@@ -5,7 +5,7 @@ import 'package:mvvm_flutter_app/model/request/createOtpChangePass.dart';
 import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/media.dart';
+import 'package:mvvm_flutter_app/model/response/media.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/model/services/base_service.dart';
@@ -22,11 +22,12 @@ import 'response/otpVerifyResponse.dart';
 class MediaRepository {
   BaseService _mediaService = MediaService();
 
-  Future<Media> fetchMediaList(String value, PhoneRequest phoneRequest) async {
+  Future<Media> fetchMediaList(String value, PhoneRequest phoneRequest  ) async {
     print(phoneRequest);
     dynamic response = await _mediaService.postResponse(value,phoneRequest);
     final jsonData = response['data'];
     print(jsonData);
+    print(response);
     Media mediaList = Media.fromJson(jsonData);
     return mediaList;
   }

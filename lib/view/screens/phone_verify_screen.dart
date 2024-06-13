@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/Strings/Languages.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/media.dart';
+import 'package:mvvm_flutter_app/model/response/media.dart';
 import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
@@ -113,68 +113,70 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
-    return Container(
-      height: 60,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        children: [
-          DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              dropdownColor: isDarkMode ? Colors.grey : Colors.white,
-              alignment: Alignment.center,
-              value: dropdownValue,
-              items: mCities.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  alignment: Alignment.center,
-                  child: Text(
-                    items,
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: isDarkMode ? Colors.white : Colors.black),
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue = newValue!;
-                  print(dropdownValue);
-                });
-              },
-              style: TextStyle(),
-              hint: Text(
-                "+91",
+    return Card(
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          children: [
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                dropdownColor: isDarkMode ? Colors.grey : Colors.white,
+                alignment: Alignment.center,
+                value: dropdownValue,
+                items: mCities.map((String items) {
+                  return DropdownMenuItem(
+                    value: items,
+                    alignment: Alignment.center,
+                    child: Text(
+                      items,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: isDarkMode ? Colors.white : Colors.black),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownValue = newValue!;
+                    print(dropdownValue);
+                  });
+                },
+                style: TextStyle(),
+                hint: Text(
+                  "+91",
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: TextField(
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-              controller: _inputController,
-              onChanged: _isValidPhoneNumber,
-              onSubmitted: (value) {
-                // if (value.isNotEmpty) {
-                //   Provider.of<MediaViewModel>(context, listen: false)
-                //       .setSelectedMedia(null);
-                //   Provider.of<MediaViewModel>(context, listen: false)
-                //       .fetchMediaData(value, phoneRequest);
-                // }
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'XXXXXXXXXX',
-                hintStyle: TextStyle(color: Colors.grey),
+            SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+                controller: _inputController,
+                onChanged: _isValidPhoneNumber,
+                onSubmitted: (value) {
+                  // if (value.isNotEmpty) {
+                  //   Provider.of<MediaViewModel>(context, listen: false)
+                  //       .setSelectedMedia(null);
+                  //   Provider.of<MediaViewModel>(context, listen: false)
+                  //       .fetchMediaData(value, phoneRequest);
+                  // }
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'XXXXXXXXXX',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -190,17 +192,17 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));
-                await Provider.of<MediaViewModel>(context, listen: false)
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);
-              /*  Navigator.pushNamed(context, '/OtpVerify',
-                    arguments: "${_inputController.text}");*/
+                      phoneRequest);*/
+                Navigator.pushNamed(context, '/OtpVerify',
+                    arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
-                getMediaWidget(context, apiResponse);
+                //getMediaWidget(context, apiResponse);
               }else{
                 SnackBar(
                   content: Text("Enter valid Phone No"),

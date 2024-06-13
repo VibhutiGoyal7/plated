@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/media.dart';
+import 'package:mvvm_flutter_app/model/response/media.dart';
 import 'package:mvvm_flutter_app/model/media_repository.dart';
 import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
@@ -55,7 +55,7 @@ class MediaViewModel with ChangeNotifier {
     try {
       print(phoneRequest.customer.phoneNumber);
       OtpVerifyResponse otpVerifyResponse = await MediaRepository().fetchOtpVerifyData(value,phoneRequest);
-      print("Yess"+ otpVerifyResponse.token.toString());
+      //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(otpVerifyResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
 import 'package:mvvm_flutter_app/utils/Helper.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
@@ -6,8 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Strings/Languages.dart';
-import '../../model/response/otpVerifyResponse.dart';
+import '../../model/response/media.dart';
 import '../../model/request/signInWithPhoneNumber.dart';
+import '../../model/response/otpVerifyResponse.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -26,11 +28,14 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   String dropdownValue = "";
   bool isValid = false;
+  bool resendOtp = false;
+  String phoneNo = "";
 
   @override
   void initState() {
     super.initState();
     isValid = false;
+    resendOtp = false;
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -78,17 +83,34 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         bool isSaved = await Helper.saveUserToken(token);
 
         // Check if the token was saved successfully
-        if (isSaved) {
-          print('Token saved successfully.');
-        } else {
-          print('Failed to save token.');
-        }
         Helper.getUserToken();
         // Retrieve the token
         String? retrievedToken = await Helper.getUserToken();
         print('Retrieved Token: $retrievedToken');
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/SetUpAccount');
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  Widget getMediaWidgetResendOtp(
+      BuildContext context, ApiResponse apiResponse) {
+    Media? mediaList = apiResponse.data as Media?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${mediaList?.mobileOtp}");
+        // Navigate to the new screen after receiving the response
+        Navigator.pushNamed(context, '/OtpVerify', arguments: "${phoneNo}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -130,11 +152,21 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 SizedBox(height: 22),
                 _buildPhoneInput(context, screenWidth),
                 SizedBox(height: 18),
-                _buildLabelText(
-                    context,
-                    "${Languages.of(context)!.labelResendCode} 00:00",
-                    14,
-                    true),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      _buildLabelText(
+                          context,
+                          "${Languages.of(context)!.labelResendCode} ",
+                          14,
+                          true),
+                      _countdownTimer(),
+                      Spacer(),
+                      if (resendOtp) _sendOtpButton(context)
+                    ],
+                  ),
+                ),
                 Spacer(),
                 _buildFooter(context),
               ],
@@ -142,6 +174,21 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _countdownTimer() {
+    return TimerCountdown(
+      endTime: DateTime.now().add(const Duration(minutes: 1, seconds: 0)),
+      format: CountDownTimerFormat.minutesSeconds,
+      enableDescriptions: false,
+      spacerWidth: 2,
+      timeTextStyle: TextStyle(fontWeight: FontWeight.bold),
+      onEnd: () {
+        setState(() {
+          resendOtp = true;
+        });
+      },
     );
   }
 
@@ -153,7 +200,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: screenWidth / 8.5,
+            width: screenWidth / 8.1,
             height: 65.0,
             child: TextField(
               controller: _controllers[index],
@@ -162,6 +209,11 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               maxLength: 1,
+              decoration: InputDecoration(
+                counterText: "", // Remove the counter text
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              ),
               style: TextStyle(fontSize: 18),
               onChanged: (value) {
                 _handleOnChange(index, value);
@@ -193,26 +245,26 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             onPressed: () async {
               String otp =
                   _controllers.map((controller) => controller.text).join();
-              if(otp.isNotEmpty) {
+              if (otp.isNotEmpty && otp.length == 6) {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: widget.data.toString(), mobileOtp: otp));
                 // Make the API call to fetch media data
-                await Provider.of<MediaViewModel>(context, listen: false)
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                      phoneRequest);
+                      phoneRequest);*/
 
                 // Now that the API call is complete, update the UI based on the response
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                getMediaWidget(context, apiResponse);
-               /* Navigator.pushNamed(
+                //getMediaWidget(context, apiResponse);
+                Navigator.pushNamed(
                     context,
                     '/SetUpAccount'
-                );*/
+                );
               }else{
                 SnackBar(
                   content: Text("Enter 6-digit otp."),
@@ -254,9 +306,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
     String otpString = _otp.join('');
     if (otpString.length == 6) {
-      // OTP length is 6, perform your action
       isValid = true;
-      // You can also validate the OTP here or enable a submit button
     } else {
       isValid = false;
     }
@@ -283,4 +333,32 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       ),
     );
   }
+
+  Widget _sendOtpButton(BuildContext context) {
+    return GestureDetector(
+        onTap: () async {
+          phoneNo = widget.data as String;
+          PhoneRequest phoneRequest = PhoneRequest(
+              customer: Customer(phoneNumber: phoneNo, mobileOtp: ""));
+          await Provider.of<MediaViewModel>(context, listen: false)
+                  .fetchMediaData(
+                      "/api/v1/app/temp_customers/initiate_customer",
+                      phoneRequest);
+
+          ApiResponse apiResponse =
+              Provider.of<MediaViewModel>(context, listen: false).response;
+          getMediaWidgetResendOtp(context, apiResponse);
+        },
+        child: Text(
+          "Resend Otp",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline,
+          ),
+        ));
+  }
+/*void restartTimer() {
+    countDownTimer.cancel();
+    startTimer();
+  }*/
 }

@@ -233,10 +233,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               Spacer(),
               GestureDetector(
                 onTap: onVisibilityToggle,
-                child: Icon(
-                  Icons.remove_red_eye,
-                  size: 20,
-                ),
+                child:Icon(isPasswordVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  size: 20,),
               ),
             ],
           ),

@@ -89,7 +89,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       case Status.COMPLETED:
         print("rwrwr ${apiResponse.data}");
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/AccountDetails');
+        Navigator.pushNamed(context, '/AccountDetailScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -213,7 +213,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                             ApiResponse apiResponse =
                                 Provider.of<MediaViewModel>(context, listen: false)
                                     .response;
-                            getMediaWidget(context, apiResponse);
+                            VerifyGetMediaWidget(context, apiResponse);
                           }
                         },
                         child: Container(
@@ -253,6 +253,10 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               maxLength: 1,
+              decoration: InputDecoration(
+                counterText: "", // Remove the counter text
+                border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              ),
               style: TextStyle(fontSize: 18),
               onChanged: (value) {
                 _handleOnChange(index, value);
