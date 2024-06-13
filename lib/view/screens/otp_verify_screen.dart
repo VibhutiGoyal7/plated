@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Strings/Languages.dart';
-import '../../model/media.dart';
+import '../../model/response/media.dart';
 import '../../model/request/signInWithPhoneNumber.dart';
 import '../../model/response/otpVerifyResponse.dart';
 

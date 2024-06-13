@@ -7,7 +7,7 @@ class CreateOtpChangePassResponse {
 
   factory CreateOtpChangePassResponse.fromJson(Map<String, dynamic> json){
     return CreateOtpChangePassResponse (
-      mobileOtp : json['data']["mobile_otp"] as String,// Convert the customer object to JSON
+      mobileOtp : json["mobile_otp"] as String,// Convert the customer object to JSON
     );
   }
 }

@@ -31,17 +31,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
-    //ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
+    final mediaList = apiResponse.data ;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${apiResponse?.data}");
+        print("response: ${apiResponse}");
 
-        // Defer the state update until the next frame
-
-        // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/AccountDetailScreen');
+        Navigator.pop(context);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -164,7 +161,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

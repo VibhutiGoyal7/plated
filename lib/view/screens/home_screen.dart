@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/media.dart';
+import 'package:mvvm_flutter_app/model/response/media.dart';
 import 'package:mvvm_flutter_app/view/widgets/player_list_widget.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';

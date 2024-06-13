@@ -66,7 +66,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${apiResponse?.data}");
+        print("response: ${apiResponse.message}");
+        print("data: ${apiResponse?.data}");
         print("otp ${mediaList?.mobileOtp}");
 
         setState(() {
@@ -93,16 +94,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${apiResponse?.data}");
-        Navigator.pushNamed(context, '/AccountDetailScreen');
+        Navigator.pop(context);
 
         setState(() {
           isOtpBoxVisible = true;
         });
-
-        // Defer the state update until the next frame
-
-        // Navigate to the new screen after receiving the response
-        //Navigator.pushNamed(context, '/AccountDetailScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -113,40 +109,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(
           child: Text('Search for the song by Artist'),
         );
-    }
-  }
-
-  void _submitOtp() {
-    if (_otpController.text.isNotEmpty &&
-        _newPasswordController.text.isNotEmpty &&
-        _newPasswordController.text == _confirmPasswordController.text) {
-      setState(() {
-        isLoading = true;
-      });
-
-      // Simulate an async operation for verifying OTP
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          isLoading = false;
-          responseMessage = 'Password changed successfully!';
-        });
-      });
-    }
-  }
-
-  void _resendOtp() {
-    if (timerUp && _phoneNumberController.text.isNotEmpty) {
-      setState(() {
-        isLoading = true;
-      });
-
-      // Simulate an async operation for resending OTP
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          isLoading = false;
-          timerUp = false; // Reset timer
-        });
-      });
     }
   }
 
@@ -252,70 +214,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
-/*
-  Widget _buildOtpBox() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            "${Languages.of(context)!.labelSentCode} ${_phoneNumberController}",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
-),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(6, (index) {
-              return SizedBox(
-                width: 50,
-                child: TextField(
-                 // decoration: InputDecoration(border: OutlineInputBorder()),
-                  onChanged: (value) {
-                    if (value.length == 1) {
-                      FocusScope.of(context).nextFocus();
-                    }
-                    otp += value;
-                  },
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  maxLength: 1,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                ),
-              );
-            }),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            children: [
-              Text(Languages.of(context)!.labelResendCode, style: TextStyle(fontSize: 14, color: Color(0XFF7f9391))),
-              _CountdownTimerApp(onTimerUp: () {
-                setState(() {
-                  timerUp = true;
-                });
-              })
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: TextButton(
-            onPressed: _resendOtp,
-            child: Text(
-              'Resend via SMS',
-              style: TextStyle(color: timerUp ? Theme.of(context).primaryColor : Colors.grey),
-            ),
-          ),
-        ),
-      ],
-    );
-  }*/
-
   Widget _buildPasswordTextFields() {
     return Column(
       children: [
@@ -387,19 +285,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       padding: const EdgeInsets.all(15.0),
       child: ElevatedButton(
         onPressed: ()async {
-          print(_phoneNumberController.text);
+          String otp =
+          _controllers.map((controller) => controller.text).join();
+          if (otp.isNotEmpty) {
+            print(_phoneNumberController.text);
 
-          VerifyOtChangePassRequest request = VerifyOtChangePassRequest(customer: CustomerVerifyOtpPass(
-            phoneNumber: _phoneNumberController.text,
-            password: _newPasswordController.text,
-            mobileOtp: _otpController.text
-          ));
+            VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
+                customer: CustomerVerifyOtpPass(
+                    phoneNumber: _phoneNumberController.text,
+                    password: _newPasswordController.text,
+                    mobileOtp: otp
+                ));
 
-          await Provider.of<MediaViewModel>(context, listen: false)
-              .VerifyOtpChangePass("/api/v1/app/customers/verify_otp_and_change_password",request);
-          ApiResponse apiResponse =
-              Provider.of<MediaViewModel>(context, listen: false).response;
-          getMediaWidget(context, apiResponse);
+            await Provider.of<MediaViewModel>(context, listen: false)
+                .VerifyOtpChangePass(
+                "/api/v1/app/customers/verify_otp_and_change_password", request);
+            ApiResponse apiResponse =
+                Provider
+                    .of<MediaViewModel>(context, listen: false)
+                    .response;
+            verifyOtpGetWidget(context, apiResponse);
+          }
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
@@ -414,10 +320,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Text(
             Languages.of(context)!.labelSubmit,
             style: TextStyle(
-              color: Colors.white, // Ensure the text color contrasts with the button color
-              fontSize: 16, // Adjust the font size as needed
+              color: Colors.white,
+              fontSize: 16,
             ),
-            textAlign: TextAlign.center, // Ensure text is centered
+            textAlign: TextAlign.center,
           ),
         ),
       ),
@@ -439,26 +345,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     String otpString = _otp.join('');
     if (otpString.length == 6) {
-      // OTP length is 6, perform your action
       isValid = true;
-      // You can also validate the OTP here or enable a submit button
     } else {
       isValid = false;
     }
   }
-
 }
 
-class _CountdownTimerApp extends StatelessWidget {
-  final VoidCallback onTimerUp;
-
-  _CountdownTimerApp({required this.onTimerUp});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      '00:59', // Placeholder for actual timer
-      style: TextStyle(color: Colors.red),
-    );
-  }
-}
