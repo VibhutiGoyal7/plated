@@ -83,6 +83,11 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         bool isSaved = await Helper.saveUserToken(token);
 
         // Check if the token was saved successfully
+        if (isSaved) {
+          print('Token saved successfully.');
+        } else {
+          print('Failed to save token.');
+        }
         Helper.getUserToken();
         // Retrieve the token
         String? retrievedToken = await Helper.getUserToken();
@@ -304,7 +309,9 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
     String otpString = _otp.join('');
     if (otpString.length == 6) {
+      // OTP length is 6, perform your action
       isValid = true;
+      // You can also validate the OTP here or enable a submit button
     } else {
       isValid = false;
     }

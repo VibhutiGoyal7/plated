@@ -7,10 +7,10 @@ class AppTheme {
     return ThemeData(
       appBarTheme: AppBarTheme(
         titleTextStyle: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.BLACK),
+            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.WHITE),
         actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
-        iconTheme: const IconThemeData(color: AppColor.BLACK),
-        backgroundColor: AppColor.WHITE,
+        iconTheme: const IconThemeData(color: AppColor.WHITE),
+        backgroundColor: AppColor.BODY_COLOR,
       ),
       cardTheme: const CardTheme(color: AppColor.WHITE4),
       primaryColor: AppColor.PRIMARY,
@@ -39,7 +39,7 @@ class AppTheme {
       iconTheme: IconThemeData(color: AppColor.BLACK),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(AppColor.BG_COLOR),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
         foregroundColor: MaterialStateProperty.all<Color>(AppColor.BLACK),
       )),
       textButtonTheme: TextButtonThemeData(
@@ -81,13 +81,14 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         titleTextStyle: GoogleFonts.getFont('Almarai',
             fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.WHITE),
-        actionsIconTheme: const IconThemeData(color: AppColor.SECONDARY),
+        actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
         iconTheme: const IconThemeData(color: AppColor.WHITE),
-        backgroundColor: AppColor.WHITE,
+        backgroundColor: AppColor.BODY_COLOR,
       ),
       cardTheme: const CardTheme(
         color: AppColor.DARK_CARD_COLOR,
       ),
+
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.DARK_BG_COLOR,
@@ -119,7 +120,7 @@ class AppTheme {
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(AppColor.DARK_BG_COLOR),
+            MaterialStateProperty.all<Color>(Colors.transparent),
         foregroundColor: MaterialStateProperty.all<Color>(AppColor.WHITE),
       )),
       textButtonTheme: TextButtonThemeData(

@@ -50,36 +50,35 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 10.0, left: 12.0, bottom: 8.0),
               child: Text(
                 'Enter amount',
-                /*style: TextStyle(
-                  fontFamily: 'popins',
-                )*/
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: Languages.of(context)!.labelZero,
-                  //labelStyle: TextStyle(fontFamily: 'popins'),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+              child: Card(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: Languages.of(context)!.labelZero,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      amount = value;
+                    });
+                  },
                 ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  setState(() {
-                    amount = value;
-                  });
-                },
               ),
             ),
             Spacer(),
@@ -89,23 +88,24 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 16.0, horizontal: 12.0),
-                  child: Container(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: amount.isNotEmpty ? () {} : null,
-                      style: ElevatedButton.styleFrom(
-                        /*primary: amount.isNotEmpty
-                            ? Theme.of(context).colorScheme.onBackground
-                            : Theme.of(context).colorScheme.onSecondary,*/
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                  child: Card(
+                    child: Container(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: amount.isNotEmpty ? () {} : null,
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30.0, vertical: 15.0),
                         ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 15.0),
-                      ),
-                      child: Text(
-                        Languages.of(context)!.labelProceed,
-                        style: TextStyle(fontFamily: 'popins'),
+                        child: Text(
+                          Languages.of(context)!.labelProceed,
+                          style: TextStyle(
+                            color: Colors.black
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -118,4 +118,3 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     );
   }
 }
-

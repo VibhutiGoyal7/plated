@@ -17,8 +17,8 @@ class _BottomNavState extends State<BottomNav> {
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
     TransferScreen(),
-    RewardScreen(),
-    PaymentScreen()
+    PaymentScreen(),
+    RewardScreen()
   ];
 
   void _onItemTapped(int index) {
@@ -45,12 +45,12 @@ class _BottomNavState extends State<BottomNav> {
             label: Languages.of(context)!.labelTransfer,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
-            label: Languages.of(context)!.labelRewards,
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.payment),
             label: Languages.of(context)!.labelPayment,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.card_giftcard),
+            label: Languages.of(context)!.labelRewards,
           )
         ],
         currentIndex: _selectedIndex,
