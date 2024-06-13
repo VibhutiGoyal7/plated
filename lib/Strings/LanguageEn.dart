@@ -74,7 +74,7 @@ class LanguageEn extends Languages {
   String get labelPassword => "Password";
 
   @override
-  String get labelPayment => "Password";
+  String get labelPayment => "Payment";
 
   @override
   String get labelPaymentMethod => "Payment Methods";

@@ -56,7 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+              padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 14),
               child: Row(children: [
                 Text(
                   Languages.of(context)!.labelLanguage,
@@ -107,33 +107,6 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 )
               ]),
-            ),
-            _buildEmailVerification(
-                context: context,
-                isDarkMode: isDarkMode,
-                isEmailVerified: isEmailVerified,
-                onTap: () {
-                  //navController.navigate(Screen.VerifyEmailScreen.route);
-                }),
-            _buildDetailBox(
-              context: context,
-              label: Languages.of(context)!.enterPhoneNumber,
-              value: phoneNumber ?? '',
-            ),
-            _buildPasswordBox(
-                context: context,
-                isPasswordVisible: isPasswordVisible,
-                password: "",
-                //password,
-                onVisibilityToggle: () {
-                  isPasswordVisible = !isPasswordVisible;
-                },
-                isDarkMode: isDarkMode),
-            _buildChangePassword(context),
-            _buildDetailBox(
-              context: context,
-              label: Languages.of(context)!.labelUserId,
-              value: userId.toString() ?? '',
             ),
           ],
         ),
