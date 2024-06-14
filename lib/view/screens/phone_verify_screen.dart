@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/Strings/Languages.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
+import 'package:mvvm_flutter_app/model/request/exustingUserRequest.dart';
 import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
+import 'package:mvvm_flutter_app/model/response/existingUserResponse.dart';
 import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
-import 'package:mvvm_flutter_app/view/component/toastMessage.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -53,17 +54,40 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }
   }
 
-  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
-    PhoneVerifyResponse? phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
-    var message = phoneVerifyResponse?.message.toString();
-    print("message ${message}");
+  Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
+    ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
-        //Call Toast
-        ToastComponent.showToast(context: context, message: message);
+        print("userfound: ${mediaList?.userFound}");
+        // Navigate to the new screen after receiving the response
+        if (mediaList?.userFound == true) {
+          Navigator.pushNamed(context, '/SignInScreen');
+        } else {
+          _phoneVerifyAPI();
+        }
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        _phoneVerifyAPI();
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+    PhoneVerifyResponse? mediaList = apiResponse.data as PhoneVerifyResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${mediaList?.mobileOtp}");
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/OtpVerify',
             arguments: "${_inputController.text}");
@@ -164,9 +188,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   fontSize: 16.0,
                 ),
                 controller: _inputController,
+                onChanged: _isValidPhoneNumber,
                 maxLength: 12,
                 keyboardType: TextInputType.phone,
-                onChanged: _isValidPhoneNumber,
                 onSubmitted: (value) {
                   // if (value.isNotEmpty) {
                   //   Provider.of<MediaViewModel>(context, listen: false)
@@ -176,7 +200,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   // }
                 },
                 decoration: InputDecoration(
-                  counterText: '',
+                  counterText: "",
                   border: InputBorder.none,
                   hintText: 'XXXXXXXXXX',
                   hintStyle: TextStyle(color: Colors.grey),
@@ -197,20 +221,20 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           child: ElevatedButton(
             onPressed: () async {
               if (phoneNumberValid) {
-                PhoneRequest phoneRequest = PhoneRequest(
-                    customer: Customer(
-                        phoneNumber: _inputController.text, mobileOtp: ""));
+                ExistingUserRequest request = ExistingUserRequest(
+                    customer: ExistingCustomer(
+                        phoneNumber: _inputController.text));
                 await Provider.of<MediaViewModel>(context, listen: false)
-                    .fetchMediaData(
-                        "/api/v1/app/temp_customers/initiate_customer",
-                        phoneRequest);
-                /* Navigator.pushNamed(context, '/OtpVerify',
+                    .existingUserData(
+                        "/api/v1/app/customers/check_customer_existance",
+                    request);
+                /*  Navigator.pushNamed(context, '/OtpVerify',
                     arguments: "${_inputController.text}");*/
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
-                getMediaWidget(context, apiResponse);
+                existingUserWidget(context, apiResponse);
               } else {
                 SnackBar(
                   content: Text("Enter valid Phone No"),
@@ -242,5 +266,21 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         ),
       ],
     );
+  }
+
+  void _phoneVerifyAPI() async {
+    if (phoneNumberValid) {
+      PhoneRequest phoneRequest = PhoneRequest(
+          customer:
+              Customer(phoneNumber: _inputController.text, mobileOtp: ""));
+      await Provider.of<MediaViewModel>(context, listen: false).fetchMediaData(
+          "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
+      /*  Navigator.pushNamed(context, '/OtpVerify',
+                    arguments: "${_inputController.text}");*/
+
+      ApiResponse apiResponse =
+          Provider.of<MediaViewModel>(context, listen: false).response;
+      getMediaWidget(context, apiResponse);
+    }
   }
 }

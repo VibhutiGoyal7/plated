@@ -3,11 +3,15 @@ import 'dart:convert';
 import 'package:mvvm_flutter_app/model/request/changeOldPasswordRequest.dart';
 import 'package:mvvm_flutter_app/model/request/createOtpChangePass.dart';
 import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:mvvm_flutter_app/model/request/exustingUserRequest.dart';
+import 'package:mvvm_flutter_app/model/request/signInRequest.dart';
 import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:mvvm_flutter_app/model/response/existingUserResponse.dart';
 import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
+import 'package:mvvm_flutter_app/model/response/signInResponse.dart';
 import 'package:mvvm_flutter_app/model/services/base_service.dart';
 import 'package:mvvm_flutter_app/model/services/media_service.dart';
 import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
@@ -31,6 +35,15 @@ class MediaRepository {
     return mediaList;
   }
 
+  Future<ExistingUserResponse> existingUserData(String value, ExistingUserRequest existingUserRequest  ) async {
+    print(existingUserRequest);
+    dynamic response = await _mediaService.postResponse(value,existingUserRequest);
+    final jsonData = response;//['data'];
+    print(jsonData);
+    ExistingUserResponse mediaList = ExistingUserResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
   Future<OtpVerifyResponse> fetchOtpVerifyData(String value, PhoneRequest phoneRequest) async {
     print(phoneRequest);
     dynamic response = await _mediaService.postResponse(value,phoneRequest);
@@ -38,6 +51,15 @@ class MediaRepository {
     final jsonData = response;
     print(jsonData);
     OtpVerifyResponse mediaList = OtpVerifyResponse.fromJson(jsonData);
+    return mediaList;
+  }
+  Future<SignInResponse> signInWithPass(String value, SignInRequest signInRequest) async {
+    print(signInRequest);
+    dynamic response = await _mediaService.postResponse(value,signInRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    SignInResponse mediaList = SignInResponse.fromJson(jsonData);
     return mediaList;
   }
 

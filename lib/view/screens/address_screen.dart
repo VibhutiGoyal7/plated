@@ -115,7 +115,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         Languages.of(context)!.labelCity, city, (value) {
                       setState(() {
                         city = value;
-                      });
+                      });}
                     , _cityController),
                   ),
                   SizedBox(width: 10),

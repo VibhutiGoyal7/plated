@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
 import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
+import 'package:mvvm_flutter_app/model/request/signInRequest.dart';
+import 'package:mvvm_flutter_app/model/response/signInResponse.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -10,18 +12,14 @@ import 'package:email_validator/email_validator.dart';
 
 import '../../utils/Helper.dart';
 
-class SetUpAccountScreen extends StatefulWidget {
-  final String? userId; // Define the 'data' parameter here
-
-  SetUpAccountScreen({Key? key, this.userId}) : super(key: key);
+class SigninScreen extends StatefulWidget {
 
   @override
-  _SetUpAccountScreenState createState() => _SetUpAccountScreenState();
+  _SigninScreenState createState() => _SigninScreenState();
 }
 
-class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
+class _SigninScreenState extends State<SigninScreen> {
   bool passwordVisible = false;
-  bool confirmPasswordVisible = false;
 
   bool inputValid = false;
 
@@ -29,20 +27,15 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   void initState() {
     super.initState();
     passwordVisible = true;
-    confirmPasswordVisible = true;
     inputValid = false;
   }
 
   void _isValidInput() {
     //print(input);
-    if (_emailController.text.isNotEmpty &&
-        _nameController.text.isNotEmpty &&
-        _lastNameController.text.isNotEmpty &&
+    if (
         _passwordController.text.isNotEmpty &&
-        _confirmPasswordController.text.isNotEmpty &&
-        _passwordController.text.length >= 8 &&
-        _passwordController.text == _confirmPasswordController.text &&
-        EmailValidator.validate(_emailController.text)) {
+        _phoneNoController.text.isNotEmpty &&
+        _passwordController.text.length >= 8 ) {
       setState(() {
         inputValid = true;
       });
@@ -53,22 +46,20 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     }
   }
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
 
   Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
-    SetUpAccountResponse? mediaList = apiResponse.data as SetUpAccountResponse?;
+    SignInResponse? mediaList = apiResponse.data as SignInResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
         Navigator.pushNamed(context, '/BottomNav');
+
         await Helper.saveUserDetails(mediaList);
+
         if(await Helper.saveUserDetails(mediaList)) print("data saved");
 
         await Helper.savePassword(_passwordController.text);
@@ -78,7 +69,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
         print('Retrieved Token: ${retrievedToken}');
         // Navigate to the new screen after receiving the response
-        // Navigator.pushNamed(context, '/BottomNav');
+        //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -106,88 +97,38 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
             child: Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16, top: 12),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLabelText(
-                            context,
-                            Languages.of(context)!.labelAlmostFinish,
-                            15,
-                            false),
-                        SizedBox(height: 1),
-                        _buildLabelText(
-                            context, Languages.of(context)!.labelSetProfile, 20, true),
-                        SizedBox(height: 8),
-                        _buildLabelText(
-                            context,
-                            Languages.of(context)!.labelTellAbtYourself,
-                            18,
-                            false),
-                        SizedBox(height: 20),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildLabelText(
-                                context, Languages.of(context)!.labelPromoCode, 14, false),
-                            _buildLabelText(context, Languages.of(context)!.labelRedeem, 14, false),
-                          ],
+
+                    _buildLabelText(
+                        context,
+                        "Login to your account",
+                        18,
+                        false),
+                    SizedBox(height: 20),
+
+                    SizedBox(height: 10),
+                    _buildPhoneInput(
+                        context,
+                        Languages.of(context)!.labelName,
+                        _phoneNoController,
+                        Icon(
+                          Icons.person,
+                          size: 20,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        )),
+
+                    SizedBox(height: 10),
+                    _buildPasswordInput(
+                        context,
+                        Languages.of(context)!.labelPassword,
+                        _passwordController,
+                        Icon(Icons.password,
+                          size: 18,
+                          color: isDarkMode ? Colors.white : Colors.black,
                         ),
-                        SizedBox(height: 10),
-                        _buildPhoneInput(
-                            context,
-                            Languages.of(context)!.labelName,
-                            _nameController,
-                            Icon(
-                              Icons.person,
-                              size: 20,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            )),
-                        SizedBox(height: 10),
-                        _buildPhoneInput(
-                            context,
-                            Languages.of(context)!.labelLastname,
-                            _lastNameController,
-                            Icon(Icons.person,
-                                size: 20,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                               )),
-                        SizedBox(height: 10),
-                        _buildPhoneInput(
-                            context,
-                            Languages.of(context)!.labelEmail,
-                            _emailController,
-                            Icon(Icons.mail,
-                                size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                              )),
-                        SizedBox(height: 10),
-                        _buildPasswordInput(
-                            context,
-                            Languages.of(context)!.labelPassword,
-                            _passwordController,
-                            Icon(Icons.password,
-                                size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                                ),
-                            passwordVisible,
-                            isDarkMode),
-                        SizedBox(height: 10),
-                        _buildPasswordInput(
-                            context,
-                            Languages.of(context)!.labelConfirmPass,
-                            _confirmPasswordController,
-                            Icon(Icons.password,
-                                size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                                ),
-                            confirmPasswordVisible,
-                            isDarkMode),
-                      ],
-                    ),
+                        passwordVisible,
+                        isDarkMode),
                     _buildFooter(context, apiResponse),
                   ],
                 )),
@@ -246,54 +187,14 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       ),
     );
   }
-  Widget _buildEmailInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon) {
-    return Card(
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  icon: icon,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildPasswordInput(
-    BuildContext context,
-    String text,
-    TextEditingController nameController,
-    Icon icon,
-    bool passwordVisibles, bool isDarkMode,
-  ) {
+      BuildContext context,
+      String text,
+      TextEditingController nameController,
+      Icon icon,
+      bool passwordVisibles, bool isDarkMode,
+      ) {
     return Card(
       child: Container(
         height: 60,
@@ -325,22 +226,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     icon: Icon(passwordVisibles
                         ? Icons.visibility
                         : Icons.visibility_off,
-                    size: 20,
+                      size: 20,
                       color: isDarkMode ? Colors.white60 : Colors.black45,),
                     onPressed: () {
                       setState(
-                        () {
-                          if (text == "Password") {
+                            () {
                             passwordVisible = !passwordVisible;
-                          } else {
-                            confirmPasswordVisible = !confirmPasswordVisible;
-                          }
                         },
                       );
                     },
                   ),
-      
-      
                 ),
               ),
             ),
@@ -358,19 +253,15 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           child: ElevatedButton(
             onPressed: () async {
               _isValidInput();
-              print(_nameController.text);
               if (inputValid) {
-                SetUpAccountRequest request = SetUpAccountRequest(
-                    customer: CustomerDetail(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                      firstName: _nameController.text,
-                      lastName: _lastNameController.text,
-                      dob: "17/07/1996",
+                SignInRequest request = SignInRequest(
+                    customer: CustomerSignIn(
+                      phoneNumber: _phoneNoController.text,
+                      password: _passwordController.text
                     ));
-                await Provider.of<MediaViewModel>(context, listen: false)
-                  .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);
+                 await Provider.of<MediaViewModel>(context, listen: false)
+                  .signInWithPass(
+                      "/api/v1/app/customers/sign_in", request);
                 //Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =

@@ -256,22 +256,22 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                     customer: Customer(
                         phoneNumber: widget.data.toString(), mobileOtp: otp));
                 // Make the API call to fetch media data
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                      phoneRequest);*/
+                      phoneRequest);
 
                 // Now that the API call is complete, update the UI based on the response
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                //getOtpResponseDataWidget(context, apiResponse);
+                getOtpResponseDataWidget(context, apiResponse);
 
-                Navigator.pushNamed(
+                /*Navigator.pushNamed(
                     context,
                     '/SetUpAccount'
-                );
+                );*/
               }else{
                 SnackBar(
                   content: Text("Enter 6-digit otp."),

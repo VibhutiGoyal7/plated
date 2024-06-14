@@ -18,6 +18,8 @@ import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/select_country_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setting_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/signin_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/splash_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/verify_identity_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
@@ -80,7 +82,12 @@ class _MyAppState extends State<MyApp> {
           themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
-            '/': (context) => PhoneVerifyScreen(),
+            '/': (context) => SplashScreen(),
+            '/PhoneVerifyScreen': (context){
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PhoneVerifyScreen();
+            },
             '/OtpVerify': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
@@ -90,6 +97,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return SetUpAccountScreen(userId: args);
+            },
+            '/SignInScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return SigninScreen();
             },
             '/BottomNav': (context) {
               final args =
