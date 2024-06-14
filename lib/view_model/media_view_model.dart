@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/media.dart';
+import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
 import 'package:mvvm_flutter_app/model/media_repository.dart';
 import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
@@ -19,13 +19,13 @@ import '../model/request/verifyOtpChangePass.dart';
 class MediaViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
 
-  Media? _media;
+  PhoneVerifyResponse? _media;
 
   ApiResponse get response {
     return _apiResponse;
   }
 
-  Media? get media {
+  PhoneVerifyResponse? get media {
     return _media;
   }
 
@@ -38,9 +38,9 @@ class MediaViewModel with ChangeNotifier {
     try {
       print(phoneRequest.customer.phoneNumber);
 
-      Media mediaList = await MediaRepository().fetchMediaList(value,phoneRequest);
-      print("Yess"+ mediaList.mobileOtp.toString());
-      _apiResponse = ApiResponse.completed(mediaList);
+      PhoneVerifyResponse phoneVerifyResponse = await MediaRepository().fetchMediaList(value,phoneRequest);
+      print("Yess"+ phoneVerifyResponse.mobileOtp.toString());
+      _apiResponse = ApiResponse.completed(phoneVerifyResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -171,7 +171,7 @@ class MediaViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedMedia(Media? media) {
+  void setSelectedMedia(PhoneVerifyResponse? media) {
     _media = media;
     notifyListeners();
   }

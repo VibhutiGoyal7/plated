@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/response/media.dart';
-import 'package:mvvm_flutter_app/view/widgets/player_list_widget.dart';
+import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +11,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
-    List<Media>? mediaList = apiResponse.data as List<Media>?;
+    List<PhoneVerifyResponse>? phoneVerifyResponseList = apiResponse.data as List<PhoneVerifyResponse>?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -20,13 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 8,
-              child: PlayerListWidget(mediaList!, (Media media) {
-                Provider.of<MediaViewModel>(context, listen: false)
-                    .setSelectedMedia(media);
-              }),
-            ),
             Expanded(
               flex: 2,
               child: Align(

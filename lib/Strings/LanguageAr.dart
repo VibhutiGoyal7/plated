@@ -47,7 +47,7 @@ class LanguageAr extends Languages {
   String get labelHelpSupport => "Help & Support";
 
   @override
-  String get labelHi => "Hi,";
+  String get labelHi => "Hi";
 
   @override
   String get labelHome => "Home";
@@ -235,4 +235,7 @@ class LanguageAr extends Languages {
 
   @override
   String get labelLanguage => "Language";
+
+  @override
+  String get labelEnterAmount => "Enter Amount";
 }

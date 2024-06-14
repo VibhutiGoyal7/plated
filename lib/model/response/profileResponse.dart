@@ -1,8 +1,4 @@
-import 'dart:ffi';
-
 import 'package:json_annotation/json_annotation.dart';
-//part 'profile_response.g.dart';
-
 
 @JsonSerializable()
 class ProfileResponse {
@@ -15,6 +11,7 @@ class ProfileResponse {
   final String? dob;
   final String? status;
   final String? phoneNumber;
+  final String? message;
   final bool? isEmailVerified;
 
   ProfileResponse({
@@ -28,19 +25,21 @@ class ProfileResponse {
     this.status,
     this.phoneNumber,
     this.isEmailVerified,
+    this.message,
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
     return ProfileResponse(
-      firstName: json['first_name'] as String?,
-      lastName: json['last_name'] as String?,
-      userId: json['id'] as int?,
-      imageUrl: json['image_url'] as String?,
-      phoneNumber: json['phone_number'] as String?,
-      email: json['email'] as String?,
-      address: json['address'] as String?,
-      dob: json['dob'] as String?,
-      isEmailVerified: json['is_email_verified'] as bool?,
+      firstName: json['data']['first_name'] as String?,
+      lastName: json['data']['last_name'] as String?,
+      userId: json['data']['id'] as int?,
+      imageUrl: json['data']['image_url'] as String?,
+      phoneNumber: json['data']['phone_number'] as String?,
+      email: json['data']['email'] as String?,
+      address: json['data']['address'] as String?,
+      dob: json['data']['dob'] as String?,
+      isEmailVerified: json['data']['is_email_verified'] as bool?,
+      message: json['message'] as String?,
     );
   }
   Map<String, dynamic> toJson() {
@@ -55,6 +54,7 @@ class ProfileResponse {
     data['address'] = this.address;
     data['dob'] = this.dob;
     data['is_email_verified'] = this.isEmailVerified;
+    data['message'] = this.message;
     return data;
   }
 
