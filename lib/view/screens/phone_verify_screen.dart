@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/Strings/Languages.dart';
 import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/response/media.dart';
 import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
+import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
+import 'package:mvvm_flutter_app/view/component/toastMessage.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -53,12 +54,16 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
-    Media? mediaList = apiResponse.data as Media?;
+    PhoneVerifyResponse? phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
+    var message = phoneVerifyResponse?.message.toString();
+    print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.mobileOtp}");
+        print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
+        //Call Toast
+        ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/OtpVerify',
             arguments: "${_inputController.text}");
@@ -195,17 +200,18 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
-                  .fetchMediaData(
-                      "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);*/
-               Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
+                await Provider.of<MediaViewModel>(context, listen: false)
+                    .fetchMediaData(
+                        "/api/v1/app/temp_customers/initiate_customer",
+                        phoneRequest);
+                /* Navigator.pushNamed(context, '/OtpVerify',
+                    arguments: "${_inputController.text}");*/
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
-              }else{
+                getMediaWidget(context, apiResponse);
+              } else {
                 SnackBar(
                   content: Text("Enter valid Phone No"),
                 );

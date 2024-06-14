@@ -14,7 +14,7 @@ class LanguageEn extends Languages {
   String get labelInfo => "This is multi-languages demo application";
 
   @override
-  String get enterPhoneNumber => "Enter phone number";
+  String get enterPhoneNumber => "Enter your phone number";
 
   @override
   String get labelAccountDetails => "Account Details";
@@ -129,7 +129,7 @@ class LanguageEn extends Languages {
   String get labelTellAbtYourself => "Tell us about yourself";
 
   @override
-  String get labelTotalBalance => "TOTAL BALANCE";
+  String get labelTotalBalance => "Total Balance";
 
   @override
   String get labelTransfer => "Transfer";
@@ -235,4 +235,7 @@ class LanguageEn extends Languages {
 
   @override
   String get labelLanguage => "Language";
+
+  @override
+  String get labelEnterAmount => "Enter Amount";
 }

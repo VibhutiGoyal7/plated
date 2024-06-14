@@ -12,6 +12,7 @@ class SetUpAccountResponse {
   final String? kycStatus;
   final String? mobileOtp;
   final String? mobileOtpExpireAt;
+  final String? message;
   final bool? isEmailVerified;
 
   SetUpAccountResponse({
@@ -28,28 +29,30 @@ class SetUpAccountResponse {
     this.isEmailVerified,
     this.mobileOtp,
     this.mobileOtpExpireAt,
-    this.kycStatus
+    this.kycStatus,
+    this.message,
   });
 
   factory SetUpAccountResponse.fromJson(Map<String, dynamic> json) {
     return SetUpAccountResponse(
-      firstName: json['first_name'] as String?,
-      lastName: json['last_name'] as String?,
-      id: json['id'] as int?,
-      phoneNumber: json['phone_number'] as String?,
-      createdAt: json['created_at'] /*!= null
-          ? DateTime.parse(json['created_at']*/ as String?/*)
+      firstName: json['data']['first_name'] as String?,
+      lastName: json['data']['last_name'] as String?,
+      id: json['data']['id'] as int?,
+      phoneNumber: json['data']['phone_number'] as String?,
+      createdAt: json['data']['created_at']/* != null
+          ? DateTime.parse(json['data']['created_at'] */as String/*)
           : null*/,
-      updatedAt: json['updated_at'] /*!= null
-          ? DateTime.parse(json['updated_at']*/ as String?/*)
+      updatedAt: json['data']['updated_at']/* != null
+          ? DateTime.parse(json['data']['updated_at']*/ as String?/*)
           : null*/,
-      email: json['email'] as String?,
-      address: json['address'] as String?,
-      dob: json['dob'] as String?,
-      kycStatus: json['kyc_status'] as String?,
+      email: json['data']['email'] as String?,
+      address: json['data']['address'] as String?,
+      dob: json['data']['dob'] as String?,
+      kycStatus: json['data']['kyc_status'] as String?,
+      message: json['message'] as String?,
       mobileOtp: json['mobile_otp'] as String?,
       mobileOtpExpireAt: json['mobile_otp_expire_at'] as String?,
-      isEmailVerified: json['is_email_verified'] as bool?,
+      isEmailVerified: json['data']['is_email_verified'] as bool?,
     );
   }
 

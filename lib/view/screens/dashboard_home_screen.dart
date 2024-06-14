@@ -37,22 +37,27 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         child: Scaffold(
           body: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        IconButton(
-                          icon: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: AppColor.WHITE,
-                            backgroundImage:
-                                AssetImage("assets/profile_user.png"),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/ProfileScreen');
-                          },
+                          child: IconButton(
+                            icon: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: AppColor.WHITE,
+                              backgroundImage:
+                                  AssetImage("assets/profile_user.png"),
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/ProfileScreen');
+                            },
+                          ),
                         ),
                         SizedBox(width: 4), // Add space between avatar and text
                         Text(
@@ -70,10 +75,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0),
                       ),
-                      color: Colors.lightGreen,
+                      color: AppColor.BODY_COLOR,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 2.0),
+                            horizontal: 10.0, vertical: 2.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +87,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 0),
                               child: Text(
                                 Languages.of(context)!.labelStandard,
-                                style: TextStyle(fontSize: 12.0),
+                                style: TextStyle(
+                                    fontSize: 12.0, color: AppColor.WHITE),
                               ),
                             ),
                             SizedBox(
@@ -106,7 +112,65 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10), // Add space between sections
+                    SizedBox(height: 8), // Add space between text and amount
+                    Text(
+                      "${isAmountVisible ? amount : "**"}  "
+                      "${Languages.of(context)!.labelINR} ",
+                      style: TextStyle(
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      Languages.of(context)!.labelTotalBalance,
+                      style: TextStyle(
+                          fontSize: 12.0, fontWeight: FontWeight.bold),
+                    ), // Add space between sections
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Card(
+                        color: isDarkMode
+                            ? AppColor.DARK_CARD_COLOR
+                            : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
+                        child: Container(
+                          width: screenWidth,
+                          height: screenHeight * 0.12,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _buildContainer(
+                                  context,
+                                  Languages.of(context)!.labelTransfer,
+                                  Icon(
+                                    Icons.transfer_within_a_station_sharp,
+                                    color: AppColor.BLACK,
+                                    size: 22,
+                                  )),
+                              _buildContainer(
+                                  context,
+                                  Languages.of(context)!.labelSend,
+                                  Icon(
+                                    Icons.send,
+                                    color: AppColor.BLACK,
+                                    size: 22,
+                                  )),
+                              _buildContainer(
+                                  context,
+                                  Languages.of(context)!.labelExchange,
+                                  Icon(
+                                    Icons.currency_exchange,
+                                    color: AppColor.BLACK,
+                                    size: 22,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -133,15 +197,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8), // Add space between text and amount
-                    Text(
-                      "${Languages.of(context)!.labelINR} "
-                      "${isAmountVisible ? amount : "**"}",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+
                     SizedBox(height: 5), // Add space between sections
                     Row(children: [
                       Container(
@@ -153,7 +209,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(14.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -162,14 +218,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     image: AssetImage(
                                         "assets/india_flag_icon.png"),
                                     width: 35,
-                                    height: 60,
+                                    height: 35,
                                   ),
                                   Spacer(),
                                   Row(
                                     children: [
-                                      SizedBox(
-                                        width: 10,
-                                      ),
                                       Text(
                                         "${Languages.of(context)!.labelINR} "
                                         "${isAmountVisible ? amount : "**"}",
@@ -188,7 +241,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       SizedBox(width: 8), // Add space between cards
                       isUSDVisible
                           ? Container(
-                              width: MediaQuery.of(context).size.width * 0.38,
+                              width: MediaQuery.of(context).size.width * 0.5,
                               height: MediaQuery.of(context).size.height * 0.15,
                               child: Card(
                                 elevation: 2,
@@ -211,14 +264,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         Spacer(),
                                         Row(
                                           children: [
-                                            SizedBox(
-                                              width: 10,
-                                            ),
                                             Text(
                                               "${Languages.of(context)!.labelUSD} "
                                               "${isAmountVisible ? amount : "**"}",
                                               style: TextStyle(
-                                                fontSize: 20.0,
+                                                fontSize: 16.0,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -235,9 +285,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    /*   Row(
                       children: [
                         Container(
                           child: Card(
@@ -295,25 +343,19 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-                              child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
-                                      child: Text(
-                                        "Send",
-                                        style: TextStyle(fontSize: 14.0),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.send,
-                                      size: 16,
-                                    )
-                                  ]),
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(children: [
+                                Text(
+                                  Languages.of(context)!.labelSend,
+                                  style: TextStyle(fontSize: 14.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.send,
+                                  size: 16,
+                                )
+                              ]),
                             ),
                           ),
                         ),
@@ -346,7 +388,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           ),
                         )
                       ],
-                    ),
+                    ),*/
                     SizedBox(height: 5.0),
                     Text(
                       Languages.of(context)!.labelNews,
@@ -357,6 +399,24 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             ),
           ),
         ));
+  }
+
+  _buildContainer(BuildContext context, String text, Icon icon) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+            margin: EdgeInsets.only(bottom: 5),
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: AppColor.WHITE,
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+            child: IconButton(onPressed: () => {}, icon: icon)),
+        Text(text, style: TextStyle(fontSize: 12))
+      ],
+    );
   }
   Future<SetUpAccountResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));

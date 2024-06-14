@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm_flutter_app/theme/AppColor.dart';
 import 'package:mvvm_flutter_app/view/screens/RewardScreen.dart';
 import 'package:mvvm_flutter_app/view/screens/Transfer_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/payment_screen.dart';
-
-import '../../Strings/Languages.dart';
 
 class BottomNav extends StatefulWidget {
   @override
@@ -34,29 +33,108 @@ class _BottomNavState extends State<BottomNav> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: Languages.of(context)!.labelHome,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.money),
-            label: Languages.of(context)!.labelTransfer,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            label: Languages.of(context)!.labelPayment,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
-            label: Languages.of(context)!.labelRewards,
-          )
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: isDarkMode ? Colors.blue[500] : Colors.blue[500],
-        unselectedItemColor: isDarkMode ? Colors.white70 : Colors.black45,
-        onTap: _onItemTapped,
+      extendBody: true,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColor.WHITE,
+        shape: CircleBorder(
+            side: BorderSide(style: BorderStyle.solid, color: AppColor.WHITE)),
+        onPressed: () {},
+        child: const Icon(
+          Icons.qr_code,
+          size: 32,
+          color: AppColor.BLACK,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        height: 55,
+        color: AppColor.BODY_COLOR,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () => {_onItemTapped(0)},
+              child: Row(
+                children: [
+                  SizedBox(width: 14),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.home,
+                        color: AppColor.WHITE,
+                        size: 26,
+                      ),
+                      Text(
+                        "Home",
+                        style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {_onItemTapped(1)},
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.transfer_within_a_station_sharp,
+                    color: AppColor.WHITE,
+                    size: 24,
+                  ),
+                  Text(
+                    "Transfer",
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            GestureDetector(
+              onTap: () => {_onItemTapped(2)},
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.payment,
+                    color: AppColor.WHITE,
+                    size: 26,
+                  ),
+                  Text(
+                    "Payment",
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {_onItemTapped(3)},
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wallet_giftcard,
+                    color: AppColor.WHITE,
+                    size: 26,
+                  ),
+                  Text(
+                    "Rewards",
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

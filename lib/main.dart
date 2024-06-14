@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mvvm_flutter_app/theme/AppTheme.dart';
+import 'package:mvvm_flutter_app/utils/Helper.dart';
 import 'package:mvvm_flutter_app/view/screens/account_detail_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/address_screen.dart';
@@ -42,7 +43,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   Locale _locale = const Locale('en');
-
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
   void setLocale(Locale locale) {
     setState(() {
       _locale = locale;
@@ -160,4 +165,16 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  void _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    var selectedLanguage = await Helper.getLocale();
+    print(selectedLanguage.languageCode);
+
+    // Ensure that setState is called synchronously after the async work is done
+    if (mounted) {
+      setState(() {
+        _locale = Locale(selectedLanguage.languageCode);
+      });
+    }
+  }
 }

@@ -235,4 +235,7 @@ class LanguageAr extends Languages {
 
   @override
   String get labelLanguage => "لغة";
+
+  @override
+  String get labelEnterAmount => "Enter Amount";
 }

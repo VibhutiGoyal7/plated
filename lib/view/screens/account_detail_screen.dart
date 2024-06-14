@@ -15,6 +15,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   var userId;
 
   var isEmailVerified;
+  var isPasswordVisible = false;
 
   @override
   void initState() {
@@ -23,6 +24,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     phoneNumber = "";
     userId = "";
     isEmailVerified = false;
+    isPasswordVisible = true;
 
     _fetchData();
     _fetchPasswordData();
@@ -30,7 +32,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPasswordVisible = false;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -51,27 +52,25 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         child: Column(
           children: [
             _buildEmailVerification(
-              context: context,
-            isDarkMode: isDarkMode,
-              isEmailVerified: isEmailVerified,
-              onTap: () {
-                {
-                  Navigator.pushNamed(context, '/VerifyEmail');
-                }              }
-            ),
+                context: context,
+                isDarkMode: isDarkMode,
+                isEmailVerified: isEmailVerified,
+                onTap: () {
+                  {
+                    Navigator.pushNamed(context, '/VerifyEmail');
+                  }
+                }),
             _buildDetailBox(
               context: context,
               label: Languages.of(context)!.enterPhoneNumber,
               value: phoneNumber ?? '',
             ),
             _buildPasswordBox(
-              context: context,
-              isPasswordVisible: isPasswordVisible,
-              password: "", //password,
-              onVisibilityToggle: () {
-                isPasswordVisible = !isPasswordVisible;
-              }, isDarkMode: isDarkMode
-            ),
+                context: context,
+                isPasswordVisibl: isPasswordVisible,
+                password: "",
+                //password,
+                isDarkMode: isDarkMode),
             _buildChangePassword(context),
             _buildDetailBox(
               context: context,
@@ -106,7 +105,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
-                    isEmailVerified ? Languages.of(context)!.labelEmailVerified : Languages.of(context)!.labelVerifyEmail,
+                    isEmailVerified
+                        ? Languages.of(context)!.labelEmailVerified
+                        : Languages.of(context)!.labelVerifyEmail,
                     style: TextStyle(
                       fontSize: 13.0,
                       fontWeight: FontWeight.bold,
@@ -117,7 +118,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: isEmailVerified
                       ? Text(
-                    Languages.of(context)!.labelEmailVerifiedContent,
+                          Languages.of(context)!.labelEmailVerifiedContent,
                           style: TextStyle(
                             fontSize: 13.0,
                           ),
@@ -134,7 +135,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                             ),
                             Icon(
                               Icons.arrow_forward_ios_rounded,
-                              color: Colors.black,
                               size: 18,
                             ),
                           ],
@@ -159,7 +159,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
@@ -180,10 +179,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.bold,
-                 /* color: value.isEmpty
+                  /* color: value.isEmpty
                       ? Colors.grey
                       : isDarkMode ? Colors.white : Colors.black,
-          */            ),
+          */
+                ),
               ),
             ],
           ),
@@ -192,20 +192,17 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     );
   }
 
-  Widget _buildPasswordBox({
-    required BuildContext context,
-    required bool isPasswordVisible,
-    required String? password,
-    required VoidCallback onVisibilityToggle,
-    required bool isDarkMode
-  }) {
+  Widget _buildPasswordBox(
+      {required BuildContext context,
+      required bool isPasswordVisibl,
+      required String? password,
+      required bool isDarkMode}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: Card(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
@@ -220,9 +217,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
-              SizedBox(width: 6.0,),
+              SizedBox(
+                width: 6.0,
+              ),
               Text(
-                isPasswordVisible ? password ?? '' : '********',
+                isPasswordVisible ? "123456789" ?? '' : '********',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.0,
@@ -232,12 +231,16 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               ),
               Spacer(),
               GestureDetector(
-                onTap: onVisibilityToggle,
-                child:Icon(isPasswordVisible
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+                onTap: () => {
+                  setState(() {
+                    isPasswordVisible = !isPasswordVisible;
+                  })
+                },
+                child: Icon(
+                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                   color: isDarkMode ? Colors.white : Colors.black,
-                  size: 20,),
+                  size: 20,
+                ),
               ),
             ],
           ),
@@ -259,21 +262,22 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
           child: Padding(
             padding: const EdgeInsets.only(right: 18, bottom: 10.0),
             child: Text(
-              Languages.of(context)!.labelChangePass  ,
+              Languages.of(context)!.labelChangePass,
               style: TextStyle(
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                decorationThickness: 2,
-                decorationColor: Colors.black
-                //color: isDarkMode ? Colors.white : Colors.black,
-              ),
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                  decorationThickness: 2,
+                  decorationColor: Colors.black
+                  //color: isDarkMode ? Colors.white : Colors.black,
+                  ),
             ),
           ),
         ),
       ],
     );
   }
+
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();
@@ -292,4 +296,3 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     password = await Helper.getPassword();
   }
 }
-

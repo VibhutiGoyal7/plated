@@ -158,4 +158,7 @@ abstract class Languages {
   String get labelAddressDetails;
 
   String get labelLanguage;
+
+  String get labelEnterAmount;
+
 }

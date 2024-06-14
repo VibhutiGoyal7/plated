@@ -2,7 +2,7 @@ import 'Languages.dart';
 
 class LanguageHi extends Languages {
   @override
-  String get appName => "बहु भाषा";
+  String get appName => "Pario";
 
   @override
   String get labelWelcome => "स्वागत हे";
@@ -14,225 +14,228 @@ class LanguageHi extends Languages {
   String get labelInfo => "यह मल्टी लैंग्वेज डेमो एप्लीकेशन है";
 
   @override
-  String get enterPhoneNumber => "भाषा का चयन करे";
+  String get enterPhoneNumber => "अपना फोन नंबर डालें";
 
   @override
-  String get labelAccountDetails => "Account Details";
+  String get labelAccountDetails => "खाता विवरण";
 
   @override
-  String get labelAddMoney => "Add Money";
+  String get labelAddMoney => "पैसे जोड़ें";
 
   @override
-  String get labelAddedCard => "Added Cards";
+  String get labelAddedCard => "जोड़े गए कार्ड";
 
   @override
-  String get labelAlmostFinish => "Almost Finish";
+  String get labelAlmostFinish => "लगभग खत्म";
 
   @override
-  String get labelConfirm => "Confirm";
+  String get labelConfirm => "पुष्टि करना";
 
   @override
-  String get labelConfirmPass => "Confirm Password";
+  String get labelConfirmPass => "पासवर्ड की पुष्टि कीजिये";
 
   @override
-  String get labelEmail => "Email";
+  String get labelEmail => "ईमेल";
 
   @override
-  String get labelEnterCode => "Enter the code";
+  String get labelEnterCode => "कोड दर्ज करें";
 
   @override
-  String get labelExchange => "Exchange";
+  String get labelExchange => "अदला-बदली";
 
   @override
-  String get labelHelpSupport => "Help & Support";
+  String get labelHelpSupport => "मदद समर्थन";
 
   @override
-  String get labelHi => "Hi,";
+  String get labelHi => "नमस्ते";
 
   @override
-  String get labelHome => "Home";
+  String get labelHome => "घर";
 
   @override
   String get labelINR => "INR";
 
   @override
-  String get labelLastname => "Lastname";
+  String get labelLastname => "उपनाम";
 
   @override
-  String get labelName => "Name";
+  String get labelName => "नाम";
 
   @override
-  String get labelNeedHelp => "Do you need any help?";
+  String get labelNeedHelp => "क्या आपको किसी मदद की ज़रूरत है?";
 
   @override
-  String get labelNews => "NEWS & PROMOTIONS";
+  String get labelNews => "समाचार एवं प्रचार";
 
   @override
-  String get labelPassword => "Password";
+  String get labelPassword => "पासवर्ड";
 
   @override
-  String get labelPayment => "Password";
+  String get labelPayment => "भुगतान";
 
   @override
-  String get labelPaymentMethod => "Payment Methods";
+  String get labelPaymentMethod => "भुगतान की विधि";
 
   @override
-  String get labelPersonalInfo => "Personal Information";
+  String get labelPersonalInfo => "व्यक्तिगत जानकारी";
 
   @override
-  String get labelProfile => "Profile";
+  String get labelProfile => "प्रोफ़ाइल";
 
   @override
-  String get labelPromoCode => "Have a promo code";
+  String get labelPromoCode => "क्या प्रोमो कोड है";
 
   @override
-  String get labelRedeem => "Redeem";
+  String get labelRedeem => "भुनाना";
 
   @override
-  String get labelResendCode => "Resend code in ";
+  String get labelResendCode => "कोड पुनः भेजें";
 
   @override
-  String get labelRewards => "Rewards";
+  String get labelRewards => "पुरस्कार";
 
   @override
-  String get labelSecurity => "Security";
+  String get labelSecurity => "सुरक्षा";
 
   @override
-  String get labelSend => "Send";
+  String get labelSend => "भेजना";
 
   @override
-  String get labelSentCode => "We sent you a code to ";
+  String get labelSentCode => "हमने आपको एक कोड भेजा है";
 
   @override
-  String get labelSetProfile => "Set up your profile";
+  String get labelSetProfile => "अपना प्रोफ़ाइल सेट करें";
 
   @override
-  String get labelSettings => "Settings";
+  String get labelSettings => "समायोजन";
 
   @override
-  String get labelStandard => "Standard";
+  String get labelStandard => "मानक";
 
   @override
-  String get labelStepVerification => "2-Step verification";
+  String get labelStepVerification => "2-चरणीय सत्यापन";
 
   @override
-  String get labelSubmit => "Submit";
+  String get labelSubmit => "जमा करना";
 
   @override
   String get labelTandC =>
-      "By pressing validate you accept our Terms &Conditions and Privacy Policy";
+      "मान्य बटन दबाकर आप हमारी नियम व शर्तें और गोपनीयता नीति स्वीकार करते हैं";
 
   @override
-  String get labelTellAbtYourself => "Tell us about yourself";
+  String get labelTellAbtYourself => "अपने बारे में हमें बताएं";
 
   @override
-  String get labelTotalBalance => "TOTAL BALANCE";
+  String get labelTotalBalance => "कुल शेष";
 
   @override
-  String get labelTransfer => "Transfer";
+  String get labelTransfer => "स्थानांतरण";
 
   @override
   String get labelUSD => "USD";
 
   @override
-  String get labelUserId => "User Id";
+  String get labelUserId => "उपयोगकर्ता पहचान";
 
   @override
-  String get labelValidate => "Validate";
+  String get labelValidate => "मान्य";
 
   @override
-  String get labelVerifyEmail => "Verify your email";
+  String get labelVerifyEmail => "अपना ईमेल सत्यापित करें";
 
   @override
   String get labelVerifyEmailContent =>
-      "Click the following link to verify your email address and associate it with your Payario Account";
+      "अपना ईमेल पता सत्यापित करने और इसे अपने Payario खाते से संबद्ध करने के लिए निम्नलिखित लिंक पर क्लिक करें";
 
   @override
   String get labelZero => "0.00";
 
   @override
-  String get labelChangePass => "Change Password";
+  String get labelChangePass => "पासवर्ड बदलें";
 
   @override
-  String get availablePayario => "Available Payario Points";
+  String get availablePayario => "उपलब्ध पेअरियो अंक";
 
   @override
-  String get completeProfile => "Complete your Profile";
+  String get completeProfile => "अपनी प्रोफ़ाइल पूरी करें";
 
   @override
-  String get labelAddress => "Address";
+  String get labelAddress => "पता";
 
   @override
-  String get labelBirthdate => "Birthdate";
+  String get labelBirthdate => "जन्म तिथि";
 
   @override
-  String get labelChooseDoc => "Choose Document";
+  String get labelChooseDoc => "दस्तावेज़ चुनें";
 
   @override
-  String get labelCity => "City";
+  String get labelCity => "शहर";
 
   @override
-  String get labelCountry => "Country";
+  String get labelCountry => "देश";
 
   @override
-  String get labelDocNo => "Document Number";
+  String get labelDocNo => "दस्तावेज़ संख्या";
 
   @override
-  String get labelEmailVerified => "Email Verified";
+  String get labelEmailVerified => "ईमेल सत्यापित हुआ";
 
   @override
   String get labelEmailVerifiedContent =>
-      "Your Email has been successfully verified via OTP which was sent on your email address";
+      "आपके ईमेल पते पर भेजे गए OTP के माध्यम से आपका ईमेल सफलतापूर्वक सत्यापित हो गया है";
 
   @override
-  String get labelForgotPass => "Forgot Password";
+  String get labelForgotPass => "पासवर्ड भूल गए";
 
   @override
-  String get labelIndia => "India";
+  String get labelIndia => "भारत";
 
   @override
-  String get labelNewPass => "New Password";
+  String get labelNewPass => "नया पासवर्ड";
 
   @override
-  String get labelOldPass => "Old Password";
+  String get labelOldPass => "पुराना पासवर्ड";
 
   @override
-  String get labelPayarioPts => "Payario points available";
+  String get labelPayarioPts => "पेअरियो अंक उपलब्ध";
 
   @override
-  String get labelPaymentScreen => "Payment Screen";
+    String get labelPaymentScreen => "भुगतान स्क्रीन";
 
   @override
-  String get labelPersonalData => "Personal Data";
+  String get labelPersonalData => "व्यक्तिगत डेटा";
 
   @override
-  String get labelPostalCode => "Postal Code";
+  String get labelPostalCode => "डाक कोड";
 
   @override
-  String get labelProceed => "Proceed";
+  String get labelProceed => "आगे बढ़ना";
 
   @override
-  String get labelRedeemBal => "Redeem Balance";
+  String get labelRedeemBal => "शेष राशि भुनाएँ";
 
   @override
-  String get labelState => "State";
+  String get labelState => "राज्य";
 
   @override
-  String get labelFirstname => "First name";
+  String get labelFirstname => "पहला नाम";
 
   @override
-  String get labelStreetName => "Street Name";
+  String get labelStreetName => "सड़क का नाम";
 
   @override
-  String get labelStreetNo => "Street Number";
+  String get labelStreetNo => "गली संख्या";
 
   @override
   String get labelTransferContent =>
-      "Currently you cannot send money because action is disabled";
+      "वर्तमान में आप पैसे नहीं भेज सकते क्योंकि कार्रवाई अक्षम है";
 
   @override
-  String get labelAddressDetails => "Address Details";
+  String get labelAddressDetails => "पते का विवरण";
 
   @override
-  String get labelLanguage => "Language";
+    String get labelLanguage => "भाषा";
+
+  @override
+    String get labelEnterAmount => "राशि डालें";
 }

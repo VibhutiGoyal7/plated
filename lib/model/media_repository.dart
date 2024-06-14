@@ -5,7 +5,7 @@ import 'package:mvvm_flutter_app/model/request/createOtpChangePass.dart';
 import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/media.dart';
+import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
 import 'package:mvvm_flutter_app/model/response/createOtpChangePassResponse.dart';
 import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
 import 'package:mvvm_flutter_app/model/services/base_service.dart';
@@ -22,13 +22,12 @@ import 'response/otpVerifyResponse.dart';
 class MediaRepository {
   BaseService _mediaService = MediaService();
 
-  Future<Media> fetchMediaList(String value, PhoneRequest phoneRequest  ) async {
+  Future<PhoneVerifyResponse> fetchMediaList(String value, PhoneRequest phoneRequest  ) async {
     print(phoneRequest);
     dynamic response = await _mediaService.postResponse(value,phoneRequest);
-    final jsonData = response['data'];
+    final jsonData = response;//['data'];
     print(jsonData);
-    print(response);
-    Media mediaList = Media.fromJson(jsonData);
+    PhoneVerifyResponse mediaList = PhoneVerifyResponse.fromJson(jsonData);
     return mediaList;
   }
 
@@ -36,7 +35,7 @@ class MediaRepository {
     print(phoneRequest);
     dynamic response = await _mediaService.postResponse(value,phoneRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     print(jsonData);
     OtpVerifyResponse mediaList = OtpVerifyResponse.fromJson(jsonData);
     return mediaList;
@@ -46,7 +45,7 @@ class MediaRepository {
     print(setUpAccountRequest);
     dynamic response = await _mediaService.putResponse(value,setUpAccountRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     print(jsonData);
     SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
     return mediaList;
@@ -55,7 +54,7 @@ class MediaRepository {
   Future<ProfileResponse> ProfileScreenData(String value) async {
     dynamic response = await _mediaService.getResponse(value);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;//['data'];
     print(jsonData);
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
     return mediaList;
@@ -65,7 +64,7 @@ class MediaRepository {
     print(changeOldPassRequest);
     dynamic response = await _mediaService.putResponse(value,changeOldPassRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     print(jsonData);
     return response;
     //SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
@@ -75,7 +74,7 @@ class MediaRepository {
     print(createOtpChangePassRequest);
     dynamic response = await _mediaService.postResponse(value,createOtpChangePassRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     print(jsonData);
     CreateOtpChangePassResponse mediaList = CreateOtpChangePassResponse.fromJson(jsonData);
     return mediaList;
@@ -85,7 +84,7 @@ class MediaRepository {
     print(verifyOtChangePassRequest);
     dynamic response = await _mediaService.postResponse(value,verifyOtChangePassRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     print(jsonData);
     return response;
   }
@@ -94,7 +93,7 @@ class MediaRepository {
     print(createOtpEmailVerifyRequest);
     dynamic response = await _mediaService.postResponse(value,createOtpEmailVerifyRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     final jsonDat = response;
     print(jsonDat);
     CreateOtpVerifyEmailResponse mediaList = CreateOtpVerifyEmailResponse.fromJson(jsonData);
@@ -106,7 +105,7 @@ class MediaRepository {
     print(verifyOtpEmailVerifyRequest);
     dynamic response = await _mediaService.postResponse(value,verifyOtpEmailVerifyRequest);
     print(value);
-    final jsonData = response['data'];
+    final jsonData = response;
     print(jsonData);
     return response;
   }

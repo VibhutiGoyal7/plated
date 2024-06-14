@@ -7,9 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Strings/Languages.dart';
-import '../../model/response/media.dart';
+import '../../model/response/phoneVerifyResponse.dart';
 import '../../model/request/signInWithPhoneNumber.dart';
 import '../../model/response/otpVerifyResponse.dart';
+import '../component/toastMessage.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -68,26 +69,24 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     }
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> getOtpResponseDataWidget(
       BuildContext context, ApiResponse apiResponse) async {
-    OtpVerifyResponse? mediaList = apiResponse.data as OtpVerifyResponse?;
+    OtpVerifyResponse? otpVerifyResponse = apiResponse.data as OtpVerifyResponse?;
+    var message = otpVerifyResponse?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("OtpVerify ${mediaList?.token}");
+        print("OtpVerify ${otpVerifyResponse?.token}");
+        //Call Toast
+        ToastComponent.showToast(context: context, message: message);
         final prefs = await SharedPreferences.getInstance();
-        String token = "${mediaList?.token}";
+        String token = "${otpVerifyResponse?.token}";
         Navigator.pushNamed(context, '/SetUpAccount');
         // Save the token
         bool isSaved = await Helper.saveUserToken(token);
 
         // Check if the token was saved successfully
-        if (isSaved) {
-          print('Token saved successfully.');
-        } else {
-          print('Failed to save token.');
-        }
         Helper.getUserToken();
         // Retrieve the token
         String? retrievedToken = await Helper.getUserToken();
@@ -108,14 +107,16 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   Widget getMediaWidgetResendOtp(
       BuildContext context, ApiResponse apiResponse) {
-    Media? mediaList = apiResponse.data as Media?;
+    PhoneVerifyResponse? phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
+    var message = phoneVerifyResponse?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.mobileOtp}");
+        print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
+        //Call Toast
+        ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/OtpVerify', arguments: "${phoneNo}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -168,7 +169,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                           true),
                       _countdownTimer(),
                       Spacer(),
-                      if (resendOtp) _sendOtpButton(context)
+                      if (resendOtp) _resendOtpButton(context)
                     ],
                   ),
                 ),
@@ -254,16 +255,19 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: widget.data.toString(), mobileOtp: otp));
+                // Make the API call to fetch media data
                 /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
                       phoneRequest);*/
 
+                // Now that the API call is complete, update the UI based on the response
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
+                //getOtpResponseDataWidget(context, apiResponse);
+
                 Navigator.pushNamed(
                     context,
                     '/SetUpAccount'
@@ -309,9 +313,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
     String otpString = _otp.join('');
     if (otpString.length == 6) {
-      // OTP length is 6, perform your action
       isValid = true;
-      // You can also validate the OTP here or enable a submit button
     } else {
       isValid = false;
     }
@@ -339,7 +341,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     );
   }
 
-  Widget _sendOtpButton(BuildContext context) {
+  Widget _resendOtpButton(BuildContext context) {
     return GestureDetector(
         onTap: () async {
           phoneNo = widget.data as String;
