@@ -5,7 +5,7 @@ class LanguageAr extends Languages {
   String get appName => "متعدد اللغات";
 
   @override
-  String get labelWelcome => "أهلا بك";
+  String get labelWelcome => "مرحباً";
 
   @override
   String get labelSelectLanguage => "اختار اللغة";
@@ -14,225 +14,225 @@ class LanguageAr extends Languages {
   String get labelInfo => "هذا هو التطبيق التجريبي متعدد اللغات";
 
   @override
-  String get enterPhoneNumber => "Enter phone number";
+  String get enterPhoneNumber => "أدخل رقم الهاتف";
 
   @override
-  String get labelAccountDetails => "Account Details";
+  String get labelAccountDetails => "تفاصيل الحساب";
 
   @override
-  String get labelAddMoney => "Add Money";
+  String get labelAddMoney => "إضافة المال";
 
   @override
-  String get labelAddedCard => "Added Cards";
+  String get labelAddedCard => "البطاقات المضافة";
 
   @override
-  String get labelAlmostFinish => "Almost Finish";
+  String get labelAlmostFinish => "تقريبا انتهي";
 
   @override
-  String get labelConfirm => "Confirm";
+  String get labelConfirm => "يتأكد";
 
   @override
-  String get labelConfirmPass => "Confirm Password";
+  String get labelConfirmPass => "تأكيد كلمة المرور";
 
   @override
-  String get labelEmail => "Email";
+  String get labelEmail => "بريد إلكتروني";
 
   @override
-  String get labelEnterCode => "Enter the code";
+  String get labelEnterCode => "ادخل الرمز";
 
   @override
-  String get labelExchange => "Exchange";
+  String get labelExchange => "تبادل";
 
   @override
-  String get labelHelpSupport => "Help & Support";
+  String get labelHelpSupport => "ساعد لدعم";
 
   @override
-  String get labelHi => "Hi,";
+  String get labelHi => "أهلاً,";
 
   @override
-  String get labelHome => "Home";
+  String get labelHome => "بيت";
 
   @override
   String get labelINR => "INR";
 
   @override
-  String get labelLastname => "Lastname";
+  String get labelLastname => "اسم العائلة";
 
   @override
-  String get labelName => "Name";
+  String get labelName => "الاسم الأول";
 
   @override
-  String get labelNeedHelp => "Do you need any help?";
+  String get labelNeedHelp => "هل تحتاج أي مساعدة؟";
 
   @override
-  String get labelNews => "NEWS & PROMOTIONS";
+  String get labelNews => "الأخبار والعروض الترويجية";
 
   @override
-  String get labelPassword => "Password";
+  String get labelPassword => "كلمة المرور";
 
   @override
-  String get labelPayment => "Password";
+  String get labelPayment => "قسط";
 
   @override
-  String get labelPaymentMethod => "Payment Methods";
+  String get labelPaymentMethod => "طرق الدفع";
 
   @override
-  String get labelPersonalInfo => "Personal Information";
+  String get labelPersonalInfo => "معلومات شخصية";
 
   @override
-  String get labelProfile => "Profile";
+  String get labelProfile => "حساب تعريفي";
 
   @override
-  String get labelPromoCode => "Have a promo code";
+  String get labelPromoCode => "هل يمتلك الرمز الترويجي";
 
   @override
-  String get labelRedeem => "Redeem";
+  String get labelRedeem => "يسترد";
 
   @override
-  String get labelResendCode => "Resend code in ";
+  String get labelResendCode => "إعادة إرسال الرمز في";
 
   @override
-  String get labelRewards => "Rewards";
+  String get labelRewards => "المكافآت";
 
   @override
-  String get labelSecurity => "Security";
+  String get labelSecurity => "حماية";
 
   @override
-  String get labelSend => "Send";
+  String get labelSend => "يرسل";
 
   @override
-  String get labelSentCode => "We sent you a code to ";
+  String get labelSentCode => "لقد أرسلنا لك رمزًا إلى";
 
   @override
-  String get labelSetProfile => "Set up your profile";
+  String get labelSetProfile => "قم بإعداد ملف التعريف الخاص بك";
 
   @override
-  String get labelSettings => "Settings";
+  String get labelSettings => "إعدادات";
 
   @override
-  String get labelStandard => "Standard";
+  String get labelStandard => "معيار";
 
   @override
-  String get labelStepVerification => "2-Step verification";
+  String get labelStepVerification => "التحقق بخطوتين";
 
   @override
-  String get labelSubmit => "Submit";
+  String get labelSubmit => "يُقدِّم";
 
   @override
   String get labelTandC =>
-      "By pressing validate you accept our Terms &Conditions and Privacy Policy";
+      "بالضغط على التحقق فإنك توافق على الشروط والأحكام وسياسة الخصوصية الخاصة بنا";
 
   @override
-  String get labelTellAbtYourself => "Tell us about yourself";
+  String get labelTellAbtYourself => "أخبرنا عن نفسك";
 
   @override
-  String get labelTotalBalance => "TOTAL BALANCE";
+  String get labelTotalBalance => "الرصيد الإجمالي";
 
   @override
-  String get labelTransfer => "Transfer";
+  String get labelTransfer => "تحويل";
 
   @override
   String get labelUSD => "USD";
 
   @override
-  String get labelUserId => "User Id";
+  String get labelUserId => "معرف المستخدم";
 
   @override
-  String get labelValidate => "Validate";
+  String get labelValidate => "التحقق من صحة";
 
   @override
-  String get labelVerifyEmail => "Verify your email";
+  String get labelVerifyEmail => "قم بتأكيد بريدك الألكتروني";
 
   @override
   String get labelVerifyEmailContent =>
-      "Click the following link to verify your email address and associate it with your Payario Account";
+      "انقر فوق الرابط التالي للتحقق من عنوان بريدك الإلكتروني وربطه بحساب Payario الخاص بك";
 
   @override
   String get labelZero => "0.00";
 
   @override
-  String get labelChangePass => "Change Password";
+  String get labelChangePass => "تغيير كلمة المرور";
 
   @override
-  String get availablePayario => "Available Payario Points";
+  String get availablePayario => "نقاط Payario المتاحة";
 
   @override
-  String get completeProfile => "Complete your Profile";
+  String get completeProfile => "أكمل ملفك الشخصي";
 
   @override
-  String get labelAddress => "Address";
+  String get labelAddress => "عنوان";
 
   @override
-  String get labelBirthdate => "Birthdate";
+  String get labelBirthdate => "تاريخ الميلاد";
 
   @override
-  String get labelChooseDoc => "Choose Document";
+  String get labelChooseDoc => "اختر المستند";
 
   @override
-  String get labelCity => "City";
+  String get labelCity => "مدينة";
 
   @override
-  String get labelCountry => "Country";
+  String get labelCountry => "دولة";
 
   @override
-  String get labelDocNo => "Document Number";
+  String get labelDocNo => "رقم المستند";
 
   @override
-  String get labelEmailVerified => "Email Verified";
+  String get labelEmailVerified => "تم التحقق من البريد الإلكتروني";
 
   @override
   String get labelEmailVerifiedContent =>
-      "Your Email has been successfully verified via OTP which was sent on your email address";
+      "لقد تم التحقق من بريدك الإلكتروني بنجاح عبر OTP الذي تم إرساله على عنوان بريدك الإلكتروني";
 
   @override
-  String get labelForgotPass => "Forgot Password";
+  String get labelForgotPass => "هل نسيت كلمة السر";
 
   @override
-  String get labelIndia => "India";
+  String get labelIndia => "الهند";
 
   @override
-  String get labelNewPass => "New Password";
+  String get labelNewPass => "كلمة المرور الجديدة";
 
   @override
-  String get labelOldPass => "Old Password";
+  String get labelOldPass => "كلمة المرور القديمة";
 
   @override
-  String get labelPayarioPts => "Payario points available";
+  String get labelPayarioPts => "نقاط Payario المتاحة";
 
   @override
-  String get labelPaymentScreen => "Payment Screen";
+  String get labelPaymentScreen => "شاشة الدفع";
 
   @override
-  String get labelPersonalData => "Personal Data";
+  String get labelPersonalData => "بيانات شخصية";
 
   @override
-  String get labelPostalCode => "Postal Code";
+  String get labelPostalCode => "رمز بريدي";
 
   @override
-  String get labelProceed => "Proceed";
+  String get labelProceed => "يتابع";
 
   @override
-  String get labelRedeemBal => "Redeem Balance";
+  String get labelRedeemBal => "استرداد الرصيد";
 
   @override
-  String get labelFirstname => "First name";
+  String get labelFirstname => "الاسم الأول";
 
   @override
-  String get labelState => "State";
+    String get labelState => "ولاية";
 
   @override
-  String get labelStreetName => "Street Name";
+  String get labelStreetName => "اسم الشارع";
 
   @override
-  String get labelStreetNo => "Street Number";
+  String get labelStreetNo => "رقم الشارع";
 
   @override
   String get labelTransferContent =>
-      "Currently you cannot send money because action is disabled";
+      "حاليا لا يمكنك إرسال الأموال لأن الإجراء معطل";
 
   @override
-  String get labelAddressDetails => "Address Details";
+  String get labelAddressDetails => "تفاصيل العنوان";
 
   @override
-  String get labelLanguage => "Language";
+  String get labelLanguage => "لغة";
 }

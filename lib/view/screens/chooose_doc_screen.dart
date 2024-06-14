@@ -54,7 +54,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () { Navigator?.pushNamed(context,"/");},
+                onTap: () { Navigator.pushNamed(context,"/SelectCountryScreen");},
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),

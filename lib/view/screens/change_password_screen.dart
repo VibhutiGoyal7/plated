@@ -38,7 +38,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       case Status.COMPLETED:
         print("response: ${apiResponse}");
 
-        Navigator.pop(context);
+        Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(

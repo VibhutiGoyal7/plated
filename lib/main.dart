@@ -14,6 +14,7 @@ import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/select_country_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setting_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
@@ -149,6 +150,11 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return ChooseDocScreen();
+            },
+            '/SelectCountryScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return SelectCountryScreen();
             }
           }),
     );

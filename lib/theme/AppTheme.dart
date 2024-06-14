@@ -36,6 +36,10 @@ class AppTheme {
         bodySmall: GoogleFonts.getFont('Almarai',
             fontSize: 12, color: AppColor.BLACK.withOpacity(0.4)),
       ),
+      listTileTheme: ListTileThemeData(
+        textColor: AppColor.BLACK,
+        selectedColor: AppColor.PRIMARY
+      ),
       iconTheme: IconThemeData(color: AppColor.BLACK),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
@@ -123,6 +127,11 @@ class AppTheme {
             MaterialStateProperty.all<Color>(Colors.transparent),
         foregroundColor: MaterialStateProperty.all<Color>(AppColor.WHITE),
       )),
+      listTileTheme: ListTileThemeData(
+          textColor: AppColor.WHITE,
+          selectedColor: AppColor.PRIMARY
+      ),
+
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               backgroundColor:

@@ -25,6 +25,18 @@ class Helper {
     return sharedPreferences.getString(pref_token);
   }
 
+  static Future<bool> savePassword(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString("Password", token);
+  }
+
+// Read Data
+  static Future<String?> getPassword() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("Password");
+  }
+
+
   static Future<bool> saveProfileDetails(_ProfileDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String ProfileDetailJson = jsonEncode(_ProfileDetail.toJson());

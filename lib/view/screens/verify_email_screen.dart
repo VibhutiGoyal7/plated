@@ -67,7 +67,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.emailOtp}");
+        print("emailOtp: ${mediaList?.emailOtp}");
         setState(() {
           isOtpBoxVisible = true;
         });
@@ -94,7 +94,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       case Status.COMPLETED:
         print("rwrwr ${apiResponse.data}");
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/AccountDetailScreen');
+        Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
