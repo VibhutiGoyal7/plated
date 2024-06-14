@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
 
 import '../../Strings/Languages.dart';
 import '../../theme/AppColor.dart';
+import '../../utils/Helper.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class DashboardHomeScreen extends StatefulWidget {
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   double amount = 0.00;
-  String name = "NAME";
+  String name = "";
   bool isAmountVisible = false;
   bool isUSDVisible = false;
 
@@ -20,6 +22,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     super.initState();
     isAmountVisible = true;
     isUSDVisible = false;
+    _fetchData();
   }
 
   @override
@@ -408,5 +411,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         Text(text, style: TextStyle(fontSize: 12))
       ],
     );
+  }
+  Future<SetUpAccountResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    SetUpAccountResponse? userDetails = await Helper.getUserDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        name = userDetails!.firstName!;
+
+      });
+    });
+    return userDetails;
   }
 }

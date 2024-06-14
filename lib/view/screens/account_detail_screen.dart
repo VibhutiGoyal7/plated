@@ -10,7 +10,6 @@ class AccountDetailScreen extends StatefulWidget {
 }
 
 class _AccountDetailScreenState extends State<AccountDetailScreen> {
-  //AccountDetailScreen({required this.navController});
   var password;
   var phoneNumber;
   var userId;
@@ -27,7 +26,8 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     isEmailVerified = false;
     isPasswordVisible = true;
 
-    //_fetchData();
+    _fetchData();
+    _fetchPasswordData();
   }
 
   @override
@@ -289,5 +289,10 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       });
     });
     return profileDetails;
+  }
+
+  Future<void> _fetchPasswordData() async{
+    await Future.delayed(Duration(milliseconds: 2));
+    password = await Helper.getPassword();
   }
 }

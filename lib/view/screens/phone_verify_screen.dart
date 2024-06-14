@@ -164,6 +164,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   fontSize: 16.0,
                 ),
                 controller: _inputController,
+                maxLength: 12,
+                keyboardType: TextInputType.phone,
                 onChanged: _isValidPhoneNumber,
                 onSubmitted: (value) {
                   // if (value.isNotEmpty) {
@@ -174,6 +176,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   // }
                 },
                 decoration: InputDecoration(
+                  counterText: '',
                   border: InputBorder.none,
                   hintText: 'XXXXXXXXXX',
                   hintStyle: TextStyle(color: Colors.grey),
@@ -197,18 +200,17 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));
-                await Provider.of<MediaViewModel>(context, listen: false)
-                    .fetchMediaData(
-                        "/api/v1/app/temp_customers/initiate_customer",
-                        phoneRequest);
-                /* Navigator.pushNamed(context, '/OtpVerify',
-                    arguments: "${_inputController.text}");*/
+                /*await Provider.of<MediaViewModel>(context, listen: false)
+                  .fetchMediaData(
+                      "/api/v1/app/temp_customers/initiate_customer",
+                      phoneRequest);*/
+               Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
-                getMediaWidget(context, apiResponse);
-              } else {
+                //getMediaWidget(context, apiResponse);
+              }else{
                 SnackBar(
                   content: Text("Enter valid Phone No"),
                 );

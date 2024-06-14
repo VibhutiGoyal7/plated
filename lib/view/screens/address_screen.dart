@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../Strings/Languages.dart';
+import '../../model/response/profileResponse.dart';
+import '../../utils/Helper.dart';
 
 class AddressScreen extends StatefulWidget {
   @override
@@ -13,12 +15,14 @@ class _AddressScreenState extends State<AddressScreen> {
   String state = "";
   String city = "";
   String postCode = "";
+  String address = "";
   bool inputValid = false;
 
   @override
   void initState() {
     super.initState();
     inputValid = false;
+    _fetchData();
   }
 
   final TextEditingController _streetController = TextEditingController();
@@ -243,5 +247,15 @@ class _AddressScreenState extends State<AddressScreen> {
         ],
       ),
     );
+  }
+  Future<ProfileResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileDetails = await Helper.getProfileDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        address = profileDetails!.address!;
+      });
+    });
+    return profileDetails;
   }
 }

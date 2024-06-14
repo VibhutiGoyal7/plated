@@ -8,15 +8,18 @@ import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/address_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/bottom_nav.dart';
 import 'package:mvvm_flutter_app/view/screens/change_password_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/chooose_doc_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/forgot_password_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/select_country_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setting_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
 import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/verify_identity_screen.dart';
 import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -142,6 +145,21 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return VerifyEmailScreen();
+            },
+            '/VerifyIdentityScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return VerifyIdentityScreen();
+            },
+            '/ChooseDocScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return ChooseDocScreen();
+            },
+            '/SelectCountryScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return SelectCountryScreen();
             }
           }),
     );

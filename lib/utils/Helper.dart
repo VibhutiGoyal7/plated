@@ -6,6 +6,7 @@ import 'package:mvvm_flutter_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/response/profileResponse.dart';
+import '../model/response/setUpAccountResponse.dart';
 
 class Helper {
   static String valueSharedPreferences = '';
@@ -24,6 +25,18 @@ class Helper {
     return sharedPreferences.getString(pref_token);
   }
 
+  static Future<bool> savePassword(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString("Password", token);
+  }
+
+// Read Data
+  static Future<String?> getPassword() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("Password");
+  }
+
+
   static Future<bool> saveProfileDetails(_ProfileDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String ProfileDetailJson = jsonEncode(_ProfileDetail.toJson());
@@ -38,9 +51,27 @@ class Helper {
     if (ProfileDetailJson == null) {
       return null;
     }
-
     final Map<String, dynamic> ProfileDetailMap = jsonDecode(ProfileDetailJson);
     return ProfileResponse.fromJson(ProfileDetailMap);  }
+
+
+  static Future<bool> saveUserDetails(_UserDetail) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final String UserDetailJson = jsonEncode(_UserDetail.toJson());
+    return await sharedPreferences.setString("UserDetails", UserDetailJson);
+  }
+
+// Read Data
+  static Future<SetUpAccountResponse?> getUserDetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final String? UserDetailJson = sharedPreferences.getString("UserDetails");
+
+    if (UserDetailJson == null) {
+      return null;
+    }
+    final Map<String, dynamic> UserDetailMap = jsonDecode(UserDetailJson);
+    return SetUpAccountResponse.fromJson(UserDetailMap);  }
+
 
 
   static Future<Locale> setLocale(String languageCode) async {

@@ -94,11 +94,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${apiResponse?.data}");
-        Navigator.pop(context);
+        Navigator.pushNamed(context, '/ProfileScreen');
 
-        setState(() {
-          isOtpBoxVisible = true;
-        });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(

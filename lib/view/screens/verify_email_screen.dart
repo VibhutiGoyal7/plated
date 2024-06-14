@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_flutter_app/Strings/Languages.dart';
 import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
@@ -28,6 +29,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   List.generate(6, (index) => TextEditingController());
   String dropdownValue = "";
   bool isValid = false;
+  bool isOtpBoxVisible = false;
 
   @override
   void initState() {
@@ -65,7 +67,10 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.emailOtp}");
+        print("emailOtp: ${mediaList?.emailOtp}");
+        setState(() {
+          isOtpBoxVisible = true;
+        });
         // Navigate to the new screen after receiving the response
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
@@ -89,7 +94,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       case Status.COMPLETED:
         print("rwrwr ${apiResponse.data}");
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/AccountDetailScreen');
+        Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -105,7 +110,6 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -155,7 +159,8 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextButton(
                         onPressed: () async {
-                          if (emailController.text.isNotEmpty) {
+                          if (emailController.text.isNotEmpty &&
+                              EmailValidator.validate(emailController.text)) {
                             CreateOtpEmailVerifyRequest request =
                                 CreateOtpEmailVerifyRequest(
                                     customer: CustomerGetOtpEmailDetail(
@@ -184,51 +189,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 SizedBox(
                   height: 30.0,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Enter the OTP sent to your email address"),
-                    ),
-                    _buildPhoneInput(context, screenWidth),
-                    SizedBox(height: 10.0,),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: TextButton(
-
-                        onPressed: () async {String otp =
-                        _controllers.map((controller) => controller.text).join();
-                          if (otp.isNotEmpty) {
-                            VerifyOtpEmailVerifyRequest request =
-                                VerifyOtpEmailVerifyRequest(
-                                    customer: CustomerVerifyOtpEmail(
-                              phoneNumber: phoneNumber,
-                              email: emailController.text,
-                              emailOtp: otp,
-                            ));
-                            await Provider.of<MediaViewModel>(context, listen: false)
-                                .VerifyOtpVerifyEmail(
-                                    "/api/v1/app/customers/verify_email_otp", request);
-                            ApiResponse apiResponse =
-                                Provider.of<MediaViewModel>(context, listen: false)
-                                    .response;
-                            VerifyGetMediaWidget(context, apiResponse);
-                          }
-                        },
-                        child: Container(
-                          width: double.infinity,
-                            alignment: Alignment.center,
-                            child: Text("Validate")),
-                      ),
-                    ),
-                    //Text("Your email has been successfully verified"),
-                    /*TextButton(
-                      onPressed: () {},
-                      child: Text("Resend via SMS"),
-                    ),*/
-                  ],
-                ),
+                if (isOtpBoxVisible) _buildVerifySection()
               ],
             ),
           ),
@@ -265,6 +226,58 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildVerifySection() {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Enter the OTP sent to your email address"),
+        ),
+        _buildPhoneInput(context, screenWidth),
+        SizedBox(
+          height: 10.0,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: TextButton(
+            onPressed: () async {
+              String otp =
+                  _controllers.map((controller) => controller.text).join();
+              if (otp.isNotEmpty) {
+                VerifyOtpEmailVerifyRequest request =
+                    VerifyOtpEmailVerifyRequest(
+                        customer: CustomerVerifyOtpEmail(
+                  phoneNumber: phoneNumber,
+                  email: emailController.text,
+                  emailOtp: otp,
+                ));
+                await Provider.of<MediaViewModel>(context, listen: false)
+                    .VerifyOtpVerifyEmail(
+                        "/api/v1/app/customers/verify_email_otp", request);
+                ApiResponse apiResponse =
+                    Provider.of<MediaViewModel>(context, listen: false)
+                        .response;
+                VerifyGetMediaWidget(context, apiResponse);
+              }
+            },
+            child: Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: Text("Validate")),
+          ),
+        ),
+        //Text("Your email has been successfully verified"),
+        /*TextButton(
+                      onPressed: () {},
+                      child: Text("Resend via SMS"),
+                    ),*/
+      ],
     );
   }
 

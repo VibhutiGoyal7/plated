@@ -6,6 +6,9 @@ import 'package:provider/provider.dart';
 
 import '../../Strings/Languages.dart';
 import '../../model/response/setUpAccountResponse.dart';
+import 'package:email_validator/email_validator.dart';
+
+import '../../utils/Helper.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
   final String? userId; // Define the 'data' parameter here
@@ -38,7 +41,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         _passwordController.text.isNotEmpty &&
         _confirmPasswordController.text.isNotEmpty &&
         _passwordController.text.length >= 8 &&
-        _passwordController.text == _confirmPasswordController.text) {
+        _passwordController.text == _confirmPasswordController.text &&
+        EmailValidator.validate(_emailController.text)) {
       setState(() {
         inputValid = true;
       });
@@ -56,13 +60,22 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
     SetUpAccountResponse? mediaList = apiResponse.data as SetUpAccountResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
+        await Helper.saveUserDetails(mediaList);
+        if(await Helper.saveUserDetails(mediaList)) print("data saved");
+
+        await Helper.savePassword(_passwordController.text);
+        String? password = await Helper.getPassword();
+        print("password: ${password}");
+
+        SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
+        print('Retrieved Token: ${retrievedToken}');
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
@@ -232,6 +245,46 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       ),
     );
   }
+  Widget _buildEmailInput(BuildContext context, String text,
+      TextEditingController nameController, Icon icon) {
+    return Card(
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+                obscureText: false,
+                obscuringCharacter: "*",
+                controller: nameController,
+                onChanged: (value) {
+                  _isValidInput();
+                },
+
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: text,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  icon: icon,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildPasswordInput(
     BuildContext context,
@@ -314,7 +367,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       lastName: _lastNameController.text,
                       dob: "17/07/1996",
                     ));
-               /* await Provider.of<MediaViewModel>(context, listen: false)
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
                       "/api/v1/app/customers/update_customer", request);*/
                 Navigator.pushNamed(context, '/BottomNav');
@@ -350,5 +403,10 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         ),
       ],
     );
+  }
+
+  void Validate(String email) {
+    bool isValid = EmailValidator.validate(email);
+    print(isValid);
   }
 }
