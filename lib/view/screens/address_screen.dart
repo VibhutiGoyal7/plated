@@ -118,7 +118,6 @@ class _AddressScreenState extends State<AddressScreen> {
                       });}
                     , _cityController),
                   ),
-                  SizedBox(width: 10),
                   Expanded(
                     flex: 1,
                     child: buildTextField(

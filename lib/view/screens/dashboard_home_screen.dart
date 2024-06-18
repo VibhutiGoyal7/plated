@@ -304,7 +304,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                           ),
                         ),
-                        GestureDetector(
+                        Expanded(
+                            child: GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/AddMoneyScreen');
                           },
@@ -316,27 +317,24 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 4.0),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Text(
-                                      Languages.of(context)!.labelAddMoney,
-                                      style: TextStyle(fontSize: 14.0),
-                                    ),
+                                    vertical: 8.0, horizontal: 6.0),
+                                child: Row(children: [
+                                  Text(
+                                    Languages.of(context)!.labelAddMoney,
+                                    style: TextStyle(fontSize: 14.0),
                                   ),
+                                  Spacer(),
                                   Icon(
                                     Icons.add,
-                                    size: 16,
+                                    size: 18,
                                   )
                                 ]),
                               ),
                             ),
                           ),
-                        ),
-                        Container(
+                        )),
+                        Expanded(
+                            child: Container(
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -358,35 +356,31 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ]),
                             ),
                           ),
-                        ),
-                        Container(
+                        )),
+                        Expanded(
+                            child: Container(
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
-                                      child: Text(
-                                        Languages.of(context)!.labelExchange,
-                                        style: TextStyle(fontSize: 14.0),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.currency_exchange,
-                                      size: 16,
-                                    )
-                                  ]),
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(children: [
+                                Text(
+                                  Languages.of(context)!.labelExchange,
+                                  style: TextStyle(fontSize: 14.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.currency_exchange,
+                                  size: 16,
+                                )
+                              ]),
                             ),
                           ),
-                        )
+                        ))
                       ],
                     ),*/
                     SizedBox(height: 5.0),

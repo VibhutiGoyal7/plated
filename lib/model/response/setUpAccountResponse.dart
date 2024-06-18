@@ -10,10 +10,10 @@ class SetUpAccountResponse {
   final String? dob;
   final String? status;
   final String? kycStatus;
-  final String? mobileOtp;
-  final String? mobileOtpExpireAt;
   final String? message;
   final bool? isEmailVerified;
+  final String? mobileOtp;
+  final String? mobileOtpExpireAt;
 
   SetUpAccountResponse({
     this.firstName,
@@ -27,10 +27,10 @@ class SetUpAccountResponse {
     this.dob,
     this.status,
     this.isEmailVerified,
+    this.kycStatus,
+    this.message
     this.mobileOtp,
     this.mobileOtpExpireAt,
-    this.kycStatus,
-    this.message,
   });
 
   factory SetUpAccountResponse.fromJson(Map<String, dynamic> json) {
@@ -50,8 +50,8 @@ class SetUpAccountResponse {
       dob: json['data']['dob'] as String?,
       kycStatus: json['data']['kyc_status'] as String?,
       message: json['message'] as String?,
-      mobileOtp: json['mobile_otp'] as String?,
-      mobileOtpExpireAt: json['mobile_otp_expire_at'] as String?,
+      mobileOtp: json['data']['mobile_otp'] as String?,
+      mobileOtpExpireAt: json['data']['mobile_otp_expire_at'] as String?,
       isEmailVerified: json['data']['is_email_verified'] as bool?,
     );
   }

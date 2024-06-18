@@ -368,16 +368,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       lastName: _lastNameController.text,
                       dob: "17/07/1996",
                     ));
-                await Provider.of<MediaViewModel>(context, listen: false)
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);
-                //Navigator.pushNamed(context, '/BottomNav');
+                      "/api/v1/app/customers/update_customer", request);*/
+                Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                getMediaWidget(context, apiResponse);
+                //getMediaWidget(context, apiResponse);
               }
             },
             child: Text(
