@@ -67,9 +67,9 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
-        Navigator.pushNamed(context, '/BottomNav');
         await Helper.saveUserDetails(mediaList);
-        if(await Helper.saveUserDetails(mediaList)) print("data saved");
+        if(await Helper.saveUserDetails(mediaList)) print("data saved") ;
+        else print("not saved");
 
         await Helper.savePassword(_passwordController.text);
         String? password = await Helper.getPassword();
@@ -77,6 +77,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
         SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
         print('Retrieved Token: ${retrievedToken}');
+
+        Navigator.pushNamed(context, '/BottomNav');
         // Navigate to the new screen after receiving the response
         // Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
@@ -368,16 +370,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       lastName: _lastNameController.text,
                       dob: "17/07/1996",
                     ));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);*/
-                Navigator.pushNamed(context, '/BottomNav');
+                      "/api/v1/app/customers/update_customer", request);
+                //Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
+                getMediaWidget(context, apiResponse);
               }
             },
             child: Text(

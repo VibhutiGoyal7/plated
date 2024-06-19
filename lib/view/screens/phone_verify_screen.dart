@@ -63,7 +63,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         print("userfound: ${mediaList?.userFound}");
         // Navigate to the new screen after receiving the response
         if (mediaList?.userFound == true) {
-          Navigator.pushNamed(context, '/SignInScreen');
+          Navigator.pushNamed(context, '/SignInScreen',
+              arguments: "${_inputController.text}");
         } else {
           _phoneVerifyAPI();
         }
@@ -228,8 +229,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     .existingUserData(
                         "/api/v1/app/customers/check_customer_existance",
                     request);
-                /*  Navigator.pushNamed(context, '/OtpVerify',
-                    arguments: "${_inputController.text}");*/
+                  // Navigator.pushNamed(context, '/OtpVerify',
+                  //   arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)

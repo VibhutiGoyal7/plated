@@ -52,7 +52,7 @@ class Helper {
       return null;
     }
     final Map<String, dynamic> ProfileDetailMap = jsonDecode(ProfileDetailJson);
-    return ProfileResponse.fromJson(ProfileDetailMap);  }
+    return ProfileResponse.fromPref(ProfileDetailMap);  }
 
 
   static Future<bool> saveUserDetails(_UserDetail) async {
@@ -61,7 +61,7 @@ class Helper {
     return await sharedPreferences.setString("UserDetails", UserDetailJson);
   }
 
-// Read Data
+  // Read Data
   static Future<SetUpAccountResponse?> getUserDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String? UserDetailJson = sharedPreferences.getString("UserDetails");
@@ -70,7 +70,7 @@ class Helper {
       return null;
     }
     final Map<String, dynamic> UserDetailMap = jsonDecode(UserDetailJson);
-    return SetUpAccountResponse.fromJson(UserDetailMap);  }
+    return SetUpAccountResponse.fromPref(UserDetailMap);  }
 
 
 

@@ -82,7 +82,6 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         ToastComponent.showToast(context: context, message: message);
         final prefs = await SharedPreferences.getInstance();
         String token = "${otpVerifyResponse?.token}";
-        Navigator.pushNamed(context, '/SetUpAccount');
         // Save the token
         bool isSaved = await Helper.saveUserToken(token);
 
@@ -96,6 +95,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         // Retrieve the token
         String? retrievedToken = await Helper.getUserToken();
         print('Retrieved Token: $retrievedToken');
+
+        Navigator.pushNamed(context, '/SetUpAccount');
         // Navigate to the new screen after receiving the response
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -260,20 +261,20 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: widget.data.toString(), mobileOtp: otp));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                      phoneRequest);*/
+                      phoneRequest);
 
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
-                Navigator.pushNamed(
-                    context,
-                    '/SetUpAccount'
-                );
+                getOtpResponseDataWidget(context, apiResponse);
+                // Navigator.pushNamed(
+                //     context,
+                //     '/SetUpAccount'
+                // );
               }else{
                 SnackBar(
                   content: Text("Enter 6-digit otp."),

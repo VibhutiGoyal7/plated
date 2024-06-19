@@ -13,7 +13,9 @@ import 'package:email_validator/email_validator.dart';
 import '../../utils/Helper.dart';
 
 class SigninScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
 
+  SigninScreen({Key? key, this.data}) : super(key: key);
   @override
   _SigninScreenState createState() => _SigninScreenState();
 }
@@ -98,6 +100,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 padding: const EdgeInsets.only(left: 16.0, right: 16, top: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
 
                     _buildLabelText(
@@ -110,7 +113,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     SizedBox(height: 10),
                     _buildPhoneInput(
                         context,
-                        Languages.of(context)!.labelName,
+                        "Phone Number",
                         _phoneNoController,
                         Icon(
                           Icons.person,
@@ -150,6 +153,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   Widget _buildPhoneInput(BuildContext context, String text,
       TextEditingController nameController, Icon icon) {
+    nameController.text = widget.data as String;
     return Card(
       child: Container(
         height: 60,
@@ -172,7 +176,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   _isValidInput();
                 },
                 onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -250,37 +254,40 @@ class _SigninScreenState extends State<SigninScreen> {
       children: [
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () async {
-              _isValidInput();
-              if (inputValid) {
-                SignInRequest request = SignInRequest(
-                    customer: CustomerSignIn(
-                      phoneNumber: _phoneNoController.text,
-                      password: _passwordController.text
-                    ));
-                 await Provider.of<MediaViewModel>(context, listen: false)
-                  .signInWithPass(
-                      "/api/v1/app/customers/sign_in", request);
-                //Navigator.pushNamed(context, '/BottomNav');
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                _isValidInput();
+                if (inputValid) {
+                  SignInRequest request = SignInRequest(
+                      customer: CustomerSignIn(
+                        phoneNumber: _phoneNoController.text,
+                        password: _passwordController.text
+                      ));
+                   await Provider.of<MediaViewModel>(context, listen: false)
+                    .signInWithPass(
+                        "/api/v1/app/customers/sign_in", request);
+                  //Navigator.pushNamed(context, '/BottomNav');
 
-                ApiResponse apiResponse =
-                    Provider
-                        .of<MediaViewModel>(context, listen: false)
-                        .response;
-                getMediaWidget(context, apiResponse);
-              }
-            },
-            child: Text(
-              Languages.of(context)!.labelConfirm,
-              style: TextStyle(
-                  color: inputValid ? Colors.white : Colors.blueAccent),
+                  ApiResponse apiResponse =
+                      Provider
+                          .of<MediaViewModel>(context, listen: false)
+                          .response;
+                  getMediaWidget(context, apiResponse);
+                }
+              },
+              child: Text(
+                Languages.of(context)!.labelConfirm,
+                style: TextStyle(
+                    color: inputValid ? Colors.white : Colors.blueAccent),
+              ),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  backgroundColor: inputValid ? Colors.blueAccent : Colors.white,
+                  elevation: 3,
+                  shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
             ),
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 14.0),
-                backgroundColor: inputValid ? Colors.blueAccent : Colors.white,
-                elevation: 3,
-                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
         Padding(

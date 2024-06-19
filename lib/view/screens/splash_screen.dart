@@ -25,12 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: GestureDetector(
         onTap: (){
-          if(token.isEmpty){
-            Navigator.popAndPushNamed(context, "/PhoneVerifyScreen");
-          }else{
-            Navigator.popAndPushNamed(context, "/BottomNav");
 
-          }
         },
         child: Padding(
           padding: EdgeInsets.all(8),
@@ -47,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   void _navigation() {
     if(token.isEmpty){
-      Navigator.popAndPushNamed(context, "/PhoneVerifyScreen");
+      Navigator.popAndPushNamed(context, "/GetStartedScreen");
     }else{
       Navigator.popAndPushNamed(context, "/BottomNav");
 

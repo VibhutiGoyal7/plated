@@ -28,7 +28,7 @@ class SetUpAccountResponse {
     this.status,
     this.isEmailVerified,
     this.kycStatus,
-    this.message
+    this.message,
     this.mobileOtp,
     this.mobileOtpExpireAt,
   });
@@ -74,5 +74,27 @@ class SetUpAccountResponse {
     data['mobile_otp_expire_at'] = this.mobileOtpExpireAt;
     data['is_email_verified'] = this.isEmailVerified;
     return data;
+  }
+
+  factory SetUpAccountResponse.fromPref(Map<String, dynamic> json) {
+    return SetUpAccountResponse(
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      id: json['id'] as int?,
+      phoneNumber: json['phone_number'] as String?,
+      createdAt: json['created_at']/* != null
+          ? DateTime.parse(json['created_at'] */as String/*)
+          : null*/,
+      updatedAt: json['updated_at']/* != null
+          ? DateTime.parse(json['updated_at']*/ as String?/*)
+          : null*/,
+      email: json['email'] as String?,
+      address: json['address'] as String?,
+      dob: json['dob'] as String?,
+      kycStatus: json['kyc_status'] as String?,
+      mobileOtp: json['mobile_otp'] as String?,
+      mobileOtpExpireAt: json['mobile_otp_expire_at'] as String?,
+      isEmailVerified: json['is_email_verified'] as bool?,
+    );
   }
 }
