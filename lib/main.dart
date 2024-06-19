@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mvvm_flutter_app/theme/AppTheme.dart';
-import 'package:mvvm_flutter_app/utils/Helper.dart';
-import 'package:mvvm_flutter_app/view/screens/account_detail_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/address_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/bottom_nav.dart';
-import 'package:mvvm_flutter_app/view/screens/change_password_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/chooose_doc_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/forgot_password_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/select_country_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/setting_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/verify_identity_screen.dart';
-import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+import 'package:payrio/theme/AppTheme.dart';
+import 'package:payrio/utils/Helper.dart';
+import 'package:payrio/view/screens/add_money_screen.dart';
+import 'package:payrio/view/screens/authSection/otp_verify_screen.dart';
+import 'package:payrio/view/screens/authSection/phone_verify_screen.dart';
+import 'package:payrio/view/screens/authSection/setup_account_screen.dart';
+import 'package:payrio/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:payrio/view/screens/kycSection/chooose_doc_screen.dart';
+import 'package:payrio/view/screens/kycSection/select_country_screen.dart';
+import 'package:payrio/view/screens/kycSection/verify_identity_screen.dart';
+import 'package:payrio/view/screens/profileSection/account_detail_screen.dart';
+import 'package:payrio/view/screens/profileSection/address_screen.dart';
+import 'package:payrio/view/screens/profileSection/change_password_screen.dart';
+import 'package:payrio/view/screens/profileSection/forgot_password_screen.dart';
+import 'package:payrio/view/screens/profileSection/personal_data_screen.dart';
+import 'package:payrio/view/screens/profileSection/personal_info_screen.dart';
+import 'package:payrio/view/screens/profileSection/profile_screen.dart';
+import 'package:payrio/view/screens/profileSection/setting_screen.dart';
+import 'package:payrio/view/screens/profileSection/verify_email_screen.dart';
+import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
-import 'Strings/AppLocalizationsDelegate.dart';
-import 'Strings/L10n.dart';
+import 'languageSection/AppLocalizationsDelegate.dart';
+import 'languageSection/L10n.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,15 +39,16 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   Locale _locale = const Locale('en');
+
   @override
   void initState() {
     super.initState();
     _fetchData();
   }
+
   void setLocale(Locale locale) {
     setState(() {
       _locale = locale;
@@ -80,7 +81,7 @@ class _MyAppState extends State<MyApp> {
           themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
-            '/': (context) => PhoneVerifyScreen(),
+            '/': (context) => BottomNav(),
             '/OtpVerify': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
@@ -139,26 +140,28 @@ class _MyAppState extends State<MyApp> {
             '/SettingScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return SettingScreen(setLocale: setLocale,);
+              return SettingScreen(
+                setLocale: setLocale,
+              );
             },
             '/VerifyEmail': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return VerifyEmailScreen();
             },
             '/VerifyIdentityScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return VerifyIdentityScreen();
             },
             '/ChooseDocScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return ChooseDocScreen();
             },
             '/SelectCountryScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return SelectCountryScreen();
             }
           }),

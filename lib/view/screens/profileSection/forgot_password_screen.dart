@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/request/verifyOtpChangePass.dart';
+import 'package:payrio/model/request/verifyOtpChangePass.dart';
 import 'package:provider/provider.dart';
 
-import '../../Strings/Languages.dart';
-import '../../model/apis/api_response.dart';
-import '../../model/request/createOtpChangePass.dart';
-import '../../model/response/createOtpChangePassResponse.dart';
-import '../../view_model/media_view_model.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../model/request/createOtpChangePass.dart';
+import '../../../model/response/createOtpChangePassResponse.dart';
+import '../../../view_model/media_view_model.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override

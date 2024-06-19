@@ -1,4 +1,5 @@
 import UIKit
+import Jumio
 import Flutter
 
 @UIApplicationMain
@@ -10,4 +11,11 @@ import Flutter
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+
+  override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
+          guard Jumio.SDK.handleDeeplinkURL(url) else {
+              return false
+          }
+          return true
+      }
 }

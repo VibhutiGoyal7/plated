@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/theme/AppColor.dart';
-import 'package:mvvm_flutter_app/view/screens/RewardScreen.dart';
-import 'package:mvvm_flutter_app/view/screens/Transfer_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/dashboard_home_screen.dart';
-import 'package:mvvm_flutter_app/view/screens/payment_screen.dart';
+import 'package:payrio/theme/AppColor.dart';
+import 'package:payrio/view/screens/bottomNavSection/payment_screen.dart';
+import 'package:payrio/view/screens/bottomNavSection/reward_screen.dart';
+import 'package:payrio/view/screens/bottomNavSection/transfer_screen.dart';
+import 'dashboard_home_screen.dart';
 
 class BottomNav extends StatefulWidget {
   @override

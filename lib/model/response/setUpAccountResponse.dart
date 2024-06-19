@@ -28,7 +28,7 @@ class SetUpAccountResponse {
     this.status,
     this.isEmailVerified,
     this.kycStatus,
-    this.message
+    this.message,
     this.mobileOtp,
     this.mobileOtpExpireAt,
   });

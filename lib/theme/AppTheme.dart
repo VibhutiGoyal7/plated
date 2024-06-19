@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'AppColor.dart';
 
 class AppTheme {
@@ -37,9 +38,11 @@ class AppTheme {
             fontSize: 12, color: AppColor.BLACK.withOpacity(0.4)),
       ),
       listTileTheme: ListTileThemeData(
-        textColor: AppColor.BLACK,
-        selectedColor: AppColor.PRIMARY
-      ),
+          textColor: AppColor.BLACK, selectedColor: AppColor.PRIMARY),
+      dialogTheme: DialogTheme(
+          backgroundColor: AppColor.WHITE,
+          titleTextStyle: TextStyle(color: AppColor.BLACK, fontSize: 22),
+          iconColor: AppColor.BLACK),
       iconTheme: IconThemeData(color: AppColor.BLACK),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
@@ -92,10 +95,14 @@ class AppTheme {
       cardTheme: const CardTheme(
         color: AppColor.DARK_CARD_COLOR,
       ),
-
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.DARK_BG_COLOR,
+      dialogTheme: DialogTheme(
+        backgroundColor: AppColor.DARK_CARD_COLOR,
+        titleTextStyle: TextStyle(color: AppColor.WHITE, fontSize: 22),
+        iconColor: AppColor.WHITE,
+      ),
       textTheme: TextTheme(
         displayLarge: GoogleFonts.getFont(
           'Almarai',
@@ -123,15 +130,11 @@ class AppTheme {
       iconTheme: IconThemeData(color: AppColor.WHITE),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
-        backgroundColor:
-            MaterialStateProperty.all<Color>(Colors.transparent),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
         foregroundColor: MaterialStateProperty.all<Color>(AppColor.WHITE),
       )),
       listTileTheme: ListTileThemeData(
-          textColor: AppColor.WHITE,
-          selectedColor: AppColor.PRIMARY
-      ),
-
+          textColor: AppColor.WHITE, selectedColor: AppColor.PRIMARY),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               backgroundColor:

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:mvvm_flutter_app/main.dart';
+import 'package:payrio/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/response/profileResponse.dart';

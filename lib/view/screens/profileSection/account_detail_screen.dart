@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
-import 'package:mvvm_flutter_app/utils/Helper.dart';
+import 'package:payrio/model/response/profileResponse.dart';
+import 'package:payrio/utils/Helper.dart';
 
-import '../../Strings/Languages.dart';
+import '../../../languageSection/Languages.dart';
 
 class AccountDetailScreen extends StatefulWidget {
   @override

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
+import 'package:payrio/model/response/setUpAccountResponse.dart';
+import 'package:payrio/view/component/toastMessage.dart';
 
-import '../../Strings/Languages.dart';
-import '../../theme/AppColor.dart';
-import '../../utils/Helper.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/request/shortcutItemList.dart';
+import '../../../theme/AppColor.dart';
+import '../../../utils/Helper.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
@@ -13,22 +15,48 @@ class DashboardHomeScreen extends StatefulWidget {
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   double amount = 0.00;
-  String name = "";
+  String? name = "";
   bool isAmountVisible = false;
   bool isUSDVisible = false;
-
+  late List<bool> _isChecked; // Initialize as late to delay initialization
+  late List<Shortcutitemlist>
+      _shortcutCardsList; // Initialize as late to delay initialization
   @override
   void initState() {
     super.initState();
     isAmountVisible = true;
     isUSDVisible = false;
     _fetchData();
+    _isChecked = List<bool>.generate(
+        5, (index) => false); // Initial setup for 5 checkboxes
+    // Initial setup for 5 checkboxes
   }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
+    _shortcutCardsList = [
+      Shortcutitemlist(
+          title: Languages.of(context)!.labelTransfer,
+          icon: Icons.transfer_within_a_station_sharp,
+          selected: true),
+      Shortcutitemlist(
+          title: Languages.of(context)!.labelAddMoney,
+          icon: Icons.add_rounded,
+          selected: true),
+      Shortcutitemlist(
+          title: Languages.of(context)!.labelSend,
+          icon: Icons.send,
+          selected: true),
+      Shortcutitemlist(
+          title: Languages.of(context)!.labelExchange,
+          icon: Icons.currency_exchange,
+          selected: true),
+      Shortcutitemlist(
+          title: Languages.of(context)!.labelRewards,
+          icon: Icons.gif_box,
+          selected: false)
+    ];
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -132,42 +160,63 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Card(
-                        color: isDarkMode
-                            ? AppColor.DARK_CARD_COLOR
-                            : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
-                        child: Container(
-                          width: screenWidth,
-                          height: screenHeight * 0.12,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              _buildContainer(
-                                  context,
-                                  Languages.of(context)!.labelTransfer,
-                                  Icon(
-                                    Icons.transfer_within_a_station_sharp,
-                                    color: AppColor.BLACK,
-                                    size: 22,
-                                  )),
-                              _buildContainer(
-                                  context,
-                                  Languages.of(context)!.labelSend,
-                                  Icon(
-                                    Icons.send,
-                                    color: AppColor.BLACK,
-                                    size: 22,
-                                  )),
-                              _buildContainer(
-                                  context,
-                                  Languages.of(context)!.labelExchange,
-                                  Icon(
-                                    Icons.currency_exchange,
-                                    color: AppColor.BLACK,
-                                    size: 22,
-                                  )),
-                            ],
-                          ),
+                        color: Colors.transparent,
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            Container(
+                              width: screenWidth,
+                              height: screenHeight * 0.12,
+                              child: Row(
+                                children: [
+                                  Card(
+                                    color: isDarkMode
+                                        ? AppColor.DARK_CARD_COLOR
+                                        : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
+                                    child: Container(
+                                      width: screenWidth * 0.8,
+                                      height: screenHeight * 0.12,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: List.generate(
+                                            4,
+                                            (index) {
+                                              return _buildContainer(
+                                                  context,
+                                                  _shortcutCardsList[index]
+                                                      .title,
+                                                  _shortcutCardsList[index]
+                                                      .icon);
+                                            },
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              right: -8,
+                              child: Container(
+                                height: screenHeight * 0.05,
+                                width: screenHeight * 0.12,
+                                child: FittedBox(
+                                  child: FloatingActionButton(
+                                    shape: CircleBorder(),
+                                    onPressed: () {
+                                      _showModal(context, _shortcutCardsList);
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -395,7 +444,61 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         ));
   }
 
-  _buildContainer(BuildContext context, String text, Icon icon) {
+  void _showModal(BuildContext context, List<Shortcutitemlist> options) {
+    // Initialize _isChecked with false for each option
+    _isChecked =
+        List<bool>.generate(options.length, (index) => options[index].selected);
+    print(_isChecked);
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Select Options'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(options.length, (index) {
+                  return CheckboxListTile(
+                    checkboxShape: CircleBorder(),
+                    title: Text(options[index].title),
+                    value: _isChecked[index],
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _isChecked[index] = value ?? false;
+                      });
+                    },
+                  );
+                }),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    int selectedCount = _countSelectedItems();
+                    if (selectedCount == 4) {
+                      print('Number of selected items: $selectedCount');
+                      Navigator.of(context).pop();
+                    } else {
+                      ToastComponent.showToast(
+                          context: context, message: "Select minimum 4 items");
+                    }
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  int _countSelectedItems() {
+    return _isChecked.where((item) => item).length;
+  }
+
+  _buildContainer(BuildContext context, String text, IconData icon) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -407,18 +510,33 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               color: AppColor.WHITE,
               borderRadius: BorderRadius.circular(14.0),
             ),
-            child: IconButton(onPressed: () => {}, icon: icon)),
+            child: IconButton(
+                onPressed: () => {
+                      if (text == Languages.of(context)!.labelTransfer)
+                        {}
+                      else if (text == Languages.of(context)!.labelSend)
+                        {}
+                      else if (text == Languages.of(context)!.labelAddMoney)
+                        {Navigator.pushNamed(context, '/AddMoneyScreen')}
+                      else if (text == Languages.of(context)!.labelExchange)
+                        {}
+                    },
+                icon: Icon(
+                  icon,
+                  color: AppColor.BLACK,
+                  size: 22,
+                ))),
         Text(text, style: TextStyle(fontSize: 12))
       ],
     );
   }
+
   Future<SetUpAccountResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     SetUpAccountResponse? userDetails = await Helper.getUserDetails();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        name = userDetails!.firstName!;
-
+        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
       });
     });
     return userDetails;

@@ -1,15 +1,15 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/Strings/Languages.dart';
-import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
-import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
+import '../../../languageSection/Languages.dart';
+import 'package:payrio/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/apis/api_response.dart';
-import '../../model/response/createOtpForEmailVerifyResponse.dart';
-import '../../model/response/profileResponse.dart';
-import '../../utils/Helper.dart';
-import '../../view_model/media_view_model.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../model/response/createOtpForEmailVerifyResponse.dart';
+import '../../../model/response/profileResponse.dart';
+import '../../../utils/Helper.dart';
+import '../../../view_model/media_view_model.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   @override

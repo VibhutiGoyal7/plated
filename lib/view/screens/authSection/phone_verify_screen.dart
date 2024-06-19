@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/Strings/Languages.dart';
-import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
-import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
-import 'package:mvvm_flutter_app/view/component/toastMessage.dart';
-import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+import '../../../languageSection/Languages.dart';
+import 'package:payrio/model/apis/api_response.dart';
+import 'package:payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:payrio/model/response/phoneVerifyResponse.dart';
+import 'package:payrio/view/component/toastMessage.dart';
+import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
 class PhoneVerifyScreen extends StatefulWidget {

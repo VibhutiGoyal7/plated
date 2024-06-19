@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
 
-import '../../Strings/Languages.dart';
-//import 'package:flutter_svg/flutter_svg.dart';
+import '../../languageSection/Languages.dart';
 
 class AddMoneyScreen extends StatefulWidget {
   @override
@@ -12,13 +12,19 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   String amount = "";
   bool expanded = false;
   bool inputValid = false;
-
+  final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     inputValid = false;
+  }
+
+  @override
+  void dispose() {
+    tokenInputController.dispose();
+    super.dispose();
   }
 
   void _isValidInput() {
@@ -71,6 +77,21 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               child: Text(
                 Languages.of(context)!.labelEnterAmount,
               ),
+            ),
+            Container(
+              width: 250.0,
+              child: TextFormField(
+                controller: tokenInputController,
+                decoration: InputDecoration(
+                    border: UnderlineInputBorder(),
+                    labelText: 'Authorization token'),
+              ),
+            ),
+            ElevatedButton(
+              child: Text("Start"),
+              onPressed: () {
+                _start(tokenInputController.text);
+              },
             ),
             _buildPhoneInput(
                 context, Languages.of(context)!.labelZero, _amountController),
@@ -157,6 +178,56 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _start(String authorizationToken) async {
+    await _logErrors(() async {
+      await Jumio.init(authorizationToken, "US");
+      final result = await Jumio.start({
+        "background": "#AC3D9A",
+        "primaryColor": "#FF5722",
+        "loadingCircleIcon": "#F2F233",
+        "loadingCirclePlain": "#57ffc7",
+        "loadingCircleGradientStart": "#EC407A",
+        "loadingCircleGradientEnd": "#bc2e41",
+        "loadingErrorCircleGradientStart": "#AC3D9A",
+        "loadingErrorCircleGradientEnd": "#C31322",
+        "primaryButtonBackground": {"light": "#D900ff00", "dark": "#9Edd9E"}
+      });
+      await _showDialogWithMessage("Jumio has completed. Result: $result");
+    });
+  }
+
+  Future<void> _logErrors(Future<void> Function() block) async {
+    try {
+      await block();
+    } catch (error) {
+      await _showDialogWithMessage(error.toString(), "Error");
+    }
+  }
+
+  Future<void> _showDialogWithMessage(String message,
+      [String title = "Result"]) async {
+    print(message);
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(child: Text(message)),
+          actions: <Widget>[
+
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../Strings/Languages.dart';
+import '../../../languageSection/Languages.dart';
 
 class VerifyIdentityScreen extends StatefulWidget {
   @override

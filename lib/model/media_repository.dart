@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-import 'package:mvvm_flutter_app/model/request/changeOldPasswordRequest.dart';
-import 'package:mvvm_flutter_app/model/request/createOtpChangePass.dart';
-import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
-import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
-import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/createOtpChangePassResponse.dart';
-import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
-import 'package:mvvm_flutter_app/model/services/base_service.dart';
-import 'package:mvvm_flutter_app/model/services/media_service.dart';
-import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
-import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
-import 'package:mvvm_flutter_app/model/request/verifyOtpChangePass.dart';
+import 'package:payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:payrio/model/request/createOtpChangePass.dart';
+import 'package:payrio/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:payrio/model/response/phoneVerifyResponse.dart';
+import 'package:payrio/model/response/createOtpChangePassResponse.dart';
+import 'package:payrio/model/response/profileResponse.dart';
+import 'package:payrio/model/services/base_service.dart';
+import 'package:payrio/model/services/media_service.dart';
+import 'package:payrio/model/request/setUpAccountRequest.dart';
+import 'package:payrio/model/response/setUpAccountResponse.dart';
+import 'package:payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:payrio/model/request/verifyOtpChangePass.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/Helper.dart';

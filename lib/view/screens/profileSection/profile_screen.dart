@@ -1,13 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
+import 'package:payrio/model/response/profileResponse.dart';
 import 'package:provider/provider.dart';
 
-import '../../Strings/Languages.dart';
-import '../../model/apis/api_response.dart';
-import '../../utils/Helper.dart';
-import '../../view_model/media_view_model.dart';
-import 'package:mvvm_flutter_app/theme/AppColor.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../utils/Helper.dart';
+import '../../../view_model/media_view_model.dart';
+import 'package:payrio/theme/AppColor.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override

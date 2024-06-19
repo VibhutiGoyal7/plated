@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+import 'package:payrio/model/apis/api_response.dart';
+import 'package:payrio/model/request/setUpAccountRequest.dart';
+import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../Strings/Languages.dart';
-import '../../model/response/setUpAccountResponse.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/response/setUpAccountResponse.dart';
 import 'package:email_validator/email_validator.dart';
 
-import '../../utils/Helper.dart';
+import '../../../utils/Helper.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
   final String? userId; // Define the 'data' parameter here

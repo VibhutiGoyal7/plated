@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/media_repository.dart';
-import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
-import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
-import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
+import 'package:payrio/model/apis/api_response.dart';
+import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:payrio/model/response/phoneVerifyResponse.dart';
+import 'package:payrio/model/media_repository.dart';
+import 'package:payrio/model/response/profileResponse.dart';
+import 'package:payrio/model/request/setUpAccountRequest.dart';
+import 'package:payrio/model/response/setUpAccountResponse.dart';
+import 'package:payrio/model/request/signInWithPhoneNumber.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';

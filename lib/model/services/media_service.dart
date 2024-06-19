@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
-import 'package:mvvm_flutter_app/model/apis/app_exception.dart';
-import 'package:mvvm_flutter_app/model/services/base_service.dart';
+import 'package:payrio/model/apis/app_exception.dart';
+import 'package:payrio/model/services/base_service.dart';
 
 import '../../utils/Helper.dart';
 

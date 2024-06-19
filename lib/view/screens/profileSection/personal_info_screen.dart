@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../Strings/Languages.dart';
-import '../../model/response/profileResponse.dart';
-import '../../utils/Helper.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/response/profileResponse.dart';
+import '../../../utils/Helper.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
 class PersonalInformationScreen extends StatefulWidget {

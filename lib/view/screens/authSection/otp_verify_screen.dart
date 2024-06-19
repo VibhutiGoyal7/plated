@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
-import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/utils/Helper.dart';
-import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+import 'package:payrio/model/apis/api_response.dart';
+import 'package:payrio/utils/Helper.dart';
+import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../Strings/Languages.dart';
-import '../../model/response/phoneVerifyResponse.dart';
-import '../../model/request/signInWithPhoneNumber.dart';
-import '../../model/response/otpVerifyResponse.dart';
-import '../component/toastMessage.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/response/phoneVerifyResponse.dart';
+import '../../../model/request/signInWithPhoneNumber.dart';
+import '../../../model/response/otpVerifyResponse.dart';
+import '../../component/toastMessage.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
