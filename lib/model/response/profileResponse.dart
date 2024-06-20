@@ -57,5 +57,18 @@ class ProfileResponse {
     data['message'] = this.message;
     return data;
   }
+  factory ProfileResponse.fromPref(Map<String, dynamic> json) {
+    return ProfileResponse(
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      userId: json['id'] as int?,
+      imageUrl: json['image_url'] as String?,
+      phoneNumber: json['phone_number'] as String?,
+      email: json['email'] as String?,
+      address: json['address'] as String?,
+      dob: json['dob'] as String?,
+      isEmailVerified: json['is_email_verified'] as bool?,
+    );
+  }
 
 }

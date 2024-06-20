@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   flutter_timer_countdown: ^1.0.7
+  email_validator: '^2.1.16'
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -64,6 +65,8 @@ flutter:
       - assets/profile_user.png
       - assets/india_flag_icon.png
       - assets/united_states_flag_icon.png
+      - assets/payment_image.png
+      - assets/money_safe.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

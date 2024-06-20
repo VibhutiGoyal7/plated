@@ -50,6 +50,23 @@ class MediaViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> existingUserData(String value, ExistingUserRequest existingUserRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    //String requestAsString = phoneRequestToString(request);
+    notifyListeners();
+    try {
+      print(existingUserRequest.customer.phoneNumber);
+
+      ExistingUserResponse existingUserResponse = await MediaRepository().existingUserData(value,existingUserRequest);
+      print("Yess"+ existingUserResponse.userFound.toString());
+      _apiResponse = ApiResponse.completed(existingUserResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
   Future<void> fetchOtpVerifyData(String value, PhoneRequest phoneRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     print("Yess"+ phoneRequest.customer.mobileOtp);
@@ -59,6 +76,22 @@ class MediaViewModel with ChangeNotifier {
       OtpVerifyResponse otpVerifyResponse = await MediaRepository().fetchOtpVerifyData(value,phoneRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(otpVerifyResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> signInWithPass(String value, SignInRequest signInRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    print("Yess"+ signInRequest.customer.phoneNumber);
+    notifyListeners();
+    try {
+      print(signInRequest.customer.phoneNumber);
+      SignInResponse signInResponse = await MediaRepository().signInWithPass(value,signInRequest);
+      //print("Yess"+ otpVerifyResponse.token.toString());
+      _apiResponse = ApiResponse.completed(signInResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

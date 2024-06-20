@@ -21,6 +21,35 @@ import 'package:payrio/view/screens/profileSection/profile_screen.dart';
 import 'package:payrio/view/screens/profileSection/setting_screen.dart';
 import 'package:payrio/view/screens/profileSection/verify_email_screen.dart';
 import 'package:payrio/view_model/media_view_model.dart';
+import 'package:mvvm_flutter_app/theme/AppTheme.dart';
+import 'package:mvvm_flutter_app/utils/Helper.dart';
+import 'package:mvvm_flutter_app/view/screens/account_detail_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/add_money_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/address_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/bottom_nav.dart';
+import 'package:mvvm_flutter_app/view/screens/change_password_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/chooose_doc_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/forgot_password_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/get_started_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/level_benefit_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/money_safe_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/notification_detail_s%20reen.dart';
+import 'package:mvvm_flutter_app/view/screens/notification_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/otp_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/personal_data_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/personal_info_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/phone_verify_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/profile_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/redeem_balance_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/redeem_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/select_country_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/setting_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/setup_account_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/signin_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/splash_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/verify_email_screen.dart';
+import 'package:mvvm_flutter_app/view/screens/verify_identity_screen.dart';
+import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
@@ -81,7 +110,23 @@ class _MyAppState extends State<MyApp> {
           themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
-            '/': (context) => PhoneVerifyScreen(),
+            '/': (context) => SplashScreen()
+            ,
+            '/GetStartedScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return GetStartedScreen();
+            },
+            '/MoneySafeScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return MoneySafeScreen();
+            },
+            '/PhoneVerifyScreen': (context){
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PhoneVerifyScreen();
+            },
             '/OtpVerify': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
@@ -91,6 +136,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return SetUpAccountScreen(userId: args);
+            },
+            '/SignInScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return SigninScreen(data: args);
             },
             '/BottomNav': (context) {
               final args =
@@ -163,6 +213,31 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return SelectCountryScreen();
+            },
+            '/LevelBenefitScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return LevelBenefitScreen();
+            },
+            '/NotificationScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return NotificationScreen();
+            },
+            '/NotificationDetailScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return NotificationDetailScreen();
+            },
+            '/RedeemBalScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return RedeemBalanceScreen();
+            },
+            '/RedeemBalance': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return RedeemScreen();
             }
           }),
     );

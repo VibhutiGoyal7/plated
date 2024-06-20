@@ -21,7 +21,8 @@ class _RewardScreenState extends State<RewardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(Languages.of(context)!.labelRewards, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),),
+                  Text(Languages.of(context)!.labelRewards,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28.0),),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Card(
@@ -35,12 +36,17 @@ class _RewardScreenState extends State<RewardScreen> {
                               Text(Languages.of(context)!.availablePayario, style: TextStyle(fontSize: 11.0),),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Row(
-                                  children: [
-                                    Text("100",style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold)),
-                                    SizedBox(width: 10,),
-                                    Icon(Icons.arrow_forward_ios_rounded)
-                                  ],
+                                child: GestureDetector(
+                                  onTap: (){
+                                    Navigator.pushNamed(context, "/LevelBenefitScreen");
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text("100",style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold)),
+                                      SizedBox(width: 10,),
+                                      Icon(Icons.arrow_forward_ios_rounded)
+                                    ],
+                                  ),
                                 ),
                               ),
                               Text("2000 ${Languages.of(context)!.labelPayarioPts}", style: TextStyle(fontSize: 10.0),),
@@ -60,20 +66,25 @@ class _RewardScreenState extends State<RewardScreen> {
                       ),
                     ),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-                    child : Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(Languages.of(context)!.labelRedeemBal, style: TextStyle(fontSize: 14.0)),
-                            Spacer(),
-                            Icon(Icons.arrow_forward_ios_rounded)
-                          ]
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, "/RedeemBalScreen");
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                      child : Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(Languages.of(context)!.labelRedeemBal, style: TextStyle(fontSize: 14.0)),
+                              Spacer(),
+                              Icon(Icons.arrow_forward_ios_rounded)
+                            ]
+                          )
                         )
-                      )
+                      ),
                     ),
                   )
                 ],

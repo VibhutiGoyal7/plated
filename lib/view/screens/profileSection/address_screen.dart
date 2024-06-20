@@ -15,7 +15,6 @@ class _AddressScreenState extends State<AddressScreen> {
   String state = "";
   String city = "";
   String postCode = "";
-  String address = "";
   bool inputValid = false;
 
   @override
@@ -47,6 +46,9 @@ class _AddressScreenState extends State<AddressScreen> {
       });
     }
   }
+
+  String address = "";
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +115,8 @@ class _AddressScreenState extends State<AddressScreen> {
                         Languages.of(context)!.labelCity, city, (value) {
                       setState(() {
                         city = value;
-                      });
-                    }, _cityController),
+                      });}
+                    , _cityController),
                   ),
                   Expanded(
                     flex: 1,

@@ -53,6 +53,34 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }
   }
 
+  Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
+    ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("userfound: ${mediaList?.userFound}");
+        // Navigate to the new screen after receiving the response
+        if (mediaList?.userFound == true) {
+          Navigator.pushNamed(context, '/SignInScreen',
+              arguments: "${_inputController.text}");
+        } else {
+          _phoneVerifyAPI();
+        }
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        _phoneVerifyAPI();
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
     PhoneVerifyResponse? phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
@@ -164,6 +192,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   fontSize: 16.0,
                 ),
                 controller: _inputController,
+                onChanged: _isValidPhoneNumber,
                 maxLength: 12,
                 keyboardType: TextInputType.phone,
                 onChanged: _isValidPhoneNumber,
@@ -176,7 +205,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   // }
                 },
                 decoration: InputDecoration(
-                  counterText: '',
+                  counterText: "",
                   border: InputBorder.none,
                   hintText: 'XXXXXXXXXX',
                   hintStyle: TextStyle(color: Colors.grey),
@@ -197,6 +226,15 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           child: ElevatedButton(
             onPressed: () async {
               if (phoneNumberValid) {
+                ExistingUserRequest request = ExistingUserRequest(
+                    customer: ExistingCustomer(
+                        phoneNumber: _inputController.text));
+                await Provider.of<MediaViewModel>(context, listen: false)
+                    .existingUserData(
+                        "/api/v1/app/customers/check_customer_existance",
+                    request);
+                  // Navigator.pushNamed(context, '/OtpVerify',
+                  //   arguments: "${_inputController.text}");
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));
@@ -209,6 +247,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
+                existingUserWidget(context, apiResponse);
+              } else {
                 getMediaWidget(context, apiResponse);
               }else{
                 SnackBar(
@@ -241,5 +281,21 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         ),
       ],
     );
+  }
+
+  void _phoneVerifyAPI() async {
+    if (phoneNumberValid) {
+      PhoneRequest phoneRequest = PhoneRequest(
+          customer:
+              Customer(phoneNumber: _inputController.text, mobileOtp: ""));
+      await Provider.of<MediaViewModel>(context, listen: false).fetchMediaData(
+          "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
+      /*  Navigator.pushNamed(context, '/OtpVerify',
+                    arguments: "${_inputController.text}");*/
+
+      ApiResponse apiResponse =
+          Provider.of<MediaViewModel>(context, listen: false).response;
+      getMediaWidget(context, apiResponse);
+    }
   }
 }

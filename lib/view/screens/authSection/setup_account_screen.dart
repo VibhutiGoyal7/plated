@@ -71,7 +71,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
         await Helper.saveUserDetails(mediaList);
-        if(await Helper.saveUserDetails(mediaList)) print("data saved");
+        if(await Helper.saveUserDetails(mediaList)) print("data saved") ;
+        else print("not saved");
 
         await Helper.savePassword(_passwordController.text);
         String? password = await Helper.getPassword();
@@ -79,8 +80,10 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
         SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
         print('Retrieved Token: ${retrievedToken}');
-        // Navigate to the new screen after receiving the response
+
         Navigator.pushNamed(context, '/BottomNav');
+        // Navigate to the new screen after receiving the response
+        // Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);

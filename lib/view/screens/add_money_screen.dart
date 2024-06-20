@@ -71,6 +71,13 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              width: double.infinity,
+              height: 1.0,
+              child: Container(
+                color: Colors.grey,
+              ),
+            ),
             Padding(
               padding:
                   const EdgeInsets.only(top: 10.0, left: 12.0, bottom: 8.0),
@@ -159,7 +166,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
-                  Navigator.pushNamed(context, '/BottomNav');
+                  Navigator.pushNamed(context, '/VerifyIdentityScreen');
                 }
               },
               child: Text(
