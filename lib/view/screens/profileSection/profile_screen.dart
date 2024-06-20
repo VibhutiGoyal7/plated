@@ -1,13 +1,15 @@
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/profileResponse.dart';
+import 'package:payrio/theme/AppColor.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
-import 'package:payrio/theme/AppColor.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -16,6 +18,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   var userName;
+  File? galleryFile;
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -25,7 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(Helper.getUserToken());
   }
 
-  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -40,13 +45,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // Defer the state update until the next frame
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            userName = "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
+            userName =
+                "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
           });
-
-    });
-
-
-
+        });
         // Navigate to the new screen after receiving the response
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
@@ -65,6 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -85,10 +88,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: Alignment.centerLeft,
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColor.WHITE,
-                    backgroundImage: AssetImage("assets/profile_user.png"),
+                  GestureDetector(
+                    onTap: () => {_showPicker(context: context)},
+                    child: galleryFile == null
+                        ? CircleAvatar(
+                            radius: 30,
+                            backgroundColor: AppColor.WHITE,
+                            backgroundImage:
+                                AssetImage("assets/profile_user.png"),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(100.0),
+                            child: Image.file(
+                              galleryFile!,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            )),
                   ),
                   _buildLabelText(context, userName.toString()),
                   Column(
@@ -98,43 +114,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, Languages.of(context)!.labelProfile)),
+                            child: _buildLabelText(
+                                context, Languages.of(context)!.labelProfile)),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/AccountDetailScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, Languages.of(context)!.labelAccountDetails, isDarkMode),
+                          child: _buildCard(
+                              context,
+                              Languages.of(context)!.labelAccountDetails,
+                              isDarkMode),
                         ),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/PersonalInfoScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, Languages.of(context)!.labelPersonalInfo, isDarkMode),
+                          child: _buildCard(
+                              context,
+                              Languages.of(context)!.labelPersonalInfo,
+                              isDarkMode),
                         ),
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, Languages.of(context)!.labelSecurity)),
-                        _buildCard(context, Languages.of(context)!.labelStepVerification, isDarkMode),
+                            child: _buildLabelText(
+                                context, Languages.of(context)!.labelSecurity)),
+                        _buildCard(
+                            context,
+                            Languages.of(context)!.labelStepVerification,
+                            isDarkMode),
                         Container(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, Languages.of(context)!.labelPaymentMethod)),
-                        _buildCard(context, Languages.of(context)!.labelAddedCard, isDarkMode),
-
+                            child: _buildLabelText(context,
+                                Languages.of(context)!.labelPaymentMethod)),
+                        _buildCard(context,
+                            Languages.of(context)!.labelAddedCard, isDarkMode),
                         Container(
                             padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context, Languages.of(context)!.labelHelpSupport)),
+                            child: _buildLabelText(context,
+                                Languages.of(context)!.labelHelpSupport)),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/SettingScreen',
                                 arguments: "");
                           },
-                          child: _buildCard(context, Languages.of(context)!.labelSettings, isDarkMode),
+                          child: _buildCard(context,
+                              Languages.of(context)!.labelSettings, isDarkMode),
                         ),
-
                       ]),
                 ],
               ),
@@ -183,5 +212,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
+  }
+
+  Future<void> _uploadProfilePic(File file) async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MediaViewModel>(context, listen: false)
+        .putMultiFormResponse("/api/v1/app/customers/update_profile_pic", galleryFile!);
+    ApiResponse apiResponse =
+        Provider.of<MediaViewModel>(context, listen: false).response;
+    getMediaWidget(context, apiResponse);
+  }
+
+  _showPicker({required BuildContext context}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  getImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  getImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future getImage(
+    ImageSource img,
+  ) async {
+    final pickedFile = await picker.pickImage(source: img);
+    XFile? xfilePick = pickedFile;
+    setState(
+      () {
+        if (xfilePick != null) {
+          galleryFile = File(pickedFile!.path);
+          _uploadProfilePic(galleryFile!);
+
+          print(galleryFile);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('Nothing is selected')));
+        }
+      },
+    );
   }
 }

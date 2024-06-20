@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:payrio/model/request/createOtpChangePass.dart';
@@ -53,6 +54,15 @@ class MediaRepository {
 
   Future<ProfileResponse> ProfileScreenData(String value) async {
     dynamic response = await _mediaService.getResponse(value);
+    print(value);
+    final jsonData = response;//['data'];
+    print(jsonData);
+    ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<ProfileResponse> putMultiFormResponse(String value, File file) async {
+    dynamic response = await _mediaService.putMultiFormResponse(value, file);
     print(value);
     final jsonData = response;//['data'];
     print(jsonData);

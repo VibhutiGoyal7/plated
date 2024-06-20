@@ -200,16 +200,16 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);*/
+                      phoneRequest);
                Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
+                getMediaWidget(context, apiResponse);
               }else{
                 SnackBar(
                   content: Text("Enter valid Phone No"),

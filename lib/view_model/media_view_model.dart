@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:payrio/model/apis/api_response.dart';
 import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
@@ -87,6 +89,22 @@ class MediaViewModel with ChangeNotifier {
     try {
       //print(phoneRequest.customer.phoneNumber);
       ProfileResponse profileResponse = await MediaRepository().ProfileScreenData(value);
+      print("Yess"+ profileResponse.firstName.toString());
+      _apiResponse = ApiResponse.completed(profileResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> putMultiFormResponse(String value, File file) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    //print("Yess"+ phoneRequest.customer.mobileOtp);
+    notifyListeners();
+    try {
+      //print(phoneRequest.customer.phoneNumber);
+      ProfileResponse profileResponse = await MediaRepository().putMultiFormResponse(value, file);
       print("Yess"+ profileResponse.firstName.toString());
       _apiResponse = ApiResponse.completed(profileResponse);
     } catch (e) {

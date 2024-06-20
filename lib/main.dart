@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
           themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
-            '/': (context) => BottomNav(),
+            '/': (context) => PhoneVerifyScreen(),
             '/OtpVerify': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;

@@ -9,6 +9,7 @@ import '../../../model/response/setUpAccountResponse.dart';
 import 'package:email_validator/email_validator.dart';
 
 import '../../../utils/Helper.dart';
+import '../../component/toastMessage.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
   final String? userId; // Define the 'data' parameter here
@@ -62,7 +63,9 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
   Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
     SetUpAccountResponse? mediaList = apiResponse.data as SetUpAccountResponse?;
+    String? message = mediaList?.message.toString();
     switch (apiResponse.status) {
+
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
@@ -80,6 +83,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        ToastComponent.showToast(context: context, message: message);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -367,16 +371,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       lastName: _lastNameController.text,
                       dob: "17/07/1996",
                     ));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);*/
-                Navigator.pushNamed(context, '/BottomNav');
+                      "/api/v1/app/customers/update_customer", request);
+                //Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =
                     Provider
                         .of<MediaViewModel>(context, listen: false)
                         .response;
-                //getMediaWidget(context, apiResponse);
+                getMediaWidget(context, apiResponse);
               }
             },
             child: Text(

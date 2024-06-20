@@ -160,11 +160,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Card(
-                        color: Colors.transparent,
+                        color: AppColor.BG_COLOR,
+                        elevation: 0,
                         child: Stack(
                           alignment: Alignment.centerRight,
                           children: [
                             Container(
+                              color: Colors.transparent,
                               width: screenWidth,
                               height: screenHeight * 0.12,
                               child: Row(

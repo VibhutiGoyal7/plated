@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:payrio/model/apis/app_exception.dart';
 import 'package:payrio/model/services/base_service.dart';
-
+import 'package:path/path.dart';
 import '../../utils/Helper.dart';
+import 'dart:convert';
 
 class MediaService extends BaseService {
   String? retrievedToken;
@@ -27,6 +27,16 @@ class MediaService extends BaseService {
       'Accept-Language': selectedLanguage.languageCode,
     };
   }
+  Future<Map<String, String>> getMultiDataHeaders() async {
+    if (retrievedToken == null || selectedLanguage == null) {
+      await setState();
+    }
+    return {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $retrievedToken',
+      'Accept-Language': selectedLanguage.languageCode,
+    };
+  }
 
   void printRequestDetails(String url, Map<String, String> headers, dynamic body) {
     print('Request URL: $url');
@@ -34,6 +44,12 @@ class MediaService extends BaseService {
     if (body != null) {
       print('Request Body: ${jsonEncode(body)}');
     }
+  }
+
+  void printResponseDetail(http.StreamedResponse response) {
+    // Implement this function to print response details
+    print('Response Status: ${response.statusCode}');
+    // Print other response details as needed
   }
 
   void printResponseDetails(http.Response response) {
@@ -114,6 +130,58 @@ class MediaService extends BaseService {
       throw FetchDataException('No Internet Connection');
     }
     return responseJson;
+  }
+
+  Future<dynamic> putMultiFormResponse(String url, File file) async {
+    print("::::: File: $file");
+    dynamic responseJson;
+
+    try {
+      // Create a multipart request
+      var requestBody = http.MultipartRequest('PUT', Uri.parse(getFullUrl(url)));
+
+      // Add file
+      var stream = http.ByteStream(file.openRead());
+      var length = await file.length();
+
+      // multipart that takes file
+      var multipartFile = http.MultipartFile('customer_image', stream, length, filename: basename(file.path));
+      print("Multipart File: ${multipartFile.filename}");
+      requestBody.files.add(multipartFile);
+
+      // Add headers
+      var headers = await getHeaders();
+      requestBody.headers.addAll(headers);
+
+      // Debugging the request
+      print("Request URL: ${getFullUrl(url)}");
+      print("Request Headers: $headers");
+      print("Request Files: ${requestBody.files.map((file) => file.filename).join(', ')}");
+
+      // Send the request and get the response
+      var response = await requestBody.send();
+      final responses = await http.Response.fromStream(response);
+      print("Response Status Code: ${responses.statusCode}");
+      print("Response Body: ${responses.body}");
+
+      responseJson = returnResponse(responses);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      print('Error: $e');
+      throw FetchDataException('Error occurred while sending the request');
+    }
+    return responseJson;
+  }
+
+  dynamic returnResponses(String responseString, int statusCode) {
+    // Implement this function to parse and return the response
+    // For example, you might want to parse the responseString as JSON
+    // and return a Map or another appropriate type
+    return {
+      'statusCode': statusCode,
+      'body': responseString,
+    };
   }
 
   @visibleForTesting

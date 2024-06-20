@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:payrio/model/request/signInWithPhoneNumber.dart';
 
 abstract class BaseService {
@@ -10,5 +12,5 @@ abstract class BaseService {
   Future<dynamic> postResponse(String url, dynamic phoneRequest);
   Future<dynamic> putResponse(String url, dynamic phoneRequest);
   Future<dynamic> getResponse(String url);
-
+  Future<dynamic> putMultiFormResponse(String url, File file);
 }
