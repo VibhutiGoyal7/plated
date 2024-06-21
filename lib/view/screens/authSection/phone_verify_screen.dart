@@ -7,6 +7,9 @@ import 'package:payrio/view/component/toastMessage.dart';
 import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/request/exustingUserRequest.dart';
+import '../../../model/response/existingUserResponse.dart';
+
 class PhoneVerifyScreen extends StatefulWidget {
   @override
   _PhoneVerifyScreenState createState() => _PhoneVerifyScreenState();
@@ -195,7 +198,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 onChanged: _isValidPhoneNumber,
                 maxLength: 12,
                 keyboardType: TextInputType.phone,
-                onChanged: _isValidPhoneNumber,
                 onSubmitted: (value) {
                   // if (value.isNotEmpty) {
                   //   Provider.of<MediaViewModel>(context, listen: false)
@@ -248,8 +250,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
                 existingUserWidget(context, apiResponse);
-              } else {
-                getMediaWidget(context, apiResponse);
               }else{
                 SnackBar(
                   content: Text("Enter valid Phone No"),

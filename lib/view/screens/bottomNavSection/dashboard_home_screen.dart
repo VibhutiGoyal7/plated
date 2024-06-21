@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:payrio/model/response/setUpAccountResponse.dart';
 import 'package:payrio/view/component/toastMessage.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/shortcutItemList.dart';
+import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 
@@ -16,6 +16,7 @@ class DashboardHomeScreen extends StatefulWidget {
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   double amount = 0.00;
   String? name = "";
+  var imageUrl;
   bool isAmountVisible = false;
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
@@ -29,6 +30,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     _fetchData();
     _isChecked = List<bool>.generate(
         5, (index) => false); // Initial setup for 5 checkboxes
+    imageUrl = "";
     // Initial setup for 5 checkboxes
   }
 
@@ -72,22 +74,30 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     Row(
                       children: [
                         Container(
+                          margin: EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          child: IconButton(
-                            icon: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: AppColor.WHITE,
-                              backgroundImage:
-                                  AssetImage("assets/profile_user.png"),
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/ProfileScreen');
+                          child: GestureDetector(
+                            onTap: () => {
+                              Navigator.pushNamed(context, '/ProfileScreen')
                             },
+                            child: imageUrl == ""
+                                ? CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: AppColor.WHITE,
+                                    backgroundImage:
+                                        AssetImage("assets/profile_user.png"),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                    child: Image.network(imageUrl,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.cover)),
                           ),
                         ),
-                        SizedBox(width: 4), // Add space between avatar and text
+                        SizedBox(width: 6), // Add space between avatar and text
                         Text(
                           "${Languages.of(context)!.labelHi}, $name",
                           style: TextStyle(
@@ -533,12 +543,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Future<SetUpAccountResponse?> _fetchData() async {
+  Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
-    SetUpAccountResponse? userDetails = await Helper.getUserDetails();
+    ProfileResponse? userDetails = await Helper.getProfileDetails();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
+        imageUrl = userDetails?.imageUrl.toString();
       });
     });
     return userDetails;

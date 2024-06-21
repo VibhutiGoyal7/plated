@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/theme/AppColor.dart';
+import 'package:payrio/theme/AppColor.dart';
 
 class LevelBenefitScreen extends StatefulWidget {
   @override

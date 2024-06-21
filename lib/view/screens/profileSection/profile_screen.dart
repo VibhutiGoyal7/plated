@@ -18,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   var userName;
+  var imageUrl;
   File? galleryFile;
   final picker = ImagePicker();
 
@@ -25,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     userName = "";
+    imageUrl = "";
     _fetchData();
     print(Helper.getUserToken());
   }
@@ -36,21 +38,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.firstName}");
-
         await Helper.saveProfileDetails(mediaList);
-
         ProfileResponse? retrievedDetails = await Helper.getProfileDetails();
-        print('Retrieved Token: ${retrievedDetails}');
-        // Defer the state update until the next frame
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             userName =
                 "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
+            imageUrl = retrievedDetails?.imageUrl.toString();
           });
         });
-        // Navigate to the new screen after receiving the response
-        //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -90,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   GestureDetector(
                     onTap: () => {_showPicker(context: context)},
-                    child: galleryFile == null
+                    child: imageUrl == ""
                         ? CircleAvatar(
                             radius: 30,
                             backgroundColor: AppColor.WHITE,
@@ -99,13 +95,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100.0),
-                            child: Image.file(
-                              galleryFile!,
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.cover,
-                            )),
+                            child: Image.network(imageUrl,
+                                height: 100, width: 100, fit: BoxFit.cover)
+                    ),
                   ),
+                  SizedBox(height: 10,),
                   _buildLabelText(context, userName.toString()),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +211,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
-        .putMultiFormResponse("/api/v1/app/customers/update_profile_pic", galleryFile!);
+        .putMultiFormResponse(
+            "/api/v1/app/customers/update_profile_pic", galleryFile!);
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);

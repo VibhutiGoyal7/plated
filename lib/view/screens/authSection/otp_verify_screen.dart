@@ -264,10 +264,10 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: widget.data.toString(), mobileOtp: otp));
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                      phoneRequest);*/
+                      phoneRequest);
 
                 ApiResponse apiResponse =
                     Provider

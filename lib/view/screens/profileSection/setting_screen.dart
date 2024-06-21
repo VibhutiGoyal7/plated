@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payrio/theme/AppColor.dart';
 import 'package:payrio/utils/Helper.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -51,6 +52,23 @@ class _SettingScreenState extends State<SettingScreen> {
           Languages.of(context)!.labelSettings,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () => {_showLogOutDialog()},
+                child: Icon(
+                  Icons.logout,
+                  size: 34,
+                  color: AppColor.WHITE,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              )
+            ],
+          )
+        ],
       ),
       body: SafeArea(
         child: Column(
@@ -105,15 +123,18 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                     ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 10,
+                ),
               ]),
             ),
-
           ],
         ),
       ),
     );
   }
+
   void _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     var selectedLanguage = await Helper.getLocale();
@@ -125,5 +146,36 @@ class _SettingScreenState extends State<SettingScreen> {
         dropdownValue = selectedLanguage.languageCode;
       });
     }
+  }
+
+  Future<void> _showLogOutDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: Border.all(),
+          title: Text("Logout"),
+          content: SingleChildScrollView(
+              child: Text("Are you sure you want to logout?")),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Helper.clearAllSharedPreferences();
+                Navigator.pushNamed(context, '/SignInScreen',
+                    arguments: "");
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

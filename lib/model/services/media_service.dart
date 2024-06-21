@@ -176,8 +176,6 @@ class MediaService extends BaseService {
 
   dynamic returnResponses(String responseString, int statusCode) {
     // Implement this function to parse and return the response
-    // For example, you might want to parse the responseString as JSON
-    // and return a Map or another appropriate type
     return {
       'statusCode': statusCode,
       'body': responseString,

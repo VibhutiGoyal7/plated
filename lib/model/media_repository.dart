@@ -15,24 +15,24 @@ import 'package:payrio/model/request/setUpAccountRequest.dart';
 import 'package:payrio/model/response/setUpAccountResponse.dart';
 import 'package:payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:payrio/model/request/verifyOtpChangePass.dart';
-import 'package:mvvm_flutter_app/model/request/changeOldPasswordRequest.dart';
-import 'package:mvvm_flutter_app/model/request/createOtpChangePass.dart';
-import 'package:mvvm_flutter_app/model/request/createOtpEmailVerifyRequest.dart';
-import 'package:mvvm_flutter_app/model/request/exustingUserRequest.dart';
-import 'package:mvvm_flutter_app/model/request/signInRequest.dart';
-import 'package:mvvm_flutter_app/model/request/verifyOtpEmailVerifyRequest.dart';
-import 'package:mvvm_flutter_app/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/existingUserResponse.dart';
-import 'package:mvvm_flutter_app/model/response/phoneVerifyResponse.dart';
-import 'package:mvvm_flutter_app/model/response/createOtpChangePassResponse.dart';
-import 'package:mvvm_flutter_app/model/response/profileResponse.dart';
-import 'package:mvvm_flutter_app/model/response/signInResponse.dart';
-import 'package:mvvm_flutter_app/model/services/base_service.dart';
-import 'package:mvvm_flutter_app/model/services/media_service.dart';
-import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/model/response/setUpAccountResponse.dart';
-import 'package:mvvm_flutter_app/model/request/signInWithPhoneNumber.dart';
-import 'package:mvvm_flutter_app/model/request/verifyOtpChangePass.dart';
+import 'package:payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:payrio/model/request/createOtpChangePass.dart';
+import 'package:payrio/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:payrio/model/request/exustingUserRequest.dart';
+import 'package:payrio/model/request/signInRequest.dart';
+import 'package:payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:payrio/model/response/existingUserResponse.dart';
+import 'package:payrio/model/response/phoneVerifyResponse.dart';
+import 'package:payrio/model/response/createOtpChangePassResponse.dart';
+import 'package:payrio/model/response/profileResponse.dart';
+import 'package:payrio/model/response/signInResponse.dart';
+import 'package:payrio/model/services/base_service.dart';
+import 'package:payrio/model/services/media_service.dart';
+import 'package:payrio/model/request/setUpAccountRequest.dart';
+import 'package:payrio/model/response/setUpAccountResponse.dart';
+import 'package:payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:payrio/model/request/verifyOtpChangePass.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/Helper.dart';
@@ -44,7 +44,7 @@ class MediaRepository {
   Future<PhoneVerifyResponse> fetchMediaList(String value, PhoneRequest phoneRequest  ) async {
     print(phoneRequest);
     dynamic response = await _mediaService.postResponse(value,phoneRequest);
-    final jsonData = response;//['data'];
+    final jsonData = response;
     print(jsonData);
     PhoneVerifyResponse mediaList = PhoneVerifyResponse.fromJson(jsonData);
     return mediaList;
@@ -53,7 +53,7 @@ class MediaRepository {
   Future<ExistingUserResponse> existingUserData(String value, ExistingUserRequest existingUserRequest  ) async {
     print(existingUserRequest);
     dynamic response = await _mediaService.postResponse(value,existingUserRequest);
-    final jsonData = response;//['data'];
+    final jsonData = response;
     print(jsonData);
     ExistingUserResponse mediaList = ExistingUserResponse.fromJson(jsonData);
     return mediaList;
@@ -91,7 +91,7 @@ class MediaRepository {
   Future<ProfileResponse> ProfileScreenData(String value) async {
     dynamic response = await _mediaService.getResponse(value);
     print(value);
-    final jsonData = response;//['data'];
+    final jsonData = response;
     print(jsonData);
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
     return mediaList;
@@ -100,7 +100,7 @@ class MediaRepository {
   Future<ProfileResponse> putMultiFormResponse(String value, File file) async {
     dynamic response = await _mediaService.putMultiFormResponse(value, file);
     print(value);
-    final jsonData = response;//['data'];
+    final jsonData = response;
     print(jsonData);
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
     return mediaList;

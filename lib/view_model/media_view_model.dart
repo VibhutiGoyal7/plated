@@ -13,10 +13,14 @@ import 'package:payrio/model/request/signInWithPhoneNumber.dart';
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';
 import '../model/request/createOtpEmailVerifyRequest.dart';
+import '../model/request/exustingUserRequest.dart';
+import '../model/request/signInRequest.dart';
 import '../model/request/verifyOtpEmailVerifyRequest.dart';
 import '../model/response/createOtpChangePassResponse.dart';
+import '../model/response/existingUserResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
 import '../model/request/verifyOtpChangePass.dart';
+import '../model/response/signInResponse.dart';
 
 class MediaViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
@@ -117,10 +121,8 @@ class MediaViewModel with ChangeNotifier {
 
   Future<void> profileScreenData(String value) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
-    //print("Yess"+ phoneRequest.customer.mobileOtp);
     notifyListeners();
     try {
-      //print(phoneRequest.customer.phoneNumber);
       ProfileResponse profileResponse = await MediaRepository().ProfileScreenData(value);
       print("Yess"+ profileResponse.firstName.toString());
       _apiResponse = ApiResponse.completed(profileResponse);
@@ -133,10 +135,8 @@ class MediaViewModel with ChangeNotifier {
 
   Future<void> putMultiFormResponse(String value, File file) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
-    //print("Yess"+ phoneRequest.customer.mobileOtp);
     notifyListeners();
     try {
-      //print(phoneRequest.customer.phoneNumber);
       ProfileResponse profileResponse = await MediaRepository().putMultiFormResponse(value, file);
       print("Yess"+ profileResponse.firstName.toString());
       _apiResponse = ApiResponse.completed(profileResponse);

@@ -22,7 +22,6 @@ environment:
 
 dependencies:
   flutter_timer_countdown: ^1.0.7
-  email_validator: '^2.1.16'
   flutter:
     sdk: flutter
   flutter_localizations:

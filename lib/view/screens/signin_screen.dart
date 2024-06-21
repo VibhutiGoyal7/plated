@@ -1,21 +1,20 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter_app/model/apis/api_response.dart';
-import 'package:mvvm_flutter_app/model/request/setUpAccountRequest.dart';
-import 'package:mvvm_flutter_app/model/request/signInRequest.dart';
-import 'package:mvvm_flutter_app/model/response/signInResponse.dart';
-import 'package:mvvm_flutter_app/view_model/media_view_model.dart';
+import 'package:payrio/model/apis/api_response.dart';
+import 'package:payrio/model/request/signInRequest.dart';
+import 'package:payrio/model/response/signInResponse.dart';
+import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../Strings/Languages.dart';
+import '../../languageSection/Languages.dart';
 import '../../model/response/setUpAccountResponse.dart';
-import 'package:email_validator/email_validator.dart';
-
 import '../../utils/Helper.dart';
 
 class SigninScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
 
   SigninScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _SigninScreenState createState() => _SigninScreenState();
 }
@@ -34,10 +33,9 @@ class _SigninScreenState extends State<SigninScreen> {
 
   void _isValidInput() {
     //print(input);
-    if (
-        _passwordController.text.isNotEmpty &&
+    if (_passwordController.text.isNotEmpty &&
         _phoneNoController.text.isNotEmpty &&
-        _passwordController.text.length >= 8 ) {
+        _passwordController.text.length >= 8) {
       setState(() {
         inputValid = true;
       });
@@ -51,7 +49,8 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
     SignInResponse? mediaList = apiResponse.data as SignInResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -62,7 +61,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
         await Helper.saveUserDetails(mediaList);
 
-        if(await Helper.saveUserDetails(mediaList)) print("data saved");
+        if (await Helper.saveUserDetails(mediaList)) print("data saved");
 
         await Helper.savePassword(_passwordController.text);
         String? password = await Helper.getPassword();
@@ -102,14 +101,9 @@ class _SigninScreenState extends State<SigninScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     _buildLabelText(
-                        context,
-                        "Login to your account",
-                        18,
-                        false),
+                        context, "Login", 18, false),
                     SizedBox(height: 20),
-
                     SizedBox(height: 10),
                     _buildPhoneInput(
                         context,
@@ -120,13 +114,13 @@ class _SigninScreenState extends State<SigninScreen> {
                           size: 20,
                           color: isDarkMode ? Colors.white : Colors.black,
                         )),
-
                     SizedBox(height: 10),
                     _buildPasswordInput(
                         context,
                         Languages.of(context)!.labelPassword,
                         _passwordController,
-                        Icon(Icons.password,
+                        Icon(
+                          Icons.password,
                           size: 18,
                           color: isDarkMode ? Colors.white : Colors.black,
                         ),
@@ -145,9 +139,8 @@ class _SigninScreenState extends State<SigninScreen> {
     return Text(
       text,
       style: TextStyle(
-        fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-      ),
+          fontSize: 28, fontWeight: FontWeight.bold,
+          color: Colors.blueAccent),
     );
   }
 
@@ -167,7 +160,7 @@ class _SigninScreenState extends State<SigninScreen> {
             Expanded(
               child: TextField(
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
                 obscureText: false,
                 obscuringCharacter: "*",
@@ -193,12 +186,13 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   Widget _buildPasswordInput(
-      BuildContext context,
-      String text,
-      TextEditingController nameController,
-      Icon icon,
-      bool passwordVisibles, bool isDarkMode,
-      ) {
+    BuildContext context,
+    String text,
+    TextEditingController nameController,
+    Icon icon,
+    bool passwordVisibles,
+    bool isDarkMode,
+  ) {
     return Card(
       child: Container(
         height: 60,
@@ -207,11 +201,13 @@ class _SigninScreenState extends State<SigninScreen> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 16),
             Expanded(
               child: TextField(
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 14.0),
                 obscureText: passwordVisibles,
                 obscuringCharacter: "*",
                 controller: nameController,
@@ -227,15 +223,17 @@ class _SigninScreenState extends State<SigninScreen> {
                   hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                   suffixIcon: IconButton(
-                    icon: Icon(passwordVisibles
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                    icon: Icon(
+                      passwordVisibles
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       size: 20,
-                      color: isDarkMode ? Colors.white60 : Colors.black45,),
+                      color: isDarkMode ? Colors.white60 : Colors.black45,
+                    ),
                     onPressed: () {
                       setState(
-                            () {
-                            passwordVisible = !passwordVisible;
+                        () {
+                          passwordVisible = !passwordVisible;
                         },
                       );
                     },
@@ -262,17 +260,14 @@ class _SigninScreenState extends State<SigninScreen> {
                 if (inputValid) {
                   SignInRequest request = SignInRequest(
                       customer: CustomerSignIn(
-                        phoneNumber: _phoneNoController.text,
-                        password: _passwordController.text
-                      ));
-                   await Provider.of<MediaViewModel>(context, listen: false)
-                    .signInWithPass(
-                        "/api/v1/app/customers/sign_in", request);
+                          phoneNumber: _phoneNoController.text,
+                          password: _passwordController.text));
+                  await Provider.of<MediaViewModel>(context, listen: false)
+                      .signInWithPass("/api/v1/app/customers/sign_in", request);
                   //Navigator.pushNamed(context, '/BottomNav');
 
                   ApiResponse apiResponse =
-                      Provider
-                          .of<MediaViewModel>(context, listen: false)
+                      Provider.of<MediaViewModel>(context, listen: false)
                           .response;
                   getMediaWidget(context, apiResponse);
                 }
@@ -284,9 +279,11 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: inputValid ? Colors.blueAccent : Colors.white,
+                  backgroundColor:
+                      inputValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
-                  shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
+                  shape:
+                      BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
             ),
           ),
         ),

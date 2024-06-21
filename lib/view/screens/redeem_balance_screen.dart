@@ -65,15 +65,22 @@ class ListItem extends StatelessWidget {
         Navigator.pushNamed(context, "/RedeemBalance");
 
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.person, size: 45.0),
-          //SizedBox(height: 8.0),
-          Text(data.redeemData),
-          //SizedBox(height: 4.0),
-          Text(data.astroPoints),
-        ],
+      child: Container(
+        padding: EdgeInsets.only(top: 0),
+        child: Card(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person, size: 40.0),
+              //SizedBox(height: 8.0),
+              Text(data.redeemData,
+              style: TextStyle(fontSize: 14),),
+              //SizedBox(height: 4.0),
+              Text(data.astroPoints,
+                style: TextStyle(fontSize: 14),),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -96,4 +96,11 @@ class Helper {
     var _locale = await setLocale(selectedLanguageCode);
     //_MyAPp.setLocale(context, _locale);
   }
+
+  static Future<void> clearAllSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    print('All shared preferences cleared');
+  }
+
 }
