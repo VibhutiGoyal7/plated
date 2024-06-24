@@ -6,9 +6,9 @@ import 'package:payrio/model/response/signInResponse.dart';
 import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../languageSection/Languages.dart';
-import '../../model/response/setUpAccountResponse.dart';
-import '../../utils/Helper.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/response/setUpAccountResponse.dart';
+import '../../../utils/Helper.dart';
 
 class SigninScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here

@@ -549,7 +549,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
-        imageUrl = userDetails?.imageUrl.toString();
+        imageUrl =userDetails?.imageUrl == null ? " " : userDetails?.imageUrl.toString();
       });
     });
     return userDetails;

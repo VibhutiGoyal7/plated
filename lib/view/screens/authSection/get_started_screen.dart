@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payrio/theme/AppColor.dart';
 
-import '../../languageSection/Languages.dart';
+import '../../../languageSection/Languages.dart';
 
 class GetStartedScreen extends StatefulWidget {
   @override

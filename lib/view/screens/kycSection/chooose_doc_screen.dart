@@ -98,19 +98,22 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 context,
                 'Passport',
                 'Photo page',
-                '/clickImagePermissionScreen/passport',
+                '/CameraAccessScreen',
+                'passport'
               ),
               _buildDocumentOption(
                 context,
                 'Driving License',
                 'Front and Back',
-                '/clickImagePermissionScreen/driving_licence',
+                '/CameraAccessScreen',
+                'national_id'
               ),
               _buildDocumentOption(
                 context,
                 'National Identity Card',
                 'Front and Back',
-                '/clickImagePermissionScreen/national_id',
+                '/CameraAccessScreen',
+                'driving_licence'
               ),
             ],
           ),
@@ -119,9 +122,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     );
   }
 
-  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route) {
+  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route, String data) {
     return GestureDetector(
-      onTap: () => Navigator?.pushNamed(context,route),
+      onTap: () => Navigator?.pushNamed(context,route, arguments: "${data}"),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
