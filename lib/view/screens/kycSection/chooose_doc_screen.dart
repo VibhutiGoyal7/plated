@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../languageSection/Languages.dart';
 class ChooseDocScreen extends StatefulWidget {
   @override
   _ChooseDocScreenState createState() => _ChooseDocScreenState();
@@ -16,72 +18,50 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             Navigator.pop(context);
           },
         ),
+        title: Text(
+        "Choose Your Document",
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+      ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  'Choose Your Document',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  'Select issuing country to see which documents we accept',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              SizedBox(height: 15),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                 child: Text(
                   'ISSUING COUNTRY',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () { Navigator.pushNamed(context,"/SelectCountryScreen");},
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 0.5,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            'India',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'India',
+                          style: TextStyle(
+                            fontSize: 18,
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 12),
@@ -128,7 +108,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         decoration: BoxDecoration(
           border: Border.all(
-            width: 1,
+            width: 0.5,
           ),
           borderRadius: BorderRadius.circular(5),
         ),
@@ -136,6 +116,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
           children: [
             Icon(
               Icons.arrow_forward_ios,
+              size: 20,
             ),
             Expanded(
               child: Padding(

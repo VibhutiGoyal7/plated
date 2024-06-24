@@ -31,6 +31,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
             ),
             Image(
               alignment: Alignment.topLeft,
+              width: screenWidth*0.9,
               image: AssetImage("assets/money_safe.png"),
             ),
             SizedBox(
@@ -44,7 +45,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
               height: 8,
             ),
             Container(
-              width: screenWidth * 0.8,
+              width: screenWidth * 0.9,
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 "Your money stays safeWe have all security measures put in place, so that you really feel that your money is in safe hands.",
@@ -52,16 +53,16 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Spacer(),
+            SizedBox(
+              height: 10,
+            ),
             _buildFooter(
                 context: context,
                 text: "SignUp",
                 onTap: () {
                   Navigator.pushNamed(context, '/PhoneVerifyScreen');
                 }),
-            SizedBox(
-              height: 8,
-            ),
+
             _buildFooter(
                 context: context,
                 text: "SignIn",
@@ -79,7 +80,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
       required String text,
       required VoidCallback onTap}) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       child: Column(
         children: [
           SizedBox(

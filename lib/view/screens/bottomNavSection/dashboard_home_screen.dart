@@ -82,18 +82,23 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             onTap: () => {
                               Navigator.pushNamed(context, '/ProfileScreen')
                             },
-                            child: imageUrl == ""
-                                ? CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: AppColor.WHITE,
-                                    backgroundImage:
-                                        AssetImage("assets/profile_user.png"),
+                            child: imageUrl == null || imageUrl == ""
+                                ? Container(
+                                    height: 40,
+                                    width: 40,
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: AppColor.WHITE,
+                                      backgroundImage: AssetImage(
+                                        "assets/profile_user.png",
+                                      ),
+                                    ),
                                   )
                                 : ClipRRect(
                                     borderRadius: BorderRadius.circular(100.0),
                                     child: Image.network(imageUrl,
-                                        height: 50,
-                                        width: 50,
+                                        height: 40,
+                                        width: 40,
                                         fit: BoxFit.cover)),
                           ),
                         ),
@@ -170,7 +175,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Card(
-                        color: AppColor.BG_COLOR,
+                        color: Colors.transparent,
                         elevation: 0,
                         child: Stack(
                           alignment: Alignment.centerRight,
