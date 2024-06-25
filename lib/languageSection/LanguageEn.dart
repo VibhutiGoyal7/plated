@@ -14,7 +14,7 @@ class LanguageEn extends Languages {
   String get labelInfo => "This is multi-languages demo application";
 
   @override
-  String get enterPhoneNumber => "Enter your phone number";
+  String get enterPhoneNumber => "Phone number";
 
   @override
   String get labelAccountDetails => "Account Details";

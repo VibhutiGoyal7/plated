@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:payrio/model/response/fetchKycDocResponse.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
-import '../../../model/response/uploadKycResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 
@@ -23,16 +21,15 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   var documentNumber;
   var dob;
 
-  String? nationalIdImg;
-  String? passportImg;
-  String? drivingLicenseImg;
-
+  var nationalIdImg;
+  var passportImg;
+  var drivingLicenseImg;
 
   bool mExpanded = false;
   String mSelectedText = "";
   final List<String> mCities = ["Aadhar", "PanCard"];
   final TextEditingController documentNumberController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -42,15 +39,15 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     userName = "";
     dob = "";
     documentNumber = "";
-    nationalIdImg = "" ;
-    passportImg="";
-    drivingLicenseImg="";
+    nationalIdImg = "";
+    passportImg = "";
+    drivingLicenseImg = "";
     _fetchData();
     _fetchDocData();
   }
 
-  Future<Widget> getMediaWidget(
-      BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> getMediaWidget(BuildContext context,
+      ApiResponse apiResponse) async {
     FetchKycDocResponse? mediaList = apiResponse.data as FetchKycDocResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -60,12 +57,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           print("completed: ${mediaList?.nationalIdImage?.documentType}");
           setState(() {
             //imageClicked = true;
-            nationalIdImg = mediaList?.nationalIdImage?.kycDocsImageUrl ;
+            nationalIdImg = mediaList?.nationalIdImage?.kycDocsImageUrl;
             passportImg = mediaList?.passportImage?.kycDocsImageUrl;
             drivingLicenseImg = mediaList?.drivingLicenseImage?.kycDocsImageUrl;
           });
         });
-        Navigator.pushNamed(context, "/AddMoneyScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -81,8 +77,14 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,10 +109,16 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             buildProfileSection(Languages.of(context)!.labelLastname, lastName),
             buildProfileSection(Languages.of(context)!.labelUsername, userName),
             buildBirthdateSection(),
-            Text("Uploaded Documents", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-            buildDocumentSection("National Id", nationalIdImg as String,screenHeight, screenWidth),
-            // buildDocumentSection("Passport", passportImg,screenHeight),
-            // buildDocumentSection("Driving License", drivingLicenseImg,screenHeight),
+            Text(
+              "Uploaded Documents",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            buildDocumentSection(
+                "National Id", "${nationalIdImg}", screenHeight, screenWidth),
+            buildDocumentSection(
+                "Passport", "${passportImg}", screenHeight, screenWidth),
+            buildDocumentSection("Driving License", "${drivingLicenseImg}",
+                screenHeight, screenWidth),
             // buildDocumentDropdown(),
             // buildDocumentNumberSection(),
           ],
@@ -161,19 +169,44 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       ),
     );
   }
-  Widget buildDocumentSection(String docName, String image, double screenHeight, double screenWidth){
-    return Padding(padding: EdgeInsets.all(8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("${docName} : "),
-        (image!=""|| image.isNotEmpty ) ?ClipRRect(
-          child: Image.network(image ,
-              height: screenHeight * 0.2,
-              fit: BoxFit.fill),
-        ) : Text("Status Pending")
-      ],
-    ));
+
+  Widget buildDocumentSection(String docName, String image, double screenHeight,
+      double screenWidth) {
+    return Padding(
+        padding: EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("${docName} : "),
+            (image != "" || image.isNotEmpty)
+                ? ClipRRect(
+              child: Image.network(
+                image,
+                height: screenHeight * 0.2,
+                fit: BoxFit.fill,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.black!,
+                      highlightColor: Colors.black!,
+                      child: Container(
+                        height: screenHeight * 0.5,
+                        color: Colors.white,
+                      ),
+                    );
+                  }
+                },
+              ),
+            )
+                : Text("Status Pending", style: TextStyle(
+              color: Colors.red,
+              fontSize: 12
+            ),)
+          ],
+        ));
   }
 
   Widget buildDocumentDropdown() {
@@ -237,7 +270,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             ),
             onChanged: (value) {
               setState(() {
@@ -263,13 +296,15 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     });
     return profileDetails;
   }
+
   Future<void> _fetchDocData() async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
-        .fetchKycDocData(
-        "/api/v1/app/customers/customer_uploaded_documents");
+        .fetchKycDocData("/api/v1/app/customers/customer_uploaded_documents");
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider
+            .of<MediaViewModel>(context, listen: false)
+            .response;
     getMediaWidget(context, apiResponse);
   }
 }

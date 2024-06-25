@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/profileResponse.dart';
 import 'package:payrio/theme/AppColor.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
@@ -23,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var imageUrl;
   File? galleryFile;
   final picker = ImagePicker();
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -40,7 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print("Text copied to clipboard: $text");
   }
 
-
   Future<Widget> getMediaWidget(
       BuildContext context, ApiResponse apiResponse) async {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
@@ -56,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
             userName = "${retrievedDetails?.username}";
             imageUrl = retrievedDetails?.imageUrl.toString();
+            isLoading = false;
           });
         });
         return Container(); // Return an empty container as you'll navigate away
@@ -116,22 +118,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        userName.toString(),
-                        style:
-                            TextStyle(fontSize: 15.0),
-                        textAlign: TextAlign.left,
+                      isLoading
+                          ? Shimmer.fromColors(
+                              baseColor: Colors.white38,
+                              highlightColor: Colors.grey,
+                              child: Container(
+                                width: 100,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.white38,
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // Adjust the radius as needed
+                                ),
+                              ),
+                            )
+                          : Text(
+                              userName,
+                              style: TextStyle(fontSize: 15.0),
+                              textAlign: TextAlign.left,
+                            ),
+                      SizedBox(
+                        width: 4,
                       ),
-                      SizedBox(width: 4,),
                       GestureDetector(
-                        onTap: ()=>{
+                        onTap: () => {
                           copyTextToClipboard(userName.toString()),
-                        ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Text copied to clipboard")),
-                        )
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Text copied to clipboard")),
+                          )
                         },
-                        child: Icon(Icons.copy,
-                        size: 16,),
+                        child: Icon(
+                          Icons.copy,
+                          size: 16,
+                        ),
                       )
                     ],
                   ),

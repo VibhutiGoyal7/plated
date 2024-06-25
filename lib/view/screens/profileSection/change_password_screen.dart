@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
-import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -16,7 +14,8 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool oldPasswordVisible = false;
   bool newPasswordVisible = false;
@@ -26,12 +25,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   void initState() {
     super.initState();
     oldPasswordVisible = true;
-    newPasswordVisible= true;
+    newPasswordVisible = true;
     confirmPasswordVisible = true;
   }
 
-  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
-    final mediaList = apiResponse.data ;
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    final mediaList = apiResponse.data;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -54,7 +54,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   bool isLoading = false;
   String? responseMessage;
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +80,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   context,
                   Languages.of(context)!.labelOldPass,
                   _oldPasswordController,
-                  Icon(Icons.password,
-                      size: 18
+                  Icon(
+                    Icons.password,
+                    size: 18,
+                    color: isDarkMode ? Colors.white : Colors.black,
                   ),
                   oldPasswordVisible,
                   isDarkMode),
@@ -90,17 +91,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   context,
                   Languages.of(context)!.labelNewPass,
                   _newPasswordController,
-                  Icon(Icons.password,
-                      size: 18,
-                      ),
+                  Icon(
+                    Icons.password,
+                    size: 18,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
                   newPasswordVisible,
                   isDarkMode),
               _buildPasswordInput(
                   context,
                   Languages.of(context)!.labelConfirmPass,
                   _confirmPasswordController,
-                  Icon(Icons.password,
-                      size: 18,),
+                  Icon(
+                    Icons.password,
+                    size: 18,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
                   confirmPasswordVisible,
                   isDarkMode),
               Align(
@@ -126,20 +132,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  onPressed: ()async {
+                  onPressed: () async {
                     print(_newPasswordController.text);
-                CustomerChangePassDetail customer = CustomerChangePassDetail
-                (password: _oldPasswordController.text, newPassword: _newPasswordController.text);
+                    CustomerChangePassDetail customer =
+                        CustomerChangePassDetail(
+                            password: _oldPasswordController.text,
+                            newPassword: _newPasswordController.text);
 
-                ChangeOldPassRequest request = ChangeOldPassRequest(customer: customer);
+                    ChangeOldPassRequest request =
+                        ChangeOldPassRequest(customer: customer);
 
-                await Provider.of<MediaViewModel>(context, listen: false)
-                    .changeOldPasswordData("/api/v1/app/customers/update_password_with_old_password",request);
-                ApiResponse apiResponse =
-                Provider.of<MediaViewModel>(context, listen: false).response;
-                getMediaWidget(context, apiResponse);
-                  }
-                      ,
+                    await Provider.of<MediaViewModel>(context, listen: false)
+                        .changeOldPasswordData(
+                            "/api/v1/app/customers/update_password_with_old_password",
+                            request);
+                    ApiResponse apiResponse =
+                        Provider.of<MediaViewModel>(context, listen: false)
+                            .response;
+                    getMediaWidget(context, apiResponse);
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                       _isButtonEnabled()
@@ -157,7 +168,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Text(Languages.of(context)!.labelProceed),
+                      child:Text(
+                        Languages.of(context)!.labelProceed,
+                        style: TextStyle(
+                            color: _isButtonEnabled() ? Colors.white : Colors.blueAccent),
+                      ),
+
                     ),
                   ),
                 ),
@@ -177,13 +193,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildPasswordInput(
-      BuildContext context,
-      String text,
-      TextEditingController nameController,
-      Icon icon,
-      bool passwordVisibles
-      , bool isDarkMode,
-      ) {
+    BuildContext context,
+    String text,
+    TextEditingController nameController,
+    Icon icon,
+    bool passwordVisibles,
+    bool isDarkMode,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6),
       child: Card(
@@ -213,28 +229,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     hintStyle: TextStyle(color: Colors.grey),
                     icon: icon,
                     suffixIcon: IconButton(
-                      icon: Icon(passwordVisibles
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+                      icon: Icon(
+                        passwordVisibles
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                         color: isDarkMode ? Colors.white : Colors.black,
-                        size: 20,),
+                        size: 20,
+                      ),
                       onPressed: () {
                         setState(
-                              () {
+                          () {
                             if (text == Languages.of(context)!.labelOldPass) {
                               oldPasswordVisible = !oldPasswordVisible;
-                            } else if(text == Languages.of(context)!.labelNewPass){
+                            } else if (text ==
+                                Languages.of(context)!.labelNewPass) {
                               newPasswordVisible = !newPasswordVisible;
-                            }else{
+                            } else {
                               confirmPasswordVisible = !confirmPasswordVisible;
-
                             }
                           },
                         );
                       },
                     ),
-
-
                   ),
                 ),
               ),
@@ -244,12 +260,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ),
     );
   }
+
   Future<void> _changePassword() async {
-    CustomerChangePassDetail customer = CustomerChangePassDetail
-      (password: _oldPasswordController.text, newPassword: _newPasswordController.text);
+    CustomerChangePassDetail customer = CustomerChangePassDetail(
+        password: _oldPasswordController.text,
+        newPassword: _newPasswordController.text);
     ChangeOldPassRequest request = ChangeOldPassRequest(customer: customer);
     await Provider.of<MediaViewModel>(context, listen: false)
-        .changeOldPasswordData("/api/v1/app/customers/update_password_with_old_password",request);
+        .changeOldPasswordData(
+            "/api/v1/app/customers/update_password_with_old_password", request);
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);

@@ -63,7 +63,7 @@ class DocumentData {
       rejectionReason: json['rejection_reason'] as String?,
       idNumber: json['id_number'] as String?,
         pendingReason: json['pending_reason'] as String?,
-      kycDocsImageUrl: json['kyc_docs_image_url'] as String?
+      kycDocsImageUrl: json['kyc_attachment_url'] as String?
     );
   }
 }
