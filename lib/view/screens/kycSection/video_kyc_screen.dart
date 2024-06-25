@@ -3,7 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../../model/apis/api_response.dart';
+import '../../../model/response/uploadKycResponse.dart';
+import '../../../view_model/media_view_model.dart';
 
 class VideoKycScreen extends StatefulWidget {
 
@@ -21,6 +26,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   final picker = ImagePicker();
   bool frontImageClicked = false;
   late File frontImg;
+  var videoUrl;
 
   @override
   void initState() {
@@ -34,6 +40,33 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
 
     //_initializeVideoPlayerFuture = _controller.initialize();
 
+  }
+
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    UploadKycDocResponse? mediaList = apiResponse.data as UploadKycDocResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            //imageClicked = true;
+            videoUrl = mediaList?.kycDocsImageUrl.toString();
+          });
+        });
+        Navigator.pushNamed(context, "/AddMoneyScreen");
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
   }
 
   @override
@@ -71,12 +104,26 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             child: VideoPlayer(videoPlayerController!),
           )
               : Text('No video selected')
-              : Text("Video clip")),
+              : GestureDetector(
+            onTap: (){
+              _startVideo(ImageSource.camera);
+            },
+              child: Text("Click to record"))),
                 _buildFooter(context)
               ],
             )
         )
     );
+  }
+
+  Future<void> _uploadProfilePic(File file) async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MediaViewModel>(context, listen: false)
+        .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
+        "video_kyc_clip", "video_kyc");
+    ApiResponse apiResponse =
+        Provider.of<MediaViewModel>(context, listen: false).response;
+    getMediaWidget(context, apiResponse);
   }
 
   Widget _buildFooter(BuildContext context) {
@@ -88,10 +135,10 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                _startVideo(ImageSource.camera);
+                _uploadProfilePic(frontImg!);
               },
               child: Text(
-                "Enable Camera",
+                "Submit",
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
