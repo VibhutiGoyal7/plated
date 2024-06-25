@@ -199,10 +199,11 @@ class _DocImageScreenState extends State<DocImageScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.pushNamed(context, "/VideoKycScreen");
-                /*if(frontImg!=""){
+                //Navigator.pushNamed(context, "/VideoKycScreen");
+                if(frontImg!=""){
                   _uploadProfilePic(frontImg!);
-                }*/
+                  Navigator.pushNamed(context, "/VideoKycScreen");
+                }
               },
               child: Text(
                 "Submit",
