@@ -24,7 +24,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     phoneNumber = "";
     userId = "";
     isEmailVerified = false;
-    isPasswordVisible = true;
+    isPasswordVisible = false;
 
     _fetchData();
     _fetchPasswordData();
@@ -71,7 +71,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 password: "",
                 //password,
                 isDarkMode: isDarkMode),
-            _buildChangePassword(context),
+            _buildChangePassword(context,isDarkMode: isDarkMode),
             _buildDetailBox(
               context: context,
               label: Languages.of(context)!.labelUserId,
@@ -162,12 +162,13 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 13.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.normal,
                   //color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
@@ -177,7 +178,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               Text(
                 value.isEmpty ? "XXXXXXXXXX" : value,
                 style: TextStyle(
-                  fontSize: 12.0,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                   /* color: value.isEmpty
                       ? Colors.grey
@@ -206,41 +207,46 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '${Languages.of(context)!.labelPassword}: ',
+                '${Languages.of(context)!.labelPassword} ',
                 style: TextStyle(
                   fontSize: 13.0,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
-              SizedBox(
-                width: 6.0,
-              ),
-              Text(
-                isPasswordVisible ? "123456789" ?? '' : '********',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                  color: isDarkMode ? Colors.white : Colors.black,
-                ),
-              ),
-              Spacer(),
-              GestureDetector(
-                onTap: () => {
-                  setState(() {
-                    isPasswordVisible = !isPasswordVisible;
-                  })
-                },
-                child: Icon(
-                  isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: isDarkMode ? Colors.white : Colors.black,
-                  size: 20,
-                ),
+              Row(
+                children: [
+                  Text(
+                    isPasswordVisible ? "123456789" ?? '' : '********',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () => {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      })
+                    },
+                    child: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      size: 22,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -249,7 +255,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     );
   }
 
-  Widget _buildChangePassword(BuildContext context) {
+  Widget _buildChangePassword(BuildContext context, {required bool isDarkMode}) {
     return Row(
       children: [
         Spacer(),
@@ -264,11 +270,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             child: Text(
               Languages.of(context)!.labelChangePass,
               style: TextStyle(
-                  fontSize: 12.0,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline,
                   decorationThickness: 2,
-                  decorationColor: Colors.black
+                  decorationColor: isDarkMode ? Colors.white : Colors.black
                   //color: isDarkMode ? Colors.white : Colors.black,
                   ),
             ),
@@ -284,14 +290,14 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         phoneNumber = profileDetails?.phoneNumber;
-        userId = profileDetails?.userId;
+        userId = profileDetails?.username;
         isEmailVerified = profileDetails?.isEmailVerified;
       });
     });
     return profileDetails;
   }
 
-  Future<void> _fetchPasswordData() async{
+  Future<void> _fetchPasswordData() async {
     await Future.delayed(Duration(milliseconds: 2));
     password = await Helper.getPassword();
   }

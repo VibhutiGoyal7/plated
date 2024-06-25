@@ -53,7 +53,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             videoUrl = mediaList?.kycDocsImageUrl.toString();
           });
         });
-        Navigator.pushNamed(context, "/AddMoneyScreen");
+        Navigator.pushNamed(context, "/ChooseDocScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(

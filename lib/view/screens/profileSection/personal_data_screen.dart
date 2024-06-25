@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/fetchKycDocResponse.dart';
@@ -9,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
-import '../../../model/response/uploadKycResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 import '../../component/toastMessage.dart';
@@ -46,7 +43,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   String mSelectedText = "";
   final List<String> mCities = ["Aadhar", "PanCard"];
   final TextEditingController documentNumberController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -62,8 +59,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     _fetchDocData();
   }
 
-  Future<Widget> getMediaWidget(
-      BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> getMediaWidget(BuildContext context,
+      ApiResponse apiResponse) async {
     FetchKycDocResponse? mediaList = apiResponse.data as FetchKycDocResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -73,7 +70,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           print("completed: ${mediaList?.nationalIdImage?.documentType}");
           setState(() {
             //imageClicked = true;
-            nationalIdImg = mediaList?.nationalIdImage?.kycDocsImageUrl ;
+            nationalIdImg = mediaList?.nationalIdImage?.kycDocsImageUrl;
             passportImg = mediaList?.passportImage?.kycDocsImageUrl;
             drivingLicenseImg = mediaList?.drivingLicenseImage?.kycDocsImageUrl;
 
@@ -314,7 +311,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             ),
             onChanged: (value) {
               setState(() {
@@ -429,7 +426,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      
+
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {

@@ -44,6 +44,7 @@ dependencies:
   jumio_mobile_sdk_flutter: ^4.9.0
   image_picker: ^1.1.2
   video_player: ^2.8.7
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:
