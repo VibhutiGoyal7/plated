@@ -56,10 +56,10 @@ class LanguageEn extends Languages {
   String get labelINR => "INR";
 
   @override
-  String get labelLastname => "Lastname";
+  String get labelLastname => "Last Name";
 
   @override
-  String get labelFirstname => "First name";
+  String get labelFirstname => "First Name";
 
   @override
   String get labelName => "Name";
@@ -241,4 +241,7 @@ class LanguageEn extends Languages {
 
   @override
   String get labelKYCVerification => "Kyc Verification";
+
+  @override
+  String get labelUsername => "User Name";
 }

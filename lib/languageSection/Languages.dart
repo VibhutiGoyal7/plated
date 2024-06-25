@@ -43,6 +43,8 @@ abstract class Languages {
 
   String get labelLastname;
 
+  String get labelUsername;
+
   String get labelEmail;
 
   String get labelPassword;

@@ -241,4 +241,7 @@ class LanguageHi extends Languages {
 
   @override
     String get labelKYCVerification => "Kyc Verification";
+
+  @override
+    String get labelUsername => "User Name";
 }

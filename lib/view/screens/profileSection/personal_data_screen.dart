@@ -11,9 +11,8 @@ class PersonalDataScreen extends StatefulWidget {
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
   var firstName;
-
   var lastName;
-
+  var userName;
   var documentNumber;
   var dob;
 
@@ -28,6 +27,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     super.initState();
     firstName = "";
     lastName = "";
+    userName = "";
     dob = "";
     documentNumber = "";
     _fetchData();
@@ -56,6 +56,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             buildProfileSection(
                 Languages.of(context)!.labelFirstname, firstName),
             buildProfileSection(Languages.of(context)!.labelLastname, lastName),
+            buildProfileSection(Languages.of(context)!.labelUsername, userName),
             buildBirthdateSection(),
             buildDocumentDropdown(),
             buildDocumentNumberSection(),
@@ -84,7 +85,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             SizedBox(height: 5),
             Text(
               value,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
           ],
         ),
@@ -189,6 +190,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       setState(() {
         firstName = profileDetails?.firstName;
         lastName = profileDetails?.lastName;
+        userName = profileDetails?.username;
         dob = profileDetails?.dob;
       });
     });

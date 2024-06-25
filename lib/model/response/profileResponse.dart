@@ -12,6 +12,7 @@ class ProfileResponse {
   final String? status;
   final String? phoneNumber;
   final String? message;
+  final String? username;
   final bool? isEmailVerified;
 
   ProfileResponse({
@@ -26,6 +27,7 @@ class ProfileResponse {
     this.phoneNumber,
     this.isEmailVerified,
     this.message,
+    this.username,
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -39,6 +41,7 @@ class ProfileResponse {
       address: json['data']['address'] as String?,
       dob: json['data']['dob'] as String?,
       isEmailVerified: json['data']['is_email_verified'] as bool?,
+      username: json['data']['username'] as String?,
       message: json['message'] as String?,
     );
   }
@@ -55,6 +58,7 @@ class ProfileResponse {
     data['dob'] = this.dob;
     data['is_email_verified'] = this.isEmailVerified;
     data['message'] = this.message;
+    data['username'] = this.username;
     return data;
   }
   factory ProfileResponse.fromPref(Map<String, dynamic> json) {
@@ -67,6 +71,7 @@ class ProfileResponse {
       email: json['email'] as String?,
       address: json['address'] as String?,
       dob: json['dob'] as String?,
+      username: json['username'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }

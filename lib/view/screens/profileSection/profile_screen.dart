@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/profileResponse.dart';
 import 'package:payrio/theme/AppColor.dart';
@@ -17,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var customerName;
   var userName;
   var imageUrl;
   File? galleryFile;
@@ -25,11 +27,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    customerName = "";
     userName = "";
     imageUrl = "";
     _fetchData();
     print(Helper.getUserToken());
   }
+
+  void copyTextToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    // Optionally show a message to the user
+    print("Text copied to clipboard: $text");
+  }
+
 
   Future<Widget> getMediaWidget(
       BuildContext context, ApiResponse apiResponse) async {
@@ -42,8 +52,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ProfileResponse? retrievedDetails = await Helper.getProfileDetails();
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            userName =
+            customerName =
                 "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
+            userName = "${retrievedDetails?.username}";
             imageUrl = retrievedDetails?.imageUrl.toString();
           });
         });
@@ -96,11 +107,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100.0),
                             child: Image.network(imageUrl,
-                                height: 100, width: 100, fit: BoxFit.cover)
-                    ),
+                                height: 100, width: 100, fit: BoxFit.cover)),
                   ),
-                  SizedBox(height: 10,),
-                  _buildLabelText(context, userName.toString()),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildLabelText(context, customerName.toString()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        userName.toString(),
+                        style:
+                            TextStyle(fontSize: 15.0),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(width: 4,),
+                      GestureDetector(
+                        onTap: ()=>{
+                          copyTextToClipboard(userName.toString()),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Text copied to clipboard")),
+                        )
+                        },
+                        child: Icon(Icons.copy,
+                        size: 16,),
+                      )
+                    ],
+                  ),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
