@@ -26,56 +26,50 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
         //backgroundColor: Theme.of(context).backgroundColor,
         body: SingleChildScrollView(
             child: SafeArea(
-                child: Center(
-          child: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildText(context, "Verify your Identity", 26, FontWeight.bold),
-                _buildText(context, "It should take a few minutes", 16,
-                    FontWeight.normal),
-                SizedBox(
-                  height: 8,
-                ),
-                _buildText(context, "Use your device to:", 18, FontWeight.bold),
-                _buildText(context, "1. Take a photo of your identity document",
-                    16, FontWeight.normal),
-                _buildText(context, "2. Record a video of your face", 16,
-                    FontWeight.normal),
-                SizedBox(
-                  height: 150,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/ChooseDocScreen");
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      child: Text(
-                        Languages.of(context)!.labelChooseDoc,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.blueAccent),
+                child: Container(
+                  padding: EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildText(context, "Verify your Identity", 26, FontWeight.bold),
+                      _buildText(context, "It should take a few minutes", 16,
+                          FontWeight.normal),
+                      SizedBox(
+                        height: 8,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 14.0),
-                        backgroundColor: Colors.white,
-                        elevation: 3,
-                        shape: BeveledRectangleBorder(
-                            borderRadius: BorderRadius.zero)),
-                  ),
-                ),
-              ],
-
-            ),
-
-          ),
-
-        )
+                      _buildText(context, "Use your device to:", 18, FontWeight.bold),
+                      _buildText(context, "1. Take a photo of your identity document",
+                          16, FontWeight.normal),
+                      _buildText(context, "2. Record a video of your face", 16,
+                          FontWeight.normal),
+                      Spacer(),
+                      // SizedBox(
+                      //   height: 350,
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/ChooseDocScreen");
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            child: Text(
+                              Languages.of(context)!.labelChooseDoc,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.blueAccent),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 14.0),
+                              backgroundColor: Colors.white,
+                              elevation: 3,
+                              shape: BeveledRectangleBorder(
+                                  borderRadius: BorderRadius.zero)),
+                        ),
+                      ),
+                    ]),
+                )
             )
         )
     );

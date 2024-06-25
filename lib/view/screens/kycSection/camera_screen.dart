@@ -100,7 +100,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
               child: Container(
                 margin: EdgeInsets.only(left: 0, right: 00, bottom: 4, top: 0),
                 alignment: Alignment.center,
-                height: screenHeight * 0.6,
+                height: isBothSides ? screenHeight * 0.36 : screenHeight * 0.6,
                 width: double.infinity,
                 decoration: BoxDecoration(border: Border.all(width: 0.2)),
                 child: frontImageClicked
@@ -124,7 +124,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
                   margin:
                       EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 4),
                   alignment: Alignment.center,
-                  height: screenHeight * 0.35,
+                  height: screenHeight * 0.36,
                   width: double.infinity,
                   decoration: BoxDecoration(border: Border.all(width: 0.5)),
                   child: backImgClicked

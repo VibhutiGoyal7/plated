@@ -27,10 +27,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     super.initState();
     isAmountVisible = true;
     isUSDVisible = false;
+    imageUrl = "";
     _fetchData();
     _isChecked = List<bool>.generate(
         5, (index) => false); // Initial setup for 5 checkboxes
-    imageUrl = "";
+
     // Initial setup for 5 checkboxes
   }
 
@@ -556,8 +557,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
-        imageUrl = userDetails?.imageUrl.toString();
+        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
       });
+      print("${name} ");
     });
     return userDetails;
   }
