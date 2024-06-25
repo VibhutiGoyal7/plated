@@ -238,4 +238,7 @@ class LanguageEn extends Languages {
 
   @override
   String get labelEnterAmount => "Enter Amount";
+
+  @override
+  String get labelKYCVerification => "Kyc Verification";
 }

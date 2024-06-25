@@ -161,4 +161,6 @@ abstract class Languages {
 
   String get labelEnterAmount;
 
+  String get labelKYCVerification;
+
 }

@@ -238,4 +238,7 @@ class LanguageHi extends Languages {
 
   @override
     String get labelEnterAmount => "राशि डालें";
+
+  @override
+    String get labelKYCVerification => "Kyc Verification";
 }

@@ -85,7 +85,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 Languages.of(context)!.labelEnterAmount,
               ),
             ),
-            Container(
+           /* Container(
               width: 250.0,
               child: TextFormField(
                 controller: tokenInputController,
@@ -99,7 +99,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               onPressed: () {
                 _start(tokenInputController.text);
               },
-            ),
+            ),*/
             _buildPhoneInput(
                 context, Languages.of(context)!.labelZero, _amountController),
             Spacer(),
