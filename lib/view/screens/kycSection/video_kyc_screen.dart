@@ -15,24 +15,24 @@ class VideoKycScreen extends StatefulWidget {
 }
 
 class _VideoKycScreenState extends State<VideoKycScreen> {
-  late VideoPlayerController _controller;
+  late VideoPlayerController videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
   String docType = '';
   final picker = ImagePicker();
   bool frontImageClicked = false;
-  File? frontImg;
+  late File frontImg;
 
   @override
   void initState() {
     super.initState();
     docType = widget.data.toString();
-    _controller = VideoPlayerController.networkUrl(
+   /* _controller = VideoPlayerController.networkUrl(
       Uri.parse(
         frontImg.toString(),
       ),
-    );
+    );*/
 
-    _initializeVideoPlayerFuture = _controller.initialize();
+    //_initializeVideoPlayerFuture = _controller.initialize();
 
   }
 
@@ -65,21 +65,13 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           decoration: BoxDecoration(
               border: Border.all(width: 1)),
           child: frontImageClicked
-              ?  FutureBuilder(
-            future: _initializeVideoPlayerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ): Text("Video clip")),
+              ?  videoPlayerController != null && videoPlayerController.value.isInitialized
+              ? AspectRatio(
+            aspectRatio: videoPlayerController!.value.aspectRatio,
+            child: VideoPlayer(videoPlayerController!),
+          )
+              : Text('No video selected')
+              : Text("Video clip")),
                 _buildFooter(context)
               ],
             )
@@ -121,7 +113,15 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             () {
           if (xfilePick != null) {
             setState(() {
-              frontImg = File(pickedFile!.path);
+              frontImg = File(pickedFile!.path) as File;
+              videoPlayerController =
+              VideoPlayerController.file(frontImg)
+                ..initialize().then((_) {
+                  setState(() {});
+                  videoPlayerController.play(); //.pause() for pausing
+                  videoPlayerController.setVolume(0.0);
+                });
+              setState(() { });
               frontImageClicked = true;
             });
             print("image : ${frontImg}");

@@ -139,7 +139,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   _isValidInput();
                 },
                 onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   border: InputBorder.none,
