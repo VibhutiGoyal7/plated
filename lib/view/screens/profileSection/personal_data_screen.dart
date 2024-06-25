@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/fetchKycDocResponse.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
@@ -10,6 +12,7 @@ import '../../../model/response/profileResponse.dart';
 import '../../../model/response/uploadKycResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/toastMessage.dart';
 
 class PersonalDataScreen extends StatefulWidget {
   @override
@@ -26,6 +29,17 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   String? nationalIdImg;
   String? passportImg;
   String? drivingLicenseImg;
+  String? kycVideo;
+
+  bool isNationalIdUploaded = false;
+  bool isPassportUploaded = false;
+  bool isDrivingLicenceUploaded = false;
+  bool isKycVideoUploaded = false;
+
+  String? nationalIdStatus;
+  String? passportStatus;
+  String? drivingLicenceStatus;
+  String? kycVideoStatus;
 
 
   bool mExpanded = false;
@@ -41,7 +55,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     lastName = "";
     userName = "";
     dob = "";
-    documentNumber = "";
     nationalIdImg = "" ;
     passportImg="";
     drivingLicenseImg="";
@@ -63,9 +76,26 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             nationalIdImg = mediaList?.nationalIdImage?.kycDocsImageUrl ;
             passportImg = mediaList?.passportImage?.kycDocsImageUrl;
             drivingLicenseImg = mediaList?.drivingLicenseImage?.kycDocsImageUrl;
+
+            if (mediaList?.nationalIdImage?.userId != null) {
+              isNationalIdUploaded = true;
+              nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
+            };
+            if (mediaList?.passportImage?.userId != null) {
+              isPassportUploaded = true;
+              passportStatus = mediaList?.passportImage?.verificationStatus;
+            }
+            if (mediaList?.drivingLicenseImage?.userId != null) {
+              isDrivingLicenceUploaded = true;
+              drivingLicenceStatus =
+                  mediaList?.drivingLicenseImage?.verificationStatus;
+            }
+            if (mediaList?.videoClipUrl?.userId != null) {
+              isKycVideoUploaded = true;
+              kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
+            }
           });
         });
-        Navigator.pushNamed(context, "/AddMoneyScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -107,10 +137,56 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             buildProfileSection(Languages.of(context)!.labelLastname, lastName),
             buildProfileSection(Languages.of(context)!.labelUsername, userName),
             buildBirthdateSection(),
-            Text("Uploaded Documents", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-            buildDocumentSection("National Id", nationalIdImg as String,screenHeight, screenWidth),
-            // buildDocumentSection("Passport", passportImg,screenHeight),
-            // buildDocumentSection("Driving License", drivingLicenseImg,screenHeight),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Uploaded Documents",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+            ),
+            _buildDocumentOption(
+                context,
+                'Passport',
+                'Photo page',
+                '/CameraAccessScreen',
+                'passport',
+                "assets/passport.png",
+                passportImg,
+                isPassportUploaded,
+                "${passportStatus}"),
+            _buildDocumentOption(
+                context,
+                'Driving License',
+                'Front and Back',
+                '/CameraAccessScreen',
+                'national_id',
+                "assets/license.png",
+                drivingLicenseImg,
+                isDrivingLicenceUploaded,
+                "${drivingLicenceStatus}"
+            ),
+            _buildDocumentOption(
+                context,
+                'National Identity Card',
+                'Front and Back',
+                '/CameraAccessScreen',
+                'driving_licence',
+                "assets/id_card.png",
+              nationalIdImg,
+                isNationalIdUploaded,
+                "${nationalIdStatus}",
+
+            ),
+            _buildDocumentOption(
+                context,
+                'Video Verification',
+                'Front ',
+                '/VideoKycScreen',
+                'video',
+                "assets/video.png",
+              kycVideo,
+                isKycVideoUploaded,
+                "${kycVideoStatus}",
+
+            ),
             // buildDocumentDropdown(),
             // buildDocumentNumberSection(),
           ],
@@ -161,6 +237,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       ),
     );
   }
+
+/*
   Widget buildDocumentSection(String docName, String image, double screenHeight, double screenWidth){
     return Padding(padding: EdgeInsets.all(8),
     child: Row(
@@ -175,7 +253,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       ],
     ));
   }
-
   Widget buildDocumentDropdown() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -249,6 +326,80 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       ),
     );
   }
+*/
+
+  Widget _buildDocumentOption(BuildContext context, String title,
+      String subtitle, String route, String data, String icon,String? image,
+      bool imageUploaded, String status) {
+    bool isDarkMode = Theme
+        .of(context)
+        .brightness == Brightness.dark;
+    String verificationStatus = "";
+    Color textColor = isDarkMode ? Colors.white : Colors.black;
+    if (imageUploaded && status == "pending") {
+      verificationStatus = "In Progress";
+      textColor = Colors.deepOrange;
+    } else if (imageUploaded) {
+      verificationStatus = status;
+      if (verificationStatus == "verified") {
+        textColor = Colors.green;
+      } else if (verificationStatus == "rejected") {
+        textColor = Colors.red;
+      }
+    }
+    else {
+      verificationStatus = "Pending";
+      textColor = Colors.yellow;
+    }
+    return GestureDetector(
+      onTap: () {
+        if (imageUploaded) {
+          _showModal(context, image);
+        }
+      },
+      child: Container(
+        width: double.infinity,
+        child: Card(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                child: Image(
+                  alignment: Alignment.topLeft,
+                  width: 25,
+                  image: AssetImage(icon),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 6),
+                child: Text(
+                  verificationStatus,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: textColor
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
@@ -263,6 +414,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     });
     return profileDetails;
   }
+
   Future<void> _fetchDocData() async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
@@ -271,5 +423,74 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
+  }
+
+  void _showModal(BuildContext context, String? image) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              scrollable: false,
+              insetPadding: EdgeInsets.all(8),
+              contentPadding: EdgeInsets.symmetric(horizontal: 0  , vertical: 0),
+                content:
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                            //decoration: new BoxDecoration(color: Colors.white),
+                            alignment: Alignment.center,
+                            //height: 240,
+                            child: (image != "" || image!.isNotEmpty) ? ClipRRect(
+                              child: Image.network(image as String,
+                                  fit: BoxFit.fill,
+                              loadingBuilder: (BuildContext context, Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.black54!,
+                                    highlightColor: Colors.black45!,
+                                    child: Container(
+                                      height: MediaQuery.of(context).size.height * 0.5,
+                                      color: Colors.white,
+                                    ),
+                                  );
+
+                                }
+                              },
+                              )
+                            ) : Text("Status Pending")
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: GestureDetector(
+                                onTap: (){
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black),
+                                    child: Icon(Icons.close ,color: Colors.white70,))),
+                          )
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+            );
+          },
+        );
+      },
+    );
   }
 }

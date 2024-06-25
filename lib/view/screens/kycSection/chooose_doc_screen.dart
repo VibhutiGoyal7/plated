@@ -1,12 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../model/response/fetchKycDocResponse.dart';
+import '../../../view_model/media_view_model.dart';
+import '../../component/toastMessage.dart';
 class ChooseDocScreen extends StatefulWidget {
   @override
   _ChooseDocScreenState createState() => _ChooseDocScreenState();
 }
 
 class _ChooseDocScreenState extends State<ChooseDocScreen> {
+  bool isNationalIdUploaded = false;
+  bool isPassportUploaded = false;
+  bool isDrivingLicenceUploaded = false;
+  bool isKycVideoUploaded = false;
+
+  String? nationalIdStatus ;
+  String? passportStatus ;
+  String? drivingLicenceStatus ;
+  String? kycVideoStatus ;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDocData();
+  }
+
+  Future<Widget> getMediaWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    FetchKycDocResponse? mediaList = apiResponse.data as FetchKycDocResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          print("completed: ${mediaList?.nationalIdImage?.documentType}");
+          setState(() {
+            //imageClicked = true;
+
+            if(mediaList?.nationalIdImage?.userId != null) {
+              isNationalIdUploaded = true;
+              nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
+            };
+            if(mediaList?.passportImage?.userId != null) {
+              isPassportUploaded = true;
+              passportStatus = mediaList?.passportImage?.verificationStatus;
+            }
+            if(mediaList?.drivingLicenseImage?.userId != null) {
+              isDrivingLicenceUploaded = true;
+              drivingLicenceStatus = mediaList?.drivingLicenseImage?.verificationStatus;
+            }
+            if(mediaList?.videoClipUrl?.userId != null) {
+              isKycVideoUploaded = true;
+              kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
+            }
+          });
+        });
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +143,18 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 'Photo page',
                 '/CameraAccessScreen',
                 'passport',
-                "assets/passport.png"
-              ),
+                "assets/passport.png",
+              isPassportUploaded,
+              "${passportStatus}"),
               _buildDocumentOption(
                 context,
                 'Driving License',
                 'Front and Back',
                 '/CameraAccessScreen',
                 'national_id',
-                "assets/license.png"
+                "assets/license.png",
+                  isDrivingLicenceUploaded,
+                  "${drivingLicenceStatus}"
               ),
               _buildDocumentOption(
                 context,
@@ -96,7 +162,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 'Front and Back',
                 '/CameraAccessScreen',
                 'driving_licence',
-                "assets/id_card.png"
+                "assets/id_card.png",
+                  isNationalIdUploaded,
+                  "${nationalIdStatus}"
               ),
               _buildDocumentOption(
                 context,
@@ -104,7 +172,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 'Front ',
                 '/VideoKycScreen',
                 'video',
-                "assets/video.png"
+                "assets/video.png",
+                  isKycVideoUploaded,
+                  "${kycVideoStatus}"
               ),
             ],
           ),
@@ -113,9 +183,31 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     );
   }
 
-  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route, String data, String icon) {
+  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route, String data, String icon, bool imageUploaded, String status) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    String verificationStatus = "";
+    Color textColor = isDarkMode ? Colors.white : Colors.black;
+    if(imageUploaded && status=="pending"){
+      verificationStatus = "In Progress";
+      textColor = Colors.deepOrange;
+    }else if(imageUploaded){
+      verificationStatus = status;
+      if(verificationStatus=="verified"){
+        textColor = Colors.green;
+      }else if(verificationStatus == "rejected"){
+        textColor = Colors.red;
+      }
+    }
+    else{
+      verificationStatus = "Pending";
+      textColor = Colors.yellow;
+    }
     return GestureDetector(
-      onTap: () => Navigator?.pushNamed(context,route, arguments: "${data}"),
+      onTap: () {
+        if (!(imageUploaded && status =="pending")) {
+          Navigator.pushNamed(context, route, arguments: "${data}");
+        }
+      },
       child: Container(
         width: double.infinity,
         height: 100,
@@ -159,9 +251,10 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
               Container(
                 margin: EdgeInsets.only(right: 6),
                 child: Text(
-                  "Pending",
+                  verificationStatus,
                   style: TextStyle(
                     fontSize: 12,
+                    color: textColor
                   ),
                 ),
               ),
@@ -171,4 +264,15 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
       ),
     );
   }
+
+  Future<void> _fetchDocData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MediaViewModel>(context, listen: false)
+        .fetchKycDocData(
+        "/api/v1/app/customers/customer_uploaded_documents");
+    ApiResponse apiResponse =
+        Provider.of<MediaViewModel>(context, listen: false).response;
+    getMediaWidget(context, apiResponse);
+  }
+
 }
