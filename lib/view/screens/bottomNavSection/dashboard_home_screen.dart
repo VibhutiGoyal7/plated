@@ -72,6 +72,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           margin: EdgeInsets.only(top: 10),
@@ -555,6 +557,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       setState(() {
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
         imageUrl = userDetails?.imageUrl.toString();
+        print(imageUrl);
       });
     });
     return userDetails;
