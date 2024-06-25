@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:payrio/model/apis/api_response.dart';
 import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:payrio/model/response/fetchKycDocResponse.dart';
 import 'package:payrio/model/response/phoneVerifyResponse.dart';
 import 'package:payrio/model/media_repository.dart';
 import 'package:payrio/model/response/profileResponse.dart';
@@ -236,6 +237,21 @@ class MediaViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> fetchKycDocData(String value) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      FetchKycDocResponse fetchKycDocResponse = await MediaRepository().fetchKycDocData(value);
+      print("Yess"+ fetchKycDocResponse.message.toString());
+      _apiResponse = ApiResponse.completed(fetchKycDocResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
 
   void setSelectedMedia(PhoneVerifyResponse? media) {
     _media = media;
