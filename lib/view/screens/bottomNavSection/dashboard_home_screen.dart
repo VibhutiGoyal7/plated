@@ -557,7 +557,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       setState(() {
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
         imageUrl = userDetails?.imageUrl.toString();
-        print(imageUrl);
       });
     });
     return userDetails;

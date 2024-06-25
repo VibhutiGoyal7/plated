@@ -274,7 +274,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                         .of<MediaViewModel>(context, listen: false)
                         .response;
                 getOtpResponseDataWidget(context, apiResponse);
-             /*   Navigator.pushNamed(
+                /*Navigator.pushNamed(
                     context,
                     '/SetUpAccount'
                 );*/

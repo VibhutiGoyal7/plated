@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   flutter_timer_countdown: ^1.0.7
+  permission_handler: ^11.2.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -42,6 +43,7 @@ dependencies:
   email_validator: ^2.1.16
   jumio_mobile_sdk_flutter: ^4.9.0
   image_picker: ^1.1.2
+  video_player: ^2.8.7
 
 dev_dependencies:
   flutter_test:

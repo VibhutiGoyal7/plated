@@ -8,9 +8,12 @@ import 'package:payrio/view/screens/authSection/otp_verify_screen.dart';
 import 'package:payrio/view/screens/authSection/phone_verify_screen.dart';
 import 'package:payrio/view/screens/authSection/setup_account_screen.dart';
 import 'package:payrio/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:payrio/view/screens/kycSection/camera_access_screen.dart';
+import 'package:payrio/view/screens/kycSection/camera_screen.dart';
 import 'package:payrio/view/screens/kycSection/chooose_doc_screen.dart';
 import 'package:payrio/view/screens/kycSection/select_country_screen.dart';
 import 'package:payrio/view/screens/kycSection/verify_identity_screen.dart';
+import 'package:payrio/view/screens/kycSection/video_kyc_screen.dart';
 import 'package:payrio/view/screens/profileSection/account_detail_screen.dart';
 import 'package:payrio/view/screens/profileSection/address_screen.dart';
 import 'package:payrio/view/screens/profileSection/change_password_screen.dart';
@@ -22,15 +25,15 @@ import 'package:payrio/view/screens/profileSection/setting_screen.dart';
 import 'package:payrio/view/screens/profileSection/verify_email_screen.dart';
 import 'package:payrio/view_model/media_view_model.dart';
 
-import 'package:payrio/view/screens/get_started_screen.dart';
+import 'package:payrio/view/screens/authSection/get_started_screen.dart';
 import 'package:payrio/view/screens/level_benefit_screen.dart';
-import 'package:payrio/view/screens/money_safe_screen.dart';
+import 'package:payrio/view/screens/authSection/money_safe_screen.dart';
 import 'package:payrio/view/screens/notification_detail_s%20reen.dart';
 import 'package:payrio/view/screens/notification_screen.dart';
 import 'package:payrio/view/screens/redeem_balance_screen.dart';
 import 'package:payrio/view/screens/redeem_screen.dart';
-import 'package:payrio/view/screens/signin_screen.dart';
-import 'package:payrio/view/screens/splash_screen.dart';
+import 'package:payrio/view/screens/authSection/signin_screen.dart';
+import 'package:payrio/view/screens/authSection/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
@@ -219,6 +222,22 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return RedeemScreen();
+            },
+            '/CameraAccessScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return CameraAccessScreen(data: args);
+            },
+            '/DocImageScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return DocImageScreen(data: args);
+            }
+            ,
+            '/VideoKycScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return VideoKycScreen();
             }
           }),
     );

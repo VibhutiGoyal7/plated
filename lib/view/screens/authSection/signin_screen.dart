@@ -58,7 +58,7 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
-
+        Navigator.pushNamed(context, '/BottomNav');
 
         await Helper.saveUserDetails(mediaList);
         String token = "${mediaList?.token}";

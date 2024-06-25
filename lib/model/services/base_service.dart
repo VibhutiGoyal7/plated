@@ -13,4 +13,6 @@ abstract class BaseService {
   Future<dynamic> putResponse(String url, dynamic phoneRequest);
   Future<dynamic> getResponse(String url);
   Future<dynamic> putMultiFormResponse(String url, File file);
+  Future<dynamic> postMultiFormResponse(String url, File file, String docType,String imageName);
+
 }

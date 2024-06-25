@@ -235,16 +235,16 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     .existingUserData(
                         "/api/v1/app/customers/check_customer_existance",
                     request);
-                  // Navigator.pushNamed(context, '/OtpVerify',
-                  //   arguments: "${_inputController.text}");
+                  Navigator.pushNamed(context, '/OtpVerify',
+                    arguments: "${_inputController.text}");
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));
-                await Provider.of<MediaViewModel>(context, listen: false)
+                /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);
-               Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
+                      phoneRequest);*/
+               //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
