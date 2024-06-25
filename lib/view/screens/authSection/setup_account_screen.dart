@@ -70,8 +70,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
-        await Helper.saveUserDetails(mediaList);
-        if(await Helper.saveUserDetails(mediaList)) print("data saved") ;
+        await Helper.saveProfileDetails(mediaList);
+        if(await Helper.saveProfileDetails(mediaList)) print("data saved") ;
         else print("not saved");
 
         await Helper.savePassword(_passwordController.text);
