@@ -6,9 +6,10 @@ import 'package:payrio/model/response/signInResponse.dart';
 import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/response/setUpAccountResponse.dart';
-import '../../../utils/Helper.dart';
+import '../../languageSection/Languages.dart';
+import '../../model/response/profileResponse.dart';
+import '../../model/response/setUpAccountResponse.dart';
+import '../../utils/Helper.dart';
 
 class SigninScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -57,11 +58,19 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
-        Navigator.pushNamed(context, '/BottomNav');
+
 
         await Helper.saveUserDetails(mediaList);
+        String token = "${mediaList?.token}";
+        bool isSaved = await Helper.saveUserToken(token);
 
-        if (await Helper.saveUserDetails(mediaList)) print("data saved");
+        // Check if the token was saved successfully
+        if (isSaved) {
+          print('Token saved successfully.');
+        } else {
+          print('Failed to save token.');
+        }
+        //if (await Helper.saveProfileDetails(mediaList)) print("data saved");
 
         await Helper.savePassword(_passwordController.text);
         String? password = await Helper.getPassword();
@@ -69,8 +78,32 @@ class _SigninScreenState extends State<SigninScreen> {
 
         SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
         print('Retrieved Token: ${retrievedToken}');
+        _fetchData();
+
         // Navigate to the new screen after receiving the response
         //Navigator.pushNamed(context, '/BottomNav');
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  Future<Widget> getProfileWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        await Helper.saveProfileDetails(mediaList);
+        Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -146,7 +179,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   Widget _buildPhoneInput(BuildContext context, String text,
       TextEditingController nameController, Icon icon) {
-    nameController.text = widget.data as String;
+    //nameController.text = widget.data as String;
     return Card(
       child: Container(
         height: 60,
@@ -263,7 +296,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           phoneNumber: _phoneNoController.text,
                           password: _passwordController.text));
                   await Provider.of<MediaViewModel>(context, listen: false)
-                      .signInWithPass("/api/v1/app/customers/sign_in", request);
+                      .signInWithPass("api/v1/app/customers/sign_in", request);
                   //Navigator.pushNamed(context, '/BottomNav');
 
                   ApiResponse apiResponse =
@@ -299,6 +332,17 @@ class _SigninScreenState extends State<SigninScreen> {
         ),
       ],
     );
+  }
+
+  Future<void> _fetchData() async {
+    String? retrievedToken = await Helper.getUserToken();
+    print("Token $retrievedToken");
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MediaViewModel>(context, listen: false)
+        .profileScreenData("/api/v1/app/customers/show_customer_details");
+    ApiResponse apiResponse =
+        Provider.of<MediaViewModel>(context, listen: false).response;
+    getProfileWidget(context, apiResponse);
   }
 
   void Validate(String email) {
