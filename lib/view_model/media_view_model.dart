@@ -9,6 +9,7 @@ import 'package:payrio/model/response/profileResponse.dart';
 import 'package:payrio/model/request/setUpAccountRequest.dart';
 import 'package:payrio/model/response/setUpAccountResponse.dart';
 import 'package:payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:payrio/model/response/uploadKycResponse.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';
@@ -140,6 +141,20 @@ class MediaViewModel with ChangeNotifier {
       ProfileResponse profileResponse = await MediaRepository().putMultiFormResponse(value, file);
       print("Yess"+ profileResponse.firstName.toString());
       _apiResponse = ApiResponse.completed(profileResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> postMultiFormResponse(String value, File file, String docType,String imageName) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      UploadKycDocResponse uploadKycDocResponse = await MediaRepository().postMultiFormResponse(value, file,docType, imageName);
+      print("Yess"+ uploadKycDocResponse.message.toString());
+      _apiResponse = ApiResponse.completed(uploadKycDocResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

@@ -9,6 +9,7 @@ import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:payrio/model/response/phoneVerifyResponse.dart';
 import 'package:payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:payrio/model/response/profileResponse.dart';
+import 'package:payrio/model/response/uploadKycResponse.dart';
 import 'package:payrio/model/services/base_service.dart';
 import 'package:payrio/model/services/media_service.dart';
 import 'package:payrio/model/request/setUpAccountRequest.dart';
@@ -103,6 +104,15 @@ class MediaRepository {
     final jsonData = response;
     print(jsonData);
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<UploadKycDocResponse> postMultiFormResponse(String value, File file, String docType,String imageName) async {
+    dynamic response = await _mediaService.postMultiFormResponse(value, file, docType, imageName);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    UploadKycDocResponse mediaList = UploadKycDocResponse.fromJson(jsonData);
     return mediaList;
   }
 
