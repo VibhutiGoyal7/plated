@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CameraAccessScreen extends StatefulWidget {
-
   final String? data; // Define the 'data' parameter here
 
   CameraAccessScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _CameraAccessScreenState createState() => _CameraAccessScreenState();
 }
 
 class _CameraAccessScreenState extends State<CameraAccessScreen> {
   String docType = '';
+
   @override
   void initState() {
     super.initState();
@@ -36,23 +37,32 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 60),
-            Text("Allow Camera Access", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            SizedBox(height: 20),
-            Text("When prompted, you must enable camera access to continue", style: TextStyle(fontSize: 18),),
-            SizedBox(height: 50,),
-            Row(
-              crossAxisAlignment:CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              Icon(Icons.camera_enhance_sharp, size: 170,),
-            ],),
-            Spacer(),
-            _buildFooter(context)
-          ]),
+                Text("Allow Camera Access",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                Text(
+                  "When prompted, you must enable camera access to continue.",
+                  style: TextStyle(fontSize: 14),
+                ),
+                Spacer(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.camera_enhance,
+                      size: 170,
+                      color: Colors.black45,
+                    ),
+                  ],
+                ),
+                Spacer(),
+                _buildFooter(context)
+              ]),
         ));
   }
 
@@ -66,7 +76,8 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 if (await checkPermissionStatus()) {
-                  Navigator.pushNamed(context, "/DocImageScreen", arguments: "${docType}");
+                  Navigator.pushNamed(context, "/DocImageScreen",
+                      arguments: "${docType}");
                 } else {
                   requestPermission();
                 }
@@ -99,7 +110,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
 
     if (await permission.isDenied) {
       await permission.request();
-    } else if(await permission.isGranted) {
+    } else if (await permission.isGranted) {
       Navigator.pushNamed(context, "/DocImageScreen");
     }
   }

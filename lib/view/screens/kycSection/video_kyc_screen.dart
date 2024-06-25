@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +10,10 @@ import '../../../model/response/uploadKycResponse.dart';
 import '../../../view_model/media_view_model.dart';
 
 class VideoKycScreen extends StatefulWidget {
-
   final String? data; // Define the 'data' parameter here
 
   VideoKycScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _VideoKycScreenState createState() => _VideoKycScreenState();
 }
@@ -32,14 +31,13 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   void initState() {
     super.initState();
     docType = widget.data.toString();
-   /* _controller = VideoPlayerController.networkUrl(
+    /* _controller = VideoPlayerController.networkUrl(
       Uri.parse(
         frontImg.toString(),
       ),
     );*/
 
     //_initializeVideoPlayerFuture = _controller.initialize();
-
   }
 
   Future<Widget> getMediaWidget(
@@ -87,40 +85,40 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           ),
         ),
         body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Column(
               children: [
-            Container(
-            margin: EdgeInsets.only(left: 10, right: 10,bottom: 4,top: 10),
-          alignment: Alignment.center,
-          height: screenHeight * 0.35,
-          width: double.infinity,
-          decoration: BoxDecoration(
-              border: Border.all(width: 1)),
-          child: frontImageClicked
-              ?  videoPlayerController != null && videoPlayerController.value.isInitialized
-              ? AspectRatio(
-            aspectRatio: videoPlayerController!.value.aspectRatio,
-            child: VideoPlayer(videoPlayerController!),
-          )
-              : Text('No video selected')
-              : GestureDetector(
-            onTap: (){
-              _startVideo(ImageSource.camera);
-            },
-              child: Text("Click to record"))),
+                Container(
+                    margin:
+                        EdgeInsets.only(left: 0, right: 0, bottom: 4, top: 10),
+                    alignment: Alignment.center,
+                    height: screenHeight * 0.65,
+                    width: double.infinity,
+                    child: frontImageClicked
+                        ? videoPlayerController != null &&
+                                videoPlayerController.value.isInitialized
+                            ? AspectRatio(
+                                aspectRatio:
+                                    videoPlayerController!.value.aspectRatio,
+                                child: VideoPlayer(videoPlayerController!),
+                              )
+                            : Text('No video selected')
+                        : GestureDetector(
+                            onTap: () {
+                              _startVideo(ImageSource.camera);
+                            },
+                            child: Text("Click to record"))),
+                Spacer(),
                 _buildFooter(context)
               ],
-            )
-        )
-    );
+            )));
   }
 
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
         .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
-        "video_kyc_clip", "video_kyc");
+            "video_kyc_clip", "video_kyc");
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
@@ -153,30 +151,33 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
       ),
     );
   }
+
   Future _startVideo(ImageSource img) async {
-      final pickedFile = await picker.pickVideo(source: img, maxDuration: const Duration(seconds: 15),);
-      XFile? xfilePick = pickedFile;
-      setState(
-            () {
-          if (xfilePick != null) {
-            setState(() {
-              frontImg = File(pickedFile!.path) as File;
-              videoPlayerController =
-              VideoPlayerController.file(frontImg)
-                ..initialize().then((_) {
-                  setState(() {});
-                  videoPlayerController.play(); //.pause() for pausing
-                  videoPlayerController.setVolume(0.0);
-                });
-              setState(() { });
-              frontImageClicked = true;
-            });
-            print("image : ${frontImg}");
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
-                const SnackBar(content: Text('Video not detected.')));
-          }
-        },
-      );
+    final pickedFile = await picker.pickVideo(
+      source: img,
+      maxDuration: const Duration(seconds: 15),
+    );
+    XFile? xfilePick = pickedFile;
+    setState(
+      () {
+        if (xfilePick != null) {
+          setState(() {
+            frontImg = File(pickedFile!.path) as File;
+            videoPlayerController = VideoPlayerController.file(frontImg)
+              ..initialize().then((_) {
+                setState(() {});
+                videoPlayerController.play(); //.pause() for pausing
+                videoPlayerController.setVolume(0.0);
+              });
+            setState(() {});
+            frontImageClicked = true;
+          });
+          print("image : ${frontImg}");
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('Video not detected.')));
+        }
+      },
+    );
   }
 }

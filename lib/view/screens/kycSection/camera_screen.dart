@@ -58,6 +58,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
           setState(() {
             //imageClicked = true;
             imageUrl = mediaList?.kycDocsImageUrl.toString();
+            Navigator.pushNamed(context, "/ChooseDocScreen");
           });
         });
         return Container(); // Return an empty container as you'll navigate away
@@ -87,7 +88,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
             },
           ),
           title: Text(
-            "Verify your Identity",
+            "${docType.toUpperCase()}",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
         ),
@@ -97,20 +98,22 @@ class _DocImageScreenState extends State<DocImageScreen> {
                 getFrontImage(ImageSource.camera);
               },
               child: Container(
-                margin: EdgeInsets.only(left: 10, right: 10,bottom: 4,top: 10),
+                margin: EdgeInsets.only(left: 0, right: 00, bottom: 4, top: 0),
                 alignment: Alignment.center,
-                height: screenHeight * 0.35,
+                height: screenHeight * 0.6,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    border: Border.all(width: 1)),
+                decoration: BoxDecoration(border: Border.all(width: 0.2)),
                 child: frontImageClicked
                     ? ClipRRect(
                         child: Image.file(frontImg as File,
-                            height: screenHeight * 0.35,
                             width: screenWidth,
                             fit: BoxFit.fill),
                       )
-                    : Text("Front Side"),
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Text("Front Side"), Icon(Icons.add)],
+                      ),
               )),
           if (isBothSides)
             GestureDetector(
@@ -118,48 +121,50 @@ class _DocImageScreenState extends State<DocImageScreen> {
                   getBackImage(ImageSource.camera);
                 },
                 child: Container(
-                  margin: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 4),
+                  margin:
+                      EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 4),
                   alignment: Alignment.center,
                   height: screenHeight * 0.35,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1)),
+                  decoration: BoxDecoration(border: Border.all(width: 0.5)),
                   child: backImgClicked
                       ? ClipRRect(
                           child: Image.file(backImg as File,
-                              height: screenHeight * 0.35,
                               width: screenWidth,
                               fit: BoxFit.fill),
                         )
-                      : Text("Back Side"),
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [Text("Back Side"), Icon(Icons.add)],
+                        ),
                 )),
           Spacer(),
-          _buildFooter(context)
+          _buildFooter(context),
+          SizedBox(height: 25,)
         ]));
   }
 
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
-        .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
-            docType, imageName);
+        .postMultiFormResponse(
+            "/api/v1/app/kyc_documents", frontImg!, docType, imageName);
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
 
-  Future getFrontImage(
-    ImageSource img
-  ) async {
+  Future getFrontImage(ImageSource img) async {
     final pickedFile = await picker.pickImage(source: img);
     XFile? xfilePick = pickedFile;
     setState(
       () {
         if (xfilePick != null) {
-         setState(() {
-           frontImg = File(pickedFile!.path);
-           frontImageClicked = true;
-         });
+          setState(() {
+            frontImg = File(pickedFile!.path);
+            frontImageClicked = true;
+          });
           print("image : ${frontImg}");
         } else {
           ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
@@ -169,13 +174,11 @@ class _DocImageScreenState extends State<DocImageScreen> {
     );
   }
 
-  Future getBackImage(
-      ImageSource img
-      ) async {
+  Future getBackImage(ImageSource img) async {
     final pickedFile = await picker.pickImage(source: img);
     XFile? xfilePick = pickedFile;
     setState(
-          () {
+      () {
         if (xfilePick != null) {
           setState(() {
             backImg = File(pickedFile!.path);
@@ -200,9 +203,9 @@ class _DocImageScreenState extends State<DocImageScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 //Navigator.pushNamed(context, "/VideoKycScreen");
-                if(frontImg!=""){
+                if (frontImg != "") {
                   _uploadProfilePic(frontImg!);
-                  Navigator.pushNamed(context, "/VideoKycScreen");
+
                 }
               },
               child: Text(

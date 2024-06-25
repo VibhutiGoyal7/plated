@@ -44,7 +44,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    width: 0.5,
+                    width: 0.2,
                   ),
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -79,21 +79,32 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 'Passport',
                 'Photo page',
                 '/CameraAccessScreen',
-                'passport'
+                'passport',
+                "assets/passport.png"
               ),
               _buildDocumentOption(
                 context,
                 'Driving License',
                 'Front and Back',
                 '/CameraAccessScreen',
-                'national_id'
+                'national_id',
+                "assets/license.png"
               ),
               _buildDocumentOption(
                 context,
                 'National Identity Card',
                 'Front and Back',
                 '/CameraAccessScreen',
-                'driving_licence'
+                'driving_licence',
+                "assets/id_card.png"
+              ),
+              _buildDocumentOption(
+                context,
+                'Video Verification',
+                'Front ',
+                '/VideoKycScreen',
+                'video',
+                "assets/video.png"
               ),
             ],
           ),
@@ -102,47 +113,60 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     );
   }
 
-  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route, String data) {
+  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route, String data, String icon) {
     return GestureDetector(
       onTap: () => Navigator?.pushNamed(context,route, arguments: "${data}"),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 0.5,
-          ),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 20,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                      ),
-                    ),
-                  ],
+        height: 100,
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        margin: const EdgeInsets.symmetric(vertical: 2.0),
+        child: Card(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Image(
+                  alignment: Alignment.topLeft,
+                  width: 25,
+                  image: AssetImage(icon),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 6),
+                child: Text(
+                  "Pending",
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
