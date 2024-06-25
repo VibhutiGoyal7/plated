@@ -10,42 +10,44 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   String token = "";
+
   @override
   void initState() {
     super.initState();
     _fetchToken();
-    Timer(Duration(seconds: 2),
-        (){
+    Timer(Duration(seconds: 2), () {
       _navigation();
-    }
-    );
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: (){
-
-        },
+        onTap: () {},
         child: Padding(
           padding: EdgeInsets.all(8),
           child: Center(
-            child: Text("Payario",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+            child: Text(
+              "Payario",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           ),
         ),
       ),
     );
   }
+
   Future<void> _fetchToken() async {
     await Future.delayed(Duration(milliseconds: 2));
-    token = await Helper.getUserToken() as String ;
+    token = await Helper.getUserToken() as String;
   }
-  void _navigation() {
-    if(token.isEmpty){
-      Navigator.popAndPushNamed(context, "/GetStartedScreen");
-    }else{
-      Navigator.popAndPushNamed(context, "/BottomNav");
 
+  void _navigation() {
+    if (token.isEmpty) {
+      Navigator.pushReplacementNamed(context, "/GetStartedScreen");
+    } else {
+      Navigator.pushReplacementNamed(context, "/BottomNav");
     }
   }
 }

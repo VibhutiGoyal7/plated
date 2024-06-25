@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../view_model/media_view_model.dart';
-import '../../component/toastMessage.dart';
+
 class ChooseDocScreen extends StatefulWidget {
   @override
   _ChooseDocScreenState createState() => _ChooseDocScreenState();
@@ -17,10 +17,13 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   bool isDrivingLicenceUploaded = false;
   bool isKycVideoUploaded = false;
 
-  String? nationalIdStatus ;
-  String? passportStatus ;
-  String? drivingLicenceStatus ;
-  String? kycVideoStatus ;
+  String? nationalIdStatus;
+
+  String? passportStatus;
+
+  String? drivingLicenceStatus;
+
+  String? kycVideoStatus;
 
   @override
   void initState() {
@@ -40,19 +43,21 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
           setState(() {
             //imageClicked = true;
 
-            if(mediaList?.nationalIdImage?.userId != null) {
+            if (mediaList?.nationalIdImage?.userId != null) {
               isNationalIdUploaded = true;
               nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
-            };
-            if(mediaList?.passportImage?.userId != null) {
+            }
+            ;
+            if (mediaList?.passportImage?.userId != null) {
               isPassportUploaded = true;
               passportStatus = mediaList?.passportImage?.verificationStatus;
             }
-            if(mediaList?.drivingLicenseImage?.userId != null) {
+            if (mediaList?.drivingLicenseImage?.userId != null) {
               isDrivingLicenceUploaded = true;
-              drivingLicenceStatus = mediaList?.drivingLicenseImage?.verificationStatus;
+              drivingLicenceStatus =
+                  mediaList?.drivingLicenseImage?.verificationStatus;
             }
-            if(mediaList?.videoClipUrl?.userId != null) {
+            if (mediaList?.videoClipUrl?.userId != null) {
               isKycVideoUploaded = true;
               kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
             }
@@ -82,9 +87,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
           },
         ),
         title: Text(
-        "Choose Your Document",
-        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-      ),
+          "Choose Your Document",
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -94,7 +99,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             children: [
               SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                 child: Text(
                   'ISSUING COUNTRY',
                   style: TextStyle(
@@ -104,7 +110,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
               ),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 0.2,
@@ -129,7 +136,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
               ),
               SizedBox(height: 12),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                 child: Text(
                   'ACCEPTED DOCUMENTS',
                   style: TextStyle(
@@ -138,44 +146,41 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 ),
               ),
               _buildDocumentOption(
-                context,
-                'Passport',
-                'Photo page',
-                '/CameraAccessScreen',
-                'passport',
-                "assets/passport.png",
-              isPassportUploaded,
-              "${passportStatus}"),
+                  context,
+                  'Passport',
+                  'Photo page',
+                  '/CameraAccessScreen',
+                  'passport',
+                  "assets/passport.png",
+                  isPassportUploaded,
+                  "${passportStatus}"),
               _buildDocumentOption(
-                context,
-                'Driving License',
-                'Front and Back',
-                '/CameraAccessScreen',
-                'national_id',
-                "assets/license.png",
+                  context,
+                  'Driving License',
+                  'Front and Back',
+                  '/CameraAccessScreen',
+                  'national_id',
+                  "assets/license.png",
                   isDrivingLicenceUploaded,
-                  "${drivingLicenceStatus}"
-              ),
+                  "${drivingLicenceStatus}"),
               _buildDocumentOption(
-                context,
-                'National Identity Card',
-                'Front and Back',
-                '/CameraAccessScreen',
-                'driving_licence',
-                "assets/id_card.png",
+                  context,
+                  'National Identity Card',
+                  'Front and Back',
+                  '/CameraAccessScreen',
+                  'driving_licence',
+                  "assets/id_card.png",
                   isNationalIdUploaded,
-                  "${nationalIdStatus}"
-              ),
+                  "${nationalIdStatus}"),
               _buildDocumentOption(
-                context,
-                'Video Verification',
-                'Front ',
-                '/VideoKycScreen',
-                'video',
-                "assets/video.png",
+                  context,
+                  'Video Verification',
+                  'Front ',
+                  '/VideoKycScreen',
+                  'video',
+                  "assets/video.png",
                   isKycVideoUploaded,
-                  "${kycVideoStatus}"
-              ),
+                  "${kycVideoStatus}"),
             ],
           ),
         ),
@@ -183,29 +188,41 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     );
   }
 
-  Widget _buildDocumentOption(BuildContext context, String title, String subtitle, String route, String data, String icon, bool imageUploaded, String status) {
+  Widget _buildDocumentOption(
+      BuildContext context,
+      String title,
+      String subtitle,
+      String route,
+      String data,
+      String icon,
+      bool imageUploaded,
+      String status) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
-    if(imageUploaded && status=="pending"){
+    if (imageUploaded && status == "pending") {
       verificationStatus = "In Progress";
       textColor = Colors.deepOrange;
-    }else if(imageUploaded){
+    } else if (imageUploaded) {
       verificationStatus = status;
-      if(verificationStatus=="verified"){
+      if (verificationStatus == "verified") {
         textColor = Colors.green;
-      }else if(verificationStatus == "rejected"){
+      } else if (verificationStatus == "rejected") {
         textColor = Colors.red;
       }
-    }
-    else{
+    } else {
       verificationStatus = "Pending";
-      textColor = Colors.yellow;
+      textColor = Colors.orange;
     }
     return GestureDetector(
-      onTap: () {
-        if (!(imageUploaded && status =="pending")) {
-          Navigator.pushNamed(context, route, arguments: "${data}");
+      onTap: () async {
+        if (!(imageUploaded && status == "pending")) {
+          if (await checkPermissionStatus()) {
+            Navigator.pushNamed(context, "/DocImageScreen",
+                arguments: "${data}");
+          } else {
+            Navigator.pushNamed(context, route, arguments: "${data}");
+          }
         }
       },
       child: Container(
@@ -241,8 +258,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                       ),
                       Text(
                         subtitle,
-                        style: TextStyle(
-                        ),
+                        style: TextStyle(),
                       ),
                     ],
                   ),
@@ -253,9 +269,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 child: Text(
                   verificationStatus,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: textColor
-                  ),
+                      fontSize: 12,
+                      color: textColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -265,14 +281,28 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     );
   }
 
+  Future<bool> checkPermissionStatus() async {
+    bool isCameraGranted = await Permission.camera.request().isGranted;
+    if (!isCameraGranted) {
+      isCameraGranted =
+          await Permission.camera.request() == PermissionStatus.granted;
+    }
+    final permission = Permission.camera;
+    PermissionStatus status = await permission.status;
+    print(status);
+    if (status.isDenied) {
+      // Handle the case when permission is permanently denied
+      openAppSettings();
+    }
+    return await isCameraGranted;
+  }
+
   Future<void> _fetchDocData() async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
-        .fetchKycDocData(
-        "/api/v1/app/customers/customer_uploaded_documents");
+        .fetchKycDocData("/api/v1/app/customers/customer_uploaded_documents");
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
-
 }

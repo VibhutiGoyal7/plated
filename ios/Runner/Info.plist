@@ -28,6 +28,10 @@
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
     <string>This will allow ${PRODUCT_NAME} to take photos of your credentials.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Can I use the photos please?</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Can I use the photos please?</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -47,5 +51,6 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
 </dict>
 </plist>

@@ -76,7 +76,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 if (await checkPermissionStatus()) {
-                  Navigator.pushNamed(context, "/DocImageScreen",
+                  Navigator.pushReplacementNamed(context, "/DocImageScreen",
                       arguments: "${docType}");
                 } else {
                   requestPermission();
@@ -100,9 +100,19 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
   }
 
   Future<bool> checkPermissionStatus() async {
+    bool isCameraGranted = await Permission.camera.request().isGranted;
+    if (!isCameraGranted) {
+      isCameraGranted =
+          await Permission.camera.request() == PermissionStatus.granted;
+    }
     final permission = Permission.camera;
-
-    return await permission.status.isGranted;
+    PermissionStatus status = await permission.status;
+    print(status);
+    if (status.isDenied) {
+      // Handle the case when permission is permanently denied
+      openAppSettings();
+    }
+    return await isCameraGranted;
   }
 
   Future<void> requestPermission() async {
@@ -111,7 +121,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
     if (await permission.isDenied) {
       await permission.request();
     } else if (await permission.isGranted) {
-      Navigator.pushNamed(context, "/DocImageScreen");
+      Navigator.pushReplacementNamed(context, "/DocImageScreen");
     }
   }
 }

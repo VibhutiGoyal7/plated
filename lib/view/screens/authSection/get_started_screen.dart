@@ -65,7 +65,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                Navigator.pushNamed(context, '/MoneySafeScreen');
+                Navigator.pushReplacementNamed(context, '/MoneySafeScreen');
               },
               child: Text(
                 Languages.of(context)!.labelProceed,

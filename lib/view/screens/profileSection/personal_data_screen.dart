@@ -326,7 +326,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 */
 
   Widget _buildDocumentOption(BuildContext context, String title,
-      String subtitle, String route, String data, String icon,String? image,
+      String subtitle, String route, String data, String icon, String? image,
       bool imageUploaded, String status) {
     bool isDarkMode = Theme
         .of(context)
@@ -346,11 +346,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     }
     else {
       verificationStatus = "Pending";
-      textColor = Colors.yellow;
+      textColor = Colors.orange;
     }
     return GestureDetector(
       onTap: () {
-        if (imageUploaded) {
+        if (imageUploaded && title != "Video Verification") {
           _showModal(context, image);
         }
       },
@@ -386,7 +386,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                   verificationStatus,
                   style: TextStyle(
                       fontSize: 12,
-                      color: textColor
+                      color: textColor,
+                    fontWeight: FontWeight.bold
                   ),
                 ),
               ),
@@ -426,63 +427,66 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     showDialog(
       barrierDismissible: false,
       context: context,
-
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
+              shape: Border.all(),
               scrollable: false,
-              insetPadding: EdgeInsets.all(8),
+              insetPadding: EdgeInsets.all(0),
               contentPadding: EdgeInsets.symmetric(horizontal: 0  , vertical: 0),
                 content:
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Stack(
-                      children: <Widget>[
-                        Container(
-                            //decoration: new BoxDecoration(color: Colors.white),
-                            alignment: Alignment.center,
-                            //height: 240,
-                            child: (image != "" || image!.isNotEmpty) ? ClipRRect(
-                              child: Image.network(image as String,
-                                  fit: BoxFit.fill,
-                              loadingBuilder: (BuildContext context, Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.black54!,
-                                    highlightColor: Colors.black45!,
-                                    child: Container(
-                                      height: MediaQuery.of(context).size.height * 0.5,
-                                      color: Colors.white,
-                                    ),
-                                  );
+                Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: <Widget>[
+                          Container(
+                              //decoration: new BoxDecoration(color: Colors.white),
+                              alignment: Alignment.center,
+                              //height: 240,
+                              child: (image != "" || image!.isNotEmpty) ? ClipRRect(
+                                child: Image.network(image as String,
+                                    fit: BoxFit.fill,
+                                loadingBuilder: (BuildContext context, Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.white30,
+                                      highlightColor: Colors.grey,
+                                      child: Container(
+                                        height: MediaQuery.of(context).size.height * 0.5,
+                                        color: Colors.grey,
+                                      ),
+                                    );
 
-                                }
-                              },
-                              )
-                            ) : Text("Status Pending")
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: GestureDetector(
-                                onTap: (){
-                                  Navigator.pop(context);
+                                  }
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(2),
-                                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black),
-                                    child: Icon(Icons.close ,color: Colors.white70,))),
+                                )
+                              ) : Text("Status Pending")
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: GestureDetector(
+                                  onTap: (){
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(2),
+                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black),
+                                      child: Icon(Icons.close ,color: Colors.white70,))),
+                            )
                           )
-                        )
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
             );
           },

@@ -100,16 +100,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   GestureDetector(
                     onTap: () => {_showPicker(context: context)},
                     child: imageUrl == ""
-                        ? CircleAvatar(
-                            radius: 30,
-                            backgroundColor: AppColor.WHITE,
-                            backgroundImage:
-                                AssetImage("assets/profile_user.png"),
+                        ? Container(
+                            height: 100,
+                            width: 100,
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: AppColor.WHITE,
+                              backgroundImage:
+                                  AssetImage("assets/profile_user.png"),
+                            ),
                           )
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100.0),
-                            child: Image.network(imageUrl,
-                                height: 100, width: 100, fit: BoxFit.cover)),
+                            child: Image.network(
+                              imageUrl,
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.black54!,
+                                    highlightColor: Colors.black45!,
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.5,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }
+                              },
+                            )),
                   ),
                   SizedBox(
                     height: 10,

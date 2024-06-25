@@ -83,7 +83,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         ToastComponent.showToast(context: context, message: message);
         final prefs = await SharedPreferences.getInstance();
         String token = "${otpVerifyResponse?.token}";
-        Navigator.pushNamed(context, '/SetUpAccount');
+        Navigator.pushReplacementNamed(context, '/SetUpAccount');
         // Save the token
         bool isSaved = await Helper.saveUserToken(token);
 

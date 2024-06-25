@@ -81,7 +81,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
         print('Retrieved Token: ${retrievedToken}');
 
-        Navigator.pushNamed(context, '/BottomNav');
+        Navigator.pushReplacementNamed(context, '/BottomNav');
         // Navigate to the new screen after receiving the response
         // Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away

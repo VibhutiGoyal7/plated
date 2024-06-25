@@ -103,7 +103,7 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
-        Navigator.pushNamed(context, '/BottomNav');
+        Navigator.pushReplacementNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(

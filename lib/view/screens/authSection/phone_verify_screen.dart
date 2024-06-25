@@ -235,7 +235,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     .existingUserData(
                         "/api/v1/app/customers/check_customer_existance",
                     request);
-                  Navigator.pushNamed(context, '/OtpVerify',
+                  Navigator.pushReplacementNamed(context, '/OtpVerify',
                     arguments: "${_inputController.text}");
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
