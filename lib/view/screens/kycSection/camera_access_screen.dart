@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payrio/languageSection/Languages.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CameraAccessScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
             },
           ),
           title: Text(
-            "Verify your Identity",
+            Languages.of(context)!.labelVerifyIdentity,
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
         ),
@@ -40,12 +41,12 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Allow Camera Access",
+                Text(Languages.of(context)!.labelAllowCamAccess,
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
                 Text(
-                  "When prompted, you must enable camera access to continue.",
+                  Languages.of(context)!.labelAllowAccessSubtitle,
                   style: TextStyle(fontSize: 14),
                 ),
                 Spacer(),
@@ -83,7 +84,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
                 }
               },
               child: Text(
-                "Enable Camera",
+                Languages.of(context)!.labelEnableCam,
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../languageSection/Languages.dart';
+
 class RedeemScreen extends StatefulWidget {
   @override
   _RedeemScreenState createState() => _RedeemScreenState();
@@ -30,7 +32,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
               Navigator.pop(context);
             },
           ),
-          title: Text("Redeem"),
+          title: Text(Languages.of(context)!.labelRedeem),
         ),
         body: SafeArea(
             child: Padding(

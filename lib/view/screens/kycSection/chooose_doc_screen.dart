@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
+import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class ChooseDocScreen extends StatefulWidget {
   @override
@@ -65,6 +67,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -147,8 +152,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
               ),
               _buildDocumentOption(
                   context,
-                  'Passport',
-                  'Photo page',
+                  Languages.of(context)!.labelPassport,
+                  Languages.of(context)!.labelPhotoPage,
                   '/CameraAccessScreen',
                   'passport',
                   "assets/passport.png",
@@ -156,8 +161,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   "${passportStatus}"),
               _buildDocumentOption(
                   context,
-                  'Driving License',
-                  'Front and Back',
+                  Languages.of(context)!.labelDrivingLicence,
+                  Languages.of(context)!.labelFrontNBack,
                   '/CameraAccessScreen',
                   'driving_licence',
                   "assets/license.png",
@@ -165,8 +170,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   "${drivingLicenceStatus}"),
               _buildDocumentOption(
                   context,
-                  'National Identity Card',
-                  'Front and Back',
+                  Languages.of(context)!.labelNationalId,
+                  Languages.of(context)!.labelFrontNBack,
                   '/CameraAccessScreen',
                   'driving_licence',
                   "assets/id_card.png",
@@ -174,7 +179,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   "${nationalIdStatus}"),
               _buildDocumentOption(
                   context,
-                  'Video Verification',
+                  Languages.of(context)!.labelVideoVerification,
                   'Front ',
                   '/VideoKycScreen',
                   'video',
@@ -201,7 +206,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
     if (imageUploaded && status == "pending") {
-      verificationStatus = "In Progress";
+      verificationStatus = Languages.of(context)!.labelInProgress;
       textColor = Colors.deepOrange;
     } else if (imageUploaded) {
       verificationStatus = status;
@@ -211,7 +216,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         textColor = Colors.red;
       }
     } else {
-      verificationStatus = "Pending";
+      verificationStatus = Languages.of(context)!.labelPending;
       textColor = Colors.orange;
     }
     return GestureDetector(

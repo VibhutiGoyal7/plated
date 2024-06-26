@@ -7,6 +7,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:payrio/model/response/uploadKycResponse.dart';
+import 'package:payrio/view/component/session_expired_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -71,6 +72,8 @@ class _DocImageScreenState extends State<DocImageScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );

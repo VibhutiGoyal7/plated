@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payrio/languageSection/Languages.dart';
 
 class SelectCountryScreen extends StatefulWidget {
   const SelectCountryScreen({Key? key}) : super(key: key);
@@ -56,7 +57,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text("ISSUING COUNTRY",
+        title: Text(Languages.of(context)!.labelIssuingCountry,
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
       ),
       body: SafeArea(
@@ -65,7 +66,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.all(6.0),
-              child: Text("Suggested Country", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              child: Text(Languages.of(context)!.labelSuggestedCountry, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
             ),
             Container(
               //height: 40,
@@ -89,7 +90,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                         _textController.text = "";
                         _filterLogListBySearchText("");
                       }),
-                  hintText: 'Search...',
+                  hintText: Languages.of(context)!.labelSearch,
                   border: InputBorder.none,
                 ),
                 onChanged: (value) => _filterLogListBySearchText(value),

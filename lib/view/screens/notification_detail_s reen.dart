@@ -1,21 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payrio/languageSection/Languages.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notification Detail Screen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: NotificationDetailScreen(),
-    );
-  }
-}
 
 class NotificationDetailScreen extends StatefulWidget {
   @override
@@ -24,8 +9,8 @@ class NotificationDetailScreen extends StatefulWidget {
 
 class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   final NotificationData data = NotificationData(
-    notificationHeading: "Cheers! You won 100 AstroPoints",
-    notificationContent: "Because you created your account in AstroPay",
+    notificationHeading: "Cheers! You won 100 Payario points",
+    notificationContent: "Because you created your account in Payario",
   );
 
   @override
@@ -36,7 +21,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Notification'),
+        title: Text(Languages.of(context)!.labelNotification),
       ),
       body: SafeArea(
         child: Column(
@@ -57,7 +42,6 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Popins',
                                         ),
                           ),
                         ),
@@ -68,7 +52,6 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                             data.notificationContent!,
                             style: TextStyle(
                               fontSize: 12,
-                              fontFamily: 'Popins',
                                         ),
                           ),
                         ),

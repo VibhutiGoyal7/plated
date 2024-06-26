@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/theme/AppColor.dart';
 
 import '../../../languageSection/Languages.dart';
 
@@ -27,7 +26,7 @@ class _TransferScreenState extends State<TransferScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Money Transfer",
+          Languages.of(context)!.labelMoneyTransfer,
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ),
@@ -57,7 +56,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       decoration: InputDecoration(
                         counterText: "",
                         border: InputBorder.none,
-                        hintText: '0.00',
+                        hintText: Languages.of(context)!.labelZero,
                       ),
                     ),
                   ),
@@ -71,7 +70,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 height: 5,
               ),
               Text(
-                "Balance: 7,000 ${Languages.of(context)!.labelINR}",
+                "${Languages.of(context)!.labelBalance}: 7,000 ${Languages.of(context)!.labelINR}",
                 style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
               ),
               Container(
@@ -119,11 +118,11 @@ class _TransferScreenState extends State<TransferScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Transfer to",
+                                Languages.of(context)!.labelTransferTo,
                                 style: TextStyle(fontSize: 14.0),
                               ),
                               Text(
-                                "Name",
+                                Languages.of(context)!.labelName,
                                 style: TextStyle(fontSize: 16.0),
                               ),
                             ],
@@ -132,7 +131,7 @@ class _TransferScreenState extends State<TransferScreen> {
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Text(
-                            "Change",
+                            Languages.of(context)!.labelChange,
                             style: TextStyle(fontSize: 14.0, color: Colors.blueAccent),
                           ),
                         ),

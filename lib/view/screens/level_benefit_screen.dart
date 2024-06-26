@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payrio/languageSection/Languages.dart';
 import 'package:payrio/theme/AppColor.dart';
 
 class LevelBenefitScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
             },
           ),
           title: Text(
-            "Level Benefits",
+            Languages.of(context)!.labelLevelBenefit,
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -50,9 +51,8 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Standard',
+                            Languages.of(context)!.labelStandard,
                             style: TextStyle(
-                              fontFamily: 'Poppins',
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -65,7 +65,6 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                               child: Text(
                                 '100 ',
                                 style: TextStyle(
-                                  fontFamily: 'Poppins',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -74,9 +73,8 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: Text(
-                                'accumulated',
+                                Languages.of(context)!.labelAccumulated,
                                 style: TextStyle(
-                                  fontFamily: 'Poppins',
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -100,7 +98,6 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                               child: Text(
                                 '2900',
                                 style: TextStyle(
-                                  fontFamily: 'Poppins',
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -109,9 +106,8 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10.0),
                               child: Text(
-                                ' Astropoints to Silver',
+                                Languages.of(context)!.labelPtsToSilver,
                                 style: TextStyle(
-                                  fontFamily: 'Poppins',
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -126,9 +122,9 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
               ),
               TabBar(
                 tabs: [
-                  Tab(text: 'Standard'),
-                  Tab(text: 'Silver'),
-                  Tab(text: 'Gold'),
+                  Tab(text: Languages.of(context)!.labelStandard),
+                  Tab(text: Languages.of(context)!.labelSilver),
+                  Tab(text: Languages.of(context)!.labelGOld),
                 ],
                 labelColor: AppColor.WHITE,
                 unselectedLabelColor: AppColor.WHITE,
@@ -163,11 +159,10 @@ class Standard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                'Level Exclusives',
+                Languages.of(context)!.labelLevelExclusives,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -179,20 +174,18 @@ class Standard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Text(
-                'Your exclusive level benefits will be displayed here.',
+                Languages.of(context)!.labelExclusiveBenefits,
                 style: TextStyle(
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                'Multipliers',
+                Languages.of(context)!.labelMultipliers,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -212,21 +205,18 @@ class Standard extends StatelessWidget {
                         Text(
                           '1',
                           style: TextStyle(
-                            fontFamily: 'Poppins',
                             fontSize: 16,
                           ),
                         ),
                         Text(
                           'x',
                           style: TextStyle(
-                            fontFamily: 'Poppins',
                             fontSize: 16,
                           ),
                         ),
                         Text(
-                          ' Online Payments',
+                          Languages.of(context)!.labelOnlinePayments,
                           style: TextStyle(
-                            fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -237,10 +227,9 @@ class Standard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Text(
-                      'Earn 1x AstroPoints with payments made from your wallet balance',
+                      Languages.of(context)!.labelEarnPayarioPts,
                       style: TextStyle(
                         color: Colors.grey,
-                        fontFamily: 'Poppins',
                       ),
                     ),
                   ),
@@ -276,19 +265,17 @@ class Silver extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Locked level',
+                    Languages.of(context)!.labelLockedLvl,
                     style: TextStyle(
                       fontSize: 14,
-                      fontFamily: 'Poppins',
                     ),
                   ),
                   Spacer(),
                   Text(
-                    'Unblock with ',
+                    Languages.of(context)!.labelUnlockWith,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
                     ),
                   ),
                   Text(
@@ -296,7 +283,6 @@ class Silver extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
                     ),
                   ),
                 ],
@@ -305,11 +291,10 @@ class Silver extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
               child: Text(
-                'Level Exclusives',
+                Languages.of(context)!.labelLevelExclusives,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -323,20 +308,18 @@ class Silver extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Text(
-                'All previous benefits',
+                Languages.of(context)!.labelPreviousBenefits,
                 style: TextStyle(
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 4),
               child: Text(
-                'Multipliers',
+                Languages.of(context)!.labelMultipliers,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -370,11 +353,10 @@ class Silver extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          ' Online Payments',
+                          Languages.of(context)!.labelOnlinePayments,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            fontFamily: 'Poppins',
                           ),
                         ),
                       ],
@@ -383,10 +365,9 @@ class Silver extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Text(
-                      'Earn 1x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance',
+                      Languages.of(context)!.labelEarnPayarioPtsWithMin1670,
                       style: TextStyle(
                         color: Colors.grey,
-                        fontFamily: 'Poppins',
                       ),
                     ),
                   ),
@@ -421,19 +402,17 @@ class Gold extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Locked level',
+                    Languages.of(context)!.labelLockedLvl,
                     style: TextStyle(
                       fontSize: 14,
-                      fontFamily: 'Poppins',
                     ),
                   ),
                   Spacer(),
                   Text(
-                    'Unblock with ',
+                    Languages.of(context)!.labelUnlockWith,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
                     ),
                   ),
                   Text(
@@ -441,7 +420,6 @@ class Gold extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
                     ),
                   ),
                 ],
@@ -450,11 +428,10 @@ class Gold extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 4),
               child: Text(
-                'Level Exclusives',
+                Languages.of(context)!.labelLevelExclusives,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -468,20 +445,18 @@ class Gold extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Text(
-                'All previous benefits',
+                Languages.of(context)!.labelPreviousBenefits,
                 style: TextStyle(
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
               child: Text(
-                'Multipliers',
+                Languages.of(context)!.labelMultipliers,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
@@ -515,11 +490,10 @@ class Gold extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          ' Online Payments',
+                          Languages.of(context)!.labelOnlinePayments,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            fontFamily: 'Poppins',
                           ),
                         ),
                       ],
@@ -528,10 +502,9 @@ class Gold extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Text(
-                      'Earn 1x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance',
+                      Languages.of(context)!.label2xEarnPayarioPtsWithMin1670,
                       style: TextStyle(
                         color: Colors.grey,
-                        fontFamily: 'Poppins',
                       ),
                     ),
                   ),
