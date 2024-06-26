@@ -8,6 +8,7 @@ import 'package:payrio/view/screens/authSection/otp_verify_screen.dart';
 import 'package:payrio/view/screens/authSection/phone_verify_screen.dart';
 import 'package:payrio/view/screens/authSection/setup_account_screen.dart';
 import 'package:payrio/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:payrio/view/screens/kycSection/camera_access_screen.dart';
 import 'package:payrio/view/screens/kycSection/camera_screen.dart';
 import 'package:payrio/view/screens/kycSection/chooose_doc_screen.dart';
@@ -238,6 +239,11 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return VideoKycScreen();
+            },
+            '/CameraPage': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PaymentScreen();
             }
           }),
     );

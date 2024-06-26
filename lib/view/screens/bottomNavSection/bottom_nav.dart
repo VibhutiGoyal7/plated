@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payrio/theme/AppColor.dart';
+import 'package:payrio/view/component/toastMessage.dart';
 import 'package:payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:payrio/view/screens/bottomNavSection/reward_screen.dart';
 import 'package:payrio/view/screens/bottomNavSection/transfer_screen.dart';
@@ -38,7 +39,9 @@ class _BottomNavState extends State<BottomNav> {
         backgroundColor: AppColor.WHITE,
         shape: CircleBorder(
             side: BorderSide(style: BorderStyle.solid, color: AppColor.WHITE)),
-        onPressed: () {},
+        onPressed: () {
+          ToastComponent.showToast(context: context, message: "Will be soon");
+        },
         child: const Icon(
           Icons.qr_code,
           size: 32,

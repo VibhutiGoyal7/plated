@@ -17,7 +17,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   double amount = 0.00;
   String? name = "";
   var imageUrl;
-  bool isAmountVisible = false;
+  bool isAmountVisible = true;
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist>
@@ -25,15 +25,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   @override
   void initState() {
     super.initState();
-    isAmountVisible = true;
-    isUSDVisible = false;
     imageUrl = "";
-    _fetchData();
+
     _isChecked = List<bool>.generate(
         5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
-
+    _fetchData();
     print("isoCountryCode:: $isoCountryCode");
     // Initial setup for 5 checkboxes
   }
@@ -86,8 +84,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Future.value(true);
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value:
-              isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+          value: isDarkMode
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
           child: Scaffold(
             body: SafeArea(
               child: Padding(
@@ -121,14 +120,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       ),
                                     )
                                   : ClipRRect(
-                                      borderRadius: BorderRadius.circular(100.0),
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
                                       child: Image.network(imageUrl,
                                           height: 40,
                                           width: 40,
                                           fit: BoxFit.cover)),
                             ),
                           ),
-                          SizedBox(width: 6), // Add space between avatar and text
+                          SizedBox(width: 6),
+                          // Add space between avatar and text
                           Text(
                             "${Languages.of(context)!.labelHi}, $name",
                             style: TextStyle(
@@ -153,7 +154,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 4.0, 0, 0),
                                 child: Text(
                                   Languages.of(context)!.labelStandard,
                                   style: TextStyle(
@@ -169,7 +171,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 ),
                                 color: Colors.black,
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
                                     "100",
                                     style: TextStyle(
@@ -277,7 +280,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                               size: 20,
-                              color: isDarkMode ? Colors.white60 : Colors.black45,
+                              color:
+                                  isDarkMode ? Colors.white60 : Colors.black45,
                             ),
                             onPressed: () {
                               setState(
@@ -334,7 +338,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         isUSDVisible
                             ? Container(
                                 width: MediaQuery.of(context).size.width * 0.5,
-                                height: MediaQuery.of(context).size.height * 0.15,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
                                 child: Card(
                                   elevation: 2,
                                   shape: RoundedRectangleBorder(
@@ -578,13 +583,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? userDetails = await Helper.getProfileDetails();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
-        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
-      });
-      print("${name} ");
+    setState(() {
+      name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
+      imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
     });
+    print("${name} ");
     return userDetails;
   }
 }
