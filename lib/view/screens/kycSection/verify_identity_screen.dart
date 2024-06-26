@@ -39,20 +39,23 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildText(
-                    context, "Verify your Identity", 26, FontWeight.bold),
-                _buildText(context, "It should take a few minutes", 16,
+                        context,
+                        Languages.of(context)!.labelVerifyIdentity,
+                        26,
+                        FontWeight.bold),
+                    _buildText(context, Languages.of(context)!.labelTakeFewMinutes, 16,
                     FontWeight.normal),
                 SizedBox(
                   height: 8,
                 ),
                 _buildText(
-                    context, "Use your device to:", 18, FontWeight.bold),
+                    context, Languages.of(context)!.labelUseDevice, 18, FontWeight.bold),
                 _buildText(
                     context,
-                    "1. Take a photo of your identity document",
+                    Languages.of(context)!.labelTakePhoto,
                     16,
                     FontWeight.normal),
-                _buildText(context, "2. Record a video of your face", 16,
+                _buildText(context, Languages.of(context)!.labelRecordVideo, 16,
                     FontWeight.normal),
               ],
             ),

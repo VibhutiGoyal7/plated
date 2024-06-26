@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -41,6 +42,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );

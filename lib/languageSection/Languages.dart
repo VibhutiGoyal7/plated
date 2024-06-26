@@ -165,4 +165,103 @@ abstract class Languages {
 
   String get labelKYCVerification;
 
+  String get labelVerifyYourEmail;
+
+  String get verifyEmailSubTitle;
+
+  String get labelEnterEmail;
+
+  String get labelEnterOtpSentToEmail;
+
+  String get labelMoneyTransfer;
+
+  String get labelBalance;
+
+  String get labelTransferTo;
+
+  String get labelChange;
+
+  String get labelSelectOptions;
+
+  String get labelUploadedDocs;
+
+  String get labelPassport;
+
+  String get labelDrivingLicence;
+
+  String get labelNationalId;
+
+  String get labelPhotoPage;
+
+  String get labelFrontNBack;
+
+  String get labelPending;
+
+  String get labelInProgress;
+
+  String get labelVerified;
+
+  String get labelRejected;
+
+  String get labelVideoVerification;
+
+  String get labelStatusPending;
+
+  String get labelVerifyIdentity;
+
+  String get labelAllowCamAccess;
+
+  String get labelAllowAccessSubtitle;
+
+  String get labelEnableCam;
+
+  String get labelIssuingCountry;
+
+  String get labelSuggestedCountry;
+
+  String get labelSearch;
+
+  String get labelTakeFewMinutes;
+
+  String get labelUseDevice;
+
+  String get labelTakePhoto;
+
+  String get labelRecordVideo;
+
+  String get labelLevelBenefit;
+
+  String get labelAccumulated;
+
+  String get labelPtsToSilver;
+
+  String get labelSilver;
+
+  String get labelGOld;
+
+  String get labelLevelExclusives;
+
+  String get labelExclusiveBenefits;
+
+  String get labelMultipliers;
+
+  String get labelOnlinePayments;
+
+  String get labelEarnPayarioPts;
+
+  String get labelLockedLvl;
+
+  String get labelUnlockWith;
+
+  String get labelPreviousBenefits;
+
+  String get labelEarnPayarioPtsWithMin1670;
+
+  String get label2xEarnPayarioPtsWithMin1670;
+
+
+  String get labelNotification;
+
+  //String get labelEarnPayarioPts;
+
 }

@@ -12,6 +12,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -62,6 +63,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );

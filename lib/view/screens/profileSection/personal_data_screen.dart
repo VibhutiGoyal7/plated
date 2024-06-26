@@ -9,6 +9,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 import '../../component/toastMessage.dart';
 
 class PersonalDataScreen extends StatefulWidget {
@@ -95,6 +96,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -136,13 +140,13 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             buildBirthdateSection(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("Uploaded Documents",
+              child: Text(Languages.of(context)!.labelUploadedDocs,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
             ),
             _buildDocumentOption(
                 context,
-                'Passport',
-                'Photo page',
+                Languages.of(context)!.labelPassport,
+                Languages.of(context)!.labelPhotoPage,
                 '/CameraAccessScreen',
                 'passport',
                 "assets/passport.png",
@@ -151,8 +155,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 "${passportStatus}"),
             _buildDocumentOption(
                 context,
-                'Driving License',
-                'Front and Back',
+                Languages.of(context)!.labelDrivingLicence,
+                Languages.of(context)!.labelFrontNBack,
                 '/CameraAccessScreen',
                 'national_id',
                 "assets/license.png",
@@ -162,8 +166,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             ),
             _buildDocumentOption(
                 context,
-                'National Identity Card',
-                'Front and Back',
+              Languages.of(context)!.labelNationalId,
+              Languages.of(context)!.labelFrontNBack,
                 '/CameraAccessScreen',
                 'driving_licence',
                 "assets/id_card.png",
@@ -174,7 +178,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             ),
             _buildDocumentOption(
                 context,
-                'Video Verification',
+              Languages.of(context)!.labelVideoVerification,
                 'Front ',
                 '/VideoKycScreen',
                 'video',
@@ -334,7 +338,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
     if (imageUploaded && status == "pending") {
-      verificationStatus = "In Progress";
+      verificationStatus = Languages.of(context)!.labelInProgress;
       textColor = Colors.deepOrange;
     } else if (imageUploaded) {
       verificationStatus = status;
@@ -345,12 +349,12 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       }
     }
     else {
-      verificationStatus = "Pending";
+      verificationStatus = Languages.of(context)!.labelPending;
       textColor = Colors.orange;
     }
     return GestureDetector(
       onTap: () {
-        if (imageUploaded && title != "Video Verification") {
+        if (imageUploaded && title != Languages.of(context)!.labelVideoVerification) {
           _showModal(context, image);
         }
       },
@@ -444,9 +448,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       Stack(
                         children: <Widget>[
                           Container(
-                              //decoration: new BoxDecoration(color: Colors.white),
                               alignment: Alignment.center,
-                              //height: 240,
                               child: (image != "" || image!.isNotEmpty) ? ClipRRect(
                                 child: Image.network(image as String,
                                     fit: BoxFit.fill,
@@ -467,7 +469,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                   }
                                 },
                                 )
-                              ) : Text("Status Pending")
+                              ) : Text(Languages.of(context)!.labelStatusPending)
                           ),
                           Align(
                             alignment: Alignment.topRight,

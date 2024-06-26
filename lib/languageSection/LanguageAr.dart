@@ -245,4 +245,149 @@ class LanguageAr extends Languages {
   @override
   String get labelUsername => "User Name";
 
+  @override
+  String get labelEnterEmail => "Enter email address";
+
+  @override
+  String get labelEnterOtpSentToEmail => "Enter the OTP sent to your email address";
+
+  @override
+  String get labelVerifyYourEmail => "We need to verify your email";
+
+  @override
+  String get verifyEmailSubTitle => "Please provide a valid email address, as you will be prompted for confirmation.";
+
+  @override
+  String get labelBalance => "Balance";
+
+  @override
+  String get labelChange => "Change";
+
+  @override
+  String get labelMoneyTransfer => "Money Transfer";
+
+  @override
+  String get labelTransferTo => "Transfer to";
+
+
+  @override
+  String get labelDrivingLicence => "Driving Licence";
+
+  @override
+  String get labelFrontNBack => "Front and Back";
+
+  @override
+  String get labelInProgress => "In Progress";
+
+  @override
+  String get labelNationalId => "National Id";
+
+  @override
+  String get labelPassport => "Passport";
+
+  @override
+  String get labelPending => "Pending";
+
+  @override
+  String get labelPhotoPage => "Photo Page";
+
+  @override
+  String get labelRejected => "Rejected";
+
+  @override
+  String get labelSelectOptions => "Select Options";
+
+  @override
+  String get labelUploadedDocs => "Uploaded Documents";
+
+  @override
+  String get labelVerified => "Verified";
+
+  @override
+  String get labelVideoVerification => "Video Verification";
+
+  @override
+  String get labelStatusPending => "Status Pending";
+
+
+  @override
+  String get labelAllowAccessSubtitle => "When prompted, you must enable camera access to continue.";
+
+  @override
+  String get labelAllowCamAccess => "Allow Camera Access";
+
+  @override
+  String get labelEnableCam => "Enable Camera";
+
+  @override
+  String get labelVerifyIdentity => "Verify your Identity";
+
+  @override
+  String get labelIssuingCountry => "ISSUING COUNTRY";
+
+  @override
+  String get labelSearch => "Search...";
+
+  @override
+  String get labelSuggestedCountry => "Suggested Country";
+
+  @override
+  String get labelRecordVideo => "2. Record a video of your face";
+
+  @override
+  String get labelTakeFewMinutes => "It should take a few minutes";
+
+  @override
+  String get labelTakePhoto => "1. Take a photo of your identity document";
+
+  @override
+  String get labelUseDevice => "Use your device to:";
+
+  @override
+  String get label2xEarnPayarioPtsWithMin1670 => 'Earn 2x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance';
+
+  @override
+  String get labelAccumulated => 'accumulated';
+
+  @override
+  String get labelEarnPayarioPts => 'Earn 1x AstroPoints with payments made from your wallet balance';
+
+  @override
+  String get labelEarnPayarioPtsWithMin1670 => 'Earn 1x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance';
+
+  @override
+  String get labelExclusiveBenefits => 'Your exclusive level benefits will be displayed here.';
+
+  @override
+  String get labelGOld => "Gold";
+
+  @override
+  String get labelLevelBenefit => "Level Benefits";
+
+  @override
+  String get labelLevelExclusives => 'Level Exclusives';
+
+  @override
+  String get labelLockedLvl => 'Locked level';
+
+  @override
+  String get labelMultipliers => 'Multipliers';
+
+  @override
+  String get labelOnlinePayments => ' Online Payments';
+
+  @override
+  String get labelPreviousBenefits => 'All previous benefits';
+
+  @override
+  String get labelPtsToSilver => ' Payario points to Silver';
+
+  @override
+  String get labelSilver => "Silver";
+
+  @override
+  String get labelUnlockWith => "Unlock with";
+
+  @override
+  String get labelNotification => 'Notification';
 }

@@ -1,21 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payrio/languageSection/Languages.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notification Screen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: NotificationScreen(),
-    );
-  }
-}
 class NotificationScreen extends StatefulWidget {
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
@@ -37,7 +22,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Notification'),
+        title: Text(Languages.of(context)!.labelNotification),
       ),
       body: ListView.builder(
         itemCount: data.length,

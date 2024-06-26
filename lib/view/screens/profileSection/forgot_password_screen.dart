@@ -7,6 +7,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/createOtpChangePass.dart';
 import '../../../model/response/createOtpChangePassResponse.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -76,6 +77,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -98,6 +102,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -168,15 +175,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
             ),
           ),
-          TextField(
-            controller: _phoneNumberController,
-            decoration: InputDecoration(
-              //labelText: 'Enter your phone number',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+          Card(
+            child: TextField(
+              controller: _phoneNumberController,
+              decoration: InputDecoration(
+                //labelText: 'Enter your phone number',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
+              keyboardType: TextInputType.phone,
             ),
-            keyboardType: TextInputType.phone,
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -216,28 +225,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: TextField(
-            controller: _newPasswordController,
-            decoration: InputDecoration(
-              labelText: Languages.of(context)!.labelNewPass,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+          child: Card(
+            child: TextField(
+              controller: _newPasswordController,
+              decoration: InputDecoration(
+                labelText: Languages.of(context)!.labelNewPass,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
+              obscureText: true,
             ),
-            obscureText: true,
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: TextField(
-            controller: _confirmPasswordController,
-            decoration: InputDecoration(
-              labelText: Languages.of(context)!.labelConfirmPass,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+          child: Card(
+            child: TextField(
+              controller: _confirmPasswordController,
+              decoration: InputDecoration(
+                labelText: Languages.of(context)!.labelConfirmPass,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
+              obscureText: true,
             ),
-            obscureText: true,
           ),
         ),
       ],

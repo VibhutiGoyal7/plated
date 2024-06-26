@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/uploadKycResponse.dart';
+import 'package:payrio/view/component/session_expired_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
@@ -63,6 +64,8 @@ class _DocImageScreenState extends State<DocImageScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );

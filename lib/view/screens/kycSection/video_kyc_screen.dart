@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/uploadKycResponse.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class VideoKycScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -56,6 +57,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
         Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );

@@ -10,6 +10,7 @@ import '../../../model/response/createOtpForEmailVerifyResponse.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   @override
@@ -75,6 +76,9 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -97,6 +101,9 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+
+        if(mediaList?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -133,21 +140,23 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               children: [
                 SizedBox(height: 20),
                 Text(
-                  "We need to verify your email",
+                  Languages.of(context)!.labelVerifyYourEmail,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Please provide a valid email address, as you will be prompted for confirmation.",
+                  Languages.of(context)!.verifyEmailSubTitle,
                   style: TextStyle(fontSize: 15),
                 ),
                 SizedBox(height: 20),
                 Container(
-                  child: TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: "Enter your email address",
-                      border: OutlineInputBorder(),
+                  child: Card(
+                    child: TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: Languages.of(context)!.labelEnterEmail,
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
                 ),
@@ -237,7 +246,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("Enter the OTP sent to your email address"),
+          child: Text(Languages.of(context)!.labelEnterOtpSentToEmail),
         ),
         _buildPhoneInput(context, screenWidth),
         SizedBox(

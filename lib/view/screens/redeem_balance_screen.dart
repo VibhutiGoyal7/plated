@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../languageSection/Languages.dart';
+
 class RedeemBalanceScreen extends StatefulWidget {
   @override
   _RedeemBalanceScreenState createState() => _RedeemBalanceScreenState();
@@ -23,7 +25,7 @@ class _RedeemBalanceScreenState extends State<RedeemBalanceScreen> {
             Navigator.pop(context);
           },
         ),
-        title: Text("Balance"),
+        title: Text(Languages.of(context)!.labelBalance),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
