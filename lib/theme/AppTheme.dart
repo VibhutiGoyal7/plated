@@ -13,6 +13,9 @@ class AppTheme {
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
       ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: AppColor.WHITE4,
+      ),
       cardTheme: const CardTheme(color: AppColor.WHITE4),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
@@ -38,7 +41,9 @@ class AppTheme {
             fontSize: 12, color: AppColor.BLACK.withOpacity(0.4)),
       ),
       listTileTheme: ListTileThemeData(
-          textColor: AppColor.BLACK, selectedColor: AppColor.PRIMARY),
+          iconColor: AppColor.BLACK,
+          textColor: AppColor.BLACK,
+          selectedColor: AppColor.PRIMARY),
       dialogTheme: DialogTheme(
           backgroundColor: AppColor.WHITE,
           titleTextStyle: TextStyle(color: AppColor.BLACK, fontSize: 22),
@@ -92,6 +97,9 @@ class AppTheme {
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
       ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: AppColor.DARK_CARD_COLOR,
+      ),
       cardTheme: const CardTheme(
         color: AppColor.DARK_CARD_COLOR,
       ),
@@ -134,7 +142,9 @@ class AppTheme {
         foregroundColor: MaterialStateProperty.all<Color>(AppColor.WHITE),
       )),
       listTileTheme: ListTileThemeData(
-          textColor: AppColor.WHITE, selectedColor: AppColor.PRIMARY),
+          iconColor: AppColor.WHITE,
+          textColor: AppColor.WHITE,
+          selectedColor: AppColor.PRIMARY),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
               backgroundColor:

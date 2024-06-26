@@ -39,7 +39,7 @@ import 'package:provider/provider.dart';
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {

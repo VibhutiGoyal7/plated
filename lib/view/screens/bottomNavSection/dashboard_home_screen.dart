@@ -31,7 +31,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     _fetchData();
     _isChecked = List<bool>.generate(
         5, (index) => false); // Initial setup for 5 checkboxes
+    final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
+    String? isoCountryCode = systemLocales.first.languageCode;
 
+    print("isoCountryCode:: $isoCountryCode");
     // Initial setup for 5 checkboxes
   }
 

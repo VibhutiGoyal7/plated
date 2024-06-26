@@ -159,7 +159,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   'Driving License',
                   'Front and Back',
                   '/CameraAccessScreen',
-                  'national_id',
+                  'driving_licence',
                   "assets/license.png",
                   isDrivingLicenceUploaded,
                   "${drivingLicenceStatus}"),
@@ -216,7 +216,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     }
     return GestureDetector(
       onTap: () async {
-        if (!(imageUploaded && status == "pending")) {
+        if (!(imageUploaded && status == "In Progress")) {
           if (await checkPermissionStatus()) {
             Navigator.pushNamed(context, "/DocImageScreen",
                 arguments: "${data}");

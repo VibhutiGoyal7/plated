@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? galleryFile;
   final picker = ImagePicker();
   bool isLoading = true;
-
+  List<String> _pictures = [];
   @override
   void initState() {
     super.initState();
@@ -98,7 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   GestureDetector(
-                    onTap: () => {_showPicker(context: context)},
+                    onTap: () => {
+                      _showPicker(context: context)
+                    },
                     child: imageUrl == ""
                         ? Container(
                             height: 100,
@@ -316,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 leading: const Icon(Icons.photo_camera),
                 title: const Text('Camera'),
                 onTap: () {
-                  getImage(ImageSource.camera);
+                  //getImage(ImageSource.camera);
                   Navigator.of(context).pop();
                 },
               ),
@@ -326,6 +329,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+
+
 
   Future getImage(
     ImageSource img,

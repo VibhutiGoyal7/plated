@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../languageSection/Languages.dart';
 import 'package:payrio/model/apis/api_response.dart';
 import 'package:payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:payrio/model/response/phoneVerifyResponse.dart';
@@ -7,6 +6,7 @@ import 'package:payrio/view/component/toastMessage.dart';
 import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../languageSection/Languages.dart';
 import '../../../model/request/exustingUserRequest.dart';
 import '../../../model/response/existingUserResponse.dart';
 
@@ -85,7 +85,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
-    PhoneVerifyResponse? phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
+    PhoneVerifyResponse? phoneVerifyResponse =
+        apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
@@ -159,7 +160,18 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         ),
         child: Row(
           children: [
-            DropdownButtonHideUnderline(
+            GestureDetector(
+              onTap: ()=>{
+                _showPicker(context: context)
+              },
+              child: Text(
+                "+91",
+                style: TextStyle(
+                    fontSize: 14,
+                    color: isDarkMode ? Colors.white : Colors.black),
+              ),
+            ),
+            /*DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 dropdownColor: isDarkMode ? Colors.grey : Colors.white,
                 alignment: Alignment.center,
@@ -187,7 +199,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   "+91",
                 ),
               ),
-            ),
+            ),*/
             SizedBox(width: 16),
             Expanded(
               child: TextField(
@@ -229,13 +241,13 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             onPressed: () async {
               if (phoneNumberValid) {
                 ExistingUserRequest request = ExistingUserRequest(
-                    customer: ExistingCustomer(
-                        phoneNumber: _inputController.text));
+                    customer:
+                        ExistingCustomer(phoneNumber: _inputController.text));
                 await Provider.of<MediaViewModel>(context, listen: false)
                     .existingUserData(
                         "/api/v1/app/customers/check_customer_existance",
-                    request);
-                  Navigator.pushReplacementNamed(context, '/OtpVerify',
+                        request);
+                Navigator.pushReplacementNamed(context, '/OtpVerify',
                     arguments: "${_inputController.text}");
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
@@ -244,13 +256,13 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
                       phoneRequest);*/
-               //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
+                //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
                 existingUserWidget(context, apiResponse);
-              }else{
+              } else {
                 SnackBar(
                   content: Text("Enter valid Phone No"),
                 );
@@ -280,6 +292,35 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  _showPicker({required BuildContext context}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  //getImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
