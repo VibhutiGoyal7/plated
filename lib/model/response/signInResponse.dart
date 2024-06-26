@@ -12,9 +12,15 @@ class SignInResponse {
   final String? kycStatus;
   final String? status;
   final bool? isEmailVerified;
-  final String? mobileOtpExpireAt;
+  final int? mobileOtpExpireAt;
   final String? mobileOtp;
   final String? message;
+  final String? currentToken;
+  final int? activityPoints;
+  final int? countryId;
+  final int? balance;
+  final String? vipLevel;
+  final String? username;
 
   SignInResponse(
       {this.firstName,
@@ -32,7 +38,13 @@ class SignInResponse {
         this.mobileOtp,
         this.token,
         this.message,
-        this.kycStatus});
+      this.kycStatus,
+      this.currentToken,
+      this.activityPoints,
+      this.countryId,
+      this.balance,
+      this.vipLevel,
+      this.username});
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) {
     return SignInResponse(
@@ -50,9 +62,16 @@ class SignInResponse {
       address: json['data']['customer']?['address'] as String?,
       dob: json['data']['customer']?['dob'] as String?,
       isEmailVerified: json['data']['customer']?['is_email_verified'] as bool?,
-      mobileOtpExpireAt: json['data']['customer']?['mobile_otp_expire_at'] as String?,
+      mobileOtpExpireAt:
+          json['data']['customer']?['mobile_otp_expire_at'] as int?,
       mobileOtp: json['data']['customer']?['mobile_otp'] as String?,
       kycStatus: json['data']['customer']?['kyc_status'] as String?,
+      currentToken: json['data']['customer']?['current_token'] as String?,
+      vipLevel: json['data']['customer']?['vip_level'] as String?,
+      balance: json['data']['customer']?['balance'] as int?,
+      username: json['data']['customer']?['username'] as String?,
+      countryId: json['data']['customer']?['country_id'] as int?,
+      activityPoints: json['data']['customer']?['activity_points'] as int?,
       token: json['data']['token'] as String?,
       message: json['message'] as String?,
     );
@@ -95,7 +114,7 @@ class SignInResponse {
       dob: json['dob'] as String?,
       kycStatus: json['kyc_status'] as String?,
       mobileOtp: json['mobile_otp'] as String?,
-      mobileOtpExpireAt: json['mobile_otp_expire_at'] as String?,
+      mobileOtpExpireAt: json['mobile_otp_expire_at'] as int?,
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }

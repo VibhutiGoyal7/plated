@@ -13,13 +13,18 @@ class PhoneRequest {
 class Customer {
   String phoneNumber;
   String mobileOtp;
+  int? countryId;
 
-  Customer({required this.phoneNumber, required this.mobileOtp});
+  Customer(
+      {required this.phoneNumber,
+      required this.mobileOtp,
+      required this.countryId});
 
   Map<String, dynamic> toJson() {
     return {
       'phone_number': phoneNumber,
       'mobile_otp': mobileOtp,
+      'country_id': countryId,
     };
   }
 }

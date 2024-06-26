@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:payrio/model/response/fetchKycDocResponse.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -10,7 +9,6 @@ import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 import '../../component/session_expired_dialog.dart';
-import '../../component/toastMessage.dart';
 
 class PersonalDataScreen extends StatefulWidget {
   @override
@@ -112,8 +110,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    // double screenHeight = MediaQuery.of(context).size.height;
+    // double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -158,7 +156,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 Languages.of(context)!.labelDrivingLicence,
                 Languages.of(context)!.labelFrontNBack,
                 '/CameraAccessScreen',
-                'national_id',
+                'driving_licence',
                 "assets/license.png",
                 drivingLicenseImg,
                 isDrivingLicenceUploaded,
@@ -169,8 +167,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               Languages.of(context)!.labelNationalId,
               Languages.of(context)!.labelFrontNBack,
                 '/CameraAccessScreen',
-                'driving_licence',
-                "assets/id_card.png",
+              'national_id',
+              "assets/id_card.png",
               nationalIdImg,
                 isNationalIdUploaded,
                 "${nationalIdStatus}",

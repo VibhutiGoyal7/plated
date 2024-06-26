@@ -76,8 +76,8 @@ class _SigninScreenState extends State<SigninScreen> {
         String? password = await Helper.getPassword();
         print("password: ${password}");
 
-        SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
-        print('Retrieved Token: ${retrievedToken}');
+        //SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
+        //print('Retrieved Token: ${retrievedToken}');
         _fetchData();
 
         // Navigate to the new screen after receiving the response

@@ -173,7 +173,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   Languages.of(context)!.labelNationalId,
                   Languages.of(context)!.labelFrontNBack,
                   '/CameraAccessScreen',
-                  'driving_licence',
+                  'national_id',
                   "assets/id_card.png",
                   isNationalIdUploaded,
                   "${nationalIdStatus}"),

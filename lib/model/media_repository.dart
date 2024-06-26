@@ -5,6 +5,7 @@ import 'package:payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:payrio/model/request/createOtpChangePass.dart';
 import 'package:payrio/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:payrio/model/response/countryListResponse.dart';
 import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:payrio/model/response/fetchKycDocResponse.dart';
 import 'package:payrio/model/response/phoneVerifyResponse.dart';
@@ -173,6 +174,15 @@ class MediaRepository {
     final jsonData = response;
     print(jsonData);
     FetchKycDocResponse mediaList = FetchKycDocResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<CountryListResponse> fetchCountryList(String value) async {
+    dynamic response = await _mediaService.getResponse(value);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    CountryListResponse mediaList = CountryListResponse.fromJson(jsonData);
     return mediaList;
   }
 }
