@@ -24,7 +24,7 @@ class CountryData {
   int? id;
   String? name;
   String? code;
-  int? phoneCode;
+  String? phoneCode;
   String? flagImageUrl;
 
   CountryData({
@@ -40,7 +40,7 @@ class CountryData {
       id: json["id"] as int?,
       name: json["name"] as String?,
       code: json["code"] as String?,
-      phoneCode: json["phone_code"] as int?,
+      phoneCode: json["phone_code"] as String?,
       flagImageUrl: json["flag_image_url"] as String?,
     );
   }

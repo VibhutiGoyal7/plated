@@ -64,8 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(mediaList?.message== "Invalid access token")
+        if(apiResponse?.message== "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
