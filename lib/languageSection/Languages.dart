@@ -259,9 +259,16 @@ abstract class Languages {
 
   String get label2xEarnPayarioPtsWithMin1670;
 
-
   String get labelNotification;
 
-  //String get labelEarnPayarioPts;
+  String get labelEnterValidPhone;
+
+  String get labelSelectCountryCode;
+
+  /*String get labelEnterValidPhone;
+
+  String get labelEnterValidPhone;
+
+  String get labelEnterValidPhone;*/
 
 }

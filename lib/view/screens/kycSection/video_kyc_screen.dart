@@ -122,7 +122,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
         .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
-            "video_kyc_clip", "video_kyc");
+            "kyc_file", "video_kyc");
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);

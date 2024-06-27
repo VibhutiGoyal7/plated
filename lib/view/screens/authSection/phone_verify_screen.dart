@@ -304,11 +304,11 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 existingUserWidget(context, apiResponse);
               } else if (countryCode == 0 && phoneCode == "+") {
                 SnackBar(
-                  content: Text("Select country code"),
+                  content: Text(Languages.of(context)!.labelSelectCountryCode),
                 );
               } else {
                 SnackBar(
-                  content: Text("Enter valid Phone No"),
+                  content: Text(Languages.of(context)!.labelEnterValidPhone),
                 );
               }
             },

@@ -390,4 +390,10 @@ class LanguageAr extends Languages {
 
   @override
   String get labelNotification => 'Notification';
+
+  @override
+  String get labelEnterValidPhone => "Enter valid Phone No";
+
+  @override
+  String get labelSelectCountryCode => "Select country code";
 }

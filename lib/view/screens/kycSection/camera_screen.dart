@@ -40,19 +40,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
   void initState() {
     super.initState();
     docType = widget.data.toString();
-    if (docType == "passport") {
-      isBothSides = false;
-      imageName = "customer_passport_image";
-    } else if (docType == "national_id") {
-      isBothSides = true;
-      imageName = "customer_national_id_image";
-    } else if (docType == "driving_licence") {
-      isBothSides = true;
-      imageName = "customer_driving_licence_image";
-    } else if (docType == "video_kyc_clip") {
-      isBothSides = false;
-      imageName = "video_kyc";
-    }
+    imageName="kyc_file";
   }
 
   Future<Widget> getMediaWidget(
