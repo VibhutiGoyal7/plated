@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:payrio/model/apis/api_response.dart';
 import 'package:payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:payrio/model/response/countryListResponse.dart';
 import 'package:payrio/model/response/phoneVerifyResponse.dart';
+import 'package:payrio/theme/AppColor.dart';
 import 'package:payrio/view/component/toastMessage.dart';
 import 'package:payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/exustingUserRequest.dart';
@@ -22,6 +25,9 @@ class PhoneVerifyScreen extends StatefulWidget {
 
 class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   late Locale _locale;
+  final ScrollController _scrollController = ScrollController();
+  String phoneCode = "+";
+  int countryCode = 0;
 
   void setLocale(Locale locale) {
     setState(() {
@@ -29,15 +35,13 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     });
   }
 
-  var mCities = ["+91", "+92", "+1", "+5", "+93"];
-  String dropdownValue = "";
   bool phoneNumberValid = false;
+
+  List<CountryData> countryList = [];
 
   @override
   void initState() {
     super.initState();
-    dropdownValue =
-        mCities.first; // Initialize dropdownValue within the state class
     phoneNumberValid = false;
   }
 
@@ -70,7 +74,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         } else {
           _phoneVerifyAPI();
         }
-        return Container(); // Return an empty container as you'll navigate away
+        return Container();
       case Status.ERROR:
         _phoneVerifyAPI();
         return Center(
@@ -99,6 +103,34 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/OtpVerify',
             arguments: "${_inputController.text}");
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
+    CountryListResponse? countryListResponse =
+        apiResponse.data as CountryListResponse?;
+    var message = countryListResponse?.message.toString();
+    print("message ${message}");
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${countryListResponse?.countries[1].name}");
+
+        countryList = countryListResponse!.countries;
+
+        _showPicker(context: context);
+
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -161,14 +193,24 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         child: Row(
           children: [
             GestureDetector(
-              onTap: ()=>{
-                _showPicker(context: context)
+              onTap: () async {
+                await Provider.of<MediaViewModel>(context, listen: false)
+                    .fetchCountryList("api/v1/app/customers/country_list");
+                ApiResponse apiResponse =
+                    Provider.of<MediaViewModel>(context, listen: false)
+                        .response;
+                getCountryList(context, apiResponse);
+
+                //_showPicker(context: context);
               },
-              child: Text(
-                "+91",
-                style: TextStyle(
-                    fontSize: 14,
-                    color: isDarkMode ? Colors.white : Colors.black),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  phoneCode,
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: isDarkMode ? Colors.white : Colors.black),
+                ),
               ),
             ),
             /*DropdownButtonHideUnderline(
@@ -239,7 +281,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () async {
-              if (phoneNumberValid) {
+              if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
                 ExistingUserRequest request = ExistingUserRequest(
                     customer:
                         ExistingCustomer(phoneNumber: _inputController.text));
@@ -247,11 +289,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     .existingUserData(
                         "/api/v1/app/customers/check_customer_existance",
                         request);
-                Navigator.pushReplacementNamed(context, '/OtpVerify',
-                    arguments: "${_inputController.text}");
-                PhoneRequest phoneRequest = PhoneRequest(
+                /* PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
-                        phoneNumber: _inputController.text, mobileOtp: ""));
+                        phoneNumber: _inputController.text, mobileOtp: ""));*/
                 /*await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
@@ -262,6 +302,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     Provider.of<MediaViewModel>(context, listen: false)
                         .response;
                 existingUserWidget(context, apiResponse);
+              } else if (countryCode == 0 && phoneCode == "+") {
+                SnackBar(
+                  content: Text("Select country code"),
+                );
               } else {
                 SnackBar(
                   content: Text("Enter valid Phone No"),
@@ -297,25 +341,74 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   _showPicker({required BuildContext context}) {
     showModalBottomSheet(
+      shape: ContinuousRectangleBorder(),
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
           child: Wrap(
             children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Photo Library'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_camera),
-                title: const Text('Camera'),
-                onTap: () {
-                  //getImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                },
+              Expanded(
+                //height: screenSize.height/2,
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: _scrollController,
+                  itemCount: countryList.length,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.only(bottom: 10),
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                        tileColor:
+                            (phoneCode == "+${countryList[index].phoneCode}")
+                                ? Colors.black12
+                                : AppColor.BG_COLOR,
+                        onTap: () {
+                          setState(() {
+                            phoneCode = "+${countryList[index].phoneCode}";
+                            countryCode = countryList[index].id as int;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        leading: ClipRRect(
+                          child: Image.network(
+                            countryList[index].flagImageUrl as String,
+                            height: 28,
+                            width: 50,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.white30,
+                                  highlightColor: Colors.grey,
+                                  child: Container(
+                                    height: 28,
+                                    width: 50,
+                                    color: Colors.grey,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        title: Container(
+                          //color : (phoneCode == "+${countryList[index].phoneCode}")  ? Colors.grey : AppColor.BG_COLOR,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                countryList[index].name as String,
+                                style: TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                              Text("+${countryList[index].phoneCode}",
+                                  style: TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                        ));
+                    // I omit the part to build card items from the list
+                  },
+                ),
               ),
             ],
           ),
@@ -327,8 +420,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   void _phoneVerifyAPI() async {
     if (phoneNumberValid) {
       PhoneRequest phoneRequest = PhoneRequest(
-          customer:
-              Customer(phoneNumber: _inputController.text, mobileOtp: ""));
+          customer: Customer(
+              phoneNumber: _inputController.text,
+              mobileOtp: "",
+              countryId: countryCode));
       await Provider.of<MediaViewModel>(context, listen: false).fetchMediaData(
           "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
       /*  Navigator.pushNamed(context, '/OtpVerify',

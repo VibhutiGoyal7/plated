@@ -7,10 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../languageSection/Languages.dart';
-import '../../../languageSection/Languages.dart';
-import '../../../model/response/phoneVerifyResponse.dart';
 import '../../../model/request/signInWithPhoneNumber.dart';
 import '../../../model/response/otpVerifyResponse.dart';
+import '../../../model/response/phoneVerifyResponse.dart';
 import '../../component/toastMessage.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
@@ -263,7 +262,9 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               if (otp.isNotEmpty && otp.length == 6) {
                 PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
-                        phoneNumber: widget.data.toString(), mobileOtp: otp));
+                        phoneNumber: widget.data.toString(),
+                        mobileOtp: otp,
+                        countryId: null));
                 await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
@@ -352,7 +353,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         onTap: () async {
           phoneNo = widget.data as String;
           PhoneRequest phoneRequest = PhoneRequest(
-              customer: Customer(phoneNumber: phoneNo, mobileOtp: ""));
+              customer: Customer(
+                  phoneNumber: phoneNo, mobileOtp: "", countryId: null));
           await Provider.of<MediaViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",

@@ -18,6 +18,7 @@ import '../model/request/createOtpEmailVerifyRequest.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/signInRequest.dart';
 import '../model/request/verifyOtpEmailVerifyRequest.dart';
+import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
@@ -252,6 +253,19 @@ class MediaViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchCountryList(String value) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      CountryListResponse countryListResponse = await MediaRepository().fetchCountryList(value);
+      print("Yess"+ countryListResponse.message.toString());
+      _apiResponse = ApiResponse.completed(countryListResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
 
   void setSelectedMedia(PhoneVerifyResponse? media) {
     _media = media;
