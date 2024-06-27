@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
+import '../../../model/response/profileResponse.dart';
+import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
@@ -14,6 +17,10 @@ class ChooseDocScreen extends StatefulWidget {
 }
 
 class _ChooseDocScreenState extends State<ChooseDocScreen> {
+  bool isLoading = true;
+  bool isCountryNameLoading = true;
+
+  String countryName = "";
 
   String? nationalIdStatus;
   String? passportStatus;
@@ -32,17 +39,25 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   String? bankStatementRejectedReason;
   String? geoLocRejectedReason;
 
-  bool isNationalIdAvailable = true;
+  bool isNationalIdAvailable = false;
   bool isPassportAvailable= true;
   bool isDrivingLicenceAvailable= true;
-  bool isKycVideoAvailable= true;
-  bool isAddressLycAvailable= true;
-  bool isBankStatementAvailable= true;
-  bool isGeoLocAvailable= true;
+  bool isKycVideoAvailable= false;
+  bool isAddressLycAvailable= false;
+  bool isBankStatementAvailable= false;
+  bool isGeoLocAvailable= false;
 
   @override
   void initState() {
     super.initState();
+    _fetchDocData();
+    _fetchCountryName();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Fetch data every time the screen becomes visible
     _fetchDocData();
   }
 
@@ -81,6 +96,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry as bool;
             isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry as bool;
             isGeoLocAvailable = mediaList?.geolocation?.availableInCountry as bool;
+
+            isLoading = false;
 
           });
         });
@@ -147,8 +164,22 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          'India',
+                        child: isCountryNameLoading
+                            ? Shimmer.fromColors(
+                          baseColor: Colors.white38,
+                          highlightColor: Colors.grey,
+                          child: Container(
+                            width: 60,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              color: Colors.white38,
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Adjust the radius as needed
+                            ),
+                          ),
+                        )
+                            :  Text(
+                          countryName,
                           style: TextStyle(
                             fontSize: 18,
                           ),
@@ -169,12 +200,13 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   ),
                 ),
               ),
+
               if(isPassportAvailable)
                 _buildDocumentOption(
                   context,
                   Languages.of(context)!.labelPassport,
                   Languages.of(context)!.labelPhotoPage,
-                  '/CameraAccessScreen',
+                  '/DocImageScreen',
                   'passport',
                   "assets/passport.png",
                   "${passportStatus}",
@@ -184,7 +216,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   context,
                   Languages.of(context)!.labelDrivingLicence,
                   Languages.of(context)!.labelFrontNBack,
-                  '/CameraAccessScreen',
+                  '/DocImageScreen',
                   'driving_licence',
                   "assets/license.png",
                   "${drivingLicenceStatus}",
@@ -194,7 +226,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   context,
                   Languages.of(context)!.labelNationalId,
                   Languages.of(context)!.labelFrontNBack,
-                  '/CameraAccessScreen',
+                  '/DocImageScreen',
                   'national_id',
                   "assets/id_card.png",
                   "${nationalIdStatus}",
@@ -204,9 +236,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   context,
                   "Address KYC",
                   'Front ',
-                  '/CameraAccessScreen',
+                  '/DocImageScreen',
                   'address_kyc',
-                  "assets/passport.png",
+                  "assets/address.png",
                   "${addressKycStatus}",
                     "${addressKycRejectedReason}"),
               if(isBankStatementAvailable)
@@ -214,9 +246,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   context,
                   "Bank Statement",
                   'Front ',
-                  '/CameraAccessScreen',
+                  '/DocImageScreen',
                   'bank_statement',
-                  "assets/passport.png",
+                  "assets/bank_statement.png",
                   "${bankStatementStatus}",
                     "${bankStatementRejectedReason}"),
               if(isGeoLocAvailable)
@@ -224,9 +256,9 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   context,
                   "Geolocation KYC",
                   'Front ',
-                  '/CameraAccessScreen',
+                  '/DocImageScreen',
                   'geolocation_kyc',
-                  "assets/passport.png",
+                  "assets/geo_Location.jpg",
                   "${geoLocStatus}",
                     "${geoLocRejectedReason}"),
               if(isKycVideoAvailable)
@@ -265,7 +297,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
       } else if (status == "rejected") {
         verificationStatus = "Rejected";
         textColor = Colors.red;
-      }else if(status == "in progress"){
+      }else if(status == "in_progress"){
         verificationStatus = Languages.of(context)!.labelInProgress;
         textColor = Colors.deepOrange;
       } else {
@@ -274,12 +306,12 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     }
     return GestureDetector(
       onTap: () async {
-        if (verificationStatus == "Pending" || verificationStatus =="Rejected") {
+        if (verificationStatus == "Pending" || verificationStatus =="In Progress") {
           if (await checkPermissionStatus()) {
-            Navigator.pushNamed(context, "/DocImageScreen",
+            Navigator.pushReplacementNamed(context, route,
                 arguments: "${data}");
           } else {
-            Navigator.pushNamed(context, route, arguments: "${data}");
+            Navigator.pushNamed(context, "/CameraAccessScreen", arguments: "${data}");
           }
         }
       },
@@ -289,7 +321,21 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         margin: const EdgeInsets.symmetric(vertical: 2.0),
         child: Card(
-          child: Row(
+          child:isLoading
+              ? Shimmer.fromColors(
+            baseColor: Colors.white38,
+            highlightColor: Colors.grey,
+            child: Container(
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white38,
+                borderRadius: BorderRadius.circular(
+                    8.0), // Adjust the radius as needed
+              ),
+            ),
+          )
+              : Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -341,17 +387,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
 
   Future<bool> checkPermissionStatus() async {
     bool isCameraGranted = await Permission.camera.request().isGranted;
-    if (!isCameraGranted) {
-      isCameraGranted =
-          await Permission.camera.request() == PermissionStatus.granted;
-    }
-    final permission = Permission.camera;
-    PermissionStatus status = await permission.status;
-    print(status);
-    if (status.isDenied) {
-      // Handle the case when permission is permanently denied
-      openAppSettings();
-    }
+    print(isCameraGranted);
     return await isCameraGranted;
   }
 
@@ -362,5 +398,11 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
+  }
+
+  Future<void> _fetchCountryName() async{
+    ProfileResponse? retrievedDetails = await Helper.getProfileDetails();
+    countryName = retrievedDetails?.countryName as String;
+    isCountryNameLoading = false;
   }
 }

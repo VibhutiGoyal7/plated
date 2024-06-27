@@ -169,8 +169,7 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Text('Yes'),
               onPressed: () {
                 Helper.clearAllSharedPreferences();
-                Navigator.pushNamed(context, '/SignInScreen',
-                    arguments: "");
+                Navigator.pushReplacementNamed(context, '/MoneySafeScreen');
               },
             ),
           ],

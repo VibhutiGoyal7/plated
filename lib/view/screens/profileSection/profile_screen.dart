@@ -14,6 +14,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 import '../../component/session_expired_dialog.dart';
+import 'package:image/image.dart' as img;
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
   var customerName;
   var userName;
   var imageUrl;
@@ -322,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 leading: const Icon(Icons.photo_camera),
                 title: const Text('Camera'),
                 onTap: () {
-                  //getImage(ImageSource.camera);
+                  getImage(ImageSource.camera);
                   Navigator.of(context).pop();
                 },
               ),
@@ -336,22 +338,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
   Future getImage(
-    ImageSource img,
+    ImageSource image,
   ) async {
-    final pickedFile = await picker.pickImage(source: img);
+    final pickedFile = await picker.pickImage(source: image);
     XFile? xfilePick = pickedFile;
-    setState(
-      () {
+
+        int quality = 80;
+
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
-          _uploadProfilePic(galleryFile!);
+          //File compressedFile = await compressImage(galleryFile as File, quality);
+          setState(
+                ()  { _uploadProfilePic(galleryFile!);
+                },
+          );
 
           print(galleryFile);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
               const SnackBar(content: Text('Nothing is selected')));
         }
-      },
-    );
+
   }
+
+/*  Future<File> compressImage(File imageFile, int quality) async {
+    // Read the image file into memory
+    List<int> imageBytes = await imageFile.readAsBytes();
+
+    // Decode the image
+    img.Image? image = img.decodeImage(imageBytes);
+    if (image == null) {
+      throw Exception('Failed to decode image');
+    }
+
+    // Compress the image
+    List<int> compressedBytes = img.encodeJpg(image, quality: quality); // JPEG compression
+
+    // Get the path of the original image file
+    String path = imageFile.path;
+
+    // Create a new File instance for the compressed image
+    File compressedFile = File('$path/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
+
+    // Write the compressed image data to the new file
+    await compressedFile.writeAsBytes(compressedBytes);
+
+    // Return the compressed File object
+    return compressedFile;
+  }*/
 }

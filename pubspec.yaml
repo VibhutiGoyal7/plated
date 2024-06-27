@@ -78,6 +78,11 @@ flutter:
       - assets/license.png
       - assets/passport.png
       - assets/video.png
+      - assets/bank_statement.png
+      - assets/geo_Location.jpg
+      - assets/address.png
+      - assets/video-recording.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

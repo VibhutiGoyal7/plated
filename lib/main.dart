@@ -240,7 +240,7 @@ class _MyAppState extends State<MyApp> {
               ModalRoute.of(context)!.settings.arguments as String?;
               return VideoKycScreen();
             },
-            '/CameraPage': (context) {
+            '/PaymentScreen': (context) {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return PaymentScreen();

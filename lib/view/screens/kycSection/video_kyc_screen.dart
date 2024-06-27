@@ -24,7 +24,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   late Future<void> _initializeVideoPlayerFuture;
   String docType = '';
   final picker = ImagePicker();
-  bool frontImageClicked = false;
+  bool isVideoRecorded = false;
   late File frontImg;
   var videoUrl;
 
@@ -32,13 +32,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   void initState() {
     super.initState();
     docType = widget.data.toString();
-    /* _controller = VideoPlayerController.networkUrl(
-      Uri.parse(
-        frontImg.toString(),
-      ),
-    );*/
 
-    //_initializeVideoPlayerFuture = _controller.initialize();
   }
 
   Future<Widget> getMediaWidget(
@@ -80,7 +74,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
             },
           ),
           title: Text(
@@ -98,20 +92,20 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                     alignment: Alignment.center,
                     height: screenHeight * 0.65,
                     width: double.infinity,
-                    child: frontImageClicked
+                    child: isVideoRecorded
                         ? videoPlayerController != null &&
                                 videoPlayerController.value.isInitialized
                             ? AspectRatio(
                                 aspectRatio:
-                                    videoPlayerController!.value.aspectRatio,
-                                child: VideoPlayer(videoPlayerController!),
+                                    videoPlayerController.value.aspectRatio,
+                                child: VideoPlayer(videoPlayerController),
                               )
                             : Text('No video selected')
                         : GestureDetector(
                             onTap: () {
                               _startVideo(ImageSource.camera);
                             },
-                            child: Text("Click to record"))),
+                            child: _buildScreen(context))),
                 Spacer(),
                 _buildFooter(context)
               ],
@@ -122,10 +116,43 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
         .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
-            "kyc_file", "video_kyc");
+            "video_kyc_clip", "kyc_file");
     ApiResponse apiResponse =
         Provider.of<MediaViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
+  }
+  
+  Widget _buildScreen(BuildContext context){
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Image(
+            alignment: Alignment.topLeft,
+            //width: 25,
+            height: MediaQuery.of(context).size.height*0.3,
+            image: AssetImage("assets/video-recording.png"),
+          ),
+        ),
+        SizedBox(height: 25,),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("Record a video", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
+            SizedBox(height: 10,),
+            Text("This is to verify you are a real person", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+            SizedBox(height: 6,),
+            Text("1. First position your face in the frame.", style: TextStyle(fontSize: 16),),
+            SizedBox(height: 6,),
+            Text("2. Then, turn your head slowly to both sides.", style: TextStyle(fontSize: 16),),
+          ],
+        ),
+
+
+
+      ],
+    );
   }
 
   Widget _buildFooter(BuildContext context) {
@@ -137,10 +164,12 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                _uploadProfilePic(frontImg!);
+                if(isVideoRecorded)
+                _uploadProfilePic(frontImg);
+                else _startVideo(ImageSource.camera);
               },
               child: Text(
-                "Submit",
+                isVideoRecorded ? "Submit" : "Start Recording",
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
@@ -174,7 +203,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                 videoPlayerController.setVolume(0.0);
               });
             setState(() {});
-            frontImageClicked = true;
+            isVideoRecorded = true;
           });
           print("image : ${frontImg}");
         } else {

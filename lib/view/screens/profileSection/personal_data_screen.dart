@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:payrio/model/response/fetchKycDocResponse.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
@@ -16,6 +19,11 @@ class PersonalDataScreen extends StatefulWidget {
 }
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
+  bool isLoading = true;
+  late VideoPlayerController videoPlayerController;
+  String video = "";
+
+
   var firstName;
   var lastName;
   var userName;
@@ -26,17 +34,34 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   String? passportImg;
   String? drivingLicenseImg;
   String? kycVideo;
-
-  bool isNationalIdUploaded = false;
-  bool isPassportUploaded = false;
-  bool isDrivingLicenceUploaded = false;
-  bool isKycVideoUploaded = false;
+  String? addressKycImg;
+  String? geoLocImg;
+  String? bankStatementImg;
 
   String? nationalIdStatus;
   String? passportStatus;
   String? drivingLicenceStatus;
   String? kycVideoStatus;
+  String? addressKycStatus;
+  String? bankStatementStatus;
+  String? geoLocStatus;
 
+
+  String? nationalIdRejectedReason;
+  String? passportRejectedReason;
+  String? drivingLicenceRejectedReason;
+  String? kycVideoRejectedReason;
+  String? addressKycRejectedReason;
+  String? bankStatementRejectedReason;
+  String? geoLocRejectedReason;
+
+  bool isNationalIdAvailable = false;
+  bool isPassportAvailable= false;
+  bool isDrivingLicenceAvailable= false;
+  bool isKycVideoAvailable= false;
+  bool isAddressLycAvailable= false;
+  bool isBankStatementAvailable= false;
+  bool isGeoLocAvailable= false;
 
   bool mExpanded = false;
   String mSelectedText = "";
@@ -72,24 +97,38 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             nationalIdImg = mediaList?.nationalIdImage?.kycDocsImageUrl;
             passportImg = mediaList?.passportImage?.kycDocsImageUrl;
             drivingLicenseImg = mediaList?.drivingLicenseImage?.kycDocsImageUrl;
+            bankStatementImg = mediaList?.bankStatement?.kycDocsImageUrl;
+            addressKycImg = mediaList?.addressKycData?.kycDocsImageUrl;
+            geoLocImg = mediaList?.geolocation?.kycDocsImageUrl;
+            kycVideo = mediaList?.videoClipUrl?.kycDocsImageUrl;
 
-            if (mediaList?.nationalIdImage?.userId != null) {
-              isNationalIdUploaded = true;
-              nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
-            };
-            if (mediaList?.passportImage?.userId != null) {
-              isPassportUploaded = true;
-              passportStatus = mediaList?.passportImage?.verificationStatus;
-            }
-            if (mediaList?.drivingLicenseImage?.userId != null) {
-              isDrivingLicenceUploaded = true;
-              drivingLicenceStatus =
-                  mediaList?.drivingLicenseImage?.verificationStatus;
-            }
-            if (mediaList?.videoClipUrl?.userId != null) {
-              isKycVideoUploaded = true;
-              kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
-            }
+
+            nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
+            passportStatus = mediaList?.passportImage?.verificationStatus;
+            drivingLicenceStatus = mediaList?.drivingLicenseImage?.verificationStatus;
+            kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
+            addressKycStatus = mediaList?.addressKycData?.verificationStatus;
+            bankStatementStatus = mediaList?.bankStatement?.verificationStatus;
+            geoLocStatus = mediaList?.geolocation?.verificationStatus;
+
+            nationalIdRejectedReason = mediaList?.nationalIdImage?.rejectionReason;
+            passportRejectedReason = mediaList?.passportImage?.rejectionReason;
+            drivingLicenceRejectedReason = mediaList?.drivingLicenseImage?.rejectionReason;
+            kycVideoRejectedReason = mediaList?.videoClipUrl?.rejectionReason;
+            addressKycRejectedReason = mediaList?.addressKycData?.rejectionReason;
+            bankStatementRejectedReason = mediaList?.bankStatement?.rejectionReason;
+            geoLocRejectedReason = mediaList?.geolocation?.rejectionReason;
+
+
+            isNationalIdAvailable = mediaList?.nationalIdImage?.availableInCountry as bool;
+            isPassportAvailable = mediaList?.passportImage?.availableInCountry as bool;
+            isDrivingLicenceAvailable = mediaList?.drivingLicenseImage?.availableInCountry as bool;
+            isKycVideoAvailable = mediaList?.videoClipUrl?.availableInCountry as bool;
+            isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry as bool;
+            isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry as bool;
+            isGeoLocAvailable = mediaList?.geolocation?.availableInCountry as bool;
+
+            isLoading = false;
           });
         });
         return Container(); // Return an empty container as you'll navigate away
@@ -141,51 +180,70 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               child: Text(Languages.of(context)!.labelUploadedDocs,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
             ),
-            _buildDocumentOption(
-                context,
-                Languages.of(context)!.labelPassport,
-                Languages.of(context)!.labelPhotoPage,
-                '/CameraAccessScreen',
-                'passport',
-                "assets/passport.png",
-                passportImg,
-                isPassportUploaded,
-                "${passportStatus}"),
-            _buildDocumentOption(
-                context,
-                Languages.of(context)!.labelDrivingLicence,
-                Languages.of(context)!.labelFrontNBack,
-                '/CameraAccessScreen',
-                'driving_licence',
-                "assets/license.png",
-                drivingLicenseImg,
-                isDrivingLicenceUploaded,
-                "${drivingLicenceStatus}"
-            ),
-            _buildDocumentOption(
-                context,
-              Languages.of(context)!.labelNationalId,
-              Languages.of(context)!.labelFrontNBack,
-                '/CameraAccessScreen',
-              'national_id',
-              "assets/id_card.png",
-              nationalIdImg,
-                isNationalIdUploaded,
-                "${nationalIdStatus}",
+            if(isPassportAvailable)
+              _buildDocumentOption(
+                  context,
+                  Languages.of(context)!.labelPassport,
+                  'passport',
+                  "assets/passport.png",
+                  "${passportStatus}",
+                  "${passportImg}",
+                  "${passportRejectedReason}"),
+            if(isDrivingLicenceAvailable)
+              _buildDocumentOption(
+                  context,
+                  Languages.of(context)!.labelDrivingLicence,
+                  'driving_licence',
+                  "assets/license.png",
+                  "${drivingLicenceStatus}",
+                  "${drivingLicenseImg}",
+                  "${drivingLicenceRejectedReason}"),
+            if(isNationalIdAvailable)
+              _buildDocumentOption(
+                  context,
+                  Languages.of(context)!.labelNationalId,
+                  'national_id',
+                  "assets/id_card.png",
+                  "${nationalIdStatus}",
+                  "${nationalIdImg}",
+                  "${nationalIdRejectedReason}"),
+            if(isAddressLycAvailable)
+              _buildDocumentOption(
+                  context,
+                  "Address KYC",
+                  'address_kyc',
+                  "assets/address.png",
+                  "${addressKycStatus}",
+                  "${addressKycImg}",
+                  "${addressKycRejectedReason}"),
+            if(isBankStatementAvailable)
+              _buildDocumentOption(
+                  context,
+                  "Bank Statement",
+                  'bank_statement',
+                  "assets/bank_statement.png",
+                  "${bankStatementStatus}",
+                  "${bankStatementImg}",
+                  "${bankStatementRejectedReason}"),
+            if(isGeoLocAvailable)
+              _buildDocumentOption(
+                  context,
+                  "Geolocation KYC",
+                  'geolocation_kyc',
+                  "assets/geo_Location.jpg",
+                  "${geoLocStatus}",
+                  "${geoLocImg}",
+                  "${geoLocRejectedReason}"),
+            if(isKycVideoAvailable)
+              _buildDocumentOption(
+                  context,
+                  Languages.of(context)!.labelVideoVerification,
+                  'video_kyc_clip',
+                  "assets/video.png",
+                  "${kycVideoStatus}",
+                  "${kycVideo}",
+                  "${kycVideoRejectedReason}"),
 
-            ),
-            _buildDocumentOption(
-                context,
-              Languages.of(context)!.labelVideoVerification,
-                'Front ',
-                '/VideoKycScreen',
-                'video',
-                "assets/video.png",
-              kycVideo,
-                isKycVideoUploaded,
-                "${kycVideoStatus}",
-
-            ),
             // buildDocumentDropdown(),
             // buildDocumentNumberSection(),
           ],
@@ -237,129 +295,63 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     );
   }
 
-/*
-  Widget buildDocumentSection(String docName, String image, double screenHeight, double screenWidth){
-    return Padding(padding: EdgeInsets.all(8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("${docName} : "),
-        (image!=""|| image.isNotEmpty ) ?ClipRRect(
-          child: Image.network(image ,
-              height: screenHeight * 0.2,
-              fit: BoxFit.fill),
-        ) : Text("Status Pending")
-      ],
-    ));
-  }
-  Widget buildDocumentDropdown() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            readOnly: true,
-            controller: TextEditingController(text: mSelectedText),
-            decoration: InputDecoration(
-              labelText: Languages.of(context)!.labelChooseDoc,
-              suffixIcon: IconButton(
-                icon: Icon(
-                    mExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
-                onPressed: () {
-                  setState(() {
-                    mExpanded = !mExpanded;
-                  });
-                },
-              ),
-            ),
-          ),
-          if (mExpanded)
-            Container(
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: mCities.map((city) {
-                  return ListTile(
-                    title: Text(city),
-                    onTap: () {
-                      setState(() {
-                        mSelectedText = city;
-                        mExpanded = false;
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
 
-  Widget buildDocumentNumberSection() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            Languages.of(context)!.labelDocNo,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 5),
-          TextField(
-            controller: documentNumberController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              contentPadding:
-              EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            ),
-            onChanged: (value) {
-              setState(() {
-                documentNumber = value;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-*/
-
-  Widget _buildDocumentOption(BuildContext context, String title,
-      String subtitle, String route, String data, String icon, String? image,
-      bool imageUploaded, String status) {
-    bool isDarkMode = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+  Widget _buildDocumentOption( BuildContext context,
+      String title,
+      String data,
+      String icon,
+      String status,
+      String image,
+      String rejectionReason) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
-    if (imageUploaded && status == "pending") {
+
+    if (status == "verified") {
+      verificationStatus = Languages.of(context)!.labelVerified;
+      textColor = Colors.green;
+    } else if (status == "rejected") {
+      verificationStatus = "Rejected";
+      textColor = Colors.red;
+    }else if(status == "in_progress"){
       verificationStatus = Languages.of(context)!.labelInProgress;
       textColor = Colors.deepOrange;
-    } else if (imageUploaded) {
-      verificationStatus = status;
-      if (verificationStatus == "verified") {
-        textColor = Colors.green;
-      } else if (verificationStatus == "rejected") {
-        textColor = Colors.red;
-      }
-    }
-    else {
+    } else {
       verificationStatus = Languages.of(context)!.labelPending;
       textColor = Colors.orange;
     }
     return GestureDetector(
       onTap: () {
-        if (imageUploaded && title != Languages.of(context)!.labelVideoVerification) {
-          _showModal(context, image);
-        }
+        if ( title != Languages.of(context)!.labelVideoVerification) {
+          _showModal(context, image, false);
+        }/*else {
+          print(video);
+          videoPlayerController = VideoPlayerController.network(
+            video, // Replace with your video URL
+          )..initialize().then((_) {
+            setState(() {});  // Ensure the first frame is shown after the video is initialized
+          });
+          _showModal(context,  image, true);
+        }*/
       },
       child: Container(
         width: double.infinity,
         child: Card(
-          child: Row(
+          child: isLoading
+              ? Shimmer.fromColors(
+            baseColor: Colors.white38,
+            highlightColor: Colors.grey,
+            child: Container(
+              width: double.infinity,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.white38,
+                borderRadius: BorderRadius.circular(
+                    8.0), // Adjust the radius as needed
+              ),
+            ),
+          )
+              :Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -400,7 +392,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     );
   }
 
-
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();
@@ -425,7 +416,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     getMediaWidget(context, apiResponse);
   }
 
-  void _showModal(BuildContext context, String? image) {
+  void _showModal(BuildContext context, String? image, bool isVideo) {
+    if(isVideo){
+      setState(() {
+        video = image as String;
+      });}
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -447,7 +442,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: <Widget>[
                           Container(
                               alignment: Alignment.center,
-                              child: (image != "" || image!.isNotEmpty) ? ClipRRect(
+                              child: (!isVideo)?(image != "" || image!.isNotEmpty) ? ClipRRect(
                                 child: Image.network(image as String,
                                     fit: BoxFit.fill,
                                 loadingBuilder: (BuildContext context, Widget child,
@@ -456,19 +451,26 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                     return child;
                                   } else {
                                     return Shimmer.fromColors(
-                                      baseColor: Colors.white30,
-                                      highlightColor: Colors.grey,
+                                      baseColor: Colors.black45,
+                                      highlightColor: Colors.black87,
                                       child: Container(
                                         height: MediaQuery.of(context).size.height * 0.5,
                                         color: Colors.grey,
                                       ),
                                     );
-
                                   }
                                 },
                                 )
                               ) : Text(Languages.of(context)!.labelStatusPending)
-                          ),
+                                  :
+                              videoPlayerController != null &&
+                                  videoPlayerController.value.isInitialized
+                                  ? AspectRatio(
+                                aspectRatio:
+                                videoPlayerController.value.aspectRatio,
+                                child: VideoPlayer(videoPlayerController),
+                              ): Text(Languages.of(context)!.labelStatusPending)
+                          ) ,
                           Align(
                             alignment: Alignment.topRight,
                             child: Padding(
