@@ -50,6 +50,7 @@ dependencies:
   image: ^3.0.1
   screenshot: ^3.0.0
   cunning_document_scanner: 1.2.3
+  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:
