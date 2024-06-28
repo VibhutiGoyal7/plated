@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/model/apis/api_response.dart';
-import 'package:payrio/model/request/signInWithPhoneNumber.dart';
-import 'package:payrio/model/response/countryListResponse.dart';
-import 'package:payrio/model/response/phoneVerifyResponse.dart';
-import 'package:payrio/theme/AppColor.dart';
-import 'package:payrio/view/component/toastMessage.dart';
-import 'package:payrio/view_model/media_view_model.dart';
+import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/response/countryListResponse.dart';
+import 'package:Payrio/model/response/phoneVerifyResponse.dart';
+import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:Payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -43,6 +43,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   void initState() {
     super.initState();
     phoneNumberValid = false;
+    _fetchData();
   }
 
   final TextEditingController _inputController = TextEditingController();
@@ -129,7 +130,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
         countryList = countryListResponse!.countries;
 
-        _showPicker(context: context);
+        //_showPicker(context: context);
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -194,54 +195,18 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           children: [
             GestureDetector(
               onTap: () async {
-                await Provider.of<MediaViewModel>(context, listen: false)
-                    .fetchCountryList("api/v1/app/customers/country_list");
-                ApiResponse apiResponse =
-                    Provider.of<MediaViewModel>(context, listen: false)
-                        .response;
-                getCountryList(context, apiResponse);
-
-                //_showPicker(context: context);
+                _showPicker(context: context);
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
                   phoneCode,
                   style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       color: isDarkMode ? Colors.white : Colors.black),
                 ),
               ),
             ),
-            /*DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                dropdownColor: isDarkMode ? Colors.grey : Colors.white,
-                alignment: Alignment.center,
-                value: dropdownValue,
-                items: mCities.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    alignment: Alignment.center,
-                    child: Text(
-                      items,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: isDarkMode ? Colors.white : Colors.black),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                    print(dropdownValue);
-                  });
-                },
-                style: TextStyle(),
-                hint: Text(
-                  "+91",
-                ),
-              ),
-            ),*/
             SizedBox(width: 16),
             Expanded(
               child: TextField(
@@ -354,13 +319,11 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   controller: _scrollController,
                   itemCount: countryList.length,
                   shrinkWrap: true,
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 0),
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                         tileColor:
-                            (phoneCode == "+${countryList[index].phoneCode}")
-                                ? Colors.black12
-                                : AppColor.BG_COLOR,
+                            (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.PRIMARY : Colors.white,
                         onTap: () {
                           setState(() {
                             phoneCode = "+${countryList[index].phoneCode}";
@@ -391,20 +354,19 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                             },
                           ),
                         ),
-                        title: Container(
-                          //color : (phoneCode == "+${countryList[index].phoneCode}")  ? Colors.grey : AppColor.BG_COLOR,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                countryList[index].name as String,
-                                style: TextStyle(
-                                    fontSize: 11, fontWeight: FontWeight.bold),
-                              ),
-                              Text("+${countryList[index].phoneCode}",
-                                  style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              countryList[index].name as String,
+                              style: TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold,
+                              color:   (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.WHITE : Colors.black,),
+                            ),
+                            Text("+${countryList[index].phoneCode}",
+                                style: TextStyle(fontSize: 12,
+                                color:   (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.WHITE : Colors.black,)),
+                          ],
                         ));
                     // I omit the part to build card items from the list
                   },
@@ -433,5 +395,15 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           Provider.of<MediaViewModel>(context, listen: false).response;
       getMediaWidget(context, apiResponse);
     }
+  }
+
+  void _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MediaViewModel>(context, listen: false)
+        .fetchCountryList("api/v1/app/customers/country_list");
+    ApiResponse apiResponse =
+        Provider.of<MediaViewModel>(context, listen: false)
+            .response;
+    getCountryList(context, apiResponse);
   }
 }

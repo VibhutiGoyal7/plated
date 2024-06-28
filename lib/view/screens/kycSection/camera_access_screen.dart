@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/languageSection/Languages.dart';
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CameraAccessScreen extends StatefulWidget {

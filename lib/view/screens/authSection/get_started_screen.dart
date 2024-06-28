@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/theme/AppColor.dart';
+import 'package:Payrio/theme/AppColor.dart';
 
 import '../../../languageSection/Languages.dart';
 

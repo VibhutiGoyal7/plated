@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Payrio/theme/AppTheme.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -29,7 +30,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   String? addressKycStatus;
   String? bankStatementStatus;
   String? geoLocStatus;
-
 
   String? nationalIdRejectedReason;
   String? passportRejectedReason;
@@ -74,18 +74,23 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             //imageClicked = true;
             nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
             passportStatus = mediaList?.passportImage?.verificationStatus;
-            drivingLicenceStatus = mediaList?.drivingLicenseImage?.verificationStatus;
+            drivingLicenceStatus =
+                mediaList?.drivingLicenseImage?.verificationStatus;
             kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
             addressKycStatus = mediaList?.addressKycData?.verificationStatus;
             bankStatementStatus = mediaList?.bankStatement?.verificationStatus;
             geoLocStatus = mediaList?.geolocation?.verificationStatus;
 
-            nationalIdRejectedReason = mediaList?.nationalIdImage?.rejectionReason;
+            nationalIdRejectedReason =
+                mediaList?.nationalIdImage?.rejectionReason;
             passportRejectedReason = mediaList?.passportImage?.rejectionReason;
-            drivingLicenceRejectedReason = mediaList?.drivingLicenseImage?.rejectionReason;
+            drivingLicenceRejectedReason =
+                mediaList?.drivingLicenseImage?.rejectionReason;
             kycVideoRejectedReason = mediaList?.videoClipUrl?.rejectionReason;
-            addressKycRejectedReason = mediaList?.addressKycData?.rejectionReason;
-            bankStatementRejectedReason = mediaList?.bankStatement?.rejectionReason;
+            addressKycRejectedReason =
+                mediaList?.addressKycData?.rejectionReason;
+            bankStatementRejectedReason =
+                mediaList?.bankStatement?.rejectionReason;
             geoLocRejectedReason = mediaList?.geolocation?.rejectionReason;
 
 
@@ -103,8 +108,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(mediaList?.message== "Invalid access token")
+        if (mediaList?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -200,7 +204,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   ),
                 ),
               ),
-
               if(isPassportAvailable)
                 _buildDocumentOption(
                   context,
@@ -261,7 +264,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   "assets/geo_Location.jpg",
                   "${geoLocStatus}",
                     "${geoLocRejectedReason}"),
-              if(isKycVideoAvailable)
+              if (isKycVideoAvailable)
                 _buildDocumentOption(
                   context,
                   Languages.of(context)!.labelVideoVerification,
@@ -361,8 +364,10 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                         ),
                       ),
                       Text(
-                        (status == "rejected")? rejectionReason : subtitle,
-                        style: TextStyle(),
+                        (status == "rejected") ? rejectionReason : subtitle,
+                        style: TextStyle(
+                          color: (status == "rejected") ? textColor: isDarkMode? Colors.white: Colors.black,
+                        ),
                       ),
                     ],
                   ),

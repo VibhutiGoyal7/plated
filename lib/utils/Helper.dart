@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:payrio/main.dart';
+import 'package:Payrio/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/response/profileResponse.dart';
@@ -11,6 +11,7 @@ import '../model/response/setUpAccountResponse.dart';
 class Helper {
   static String valueSharedPreferences = '';
   static String pref_token = 'token';
+  static String biometricPref = 'biometricPref';
   static const String prefSelectedLanguageCode = "SelectedLanguageCode";
 
 // Write DATA
@@ -23,6 +24,18 @@ class Helper {
   static Future<String?> getUserToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(pref_token);
+  }
+
+// Write DATA
+  static Future<bool> saveBiometric(isEnable) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setBool(biometricPref, isEnable);
+  }
+
+// Read Data
+  static Future<bool?> getBiometric() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(biometricPref);
   }
 
   static Future<bool> savePassword(token) async {

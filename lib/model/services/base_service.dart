@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 
 abstract class BaseService {
   final String mediaBaseUrl = "https://custapi.payorio.com/";

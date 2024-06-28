@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';

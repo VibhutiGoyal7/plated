@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
-import 'package:payrio/model/apis/api_response.dart';
-import 'package:payrio/utils/Helper.dart';
-import 'package:payrio/view_model/media_view_model.dart';
+import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/utils/Helper.dart';
+import 'package:Payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

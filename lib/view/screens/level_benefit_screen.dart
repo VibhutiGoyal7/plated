@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/languageSection/Languages.dart';
-import 'package:payrio/theme/AppColor.dart';
+import 'package:Payrio/languageSection/Languages.dart';
+import 'package:Payrio/theme/AppColor.dart';
 
 class LevelBenefitScreen extends StatefulWidget {
   @override

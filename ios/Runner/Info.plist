@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>payrio</string>
+	<string>Payrio</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -28,6 +28,8 @@
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
     <string>This will allow ${PRODUCT_NAME} to take photos of your credentials.</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Why is my app authenticating using face id?</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Can I use the photos please?</string>
     <key>NSPhotoLibraryAddUsageDescription</key>

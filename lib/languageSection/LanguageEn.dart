@@ -68,7 +68,7 @@ class LanguageEn extends Languages {
   String get labelNeedHelp => "Do you need any help?";
 
   @override
-  String get labelNews => "NEWS & PROMOTIONS";
+  String get labelNews => "News & offers";
 
   @override
   String get labelPassword => "Password";

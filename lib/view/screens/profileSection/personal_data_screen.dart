@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';

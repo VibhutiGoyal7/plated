@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/languageSection/Languages.dart';
+import 'package:Payrio/languageSection/Languages.dart';
 
 class SelectCountryScreen extends StatefulWidget {
   const SelectCountryScreen({Key? key}) : super(key: key);

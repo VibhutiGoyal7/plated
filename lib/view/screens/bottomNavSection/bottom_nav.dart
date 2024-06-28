@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/theme/AppColor.dart';
-import 'package:payrio/view/component/toastMessage.dart';
-import 'package:payrio/view/screens/bottomNavSection/payment_screen.dart';
-import 'package:payrio/view/screens/bottomNavSection/reward_screen.dart';
-import 'package:payrio/view/screens/bottomNavSection/transfer_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
+import '../../../utils/Helper.dart';
 import 'dashboard_home_screen.dart';
 
 class BottomNav extends StatefulWidget {
@@ -13,13 +17,26 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int _selectedIndex = 0;
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _canCheckBiometric = false;
+  bool _isAuthenticated = false;
+  bool _authenticationAttempted = false; // Add this flag
+  String _authorized = 'Not Authorized';
 
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
     TransferScreen(),
     PaymentScreen(),
-    RewardScreen()
+    RewardScreen(),
+    ScanQrScreen(),
   ];
+
+  @override
+  void initState() {
+
+    _initializeBiometrics();
+    super.initState();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -40,7 +57,7 @@ class _BottomNavState extends State<BottomNav> {
         shape: CircleBorder(
             side: BorderSide(style: BorderStyle.solid, color: AppColor.WHITE)),
         onPressed: () {
-          ToastComponent.showToast(context: context, message: "Will be soon");
+          _onItemTapped(4);
         },
         child: const Icon(
           Icons.qr_code,
@@ -141,4 +158,69 @@ class _BottomNavState extends State<BottomNav> {
       ),
     );
   }
+
+  Future<void> _initializeBiometrics() async {
+    bool? retrievedBiometric = await Helper.getBiometric();
+    print('Retrieved Token: $retrievedBiometric');
+    bool? canCheckBiometric = retrievedBiometric;
+    print('Can CheckBiometric: $canCheckBiometric');
+
+    if (canCheckBiometric == true) {
+      List<BiometricType> availableBiometric = [];
+      try {
+        canCheckBiometric = await auth.canCheckBiometrics;
+        if (canCheckBiometric) {
+          availableBiometric = await auth.getAvailableBiometrics();
+        }
+      } on PlatformException catch (e) {
+        print(e);
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+        _canCheckBiometric = canCheckBiometric! && availableBiometric.isNotEmpty;
+      });
+
+      if (_canCheckBiometric && !_authenticationAttempted) {
+        print("Checking Number of times");
+        _authenticate(); // Only call authenticate if not attempted before
+      }
+    }
+  }
+
+  Future<void> _authenticate() async {
+    print("Called _authenticate()");
+    bool authenticated = false;
+    try {
+      authenticated = await auth.authenticate(
+        localizedReason: 'Scan your fingerprint to authenticate',
+        //useErrorDialogs: true,
+        //stickyAuth: true,
+      );
+    } on PlatformException catch (e) {
+      print('Error authenticating: $e');
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _isAuthenticated = authenticated;
+      _authorized = authenticated ? 'Authorized' : 'Failed to authenticate';
+      _authenticationAttempted = true; // Mark authentication attempted
+    });
+
+    if (authenticated) {
+      print("User authenticated successfully.");
+      // Proceed with authorized action
+      // For example:
+      // Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // User cancelled authentication
+      print("User cancelled authentication.");
+      // Close the app or show a message and handle accordingly
+      SystemNavigator.pop(); // This will close the app
+    }
+  }
+
 }
