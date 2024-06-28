@@ -85,7 +85,10 @@ flutter:
       - assets/geo_Location.jpg
       - assets/address.png
       - assets/video-recording.png
-
+  fonts:
+    - family: CustomFont
+      fonts:
+        - asset: font/marlin_regular.otf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

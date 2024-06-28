@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'AppColor.dart';
 
@@ -7,8 +6,12 @@ class AppTheme {
   static ThemeData getAppTheme() {
     return ThemeData(
       appBarTheme: AppBarTheme(
-        titleTextStyle: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.WHITE),
+        titleTextStyle: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
         actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
@@ -21,24 +24,57 @@ class AppTheme {
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.BG_COLOR,
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.getFont('Almarai',
-            fontSize: 20, fontWeight: FontWeight.bold, color: AppColor.BLACK),
-        displayMedium: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.BLACK),
-        displaySmall: GoogleFonts.getFont('Almarai',
-            fontSize: 16, fontWeight: FontWeight.bold, color: AppColor.BLACK),
-        titleLarge: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.BLACK),
-        titleMedium: GoogleFonts.getFont('Almarai',
-            fontSize: 14, fontWeight: FontWeight.bold, color: AppColor.BLACK),
-        titleSmall: GoogleFonts.getFont('Almarai',
-            fontSize: 12, fontWeight: FontWeight.bold, color: AppColor.BLACK),
-        bodyLarge:
-            GoogleFonts.getFont('Almarai', fontSize: 16, color: AppColor.BLACK),
-        bodyMedium:
-            GoogleFonts.getFont('Almarai', fontSize: 14, color: AppColor.BLACK),
-        bodySmall: GoogleFonts.getFont('Almarai',
-            fontSize: 12, color: AppColor.BLACK.withOpacity(0.4)),
+        displayLarge: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
+        displayMedium: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
+        displaySmall: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
+        titleLarge: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
+        titleMedium: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
+        titleSmall: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: AppColor.BLACK,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 16,
+          color: AppColor.BLACK,
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 14,
+          color: AppColor.BLACK,
+        ),
+        bodySmall: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 12,
+          color: AppColor.BLACK.withOpacity(0.4),
+        ),
       ),
       listTileTheme: ListTileThemeData(
           iconColor: AppColor.BLACK,
@@ -91,8 +127,12 @@ class AppTheme {
   static ThemeData getDarkTheme() {
     return ThemeData(
       appBarTheme: AppBarTheme(
-        titleTextStyle: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.WHITE),
+        titleTextStyle: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColor.WHITE,
+        ),
         actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
@@ -112,28 +152,57 @@ class AppTheme {
         iconColor: AppColor.WHITE,
       ),
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.getFont(
-          'Almarai',
+        displayLarge: TextStyle(
+          fontFamily: 'CustomFont',
           fontSize: 20,
           fontWeight: FontWeight.bold,
           color: AppColor.WHITE,
         ),
-        displayMedium: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.WHITE),
-        displaySmall: GoogleFonts.getFont('Almarai',
-            fontSize: 16, fontWeight: FontWeight.bold, color: AppColor.WHITE),
-        titleLarge: GoogleFonts.getFont('Almarai',
-            fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.WHITE),
-        titleMedium: GoogleFonts.getFont('Almarai',
-            fontSize: 14, fontWeight: FontWeight.bold, color: AppColor.WHITE),
-        titleSmall: GoogleFonts.getFont('Almarai',
-            fontSize: 12, fontWeight: FontWeight.bold, color: AppColor.WHITE),
-        bodyLarge:
-            GoogleFonts.getFont('Almarai', fontSize: 16, color: AppColor.WHITE),
-        bodyMedium:
-            GoogleFonts.getFont('Almarai', fontSize: 14, color: AppColor.WHITE),
-        bodySmall: GoogleFonts.getFont('Almarai',
-            fontSize: 12, color: AppColor.WHITE.withOpacity(0.7)),
+        displayMedium: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColor.WHITE,
+        ),
+        displaySmall: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: AppColor.WHITE,
+        ),
+        titleLarge: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColor.WHITE,
+        ),
+        titleMedium: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: AppColor.WHITE,
+        ),
+        titleSmall: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: AppColor.WHITE,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 16,
+          color: AppColor.WHITE,
+        ),
+        bodyMedium: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 14,
+          color: AppColor.WHITE,
+        ),
+        bodySmall: TextStyle(
+          fontFamily: 'CustomFont',
+          fontSize: 12,
+          color: AppColor.WHITE.withOpacity(0.4),
+        ),
       ),
       iconTheme: IconThemeData(color: AppColor.WHITE),
       iconButtonTheme: IconButtonThemeData(

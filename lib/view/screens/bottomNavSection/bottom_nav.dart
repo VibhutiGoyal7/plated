@@ -68,7 +68,7 @@ class _BottomNavState extends State<BottomNav> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        height: 55,
+        height: 60,
         color: AppColor.BODY_COLOR,
         shape: const CircularNotchedRectangle(),
         notchMargin: 6,

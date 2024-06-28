@@ -1,5 +1,4 @@
 import 'package:Payrio/view/component/toastMessage.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,7 +14,7 @@ class DashboardHomeScreen extends StatefulWidget {
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
-  double amount = 0.00;
+  String amount = "0.00";
   String? name = "";
   var imageUrl;
   bool isAmountVisible = true;
@@ -32,6 +31,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
+  final ScrollController _scrollController = ScrollController();
+  List<String> _allLogList = [
+    "Add money",
+    "Add money",
+    "Add money",
+    "Add money",
+  ];
+  List<String> _filteredList = [];
 
   @override
   void initState() {
@@ -140,7 +147,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                           fit: BoxFit.cover)),
                             ),
                           ),
-                          SizedBox(width: 6),
+                          SizedBox(width: 3),
                           // Add space between avatar and text
                           Text(
                             "${Languages.of(context)!.labelHi}, $name",
@@ -148,6 +155,21 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 fontSize: 14.0, fontWeight: FontWeight.bold),
                           ),
                           Spacer(),
+                          IconButton(
+                            icon: Icon(
+                              isAmountVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () {
+                                  isAmountVisible = !isAmountVisible;
+                                },
+                              );
+                            },
+                          ),
                           Icon(Icons.notifications)
                         ],
                       ),
@@ -202,45 +224,36 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 12,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            Languages.of(context)!.labelTotalBalance,
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.25),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              isAmountVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              size: 20,
-                              color:
-                                  isDarkMode ? Colors.white60 : Colors.black45,
+                          Container(
+                            height: 25,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  Languages.of(context)!.labelTotalBalance,
+                                  style: TextStyle(
+                                      fontSize: 16.0, letterSpacing: 1.25),
+                                ),
+                              ],
                             ),
-                            onPressed: () {
-                              setState(
-                                () {
-                                  isAmountVisible = !isAmountVisible;
-                                },
-                              );
-                            },
+                          ),
+                          Text(
+                            "${isAmountVisible ? amount : "**"}  "
+                            "${Languages.of(context)!.labelINR} ",
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ), // Add space between text and amount
-                      Text(
-                        "${isAmountVisible ? amount : "**"}  "
-                        "${Languages.of(context)!.labelINR} ",
-                        style: TextStyle(
-                          fontSize: 26.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
 
                       /*  Row(children: [
                         Container(
@@ -330,19 +343,19 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         width: screenWidth,
                         height: screenHeight * 0.15,
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: List.generate(
-                              4,
-                              (index) {
-                                return _buildContainer(
-                                    context,
-                                    _shortcutCardsList[index].title,
-                                    _shortcutCardsList[index].icon);
-                              },
-                            )),
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: List.generate(
+                            4,
+                            (index) {
+                              return _buildContainer(
+                                  context,
+                                  _shortcutCardsList[index].title,
+                                  _shortcutCardsList[index].icon);
+                            },
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 3.0),
                       Text(
                         Languages.of(context)!.labelNews,
                         style: TextStyle(
@@ -351,9 +364,30 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             letterSpacing: 1.25),
                       ),
                       Container(
-                          width: screenWidth,
-                          height: screenHeight * 0.2,
-                          child: CarouselSlider(
+                        width: screenWidth,
+                        height: screenHeight * 0.2,
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          controller: _scrollController,
+                          itemCount: _allLogList.length,
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(bottom: 10),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              width: screenWidth / 2,
+                              child: Center(
+                                  child: Image.network(
+                                imgList[1],
+                                fit: BoxFit.cover,
+                              )),
+                            );
+                            // I omit the part to build card items from the list
+                          },
+                        ),
+
+                        /*CarouselSlider(
                             options: CarouselOptions(
                               viewportFraction: 0.5,
                               autoPlay: true,
@@ -373,7 +407,109 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               fit: BoxFit.cover, width: 500)),
                                     ))
                                 .toList(),
-                          )),
+                          )*/
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Transactions",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "See all",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 16,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        //height: screenSize.height/2,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 8),
+                          child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            controller: _scrollController,
+                            itemCount: _allLogList.length,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(bottom: 10),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: Card(
+                                              shape: CircleBorder(
+                                                  side: BorderSide(
+                                                      width: 0,
+                                                      color: Colors.blue)),
+                                              color: Colors.blue,
+                                              child: Icon(
+                                                Icons.wallet,
+                                                color: Colors.white,
+                                              )),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _allLogList[index],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14),
+                                            ),
+                                            Text("From Google Pay",
+                                                style: TextStyle(fontSize: 12)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "+INR 100.00",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text("05/05/2024",
+                                            style: TextStyle(fontSize: 12)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                              // I omit the part to build card items from the list
+                            },
+                          ),
+                        ),
+                      ),
                     ]),
               ),
             ),
