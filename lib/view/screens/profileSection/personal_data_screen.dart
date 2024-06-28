@@ -443,7 +443,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                           Container(
                               alignment: Alignment.center,
                               child: (!isVideo)?(image != "" || image!.isNotEmpty) ? ClipRRect(
-                                child: Image.network(image as String,
+                                child:
+                                Image.network(image as String,
                                     fit: BoxFit.fill,
                                 loadingBuilder: (BuildContext context, Widget child,
                                     ImageChunkEvent? loadingProgress) {

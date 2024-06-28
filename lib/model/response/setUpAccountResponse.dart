@@ -4,16 +4,20 @@ class SetUpAccountResponse {
   final int? id;
   final String? phoneNumber;
   final String? createdAt;
-  final String? updatedAt;
   final String? email;
   final String? address;
   final String? dob;
   final String? status;
   final String? kycStatus;
   final String? message;
+  final String? username;
+  final int? balance;
+  final int? activityPts;
+  final String? vipLevel;
+  final int? countryId;
+  final String? countryName;
+  final String? countryPhoneCode;
   final bool? isEmailVerified;
-  final String? mobileOtp;
-  final String? mobileOtpExpireAt;
 
   SetUpAccountResponse({
     this.firstName,
@@ -21,7 +25,6 @@ class SetUpAccountResponse {
     this.id,
     this.phoneNumber,
     this.createdAt,
-    this.updatedAt,
     this.email,
     this.address,
     this.dob,
@@ -29,8 +32,13 @@ class SetUpAccountResponse {
     this.isEmailVerified,
     this.kycStatus,
     this.message,
-    this.mobileOtp,
-    this.mobileOtpExpireAt,
+    this.username,
+    this.countryPhoneCode,
+    this.countryName,
+    this.countryId,
+    this.vipLevel,
+    this.activityPts,
+    this.balance,
   });
 
   factory SetUpAccountResponse.fromJson(Map<String, dynamic> json) {
@@ -42,16 +50,19 @@ class SetUpAccountResponse {
       createdAt: json['data']['created_at']/* != null
           ? DateTime.parse(json['data']['created_at'] */as String/*)
           : null*/,
-      updatedAt: json['data']['updated_at']/* != null
-          ? DateTime.parse(json['data']['updated_at']*/ as String?/*)
-          : null*/,
+
       email: json['data']['email'] as String?,
       address: json['data']['address'] as String?,
       dob: json['data']['dob'] as String?,
       kycStatus: json['data']['kyc_status'] as String?,
       message: json['message'] as String?,
-      mobileOtp: json['data']['mobile_otp'] as String?,
-      mobileOtpExpireAt: json['data']['mobile_otp_expire_at'] as String?,
+      username: json['data']['username'] as String?,
+      balance: json['data']['balance'] as int?,
+      activityPts: json['data']['activity_points'] as int?,
+      vipLevel: json['data']['vip_level'] as String?,
+      countryId: json['data']['country_id'] as int?,
+      countryName: json['data']['country_name'] as String?,
+      countryPhoneCode: json['data']['country_phone_code'] as String?,
       isEmailVerified: json['data']['is_email_verified'] as bool?,
     );
   }
@@ -67,12 +78,18 @@ class SetUpAccountResponse {
     data['address'] = this.address;
     data['kyc_status'] = this.kycStatus;
     data['created_at'] = this.createdAt ;
-    data['updated_at'] = this.updatedAt;
     data['status'] = this.status;
     data['dob'] = this.dob;
-    data['mobile_otp'] = this.mobileOtp;
-    data['mobile_otp_expire_at'] = this.mobileOtpExpireAt;
     data['is_email_verified'] = this.isEmailVerified;
+    data['username'] = this.username;
+    data['created_at'] = this.createdAt;
+    data['kyc_status'] = this.kycStatus;
+    data['vip_level'] = this.vipLevel;
+    data['balance'] = this.balance;
+    data['country_id'] = this.countryId;
+    data['country_name'] = this.countryName;
+    data['country_phone_code'] = this.countryPhoneCode;
+    data['activity_points'] = this.activityPts;
     return data;
   }
 
@@ -85,15 +102,16 @@ class SetUpAccountResponse {
       createdAt: json['created_at']/* != null
           ? DateTime.parse(json['created_at'] */as String/*)
           : null*/,
-      updatedAt: json['updated_at']/* != null
-          ? DateTime.parse(json['updated_at']*/ as String?/*)
-          : null*/,
       email: json['email'] as String?,
       address: json['address'] as String?,
       dob: json['dob'] as String?,
       kycStatus: json['kyc_status'] as String?,
-      mobileOtp: json['mobile_otp'] as String?,
-      mobileOtpExpireAt: json['mobile_otp_expire_at'] as String?,
+      balance: json['balance'] as int?,
+      activityPts: json['activity_points'] as int?,
+      vipLevel: json['vip_level'] as String?,
+      countryId: json['country_id'] as int?,
+      countryName: json['country_name'] as String?,
+      countryPhoneCode: json['country_phone_code'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }

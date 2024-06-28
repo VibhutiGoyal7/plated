@@ -75,6 +75,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         else print("not saved");
 
         await Helper.savePassword(_passwordController.text);
+        await Helper.saveCountry(mediaList?.countryName);
         String? password = await Helper.getPassword();
         print("password: ${password}");
 

@@ -20,7 +20,7 @@ class Helper {
     return await sharedPreferences.setString(pref_token, token);
   }
 
-// Read Data
+ // Read Data
   static Future<String?> getUserToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(pref_token);
@@ -43,7 +43,7 @@ class Helper {
     return await sharedPreferences.setString("Password", token);
   }
 
-// Read Data
+  // Read Data
   static Future<String?> getPassword() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString("Password");
@@ -97,6 +97,17 @@ class Helper {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String languageCode = _prefs.getString(prefSelectedLanguageCode) ?? "en";
     return _locale(languageCode);
+  }
+
+  static Future<bool> saveCountry(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString("Country", token);
+  }
+
+  // Read Data
+  static Future<String?> getCountry() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("Country");
   }
 
   static Locale _locale(String languageCode) {

@@ -1,6 +1,7 @@
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/shortcutItemList.dart';
@@ -49,7 +50,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
-    _fetchData();
+    //_fetchData();
+    Helper.getProfileDetails().then((userDetails) {
+      setState(() {
+        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
+        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
+      });
+    });
     print("isoCountryCode:: $isoCountryCode");
 
     // Initial setup for 5 checkboxes
@@ -141,10 +148,41 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   : ClipRRect(
                                       borderRadius:
                                           BorderRadius.circular(100.0),
-                                      child: Image.network(imageUrl,
-                                          height: 40,
-                                          width: 40,
-                                          fit: BoxFit.cover)),
+                                      child: Image.network(imageUrl as String,
+                                        height: 60,
+                                        width: 60,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                          // You can return any widget here to display in case of an error
+                                          return Container(
+                                            height: 60,
+                                            width: 60,
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: AppColor.WHITE,
+                                              backgroundImage: AssetImage(
+                                                "assets/profile_user.png",
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        loadingBuilder: (BuildContext context, Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.black45,
+                                              highlightColor: Colors.black87,
+                                              child: Container(
+                                                height: 60,
+                                                width: 60,
+                                                color: Colors.grey,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      )),
                             ),
                           ),
                           SizedBox(width: 3),

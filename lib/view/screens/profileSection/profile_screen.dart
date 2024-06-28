@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -14,6 +16,8 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 import 'package:image/image.dart' as img;
+
+import 'package:path/path.dart' as path;
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -73,8 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token")
-          SessionExpiredDialog.showDialogBox(context: context);
+        if(apiResponse.message== "Invalid access token")
+          {SessionExpiredDialog.showDialogBox(context: context);}
+          print(apiResponse.message) ;
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -141,9 +146,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       baseColor: Colors.black54!,
                                       highlightColor: Colors.black45!,
                                       child: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.5,
+                                        height:100,
+                                        width: 100,
                                         color: Colors.white,
                                       ),
                                     );
@@ -349,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getMediaWidget(context, apiResponse);
   }
 
-  Future<void> _uploadProfilePic(File file) async {
+  Future<void> _uploadProfilePic(File? file) async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
         .putMultiFormResponse(
@@ -395,17 +399,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final pickedFile = await picker.pickImage(source: image);
     XFile? xfilePick = pickedFile;
 
-        int quality = 80;
+        int quality = 50;
 
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
-          //File compressedFile = await compressImage(galleryFile as File, quality);
+          File? compressedFile = await _compressImage(galleryFile as File);
           setState(
-                ()  { _uploadProfilePic(galleryFile!);
+                ()  { _uploadProfilePic(compressedFile);
                 },
           );
 
-          print(galleryFile);
+          //print(compressedFile);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
               const SnackBar(content: Text('Nothing is selected')));
@@ -423,29 +427,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-/*  Future<File> compressImage(File imageFile, int quality) async {
-    // Read the image file into memory
-    List<int> imageBytes = await imageFile.readAsBytes();
+  Future<File?> _compressImage(File file) async {
+    try {
+      final directory = await getTemporaryDirectory();
+      final targetPath = path.join(directory.path, '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
 
-    // Decode the image
-    img.Image? image = img.decodeImage(imageBytes);
-    if (image == null) {
-      throw Exception('Failed to decode image');
+      int quality = 85;
+      File? result;
+
+      // Loop to gradually reduce the quality until the file size is under 1MB
+      do {
+        result = await FlutterImageCompress.compressAndGetFile(
+          file.absolute.path,
+          targetPath,
+          quality: quality,
+          format: CompressFormat.jpeg,
+        );
+
+        if (result == null) {
+          print('Compression failed at quality $quality.');
+          return null;
+        }
+
+        print('Compression attempt at quality $quality: ${result.lengthSync()} bytes');
+        quality -= 5; // Decrease quality by 5 for each iteration
+      } while (result.lengthSync() > 1024 * 1024 && quality > 0); // Check file size and ensure quality does not go below 0
+
+      print('Original size: ${file.lengthSync()} bytes');
+      print('Compressed size: ${result.lengthSync()} bytes');
+
+      return result;
+    } catch (e) {
+      print('Error compressing image: $e');
+      return null;
     }
+  }
 
-    // Compress the image
-    List<int> compressedBytes = img.encodeJpg(image, quality: quality); // JPEG compression
 
-    // Get the path of the original image file
-    String path = imageFile.path;
 
-    // Create a new File instance for the compressed image
-    File compressedFile = File('$path/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
+/*Future<File> compressImage(File imageFile, int quality) async {
+    // Read the image file into memory
+    try {
+      // Read the image file into memory
+      List<int> imageBytes = await imageFile.readAsBytes();
 
-    // Write the compressed image data to the new file
-    await compressedFile.writeAsBytes(compressedBytes);
+      // Decode the image
+      img.Image? image = img.decodeImage(imageBytes);
+      if (image == null) {
+        throw Exception('Failed to decode image');
+      }
 
-    // Return the compressed File object
-    return compressedFile;
+      // Compress the image
+      List<int> compressedBytes = img.encodeJpg(image, quality: quality); // JPEG compression
+
+      // Get the directory of the original image file
+      String dir = imageFile.parent.path;
+
+      // Create a new File instance for the compressed image with a new filename
+      String newPath = '$dir/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg';
+      File compressedFile = File(newPath);
+
+      // Write the compressed image data to the new file
+      await compressedFile.writeAsBytes(compressedBytes);
+
+      // Return the compressed File object
+      return compressedFile;
+    } catch (e) {
+      print('Error compressing image: $e');
+      rethrow;
+    }
   }*/
 }
