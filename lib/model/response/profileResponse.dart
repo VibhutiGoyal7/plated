@@ -13,6 +13,14 @@ class ProfileResponse {
   final String? phoneNumber;
   final String? message;
   final String? username;
+  final int? balance;
+  final String? kycStatus;
+  final int? activityPts;
+  final String? vipLevel;
+  final int? countryId;
+  final String? countryName;
+  final String? countryPhoneCode;
+  final String? createdAt;
   final bool? isEmailVerified;
 
   ProfileResponse({
@@ -28,6 +36,14 @@ class ProfileResponse {
     this.isEmailVerified,
     this.message,
     this.username,
+    this.createdAt,
+    this.countryPhoneCode,
+    this.countryName,
+    this.countryId,
+    this.vipLevel,
+    this.activityPts,
+    this.kycStatus,
+    this.balance,
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -42,6 +58,14 @@ class ProfileResponse {
       dob: json['data']['dob'] as String?,
       isEmailVerified: json['data']['is_email_verified'] as bool?,
       username: json['data']['username'] as String?,
+      balance: json['data']['balance'] as int?,
+      kycStatus: json['data']['kyc_status'] as String?,
+      activityPts: json['data']['activity_points'] as int?,
+      vipLevel: json['data']['vip_level'] as String?,
+      countryId: json['data']['country_id'] as int?,
+      countryName: json['data']['country_name'] as String?,
+      countryPhoneCode: json['data']['country_phone_code'] as String?,
+      createdAt: json['data']['created_at'] as String?,
       message: json['message'] as String?,
     );
   }
@@ -59,6 +83,14 @@ class ProfileResponse {
     data['is_email_verified'] = this.isEmailVerified;
     data['message'] = this.message;
     data['username'] = this.username;
+    data['created_at'] = this.createdAt;
+    data['kyc_status'] = this.kycStatus;
+    data['vip_level'] = this.vipLevel;
+    data['balance'] = this.balance;
+    data['country_id'] = this.countryId;
+    data['country_name'] = this.countryName;
+    data['country_phone_code'] = this.countryPhoneCode;
+    data['activity_points'] = this.activityPts;
     return data;
   }
   factory ProfileResponse.fromPref(Map<String, dynamic> json) {
@@ -72,6 +104,14 @@ class ProfileResponse {
       address: json['address'] as String?,
       dob: json['dob'] as String?,
       username: json['username'] as String?,
+      balance: json['balance'] as int?,
+      kycStatus: json['kyc_status'] as String?,
+      activityPts: json['activity_points'] as int?,
+      vipLevel: json['vip_level'] as String?,
+      countryId: json['country_id'] as int?,
+      countryName: json['country_name'] as String?,
+      countryPhoneCode: json['country_phone_code'] as String?,
+      createdAt: json['created_at'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }

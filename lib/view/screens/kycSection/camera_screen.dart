@@ -54,6 +54,15 @@ class _DocImageScreenState extends State<DocImageScreen> {
       isBothSides = true;
     }
     imageName="kyc_file";
+    if (docType == "passport") {
+      isBothSides = false;
+    } else if (docType == "national_id") {
+      isBothSides = true;
+    } else if (docType == "driving_licence") {
+      isBothSides = true;
+    } else if (docType == "video_kyc_clip") {
+      isBothSides = false;
+    }
   }
 
   Future<Widget> getMediaWidget(
@@ -63,14 +72,14 @@ class _DocImageScreenState extends State<DocImageScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        //WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             print(imageUrl);
             //imageClicked = true;
             imageUrl = mediaList?.kycDocsImageUrl.toString();
             Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
           });
-        });
+       // });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if(mediaList?.message== "Invalid access token")
@@ -85,88 +94,100 @@ class _DocImageScreenState extends State<DocImageScreen> {
         );
     }
   }
+  Future<bool> _onWillPop() async {
+    // Navigate to the desired screen
+    Navigator.pushReplacementNamed(
+      context,
+      "/ChooseDocScreen",
+    );
+    return false; // Prevent the default back button behavior
+  }
+
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+    return WillPopScope(
+      onWillPop: _onWillPop ,
+      child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
+              },
+            ),
+            title: Text(
+              "${docType.toUpperCase()}",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
           ),
-          title: Text(
-            "${docType.toUpperCase()}",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: Column(children: [
-          Screenshot(
-            controller: screenshotController,
-            child: Column(
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      onPressedFrontImage();
-                      //getFrontImage(ImageSource.camera);
-                    },
-                    child: Container(
-                      margin:
-                          EdgeInsets.only(left: 0, right: 00, bottom: 0, top: 0),
-                      alignment: Alignment.center,
-                      height:
-                          isBothSides ? screenHeight * 0.36 : screenHeight * 0.6,
-                      width: double.infinity,
-                      decoration: BoxDecoration(border: Border.all(width: 0.2)),
-                      child: frontImageClicked
-                          ? ClipRRect(
-                              child: Image.file(frontImg as File,
-                                  width: screenWidth, fit: BoxFit.fill),
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("Front Side"), Icon(Icons.add)],
-                            ),
-                    )),
-                if (isBothSides)
+          body: Column(children: [
+            Screenshot(
+              controller: screenshotController,
+              child: Column(
+                children: [
                   GestureDetector(
                       onTap: () {
-                        onPressedBackImage();
-                        //getBackImage(ImageSource.camera);
+                        onPressedFrontImage();
+                        //getFrontImage(ImageSource.camera);
                       },
                       child: Container(
                         margin:
-                        EdgeInsets.only(left: 0, right: 0, bottom: 0, top: 0),
+                            EdgeInsets.only(left: 0, right: 00, bottom: 0, top: 0),
                         alignment: Alignment.center,
-                        height: screenHeight * 0.36,
+                        height:
+                            isBothSides ? screenHeight * 0.36 : screenHeight * 0.6,
                         width: double.infinity,
-                        decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                        child: backImgClicked
+                        decoration: BoxDecoration(border: Border.all(width: 0.2)),
+                        child: frontImageClicked
                             ? ClipRRect(
-                          child: Image.file(backImg as File,
-                              width: screenWidth, fit: BoxFit.fill),
-                        )
+                                child: Image.file(frontImg as File,
+                                    width: screenWidth, fit: BoxFit.fill),
+                              )
                             : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Text("Back Side"), Icon(Icons.add)],
-                        ),
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [Text("Front Side"), Icon(Icons.add)],
+                              ),
                       )),
-              ],
+                  if (isBothSides)
+                    GestureDetector(
+                        onTap: () {
+                          onPressedBackImage();
+                          //getBackImage(ImageSource.camera);
+                        },
+                        child: Container(
+                          margin:
+                          EdgeInsets.only(left: 0, right: 0, bottom: 0, top: 0),
+                          alignment: Alignment.center,
+                          height: screenHeight * 0.36,
+                          width: double.infinity,
+                          decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                          child: backImgClicked
+                              ? ClipRRect(
+                            child: Image.file(backImg as File,
+                                width: screenWidth, fit: BoxFit.fill),
+                          )
+                              : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text("Back Side"), Icon(Icons.add)],
+                          ),
+                        )),
+                ],
+              ),
             ),
-          ),
 
-          Spacer(),
-          _buildFooter(context),
-          SizedBox(
-            height: 25,
-          )
-        ]));
+            Spacer(),
+            _buildFooter(context),
+            SizedBox(
+              height: 25,
+            )
+          ])),
+    );
   }
 
   Future<void> _uploadProfilePic(File file) async {
@@ -207,19 +228,19 @@ class _DocImageScreenState extends State<DocImageScreen> {
       capturedImage.width,
       cropBottom - cropTop,
     );
+    List<int> jpegBytes = img.encodeJpg(croppedImage, quality: 80);
 
     // Get the temporary directory
     final directory = await getTemporaryDirectory();
 
-    // Create a file to save the cropped screenshot
-    final file =
-        await File('${directory.path}/cropped_screenshot.png').create();
+    // Create a file to save the compressed screenshot
+    final file = await File('${directory.path}/compressed_screenshot.jpg').create();
 
-    // Write the cropped image as bytes to the file
-    await file.writeAsBytes(img.encodePng(croppedImage));
+    // Write the compressed image bytes to the file
+    await file.writeAsBytes(jpegBytes);
 
     // Print the file path for debugging
-    print('Cropped screenshot saved to ${file.path}');
+    print('Compressed screenshot saved to ${file.path}');
     return file;
   }
 
