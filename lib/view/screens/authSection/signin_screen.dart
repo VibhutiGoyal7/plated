@@ -1,9 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:payrio/model/apis/api_response.dart';
-import 'package:payrio/model/request/signInRequest.dart';
-import 'package:payrio/model/response/signInResponse.dart';
-import 'package:payrio/view_model/media_view_model.dart';
+import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/model/request/signInRequest.dart';
+import 'package:Payrio/model/response/signInResponse.dart';
+import 'package:Payrio/view_model/media_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';

@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:payrio/model/response/profileResponse.dart';
-import 'package:payrio/theme/AppColor.dart';
+import 'package:Payrio/model/response/profileResponse.dart';
+import 'package:Payrio/theme/AppColor.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -27,7 +26,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? galleryFile;
   final picker = ImagePicker();
   bool isLoading = true;
-  List<String> _pictures = [];
+  bool isBiometricEnable = false;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userName = "";
     imageUrl = "";
     _fetchData();
+    Helper.getBiometric().then((retrievedBiometric) {
+      setState(() {
+        isBiometricEnable = retrievedBiometric ?? false; // Handle null case
+        isLoading = false; // Update loading state
+      });
+    });
     print(Helper.getUserToken());
+
   }
 
   void copyTextToClipboard(String text) {
@@ -64,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(apiResponse?.message== "Invalid access token")
+        if (apiResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -95,158 +102,167 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 30.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () => {
-                      _showPicker(context: context)
-                    },
-                    child: imageUrl == ""
-                        ? Container(
-                            height: 100,
-                            width: 100,
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundColor: AppColor.WHITE,
-                              backgroundImage:
-                                  AssetImage("assets/profile_user.png"),
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(100.0),
-                            child: Image.network(
-                              imageUrl,
+        child: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 30.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => {_showPicker(context: context)},
+                      child: imageUrl == ""
+                          ? Container(
                               height: 100,
                               width: 100,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.black54!,
-                                    highlightColor: Colors.black45!,
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.5,
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }
-                              },
-                            )),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildLabelText(context, customerName.toString()),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      isLoading
-                          ? Shimmer.fromColors(
-                              baseColor: Colors.white38,
-                              highlightColor: Colors.grey,
-                              child: Container(
-                                width: 100,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  color: Colors.white38,
-                                  borderRadius: BorderRadius.circular(
-                                      8.0), // Adjust the radius as needed
-                                ),
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: AppColor.WHITE,
+                                backgroundImage:
+                                    AssetImage("assets/profile_user.png"),
                               ),
                             )
-                          : Text(
-                              userName,
-                              style: TextStyle(fontSize: 15.0),
-                              textAlign: TextAlign.left,
-                            ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      GestureDetector(
-                        onTap: () => {
-                          copyTextToClipboard(userName.toString()),
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Text copied to clipboard")),
-                          )
-                        },
-                        child: Icon(
-                          Icons.copy,
-                          size: 16,
-                        ),
-                      )
-                    ],
-                  ),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(100.0),
+                              child: Image.network(
+                                imageUrl,
+                                height: 100,
+                                width: 100,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.black54!,
+                                      highlightColor: Colors.black45!,
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.5,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }
+                                },
+                              )),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _buildLabelText(context, customerName.toString()),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 12.0),
-                        Container(
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(
-                                context, Languages.of(context)!.labelProfile)),
+                        isLoading
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.white38,
+                                highlightColor: Colors.grey,
+                                child: Container(
+                                  width: 100,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white38,
+                                    borderRadius: BorderRadius.circular(
+                                        8.0), // Adjust the radius as needed
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                userName,
+                                style: TextStyle(fontSize: 15.0),
+                                textAlign: TextAlign.left,
+                              ),
+                        SizedBox(
+                          width: 4,
+                        ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/AccountDetailScreen',
-                                arguments: "");
+                          onTap: () => {
+                            copyTextToClipboard(userName.toString()),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text("Text copied to clipboard")),
+                            )
                           },
-                          child: _buildCard(
+                          child: Icon(
+                            Icons.copy,
+                            size: 16,
+                          ),
+                        )
+                      ],
+                    ),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 12.0),
+                          Container(
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              padding: EdgeInsets.all(6.0),
+                              child: _buildLabelText(context,
+                                  Languages.of(context)!.labelProfile)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, '/AccountDetailScreen',
+                                  arguments: "");
+                            },
+                            child: _buildCard(
+                                context,
+                                Languages.of(context)!.labelAccountDetails,
+                                isDarkMode),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, '/PersonalInfoScreen',
+                                  arguments: "");
+                            },
+                            child: _buildCard(
+                                context,
+                                Languages.of(context)!.labelPersonalInfo,
+                                isDarkMode),
+                          ),
+                          Container(
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              padding: EdgeInsets.all(6.0),
+                              child: _buildLabelText(context,
+                                  Languages.of(context)!.labelSecurity)),
+                          _buildCard(
                               context,
-                              Languages.of(context)!.labelAccountDetails,
+                              Languages.of(context)!.labelStepVerification,
                               isDarkMode),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/PersonalInfoScreen',
-                                arguments: "");
-                          },
-                          child: _buildCard(
+                          _buildBiometricCard(
+                              context, "Bio-metric Authentication", isDarkMode),
+                          Container(
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              padding: EdgeInsets.all(6.0),
+                              child: _buildLabelText(context,
+                                  Languages.of(context)!.labelPaymentMethod)),
+                          _buildCard(
                               context,
-                              Languages.of(context)!.labelPersonalInfo,
+                              Languages.of(context)!.labelAddedCard,
                               isDarkMode),
-                        ),
-                        Container(
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(
-                                context, Languages.of(context)!.labelSecurity)),
-                        _buildCard(
-                            context,
-                            Languages.of(context)!.labelStepVerification,
-                            isDarkMode),
-                        Container(
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context,
-                                Languages.of(context)!.labelPaymentMethod)),
-                        _buildCard(context,
-                            Languages.of(context)!.labelAddedCard, isDarkMode),
-                        Container(
-                            padding: EdgeInsets.all(6.0),
-                            child: _buildLabelText(context,
-                                Languages.of(context)!.labelHelpSupport)),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/SettingScreen',
-                                arguments: "");
-                          },
-                          child: _buildCard(context,
-                              Languages.of(context)!.labelSettings, isDarkMode),
-                        ),
-                      ]),
-                ],
-              ),
-            )),
+                          Container(
+                              padding: EdgeInsets.all(6.0),
+                              child: _buildLabelText(context,
+                                  Languages.of(context)!.labelHelpSupport)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/SettingScreen',
+                                  arguments: "");
+                            },
+                            child: _buildCard(
+                                context,
+                                Languages.of(context)!.labelSettings,
+                                isDarkMode),
+                          ),
+                        ]),
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }
@@ -276,6 +292,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Icons.arrow_forward_ios_outlined,
               size: 16,
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildBiometricCard(BuildContext context, String text, bool isDarkMode) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(14.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(text, style: TextStyle(fontSize: 14.0)),
+            Transform.scale(
+              scale: 0.8,
+              child: Switch.adaptive(
+                  applyCupertinoTheme: false,
+                  value: isBiometricEnable,
+                  activeColor: AppColor.WHITE,
+                  activeTrackColor: AppColor.PRIMARY,
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Colors.red,
+                  trackOutlineColor: WidgetStateColor.transparent,
+                  onChanged: (bool value) {
+                    // This is called when the user toggles the switch.
+                    setState(() {
+                      isBiometricEnable = value;
+                      enableDisableBioMetric(value);
+                    });
+                  }),
+            ),
           ],
         ),
       ),
@@ -333,8 +387,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
-
   Future getImage(
     ImageSource img,
   ) async {
@@ -353,5 +405,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       },
     );
+  }
+
+  Future<void> enableDisableBioMetric(bool value) async {
+    bool isSaved = await Helper.saveBiometric(value);
+    // Check if the token was saved successfully
+    if (isSaved) {
+      print('Biometric Saved successfully.$value');
+    } else {
+      print('Failed to save biometric.');
+    }
   }
 }

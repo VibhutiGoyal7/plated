@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:payrio/model/apis/api_response.dart';
-import 'package:payrio/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:payrio/model/response/fetchKycDocResponse.dart';
-import 'package:payrio/model/response/phoneVerifyResponse.dart';
-import 'package:payrio/model/media_repository.dart';
-import 'package:payrio/model/response/profileResponse.dart';
-import 'package:payrio/model/request/setUpAccountRequest.dart';
-import 'package:payrio/model/response/setUpAccountResponse.dart';
-import 'package:payrio/model/request/signInWithPhoneNumber.dart';
-import 'package:payrio/model/response/uploadKycResponse.dart';
+import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/model/response/phoneVerifyResponse.dart';
+import 'package:Payrio/model/media_repository.dart';
+import 'package:Payrio/model/response/profileResponse.dart';
+import 'package:Payrio/model/request/setUpAccountRequest.dart';
+import 'package:Payrio/model/response/setUpAccountResponse.dart';
+import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/response/uploadKycResponse.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';

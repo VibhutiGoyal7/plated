@@ -1,6 +1,7 @@
+import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:payrio/view/component/toastMessage.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/shortcutItemList.dart';
@@ -22,6 +23,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist>
       _shortcutCardsList; // Initialize as late to delay initialization
+
+  final List<String> imgList = [
+    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+    'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+    'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+    'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+    'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+    'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +44,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     String? isoCountryCode = systemLocales.first.languageCode;
     _fetchData();
     print("isoCountryCode:: $isoCountryCode");
+
     // Initial setup for 5 checkboxes
   }
 
@@ -139,7 +151,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           Icon(Icons.notifications)
                         ],
                       ),
-                      SizedBox(height: 6), // Add space between sections
+                      // Add space between sections
+                      SizedBox(
+                        height: 5,
+                      ),
                       Card(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
@@ -176,7 +191,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   child: Text(
                                     "100",
                                     style: TextStyle(
-                                        fontSize: 12.0, color: Colors.white),
+                                      fontSize: 12.0,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -184,87 +201,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 8), // Add space between text and amount
-                      Text(
-                        "${isAmountVisible ? amount : "**"}  "
-                        "${Languages.of(context)!.labelINR} ",
-                        style: TextStyle(
-                          fontSize: 26.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        Languages.of(context)!.labelTotalBalance,
-                        style: TextStyle(
-                            fontSize: 12.0, fontWeight: FontWeight.bold),
-                      ), // Add space between sections
                       SizedBox(
-                        height: 15,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Card(
-                          color: Colors.transparent,
-                          elevation: 0,
-                          child: Stack(
-                            alignment: Alignment.centerRight,
-                            children: [
-                              Container(
-                                color: Colors.transparent,
-                                width: screenWidth,
-                                height: screenHeight * 0.12,
-                                child: Row(
-                                  children: [
-                                    Card(
-                                      color: isDarkMode
-                                          ? AppColor.DARK_CARD_COLOR
-                                          : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
-                                      child: Container(
-                                        width: screenWidth * 0.8,
-                                        height: screenHeight * 0.12,
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: List.generate(
-                                              4,
-                                              (index) {
-                                                return _buildContainer(
-                                                    context,
-                                                    _shortcutCardsList[index]
-                                                        .title,
-                                                    _shortcutCardsList[index]
-                                                        .icon);
-                                              },
-                                            )),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                right: -8,
-                                child: Container(
-                                  height: screenHeight * 0.05,
-                                  width: screenHeight * 0.12,
-                                  child: FittedBox(
-                                    child: FloatingActionButton(
-                                      shape: CircleBorder(),
-                                      onPressed: () {
-                                        _showModal(context, _shortcutCardsList);
-                                      },
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 28,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        height: 10,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,7 +210,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           Text(
                             Languages.of(context)!.labelTotalBalance,
                             style: TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.bold),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.25),
                           ),
                           IconButton(
                             icon: Icon(
@@ -292,10 +232,17 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             },
                           ),
                         ],
+                      ), // Add space between text and amount
+                      Text(
+                        "${isAmountVisible ? amount : "**"}  "
+                        "${Languages.of(context)!.labelINR} ",
+                        style: TextStyle(
+                          fontSize: 26.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
 
-                      SizedBox(height: 5), // Add space between sections
-                      Row(children: [
+                      /*  Row(children: [
                         Container(
                           height: MediaQuery.of(context).size.height * 0.15,
                           width: MediaQuery.of(context).size.width * 0.38,
@@ -321,7 +268,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       children: [
                                         Text(
                                           "${Languages.of(context)!.labelINR} "
-                                          "${isAmountVisible ? amount : "**"}",
+                                              "${isAmountVisible ? amount : "**"}",
                                           style: TextStyle(
                                             fontSize: 20.0,
                                             fontWeight: FontWeight.bold,
@@ -337,155 +284,96 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         SizedBox(width: 8), // Add space between cards
                         isUSDVisible
                             ? Container(
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.15,
-                                child: Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Image(
-                                            alignment: Alignment.topLeft,
-                                            image: AssetImage(
-                                                "assets/united_states_flag_icon.png"),
-                                            width: 35,
-                                            height: 60,
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${Languages.of(context)!.labelUSD} "
-                                                "${isAmountVisible ? amount : "**"}",
-                                                style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ]),
-                                  ),
-                                ),
-                              )
-                            : SizedBox(
-                                width: 0,
-                              ),
-                      ]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      /*   Row(
-                        children: [
-                          Container(
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(6.0),
-                                child: Row(children: [
-                                  Icon(
-                                    Icons.edit,
-                                    size: 24,
-                                  )
-                                ]),
-                              ),
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height:
+                          MediaQuery.of(context).size.height * 0.15,
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                          ),
-                          Expanded(
-                              child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/AddMoneyScreen');
-                            },
-                            child: Container(
-                              child: Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 6.0),
-                                  child: Row(children: [
-                                    Text(
-                                      Languages.of(context)!.labelAddMoney,
-                                      style: TextStyle(fontSize: 14.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Image(
+                                      alignment: Alignment.topLeft,
+                                      image: AssetImage(
+                                          "assets/united_states_flag_icon.png"),
+                                      width: 35,
+                                      height: 60,
                                     ),
                                     Spacer(),
-                                    Icon(
-                                      Icons.add,
-                                      size: 18,
-                                    )
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${Languages.of(context)!.labelUSD} "
+                                              "${isAmountVisible ? amount : "**"}",
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ]),
-                                ),
-                              ),
                             ),
-                          )),
-                          Expanded(
-                              child: Container(
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(children: [
-                                  Text(
-                                    Languages.of(context)!.labelSend,
-                                    style: TextStyle(fontSize: 14.0),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.send,
-                                    size: 16,
-                                  )
-                                ]),
-                              ),
-                            ),
-                          )),
-                          Expanded(
-                              child: Container(
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(children: [
-                                  Text(
-                                    Languages.of(context)!.labelExchange,
-                                    style: TextStyle(fontSize: 14.0),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.currency_exchange,
-                                    size: 16,
-                                  )
-                                ]),
-                              ),
-                            ),
-                          ))
-                        ],
-                      ),*/
-                      SizedBox(height: 5.0),
+                          ),
+                        )
+                            : SizedBox(
+                          width: 0,
+                        ),
+                      ]),*/
+                      Container(
+                        width: screenWidth,
+                        height: screenHeight * 0.15,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: List.generate(
+                              4,
+                              (index) {
+                                return _buildContainer(
+                                    context,
+                                    _shortcutCardsList[index].title,
+                                    _shortcutCardsList[index].icon);
+                              },
+                            )),
+                      ),
+                      SizedBox(height: 3.0),
                       Text(
                         Languages.of(context)!.labelNews,
                         style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
-                      )
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.25),
+                      ),
+                      Container(
+                          width: screenWidth,
+                          height: screenHeight * 0.2,
+                          child: CarouselSlider(
+                            options: CarouselOptions(
+                              viewportFraction: 0.5,
+                              autoPlay: true,
+                              aspectRatio: 16 / 9,
+                              autoPlayInterval: Duration(seconds: 3),
+                              autoPlayAnimationDuration:
+                                  Duration(milliseconds: 800),
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: true,
+                            ),
+                            items: imgList
+                                .map((item) => Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 5),
+                                      child: Center(
+                                          child: Image.network(item,
+                                              fit: BoxFit.cover, width: 500)),
+                                    ))
+                                .toList(),
+                          )),
                     ]),
               ),
             ),
@@ -553,11 +441,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       children: [
         Container(
             margin: EdgeInsets.only(bottom: 5),
-            width: 42,
-            height: 42,
+            width: 62,
+            height: 62,
             decoration: BoxDecoration(
-              color: AppColor.WHITE,
-              borderRadius: BorderRadius.circular(14.0),
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(40.0),
             ),
             child: IconButton(
                 onPressed: () => {
@@ -572,8 +460,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     },
                 icon: Icon(
                   icon,
-                  color: AppColor.BLACK,
-                  size: 22,
+                  color: AppColor.WHITE,
+                  size: 28,
                 ))),
         Text(text, style: TextStyle(fontSize: 12))
       ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/model/response/profileResponse.dart';
-import 'package:payrio/utils/Helper.dart';
+import 'package:Payrio/model/response/profileResponse.dart';
+import 'package:Payrio/utils/Helper.dart';
 
 import '../../../languageSection/Languages.dart';
 

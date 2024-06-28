@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Payrio/theme/AppTheme.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,6 @@ class ChooseDocScreen extends StatefulWidget {
 }
 
 class _ChooseDocScreenState extends State<ChooseDocScreen> {
-
   String? nationalIdStatus;
   String? passportStatus;
   String? drivingLicenceStatus;
@@ -22,7 +22,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   String? addressKycStatus;
   String? bankStatementStatus;
   String? geoLocStatus;
-
 
   String? nationalIdRejectedReason;
   String? passportRejectedReason;
@@ -33,12 +32,12 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   String? geoLocRejectedReason;
 
   bool isNationalIdAvailable = true;
-  bool isPassportAvailable= true;
-  bool isDrivingLicenceAvailable= true;
-  bool isKycVideoAvailable= true;
-  bool isAddressLycAvailable= true;
-  bool isBankStatementAvailable= true;
-  bool isGeoLocAvailable= true;
+  bool isPassportAvailable = true;
+  bool isDrivingLicenceAvailable = true;
+  bool isKycVideoAvailable = true;
+  bool isAddressLycAvailable = true;
+  bool isBankStatementAvailable = true;
+  bool isGeoLocAvailable = true;
 
   @override
   void initState() {
@@ -59,35 +58,44 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             //imageClicked = true;
             nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
             passportStatus = mediaList?.passportImage?.verificationStatus;
-            drivingLicenceStatus = mediaList?.drivingLicenseImage?.verificationStatus;
+            drivingLicenceStatus =
+                mediaList?.drivingLicenseImage?.verificationStatus;
             kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
             addressKycStatus = mediaList?.addressKycData?.verificationStatus;
             bankStatementStatus = mediaList?.bankStatement?.verificationStatus;
             geoLocStatus = mediaList?.geolocation?.verificationStatus;
 
-            nationalIdRejectedReason = mediaList?.nationalIdImage?.rejectionReason;
+            nationalIdRejectedReason =
+                mediaList?.nationalIdImage?.rejectionReason;
             passportRejectedReason = mediaList?.passportImage?.rejectionReason;
-            drivingLicenceRejectedReason = mediaList?.drivingLicenseImage?.rejectionReason;
+            drivingLicenceRejectedReason =
+                mediaList?.drivingLicenseImage?.rejectionReason;
             kycVideoRejectedReason = mediaList?.videoClipUrl?.rejectionReason;
-            addressKycRejectedReason = mediaList?.addressKycData?.rejectionReason;
-            bankStatementRejectedReason = mediaList?.bankStatement?.rejectionReason;
+            addressKycRejectedReason =
+                mediaList?.addressKycData?.rejectionReason;
+            bankStatementRejectedReason =
+                mediaList?.bankStatement?.rejectionReason;
             geoLocRejectedReason = mediaList?.geolocation?.rejectionReason;
 
-
-            isNationalIdAvailable = mediaList?.nationalIdImage?.availableInCountry as bool;
-            isPassportAvailable = mediaList?.passportImage?.availableInCountry as bool;
-            isDrivingLicenceAvailable = mediaList?.drivingLicenseImage?.availableInCountry as bool;
-            isKycVideoAvailable = mediaList?.videoClipUrl?.availableInCountry as bool;
-            isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry as bool;
-            isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry as bool;
-            isGeoLocAvailable = mediaList?.geolocation?.availableInCountry as bool;
-
+            isNationalIdAvailable =
+                mediaList?.nationalIdImage?.availableInCountry as bool;
+            isPassportAvailable =
+                mediaList?.passportImage?.availableInCountry as bool;
+            isDrivingLicenceAvailable =
+                mediaList?.drivingLicenseImage?.availableInCountry as bool;
+            isKycVideoAvailable =
+                mediaList?.videoClipUrl?.availableInCountry as bool;
+            isAddressLycAvailable =
+                mediaList?.addressKycData?.availableInCountry as bool;
+            isBankStatementAvailable =
+                mediaList?.bankStatement?.availableInCountry as bool;
+            isGeoLocAvailable =
+                mediaList?.geolocation?.availableInCountry as bool;
           });
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(mediaList?.message== "Invalid access token")
+        if (mediaList?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -169,76 +177,76 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                   ),
                 ),
               ),
-              if(isPassportAvailable)
+              if (isPassportAvailable)
                 _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelPassport,
-                  Languages.of(context)!.labelPhotoPage,
-                  '/CameraAccessScreen',
-                  'passport',
-                  "assets/passport.png",
-                  "${passportStatus}",
+                    context,
+                    Languages.of(context)!.labelPassport,
+                    Languages.of(context)!.labelPhotoPage,
+                    '/CameraAccessScreen',
+                    'passport',
+                    "assets/passport.png",
+                    "${passportStatus}",
                     "${passportRejectedReason}"),
-              if(isDrivingLicenceAvailable)
+              if (isDrivingLicenceAvailable)
                 _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelDrivingLicence,
-                  Languages.of(context)!.labelFrontNBack,
-                  '/CameraAccessScreen',
-                  'driving_licence',
-                  "assets/license.png",
-                  "${drivingLicenceStatus}",
+                    context,
+                    Languages.of(context)!.labelDrivingLicence,
+                    Languages.of(context)!.labelFrontNBack,
+                    '/CameraAccessScreen',
+                    'driving_licence',
+                    "assets/license.png",
+                    "${drivingLicenceStatus}",
                     "${drivingLicenceRejectedReason}"),
-              if(isNationalIdAvailable)
+              if (isNationalIdAvailable)
                 _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelNationalId,
-                  Languages.of(context)!.labelFrontNBack,
-                  '/CameraAccessScreen',
-                  'national_id',
-                  "assets/id_card.png",
-                  "${nationalIdStatus}",
+                    context,
+                    Languages.of(context)!.labelNationalId,
+                    Languages.of(context)!.labelFrontNBack,
+                    '/CameraAccessScreen',
+                    'national_id',
+                    "assets/id_card.png",
+                    "${nationalIdStatus}",
                     "${nationalIdRejectedReason}"),
-              if(isAddressLycAvailable)
+              if (isAddressLycAvailable)
                 _buildDocumentOption(
-                  context,
-                  "Address KYC",
-                  'Front ',
-                  '/CameraAccessScreen',
-                  'address_kyc',
-                  "assets/passport.png",
-                  "${addressKycStatus}",
+                    context,
+                    "Address KYC",
+                    'Front ',
+                    '/CameraAccessScreen',
+                    'address_kyc',
+                    "assets/passport.png",
+                    "${addressKycStatus}",
                     "${addressKycRejectedReason}"),
-              if(isBankStatementAvailable)
+              if (isBankStatementAvailable)
                 _buildDocumentOption(
-                  context,
-                  "Bank Statement",
-                  'Front ',
-                  '/CameraAccessScreen',
-                  'bank_statement',
-                  "assets/passport.png",
-                  "${bankStatementStatus}",
+                    context,
+                    "Bank Statement",
+                    'Front ',
+                    '/CameraAccessScreen',
+                    'bank_statement',
+                    "assets/passport.png",
+                    "${bankStatementStatus}",
                     "${bankStatementRejectedReason}"),
-              if(isGeoLocAvailable)
+              if (isGeoLocAvailable)
                 _buildDocumentOption(
-                  context,
-                  "Geolocation KYC",
-                  'Front ',
-                  '/CameraAccessScreen',
-                  'geolocation_kyc',
-                  "assets/passport.png",
-                  "${geoLocStatus}",
+                    context,
+                    "Geolocation KYC",
+                    'Front ',
+                    '/CameraAccessScreen',
+                    'geolocation_kyc',
+                    "assets/passport.png",
+                    "${geoLocStatus}",
                     "${geoLocRejectedReason}"),
-              if(isKycVideoAvailable)
+              if (isKycVideoAvailable)
                 _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelVideoVerification,
-                  'Front ',
-                  '/VideoKycScreen',
-                  'video_kyc_clip',
-                  "assets/video.png",
-                  "${kycVideoStatus}",
-                "${kycVideoRejectedReason}"),
+                    context,
+                    Languages.of(context)!.labelVideoVerification,
+                    'Front ',
+                    '/VideoKycScreen',
+                    'video_kyc_clip',
+                    "assets/video.png",
+                    "${kycVideoStatus}",
+                    "${kycVideoRejectedReason}"),
             ],
           ),
         ),
@@ -259,24 +267,25 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
 
-      if (status == "verified") {
-        verificationStatus = Languages.of(context)!.labelVerified;
-        textColor = Colors.green;
-      } else if (status == "rejected") {
-        verificationStatus = "Rejected";
-        textColor = Colors.red;
-      }else if(status == "in progress"){
-        verificationStatus = Languages.of(context)!.labelInProgress;
-        textColor = Colors.deepOrange;
-      } else {
+    if (status == "verified") {
+      verificationStatus = Languages.of(context)!.labelVerified;
+      textColor = Colors.green;
+    } else if (status == "rejected") {
+      verificationStatus = "Rejected";
+      textColor = Colors.red;
+    } else if (status == "in_progress") {
+      verificationStatus = Languages.of(context)!.labelInProgress;
+      textColor = Colors.deepOrange;
+    } else {
       verificationStatus = Languages.of(context)!.labelPending;
       textColor = Colors.orange;
     }
     return GestureDetector(
       onTap: () async {
-        if (verificationStatus == "Pending" || verificationStatus =="Rejected") {
+        if (verificationStatus == "Pending" ||
+            verificationStatus == "Rejected") {
           if (await checkPermissionStatus()) {
-            Navigator.pushNamed(context, "/DocImageScreen",
+            Navigator.pushNamed(context, route,
                 arguments: "${data}");
           } else {
             Navigator.pushNamed(context, route, arguments: "${data}");
@@ -315,8 +324,10 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                         ),
                       ),
                       Text(
-                        (status == "rejected")? rejectionReason : subtitle,
-                        style: TextStyle(),
+                        (status == "rejected") ? rejectionReason : subtitle,
+                        style: TextStyle(
+                          color: (status == "rejected") ? textColor: isDarkMode? Colors.white: Colors.black,
+                        ),
                       ),
                     ],
                   ),

@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:payrio/model/response/uploadKycResponse.dart';
-import 'package:payrio/view/component/session_expired_dialog.dart';
+import 'package:Payrio/model/response/uploadKycResponse.dart';
+import 'package:Payrio/view/component/session_expired_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -40,6 +40,19 @@ class _DocImageScreenState extends State<DocImageScreen> {
   void initState() {
     super.initState();
     docType = widget.data.toString();
+    if (docType == "passport") {
+      isBothSides = false;
+    } else if (docType == "national_id") {
+      isBothSides = true;
+    } else if (docType == "driving_licence") {
+      isBothSides = true;
+    } else if (docType == "video_kyc_clip") {
+      isBothSides = false;
+    }else if (docType == "address_kyc") {
+      isBothSides = true;
+    }else if (docType == "bank_statement") {
+      isBothSides = true;
+    }
     imageName="kyc_file";
   }
 

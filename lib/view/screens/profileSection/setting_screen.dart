@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:payrio/theme/AppColor.dart';
-import 'package:payrio/utils/Helper.dart';
+import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Helper.dart';
 
 import '../../../languageSection/Languages.dart';
 

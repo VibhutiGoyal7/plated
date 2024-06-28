@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:payrio/utils/Helper.dart';
+import 'package:Payrio/utils/Helper.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

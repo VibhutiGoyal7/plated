@@ -1,8 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import '../../../languageSection/Languages.dart';
-import 'package:payrio/model/request/createOtpEmailVerifyRequest.dart';
-import 'package:payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
