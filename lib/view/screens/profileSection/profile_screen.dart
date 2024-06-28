@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -14,6 +16,8 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/media_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 import 'package:image/image.dart' as img;
+
+import 'package:path/path.dart' as path;
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -349,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getMediaWidget(context, apiResponse);
   }
 
-  Future<void> _uploadProfilePic(File file) async {
+  Future<void> _uploadProfilePic(File? file) async {
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MediaViewModel>(context, listen: false)
         .putMultiFormResponse(
@@ -399,13 +403,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
-          File compressedFile = await compressImage(galleryFile as File, quality);
+          File? compressedFile = await _compressImage(galleryFile as File);
           setState(
                 ()  { _uploadProfilePic(compressedFile);
                 },
           );
 
-          print(compressedFile);
+          //print(compressedFile);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
               const SnackBar(content: Text('Nothing is selected')));
@@ -423,8 +427,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-/*  Future<File> compressImage(File imageFile, int quality) async {
-  Future<File> compressImage(File imageFile, int quality) async {
+  Future<File?> _compressImage(File file) async {
+    try {
+      final directory = await getTemporaryDirectory();
+      final targetPath = path.join(directory.path, '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
+
+      int quality = 85;
+      File? result;
+
+      // Loop to gradually reduce the quality until the file size is under 1MB
+      do {
+        result = await FlutterImageCompress.compressAndGetFile(
+          file.absolute.path,
+          targetPath,
+          quality: quality,
+          format: CompressFormat.jpeg,
+        );
+
+        if (result == null) {
+          print('Compression failed at quality $quality.');
+          return null;
+        }
+
+        print('Compression attempt at quality $quality: ${result.lengthSync()} bytes');
+        quality -= 5; // Decrease quality by 5 for each iteration
+      } while (result.lengthSync() > 1024 * 1024 && quality > 0); // Check file size and ensure quality does not go below 0
+
+      print('Original size: ${file.lengthSync()} bytes');
+      print('Compressed size: ${result.lengthSync()} bytes');
+
+      return result;
+    } catch (e) {
+      print('Error compressing image: $e');
+      return null;
+    }
+  }
+
+
+
+/*Future<File> compressImage(File imageFile, int quality) async {
     // Read the image file into memory
     try {
       // Read the image file into memory
@@ -455,5 +496,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('Error compressing image: $e');
       rethrow;
     }
-  }
+  }*/
 }
