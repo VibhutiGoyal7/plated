@@ -401,8 +401,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   }
 
   Future<void> _fetchCountryName() async{
-    ProfileResponse? retrievedDetails = await Helper.getProfileDetails();
-    countryName = retrievedDetails?.countryName as String;
-    isCountryNameLoading = false;
+    countryName = (await Helper.getCountry())!;
   }
 }

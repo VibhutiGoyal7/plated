@@ -65,51 +65,63 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    // Navigate to the desired screen
+    Navigator.pushReplacementNamed(
+      context,
+      "/ChooseDocScreen",
+    );
+    return false; // Prevent the default back button behavior
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
-            },
+    return WillPopScope(
+      onWillPop: _onWillPop ,
+      child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
+              },
+            ),
+            title: Text(
+              "Verify your Identity",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
           ),
-          title: Text(
-            "Verify your Identity",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Column(
-              children: [
-                Container(
-                    margin:
-                        EdgeInsets.only(left: 0, right: 0, bottom: 4, top: 10),
-                    alignment: Alignment.center,
-                    height: screenHeight * 0.65,
-                    width: double.infinity,
-                    child: isVideoRecorded
-                        ? videoPlayerController != null &&
-                                videoPlayerController.value.isInitialized
-                            ? AspectRatio(
-                                aspectRatio:
-                                    videoPlayerController.value.aspectRatio,
-                                child: VideoPlayer(videoPlayerController),
-                              )
-                            : Text('No video selected')
-                        : GestureDetector(
-                            onTap: () {
-                              _startVideo(ImageSource.camera);
-                            },
-                            child: _buildScreen(context))),
-                Spacer(),
-                _buildFooter(context)
-              ],
-            )));
+          body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Column(
+                children: [
+                  Container(
+                      margin:
+                          EdgeInsets.only(left: 0, right: 0, bottom: 4, top: 10),
+                      alignment: Alignment.center,
+                      height: screenHeight * 0.65,
+                      width: double.infinity,
+                      child: isVideoRecorded
+                          ? videoPlayerController != null &&
+                                  videoPlayerController.value.isInitialized
+                              ? AspectRatio(
+                                  aspectRatio:
+                                      videoPlayerController.value.aspectRatio,
+                                  child: VideoPlayer(videoPlayerController),
+                                )
+                              : Text('No video selected')
+                          : GestureDetector(
+                              onTap: () {
+                                _startVideo(ImageSource.camera);
+                              },
+                              child: _buildScreen(context))),
+                  Spacer(),
+                  _buildFooter(context)
+                ],
+              ))),
+    );
   }
 
   Future<void> _uploadProfilePic(File file) async {

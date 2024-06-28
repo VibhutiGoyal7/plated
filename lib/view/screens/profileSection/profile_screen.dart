@@ -66,8 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(apiResponse?.message== "Invalid access token")
-          SessionExpiredDialog.showDialogBox(context: context);
+        if(apiResponse.message== "Invalid access token")
+          {SessionExpiredDialog.showDialogBox(context: context);}
+          print(apiResponse.message) ;
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -135,9 +136,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     baseColor: Colors.black54!,
                                     highlightColor: Colors.black45!,
                                     child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.5,
+                                      height:100,
+                                      width: 100,
                                       color: Colors.white,
                                     ),
                                   );
@@ -343,17 +343,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final pickedFile = await picker.pickImage(source: image);
     XFile? xfilePick = pickedFile;
 
-        int quality = 80;
+        int quality = 50;
 
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
-          //File compressedFile = await compressImage(galleryFile as File, quality);
+          File compressedFile = await compressImage(galleryFile as File, quality);
           setState(
-                ()  { _uploadProfilePic(galleryFile!);
+                ()  { _uploadProfilePic(compressedFile);
                 },
           );
 
-          print(galleryFile);
+          print(compressedFile);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
               const SnackBar(content: Text('Nothing is selected')));
@@ -361,29 +361,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   }
 
-/*  Future<File> compressImage(File imageFile, int quality) async {
+  Future<File> compressImage(File imageFile, int quality) async {
     // Read the image file into memory
-    List<int> imageBytes = await imageFile.readAsBytes();
+    try {
+      // Read the image file into memory
+      List<int> imageBytes = await imageFile.readAsBytes();
 
-    // Decode the image
-    img.Image? image = img.decodeImage(imageBytes);
-    if (image == null) {
-      throw Exception('Failed to decode image');
+      // Decode the image
+      img.Image? image = img.decodeImage(imageBytes);
+      if (image == null) {
+        throw Exception('Failed to decode image');
+      }
+
+      // Compress the image
+      List<int> compressedBytes = img.encodeJpg(image, quality: quality); // JPEG compression
+
+      // Get the directory of the original image file
+      String dir = imageFile.parent.path;
+
+      // Create a new File instance for the compressed image with a new filename
+      String newPath = '$dir/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg';
+      File compressedFile = File(newPath);
+
+      // Write the compressed image data to the new file
+      await compressedFile.writeAsBytes(compressedBytes);
+
+      // Return the compressed File object
+      return compressedFile;
+    } catch (e) {
+      print('Error compressing image: $e');
+      rethrow;
     }
-
-    // Compress the image
-    List<int> compressedBytes = img.encodeJpg(image, quality: quality); // JPEG compression
-
-    // Get the path of the original image file
-    String path = imageFile.path;
-
-    // Create a new File instance for the compressed image
-    File compressedFile = File('$path/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
-
-    // Write the compressed image data to the new file
-    await compressedFile.writeAsBytes(compressedBytes);
-
-    // Return the compressed File object
-    return compressedFile;
-  }*/
+  }
 }
