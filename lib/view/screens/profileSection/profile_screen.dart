@@ -93,197 +93,209 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    // Navigate to the desired screen
+    Navigator.pushReplacementNamed(
+      context,
+      "/BottomNav",
+    );
+    return false; // Prevent the default back button behavior
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, "/BottomNav");
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop ,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, "/BottomNav");
+            },
+          ),
+          title: Text(
+            Languages.of(context)!.labelProfile,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
         ),
-        title: Text(
-          Languages.of(context)!.labelProfile,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 30.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () => {_showPicker(context: context)},
-                      child: imageUrl == ""
-                          ? Container(
-                              height: 100,
-                              width: 100,
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundColor: AppColor.WHITE,
-                                backgroundImage:
-                                    AssetImage("assets/profile_user.png"),
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(100.0),
-                              child: Image.network(
-                                imageUrl,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 30.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () => {_showPicker(context: context)},
+                        child: imageUrl == ""
+                            ? Container(
                                 height: 100,
                                 width: 100,
-                                fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                  // You can return any widget here to display in case of an error
-                                  return Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: AppColor.WHITE,
-                                      backgroundImage: AssetImage(
-                                        "assets/profile_user.png",
-                                      ),
-                                    ),
-                                  );
-                                },
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Shimmer.fromColors(
-                                      baseColor: Colors.black54!,
-                                      highlightColor: Colors.black45!,
-                                      child: Container(
-                                        height:100,
-                                        width: 100,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                                  }
-                                },
-                              )),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _buildLabelText(context, customerName.toString()),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        isLoading
-                            ? Shimmer.fromColors(
-                                baseColor: Colors.white38,
-                                highlightColor: Colors.grey,
-                                child: Container(
-                                  width: 100,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white38,
-                                    borderRadius: BorderRadius.circular(
-                                        8.0), // Adjust the radius as needed
-                                  ),
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: AppColor.WHITE,
+                                  backgroundImage:
+                                      AssetImage("assets/profile_user.png"),
                                 ),
                               )
-                            : Text(
-                                userName,
-                                style: TextStyle(fontSize: 15.0),
-                                textAlign: TextAlign.left,
-                              ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        GestureDetector(
-                          onTap: () => {
-                            copyTextToClipboard(userName.toString()),
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text("Text copied to clipboard")),
-                            )
-                          },
-                          child: Icon(
-                            Icons.copy,
-                            size: 16,
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(100.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    // You can return any widget here to display in case of an error
+                                    return Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: AppColor.WHITE,
+                                        backgroundImage: AssetImage(
+                                          "assets/profile_user.png",
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.black54!,
+                                        highlightColor: Colors.black45!,
+                                        child: Container(
+                                          height:100,
+                                          width: 100,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _buildLabelText(context, customerName.toString()),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 12.0),
-                          Container(
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              padding: EdgeInsets.all(6.0),
-                              child: _buildLabelText(context,
-                                  Languages.of(context)!.labelProfile)),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, '/AccountDetailScreen',
-                                  arguments: "");
-                            },
-                            child: _buildCard(
-                                context,
-                                Languages.of(context)!.labelAccountDetails,
-                                isDarkMode),
+                          isLoading
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.white38,
+                                  highlightColor: Colors.grey,
+                                  child: Container(
+                                    width: 100,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white38,
+                                      borderRadius: BorderRadius.circular(
+                                          8.0), // Adjust the radius as needed
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  userName,
+                                  style: TextStyle(fontSize: 15.0),
+                                  textAlign: TextAlign.left,
+                                ),
+                          SizedBox(
+                            width: 4,
                           ),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, '/PersonalInfoScreen',
-                                  arguments: "");
+                            onTap: () => {
+                              copyTextToClipboard(userName.toString()),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text("Text copied to clipboard")),
+                              )
                             },
-                            child: _buildCard(
+                            child: Icon(
+                              Icons.copy,
+                              size: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 12.0),
+                            Container(
+                                margin: EdgeInsets.symmetric(vertical: 8.0),
+                                padding: EdgeInsets.all(6.0),
+                                child: _buildLabelText(context,
+                                    Languages.of(context)!.labelProfile)),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/AccountDetailScreen',
+                                    arguments: "");
+                              },
+                              child: _buildCard(
+                                  context,
+                                  Languages.of(context)!.labelAccountDetails,
+                                  isDarkMode),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/PersonalInfoScreen',
+                                    arguments: "");
+                              },
+                              child: _buildCard(
+                                  context,
+                                  Languages.of(context)!.labelPersonalInfo,
+                                  isDarkMode),
+                            ),
+                            Container(
+                                margin: EdgeInsets.symmetric(vertical: 8.0),
+                                padding: EdgeInsets.all(6.0),
+                                child: _buildLabelText(context,
+                                    Languages.of(context)!.labelSecurity)),
+                            _buildCard(
                                 context,
-                                Languages.of(context)!.labelPersonalInfo,
+                                Languages.of(context)!.labelStepVerification,
                                 isDarkMode),
-                          ),
-                          Container(
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              padding: EdgeInsets.all(6.0),
-                              child: _buildLabelText(context,
-                                  Languages.of(context)!.labelSecurity)),
-                          _buildCard(
-                              context,
-                              Languages.of(context)!.labelStepVerification,
-                              isDarkMode),
-                          _buildBiometricCard(
-                              context, "Bio-metric Authentication", isDarkMode),
-                          Container(
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              padding: EdgeInsets.all(6.0),
-                              child: _buildLabelText(context,
-                                  Languages.of(context)!.labelPaymentMethod)),
-                          _buildCard(
-                              context,
-                              Languages.of(context)!.labelAddedCard,
-                              isDarkMode),
-                          Container(
-                              padding: EdgeInsets.all(6.0),
-                              child: _buildLabelText(context,
-                                  Languages.of(context)!.labelHelpSupport)),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/SettingScreen',
-                                  arguments: "");
-                            },
-                            child: _buildCard(
+                            _buildBiometricCard(
+                                context, "Bio-metric Authentication", isDarkMode),
+                            Container(
+                                margin: EdgeInsets.symmetric(vertical: 8.0),
+                                padding: EdgeInsets.all(6.0),
+                                child: _buildLabelText(context,
+                                    Languages.of(context)!.labelPaymentMethod)),
+                            _buildCard(
                                 context,
-                                Languages.of(context)!.labelSettings,
+                                Languages.of(context)!.labelAddedCard,
                                 isDarkMode),
-                          ),
-                        ]),
-                  ],
-                ),
-              )),
+                            Container(
+                                padding: EdgeInsets.all(6.0),
+                                child: _buildLabelText(context,
+                                    Languages.of(context)!.labelHelpSupport)),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, '/SettingScreen',
+                                    arguments: "");
+                              },
+                              child: _buildCard(
+                                  context,
+                                  Languages.of(context)!.labelSettings,
+                                  isDarkMode),
+                            ),
+                          ]),
+                    ],
+                  ),
+                )),
+          ),
         ),
       ),
     );
