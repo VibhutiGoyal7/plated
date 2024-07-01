@@ -60,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<Widget> getMediaWidget(
       BuildContext context, ApiResponse apiResponse) async {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
+    print("apiResponse${apiResponse.status}");
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -79,6 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         //});
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        print("Invalid access token${apiResponse.message}") ;
         if(apiResponse.message== "Invalid access token")
           {SessionExpiredDialog.showDialogBox(context: context);}
           print(apiResponse.message) ;
