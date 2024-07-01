@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
 
 import '../../languageSection/Languages.dart';
+import '../../utils/Helper.dart';
 
 class AddMoneyScreen extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class AddMoneyScreen extends StatefulWidget {
 }
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
+  String kycStatus = "";
   String amount = "";
   bool expanded = false;
   bool inputValid = false;
@@ -166,7 +168,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
-                  Navigator.pushNamed(context, '/VerifyIdentityScreen');
+                  _fetchKycStatus();
                 }
               },
               child: Text(
@@ -225,7 +227,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           title: Text(title),
           content: SingleChildScrollView(child: Text(message)),
           actions: <Widget>[
-
             TextButton(
               child: Text('OK'),
               onPressed: () {
@@ -236,5 +237,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         );
       },
     );
+  }
+  Future<void> _fetchKycStatus() async {
+    kycStatus = (await Helper.getKycStatus())!;
+    if(kycStatus != "verified"){
+      Navigator.pushNamed(context, '/VerifyIdentityScreen');
+    }
   }
 }

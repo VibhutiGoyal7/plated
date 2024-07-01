@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:Payrio/model/apis/api_response.dart';
-import 'package:Payrio/model/media_repository.dart';
+import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
@@ -48,7 +48,7 @@ class MainViewModel with ChangeNotifier {
       print(phoneRequest.customer.phoneNumber);
 
       PhoneVerifyResponse phoneVerifyResponse =
-          await MediaRepository().fetchMediaList(value, phoneRequest);
+          await MainRepository().fetchMediaList(value, phoneRequest);
       print("Yess" + phoneVerifyResponse.mobileOtp.toString());
       _apiResponse = ApiResponse.completed(phoneVerifyResponse);
     } catch (e) {
@@ -67,7 +67,7 @@ class MainViewModel with ChangeNotifier {
       print(existingUserRequest.customer.phoneNumber);
 
       ExistingUserResponse existingUserResponse =
-          await MediaRepository().existingUserData(value, existingUserRequest);
+          await MainRepository().existingUserData(value, existingUserRequest);
       print("Yess" + existingUserResponse.userFound.toString());
       _apiResponse = ApiResponse.completed(existingUserResponse);
     } catch (e) {
@@ -85,7 +85,7 @@ class MainViewModel with ChangeNotifier {
     try {
       print(phoneRequest.customer.phoneNumber);
       OtpVerifyResponse otpVerifyResponse =
-          await MediaRepository().fetchOtpVerifyData(value, phoneRequest);
+          await MainRepository().fetchOtpVerifyData(value, phoneRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(otpVerifyResponse);
     } catch (e) {
@@ -102,7 +102,7 @@ class MainViewModel with ChangeNotifier {
     try {
       print(signInRequest.customer.phoneNumber);
       SignInResponse signInResponse =
-          await MediaRepository().signInWithPass(value, signInRequest);
+          await MainRepository().signInWithPass(value, signInRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(signInResponse);
     } catch (e) {
@@ -119,7 +119,7 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       print(setUpAccountRequest.customer.email);
-      SetUpAccountResponse setUpAccountResponse = await MediaRepository()
+      SetUpAccountResponse setUpAccountResponse = await MainRepository()
           .fetchSetUpScreenData(value, setUpAccountRequest);
       print("Yess" + setUpAccountResponse.email.toString());
       _apiResponse = ApiResponse.completed(setUpAccountResponse);
@@ -135,9 +135,9 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       ProfileResponse profileResponse =
-          await MediaRepository().ProfileScreenData(value);
-      print("Yess" + profileResponse.firstName.toString());
-      if (profileResponse == null) {
+          await MainRepository().ProfileScreenData(value);
+      print("Yess ${profileResponse.message}");
+      if (profileResponse.userId != null) {
         _apiResponse = ApiResponse.completed(profileResponse);
       } else {
         _apiResponse = ApiResponse.error(profileResponse.message);
@@ -154,9 +154,13 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       ProfileResponse profileResponse =
-          await MediaRepository().putMultiFormResponse(value, file);
+          await MainRepository().putMultiFormResponse(value, file);
       print("Yess" + profileResponse.firstName.toString());
-      _apiResponse = ApiResponse.completed(profileResponse);
+      if (profileResponse.userId != null) {
+        _apiResponse = ApiResponse.completed(profileResponse);
+      } else {
+        _apiResponse = ApiResponse.error(profileResponse.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -169,10 +173,14 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      UploadKycDocResponse uploadKycDocResponse = await MediaRepository()
+      UploadKycDocResponse uploadKycDocResponse = await MainRepository()
           .postMultiFormResponse(value, file, docType, imageName);
       print("Yess" + uploadKycDocResponse.message.toString());
-      _apiResponse = ApiResponse.completed(uploadKycDocResponse);
+      if (uploadKycDocResponse.userId != null) {
+        _apiResponse = ApiResponse.completed(uploadKycDocResponse);
+      } else {
+        _apiResponse = ApiResponse.error(uploadKycDocResponse.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -187,11 +195,14 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       //print(changeOldPassRequest.customer.email);
-      final response = await MediaRepository()
+      final response = await MainRepository()
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
       //print("Yess"+ setUpAccountResponse.email.toString());
-      _apiResponse = ApiResponse.completed(response);
-    } catch (e) {
+      if (response != null) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }    } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
     }
@@ -207,11 +218,15 @@ class MainViewModel with ChangeNotifier {
       print(createOtpChangePassRequest.customer.phoneNumber);
 
       CreateOtpChangePassResponse createOtpChangePassResponse =
-          await MediaRepository()
+          await MainRepository()
               .CreateOtpChangePass(value, createOtpChangePassRequest);
       print("Yess" + createOtpChangePassResponse.mobileOtp);
-      _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
-    } catch (e) {
+
+      if (createOtpChangePassResponse.mobileOtp != null) {
+        _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
+      } else {
+        _apiResponse = ApiResponse.error(createOtpChangePassResponse.message);
+      }    } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
     }
@@ -223,10 +238,11 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      final response = await MediaRepository()
+      final response = await MainRepository()
           .VerifyOtpChangePass(value, verifyOtChangePassRequest);
-      _apiResponse = ApiResponse.completed(response);
-    } catch (e) {
+
+        _apiResponse = ApiResponse.completed(response);
+         } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
     }
@@ -241,11 +257,15 @@ class MainViewModel with ChangeNotifier {
       print(createOtpEmailVerifyRequest.customer.phoneNumber);
 
       CreateOtpVerifyEmailResponse createOtpVerifyEmailResponse =
-          await MediaRepository()
+          await MainRepository()
               .CreateOtpVerifyEmail(value, createOtpEmailVerifyRequest);
       print("Yess" + createOtpVerifyEmailResponse.mobileOtp);
-      _apiResponse = ApiResponse.completed(createOtpVerifyEmailResponse);
-    } catch (e) {
+
+      if (createOtpVerifyEmailResponse.userId != null) {
+        _apiResponse = ApiResponse.completed(createOtpVerifyEmailResponse);
+      } else {
+        _apiResponse = ApiResponse.error(createOtpVerifyEmailResponse.message);
+      }    } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
     }
@@ -257,9 +277,9 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      final response = await MediaRepository()
+      final response = await MainRepository()
           .VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
-      _apiResponse = ApiResponse.completed(response);
+        _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -272,10 +292,11 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       FetchKycDocResponse fetchKycDocResponse =
-          await MediaRepository().fetchKycDocData(value);
+          await MainRepository().fetchKycDocData(value);
       print("Yess" + fetchKycDocResponse.message.toString());
-      _apiResponse = ApiResponse.completed(fetchKycDocResponse);
-    } catch (e) {
+
+        _apiResponse = ApiResponse.completed(fetchKycDocResponse);
+         } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
     }
@@ -287,9 +308,10 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       CountryListResponse countryListResponse =
-          await MediaRepository().fetchCountryList(value);
+          await MainRepository().fetchCountryList(value);
       print("Yess" + countryListResponse.message.toString());
-      _apiResponse = ApiResponse.completed(countryListResponse);
+
+        _apiResponse = ApiResponse.completed(countryListResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

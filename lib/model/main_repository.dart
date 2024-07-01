@@ -1,47 +1,30 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:Payrio/model/request/createOtpChangePass.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
+import 'package:Payrio/model/request/exustingUserRequest.dart';
+import 'package:Payrio/model/request/setUpAccountRequest.dart';
+import 'package:Payrio/model/request/signInRequest.dart';
+import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
+import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:Payrio/model/response/existingUserResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
-import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
+import 'package:Payrio/model/response/setUpAccountResponse.dart';
+import 'package:Payrio/model/response/signInResponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/services/base_service.dart';
 import 'package:Payrio/model/services/payrio_service.dart';
-import 'package:Payrio/model/request/setUpAccountRequest.dart';
-import 'package:Payrio/model/response/setUpAccountResponse.dart';
-import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
-import 'package:Payrio/model/request/verifyOtpChangePass.dart';
-import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
-import 'package:Payrio/model/request/createOtpChangePass.dart';
-import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
-import 'package:Payrio/model/request/exustingUserRequest.dart';
-import 'package:Payrio/model/request/signInRequest.dart';
-import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
-import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
-import 'package:Payrio/model/response/existingUserResponse.dart';
-import 'package:Payrio/model/response/phoneVerifyResponse.dart';
-import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
-import 'package:Payrio/model/response/profileResponse.dart';
-import 'package:Payrio/model/response/signInResponse.dart';
-import 'package:Payrio/model/services/base_service.dart';
-import 'package:Payrio/model/services/payrio_service.dart';
-import 'package:Payrio/model/request/setUpAccountRequest.dart';
-import 'package:Payrio/model/response/setUpAccountResponse.dart';
-import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
-import 'package:Payrio/model/request/verifyOtpChangePass.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/Helper.dart';
 import 'response/otpVerifyResponse.dart';
 
-class MediaRepository {
+class MainRepository {
   BaseService _payrioService = PayrioService();
 
   Future<PhoneVerifyResponse> fetchMediaList(String value, PhoneRequest phoneRequest  ) async {
@@ -95,9 +78,9 @@ class MediaRepository {
     dynamic response = await _payrioService.getResponse(value);
     print(value);
     final jsonData = response;
-    print("jsonData $jsonData");
+    //print("jsonData $jsonData");
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
-    print("object ${mediaList.message}");
+    //print("object ${mediaList.message}");
     return mediaList;
   }
 

@@ -22,27 +22,27 @@ class FetchKycDocResponse {
   factory FetchKycDocResponse.fromJson(Map<String, dynamic> json) {
     return FetchKycDocResponse(
 
-      nationalIdImage : json["data"]['national_id'] != null
-            ? new DocumentData.fromJson(json["data"]['national_id'])
+      nationalIdImage : json["data"]?['national_id'] != null
+            ? new DocumentData.fromJson(json["data"]?['national_id'])
             : null,
 
-      passportImage : json["data"]['passport'] != null
-            ? new DocumentData.fromJson(json["data"]['passport'])
+      passportImage : json["data"]?['passport'] != null
+            ? new DocumentData.fromJson(json["data"]?['passport'])
             : null,
-      drivingLicenseImage : json["data"]['driving_licence'] != null
-          ? new DocumentData.fromJson(json["data"]['driving_licence'])
+      drivingLicenseImage : json["data"]?['driving_licence'] != null
+          ? new DocumentData.fromJson(json["data"]?['driving_licence'])
           : null,
-      videoClipUrl : json["data"]['video_kyc_clip'] != null
-          ? new DocumentData.fromJson(json["data"]['video_kyc_clip'])
+      videoClipUrl : json["data"]?['video_kyc_clip'] != null
+          ? new DocumentData.fromJson(json["data"]?['video_kyc_clip'])
           : null,
-      addressKycData : json["data"]['address_kyc'] != null
-          ? new DocumentData.fromJson(json["data"]['address_kyc'])
+      addressKycData : json["data"]?['address_kyc'] != null
+          ? new DocumentData.fromJson(json["data"]?['address_kyc'])
           : null,
-      bankStatement : json["data"]['bank_statement'] != null
-          ? new DocumentData.fromJson(json["data"]['bank_statement'])
+      bankStatement : json["data"]?['bank_statement'] != null
+          ? new DocumentData.fromJson(json["data"]?['bank_statement'])
           : null,
-      geolocation : json["data"]['geolocation_kyc'] != null
-          ? new DocumentData.fromJson(json["data"]['geolocation_kyc'])
+      geolocation : json["data"]?['geolocation_kyc'] != null
+          ? new DocumentData.fromJson(json["data"]?['geolocation_kyc'])
           : null,
       message : json["message"] as String?,
     );

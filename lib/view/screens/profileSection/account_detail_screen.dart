@@ -68,8 +68,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
             _buildPasswordBox(
                 context: context,
                 isPasswordVisibl: isPasswordVisible,
-                password: "",
-                //password,
                 isDarkMode: isDarkMode),
             _buildChangePassword(context,isDarkMode: isDarkMode),
             _buildDetailBox(
@@ -196,7 +194,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   Widget _buildPasswordBox(
       {required BuildContext context,
       required bool isPasswordVisibl,
-      required String? password,
       required bool isDarkMode}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -221,7 +218,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               Row(
                 children: [
                   Text(
-                    isPasswordVisible ? "123456789" ?? '' : '********',
+                    isPasswordVisible ? password ?? '' : '********',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14.0,

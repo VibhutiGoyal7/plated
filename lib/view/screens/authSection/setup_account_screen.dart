@@ -78,6 +78,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
         await Helper.savePassword(_passwordController.text);
         await Helper.saveCountry(setUpAccountResponse?.countryName);
+        await Helper.saveKycStatus(setUpAccountResponse?.kycStatus);
         String? password = await Helper.getPassword();
         print("password: ${password}");
         await Helper.getUserDetails();

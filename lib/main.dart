@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/screens/add_money_screen.dart';

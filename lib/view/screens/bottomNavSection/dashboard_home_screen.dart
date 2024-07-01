@@ -14,6 +14,7 @@ class DashboardHomeScreen extends StatefulWidget {
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
+  String kycStatus = "";
   String amount = "0.00";
   String? name = "";
   var imageUrl;

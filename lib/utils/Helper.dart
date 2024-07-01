@@ -110,6 +110,19 @@ class Helper {
     return sharedPreferences.getString("Country");
   }
 
+  static Future<bool> saveKycStatus(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString("KycStatus", token);
+  }
+
+  // Read Data
+  static Future<String?> getKycStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("KycStatus");
+  }
+
+
+
   static Locale _locale(String languageCode) {
     return languageCode != null && languageCode.isNotEmpty
         ? Locale(languageCode, '')
