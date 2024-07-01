@@ -1,28 +1,28 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/model/media_repository.dart';
+import 'package:Payrio/model/request/setUpAccountRequest.dart';
+import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
-import 'package:Payrio/model/media_repository.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
-import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
-import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';
 import '../model/request/createOtpEmailVerifyRequest.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/signInRequest.dart';
+import '../model/request/verifyOtpChangePass.dart';
 import '../model/request/verifyOtpEmailVerifyRequest.dart';
 import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
-import '../model/request/verifyOtpChangePass.dart';
 import '../model/response/signInResponse.dart';
 
 class MainViewModel with ChangeNotifier {
@@ -40,15 +40,16 @@ class MainViewModel with ChangeNotifier {
 
   /// Call the media service and gets the data of requested media data of
   /// an artist.
-    Future<void> fetchMediaData(String value, PhoneRequest phoneRequest) async {
+  Future<void> fetchMediaData(String value, PhoneRequest phoneRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     //String requestAsString = phoneRequestToString(request);
     notifyListeners();
     try {
       print(phoneRequest.customer.phoneNumber);
 
-      PhoneVerifyResponse phoneVerifyResponse = await MediaRepository().fetchMediaList(value,phoneRequest);
-      print("Yess"+ phoneVerifyResponse.mobileOtp.toString());
+      PhoneVerifyResponse phoneVerifyResponse =
+          await MediaRepository().fetchMediaList(value, phoneRequest);
+      print("Yess" + phoneVerifyResponse.mobileOtp.toString());
       _apiResponse = ApiResponse.completed(phoneVerifyResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -57,15 +58,17 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> existingUserData(String value, ExistingUserRequest existingUserRequest) async {
+  Future<void> existingUserData(
+      String value, ExistingUserRequest existingUserRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     //String requestAsString = phoneRequestToString(request);
     notifyListeners();
     try {
       print(existingUserRequest.customer.phoneNumber);
 
-      ExistingUserResponse existingUserResponse = await MediaRepository().existingUserData(value,existingUserRequest);
-      print("Yess"+ existingUserResponse.userFound.toString());
+      ExistingUserResponse existingUserResponse =
+          await MediaRepository().existingUserData(value, existingUserRequest);
+      print("Yess" + existingUserResponse.userFound.toString());
       _apiResponse = ApiResponse.completed(existingUserResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -74,13 +77,15 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchOtpVerifyData(String value, PhoneRequest phoneRequest) async {
+  Future<void> fetchOtpVerifyData(
+      String value, PhoneRequest phoneRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
-    print("Yess"+ phoneRequest.customer.mobileOtp);
+    print("Yess" + phoneRequest.customer.mobileOtp);
     notifyListeners();
     try {
       print(phoneRequest.customer.phoneNumber);
-      OtpVerifyResponse otpVerifyResponse = await MediaRepository().fetchOtpVerifyData(value,phoneRequest);
+      OtpVerifyResponse otpVerifyResponse =
+          await MediaRepository().fetchOtpVerifyData(value, phoneRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(otpVerifyResponse);
     } catch (e) {
@@ -92,11 +97,12 @@ class MainViewModel with ChangeNotifier {
 
   Future<void> signInWithPass(String value, SignInRequest signInRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
-    print("Yess"+ signInRequest.customer.phoneNumber);
+    print("Yess" + signInRequest.customer.phoneNumber);
     notifyListeners();
     try {
       print(signInRequest.customer.phoneNumber);
-      SignInResponse signInResponse = await MediaRepository().signInWithPass(value,signInRequest);
+      SignInResponse signInResponse =
+          await MediaRepository().signInWithPass(value, signInRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       _apiResponse = ApiResponse.completed(signInResponse);
     } catch (e) {
@@ -106,14 +112,16 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchSetUpScreenData(String value, SetUpAccountRequest setUpAccountRequest) async {
+  Future<void> fetchSetUpScreenData(
+      String value, SetUpAccountRequest setUpAccountRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
-    print("Yess"+ setUpAccountRequest.customer.email);
+    print("Yess" + setUpAccountRequest.customer.email);
     notifyListeners();
     try {
       print(setUpAccountRequest.customer.email);
-      SetUpAccountResponse setUpAccountResponse = await MediaRepository().fetchSetUpScreenData(value, setUpAccountRequest);
-      print("Yess"+ setUpAccountResponse.email.toString());
+      SetUpAccountResponse setUpAccountResponse = await MediaRepository()
+          .fetchSetUpScreenData(value, setUpAccountRequest);
+      print("Yess" + setUpAccountResponse.email.toString());
       _apiResponse = ApiResponse.completed(setUpAccountResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -126,12 +134,17 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      ProfileResponse profileResponse = await MediaRepository().ProfileScreenData(value);
-      print("Yess"+ profileResponse.firstName.toString());
-      _apiResponse = ApiResponse.completed(profileResponse);
+      ProfileResponse profileResponse =
+          await MediaRepository().ProfileScreenData(value);
+      print("Yess" + profileResponse.firstName.toString());
+      if (profileResponse == null) {
+        _apiResponse = ApiResponse.completed(profileResponse);
+      } else {
+        _apiResponse = ApiResponse.error(profileResponse.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
+      print("Catch $e");
     }
     notifyListeners();
   }
@@ -140,8 +153,9 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      ProfileResponse profileResponse = await MediaRepository().putMultiFormResponse(value, file);
-      print("Yess"+ profileResponse.firstName.toString());
+      ProfileResponse profileResponse =
+          await MediaRepository().putMultiFormResponse(value, file);
+      print("Yess" + profileResponse.firstName.toString());
       _apiResponse = ApiResponse.completed(profileResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -150,12 +164,14 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> postMultiFormResponse(String value, File file, String docType,String imageName) async {
+  Future<void> postMultiFormResponse(
+      String value, File file, String docType, String imageName) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      UploadKycDocResponse uploadKycDocResponse = await MediaRepository().postMultiFormResponse(value, file,docType, imageName);
-      print("Yess"+ uploadKycDocResponse.message.toString());
+      UploadKycDocResponse uploadKycDocResponse = await MediaRepository()
+          .postMultiFormResponse(value, file, docType, imageName);
+      print("Yess" + uploadKycDocResponse.message.toString());
       _apiResponse = ApiResponse.completed(uploadKycDocResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -164,13 +180,15 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> changeOldPasswordData(String value, ChangeOldPassRequest changeOldPassRequest) async {
+  Future<void> changeOldPasswordData(
+      String value, ChangeOldPassRequest changeOldPassRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
     try {
       //print(changeOldPassRequest.customer.email);
-      final response = await MediaRepository().ChangeWithOldPasswordData(value, changeOldPassRequest);
+      final response = await MediaRepository()
+          .ChangeWithOldPasswordData(value, changeOldPassRequest);
       //print("Yess"+ setUpAccountResponse.email.toString());
       _apiResponse = ApiResponse.completed(response);
     } catch (e) {
@@ -180,15 +198,18 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> CreateOtpChangePass(String value, CreateOtpChangePassRequest createOtpChangePassRequest) async {
+  Future<void> CreateOtpChangePass(String value,
+      CreateOtpChangePassRequest createOtpChangePassRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
     try {
       print(createOtpChangePassRequest.customer.phoneNumber);
 
-      CreateOtpChangePassResponse createOtpChangePassResponse = await MediaRepository().CreateOtpChangePass(value, createOtpChangePassRequest);
-      print("Yess"+ createOtpChangePassResponse.mobileOtp);
+      CreateOtpChangePassResponse createOtpChangePassResponse =
+          await MediaRepository()
+              .CreateOtpChangePass(value, createOtpChangePassRequest);
+      print("Yess" + createOtpChangePassResponse.mobileOtp);
       _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -197,11 +218,13 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> VerifyOtpChangePass(String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
+  Future<void> VerifyOtpChangePass(
+      String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      final response = await MediaRepository().VerifyOtpChangePass(value, verifyOtChangePassRequest);
+      final response = await MediaRepository()
+          .VerifyOtpChangePass(value, verifyOtChangePassRequest);
       _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -210,14 +233,17 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> CreateOtpVerifyEmail(String value, CreateOtpEmailVerifyRequest createOtpEmailVerifyRequest) async {
+  Future<void> CreateOtpVerifyEmail(String value,
+      CreateOtpEmailVerifyRequest createOtpEmailVerifyRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
       print(createOtpEmailVerifyRequest.customer.phoneNumber);
 
-      CreateOtpVerifyEmailResponse createOtpVerifyEmailResponse = await MediaRepository().CreateOtpVerifyEmail(value, createOtpEmailVerifyRequest);
-      print("Yess"+ createOtpVerifyEmailResponse.mobileOtp);
+      CreateOtpVerifyEmailResponse createOtpVerifyEmailResponse =
+          await MediaRepository()
+              .CreateOtpVerifyEmail(value, createOtpEmailVerifyRequest);
+      print("Yess" + createOtpVerifyEmailResponse.mobileOtp);
       _apiResponse = ApiResponse.completed(createOtpVerifyEmailResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -226,11 +252,13 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> VerifyOtpVerifyEmail(String value, VerifyOtpEmailVerifyRequest verifyOtpEmailVerifyRequest) async {
+  Future<void> VerifyOtpVerifyEmail(String value,
+      VerifyOtpEmailVerifyRequest verifyOtpEmailVerifyRequest) async {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      final response = await MediaRepository().VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
+      final response = await MediaRepository()
+          .VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
       _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -243,8 +271,9 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      FetchKycDocResponse fetchKycDocResponse = await MediaRepository().fetchKycDocData(value);
-      print("Yess"+ fetchKycDocResponse.message.toString());
+      FetchKycDocResponse fetchKycDocResponse =
+          await MediaRepository().fetchKycDocData(value);
+      print("Yess" + fetchKycDocResponse.message.toString());
       _apiResponse = ApiResponse.completed(fetchKycDocResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -257,8 +286,9 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Fetching artist data');
     notifyListeners();
     try {
-      CountryListResponse countryListResponse = await MediaRepository().fetchCountryList(value);
-      print("Yess"+ countryListResponse.message.toString());
+      CountryListResponse countryListResponse =
+          await MediaRepository().fetchCountryList(value);
+      print("Yess" + countryListResponse.message.toString());
       _apiResponse = ApiResponse.completed(countryListResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

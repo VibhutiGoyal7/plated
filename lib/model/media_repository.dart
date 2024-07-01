@@ -95,8 +95,9 @@ class MediaRepository {
     dynamic response = await _payrioService.getResponse(value);
     print(value);
     final jsonData = response;
-    print(jsonData);
+    print("jsonData $jsonData");
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
+    print("object ${mediaList.message}");
     return mediaList;
   }
 
