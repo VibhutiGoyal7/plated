@@ -10,7 +10,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
 class PersonalDataScreen extends StatefulWidget {
@@ -408,11 +408,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
   Future<void> _fetchDocData() async {
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .fetchKycDocData(
         "/api/v1/app/customers/customer_uploaded_documents");
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
 

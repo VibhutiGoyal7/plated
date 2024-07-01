@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 
 abstract class BaseService {
-  final String mediaBaseUrl = "https://custapi.payorio.com/";
+  final String BaseUrl = "https://custapi.payorio.com/";
 
   String getFullUrl(String endpoint) {
-    return "$mediaBaseUrl$endpoint";
+    return "$BaseUrl$endpoint";
   }
 
   Future<dynamic> postResponse(String url, dynamic phoneRequest);

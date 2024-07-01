@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../../../model/apis/api_response.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 
 class DocImageScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -199,11 +199,11 @@ class _DocImageScreenState extends State<DocImageScreen> {
     //String base64Image = base64Encode(mergedImageBytes);
     //File finalFile = await processImagesAndReturnFile(file!, backImg);
     //File dile = bytesToFile(mergedImageBytes, base64Image) as File;
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .postMultiFormResponse(
             "/api/v1/app/kyc_documents", file!, docType, imageName);
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
 

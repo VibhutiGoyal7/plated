@@ -26,7 +26,7 @@ import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
 import 'package:Payrio/view/screens/profileSection/setting_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_screen.dart';
-import 'package:Payrio/view_model/media_view_model.dart';
+import 'package:Payrio/view_model/main_view_model.dart';
 
 import 'package:Payrio/view/screens/authSection/get_started_screen.dart';
 import 'package:Payrio/view/screens/level_benefit_screen.dart';
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: MediaViewModel()),
+        ChangeNotifierProvider.value(value: MainViewModel()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

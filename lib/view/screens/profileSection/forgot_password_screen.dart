@@ -6,7 +6,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/request/createOtpChangePass.dart';
 import '../../../model/response/createOtpChangePassResponse.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -198,12 +198,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   phoneNumber: _phoneNumberController.text,
                 ));
 
-                await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MainViewModel>(context, listen: false)
                     .CreateOtpChangePass(
                         "/api/v1/app/customers/generate_otp_for_forget_password",
                         request);
                 ApiResponse apiResponse =
-                    Provider.of<MediaViewModel>(context, listen: false)
+                    Provider.of<MainViewModel>(context, listen: false)
                         .response;
                 getMediaWidget(context, apiResponse);
               },
@@ -307,12 +307,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     mobileOtp: otp
                 ));
 
-            await Provider.of<MediaViewModel>(context, listen: false)
+            await Provider.of<MainViewModel>(context, listen: false)
                 .VerifyOtpChangePass(
                 "/api/v1/app/customers/verify_otp_and_change_password", request);
             ApiResponse apiResponse =
                 Provider
-                    .of<MediaViewModel>(context, listen: false)
+                    .of<MainViewModel>(context, listen: false)
                     .response;
             verifyOtpGetWidget(context, apiResponse);
           }

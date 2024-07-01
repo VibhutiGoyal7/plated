@@ -5,7 +5,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/shortcutItemList.dart';
-import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 
@@ -50,11 +49,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
-    //_fetchData();
     Helper.getProfileDetails().then((userDetails) {
       setState(() {
+        print("userDetails?.imageUrl${userDetails?.imageUrl}");
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
         imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
+        print("imageUrl${imageUrl}");
       });
     });
     print("isoCountryCode:: $isoCountryCode");
@@ -119,13 +119,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -148,15 +148,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   : ClipRRect(
                                       borderRadius:
                                           BorderRadius.circular(100.0),
-                                      child: Image.network(imageUrl as String,
-                                        height: 60,
-                                        width: 60,
+                                      child: Image.network(
+                                        imageUrl as String,
+                                        height: 40,
+                                        width: 40,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                        errorBuilder: (BuildContext context,
+                                            Object exception,
+                                            StackTrace? stackTrace) {
                                           // You can return any widget here to display in case of an error
                                           return Container(
-                                            height: 60,
-                                            width: 60,
+                                            height: 40,
+                                            width: 40,
                                             child: CircleAvatar(
                                               radius: 30,
                                               backgroundColor: AppColor.WHITE,
@@ -166,7 +169,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             ),
                                           );
                                         },
-                                        loadingBuilder: (BuildContext context, Widget child,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
                                             ImageChunkEvent? loadingProgress) {
                                           if (loadingProgress == null) {
                                             return child;
@@ -185,13 +189,60 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       )),
                             ),
                           ),
-                          SizedBox(width: 3),
+                          SizedBox(width: 5),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    Languages.of(context)!.labelStandard,
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0.5),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 4),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.blue),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 18,
+                                        color: Colors.white,
+                                      )), // Add space between text and card
+                                  Text(
+                                    "100",
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_right,
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                              Text(
+                                "2900 Points to Silver",
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                            ],
+                          ),
+
                           // Add space between avatar and text
-                          Text(
+                          /*Text(
                             "${Languages.of(context)!.labelHi}, $name",
                             style: TextStyle(
                                 fontSize: 14.0, fontWeight: FontWeight.bold),
-                          ),
+                          ),*/
+
                           Spacer(),
                           IconButton(
                             icon: Icon(
@@ -212,55 +263,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ],
                       ),
                       // Add space between sections
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        color: AppColor.BODY_COLOR,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 2.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 4.0, 0, 0),
-                                child: Text(
-                                  Languages.of(context)!.labelStandard,
-                                  style: TextStyle(
-                                      fontSize: 12.0, color: AppColor.WHITE),
-                                ),
-                              ),
-                              SizedBox(
-                                  width: 8), // Add space between text and card
-                              Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
-                                ),
-                                color: Colors.black,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    "100",
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                       SizedBox(
                         height: 12,
                       ),
@@ -605,6 +607,92 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
+  _showPicker({required BuildContext context}) {
+    showModalBottomSheet(
+      shape: ContinuousRectangleBorder(),
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Wrap(
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Quick actions", style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                    ),),
+                    SizedBox(height: 10,),
+                    Text("Most Frequent", style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                    ),),
+                  ],
+                ),
+                Expanded(
+                  //height: screenSize.height/2,
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _scrollController,
+                    itemCount: _shortcutCardsList.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(bottom: 0),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue
+                            ),
+                            child: Icon(_shortcutCardsList[index].icon),),
+                          Text(
+                            _shortcutCardsList[index].title,
+                            style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold,
+                              color:    Colors.black,),
+                          ),
+                        ],
+                      );
+                    /*    ListTile(
+                          leading: ClipRRect(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue
+                                ),
+                                child: Icon(_shortcutCardsList[index].icon),)
+                          ),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _shortcutCardsList[index].title,
+                                style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold,
+                                  color:    Colors.black,),
+                              ),
+                              Text("+${_shortcutCardsList[index].title}",
+                                  style: TextStyle(fontSize: 12,
+                                    color: Colors.black,)),
+                            ],
+                          ));*/
+                      // I omit the part to build card items from the list
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   int _countSelectedItems() {
     return _isChecked.where((item) => item).length;
   }
@@ -630,7 +718,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {Navigator.pushNamed(context, '/AddMoneyScreen')}
                       else if (text == Languages.of(context)!.labelExchange)
-                        {}
+                        {
+                        _showPicker(context: context)
+                        }
                     },
                 icon: Icon(
                   icon,
@@ -640,16 +730,5 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         Text(text, style: TextStyle(fontSize: 12))
       ],
     );
-  }
-
-  Future<ProfileResponse?> _fetchData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    ProfileResponse? userDetails = await Helper.getProfileDetails();
-    setState(() {
-      name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
-      imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
-    });
-    print("${name} ");
-    return userDetails;
   }
 }

@@ -25,7 +25,7 @@ import '../model/response/otpVerifyResponse.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/response/signInResponse.dart';
 
-class MediaViewModel with ChangeNotifier {
+class MainViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
 
   PhoneVerifyResponse? _media;

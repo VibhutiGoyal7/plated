@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
-import 'package:Payrio/view_model/media_view_model.dart';
+import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/setUpAccountResponse.dart';
-import 'package:email_validator/email_validator.dart';
-
 import '../../../utils/Helper.dart';
 import '../../component/toastMessage.dart';
 
@@ -61,30 +60,28 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  Future<Widget> getMediaWidget(BuildContext context, ApiResponse apiResponse) async {
-    SetUpAccountResponse? mediaList = apiResponse.data as SetUpAccountResponse?;
-    String? message = mediaList?.message.toString();
+  Future<Widget> getSetUpAccountWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    SetUpAccountResponse? setUpAccountResponse =
+        apiResponse.data as SetUpAccountResponse?;
+    String? message = setUpAccountResponse?.message.toString();
     switch (apiResponse.status) {
-
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.firstName}");
-        await Helper.saveProfileDetails(mediaList);
-        if(await Helper.saveProfileDetails(mediaList)) print("data saved") ;
-        else print("not saved");
+        print("rwrwr ${setUpAccountResponse?.firstName}");
+        await Helper.saveProfileDetails(setUpAccountResponse);
+        if (await Helper.saveProfileDetails(setUpAccountResponse))
+          print("data saved");
+        else
+          print("not saved");
 
         await Helper.savePassword(_passwordController.text);
-        await Helper.saveCountry(mediaList?.countryName);
+        await Helper.saveCountry(setUpAccountResponse?.countryName);
         String? password = await Helper.getPassword();
         print("password: ${password}");
-
-        SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
-        print('Retrieved Token: ${retrievedToken}');
-
+        await Helper.getUserDetails();
         Navigator.pushReplacementNamed(context, '/BottomNav');
-        // Navigate to the new screen after receiving the response
-        // Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);
@@ -104,7 +101,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
+    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -125,8 +122,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             15,
                             false),
                         SizedBox(height: 1),
-                        _buildLabelText(
-                            context, Languages.of(context)!.labelSetProfile, 20, true),
+                        _buildLabelText(context,
+                            Languages.of(context)!.labelSetProfile, 20, true),
                         SizedBox(height: 8),
                         _buildLabelText(
                             context,
@@ -139,8 +136,12 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildLabelText(
-                                context, Languages.of(context)!.labelPromoCode, 14, false),
-                            _buildLabelText(context, Languages.of(context)!.labelRedeem, 14, false),
+                                context,
+                                Languages.of(context)!.labelPromoCode,
+                                14,
+                                false),
+                            _buildLabelText(context,
+                                Languages.of(context)!.labelRedeem, 14, false),
                           ],
                         ),
                         SizedBox(height: 10),
@@ -158,28 +159,31 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             context,
                             Languages.of(context)!.labelLastname,
                             _lastNameController,
-                            Icon(Icons.person,
-                                size: 20,
+                            Icon(
+                              Icons.person,
+                              size: 20,
                               color: isDarkMode ? Colors.white : Colors.black,
-                               )),
+                            )),
                         SizedBox(height: 10),
                         _buildPhoneInput(
                             context,
                             Languages.of(context)!.labelEmail,
                             _emailController,
-                            Icon(Icons.mail,
-                                size: 18,
+                            Icon(
+                              Icons.mail,
+                              size: 18,
                               color: isDarkMode ? Colors.white : Colors.black,
-                              )),
+                            )),
                         SizedBox(height: 10),
                         _buildPasswordInput(
                             context,
                             Languages.of(context)!.labelPassword,
                             _passwordController,
-                            Icon(Icons.password,
-                                size: 18,
+                            Icon(
+                              Icons.password,
+                              size: 18,
                               color: isDarkMode ? Colors.white : Colors.black,
-                                ),
+                            ),
                             passwordVisible,
                             isDarkMode),
                         SizedBox(height: 10),
@@ -187,10 +191,11 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             context,
                             Languages.of(context)!.labelConfirmPass,
                             _confirmPasswordController,
-                            Icon(Icons.password,
-                                size: 18,
+                            Icon(
+                              Icons.password,
+                              size: 18,
                               color: isDarkMode ? Colors.white : Colors.black,
-                                ),
+                            ),
                             confirmPasswordVisible,
                             isDarkMode),
                       ],
@@ -253,6 +258,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       ),
     );
   }
+
   Widget _buildEmailInput(BuildContext context, String text,
       TextEditingController nameController, Icon icon) {
     return Card(
@@ -276,7 +282,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 onChanged: (value) {
                   _isValidInput();
                 },
-
                 onSubmitted: (value) {},
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
@@ -299,7 +304,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     String text,
     TextEditingController nameController,
     Icon icon,
-    bool passwordVisibles, bool isDarkMode,
+    bool passwordVisibles,
+    bool isDarkMode,
   ) {
     return Card(
       child: Container(
@@ -329,11 +335,13 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                   hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                   suffixIcon: IconButton(
-                    icon: Icon(passwordVisibles
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                    size: 20,
-                      color: isDarkMode ? Colors.white60 : Colors.black45,),
+                    icon: Icon(
+                      passwordVisibles
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      size: 20,
+                      color: isDarkMode ? Colors.white60 : Colors.black45,
+                    ),
                     onPressed: () {
                       setState(
                         () {
@@ -346,8 +354,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       );
                     },
                   ),
-      
-      
                 ),
               ),
             ),
@@ -369,22 +375,21 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               if (inputValid) {
                 SetUpAccountRequest request = SetUpAccountRequest(
                     customer: CustomerDetail(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                      firstName: _nameController.text,
-                      lastName: _lastNameController.text,
-                      dob: "17/07/1996",
-                    ));
-                await Provider.of<MediaViewModel>(context, listen: false)
-                  .fetchSetUpScreenData(
-                      "/api/v1/app/customers/update_customer", request);
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  firstName: _nameController.text,
+                  lastName: _lastNameController.text,
+                  dob: "17/07/1996",
+                ));
+                await Provider.of<MainViewModel>(context, listen: false)
+                    .fetchSetUpScreenData(
+                        "/api/v1/app/customers/update_customer", request);
                 //Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =
-                    Provider
-                        .of<MediaViewModel>(context, listen: false)
+                    Provider.of<MainViewModel>(context, listen: false)
                         .response;
-                getMediaWidget(context, apiResponse);
+                getSetUpAccountWidget(context, apiResponse);
               }
             },
             child: Text(

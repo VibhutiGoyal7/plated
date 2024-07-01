@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/response/signInResponse.dart';
-import 'package:Payrio/view_model/media_view_model.dart';
+import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -123,7 +123,7 @@ class _SigninScreenState extends State<SigninScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
+    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -296,12 +296,12 @@ class _SigninScreenState extends State<SigninScreen> {
                       customer: CustomerSignIn(
                           phoneNumber: _phoneNoController.text,
                           password: _passwordController.text));
-                  await Provider.of<MediaViewModel>(context, listen: false)
+                  await Provider.of<MainViewModel>(context, listen: false)
                       .signInWithPass("api/v1/app/customers/sign_in", request);
                   //Navigator.pushNamed(context, '/BottomNav');
 
                   ApiResponse apiResponse =
-                      Provider.of<MediaViewModel>(context, listen: false)
+                      Provider.of<MainViewModel>(context, listen: false)
                           .response;
                   getMediaWidget(context, apiResponse);
                 }
@@ -339,10 +339,10 @@ class _SigninScreenState extends State<SigninScreen> {
     String? retrievedToken = await Helper.getUserToken();
     print("Token $retrievedToken");
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .profileScreenData("/api/v1/app/customers/show_customer_details");
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getProfileWidget(context, apiResponse);
   }
 

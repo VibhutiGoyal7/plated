@@ -13,7 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../utils/Helper.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 import 'package:image/image.dart' as img;
 
@@ -65,16 +65,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
-        ProfileResponse? retrievedDetails = await Helper.getProfileDetails();
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        ProfileResponse? profileResponse = await Helper.getProfileDetails();
+
+          await Helper.saveCountry(profileResponse?.countryName);
+          print(profileResponse?.countryName);
           setState(() {
             customerName =
-                "${retrievedDetails?.firstName} ${retrievedDetails?.lastName}";
-            userName = "${retrievedDetails?.username}";
-            imageUrl = retrievedDetails?.imageUrl.toString();
+                "${profileResponse?.firstName} ${profileResponse?.lastName}";
+            userName = "${profileResponse?.username}";
+            imageUrl = profileResponse?.imageUrl.toString();
             isLoading = false;
           });
-        });
+        //});
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if(apiResponse.message== "Invalid access token")
@@ -100,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, "/BottomNav");
           },
         ),
         title: Text(
@@ -136,6 +138,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 100,
                                 width: 100,
                                 fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  // You can return any widget here to display in case of an error
+                                  return Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: AppColor.WHITE,
+                                      backgroundImage: AssetImage(
+                                        "assets/profile_user.png",
+                                      ),
+                                    ),
+                                  );
+                                },
                                 loadingBuilder: (BuildContext context,
                                     Widget child,
                                     ImageChunkEvent? loadingProgress) {
@@ -346,20 +362,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? retrievedToken = await Helper.getUserToken();
     print("Token $retrievedToken");
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .profileScreenData("/api/v1/app/customers/show_customer_details");
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
 
   Future<void> _uploadProfilePic(File? file) async {
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .putMultiFormResponse(
-            "/api/v1/app/customers/update_profile_pic", galleryFile!);
+            "/api/v1/app/customers/update_profile_pic", file!);
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
 
@@ -399,15 +415,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final pickedFile = await picker.pickImage(source: image);
     XFile? xfilePick = pickedFile;
 
-        int quality = 50;
-
         if (xfilePick != null) {
           galleryFile = File(pickedFile!.path);
-          File? compressedFile = await _compressImage(galleryFile as File);
-          setState(
-                ()  { _uploadProfilePic(compressedFile);
-                },
-          );
+          File? compressedFile = await _resizeAndCompressImage(galleryFile as File, 800);
+          if (compressedFile != null) {
+            setState(() {
+              _uploadProfilePic(compressedFile);
+            });
+          } else {
+            print('Compression failed.');
+          }
 
           //print(compressedFile);
         } else {
@@ -427,74 +444,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<File?> _compressImage(File file) async {
+  Future<File?> _resizeAndCompressImage(File file, int targetWidth) async {
     try {
       final directory = await getTemporaryDirectory();
       final targetPath = path.join(directory.path, '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
 
-      int quality = 85;
-      File? result;
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        minWidth: targetWidth,
+        quality: 85, // Adjust quality to balance size and quality
+        format: CompressFormat.jpeg,
+        keepExif: false, // Remove metadata
+      );
 
-      // Loop to gradually reduce the quality until the file size is under 1MB
-      do {
-        result = await FlutterImageCompress.compressAndGetFile(
-          file.absolute.path,
-          targetPath,
-          quality: quality,
-          format: CompressFormat.jpeg,
-        );
-
-        if (result == null) {
-          print('Compression failed at quality $quality.');
-          return null;
-        }
-
-        print('Compression attempt at quality $quality: ${result.lengthSync()} bytes');
-        quality -= 5; // Decrease quality by 5 for each iteration
-      } while (result.lengthSync() > 1024 * 1024 && quality > 0); // Check file size and ensure quality does not go below 0
+      if (result == null) {
+        print('Resizing and compression failed.');
+        return null;
+      }
 
       print('Original size: ${file.lengthSync()} bytes');
-      print('Compressed size: ${result.lengthSync()} bytes');
+      print('Resized and compressed size: ${result.lengthSync()} bytes');
 
       return result;
     } catch (e) {
-      print('Error compressing image: $e');
+      print('Error resizing and compressing image: $e');
       return null;
     }
   }
-
-
-
-/*Future<File> compressImage(File imageFile, int quality) async {
-    // Read the image file into memory
-    try {
-      // Read the image file into memory
-      List<int> imageBytes = await imageFile.readAsBytes();
-
-      // Decode the image
-      img.Image? image = img.decodeImage(imageBytes);
-      if (image == null) {
-        throw Exception('Failed to decode image');
-      }
-
-      // Compress the image
-      List<int> compressedBytes = img.encodeJpg(image, quality: quality); // JPEG compression
-
-      // Get the directory of the original image file
-      String dir = imageFile.parent.path;
-
-      // Create a new File instance for the compressed image with a new filename
-      String newPath = '$dir/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg';
-      File compressedFile = File(newPath);
-
-      // Write the compressed image data to the new file
-      await compressedFile.writeAsBytes(compressedBytes);
-
-      // Return the compressed File object
-      return compressedFile;
-    } catch (e) {
-      print('Error compressing image: $e');
-      rethrow;
-    }
-  }*/
 }

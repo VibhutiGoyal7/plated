@@ -7,7 +7,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/uploadKycResponse.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VideoKycScreen extends StatefulWidget {
@@ -126,14 +126,14 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
 
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
             "video_kyc_clip", "kyc_file");
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
-  
+
   Widget _buildScreen(BuildContext context){
     return Column(
       children: [
@@ -142,7 +142,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           child: Image(
             alignment: Alignment.topLeft,
             //width: 25,
-            height: MediaQuery.of(context).size.height*0.3,
+            height: MediaQuery.of(context).size.height*0.2,
             image: AssetImage("assets/video-recording.png"),
           ),
         ),
@@ -151,18 +151,15 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("Record a video", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
+            Text("Record a video", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
             SizedBox(height: 10,),
-            Text("This is to verify you are a real person", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+            Text("This is to verify you are a real person", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
             SizedBox(height: 6,),
-            Text("1. First position your face in the frame.", style: TextStyle(fontSize: 16),),
+            Text("1. First position your face in the frame.", style: TextStyle(fontSize: 14),),
             SizedBox(height: 6,),
-            Text("2. Then, turn your head slowly to both sides.", style: TextStyle(fontSize: 16),),
+            Text("2. Then, turn your head slowly to both sides.", style: TextStyle(fontSize: 14),),
           ],
         ),
-
-
-
       ],
     );
   }

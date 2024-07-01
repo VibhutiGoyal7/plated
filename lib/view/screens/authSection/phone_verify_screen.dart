@@ -5,7 +5,7 @@ import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
-import 'package:Payrio/view_model/media_view_model.dart';
+import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -148,7 +148,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
+    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -219,9 +219,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 keyboardType: TextInputType.phone,
                 onSubmitted: (value) {
                   // if (value.isNotEmpty) {
-                  //   Provider.of<MediaViewModel>(context, listen: false)
+                  //   Provider.of<MainViewModel>(context, listen: false)
                   //       .setSelectedMedia(null);
-                  //   Provider.of<MediaViewModel>(context, listen: false)
+                  //   Provider.of<MainViewModel>(context, listen: false)
                   //       .fetchMediaData(value, phoneRequest);
                   // }
                 },
@@ -250,21 +250,21 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 ExistingUserRequest request = ExistingUserRequest(
                     customer:
                         ExistingCustomer(phoneNumber: _inputController.text));
-                await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MainViewModel>(context, listen: false)
                     .existingUserData(
                         "/api/v1/app/customers/check_customer_existance",
                         request);
                 /* PhoneRequest phoneRequest = PhoneRequest(
                     customer: Customer(
                         phoneNumber: _inputController.text, mobileOtp: ""));*/
-                /*await Provider.of<MediaViewModel>(context, listen: false)
+                /*await Provider.of<MainViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
                       phoneRequest);*/
                 //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
                 ApiResponse apiResponse =
-                    Provider.of<MediaViewModel>(context, listen: false)
+                    Provider.of<MainViewModel>(context, listen: false)
                         .response;
                 existingUserWidget(context, apiResponse);
               } else if (countryCode == 0 && phoneCode == "+") {
@@ -386,23 +386,23 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               phoneNumber: _inputController.text,
               mobileOtp: "",
               countryId: countryCode));
-      await Provider.of<MediaViewModel>(context, listen: false).fetchMediaData(
+      await Provider.of<MainViewModel>(context, listen: false).fetchMediaData(
           "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
       /*  Navigator.pushNamed(context, '/OtpVerify',
                     arguments: "${_inputController.text}");*/
 
       ApiResponse apiResponse =
-          Provider.of<MediaViewModel>(context, listen: false).response;
+          Provider.of<MainViewModel>(context, listen: false).response;
       getMediaWidget(context, apiResponse);
     }
   }
 
   void _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .fetchCountryList("api/v1/app/customers/country_list");
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false)
+        Provider.of<MainViewModel>(context, listen: false)
             .response;
     getCountryList(context, apiResponse);
   }

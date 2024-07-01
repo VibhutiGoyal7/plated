@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/utils/Helper.dart';
-import 'package:Payrio/view_model/media_view_model.dart';
+import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -142,7 +142,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    ApiResponse apiResponse = Provider.of<MediaViewModel>(context).response;
+    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: Container(
         width: screenWidth,
@@ -265,14 +265,14 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                         phoneNumber: widget.data.toString(),
                         mobileOtp: otp,
                         countryId: null));
-                await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MainViewModel>(context, listen: false)
                   .fetchOtpVerifyData(
                       "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
                       phoneRequest);
 
                 ApiResponse apiResponse =
                     Provider
-                        .of<MediaViewModel>(context, listen: false)
+                        .of<MainViewModel>(context, listen: false)
                         .response;
                 getOtpResponseDataWidget(context, apiResponse);
                 /*Navigator.pushNamed(
@@ -355,13 +355,13 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           PhoneRequest phoneRequest = PhoneRequest(
               customer: Customer(
                   phoneNumber: phoneNo, mobileOtp: "", countryId: null));
-          await Provider.of<MediaViewModel>(context, listen: false)
+          await Provider.of<MainViewModel>(context, listen: false)
                   .fetchMediaData(
                       "/api/v1/app/temp_customers/initiate_customer",
                       phoneRequest);
 
           ApiResponse apiResponse =
-              Provider.of<MediaViewModel>(context, listen: false).response;
+              Provider.of<MainViewModel>(context, listen: false).response;
           getMediaWidgetResendOtp(context, apiResponse);
         },
         child: Text(

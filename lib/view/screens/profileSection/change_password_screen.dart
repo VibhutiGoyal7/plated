@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -146,12 +146,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ChangeOldPassRequest request =
                         ChangeOldPassRequest(customer: customer);
 
-                    await Provider.of<MediaViewModel>(context, listen: false)
+                    await Provider.of<MainViewModel>(context, listen: false)
                         .changeOldPasswordData(
                             "/api/v1/app/customers/update_password_with_old_password",
                             request);
                     ApiResponse apiResponse =
-                        Provider.of<MediaViewModel>(context, listen: false)
+                        Provider.of<MainViewModel>(context, listen: false)
                             .response;
                     getMediaWidget(context, apiResponse);
                   },
@@ -270,11 +270,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         password: _oldPasswordController.text,
         newPassword: _newPasswordController.text);
     ChangeOldPassRequest request = ChangeOldPassRequest(customer: customer);
-    await Provider.of<MediaViewModel>(context, listen: false)
+    await Provider.of<MainViewModel>(context, listen: false)
         .changeOldPasswordData(
             "/api/v1/app/customers/update_password_with_old_password", request);
     ApiResponse apiResponse =
-        Provider.of<MediaViewModel>(context, listen: false).response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getMediaWidget(context, apiResponse);
   }
 }

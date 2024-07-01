@@ -8,7 +8,7 @@ import 'package:path/path.dart';
 import '../../utils/Helper.dart';
 import 'dart:convert';
 
-class MediaService extends BaseService {
+class PayrioService extends BaseService {
   String? retrievedToken;
   var selectedLanguage;
 

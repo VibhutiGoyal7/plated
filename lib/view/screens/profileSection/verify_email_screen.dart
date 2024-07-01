@@ -9,7 +9,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/createOtpForEmailVerifyResponse.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
-import '../../../view_model/media_view_model.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
@@ -176,13 +176,13 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                               phoneNumber: phoneNumber,
                               email: emailController.text,
                             ));
-                            await Provider.of<MediaViewModel>(context,
+                            await Provider.of<MainViewModel>(context,
                                     listen: false)
                                 .CreateOtpVerifyEmail(
                                     "/api/v1/app/customers/generate_otp_for_email",
                                     request);
                             ApiResponse apiResponse =
-                                Provider.of<MediaViewModel>(context,
+                                Provider.of<MainViewModel>(context,
                                         listen: false)
                                     .response;
                             getMediaWidget(context, apiResponse);
@@ -266,11 +266,11 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                   email: emailController.text,
                   emailOtp: otp,
                 ));
-                await Provider.of<MediaViewModel>(context, listen: false)
+                await Provider.of<MainViewModel>(context, listen: false)
                     .VerifyOtpVerifyEmail(
                         "/api/v1/app/customers/verify_email_otp", request);
                 ApiResponse apiResponse =
-                    Provider.of<MediaViewModel>(context, listen: false)
+                    Provider.of<MainViewModel>(context, listen: false)
                         .response;
                 VerifyGetMediaWidget(context, apiResponse);
               }
