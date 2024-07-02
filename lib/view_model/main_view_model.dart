@@ -137,7 +137,7 @@ class MainViewModel with ChangeNotifier {
       ProfileResponse profileResponse =
           await MediaRepository().ProfileScreenData(value);
       print("Yess" + profileResponse.firstName.toString());
-      if (profileResponse == null) {
+      if (profileResponse != null) {
         _apiResponse = ApiResponse.completed(profileResponse);
       } else {
         _apiResponse = ApiResponse.error(profileResponse.message);

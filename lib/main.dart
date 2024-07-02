@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -37,17 +38,37 @@ import 'package:Payrio/view/screens/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeem_screen.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:Payrio/view/screens/authSection/splash_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/services/PushNotificationService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await PushNotificationService().setupInteractedMessage();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
+
   });
+
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    print("FirebaseMessaging:: ${initialMessage}");
+    // App received a notification when it was killed
+  }
+  await Permission.notification.isDenied.then(
+        (bool value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    },
+  );
+
+
 }
 
 class MyApp extends StatefulWidget {
