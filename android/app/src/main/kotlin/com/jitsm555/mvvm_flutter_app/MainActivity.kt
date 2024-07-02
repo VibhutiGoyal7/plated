@@ -1,4 +1,4 @@
-package com.jitsm555.mvvm_flutter_app
+package com.payorio
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

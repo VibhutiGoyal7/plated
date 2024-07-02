@@ -161,11 +161,10 @@ class _BottomNavState extends State<BottomNav> {
 
   Future<void> _initializeBiometrics() async {
     bool? retrievedBiometric = await Helper.getBiometric();
-    print('Retrieved Token: $retrievedBiometric');
     bool? canCheckBiometric = retrievedBiometric;
     print('Can CheckBiometric: $canCheckBiometric');
 
-    if (canCheckBiometric == true) {
+    if (canCheckBiometric != null && canCheckBiometric == true) {
       List<BiometricType> availableBiometric = [];
       try {
         canCheckBiometric = await auth.canCheckBiometrics;
