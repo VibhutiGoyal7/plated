@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
@@ -11,6 +14,7 @@ import '../../../utils/Helper.dart';
 class DashboardHomeScreen extends StatefulWidget {
   @override
   _DashboardHomeScreenState createState() => _DashboardHomeScreenState();
+
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
@@ -59,8 +63,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       });
     });
     print("isoCountryCode:: $isoCountryCode");
-
     // Initial setup for 5 checkboxes
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    Helper.getProfileDetails().then((userDetails) {
+      setState(() {
+        print("userDetails?.imageUrl${userDetails?.imageUrl}");
+        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
+        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
+        print("imageUrl${imageUrl}");
+      });
+    });
   }
 
   @override
@@ -91,24 +105,32 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     DateTime? lastBackPressed;
-    return WillPopScope(
-      onWillPop: () async {
-        final now = DateTime.now();
-        const maxDuration = Duration(seconds: 2);
-        final isWarning = lastBackPressed == null ||
-            now.difference(lastBackPressed!) > maxDuration;
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop){
+        if (kDebugMode) {
+          print("$didPop");
+          final now = DateTime.now();
+          const maxDuration = Duration(seconds: 2);
+          final isWarning = lastBackPressed == null ||
+              now.difference(lastBackPressed!) > maxDuration;
 
-        if (isWarning) {
-          lastBackPressed = DateTime.now();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Press back again to exit'),
-              duration: maxDuration,
-            ),
-          );
-          return Future.value(false);
+          if (isWarning) {
+            lastBackPressed = DateTime.now();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Press back again to exit'),
+                duration: maxDuration,
+              ),
+            );
+            SystemNavigator.pop();
+            //return Future.value(false);
+          }else
+            {
+              SystemNavigator.pop();
+            }
+         // return Future.value(true);
         }
-        return Future.value(true);
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: isDarkMode
@@ -132,7 +154,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                             child: GestureDetector(
                               onTap: () => {
-                                Navigator.pushNamed(context, '/ProfileScreen')
+                                Navigator.pushNamed(context, '/ProfileScreen').then(onGoBack)
                               },
                               child: imageUrl == null || imageUrl == ""
                                   ? Container(

@@ -55,6 +55,10 @@ abstract class Languages {
 
   String get labelConfirm;
 
+  String get labelLogin;
+
+  String get labelLogout;
+
   String get labelHi;
 
   String get labelStandard;
