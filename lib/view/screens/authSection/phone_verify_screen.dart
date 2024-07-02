@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
@@ -6,6 +5,7 @@ import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -28,6 +28,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   final ScrollController _scrollController = ScrollController();
   String phoneCode = "+";
   int countryCode = 0;
+
+  late double screenWidth;
 
   void setLocale(Locale locale) {
     setState(() {
@@ -147,6 +149,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
@@ -154,32 +157,58 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          //mainAxisAlignment: sp,
           children:[
-            Container(
-              height: screenHeight*0.24,
-              child:_buildLabelText(context, "Phone Verification", 28, true),
-              alignment: AlignmentDirectional.center,
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                Container(
+                  height: screenHeight * 0.15,
+                  child: Text(
+                    "Phone\n Verification",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  alignment: AlignmentDirectional.center,
+                ),
+              ],
             ),
+            Expanded(
+              child: Container(
+                width: screenWidth,
+                child: Card(
+                  margin: EdgeInsets.all(0),
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20),
+                        _buildLabelText(
+                            context, "Enter your mobile number", 16, true),
+                        _buildLabelText(context,
+                            "We will send you a confirmation code", 12, false),
+                        Column(
+                          children: [
+                            SizedBox(height: 40),
+                            _buildPhoneInput(context, isDarkMode),
+                            SizedBox(
+                              height: screenHeight * 0.2,
+                            ),
 
-            Spacer(),
-            Container(
-              height: screenHeight*0.72,
-              child: Card(
-                margin: EdgeInsets.all(0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 8),
-                    Padding(padding: EdgeInsets.all(12) ,child: _buildLabelText(
-                        context, Languages.of(context)!.enterPhoneNumber, 18, true) ,),
-                   
-                    //SizedBox(height: 10),
-                    _buildPhoneInput(context, isDarkMode),
-                    Spacer(),
-                    _buildFooter(context, apiResponse),
-                  ],
+                          ],
+                        ),
+                        Spacer(),
+                        Center(child: _buildFooter(context, apiResponse),),
+                        SizedBox(height: 30,)
+
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -203,64 +232,90 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
-    return Card(
-      elevation:  2,
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () async {
-                _showPicker(context: context);
-              },
-              child: SizedBox(
-                height: 60,
-                width: 25,
-                child: Center(
-                  child: Text(
-                    phoneCode,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: isDarkMode ? Colors.white : Colors.black),
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: _buildLabelText(context, "Phone Number", 12, false),
+          ),
+          Card(
+            elevation: 2,
+            child: Container(
+              height: 55,
+              width: screenWidth * 0.9,
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                border: Border(
+                    top: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    bottom: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    right: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    left: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4)),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      _showPicker(context: context);
+                    },
+                    child: SizedBox(
+                      height: 55,
+                      width: 25,
+                      child: Center(
+                        child: Text(
+                          phoneCode,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: isDarkMode ? Colors.white : Colors.black),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                      controller: _inputController,
+                      onChanged: _isValidPhoneNumber,
+                      maxLength: 12,
+                      keyboardType: TextInputType.phone,
+                      onSubmitted: (value) {
+                        // if (value.isNotEmpty) {
+                        //   Provider.of<MainViewModel>(context, listen: false)
+                        //       .setSelectedMedia(null);
+                        //   Provider.of<MainViewModel>(context, listen: false)
+                        //       .fetchMediaData(value, phoneRequest);
+                        // }
+                      },
+                      decoration: InputDecoration(
+                        counterText: "",
+                        border: InputBorder.none,
+                        hintText: 'XXXXXXXXXX',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        //suffixIcon:Icon(Icons.phone_enabled_sharp),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-                controller: _inputController,
-                onChanged: _isValidPhoneNumber,
-                maxLength: 12,
-                keyboardType: TextInputType.phone,
-                onSubmitted: (value) {
-                  // if (value.isNotEmpty) {
-                  //   Provider.of<MainViewModel>(context, listen: false)
-                  //       .setSelectedMedia(null);
-                  //   Provider.of<MainViewModel>(context, listen: false)
-                  //       .fetchMediaData(value, phoneRequest);
-                  // }
-                },
-                decoration: InputDecoration(
-                  counterText: "",
-                  border: InputBorder.none,
-                  hintText: 'XXXXXXXXXX',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -269,9 +324,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+          padding: const EdgeInsets.all(16.0),
           child: SizedBox(
-            width: double.infinity,
+            width: screenWidth * 0.7,
+            height: 40,
             child: ElevatedButton(
               onPressed: () async {
                 if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
@@ -311,20 +367,21 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     color: phoneNumberValid ? Colors.white : Colors.blueAccent),
               ),
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   backgroundColor:
                       phoneNumberValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
-                  shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
+                  shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(2))),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
             Languages.of(context)!.labelNeedHelp,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.grey[400],
             ),
           ),
