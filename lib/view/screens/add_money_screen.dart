@@ -10,6 +10,7 @@ class AddMoneyScreen extends StatefulWidget {
 }
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
+  String limitAmt = "1000";
   String kycStatus = "";
   String amount = "";
   bool expanded = false;
@@ -60,43 +61,44 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 1.0,
-              child: Container(
-                color: Colors.grey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 5.0,left: 5, bottom: 8.0),
+                child: Text(
+                  Languages.of(context)!.labelEnterAmount,
+                ),
               ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 10.0, left: 12.0, bottom: 8.0),
-              child: Text(
-                Languages.of(context)!.labelEnterAmount,
+             /* Container(
+                width: 250.0,
+                child: TextFormField(
+                  controller: tokenInputController,
+                  decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Authorization token'),
+                ),
               ),
-            ),
-           /* Container(
-              width: 250.0,
-              child: TextFormField(
-                controller: tokenInputController,
-                decoration: InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Authorization token'),
+              ElevatedButton(
+                child: Text("Start"),
+                onPressed: () {
+                  _start(tokenInputController.text);
+                },
+              ),*/
+              _buildPhoneInput(
+                  context, Languages.of(context)!.labelZero, _amountController),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 4),
+                child: Text("Limit : ${limitAmt}"),
               ),
-            ),
-            ElevatedButton(
-              child: Text("Start"),
-              onPressed: () {
-                _start(tokenInputController.text);
-              },
-            ),*/
-            _buildPhoneInput(
-                context, Languages.of(context)!.labelZero, _amountController),
-            Spacer(),
-            _buildFooter(context),
-          ],
+              Spacer(),
+              _buildFooter(context),
+            ],
+          ),
         ),
       ),
     );
@@ -112,7 +114,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Container(
         height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 4.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
         ),

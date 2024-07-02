@@ -14,6 +14,7 @@ import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/existingUserResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
@@ -167,6 +168,16 @@ class MainRepository {
     final jsonData = response;
     print(jsonData);
     CountryListResponse mediaList = CountryListResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<KycStatusResponse> kycStatusData(String value) async {
+    dynamic response = await _payrioService.getResponse(value);
+    print(value);
+    final jsonData = response;
+    //print("jsonData $jsonData");
+    KycStatusResponse mediaList = KycStatusResponse.fromJson(jsonData);
+    //print("object ${mediaList.message}");
     return mediaList;
   }
 }

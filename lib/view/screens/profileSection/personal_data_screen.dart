@@ -29,6 +29,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   var userName;
   var documentNumber;
   var dob;
+  var email;
 
   String? nationalIdImg;
   String? passportImg;
@@ -76,6 +77,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     lastName = "";
     userName = "";
     dob = "";
+    email="";
     nationalIdImg = "" ;
     passportImg="";
     drivingLicenseImg="";
@@ -173,6 +175,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             buildProfileSection(
                 Languages.of(context)!.labelFirstname, firstName),
             buildProfileSection(Languages.of(context)!.labelLastname, lastName),
+            buildProfileSection(Languages.of(context)!.labelEmail, email),
             buildProfileSection(Languages.of(context)!.labelUsername, userName),
             buildBirthdateSection(),
             Padding(
@@ -401,6 +404,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         lastName = profileDetails?.lastName;
         userName = profileDetails?.username;
         dob = profileDetails?.dob;
+        email = profileDetails?.email;
       });
     });
     return profileDetails;

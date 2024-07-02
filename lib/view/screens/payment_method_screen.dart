@@ -140,7 +140,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.call_made_sharp,color: isDarkMode ? Colors.white :Colors.black,),
+              child: Icon(Icons.call_made_sharp,color: isDarkMode ? Colors.white :Colors.black,size: 18,),
             )
           ],
         ),
@@ -160,6 +160,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 title: const Text('A Bank'),
                 onTap: () {
                   //getImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
                   Navigator.pushNamed(context, "/AddMoneyScreen");
                 },
               ),
@@ -168,6 +169,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 title: const Text('B Bank'),
                 onTap: () {
                   //getImage(ImageSource.camera);
+                  Navigator.of(context).pop();
                   Navigator.pushNamed(context, "/AddMoneyScreen");
                 },
               ),

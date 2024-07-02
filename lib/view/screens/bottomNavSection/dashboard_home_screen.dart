@@ -1,24 +1,26 @@
 import 'dart:async';
-
+import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
 import '../../../model/request/shortcutItemList.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../../view_model/main_view_model.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
   _DashboardHomeScreenState createState() => _DashboardHomeScreenState();
-
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatus = "";
+  String kycStatusApi = "";
   String amount = "0.00";
   String? name = "";
   var imageUrl;
@@ -75,6 +77,38 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         print("imageUrl${imageUrl}");
       });
     });
+  }
+
+  Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
+    KycStatusResponse? kycStatusResponse =
+    apiResponse.data as KycStatusResponse?;
+    var message = kycStatusResponse?.message.toString();
+    print("message ${message}");
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${kycStatusResponse?.kycStatus}");
+
+        kycStatusApi = kycStatusResponse!.kycStatus!;
+
+        if(kycStatus != "verified"){
+
+          Navigator.pushNamed(context, '/VerifyIdentityScreen');
+        }
+        //_showPicker(context: context);
+
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
   }
 
   @override
@@ -832,7 +866,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelSend)
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)
-                        {_fetchKycStatus()}
+                        {_getKycStatus()}
                       else if (text == "More")
                         {
                         _showPicker(context: context)
@@ -848,12 +882,22 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Future<void> _fetchKycStatus() async {
+  Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if(kycStatus == "verified"){
-      Navigator.pushNamed(context, '/VerifyIdentityScreen');
-    }else{
+    if(kycStatus != "verified"){
       Navigator.pushNamed(context, '/PaymentMethodScreen');
+    }else{
+      _fetchKycStatus();
     }
+  }
+
+  void _fetchKycStatus() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MainViewModel>(context, listen: false)
+        .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
+    ApiResponse apiResponse =
+        Provider.of<MainViewModel>(context, listen: false)
+            .response;
+    getKycStatus(context, apiResponse);
   }
 }

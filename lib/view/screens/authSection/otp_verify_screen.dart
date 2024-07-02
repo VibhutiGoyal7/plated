@@ -152,37 +152,57 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildLabelText(
-                    context, Languages.of(context)!.labelWelcome, 16, false),
-                SizedBox(height: 4),
-                _buildLabelText(
-                    context, Languages.of(context)!.labelEnterCode, 20, true),
-                SizedBox(height: 4),
-                _buildLabelText(
-                    context,
-                    "${Languages.of(context)!.labelSentCode} ${widget.data}",
-                    12,
-                    false),
-                SizedBox(height: 22),
-                _buildPhoneInput(context, screenWidth),
-                SizedBox(height: 18),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      _buildLabelText(
-                          context,
-                          "${Languages.of(context)!.labelResendCode} ",
-                          14,
-                          true),
-                      _countdownTimer(),
-                      Spacer(),
-                      if (resendOtp) _resendOtpButton(context)
-                    ],
-                  ),
+            Container(
+            height: screenHeight*0.24,
+              child:_buildLabelText(context, "Phone Verification", 28, true),
+              alignment: AlignmentDirectional.center,
+            ),
+
+            Spacer(),
+            Container(
+              height: screenHeight*0.72,
+              child: Card(
+                margin: EdgeInsets.all(0),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLabelText(
+                        context, Languages.of(context)!.labelWelcome, 16, false),
+                    SizedBox(height: 4),
+                    _buildLabelText(
+                        context, Languages.of(context)!.labelEnterCode, 20, true),
+                    SizedBox(height: 4),
+                    _buildLabelText(
+                        context,
+                        "${Languages.of(context)!.labelSentCode} ${widget.data}",
+                        12,
+                        false),
+                    SizedBox(height: 22),
+                    _buildPhoneInput(context, screenWidth),
+                    SizedBox(height: 18),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          _buildLabelText(
+                              context,
+                              "${Languages.of(context)!.labelResendCode} ",
+                              14,
+                              true),
+                          _countdownTimer(),
+                          Spacer(),
+                          if (resendOtp) _resendOtpButton(context)
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    _buildFooter(context),
+                  ],
                 ),
-                Spacer(),
-                _buildFooter(context),
+              ),
+            ),
+
               ],
             ),
           ),

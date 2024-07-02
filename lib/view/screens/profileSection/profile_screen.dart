@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 30.0),
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Column(
@@ -290,12 +290,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
+                      Container(height: 0.5,color: Colors.grey,margin: EdgeInsets.all(15),),
 
 
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 18.0),
+                            //SizedBox(height: 18.0),
                             /*Container(
                                 margin: EdgeInsets.symmetric(vertical: 8.0),
                                 padding: EdgeInsets.all(6.0),
