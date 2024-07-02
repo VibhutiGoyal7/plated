@@ -810,7 +810,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelSend)
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)
-                        {Navigator.pushNamed(context, '/AddMoneyScreen')}
+                        {_fetchKycStatus()}
                       else if (text == "More")
                         {
                         _showPicker(context: context)
@@ -824,5 +824,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         Text(text, style: TextStyle(fontSize: 12))
       ],
     );
+  }
+
+  Future<void> _fetchKycStatus() async {
+    kycStatus = (await Helper.getKycStatus())!;
+    if(kycStatus == "verified"){
+      Navigator.pushNamed(context, '/VerifyIdentityScreen');
+    }else{
+      Navigator.pushNamed(context, '/PaymentMethodScreen');
+    }
   }
 }

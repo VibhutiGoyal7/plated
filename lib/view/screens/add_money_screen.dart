@@ -43,16 +43,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     }
   }
 
-  final List<Map<String, dynamic>> items = [
-    {'icon': 'assets/united_states_flag_icon.svg', 'label': 'USD'},
-    {'icon': 'assets/india_flag_icon.svg', 'label': 'INR'},
-  ];
-
-  Map<String, dynamic> selectedItem = {
-    'icon': 'assets/united_states_flag_icon.svg',
-    'label': 'USD'
-  };
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +158,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
-                  _fetchKycStatus();
+                  //_fetchKycStatus();
                 }
               },
               child: Text(

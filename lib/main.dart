@@ -1,3 +1,4 @@
+import 'package:Payrio/view/screens/payment_method_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -184,6 +185,14 @@ class _MyAppState extends State<MyApp> {
                   .settings
                   .arguments as String?;
               return AddMoneyScreen();
+            },
+            '/PaymentMethodScreen': (context) {
+              final args =
+              ModalRoute
+                  .of(context)!
+                  .settings
+                  .arguments as String?;
+              return PaymentMethodScreen();
             },
             '/ChangePasswordScreen': (context) {
               final args =

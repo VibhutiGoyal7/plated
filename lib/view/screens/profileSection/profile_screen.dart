@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -24,6 +25,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Uint8List? qrCodeImage;
+  bool isUsernameRetrieved = false;
   bool isQrCodeGenerated = false;
   var customerName;
   var userName;
@@ -76,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             userName = "${profileResponse?.username}";
             imageUrl = profileResponse?.imageUrl.toString();
             isLoading = false;
-            isQrCodeGenerated = true;
+            isUsernameRetrieved = true;
           });
         //});
         return Container(); // Return an empty container as you'll navigate away
@@ -96,19 +99,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Widget _generateQrCode(String user){
-    return QrImageView(
-      data: user,
-      size: 110,
-      // You can include embeddedImageStyle Property if you
-      //wanna embed an image from your Asset folder
-      embeddedImageStyle: QrEmbeddedImageStyle(
-        size: const Size(
-          100,
-          100,
-        ),
-      ),
+  Future<void> generateQrCode(String data) async {
+    final qrValidationResult = QrValidator.validate(
+      data: data,
+      version: QrVersions.auto,
+      errorCorrectionLevel: QrErrorCorrectLevel.L,
     );
+
+    if (qrValidationResult.status == QrValidationStatus.valid) {
+      final qrCode = qrValidationResult.qrCode;
+      final painter = QrPainter.withQr(
+        qr: qrCode!,
+        color: Colors.black,
+        emptyColor: Colors.white,
+        gapless: true,
+      );
+
+      final directory = await getTemporaryDirectory();
+      final imagePath = '${directory.path}/qr_code.png';
+      final imageFile = File(imagePath);
+
+      final picData = await painter.toImageData(170);
+      final bytes = picData!.buffer.asUint8List();
+
+      final image = img.decodeImage(bytes);
+      final png = img.encodePng(image!);
+      await imageFile.writeAsBytes(png);
+
+      setState(() {
+        qrCodeImage = bytes;
+        print(qrCodeImage);
+        isQrCodeGenerated = true;
+      });
+      _showModal(context, userName);
+    }
   }
 
   Future<bool> _onWillPop() async {
@@ -256,7 +280,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             Spacer(),
-                            IconButton( onPressed: (){_showModal(context, userName,isQrCodeGenerated);},
+                            IconButton( onPressed: (){
+                              generateQrCode(userName);
+
+
+                              },
                                 icon: Icon(Icons.qr_code_2)),
                           ],
                         ),
@@ -266,7 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 12.0),
+                            SizedBox(height: 18.0),
                             /*Container(
                                 margin: EdgeInsets.symmetric(vertical: 8.0),
                                 padding: EdgeInsets.all(6.0),
@@ -522,7 +550,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _showModal(BuildContext context, String username, bool isQrGenerated) {
+  void _showModal(BuildContext context, String username) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -535,30 +563,124 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               scrollable: true,
               insetPadding: EdgeInsets.all(10),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 22),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  GestureDetector(
+                    onTap: () => {_showPicker(context: context)},
+                    child: imageUrl == ""
+                        ? Container(
+                      height: 60,
+                      width: 60,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: AppColor.WHITE,
+                        backgroundImage:
+                        AssetImage("assets/profile_user.png"),
+                      ),
+                    )
+                        : ClipRRect(
+                        borderRadius: BorderRadius.circular(100.0),
+                        child: Image.network(
+                          imageUrl,
+                          height: 60,
+                          width: 60,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                            // You can return any widget here to display in case of an error
+                            return Container(
+                              height: 60,
+                              width: 60,
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: AppColor.WHITE,
+                                backgroundImage: AssetImage(
+                                  "assets/profile_user.png",
+                                ),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (BuildContext context,
+                              Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.black54,
+                                highlightColor: Colors.black45,
+                                child: Container(
+                                  height:60,
+                                  width: 60,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          },
+                        )),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildLabelText(context, customerName.toString()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      isLoading
+                          ? Shimmer.fromColors(
+                        baseColor: Colors.white38,
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          width: 100,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.white38,
+                            borderRadius: BorderRadius.circular(
+                                8.0), // Adjust the radius as needed
+                          ),
+                        ),
+                      )
+                          : Text(
+                        userName,
+                        style: TextStyle(fontSize: 14.0),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      GestureDetector(
+                        onTap: () => {
+                          copyTextToClipboard(userName.toString()),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text("Text copied to clipboard")),
+                          )
+                        },
+                        child: Icon(
+                          Icons.copy,
+                          size: 16,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 15,),
                   Container(
                     alignment: Alignment.center,
                     child: Padding(
                       padding: EdgeInsets.all(15),
-                      child: isQrGenerated
-                          ? Text("data")
-                      /*QrImageView(
-                        data: username,
-                        size: 110,
-                        embeddedImageStyle: QrEmbeddedImageStyle(
-                          size: Size(100, 100),
-                        ),
-                      )*/
+                      child: isUsernameRetrieved && isQrCodeGenerated
+                          ? //Text("data")
+                      qrCodeImage != null
+                          ? Image.memory(qrCodeImage!)
+                          : Text("Error loading QR code")
                           : Shimmer.fromColors(
                         baseColor: Colors.white38,
                         highlightColor: Colors.grey,
                         child: Container(
-                          width: 110,
-                          height: 110,
+                          width: 160,
+                          height: 160,
                           decoration: BoxDecoration(
                             color: Colors.white38,
                             borderRadius: BorderRadius.circular(8.0),
