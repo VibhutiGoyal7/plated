@@ -31,16 +31,16 @@ class CreateOtpVerifyEmailResponse {
 
   factory CreateOtpVerifyEmailResponse.fromJson(Map<String, dynamic> json){
     return CreateOtpVerifyEmailResponse (
-      email : json['data']['email'] as String,
-      emailOtp : json['data']['email_otp'] as String,
-      emailOtpExpireAt : json['data']['email_otp_expire_at'] as int,
-      userId : json['data']['id'] as int,
-      phoneNumber : json['data']['phone_number'] as String,
-      createdAt : json['data']['created_at'] as String,
-      updatedAt : json['data']['updated_at'] as String,
-      mobileOtp : json['data']["mobile_otp"] as String,
       message : json["message"] as String,
-      mobileOtpExpireAt : json['data']["mobile_otp_expire_at"] as int,
+      email : json['data']?['email'] as String,
+      emailOtp : json['data']?['email_otp'] as String,
+      emailOtpExpireAt : json['data']?['email_otp_expire_at'] as int,
+      userId : json['data']?['id'] as int,
+      phoneNumber : json['data']?['phone_number'] as String,
+      createdAt : json['data']?['created_at'] as String,
+      updatedAt : json['data']?['updated_at'] as String,
+      mobileOtp : json['data']?["mobile_otp"] as String,
+      mobileOtpExpireAt : json['data']?["mobile_otp_expire_at"] as int,
     );
   }
 }

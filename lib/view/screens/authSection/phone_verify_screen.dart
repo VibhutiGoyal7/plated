@@ -126,9 +126,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries[1].name}");
+        print("rwrwr ${countryListResponse?.countries?[1].name}");
 
-        countryList = countryListResponse!.countries;
+        countryList = countryListResponse!.countries!;
 
         //_showPicker(context: context);
 

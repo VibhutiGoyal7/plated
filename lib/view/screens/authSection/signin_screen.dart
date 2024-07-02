@@ -104,6 +104,7 @@ class _SigninScreenState extends State<SigninScreen> {
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
         await Helper.saveCountry(mediaList?.countryName);
+        await Helper.saveKycStatus(mediaList?.kycStatus);
         Navigator.pushReplacementNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:

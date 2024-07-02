@@ -14,6 +14,7 @@ class DashboardHomeScreen extends StatefulWidget {
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
+  String kycStatus = "";
   String amount = "0.00";
   String? name = "";
   var imageUrl;
@@ -179,8 +180,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               baseColor: Colors.black45,
                                               highlightColor: Colors.black87,
                                               child: Container(
-                                                height: 60,
-                                                width: 60,
+                                                height: 40,
+                                                width: 40,
                                                 color: Colors.grey,
                                               ),
                                             );
@@ -388,10 +389,17 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           children: List.generate(
                             4,
                             (index) {
-                              return _buildContainer(
-                                  context,
-                                  _shortcutCardsList[index].title,
-                                  _shortcutCardsList[index].icon);
+                              if(index<=2) {
+                                return _buildContainer(
+                                    context,
+                                    _shortcutCardsList[index].title,
+                                    _shortcutCardsList[index].icon);
+                              }else{
+                                return _buildContainer(
+                                    context,
+                                    "More",
+                                    Icons.more_horiz);
+                              }
                             },
                           ),
                         ),
@@ -608,6 +616,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   _showPicker({required BuildContext context}) {
+    double screenHeight = MediaQuery.of(context).size.height;
     showModalBottomSheet(
       shape: ContinuousRectangleBorder(),
       context: context,
@@ -615,75 +624,160 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Wrap(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Quick actions", style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                    ),),
-                    SizedBox(height: 10,),
-                    Text("Most Frequent", style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                    ),),
-                  ],
+                Text("Quick actions", style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
+                ),),
+                SizedBox(height: 10,),
+                Text("Most Frequent", style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold
+                ),),
+                SizedBox(height: 10,),
+                Expanded(
+                  child: Container(
+                    height: screenHeight*0.12,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      itemCount: _shortcutCardsList.length,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 0),
+                      itemBuilder: (BuildContext context, int index) {
+                        if(index <=1) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(18),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue
+                                  ),
+                                  child: Icon(_shortcutCardsList[index].icon,
+                                    color: AppColor.WHITE,),),
+                                Text(
+                                  _shortcutCardsList[index].title,
+                                  style: TextStyle(
+                                    fontSize: 14,),
+                                ),
+                              ],
+                            ),
+                          );
+                        }else return Container();
+                      /*    ListTile(
+                            leading: ClipRRect(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.blue
+                                  ),
+                                  child: Icon(_shortcutCardsList[index].icon),)
+                            ),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _shortcutCardsList[index].title,
+                                  style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold,
+                                    color:    Colors.black,),
+                                ),
+                                Text("+${_shortcutCardsList[index].title}",
+                                    style: TextStyle(fontSize: 12,
+                                      color: Colors.black,)),
+                              ],
+                            ));*/
+                        // I omit the part to build card items from the list
+                      },
+                    ),
+                  ),
                 ),
+                Text("Send", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),
+                SizedBox(height: 10,),
                 Expanded(
                   //height: screenSize.height/2,
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    controller: _scrollController,
-                    itemCount: _shortcutCardsList.length,
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(bottom: 0),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blue
-                            ),
-                            child: Icon(_shortcutCardsList[index].icon),),
-                          Text(
-                            _shortcutCardsList[index].title,
-                            style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold,
-                              color:    Colors.black,),
-                          ),
-                        ],
-                      );
-                    /*    ListTile(
-                          leading: ClipRRect(
-                            child: Container(
-                              padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blue
+                  child: Container(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      itemCount: _shortcutCardsList.length,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 0),
+                      itemBuilder: (BuildContext context, int index) {
+                        if(index ==2) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(18),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue
+                                  ),
+                                  child: Icon(_shortcutCardsList[index].icon,
+                                    color: AppColor.WHITE,),
+                                  ),
+                                Text(
+                                  _shortcutCardsList[index].title,
+                                  style: TextStyle(
+                                    fontSize: 14,),
                                 ),
-                                child: Icon(_shortcutCardsList[index].icon),)
-                          ),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _shortcutCardsList[index].title,
-                                style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold,
-                                  color:    Colors.black,),
-                              ),
-                              Text("+${_shortcutCardsList[index].title}",
-                                  style: TextStyle(fontSize: 12,
-                                    color: Colors.black,)),
-                            ],
-                          ));*/
-                      // I omit the part to build card items from the list
-                    },
+                              ],
+                            ),
+                          );
+                        }else return Container();
+                      },
+                    ),
+                  ),
+                ),
+                Text("Pay", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                SizedBox(height: 10,),
+                Expanded(
+                  //height: screenSize.height/2,
+                  child: Container(
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: _scrollController,
+                      itemCount: _shortcutCardsList.length,
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 0),
+                      itemBuilder: (BuildContext context, int index) {
+                        if(index ==3) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(18),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue
+                                  ),
+                                  child: Icon(_shortcutCardsList[index].icon,
+                                    color: AppColor.WHITE,),),
+                                Text(
+                                  _shortcutCardsList[index].title,
+                                  style: TextStyle(
+                                    fontSize: 14,),
+                                ),
+                              ],
+                            ),
+                          );
+                        }else return Container();
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -717,7 +811,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {Navigator.pushNamed(context, '/AddMoneyScreen')}
-                      else if (text == Languages.of(context)!.labelExchange)
+                      else if (text == "More")
                         {
                         _showPicker(context: context)
                         }
