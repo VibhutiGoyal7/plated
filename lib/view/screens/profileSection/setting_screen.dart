@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Helper.dart';
+import 'package:Payrio/view/screens/authSection/money_safe_screen.dart';
+import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
 
@@ -169,7 +170,10 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Text('Yes'),
               onPressed: () {
                 Helper.clearAllSharedPreferences();
-                Navigator.pushReplacementNamed(context, '/MoneySafeScreen');
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => MoneySafeScreen()),
+                  (Route<dynamic> route) => false,
+                );
               },
             ),
           ],

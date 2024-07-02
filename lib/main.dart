@@ -1,4 +1,5 @@
 import 'package:Payrio/view/screens/payment_method_screen.dart';
+import 'package:Payrio/view/screens/payment_method_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +57,7 @@ void main() async {
     runApp(MyApp());
   });
 
-  RemoteMessage? initialMessage =
+/*  RemoteMessage? initialMessage =
   await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: ${initialMessage}");
@@ -68,7 +69,7 @@ void main() async {
         Permission.notification.request();
       }
     },
-  );
+  );*/
 
 
 }

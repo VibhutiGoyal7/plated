@@ -1,8 +1,9 @@
 import 'package:Payrio/model/response/kycStatusResponse.dart';
+import 'dart:async';
+
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -10,11 +11,11 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/shortcutItemList.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
-import '../../../view_model/main_view_model.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
   _DashboardHomeScreenState createState() => _DashboardHomeScreenState();
+
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
@@ -64,7 +65,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       });
     });
     print("isoCountryCode:: $isoCountryCode");
-
     // Initial setup for 5 checkboxes
   }
 
@@ -100,6 +100,17 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     }
   }
 
+  FutureOr onGoBack(dynamic value) {
+    Helper.getProfileDetails().then((userDetails) {
+      setState(() {
+        print("userDetails?.imageUrl${userDetails?.imageUrl}");
+        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
+        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
+        print("imageUrl${imageUrl}");
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -128,24 +139,32 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     DateTime? lastBackPressed;
-    return WillPopScope(
-      onWillPop: () async {
-        final now = DateTime.now();
-        const maxDuration = Duration(seconds: 2);
-        final isWarning = lastBackPressed == null ||
-            now.difference(lastBackPressed!) > maxDuration;
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop){
+        if (kDebugMode) {
+          print("$didPop");
+          final now = DateTime.now();
+          const maxDuration = Duration(seconds: 2);
+          final isWarning = lastBackPressed == null ||
+              now.difference(lastBackPressed!) > maxDuration;
 
-        if (isWarning) {
-          lastBackPressed = DateTime.now();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Press back again to exit'),
-              duration: maxDuration,
-            ),
-          );
-          return Future.value(false);
+          if (isWarning) {
+            lastBackPressed = DateTime.now();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Press back again to exit'),
+                duration: maxDuration,
+              ),
+            );
+            SystemNavigator.pop();
+            //return Future.value(false);
+          }else
+            {
+              SystemNavigator.pop();
+            }
+         // return Future.value(true);
         }
-        return Future.value(true);
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: isDarkMode
@@ -169,7 +188,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                             child: GestureDetector(
                               onTap: () => {
-                                Navigator.pushNamed(context, '/ProfileScreen')
+                                Navigator.pushNamed(context, '/ProfileScreen').then(onGoBack)
                               },
                               child: imageUrl == null || imageUrl == ""
                                   ? Container(
@@ -847,7 +866,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelSend)
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)
-                        {_getKycStatus()}
+                        {_fetchKycStatus()}
                       else if (text == "More")
                         {
                         _showPicker(context: context)
@@ -863,22 +882,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Future<void> _getKycStatus() async {
+  Future<void> _fetchKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if(kycStatus != "verified"){
-      Navigator.pushNamed(context, '/PaymentMethodScreen');
+    if(kycStatus == "verified"){
+      Navigator.pushNamed(context, '/VerifyIdentityScreen');
     }else{
-      _fetchKycStatus();
+      Navigator.pushNamed(context, '/PaymentMethodScreen');
     }
-  }
-
-  void _fetchKycStatus() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false)
-            .response;
-    getKycStatus(context, apiResponse);
   }
 }

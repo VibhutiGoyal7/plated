@@ -136,10 +136,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    Navigator.pushReplacementNamed(
+    Navigator.pop(context);
+  /*  Navigator.pushReplacementNamed(
       context,
       "/BottomNav",
-    );
+    );*/
     return false;
   }
 

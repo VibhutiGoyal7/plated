@@ -1,14 +1,13 @@
-import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/response/signInResponse.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/profileResponse.dart';
-import '../../../model/response/setUpAccountResponse.dart';
 import '../../../utils/Helper.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -24,7 +23,8 @@ class _SigninScreenState extends State<SigninScreen> {
   bool passwordVisible = false;
 
   bool inputValid = false;
-
+  late double screenWidth;
+  late bool isDarkMode;
   @override
   void initState() {
     super.initState();
@@ -58,7 +58,6 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
-
 
         await Helper.saveUserDetails(mediaList);
         String token = "${mediaList?.token}";
@@ -121,61 +120,85 @@ class _SigninScreenState extends State<SigninScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    double screenWidth = MediaQuery.of(context).size.width;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: screenHeight * 0.95),
-            child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16, top: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _buildLabelText(
-                        context, "Login", 18, false),
-                    SizedBox(height: 20),
-                    SizedBox(height: 10),
-                    _buildPhoneInput(
-                        context,
-                        "Phone Number",
-                        _phoneNoController,
-                        Icon(
-                          Icons.person,
-                          size: 20,
-                          color: isDarkMode ? Colors.white : Colors.black,
-                        )),
-                    SizedBox(height: 10),
-                    _buildPasswordInput(
-                        context,
-                        Languages.of(context)!.labelPassword,
-                        _passwordController,
-                        Icon(
-                          Icons.password,
-                          size: 18,
-                          color: isDarkMode ? Colors.white : Colors.black,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image(
+                alignment: Alignment.topLeft,
+                width: screenWidth * 0.9,
+                height: screenHeight * 0.25,
+                image: AssetImage("assets/payment_image.png"),
+              ),
+              Container(
+                height: screenHeight * 0.7,
+                width: screenWidth,
+                padding: EdgeInsets.zero,
+                child: Card(
+                  elevation: 20 ,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20  ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20),
+                           _buildLabelText(
+                          context, "Welcome Back!", 26, true),
+                           _buildLabelText(
+                          context, "Welcome back we missed you", 14, false),
+                        SizedBox(height: 25),
+                        _buildPhoneInput(
+                            context,
+                            "Phone Number",
+                            _phoneNoController,
+                            Icon(
+                              Icons.person,
+                              size: 20,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
                         ),
-                        passwordVisible,
-                        isDarkMode),
-                    _buildFooter(context, apiResponse),
-                  ],
-                )),
+                        SizedBox(height: 15),
+                        _buildPasswordInput(
+                            context,
+                            Languages.of(context)!.labelPassword,
+                            _passwordController,
+                            Icon(
+                              Icons.password,
+                              size: 18,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
+                            passwordVisible,
+                            isDarkMode),
+                        SizedBox(height: 15,),
+                        _buildFooter(context, apiResponse),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
 
-  _buildLabelText(BuildContext context, String text, int size, bool isBold) {
+  _buildLabelText(BuildContext context, String text, double size, bool isBold) {
     return Text(
       text,
       style: TextStyle(
-          fontSize: 28, fontWeight: FontWeight.bold,
-          color: Colors.blueAccent),
+          fontSize: size, fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
     );
   }
 
@@ -185,8 +208,15 @@ class _SigninScreenState extends State<SigninScreen> {
     return Card(
       child: Container(
         height: 60,
+        width: screenWidth*0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border(
+              top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
@@ -231,8 +261,15 @@ class _SigninScreenState extends State<SigninScreen> {
     return Card(
       child: Container(
         height: 60,
+        width: screenWidth*0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border(
+              top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
@@ -286,7 +323,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Column(
       children: [
         SizedBox(
-          width: double.infinity,
+          width: screenWidth*0.8,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
@@ -318,18 +355,35 @@ class _SigninScreenState extends State<SigninScreen> {
                       inputValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
                   shape:
-                      BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
+                      BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Do you need any help?",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[400],
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Need account? ",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[400],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/PhoneVerifyScreen');
+                },
+                child: Text(
+                  "SignUp here.",
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
         ),
       ],

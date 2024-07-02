@@ -18,6 +18,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -30,6 +32,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
           ),
           Image(
             alignment: Alignment.topLeft,
+            width: screenWidth*0.9,
+            height: screenHeight*0.4,
             image: AssetImage("assets/payment_image.png"),
           ),
           SizedBox(

@@ -178,7 +178,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               color: isDarkMode ? Colors.white : Colors.black,
                             )),
                         SizedBox(height: 10),
-                       /* _buildDOBInput(
+                        _buildDOBInput(
                             context,
                             Languages.of(context)!.labelDOB,
                             isDarkMode,
@@ -187,7 +187,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               Icons.calendar_month,
                               size: 18,
                               color: isDarkMode ? Colors.white : Colors.black,
-                            )),*/
+                            )),
                         SizedBox(height: 10),
                         _buildPasswordInput(
                             context,

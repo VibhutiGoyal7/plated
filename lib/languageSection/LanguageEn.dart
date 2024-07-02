@@ -398,9 +398,10 @@ class LanguageEn extends Languages {
   @override
   String get labelSelectCountryCode => "Select country code";
 
+  @override
+  String get labelLogin =>  "Login";
 
-
-
-
+  @override
+  String get labelLogout =>   "Logout";
 
 }
