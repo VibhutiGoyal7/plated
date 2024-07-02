@@ -6,6 +6,7 @@ import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
@@ -312,6 +313,22 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + countryListResponse.message.toString());
 
         _apiResponse = ApiResponse.completed(countryListResponse);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> kycStatusData(String value) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      KycStatusResponse kycStatusResponse =
+          await MainRepository().kycStatusData(value);
+      print("Yess" + kycStatusResponse.message.toString());
+
+        _apiResponse = ApiResponse.completed(kycStatusResponse);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

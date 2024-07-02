@@ -147,26 +147,46 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildLabelText(
-                  context, Languages.of(context)!.appName, 16, false),
-              SizedBox(height: 4),
-              _buildLabelText(
-                  context, Languages.of(context)!.enterPhoneNumber, 20, true),
-              SizedBox(height: 16),
-              _buildPhoneInput(context, isDarkMode),
-              Spacer(),
-              _buildFooter(context, apiResponse),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisAlignment: sp,
+          children:[
+            Container(
+              height: screenHeight*0.24,
+              child:_buildLabelText(context, "Phone Verification", 28, true),
+              alignment: AlignmentDirectional.center,
+            ),
+
+            Spacer(),
+            Container(
+              height: screenHeight*0.72,
+              child: Card(
+                margin: EdgeInsets.all(0),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8),
+                    Padding(padding: EdgeInsets.all(12) ,child: _buildLabelText(
+                        context, Languages.of(context)!.enterPhoneNumber, 18, true) ,),
+                   
+                    //SizedBox(height: 10),
+                    _buildPhoneInput(context, isDarkMode),
+                    Spacer(),
+                    _buildFooter(context, apiResponse),
+                  ],
+                ),
+              ),
+            ),
+            /*_buildLabelText(
+                context, Languages.of(context)!.appName, 16, false),*/
+
+          ],
         ),
       ),
     );
@@ -184,6 +204,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
     return Card(
+      elevation:  2,
       child: Container(
         height: 60,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -242,52 +263,55 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Widget _buildFooter(BuildContext context, ApiResponse apiResponse) {
     return Column(
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () async {
-              if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
-                ExistingUserRequest request = ExistingUserRequest(
-                    customer:
-                        ExistingCustomer(phoneNumber: _inputController.text));
-                await Provider.of<MainViewModel>(context, listen: false)
-                    .existingUserData(
-                        "/api/v1/app/customers/check_customer_existance",
-                        request);
-                /* PhoneRequest phoneRequest = PhoneRequest(
-                    customer: Customer(
-                        phoneNumber: _inputController.text, mobileOtp: ""));*/
-                /*await Provider.of<MainViewModel>(context, listen: false)
-                  .fetchMediaData(
-                      "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);*/
-                //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
+                  ExistingUserRequest request = ExistingUserRequest(
+                      customer:
+                          ExistingCustomer(phoneNumber: _inputController.text));
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .existingUserData(
+                          "/api/v1/app/customers/check_customer_existance",
+                          request);
+                  /* PhoneRequest phoneRequest = PhoneRequest(
+                      customer: Customer(
+                          phoneNumber: _inputController.text, mobileOtp: ""));*/
+                  /*await Provider.of<MainViewModel>(context, listen: false)
+                    .fetchMediaData(
+                        "/api/v1/app/temp_customers/initiate_customer",
+                        phoneRequest);*/
+                  //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
 
-                ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false)
-                        .response;
-                existingUserWidget(context, apiResponse);
-              } else if (countryCode == 0 && phoneCode == "+") {
-                SnackBar(
-                  content: Text(Languages.of(context)!.labelSelectCountryCode),
-                );
-              } else {
-                SnackBar(
-                  content: Text(Languages.of(context)!.labelEnterValidPhone),
-                );
-              }
-            },
-            child: Text(
-              Languages.of(context)!.labelSubmit,
-              style: TextStyle(
-                  color: phoneNumberValid ? Colors.white : Colors.blueAccent),
+                  ApiResponse apiResponse =
+                      Provider.of<MainViewModel>(context, listen: false)
+                          .response;
+                  existingUserWidget(context, apiResponse);
+                } else if (countryCode == 0 && phoneCode == "+") {
+                  SnackBar(
+                    content: Text(Languages.of(context)!.labelSelectCountryCode),
+                  );
+                } else {
+                  SnackBar(
+                    content: Text(Languages.of(context)!.labelEnterValidPhone),
+                  );
+                }
+              },
+              child: Text(
+                Languages.of(context)!.labelSubmit,
+                style: TextStyle(
+                    color: phoneNumberValid ? Colors.white : Colors.blueAccent),
+              ),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  backgroundColor:
+                      phoneNumberValid ? Colors.blueAccent : Colors.white,
+                  elevation: 3,
+                  shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
             ),
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                backgroundColor:
-                    phoneNumberValid ? Colors.blueAccent : Colors.white,
-                elevation: 3,
-                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
         Padding(
