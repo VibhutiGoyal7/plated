@@ -3,6 +3,7 @@ import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -56,6 +57,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -176,6 +178,17 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               color: isDarkMode ? Colors.white : Colors.black,
                             )),
                         SizedBox(height: 10),
+                       /* _buildDOBInput(
+                            context,
+                            Languages.of(context)!.labelDOB,
+                            isDarkMode,
+                            _dateController,
+                            Icon(
+                              Icons.calendar_month,
+                              size: 18,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            )),*/
+                        SizedBox(height: 10),
                         _buildPasswordInput(
                             context,
                             Languages.of(context)!.labelPassword,
@@ -254,6 +267,72 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDOBInput(BuildContext context, String text, bool isDarkMode,
+      TextEditingController nameController, Icon icon) {
+    return Card(
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+                child: TextField(
+                    controller: _dateController,
+                    //editing controller of this TextField
+                    decoration: const InputDecoration(
+                        icon: Icon(
+                          Icons.calendar_month,
+                          //color: isDarkMode ? Colors.white : Colors.black,
+                          size: 20,
+                        ),
+                        //icon of text field
+                        labelText: "Enter Date" //label text of field
+                        ),
+                    readOnly: true,
+                    // when true user cannot edit text
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1950),
+                          //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2100),
+                          helpText: "Select Date Of Birth",
+                          confirmText: "Confirm",
+                          errorFormatText: 'Enter valid date',
+                          errorInvalidText: 'Enter date in valid range',
+                          builder: (context, child) {
+                            return Theme(
+                              data: isDarkMode
+                                  ? ThemeData.dark()
+                                  : ThemeData
+                                      .light(), // This will change to light theme.
+                              child: child!,
+                            );
+                          });
+
+                      if (pickedDate != null) {
+                        print(
+                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        print(
+                            formattedDate); //formatted date output using intl package =>  2021-03-16
+                        setState(() {
+                          _dateController.text =
+                              formattedDate; //set output date to TextField value.
+                        });
+                      } else {}
+                    })),
           ],
         ),
       ),
@@ -388,8 +467,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 //Navigator.pushNamed(context, '/BottomNav');
 
                 ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false)
-                        .response;
+                    Provider.of<MainViewModel>(context, listen: false).response;
                 getSetUpAccountWidget(context, apiResponse);
               }
             },

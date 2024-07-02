@@ -38,6 +38,9 @@ class LanguageAr extends Languages {
   String get labelEmail => "بريد إلكتروني";
 
   @override
+  String get labelDOB => "D.O.B";
+
+  @override
   String get labelEnterCode => "ادخل الرمز";
 
   @override

@@ -38,6 +38,9 @@ class LanguageHi extends Languages {
   String get labelEmail => "ईमेल";
 
   @override
+  String get labelDOB => "D.O.B";
+
+  @override
   String get labelEnterCode => "कोड दर्ज करें";
 
   @override

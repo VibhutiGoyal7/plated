@@ -84,6 +84,15 @@ class AppTheme {
           backgroundColor: AppColor.WHITE,
           titleTextStyle: TextStyle(color: AppColor.BLACK, fontSize: 22),
           iconColor: AppColor.BLACK),
+      datePickerTheme: DatePickerThemeData(
+          dayStyle: TextStyle(
+              color: Colors.black,
+            fontSize: 12
+          ),
+        shape: Border(),
+
+
+      ),
       iconTheme: IconThemeData(color: AppColor.BLACK),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
@@ -139,6 +148,11 @@ class AppTheme {
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.DARK_CARD_COLOR,
+      ),
+      datePickerTheme: DatePickerThemeData(
+        dayStyle: TextStyle(
+          color: Colors.white
+        )
       ),
       cardTheme: const CardTheme(
         color: AppColor.DARK_CARD_COLOR,

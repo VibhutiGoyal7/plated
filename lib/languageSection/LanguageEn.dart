@@ -38,6 +38,9 @@ class LanguageEn extends Languages {
   String get labelEmail => "Email";
 
   @override
+  String get labelDOB => "D.O.B";
+
+  @override
   String get labelEnterCode => "Enter the code";
 
   @override

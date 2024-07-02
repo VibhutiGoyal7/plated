@@ -47,6 +47,8 @@ abstract class Languages {
 
   String get labelEmail;
 
+  String get labelDOB;
+
   String get labelPassword;
 
   String get labelConfirmPass;

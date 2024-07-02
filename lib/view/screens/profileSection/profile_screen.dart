@@ -303,8 +303,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 Languages.of(context)!.labelStepVerification,
                                 isDarkMode),
-                            _buildBiometricCard(
-                                context, "Bio-metric Authentication", isDarkMode),
+                            _buildBiometricCard(context,
+                                "Bio-metric Authentication", isDarkMode),
                             Container(
                                 margin: EdgeInsets.symmetric(vertical: 8.0),
                                 padding: EdgeInsets.all(6.0),
@@ -315,6 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Languages.of(context)!.labelAddedCard,
                                 isDarkMode),
                             Container(
+                                margin: EdgeInsets.symmetric(vertical: 8.0),
                                 padding: EdgeInsets.all(6.0),
                                 child: _buildLabelText(context,
                                     Languages.of(context)!.labelHelpSupport)),
@@ -377,14 +378,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(14.0),
+        padding: EdgeInsets.only(left: 12.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(text, style: TextStyle(fontSize: 14.0)),
             Transform.scale(
-              scale: 0.8,
+              scale: 0.6,
               child: Switch.adaptive(
                   applyCupertinoTheme: false,
                   value: isBiometricEnable,
@@ -464,23 +465,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final pickedFile = await picker.pickImage(source: image);
     XFile? xfilePick = pickedFile;
 
-        if (xfilePick != null) {
-          galleryFile = File(pickedFile!.path);
-          File? compressedFile = await _resizeAndCompressImage(galleryFile as File, 800);
-          if (compressedFile != null) {
-            setState(() {
-              _uploadProfilePic(compressedFile);
-            });
-          } else {
-            print('Compression failed.');
-          }
+    if (xfilePick != null) {
+      galleryFile = File(pickedFile!.path);
+      File? compressedFile =
+          await _resizeAndCompressImage(galleryFile as File, 800);
+      if (compressedFile != null) {
+        setState(() {
+          _uploadProfilePic(compressedFile);
+        });
+      } else {
+        print('Compression failed.');
+      }
 
-          //print(compressedFile);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
-              const SnackBar(content: Text('Nothing is selected')));
-        }
-
+      //print(compressedFile);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+          const SnackBar(content: Text('Nothing is selected')));
+    }
   }
 
   Future<void> enableDisableBioMetric(bool value) async {
@@ -496,7 +497,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<File?> _resizeAndCompressImage(File file, int targetWidth) async {
     try {
       final directory = await getTemporaryDirectory();
-      final targetPath = path.join(directory.path, '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
+      final targetPath = path.join(directory.path,
+          '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
 
       final result = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
@@ -524,7 +526,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showModal(BuildContext context, String username, bool isQrGenerated) {
     showDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
+
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -535,7 +538,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               scrollable: true,
               insetPadding: EdgeInsets.all(10),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -546,7 +550,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.all(15),
                       child: isQrGenerated
                           ? Text("data")
-                      /*QrImageView(
+                          /*QrImageView(
                         data: username,
                         size: 110,
                         embeddedImageStyle: QrEmbeddedImageStyle(
@@ -554,17 +558,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )*/
                           : Shimmer.fromColors(
-                        baseColor: Colors.white38,
-                        highlightColor: Colors.grey,
-                        child: Container(
-                          width: 110,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            color: Colors.white38,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
+                              baseColor: Colors.white38,
+                              highlightColor: Colors.grey,
+                              child: Container(
+                                width: 110,
+                                height: 110,
+                                decoration: BoxDecoration(
+                                  color: Colors.white38,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                 ],
