@@ -41,7 +41,7 @@ class LanguageEn extends Languages {
   String get labelDOB => "D.O.B";
 
   @override
-  String get labelEnterCode => "Enter the code";
+  String get labelEnterCode => "Enter your PIN";
 
   @override
   String get labelExchange => "Exchange";

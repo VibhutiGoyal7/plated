@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
@@ -6,6 +5,7 @@ import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -155,16 +155,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisAlignment: sp,
-          children:[
+          children: [
             Container(
-              height: screenHeight*0.24,
-              child:_buildLabelText(context, "Phone Verification", 28, true),
+              height: screenHeight * 0.24,
+              child: _buildLabelText(context, "Phone Verification", 28, true),
               alignment: AlignmentDirectional.center,
             ),
-
-            Spacer(),
             Container(
-              height: screenHeight*0.72,
+              height: screenHeight * 0.65,
               child: Card(
                 margin: EdgeInsets.all(0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -172,9 +170,11 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 8),
-                    Padding(padding: EdgeInsets.all(12) ,child: _buildLabelText(
-                        context, Languages.of(context)!.enterPhoneNumber, 18, true) ,),
-                   
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: _buildLabelText(context,
+                          Languages.of(context)!.enterPhoneNumber, 18, true),
+                    ),
                     //SizedBox(height: 10),
                     _buildPhoneInput(context, isDarkMode),
                     Spacer(),
@@ -185,7 +185,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             ),
             /*_buildLabelText(
                 context, Languages.of(context)!.appName, 16, false),*/
-
           ],
         ),
       ),
@@ -204,7 +203,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
     return Card(
-      elevation:  2,
+      elevation: 2,
       child: Container(
         height: 60,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -297,7 +296,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   existingUserWidget(context, apiResponse);
                 } else if (countryCode == 0 && phoneCode == "+") {
                   SnackBar(
-                    content: Text(Languages.of(context)!.labelSelectCountryCode),
+                    content:
+                        Text(Languages.of(context)!.labelSelectCountryCode),
                   );
                 } else {
                   SnackBar(
@@ -315,7 +315,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   backgroundColor:
                       phoneNumberValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
-                  shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
+                  shape:
+                      BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
             ),
           ),
         ),
@@ -343,7 +344,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min, // Ensure minimal height
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,// Align start
+            mainAxisAlignment: MainAxisAlignment.end, // Align start
             children: <Widget>[
               ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -353,7 +354,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 padding: const EdgeInsets.only(bottom: 0),
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    tileColor: (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.PRIMARY : Colors.white,
+                    tileColor: (phoneCode == "+${countryList[index].phoneCode}")
+                        ? AppColor.PRIMARY
+                        : Colors.white,
                     onTap: () {
                       setState(() {
                         phoneCode = "+${countryList[index].phoneCode}";
@@ -366,7 +369,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                         countryList[index].flagImageUrl as String,
                         height: 28,
                         width: 50,
-                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
                           if (loadingProgress == null) {
                             return child;
                           } else {
@@ -391,14 +395,20 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.WHITE : Colors.black,
+                            color: (phoneCode ==
+                                    "+${countryList[index].phoneCode}")
+                                ? AppColor.WHITE
+                                : Colors.black,
                           ),
                         ),
                         Text(
                           "+${countryList[index].phoneCode}",
                           style: TextStyle(
                             fontSize: 12,
-                            color: (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.WHITE : Colors.black,
+                            color: (phoneCode ==
+                                    "+${countryList[index].phoneCode}")
+                                ? AppColor.WHITE
+                                : Colors.black,
                           ),
                         ),
                       ],
@@ -412,8 +422,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       },
     );
   }
-
-
 
   void _phoneVerifyAPI() async {
     if (phoneNumberValid) {
@@ -438,8 +446,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     await Provider.of<MainViewModel>(context, listen: false)
         .fetchCountryList("api/v1/app/customers/country_list");
     ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false)
-            .response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getCountryList(context, apiResponse);
   }
 }

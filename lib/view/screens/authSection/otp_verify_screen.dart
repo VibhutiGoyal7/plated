@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +31,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   bool isValid = false;
   bool resendOtp = false;
   String phoneNo = "";
+  late double screenWidth;
 
   @override
   void initState() {
@@ -71,7 +72,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   Future<Widget> getOtpResponseDataWidget(
       BuildContext context, ApiResponse apiResponse) async {
-    OtpVerifyResponse? otpVerifyResponse = apiResponse.data as OtpVerifyResponse?;
+    OtpVerifyResponse? otpVerifyResponse =
+        apiResponse.data as OtpVerifyResponse?;
     var message = otpVerifyResponse?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -115,7 +117,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   Widget getMediaWidgetResendOtp(
       BuildContext context, ApiResponse apiResponse) {
-    PhoneVerifyResponse? phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
+    PhoneVerifyResponse? phoneVerifyResponse =
+        apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -140,49 +143,54 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
-      body: Container(
-        width: screenWidth,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
             Container(
-            height: screenHeight*0.24,
-              child:_buildLabelText(context, "Phone Verification", 28, true),
+              width: screenWidth,
+              height: screenHeight * 0.15,
+              margin: EdgeInsets.zero,
+              child: _buildLabelText(context, "PIN \n VERIFICATION ", 28, true),
               alignment: AlignmentDirectional.center,
             ),
-
-            Spacer(),
             Container(
-              height: screenHeight*0.72,
+              width: screenWidth,
+              height: screenHeight * 0.72,
+              margin: EdgeInsets.zero,
               child: Card(
                 margin: EdgeInsets.all(0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildLabelText(
-                        context, Languages.of(context)!.labelWelcome, 16, false),
+                    /*_buildLabelText(context,
+                        Languages.of(context)!.labelWelcome, 16, false),
+
+                    SizedBox(height: 4),*/
+                    SizedBox(height: 20),
+                    Center(
+                      child: _buildLabelText(context,
+                          Languages.of(context)!.labelEnterCode, 20, true),
+                    ),
                     SizedBox(height: 4),
-                    _buildLabelText(
-                        context, Languages.of(context)!.labelEnterCode, 20, true),
-                    SizedBox(height: 4),
-                    _buildLabelText(
-                        context,
-                        "${Languages.of(context)!.labelSentCode} ${widget.data}",
-                        12,
-                        false),
+                    Center(
+                      child: _buildLabelText(
+                          context,
+                          "${Languages.of(context)!.labelSentCode} ${widget.data}",
+                          12,
+                          false),
+                    ),
                     SizedBox(height: 22),
                     _buildPhoneInput(context, screenWidth),
-                    SizedBox(height: 18),
+                    SizedBox(height: 10),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 24),
                       child: Row(
                         children: [
                           _buildLabelText(
@@ -202,10 +210,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 ),
               ),
             ),
-
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );
@@ -263,7 +268,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
           child: Text(
             Languages.of(context)!.labelTandC,
             textAlign: TextAlign.center,
@@ -274,7 +279,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           ),
         ),
         SizedBox(
-          width: double.infinity,
+          width: screenWidth * 0.7,
           child: ElevatedButton(
             onPressed: () async {
               String otp =
@@ -286,20 +291,14 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                         mobileOtp: otp,
                         countryId: null));
                 await Provider.of<MainViewModel>(context, listen: false)
-                  .fetchOtpVerifyData(
-                      "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                      phoneRequest);
+                    .fetchOtpVerifyData(
+                        "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
+                        phoneRequest);
 
                 ApiResponse apiResponse =
-                    Provider
-                        .of<MainViewModel>(context, listen: false)
-                        .response;
+                    Provider.of<MainViewModel>(context, listen: false).response;
                 getOtpResponseDataWidget(context, apiResponse);
-                /*Navigator.pushNamed(
-                    context,
-                    '/SetUpAccount'
-                );*/
-              }else{
+              } else {
                 SnackBar(
                   content: Text("Enter 6-digit otp."),
                 );
@@ -314,7 +313,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 backgroundColor: isValid ? Colors.blueAccent : Colors.white,
                 elevation: 3,
-                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
+                shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(2))),
           ),
         ),
         SizedBox(
@@ -361,6 +361,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   _buildLabelText(BuildContext context, String text, int size, bool isBold) {
     return Text(
       text,
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size.toDouble(),
         fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
@@ -376,9 +377,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               customer: Customer(
                   phoneNumber: phoneNo, mobileOtp: "", countryId: null));
           await Provider.of<MainViewModel>(context, listen: false)
-                  .fetchMediaData(
-                      "/api/v1/app/temp_customers/initiate_customer",
-                      phoneRequest);
+              .fetchMediaData(
+                  "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
 
           ApiResponse apiResponse =
               Provider.of<MainViewModel>(context, listen: false).response;

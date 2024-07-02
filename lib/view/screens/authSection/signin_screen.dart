@@ -142,7 +142,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 width: screenWidth,
                 padding: EdgeInsets.zero,
                 child: Card(
-                  elevation: 20 ,
+                  elevation: 20,
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -262,7 +262,7 @@ class _SigninScreenState extends State<SigninScreen> {
       child: Container(
         height: 60,
         width: screenWidth*0.8,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border(
@@ -292,6 +292,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
+                  alignLabelWithHint: true,
                   hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                   suffixIcon: IconButton(
