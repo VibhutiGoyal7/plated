@@ -85,6 +85,8 @@ abstract class Languages {
 
   String get labelTransfer;
 
+  String get labelTransaction;
+
   String get labelPayment;
 
   String get labelProfile;

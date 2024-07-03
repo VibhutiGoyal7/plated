@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:Payrio/model/response/kycStatusResponse.dart';
-
+import 'package:Payrio/view/component/news_offer_list_widget.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +12,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/request/shortcutItemList.dart';
+import '../../../model/response/offersResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
@@ -20,7 +20,6 @@ import '../../../view_model/main_view_model.dart';
 class DashboardHomeScreen extends StatefulWidget {
   @override
   _DashboardHomeScreenState createState() => _DashboardHomeScreenState();
-
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
@@ -35,13 +34,37 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   late List<Shortcutitemlist>
       _shortcutCardsList; // Initialize as late to delay initialization
 
-  final List<String> imgList = [
-    'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-    'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-    'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-    'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-    'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+  final List<OfferResponse> imgList = [
+    OfferResponse(
+        image:
+            "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+            "https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+            "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+            "https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+            "https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
   ];
   final ScrollController _scrollController = ScrollController();
   List<String> _allLogList = [
@@ -86,7 +109,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
-    apiResponse.data as KycStatusResponse?;
+        apiResponse.data as KycStatusResponse?;
     var message = kycStatusResponse?.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
@@ -97,8 +120,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         kycStatusApi = kycStatusResponse!.kycStatus!;
 
-        if(kycStatus != "verified"){
-
+        if (kycStatus != "verified") {
           Navigator.pushNamed(context, '/VerifyIdentityScreen');
         }
         //_showPicker(context: context);
@@ -146,7 +168,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     DateTime? lastBackPressed;
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop){
+      onPopInvoked: (bool didPop) {
         if (kDebugMode) {
           print("$didPop");
           final now = DateTime.now();
@@ -164,11 +186,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             );
             SystemNavigator.pop();
             //return Future.value(false);
-          }else
-            {
-              SystemNavigator.pop();
-            }
-         // return Future.value(true);
+          } else {
+            SystemNavigator.pop();
+          }
+          // return Future.value(true);
         }
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -193,7 +214,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                             child: GestureDetector(
                               onTap: () => {
-                                Navigator.pushNamed(context, '/ProfileScreen').then(onGoBack)
+                                Navigator.pushNamed(context, '/ProfileScreen')
+                                    .then(onGoBack)
                               },
                               child: imageUrl == null || imageUrl == ""
                                   ? Container(
@@ -321,7 +343,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               );
                             },
                           ),
-                          Icon(Icons.notifications)
+                          IconButton(
+                            icon: Icon(Icons.notifications),
+                            onPressed: () => {
+                              Navigator.pushNamed(
+                                  context, "/NotificationScreen")
+                            },
+                          ),
                         ],
                       ),
                       // Add space between sections
@@ -450,16 +478,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           children: List.generate(
                             4,
                             (index) {
-                              if(index<=2) {
+                              if (index <= 2) {
                                 return _buildContainer(
                                     context,
                                     _shortcutCardsList[index].title,
                                     _shortcutCardsList[index].icon);
-                              }else{
+                              } else {
                                 return _buildContainer(
-                                    context,
-                                    "More",
-                                    Icons.more_horiz);
+                                    context, "More", Icons.more_horiz);
                               }
                             },
                           ),
@@ -472,76 +498,45 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.25),
                       ),
-                      Container(
-                        width: screenWidth,
-                        height: screenHeight * 0.2,
-                        child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          controller: _scrollController,
-                          itemCount: _allLogList.length,
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.only(bottom: 10),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5),
-                              width: screenWidth / 2,
-                              child: Center(
-                                  child: Image.network(
-                                imgList[1],
-                                fit: BoxFit.cover,
-                              )),
-                            );
-                            // I omit the part to build card items from the list
-                          },
-                        ),
-
-                        /*CarouselSlider(
-                            options: CarouselOptions(
-                              viewportFraction: 0.5,
-                              autoPlay: true,
-                              aspectRatio: 16 / 9,
-                              autoPlayInterval: Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  Duration(milliseconds: 800),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              enlargeCenterPage: true,
-                            ),
-                            items: imgList
-                                .map((item) => Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5),
-                                      child: Center(
-                                          child: Image.network(item,
-                                              fit: BoxFit.cover, width: 500)),
-                                    ))
-                                .toList(),
-                          )*/
+                      // News and Offer List
+                      SizedBox(
+                        height: 10,
                       ),
+                      NewsOfferListWidget(data: imgList),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Transactions",
+                            "${Languages.of(context)!.labelTransaction}s",
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                "See all",
-                                style: TextStyle(
-                                  fontSize: 14.0,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                      context, '/TransactionsScreen')
+                                  .then(onGoBack);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "See all",
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 16,
-                              )
-                            ],
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 14,
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -689,19 +684,23 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Quick actions", style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-                ),),
-                SizedBox(height: 10,),
-                Text("Most Frequent", style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold
-                ),),
-                SizedBox(height: 10,),
+                Text(
+                  "Quick Actions",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Most Frequent",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                   child: Container(
-                    height: screenHeight*0.12,
+                    height: screenHeight * 0.12,
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
                       controller: _scrollController,
@@ -710,7 +709,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if(index <=1) {
+                        if (index <= 1) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -719,20 +718,24 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   padding: EdgeInsets.all(18),
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.blue
+                                      color: Colors.blue),
+                                  child: Icon(
+                                    _shortcutCardsList[index].icon,
+                                    color: AppColor.WHITE,
                                   ),
-                                  child: Icon(_shortcutCardsList[index].icon,
-                                    color: AppColor.WHITE,),),
+                                ),
                                 Text(
                                   _shortcutCardsList[index].title,
                                   style: TextStyle(
-                                    fontSize: 14,),
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ],
                             ),
                           );
-                        }else return Container();
-                      /*    ListTile(
+                        } else
+                          return Container();
+                        /*    ListTile(
                             leading: ClipRRect(
                               child: Container(
                                 padding: EdgeInsets.all(10),
@@ -761,8 +764,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     ),
                   ),
                 ),
-                Text("Send", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),
-                SizedBox(height: 10,),
+                Text("Send",
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                   //height: screenSize.height/2,
                   child: Container(
@@ -775,7 +782,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if(index ==2) {
+                        if (index == 2) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -784,26 +791,34 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   padding: EdgeInsets.all(18),
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.blue
+                                      color: Colors.blue),
+                                  child: Icon(
+                                    _shortcutCardsList[index].icon,
+                                    color: AppColor.WHITE,
                                   ),
-                                  child: Icon(_shortcutCardsList[index].icon,
-                                    color: AppColor.WHITE,),
-                                  ),
+                                ),
                                 Text(
                                   _shortcutCardsList[index].title,
                                   style: TextStyle(
-                                    fontSize: 14,),
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ],
                             ),
                           );
-                        }else return Container();
+                        } else
+                          return Container();
                       },
                     ),
                   ),
                 ),
-                Text("Pay", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
-                SizedBox(height: 10,),
+                Text(
+                  "Pay",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                   //height: screenSize.height/2,
                   child: Container(
@@ -815,7 +830,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if(index ==3) {
+                        if (index == 3) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -824,19 +839,23 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   padding: EdgeInsets.all(18),
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.blue
+                                      color: Colors.blue),
+                                  child: Icon(
+                                    _shortcutCardsList[index].icon,
+                                    color: AppColor.WHITE,
                                   ),
-                                  child: Icon(_shortcutCardsList[index].icon,
-                                    color: AppColor.WHITE,),),
+                                ),
                                 Text(
                                   _shortcutCardsList[index].title,
                                   style: TextStyle(
-                                    fontSize: 14,),
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ],
                             ),
                           );
-                        }else return Container();
+                        } else
+                          return Container();
                       },
                     ),
                   ),
@@ -848,6 +867,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       },
     );
   }
+
   int _countSelectedItems() {
     return _isChecked.where((item) => item).length;
   }
@@ -873,9 +893,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {_getKycStatus()}
                       else if (text == "More")
-                        {
-                        _showPicker(context: context)
-                        }
+                        {_showPicker(context: context)}
                     },
                 icon: Icon(
                   icon,
@@ -889,9 +907,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if(kycStatus != "verified"){
+    if (kycStatus != "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
-    }else{
+    } else {
       _fetchKycStatus();
     }
   }
@@ -901,8 +919,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     await Provider.of<MainViewModel>(context, listen: false)
         .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
     ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false)
-            .response;
+        Provider.of<MainViewModel>(context, listen: false).response;
     getKycStatus(context, apiResponse);
   }
 }

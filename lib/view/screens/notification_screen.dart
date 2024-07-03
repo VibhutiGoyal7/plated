@@ -51,11 +51,11 @@ class NotificationItem extends StatelessWidget {
         Navigator.pushNamed(context, "/NotificationDetailScreen");
       },
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Card(
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(4.0),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +66,7 @@ class NotificationItem extends StatelessWidget {
                     child: Text(
                       data.notificationHeading!,
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -77,7 +77,7 @@ class NotificationItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: Text(
                       data.notificationContent!,
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
               ],

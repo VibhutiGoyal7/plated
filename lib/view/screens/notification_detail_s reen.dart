@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/languageSection/Languages.dart';
-
+import 'package:flutter/material.dart';
 
 class NotificationDetailScreen extends StatefulWidget {
   @override
-  _NotificationDetailScreenState createState() => _NotificationDetailScreenState();
+  _NotificationDetailScreenState createState() =>
+      _NotificationDetailScreenState();
 }
 
 class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
@@ -26,7 +26,6 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
       body: SafeArea(
         child: Column(
           children: [
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -40,9 +39,9 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                           child: Text(
                             data.notificationHeading!,
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
-                                        ),
+                            ),
                           ),
                         ),
                       if (data.notificationContent != null)
@@ -51,16 +50,16 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                           child: Text(
                             data.notificationContent!,
                             style: TextStyle(
-                              fontSize: 12,
-                                        ),
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                     ],
                   ),
                   Spacer(),
-                  Icon(
+                  /*Icon(
                     Icons.arrow_forward,
-                    ),
+                    ),*/
                 ],
               ),
             ),

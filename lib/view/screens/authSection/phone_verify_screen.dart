@@ -272,7 +272,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     },
                     child: SizedBox(
                       height: 55,
-                      width: 25,
+                      width: 40,
                       child: Center(
                         child: Text(
                           phoneCode,
