@@ -126,19 +126,28 @@ class _SigninScreenState extends State<SigninScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                alignment: Alignment.topLeft,
-                width: screenWidth * 0.9,
-                height: screenHeight * 0.25,
-                image: AssetImage("assets/payment_image.png"),
-              ),
-              Container(
-                height: screenHeight * 0.7,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: <Widget>[
+                Container(
+                  height: screenHeight * 0.2,
+                  child:   Image(
+                    alignment: Alignment.topLeft,
+                    width: screenWidth * 0.9,
+                    height: screenHeight * 0.25,
+                    image: AssetImage("assets/payment_image.png"),
+                  ),
+                  alignment: AlignmentDirectional.center,
+                ),
+              ],
+            ),
+
+            Expanded(
+              child: Container(
                 width: screenWidth,
                 padding: EdgeInsets.zero,
                 child: Card(
@@ -186,9 +195,9 @@ class _SigninScreenState extends State<SigninScreen> {
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

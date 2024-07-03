@@ -1,5 +1,6 @@
 import 'package:Payrio/view/screens/payment_method_screen.dart';
 import 'package:Payrio/view/screens/payment_method_screen.dart';
+import 'package:Payrio/view/screens/transactions_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -372,6 +373,14 @@ class _MyAppState extends State<MyApp> {
                   .settings
                   .arguments as String?;
               return ScanQrScreen();
+            },
+            '/TransactionsScreen': (context) {
+              final args =
+              ModalRoute
+                  .of(context)!
+                  .settings
+                  .arguments as String?;
+              return TransactionsScreen();
             }
           }),
     );

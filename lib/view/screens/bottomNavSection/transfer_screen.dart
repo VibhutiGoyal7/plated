@@ -9,33 +9,31 @@ class TransferScreen extends StatefulWidget {
 
 class _TransferScreenState extends State<TransferScreen> {
   bool inputValid = false;
+  String amount = "0.00";
   final TextEditingController _inputController = TextEditingController();
 
   final ScrollController _scrollController = ScrollController();
   List<String> _allLogList = [
-    "100 INR",
-    "200 INR",
-    "300 INR",
-    "400 INR",
-    "500 INR"
+    "100",
+    "200",
+    "300",
+    "400",
+    "500"
   ];
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          Languages.of(context)!.labelMoneyTransfer,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(Languages.of(context)!.labelMoneyTransfer,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),),
+              SizedBox(height: 20,),
               Text(
                 Languages.of(context)!.labelEnterAmount,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
@@ -43,60 +41,79 @@ class _TransferScreenState extends State<TransferScreen> {
               Row(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 26.0,
-                      ),
-                      controller: _inputController,
-                      onChanged: (value) {},
-                      maxLength: 12,
-                      keyboardType: TextInputType.number,
-                      onSubmitted: (value) {},
-                      decoration: InputDecoration(
-                        counterText: "",
-                        border: InputBorder.none,
-                        hintText: Languages.of(context)!.labelZero,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 26.0,
+                        ),
+                        controller: _inputController,
+                        onChanged: (value) {
+                          amount = value;
+                        },
+                        maxLength: 12,
+                        keyboardType: TextInputType.number,
+                        onSubmitted: (value) {},
+                        decoration: InputDecoration(
+                          counterText: "",
+                          border: InputBorder.none,
+                          hintText: Languages.of(context)?.labelZero,
+                        ),
                       ),
                     ),
                   ),
-                  Text(
+                  /*Text(
                     Languages.of(context)!.labelINR,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                  ),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                  ),*/
                 ],
               ),
               SizedBox(
-                height: 5,
+                height: 15,
               ),
               Text(
                 "${Languages.of(context)!.labelBalance}: 7,000 ${Languages.of(context)!.labelINR}",
                 style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
               ),
               Container(
-                height: screenHeight*0.065, // Set the desired height
+                height: screenHeight * 0.065, // Set the desired height
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   physics: const AlwaysScrollableScrollPhysics(),
                   controller: _scrollController,
                   itemCount: _allLogList.length,
-                  padding: const EdgeInsets.only(bottom: 10), // Adjust padding if needed
+                  padding: const EdgeInsets.only(bottom: 10),
+                  // Adjust padding if needed
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width*0.16, // Adjust width as needed
-                      margin: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1.0, // Border width
+                    return GestureDetector(
+                      onTap: (){
+                        setState(() {
+                          _inputController.text = _allLogList[index];
+                        });
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width *
+                            0.18, // Adjust width as needed
+                        margin: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1.0, // Border width
+                          ),
+                          borderRadius: BorderRadius.circular(6.0),
                         ),
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          _allLogList[index],
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12),
+                        child: Card(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                _allLogList[index],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     );
@@ -108,7 +125,8 @@ class _TransferScreenState extends State<TransferScreen> {
               Card(
                 child: Container(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -132,7 +150,8 @@ class _TransferScreenState extends State<TransferScreen> {
                           padding: const EdgeInsets.all(4.0),
                           child: Text(
                             Languages.of(context)!.labelChange,
-                            style: TextStyle(fontSize: 14.0, color: Colors.blueAccent),
+                            style: TextStyle(
+                                fontSize: 14.0, color: Colors.blueAccent),
                           ),
                         ),
                       ],
@@ -147,7 +166,6 @@ class _TransferScreenState extends State<TransferScreen> {
         ),
       ),
     );
-
   }
 
   Widget _buildFooter(BuildContext context) {

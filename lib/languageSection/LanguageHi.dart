@@ -405,4 +405,7 @@ class LanguageHi extends Languages {
 
   @override
   String get labelLogout =>   "Logout";
+
+  @override
+  String get labelTransaction =>   "Transaction";
 }
