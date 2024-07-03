@@ -408,4 +408,7 @@ class LanguageAr extends Languages {
 
   @override
   String get labelTransaction =>   "Transaction";
+
+  @override
+  String get labelComingSoon =>   "Coming Soon";
 }

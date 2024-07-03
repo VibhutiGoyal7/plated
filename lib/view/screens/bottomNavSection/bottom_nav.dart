@@ -15,13 +15,15 @@ class BottomNav extends StatefulWidget {
   _BottomNavState createState() => _BottomNavState();
 }
 
-class _BottomNavState extends State<BottomNav> {
+class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometric = false;
   bool _isAuthenticated = false;
   bool _authenticationAttempted = false; // Add this flag
   String _authorized = 'Not Authorized';
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
@@ -33,15 +35,31 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   void initState() {
-
     _initializeBiometrics();
     super.initState();
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _animationController.forward(from: 0.0);
+
   }
 
   @override
@@ -49,7 +67,8 @@ class _BottomNavState extends State<BottomNav> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child:_selectedIndex!=0? ScaleTransition(scale : _animation,
+            child: _widgetOptions.elementAt(_selectedIndex)): _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
       floatingActionButton: FloatingActionButton(

@@ -157,6 +157,8 @@ abstract class Languages {
 
   String get labelPaymentScreen;
 
+  String get labelComingSoon;
+
   String get availablePayario;
 
   String get labelRedeemBal;

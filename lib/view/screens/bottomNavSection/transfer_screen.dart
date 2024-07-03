@@ -9,6 +9,7 @@ class TransferScreen extends StatefulWidget {
 
 class _TransferScreenState extends State<TransferScreen> {
   bool inputValid = false;
+  bool isComingSoon = false;
   String amount = "0.00";
   final TextEditingController _inputController = TextEditingController();
 
@@ -26,14 +27,18 @@ class _TransferScreenState extends State<TransferScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: isComingSoon ? Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(Languages.of(context)!.labelMoneyTransfer,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),),
-              SizedBox(height: 20,),
+              Text(
+                Languages.of(context)!.labelMoneyTransfer,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Text(
                 Languages.of(context)!.labelEnterAmount,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
@@ -88,7 +93,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   // Adjust padding if needed
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         setState(() {
                           _inputController.text = _allLogList[index];
                         });
@@ -97,12 +102,6 @@ class _TransferScreenState extends State<TransferScreen> {
                         width: MediaQuery.of(context).size.width *
                             0.18, // Adjust width as needed
                         margin: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1.0, // Border width
-                          ),
-                          borderRadius: BorderRadius.circular(6.0),
-                        ),
                         child: Card(
                           child: Center(
                             child: Padding(
@@ -163,6 +162,11 @@ class _TransferScreenState extends State<TransferScreen> {
               SizedBox(height: 10)
             ],
           ),
+        ) : Center(
+          child: Text(Languages.of(context)!.labelComingSoon, style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold
+          ),),
         ),
       ),
     );

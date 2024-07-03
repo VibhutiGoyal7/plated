@@ -19,8 +19,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 25.0),
           child: Center(
               child: Text(
-            Languages.of(context)!.labelPaymentScreen,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+            Languages.of(context)!.labelComingSoon,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ))),
     ));
   }

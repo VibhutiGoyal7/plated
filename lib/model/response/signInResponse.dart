@@ -18,26 +18,26 @@ class SignInResponse {
   final String? currentToken;
   final int? activityPoints;
   final int? countryId;
-  final int? balance;
+  final String? balance;
   final String? vipLevel;
   final String? username;
 
   SignInResponse(
       {this.firstName,
-        this.lastName,
-        this.id,
-        this.phoneNumber,
-        this.createdAt,
-        this.updatedAt,
-        this.email,
-        this.address,
-        this.dob,
-        this.status,
-        this.isEmailVerified,
-        this.mobileOtpExpireAt,
-        this.mobileOtp,
-        this.token,
-        this.message,
+      this.lastName,
+      this.id,
+      this.phoneNumber,
+      this.createdAt,
+      this.updatedAt,
+      this.email,
+      this.address,
+      this.dob,
+      this.status,
+      this.isEmailVerified,
+      this.mobileOtpExpireAt,
+      this.mobileOtp,
+      this.token,
+      this.message,
       this.kycStatus,
       this.currentToken,
       this.activityPoints,
@@ -52,12 +52,18 @@ class SignInResponse {
       lastName: json['data']['customer']?['last_name'] as String?,
       id: json['data']['customer']?['id'] as int?,
       phoneNumber: json['data']['customer']?['phone_number'] as String?,
-      createdAt: json['data']['customer']?['created_at'] /*!= null
-          ? DateTime.parse(json['data']['customer']?['created_at']*/ as String?/*)
-          : null,*/,
-      updatedAt: json['data']['customer']?['updated_at'] /*!= null
-          ? DateTime.parse(json['data']['customer']?['updated_at']*/ as String/*)
-          : null,*/,
+      createdAt: json['data']['customer']?[
+              'created_at'] /*!= null
+          ? DateTime.parse(json['data']['customer']?['created_at']*/
+          as String? /*)
+          : null,*/
+      ,
+      updatedAt: json['data']['customer']?[
+              'updated_at'] /*!= null
+          ? DateTime.parse(json['data']['customer']?['updated_at']*/
+          as String /*)
+          : null,*/
+      ,
       email: json['data']['customer']?['email'] as String?,
       address: json['data']['customer']?['address'] as String?,
       dob: json['data']['customer']?['dob'] as String?,
@@ -68,7 +74,7 @@ class SignInResponse {
       kycStatus: json['data']['customer']?['kyc_status'] as String?,
       currentToken: json['data']['customer']?['current_token'] as String?,
       vipLevel: json['data']['customer']?['vip_level'] as String?,
-      balance: json['data']['customer']?['balance'] as int?,
+      balance: json['data']['customer']?['balance'] as String?,
       username: json['data']['customer']?['username'] as String?,
       countryId: json['data']['customer']?['country_id'] as int?,
       activityPoints: json['data']['customer']?['activity_points'] as int?,
@@ -87,7 +93,7 @@ class SignInResponse {
     data['email'] = this.email;
     data['address'] = this.address;
     data['kyc_status'] = this.kycStatus;
-    data['created_at'] = this.createdAt ;
+    data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['status'] = this.status;
     data['dob'] = this.dob;
@@ -103,12 +109,18 @@ class SignInResponse {
       lastName: json['last_name'] as String?,
       id: json['id'] as int?,
       phoneNumber: json['phone_number'] as String?,
-      createdAt: json['created_at']/* != null
-          ? DateTime.parse(json['created_at'] */as String/*)
-          : null*/,
-      updatedAt: json['updated_at']/* != null
-          ? DateTime.parse(json['updated_at']*/ as String?/*)
-          : null*/,
+      createdAt: json[
+              'created_at'] /* != null
+          ? DateTime.parse(json['created_at'] */
+          as String /*)
+          : null*/
+      ,
+      updatedAt: json[
+              'updated_at'] /* != null
+          ? DateTime.parse(json['updated_at']*/
+          as String? /*)
+          : null*/
+      ,
       email: json['email'] as String?,
       address: json['address'] as String?,
       dob: json['dob'] as String?,

@@ -25,13 +25,14 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   bool confirmPasswordVisible = false;
 
   bool inputValid = false;
-
+  bool isDarkMode = false;
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
     confirmPasswordVisible = true;
     inputValid = false;
+    isDarkMode = false;
   }
 
   void _isValidInput() {
@@ -40,6 +41,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         _nameController.text.isNotEmpty &&
         _lastNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty &&
+        _dateController.text.isNotEmpty &&
         _confirmPasswordController.text.isNotEmpty &&
         _passwordController.text.length >= 8 &&
         _passwordController.text == _confirmPasswordController.text &&
@@ -101,7 +103,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
@@ -181,13 +183,13 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         _buildDOBInput(
                             context,
                             Languages.of(context)!.labelDOB,
-                            isDarkMode,
                             _dateController,
                             Icon(
                               Icons.calendar_month,
                               size: 18,
                               color: isDarkMode ? Colors.white : Colors.black,
-                            )),
+                            )
+                        ),
                         SizedBox(height: 10),
                         _buildPasswordInput(
                             context,
@@ -273,8 +275,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     );
   }
 
-  Widget _buildDOBInput(BuildContext context, String text, bool isDarkMode,
-      TextEditingController nameController, Icon icon) {
+  Widget _buildDOBInput(BuildContext context, String text,
+      TextEditingController dateController, Icon icon) {
     return Card(
       child: Container(
         height: 60,
@@ -286,16 +288,16 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           children: [
             Expanded(
                 child: TextField(
-                    controller: _dateController,
+                    controller: dateController,
                     //editing controller of this TextField
-                    decoration: const InputDecoration(
-                        icon: Icon(
-                          Icons.calendar_month,
-                          //color: isDarkMode ? Colors.white : Colors.black,
-                          size: 20,
-                        ),
+                    textInputAction: TextInputAction.done,
+
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Enter Date",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        icon: icon
                         //icon of text field
-                        labelText: "Enter Date" //label text of field
                         ),
                     readOnly: true,
                     // when true user cannot edit text
@@ -399,7 +401,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
             SizedBox(width: 16),
             Expanded(
               child: TextField(
-                style: TextStyle(fontSize: 16.0),
+                textAlignVertical: TextAlignVertical.center,
+                style: TextStyle(fontSize: 16.0,),
                 obscureText: passwordVisibles,
                 obscuringCharacter: "*",
                 controller: nameController,
@@ -459,7 +462,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                   password: _passwordController.text,
                   firstName: _nameController.text,
                   lastName: _lastNameController.text,
-                  dob: "17/07/1996",
+                  dob: _dateController.text,
                 ));
                 await Provider.of<MainViewModel>(context, listen: false)
                     .fetchSetUpScreenData(

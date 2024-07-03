@@ -269,7 +269,6 @@ class _SigninScreenState extends State<SigninScreen> {
   ) {
     return Card(
       child: Container(
-        height: 60,
         width: screenWidth*0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
         decoration: BoxDecoration(
@@ -288,6 +287,7 @@ class _SigninScreenState extends State<SigninScreen> {
             SizedBox(width: 16),
             Expanded(
               child: TextField(
+                textAlignVertical: TextAlignVertical.center,
                 style: TextStyle(fontSize: 14.0),
                 obscureText: passwordVisibles,
                 obscuringCharacter: "*",

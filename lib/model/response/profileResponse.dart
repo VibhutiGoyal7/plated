@@ -13,7 +13,7 @@ class ProfileResponse {
   final String? phoneNumber;
   final String? message;
   final String? username;
-  final int? balance;
+  final String? balance;
   final String? kycStatus;
   final int? activityPts;
   final String? vipLevel;
@@ -59,7 +59,7 @@ class ProfileResponse {
       dob: json['data']?['dob'] as String?,
       isEmailVerified: json['data']?['is_email_verified'] as bool?,
       username: json['data']?['username'] as String?,
-      balance: json['data']?['balance'] as int?,
+      balance: json['data']?['balance'] as String?,
       kycStatus: json['data']?['kyc_status'] as String?,
       activityPts: json['data']?['activity_points'] as int?,
       vipLevel: json['data']?['vip_level'] as String?,
@@ -105,7 +105,7 @@ class ProfileResponse {
       address: json['address'] as String?,
       dob: json['dob'] as String?,
       username: json['username'] as String?,
-      balance: json['balance'] as int?,
+      balance: json['balance'] as String?,
       kycStatus: json['kyc_status'] as String?,
       activityPts: json['activity_points'] as int?,
       vipLevel: json['vip_level'] as String?,

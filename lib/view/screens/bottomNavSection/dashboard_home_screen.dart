@@ -28,7 +28,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String amount = "0.00";
   String? name = "";
   var imageUrl;
-  bool isAmountVisible = true;
+  bool isAmountVisible = false;
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist>
@@ -274,7 +274,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                           ),
                           SizedBox(width: 5),
-                          Column(
+                         /* Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -318,14 +318,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 style: TextStyle(fontSize: 14.0),
                               ),
                             ],
-                          ),
+                          ),*/
 
                           // Add space between avatar and text
-                          /*Text(
+                          Text(
                             "${Languages.of(context)!.labelHi}, $name",
                             style: TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.bold),
-                          ),*/
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
 
                           Spacer(),
                           IconButton(
@@ -503,7 +503,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         height: 10,
                       ),
                       NewsOfferListWidget(data: imgList),
-
+                      SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,

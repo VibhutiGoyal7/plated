@@ -10,13 +10,14 @@ class RewardScreen extends StatefulWidget {
 class _RewardScreenState extends State<RewardScreen> {
   double amount = 0.00;
   String name = "";
+  bool isComingSoon = false;
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: SafeArea(
-      child: Padding(
+      child: isComingSoon ? Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +122,14 @@ class _RewardScreenState extends State<RewardScreen> {
                 ),
               )
             ],
-          )),
+          )) :
+          Center(
+            child: Text(Languages.of(context)!.labelComingSoon,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold
+            ),),
+          ),
     ));
   }
 }
