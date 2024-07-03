@@ -19,6 +19,13 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.WHITE4,
       ),
+      tabBarTheme: TabBarTheme(
+        dividerColor: Colors.black,
+        labelColor: Colors.black,
+          unselectedLabelColor: Colors.black45,
+          indicatorColor: Colors.black,
+          unselectedLabelStyle: TextStyle(fontSize: 12),
+      /*indicatorSize: TabBarIndicatorSize.label*/),
       cardTheme: const CardTheme(color: AppColor.WHITE4),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
@@ -165,6 +172,12 @@ class AppTheme {
         titleTextStyle: TextStyle(color: AppColor.WHITE, fontSize: 22),
         iconColor: AppColor.WHITE,
       ),
+      tabBarTheme: TabBarTheme(
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white24,
+        indicatorColor: Colors.white,
+        unselectedLabelStyle: TextStyle(fontSize: 12),
+        /*indicatorSize: TabBarIndicatorSize.label*/),
       textTheme: TextTheme(
         displayLarge: TextStyle(
           fontFamily: 'CustomFont',

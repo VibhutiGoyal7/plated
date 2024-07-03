@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:Payrio/model/request/createOtpChangePass.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
@@ -9,6 +10,7 @@ import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
@@ -151,6 +153,16 @@ class MainRepository {
     final jsonData = response;
     print(jsonData);
     return response;
+  }
+
+  Future<dynamic> addMoneyData(String value, AddMoneyRequest addMoneyRequest) async {
+    print(addMoneyRequest);
+    dynamic response = await _payrioService.postResponse(value,addMoneyRequest);
+    print("Repo $value");
+    final jsonData = response;
+    AddMoneyResponse mediaList = AddMoneyResponse.fromJson(jsonData);
+    print("RepoJsonData $jsonData");
+    return mediaList;
   }
 
   Future<FetchKycDocResponse> fetchKycDocData(String value) async {

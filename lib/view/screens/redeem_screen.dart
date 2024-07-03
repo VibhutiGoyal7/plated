@@ -39,14 +39,14 @@ class _RedeemScreenState extends State<RedeemScreen> {
           padding: EdgeInsets.all(16.0),
           child: Container(
             width: double.infinity,
-            height: screenHeight * 0.35,
+            height: screenHeight * 0.3,
             child: Card(
               child: Column(
                 children: [
                   SizedBox(
                     height: 20,
                   ),
-                  Icon(Icons.person, size: 125.0),
+                  Icon(Icons.person, size: 150.0),
                   //SizedBox(height: 8.0),
                   Text(data[0].redeemData),
                   //SizedBox(height: 4.0),

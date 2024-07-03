@@ -26,7 +26,7 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.help_outline),
+              icon: Icon(Icons.help_outline, color: Colors.white,),
               onPressed: () {
                 Navigator.pushNamed(context, "/NotificationScreen");
               },
@@ -126,9 +126,9 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                   Tab(text: Languages.of(context)!.labelSilver),
                   Tab(text: Languages.of(context)!.labelGOld),
                 ],
-                labelColor: AppColor.WHITE,
+                /*labelColor: AppColor.WHITE,
                 unselectedLabelColor: AppColor.WHITE,
-                indicatorColor: AppColor.WHITE,
+                indicatorColor: AppColor.WHITE,*/
               ),
               Expanded(
                 child: TabBarView(
@@ -166,16 +166,18 @@ class Standard extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Text(
-                Languages.of(context)!.labelExclusiveBenefits,
-                style: TextStyle(
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(10),
+                /*decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(18),
+                ),*/
+                child: Text(
+                  Languages.of(context)!.labelExclusiveBenefits,
+                  style: TextStyle(
+                  ),
                 ),
               ),
             ),
@@ -189,51 +191,53 @@ class Standard extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          '1',
-                          style: TextStyle(
-                            fontSize: 16,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(6),
+                /*decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(10),
+                ),*/
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            '1',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'x',
-                          style: TextStyle(
-                            fontSize: 16,
+                          Text(
+                            'x',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Languages.of(context)!.labelOnlinePayments,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                          Text(
+                            Languages.of(context)!.labelOnlinePayments,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Text(
-                      Languages.of(context)!.labelEarnPayarioPts,
-                      style: TextStyle(
-                        color: Colors.grey,
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text(
+                        Languages.of(context)!.labelEarnPayarioPts,
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -253,39 +257,39 @@ class Silver extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    Languages.of(context)!.labelLockedLvl,
-                    style: TextStyle(
-                      fontSize: 14,
+                child: Row(
+                  children: [
+                    Text(
+                      Languages.of(context)!.labelLockedLvl,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  Text(
-                    Languages.of(context)!.labelUnlockWith,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    Spacer(),
+                    Text(
+                      Languages.of(context)!.labelUnlockWith,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '3,000',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    Text(
+                      '3,000',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -298,18 +302,18 @@ class Silver extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                 
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Text(
-                Languages.of(context)!.labelPreviousBenefits,
-                style: TextStyle(
+                child: Text(
+                  Languages.of(context)!.labelPreviousBenefits,
+                  style: TextStyle(
+                  ),
                 ),
               ),
             ),
@@ -323,55 +327,55 @@ class Silver extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          '1',
-                          style: TextStyle(
-                            color: Color(0xFF20e7a6),
-                            fontSize: 16,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            '1',
+                            style: TextStyle(
+                              color: Color(0xFF20e7a6),
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'x',
-                          style: TextStyle(
-                            color: Color(0xFF20e7a6),
-                            fontSize: 16,
+                          Text(
+                            'x',
+                            style: TextStyle(
+                              color: Color(0xFF20e7a6),
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Languages.of(context)!.labelOnlinePayments,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                          Text(
+                            Languages.of(context)!.labelOnlinePayments,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Text(
-                      Languages.of(context)!.labelEarnPayarioPtsWithMin1670,
-                      style: TextStyle(
-                        color: Colors.grey,
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text(
+                        Languages.of(context)!.labelEarnPayarioPtsWithMin1670,
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -390,39 +394,39 @@ class Gold extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    Languages.of(context)!.labelLockedLvl,
-                    style: TextStyle(
-                      fontSize: 14,
+                child: Row(
+                  children: [
+                    Text(
+                      Languages.of(context)!.labelLockedLvl,
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  Text(
-                    Languages.of(context)!.labelUnlockWith,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    Spacer(),
+                    Text(
+                      Languages.of(context)!.labelUnlockWith,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '10,000',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    Text(
+                      '10,000',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -435,18 +439,18 @@ class Gold extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                 
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Text(
-                Languages.of(context)!.labelPreviousBenefits,
-                style: TextStyle(
+                child: Text(
+                  Languages.of(context)!.labelPreviousBenefits,
+                  style: TextStyle(
+                  ),
                 ),
               ),
             ),
@@ -460,55 +464,54 @@ class Gold extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(4),
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          '2',
-                          style: TextStyle(
-                            color: Color(0xFF20e7a6),
-                            fontSize: 16,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            '2',
+                            style: TextStyle(
+                              color: Color(0xFF20e7a6),
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'x',
-                          style: TextStyle(
-                            color: Color(0xFF20e7a6),
-                            fontSize: 16,
+                          Text(
+                            'x',
+                            style: TextStyle(
+                              color: Color(0xFF20e7a6),
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Languages.of(context)!.labelOnlinePayments,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                          Text(
+                            Languages.of(context)!.labelOnlinePayments,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Text(
-                      Languages.of(context)!.label2xEarnPayarioPtsWithMin1670,
-                      style: TextStyle(
-                        color: Colors.grey,
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text(
+                        Languages.of(context)!.label2xEarnPayarioPtsWithMin1670,
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

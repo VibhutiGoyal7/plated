@@ -1,8 +1,16 @@
+import 'package:Payrio/model/request/AddMoneyRequest.dart';
+import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../languageSection/Languages.dart';
+import '../../model/apis/api_response.dart';
+import '../../model/response/profileResponse.dart';
+import '../../theme/AppColor.dart';
 import '../../utils/Helper.dart';
+import '../../view_model/main_view_model.dart';
+import '../component/session_expired_dialog.dart';
 
 class AddMoneyScreen extends StatefulWidget {
   @override
@@ -10,6 +18,11 @@ class AddMoneyScreen extends StatefulWidget {
 }
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
+  late double screenWidth;
+  String bankName = "abc bank";
+  bool isDarkMode = false;
+  String username = "";
+  String paymentMethod = "Pay2Local";
   String limitAmt = "1000";
   String kycStatus = "";
   String amount = "";
@@ -22,6 +35,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   void initState() {
     super.initState();
     inputValid = false;
+    _fetchData();
   }
 
   @override
@@ -44,8 +58,38 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     }
   }
 
+  Future<Widget> getAddMoneyResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    AddMoneyResponse? addMoneyResponse =
+    apiResponse.data as AddMoneyResponse?;
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("response: ${apiResponse}");
+        String redirectUrl = "${addMoneyResponse?.redirectUrl}";
+        print("redirectUrl: ${redirectUrl}");
+        Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+
+        if(addMoneyResponse?.message== "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -64,36 +108,30 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 18,),
+              Container(
+                height: 70,
+                width: 70,
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: AppColor.WHITE,
+                  backgroundImage: AssetImage(
+                    "assets/bank_statement.png",
 
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 5.0,left: 5, bottom: 8.0),
-                child: Text(
-                  Languages.of(context)!.labelEnterAmount,
+                  ),
                 ),
               ),
-             /* Container(
-                width: 250.0,
-                child: TextFormField(
-                  controller: tokenInputController,
-                  decoration: InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Authorization token'),
-                ),
-              ),
-              ElevatedButton(
-                child: Text("Start"),
-                onPressed: () {
-                  _start(tokenInputController.text);
-                },
-              ),*/
+              SizedBox(height: 15,),
+              Text("Adding via: ${paymentMethod}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              Text("${username}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: isDarkMode ? Colors.white70:Colors.black54)),
+              Text("Please enter amount to proceed", style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),),
               _buildPhoneInput(
                   context, Languages.of(context)!.labelZero, _amountController),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 4),
-                child: Text("Limit : ${limitAmt}"),
+                padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                child: Text("Limit : ${limitAmt}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
               ),
               Spacer(),
               _buildFooter(context),
@@ -110,57 +148,71 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     TextEditingController amountController,
     //TextEditingController nameController, Icon icon
   ) {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 4.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: amountController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
+    return Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          //Text("Rs", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal),),
+          Container(
+           // height: 60,
+            width: screenWidth*0.85 ,
+            padding: EdgeInsets.symmetric(horizontal: 2.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: TextField(
+              style: TextStyle(
+                fontSize: 40.0,
+              ),
+              obscureText: false,
+              obscuringCharacter: "*",
+              controller: amountController,
+              onChanged: (value) {
+                _isValidInput();
+              },
+              maxLength: 6,
+              textAlign: TextAlign.center,
+              onSubmitted: (value) {},
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                counterText: "",
+                border: InputBorder.none,
+                hintText: text,
+                hintStyle: TextStyle(color: Colors.grey),
+                alignLabelWithHint: true
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildFooter(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
       child: Column(
         children: [
           SizedBox(
-            width: double.infinity,
+            width: screenWidth*0.7,
             child: ElevatedButton(
               onPressed: () async {
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
-                  //_fetchKycStatus();
+                  AddMoneyRequest request = AddMoneyRequest(amount: int.parse(_amountController.text));
+
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .addMoneyData(
+                      "/api/v1/app/transactions/add_money_to_wallet",
+                      request);
+
+                  ApiResponse apiResponse =
+                      Provider.of<MainViewModel>(context, listen: false)
+                          .response;
+                  getAddMoneyResponse(context, apiResponse);
+
                 }
               },
               child: Text(
@@ -169,12 +221,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     color: inputValid ? Colors.white : Colors.blueAccent),
               ),
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
                   backgroundColor:
                       inputValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.circular(2))),
+                      borderRadius: BorderRadius.circular(4))),
             ),
           ),
         ],
@@ -235,5 +287,16 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     if(kycStatus != "verified"){
       Navigator.pushNamed(context, '/VerifyIdentityScreen');
     }
+  }
+
+  Future<ProfileResponse?> _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileDetails = await Helper.getProfileDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        username = "${profileDetails?.username}";
+      });
+    });
+    return profileDetails;
   }
 }

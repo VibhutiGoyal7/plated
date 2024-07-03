@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
+import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
@@ -284,6 +286,21 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> addMoneyData(String value,
+      AddMoneyRequest addMoneyRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      AddMoneyResponse response = await MainRepository().addMoneyData(value, addMoneyRequest);
+      print("MainViewModel $response");
+        _apiResponse = ApiResponse.completed(response);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("MainViewModelError $e");
     }
     notifyListeners();
   }

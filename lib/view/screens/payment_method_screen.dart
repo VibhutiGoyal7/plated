@@ -79,9 +79,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     SizedBox(height: 8,),
                     GestureDetector(
                       onTap: (){
-                        _showPicker(context: context);
+                        //_showPicker(context: context);
+                        Navigator.pushNamed(context, "/AddMoneyScreen");
                       },
-                       child: _buildCard(context, "Fionpay","assets/bank_statement.png", isDarkMode),
+                       child: _buildCard(context, "Pay2Local","assets/bank_statement.png", isDarkMode),
                     )
                   ]
               ),

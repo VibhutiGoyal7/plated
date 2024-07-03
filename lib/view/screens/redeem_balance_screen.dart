@@ -30,12 +30,13 @@ class _RedeemBalanceScreenState extends State<RedeemBalanceScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 2.0,
+                  //childAspectRatio: 1.0,
                 ),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
