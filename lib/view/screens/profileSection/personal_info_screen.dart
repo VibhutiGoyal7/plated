@@ -72,9 +72,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             _buildEmailVerification(
               context: context,
               //customerDetailsResponse: customerDetailsResponse,
-              onTap: () {
+              onTap: () {if(isEmailVerified != true ){
                 Navigator.pushNamed(context, '/VerifyEmail');
-              },
+              }}
             ),
           ],
         ),
@@ -128,7 +128,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: GestureDetector(
-        onTap: onTap,
+        onTap:onTap,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),

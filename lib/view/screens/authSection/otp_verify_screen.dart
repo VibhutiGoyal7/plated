@@ -145,9 +145,12 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -186,7 +189,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                           false),
                     ),
                     SizedBox(height: 22),
-                    _buildPhoneInput(context, screenWidth),
+                    _buildPhoneInput(context, screenWidth , isDarkMode),
                     SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -231,7 +234,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     );
   }
 
-  Widget _buildPhoneInput(BuildContext context, double screenWidth) {
+  Widget _buildPhoneInput(BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -239,8 +242,16 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
+            decoration: BoxDecoration(
+                border : Border(
+                    top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                    bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                    right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                    left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
+                borderRadius: BorderRadius.circular(6)
+            ),
             width: screenWidth / 8.1,
-            height: 65.0,
+            height: 62.0,
             child: TextField(
               controller: _controllers[index],
               focusNode: _focusNodes[index],

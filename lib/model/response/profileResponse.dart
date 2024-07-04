@@ -116,5 +116,4 @@ class ProfileResponse {
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }
-
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
+import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/session_expired_dialog.dart';
 
@@ -13,6 +15,8 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  late double screenWidth;
+
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -61,6 +65,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +84,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisSize: MainAxisSize.max,
             children: [
+              SizedBox(height: 10,),
+              Image(
+                alignment: Alignment.topLeft,
+                width: screenWidth*0.6,
+               // height: screenHeight*0.45,
+                image: AssetImage("assets/change_password.png"),
+              ),
+
+              SizedBox(height: 10,),
               _buildPasswordInput(
                   context,
                   Languages.of(context)!.labelOldPass,
@@ -132,56 +148,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    print(_newPasswordController.text);
-                    CustomerChangePassDetail customer =
-                        CustomerChangePassDetail(
-                            password: _oldPasswordController.text,
-                            newPassword: _newPasswordController.text);
-
-                    ChangeOldPassRequest request =
-                        ChangeOldPassRequest(customer: customer);
-
-                    await Provider.of<MainViewModel>(context, listen: false)
-                        .changeOldPasswordData(
-                            "/api/v1/app/customers/update_password_with_old_password",
-                            request);
-                    ApiResponse apiResponse =
-                        Provider.of<MainViewModel>(context, listen: false)
-                            .response;
-                    getMediaWidget(context, apiResponse);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      _isButtonEnabled()
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey,
-                    ),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child:Text(
-                        Languages.of(context)!.labelProceed,
-                        style: TextStyle(
-                            color: _isButtonEnabled() ? Colors.white : Colors.blueAccent),
-                      ),
-
-                    ),
-                  ),
-                ),
-              )
+              SizedBox(height: 22),
+             _buildFooter(context)
             ],
           ),
         ),
@@ -196,6 +164,57 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _newPasswordController.text == _confirmPasswordController.text;
   }
 
+  Widget _buildFooter(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          width: screenWidth*0.9,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                _isButtonEnabled();
+                if (_isButtonEnabled()) {
+
+                  print(_newPasswordController.text);
+                  CustomerChangePassDetail customer =
+                  CustomerChangePassDetail(
+                      password: _oldPasswordController.text,
+                      newPassword: _newPasswordController.text);
+
+                  ChangeOldPassRequest request =
+                  ChangeOldPassRequest(customer: customer);
+
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .changeOldPasswordData(
+                      "/api/v1/app/customers/update_password_with_old_password",
+                      request);
+                  ApiResponse apiResponse =
+                      Provider.of<MainViewModel>(context, listen: false)
+                          .response;
+                  getMediaWidget(context, apiResponse);
+                }
+              },
+              child: Text(
+                Languages.of(context)!.labelProceed,
+                style: TextStyle(
+                    color: _isButtonEnabled() ? Colors.white : Colors.blueAccent),
+              ),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  backgroundColor:
+                  _isButtonEnabled() ? Colors.blueAccent : Colors.white,
+                  elevation: 3,
+                  shape:
+                  BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),
+            ),
+          ),
+        ),
+
+      ],
+    );
+  }
+
   Widget _buildPasswordInput(
     BuildContext context,
     String text,
@@ -205,13 +224,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     bool isDarkMode,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
       child: Card(
         child: Container(
-          height: 60,
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          //height: 60,
+          width: screenWidth*0.92,
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+            //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Row(
@@ -219,10 +239,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               SizedBox(width: 16),
               Expanded(
                 child: TextField(
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(fontSize: 15.0),
                   obscureText: passwordVisibles,
                   obscuringCharacter: "*",
                   controller: nameController,
+                  textAlignVertical: TextAlignVertical.center,
                   onChanged: (value) {},
                   onSubmitted: (value) {},
                   keyboardType: TextInputType.visiblePassword,
@@ -230,7 +251,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: text,
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
                     icon: icon,
                     suffixIcon: IconButton(
                       icon: Icon(

@@ -91,6 +91,9 @@ flutter:
       - assets/geo_Location.jpg
       - assets/address.png
       - assets/video-recording.png
+      - assets/change_password.png
+      - assets/forgot_password.png
+
   fonts:
     - family: CustomFont
       fonts:

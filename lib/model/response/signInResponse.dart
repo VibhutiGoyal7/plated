@@ -20,6 +20,7 @@ class SignInResponse {
   final int? countryId;
   final String? balance;
   final String? vipLevel;
+  final String? isProfileSetupDone;
   final String? username;
 
   SignInResponse(
@@ -43,43 +44,45 @@ class SignInResponse {
       this.activityPoints,
       this.countryId,
       this.balance,
+      this.isProfileSetupDone,
       this.vipLevel,
       this.username});
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) {
     return SignInResponse(
-      firstName: json['data']['customer']?['first_name'] as String?,
-      lastName: json['data']['customer']?['last_name'] as String?,
-      id: json['data']['customer']?['id'] as int?,
-      phoneNumber: json['data']['customer']?['phone_number'] as String?,
-      createdAt: json['data']['customer']?[
+      message: json['message'] as String?,
+      firstName: json['data']?['customer']?['first_name'] as String?,
+      lastName: json['data']?['customer']?['last_name'] as String?,
+      id: json['data']?['customer']?['id'] as int?,
+      phoneNumber: json['data']?['customer']?['phone_number'] as String?,
+      createdAt: json['data']?['customer']?[
               'created_at'] /*!= null
           ? DateTime.parse(json['data']['customer']?['created_at']*/
           as String? /*)
           : null,*/
       ,
-      updatedAt: json['data']['customer']?[
+      updatedAt: json['data']?['customer']?[
               'updated_at'] /*!= null
           ? DateTime.parse(json['data']['customer']?['updated_at']*/
-          as String /*)
+          as String? /*)
           : null,*/
       ,
-      email: json['data']['customer']?['email'] as String?,
-      address: json['data']['customer']?['address'] as String?,
-      dob: json['data']['customer']?['dob'] as String?,
-      isEmailVerified: json['data']['customer']?['is_email_verified'] as bool?,
+      email: json['data']?['customer']?['email'] as String?,
+      address: json['data']?['customer']?['address'] as String?,
+      dob: json['data']?['customer']?['dob'] as String?,
+      isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
       mobileOtpExpireAt:
-          json['data']['customer']?['mobile_otp_expire_at'] as int?,
-      mobileOtp: json['data']['customer']?['mobile_otp'] as String?,
-      kycStatus: json['data']['customer']?['kyc_status'] as String?,
-      currentToken: json['data']['customer']?['current_token'] as String?,
-      vipLevel: json['data']['customer']?['vip_level'] as String?,
-      balance: json['data']['customer']?['balance'] as String?,
-      username: json['data']['customer']?['username'] as String?,
-      countryId: json['data']['customer']?['country_id'] as int?,
-      activityPoints: json['data']['customer']?['activity_points'] as int?,
-      token: json['data']['token'] as String?,
-      message: json['message'] as String?,
+          json['data']?['customer']?['mobile_otp_expire_at'] as int?,
+      mobileOtp: json['data']?['customer']?['mobile_otp'] as String?,
+      kycStatus: json['data']?['customer']?['kyc_status'] as String?,
+      currentToken: json['data']?['customer']?['current_token'] as String?,
+      vipLevel: json['data']?['customer']?['vip_level'] as String?,
+      balance: json['data']?['customer']?['balance'] as String?,
+      username: json['data']?['customer']?['username'] as String?,
+      countryId: json['data']?['customer']?['country_id'] as int?,
+      isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as String?,
+      activityPoints: json['data']?['customer']?['activity_points'] as int?,
+      token: json['data']?['token'] as String?,
     );
   }
 

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
+import '../../component/toastMessage.dart';
 
 class SigninScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -53,6 +54,7 @@ class _SigninScreenState extends State<SigninScreen> {
   Future<Widget> getMediaWidget(
       BuildContext context, ApiResponse apiResponse) async {
     SignInResponse? mediaList = apiResponse.data as SignInResponse?;
+    var message = mediaList?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -83,6 +85,8 @@ class _SigninScreenState extends State<SigninScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        print("message : ${apiResponse.message}");
+        ToastComponent.showToast(context: context, message: apiResponse.message);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -125,6 +129,7 @@ class _SigninScreenState extends State<SigninScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -216,7 +221,7 @@ class _SigninScreenState extends State<SigninScreen> {
     //nameController.text = widget.data as String;
     return Card(
       child: Container(
-        height: 60,
+        //height: 60,
         width: screenWidth*0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
@@ -270,7 +275,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Card(
       child: Container(
         width: screenWidth*0.8,
-        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border(
@@ -360,7 +365,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     color: inputValid ? Colors.white : Colors.blueAccent),
               ),
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
                   backgroundColor:
                       inputValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,

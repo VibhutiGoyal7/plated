@@ -8,6 +8,7 @@ class PhoneVerifyResponse {
   final String? email;
   final String? emailOtp;
   final String? message;
+  final String? isProfileSetupDone;
   final int? emailOtpExpireAt;
 
   PhoneVerifyResponse({
@@ -20,6 +21,7 @@ class PhoneVerifyResponse {
     this.email,
     this.emailOtp,
     this.emailOtpExpireAt,
+    this.isProfileSetupDone,
     this.message,
   });
 
@@ -40,6 +42,7 @@ class PhoneVerifyResponse {
           : null,
       email: json['data']['email'] as String?,
       emailOtp: json['data']['email_otp'] as String?,
+      isProfileSetupDone: json['data']['is_profile_setup_done'] as String?,
       emailOtpExpireAt: json['data']['email_otp_expire_at'] as int?,
       message: json['message'] as String?,
     );

@@ -56,6 +56,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 isDarkMode: isDarkMode,
                 isEmailVerified: isEmailVerified,
                 onTap: () {
+                  if(isEmailVerified == false )
                   {
                     Navigator.pushNamed(context, '/VerifyEmail');
                   }
@@ -90,7 +91,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: GestureDetector(
-        onTap: onTap,
+        onTap:  onTap,
         child: Card(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),

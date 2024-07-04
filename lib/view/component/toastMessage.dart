@@ -9,7 +9,7 @@ class ToastComponent {
   }) {
     toastification.show(
       context: context,
-      title: Text(message!),
+      title: Text("${message}"),
       style: ToastificationStyle.flat,
       autoCloseDuration: duration,
       direction: TextDirection.ltr,

@@ -117,6 +117,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -151,11 +152,14 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 SizedBox(height: 20),
                 Container(
                   child: Card(
-                    child: TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        labelText: Languages.of(context)!.labelEnterEmail,
-                        border: OutlineInputBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                      child: TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelText: Languages.of(context)!.labelEnterEmail,
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
@@ -198,7 +202,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 SizedBox(
                   height: 30.0,
                 ),
-                if (isOtpBoxVisible) _buildVerifySection()
+                if (isOtpBoxVisible) _buildVerifySection(isDarkMode)
               ],
             ),
           ),
@@ -206,7 +210,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       ),
     );
   }
-  Widget _buildPhoneInput(BuildContext context, double screenWidth) {
+  Widget _buildPhoneInput(BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +219,15 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             width: screenWidth/8.5,
-            height: 65.0,
+                decoration: BoxDecoration(
+                    border : Border(
+                        top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                        bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                        right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                        left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
+                    borderRadius: BorderRadius.circular(6)
+                ),
+            height: 60.0,
             child: TextField(
               controller: _controllers[index],
               focusNode: _focusNodes[index],
@@ -225,7 +237,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               maxLength: 1,
               decoration: InputDecoration(
                 counterText: "", // Remove the counter text
-                border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                border: InputBorder.none,
               ),
               style: TextStyle(fontSize: 18),
               onChanged: (value) {
@@ -238,7 +250,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     );
   }
 
-  Widget _buildVerifySection() {
+  Widget _buildVerifySection(bool isDarkMode) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Column(
@@ -248,7 +260,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Text(Languages.of(context)!.labelEnterOtpSentToEmail),
         ),
-        _buildPhoneInput(context, screenWidth),
+        _buildPhoneInput(context, screenWidth, isDarkMode),
         SizedBox(
           height: 10.0,
         ),

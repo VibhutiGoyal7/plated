@@ -60,18 +60,19 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       setState(() {
         phoneNumberValid = false;
       });
-    }
+    }/*6283252694*/
   }
 
   Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
     ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
+    var message = mediaList?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("userfound: ${mediaList?.userFound}");
         // Navigate to the new screen after receiving the response
-        if (mediaList?.userFound == true) {
+        if (mediaList?.userFound == true && mediaList?.isProfileSetupDone == true) {
           Navigator.pushNamed(context, '/SignInScreen',
               arguments: "${_inputController.text}");
         } else {
@@ -102,12 +103,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.COMPLETED:
         print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
         //Call Toast
+
         ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/OtpVerify',
             arguments: "${_inputController.text}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        ToastComponent.showToast(context: context, message: message);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -154,6 +157,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

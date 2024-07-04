@@ -282,8 +282,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Spacer(),
                             IconButton( onPressed: (){
-                              generateQrCode(userName);
-
+                              //generateQrCode(userName);
+                              Navigator.pushNamed(context, "/QRScannerScreen");
 
                               },
                                 icon: Icon(Icons.qr_code_2)),

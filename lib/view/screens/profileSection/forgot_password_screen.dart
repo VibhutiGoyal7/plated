@@ -15,11 +15,19 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+
+  late double screenWidth;
+  late double screenHeight;
+
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
+
+  bool newPasswordVisible = false;
+  bool confirmPasswordVisible = false;
 
   // final TextEditingController _isOtpBoxVisible = TextEditingController();
 
@@ -92,6 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Future<Widget> verifyOtpGetWidget(BuildContext context, ApiResponse apiResponse) async {
+
     final mediaList = apiResponse.data ;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -118,7 +127,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -137,9 +148,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: SafeArea(
           child: Column(
             children: [
+              Center(
+                child: Image(
+                  alignment: Alignment.topLeft,
+                  //width: screenWidth*0.8,
+                   height: screenHeight*0.22,
+                  image: AssetImage("assets/forgot_password.png"),
+                ),
+              ),
               _buildPhoneNumberTextField(),
-              if (isOtpBoxVisible) _buildPhoneInput(context, screenWidth),
-              if (isOtpBoxVisible) _buildPasswordTextFields(),
+              if (isOtpBoxVisible) _buildPhoneInput(context, screenWidth, isDarkMode),
+              if (isOtpBoxVisible)_buildPasswordTextFields(isDarkMode),
               SizedBox(height: 25),
               if (isOtpBoxVisible) _buildSubmitButton(),
               if (isLoading) CircularProgressIndicator(),
@@ -161,12 +180,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget _buildPhoneNumberTextField() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: Text(
               Languages.of(context)!.enterPhoneNumber,
               style: TextStyle(
@@ -176,15 +195,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
           Card(
-            child: TextField(
-              controller: _phoneNumberController,
-              decoration: InputDecoration(
-                //labelText: 'Enter your phone number',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+              child: TextField(
+                controller: _phoneNumberController,
+                textAlignVertical: TextAlignVertical.center,
+                onChanged: (value) {},
+                onSubmitted: (value) {},
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  //labelText: 'Enter your phone number',
+
                 ),
+                keyboardType: TextInputType.phone,
               ),
-              keyboardType: TextInputType.phone,
             ),
           ),
           Align(
@@ -220,53 +244,120 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ),
     );
   }
-  Widget _buildPasswordTextFields() {
+  Widget _buildPasswordTextFields(bool isDarkMode) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Card(
-            child: TextField(
-              controller: _newPasswordController,
-              decoration: InputDecoration(
-                labelText: Languages.of(context)!.labelNewPass,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              obscureText: true,
+        _buildPasswordInput(
+            context,
+            Languages.of(context)!.labelNewPass,
+            _newPasswordController,
+            Icon(
+              Icons.password,
+              size: 18,
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Card(
-            child: TextField(
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(
-                labelText: Languages.of(context)!.labelConfirmPass,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              obscureText: true,
+            newPasswordVisible,
+            isDarkMode),
+        _buildPasswordInput(
+            context,
+            Languages.of(context)!.labelConfirmPass,
+            _confirmPasswordController,
+            Icon(
+              Icons.password,
+              size: 18,
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
-          ),
-        ),
+            confirmPasswordVisible,
+            isDarkMode)
       ],
     );
   }
+  Widget _buildPasswordInput(
+      BuildContext context,
+      String text,
+      TextEditingController nameController,
+      Icon icon,
+      bool passwordVisibles,
+      bool isDarkMode,
+      ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
+      child: Card(
+        child: Container(
+          //height: 60,
+          width: screenWidth*0.92,
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+          decoration: BoxDecoration(
+            //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Row(
+            children: [
+              SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  style: TextStyle(fontSize: 15.0),
+                  obscureText: passwordVisibles,
+                  obscuringCharacter: "*",
+                  controller: nameController,
+                  textAlignVertical: TextAlignVertical.center,
+                  onChanged: (value) {},
+                  onSubmitted: (value) {},
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: text,
+                    hintStyle: TextStyle(color: Colors.grey),
+                    icon: icon,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        passwordVisibles
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        setState(
+                              () {if (text ==
+                                Languages.of(context)!.labelNewPass) {
+                              newPasswordVisible = !newPasswordVisible;
+                            } else {
+                              confirmPasswordVisible = !confirmPasswordVisible;
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-  Widget _buildPhoneInput(BuildContext context, double screenWidth) {
+  Widget _buildPhoneInput(BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
               (index) => Container(
+                decoration: BoxDecoration(
+                  border : Border(
+                      top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                      bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                      right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
+                      left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
+                  borderRadius: BorderRadius.circular(6)
+                ),
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             width: screenWidth/8.5,
-            height: 65.0,
+            height: 60.0,
             child: TextField(
               controller: _controllers[index],
               focusNode: _focusNodes[index],
@@ -276,7 +367,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               maxLength: 1,
               decoration: InputDecoration(
                 counterText: "", // Remove the counter text
-                border: OutlineInputBorder( borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                border: InputBorder.none
+
               ),
               style: TextStyle(fontSize: 18),
               onChanged: (value) {
