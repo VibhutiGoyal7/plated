@@ -25,6 +25,7 @@ class _SigninScreenState extends State<SigninScreen> {
   bool inputValid = false;
   late double screenWidth;
   late bool isDarkMode;
+
   @override
   void initState() {
     super.initState();
@@ -101,10 +102,16 @@ class _SigninScreenState extends State<SigninScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        await Helper.saveProfileDetails(mediaList);
-        await Helper.saveCountry(mediaList?.countryName);
-        await Helper.saveKycStatus(mediaList?.kycStatus);
-        Navigator.pushReplacementNamed(context, '/BottomNav');
+        var email = mediaList?.email;
+        if (email?.isEmpty == true) {
+          Navigator.pushReplacementNamed(context, '/SetUpAccount');
+        }else{
+          await Helper.saveProfileDetails(mediaList);
+          await Helper.saveCountry(mediaList?.countryName);
+          await Helper.saveKycStatus(mediaList?.kycStatus);
+          Navigator.pushReplacementNamed(context, '/BottomNav');
+        }
+
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
@@ -135,7 +142,7 @@ class _SigninScreenState extends State<SigninScreen> {
               children: <Widget>[
                 Container(
                   height: screenHeight * 0.2,
-                  child:   Image(
+                  child: Image(
                     alignment: Alignment.topLeft,
                     width: screenWidth * 0.9,
                     height: screenHeight * 0.25,
@@ -145,7 +152,6 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
               ],
             ),
-
             Expanded(
               child: Container(
                 width: screenWidth,
@@ -158,24 +164,24 @@ class _SigninScreenState extends State<SigninScreen> {
                           topLeft: Radius.circular(40),
                           topRight: Radius.circular(40))),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20  ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 20),
                     child: Column(
                       children: [
                         SizedBox(height: 20),
-                           _buildLabelText(
-                          context, "Welcome Back!", 26, true),
-                           _buildLabelText(
-                          context, "Welcome back we missed you", 14, false),
+                        _buildLabelText(context, "Welcome Back!", 26, true),
+                        _buildLabelText(
+                            context, "Welcome back we missed you", 14, false),
                         SizedBox(height: 25),
                         _buildPhoneInput(
-                            context,
-                            "Phone Number",
-                            _phoneNoController,
-                            Icon(
-                              Icons.person,
-                              size: 20,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
+                          context,
+                          "Phone Number",
+                          _phoneNoController,
+                          Icon(
+                            Icons.person,
+                            size: 20,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
                         ),
                         SizedBox(height: 15),
                         _buildPasswordInput(
@@ -189,7 +195,9 @@ class _SigninScreenState extends State<SigninScreen> {
                             ),
                             passwordVisible,
                             isDarkMode),
-                        SizedBox(height: 15,),
+                        SizedBox(
+                          height: 15,
+                        ),
                         _buildFooter(context, apiResponse),
                       ],
                     ),
@@ -207,7 +215,8 @@ class _SigninScreenState extends State<SigninScreen> {
     return Text(
       text,
       style: TextStyle(
-          fontSize: size, fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+          fontSize: size,
+          fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
     );
   }
 
@@ -217,15 +226,20 @@ class _SigninScreenState extends State<SigninScreen> {
     return Card(
       child: Container(
         height: 60,
-        width: screenWidth*0.8,
+        width: screenWidth * 0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border(
-              top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
+              top: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54,
+                  width: 0.4)),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
@@ -269,15 +283,20 @@ class _SigninScreenState extends State<SigninScreen> {
   ) {
     return Card(
       child: Container(
-        width: screenWidth*0.8,
+        width: screenWidth * 0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border(
-              top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
+              top: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54,
+                  width: 0.4)),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
@@ -333,7 +352,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Column(
       children: [
         SizedBox(
-          width: screenWidth*0.8,
+          width: screenWidth * 0.8,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
@@ -364,8 +383,8 @@ class _SigninScreenState extends State<SigninScreen> {
                   backgroundColor:
                       inputValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
-                  shape:
-                      BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),
+                  shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(2))),
             ),
           ),
         ),
@@ -383,7 +402,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/PhoneVerifyScreen');
+                  Navigator.pushNamed(context, '/ForgotPasswordScreen');
                 },
                 child: Text(
                   "SignUp here.",

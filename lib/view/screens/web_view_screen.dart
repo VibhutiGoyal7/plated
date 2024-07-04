@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // Import for Android features.
@@ -19,6 +17,9 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   var loadingPercentage = 0;
+  String span1 = '';
+  String span2 = '';
+  String warningText = '';
   late final WebViewController controller;
 
   @override
@@ -36,7 +37,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
     controller = WebViewController.fromPlatformCreationParams(params);
     controller
-    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (url) {
           setState(() {
@@ -49,21 +50,29 @@ class _WebViewScreenState extends State<WebViewScreen> {
           });
         },
         onPageFinished: (url) {
+          print("uRL:::{url}");
           setState(() {
             loadingPercentage = 100;
           });
+
+          fetchData();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(warningText)),
+          );
         },
       ))
       ..addJavaScriptChannel(
         'Toaster',
         onMessageReceived: (JavaScriptMessage message) {
+          print("ToasterService $message");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
           );
         },
       )
       ..loadRequest(
-          Uri.parse("https://pay2local.com/payment/2ed4e8c7-04c4-49a8-9394-4b431dc1f670"),
+        Uri.parse("${widget.data}"),
       );
 
     if (controller.platform is AndroidWebViewController) {
@@ -73,13 +82,69 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
   }
 
+  void fetchData() async {
+    // Ensure a reasonable delay to allow WebView to load content
+    await Future.delayed(Duration(milliseconds: 10000));
+
+    String jsScript = '''
+  (function() {
+    var element = document.getElementsByClassName('requested-amount')[0];
+    if (element) {
+      return element.textContent.trim();
+    } else {
+      return 'Element not found';
+    }
+  })();
+  ''';
+
+    controller.runJavaScriptReturningResult(jsScript).then((result) {
+      String trimmedResult = result.toString().trim();
+
+      print('JavaScript executed: $trimmedResult');
+
+      // Compare trimmed result
+      if (trimmedResult.contains("Requested AmountPayment Method")) {
+        print('Match found: $trimmedResult');
+        Navigator.of(context).pop();
+      } else {
+        fetchData();
+        print('No match found: $trimmedResult');
+      }
+    }).catchError((error) {
+      print('Error executing JavaScript: $error');
+    });
+    /*var script = '''
+      var requestIdElement = document.querySelector('.rounded mb-3');
+      var requestId = document.querySelector('.form-title');
+      requestId ? requestId.textContent.trim() : '';
+    ''';
+    //binding.webView!!.loadUrl("javascript:(function(){var element = document.getElementsByName('username');element[0].focus();document.execCommand('insertText', false, '$userLogin');})()")
+
+    var result = await controller.runJavaScriptReturningResult(script).then((value) {
+      // Handle extracted data
+      print('Request ID: $value');
+      // Update your UI or save the value as needed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Request ID: $value')),
+      );
+    });*/
+    /* if(mounted) {
+      print("warningText $result");
+    }
+    setState(() {
+      warningText = result.toString(); // Remove quotes from extracted text
+    });*/
+  }
+
   @override
   Widget build(BuildContext context) {
     print("redirectUrl: ${widget.data}");
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Money",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+        title: Text(
+          "Add Money",
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
         child: Stack(
