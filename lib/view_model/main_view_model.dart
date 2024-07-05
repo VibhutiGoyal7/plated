@@ -5,6 +5,7 @@ import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
@@ -12,6 +13,7 @@ import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
+import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -145,7 +147,13 @@ class MainViewModel with ChangeNotifier {
       SetUpAccountResponse setUpAccountResponse = await MainRepository()
           .fetchSetUpScreenData(value, setUpAccountRequest);
       print("Yess" + setUpAccountResponse.email.toString());
-      _apiResponse = ApiResponse.completed(setUpAccountResponse);
+      //_apiResponse = ApiResponse.completed(setUpAccountResponse);
+      if (setUpAccountResponse.phoneNumber != null) {
+        _apiResponse = ApiResponse.completed(setUpAccountResponse);
+      } else {
+        print("viewmodel ${setUpAccountResponse.message}");
+        _apiResponse = ApiResponse.error(setUpAccountResponse.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -264,7 +272,12 @@ class MainViewModel with ChangeNotifier {
       final response = await MainRepository()
           .VerifyOtpChangePass(value, verifyOtChangePassRequest);
 
+        //_apiResponse = ApiResponse.completed(response);
+      if (response.mobileOtp != null) {
         _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
          } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -302,7 +315,12 @@ class MainViewModel with ChangeNotifier {
     try {
       final response = await MainRepository()
           .VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
+       // _apiResponse = ApiResponse.completed(response);
+      if (response.mobileOtp != null) {
         _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -317,7 +335,12 @@ class MainViewModel with ChangeNotifier {
     try {
       AddMoneyResponse response = await MainRepository().addMoneyData(value, addMoneyRequest);
       print("MainViewModel $response");
+      //  _apiResponse = ApiResponse.completed(response);
+      if (response.redirectUrl != null) {
         _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("MainViewModelError $e");
@@ -333,7 +356,12 @@ class MainViewModel with ChangeNotifier {
           await MainRepository().fetchKycDocData(value);
       print("Yess" + fetchKycDocResponse.message.toString());
 
-        _apiResponse = ApiResponse.completed(fetchKycDocResponse);
+       // _apiResponse = ApiResponse.completed(fetchKycDocResponse);
+      if (response.status != null) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
          } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -349,7 +377,12 @@ class MainViewModel with ChangeNotifier {
           await MainRepository().fetchCountryList(value);
       print("Yess" + countryListResponse.message.toString());
 
-        _apiResponse = ApiResponse.completed(countryListResponse);
+        //_apiResponse = ApiResponse.completed(countryListResponse);
+      if (response.data != null) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -365,10 +398,33 @@ class MainViewModel with ChangeNotifier {
           await MainRepository().kycStatusData(value);
       print("Yess" + kycStatusResponse.message.toString());
 
-        _apiResponse = ApiResponse.completed(kycStatusResponse);
+        //_apiResponse = ApiResponse.completed(kycStatusResponse);
+      if (response.data != null) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> transactionListData(String value, TransactionListRequest transactionListRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    print("Yess ${transactionListRequest.paymentRequestId}");
+    notifyListeners();
+    try {
+      TransactionListResponse transactionListResponse = await MainRepository().transactionListData(value, transactionListRequest);
+      if (transactionListResponse != null && transactionListResponse.data != null) {
+        _apiResponse = ApiResponse.completed(transactionListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(transactionListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
     }
     notifyListeners();
   }

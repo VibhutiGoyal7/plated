@@ -1,10 +1,16 @@
 
+import 'package:Payrio/model/request/transactionListRequest.dart';
+import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../languageSection/Languages.dart';
+import '../../model/apis/api_response.dart';
+import '../../view_model/main_view_model.dart';
+import '../component/session_expired_dialog.dart';
 
 class TransactionsScreen extends StatefulWidget {
   @override
@@ -30,6 +36,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     "Add money",
     "Add money",
   ];
+  List<TransactionDetails> transactionList = [];
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
@@ -37,6 +44,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void initState() {
     super.initState();
     inputValid = false;
+    _fetchData();
   }
 
   @override
@@ -56,6 +64,38 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       setState(() {
         inputValid = false;
       });
+    }
+  }
+
+
+  Future<Widget> getTransactionData(
+      BuildContext context, ApiResponse apiResponse) async {
+    TransactionListResponse? transactionListResponse = apiResponse.data as TransactionListResponse?;
+    print("apiResponse${apiResponse.status}");
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+
+        print(transactionListResponse?.data);
+        setState(() {
+          transactionList = transactionListResponse?.data as List<TransactionDetails>;
+        });
+        //});
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        print("Message : ${apiResponse.message}") ;
+        if(apiResponse.message== "Invalid access token")
+        {SessionExpiredDialog.showDialogBox(context: context);}
+        print(apiResponse.message) ;
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
     }
   }
 
@@ -92,7 +132,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         child: ListView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
                           controller: _scrollController,
-                          itemCount: _allLogList.length,
+                          itemCount: transactionList.length,
                           shrinkWrap: true,
                           padding: const EdgeInsets.only(bottom: 10),
                           itemBuilder: (BuildContext context, int index) {
@@ -129,12 +169,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                         CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            _allLogList[index],
+                                            "${transactionList[index].requestType}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14),
                                           ),
-                                          Text("From Google Pay",
+                                          Text("${transactionList[index].bankService}",
                                               style: TextStyle(fontSize: 12)),
                                         ],
                                       ),
@@ -143,11 +183,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   Column(
                                     children: [
                                       Text(
-                                        "+INR 100.00",
+                                        "${transactionList[index].amount}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      Text("05/05/2024",
+                                      Text("${transactionList[index].paymentRequestId}",
                                           style: TextStyle(fontSize: 12)),
                                     ],
                                   ),
@@ -224,35 +264,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     );
   }
 
-  _showPicker({required BuildContext context}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.attach_money),
-                title: const Text('A Bank'),
-                onTap: () {
-                  //getImage(ImageSource.gallery);
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context, "/AddMoneyScreen");
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.attach_money),
-                title: const Text('B Bank'),
-                onTap: () {
-                  //getImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context, "/AddMoneyScreen");
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  void _fetchData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    TransactionListRequest request = TransactionListRequest(pageNo: 1, pageSize: 10, paymentRequestId: "", trxId: "", requestType: "", status: "");
+    await Provider.of<MainViewModel>(context, listen: false)
+        .transactionListData("/api/v1/app/transactions/list",request);
+    ApiResponse apiResponse =
+        Provider.of<MainViewModel>(context, listen: false).response;
+    getTransactionData(context, apiResponse);
   }
+
 }

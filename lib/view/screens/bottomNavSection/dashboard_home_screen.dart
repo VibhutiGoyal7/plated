@@ -16,6 +16,7 @@ import '../../../model/response/offersResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/session_expired_dialog.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
@@ -127,6 +128,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        if(apiResponse.message== "Invalid access token")
+        {SessionExpiredDialog.showDialogBox(context: context);}
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -907,7 +910,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus != "verified") {
+    if (kycStatus == "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();

@@ -43,27 +43,27 @@ class SetUpAccountResponse {
 
   factory SetUpAccountResponse.fromJson(Map<String, dynamic> json) {
     return SetUpAccountResponse(
-      firstName: json['data']['first_name'] as String?,
-      lastName: json['data']['last_name'] as String?,
-      id: json['data']['id'] as int?,
-      phoneNumber: json['data']['phone_number'] as String?,
-      createdAt: json['data']['created_at']/* != null
+      firstName: json['data']?['first_name'] as String?,
+      lastName: json['data']?['last_name'] as String?,
+      id: json['data']?['id'] as int?,
+      phoneNumber: json['data']?['phone_number'] as String?,
+      createdAt: json['data']?['created_at']/* != null
           ? DateTime.parse(json['data']['created_at'] */as String/*)
           : null*/,
 
-      email: json['data']['email'] as String?,
-      address: json['data']['address'] as String?,
-      dob: json['data']['dob'] as String?,
-      kycStatus: json['data']['kyc_status'] as String?,
+      email: json['data']?['email'] as String?,
+      address: json['data']?['address'] as String?,
+      dob: json['data']?['dob'] as String?,
+      kycStatus: json['data']?['kyc_status'] as String?,
       message: json['message'] as String?,
-      username: json['data']['username'] as String?,
-      balance: json['data']['balance'] as int?,
-      activityPts: json['data']['activity_points'] as int?,
-      vipLevel: json['data']['vip_level'] as String?,
-      countryId: json['data']['country_id'] as int?,
-      countryName: json['data']['country_name'] as String?,
-      countryPhoneCode: json['data']['country_phone_code'] as String?,
-      isEmailVerified: json['data']['is_email_verified'] as bool?,
+      username: json['data']?['username'] as String?,
+      balance: json['data']?['balance'] as int?,
+      activityPts: json['data']?['activity_points'] as int?,
+      vipLevel: json['data']?['vip_level'] as String?,
+      countryId: json['data']?['country_id'] as int?,
+      countryName: json['data']?['country_name'] as String?,
+      countryPhoneCode: json['data']?['country_phone_code'] as String?,
+      isEmailVerified: json['data']?['is_email_verified'] as bool?,
     );
   }
 
