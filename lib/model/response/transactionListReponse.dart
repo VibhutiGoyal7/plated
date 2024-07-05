@@ -10,16 +10,15 @@ class TransactionListResponse {
   });
 
   factory TransactionListResponse.fromJson(Map<String, dynamic> json) {
-
     var list = json['data'] as List;
-    List<TransactionDetails>? transactionList = list?.map((i) => TransactionDetails.fromJson(i)).toList();
+    List<TransactionDetails>? transactionList =
+        list?.map((i) => TransactionDetails.fromJson(i)).toList();
 
     return TransactionListResponse(
       message: json['message'] as String?,
       data: transactionList,
-      pagy: json['pagy'] != null
-          ? new PagyDetails.fromJson(json['pagy'])
-          : null,
+      pagy:
+          json['pagy'] != null ? new PagyDetails.fromJson(json['pagy']) : null,
     );
   }
 }
@@ -74,9 +73,9 @@ class PagyDetails {
   int? pageSize;
 
   PagyDetails({
-     this.totalRow,
-     this.pageNo,
-     this.pageSize,
+    this.totalRow,
+    this.pageNo,
+    this.pageSize,
   });
 
   factory PagyDetails.fromJson(Map<String, dynamic> json) {

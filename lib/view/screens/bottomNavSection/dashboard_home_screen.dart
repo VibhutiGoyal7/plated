@@ -164,7 +164,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         kycStatusApi = kycStatusResponse!.kycStatus!;
 
-        if (kycStatus != "verified") {
+        if (kycStatus == "in_progress") {
           Navigator.pushNamed(context, '/VerifyIdentityScreen');
         }
         //_showPicker(context: context);
@@ -953,7 +953,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "verified") {
+    if (kycStatus == "in_progress") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();

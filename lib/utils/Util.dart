@@ -1,0 +1,19 @@
+import 'package:intl/intl.dart';
+
+String capitalizeFirstLetter(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+  return input[0].toUpperCase() + input.substring(1);
+}
+
+String convertDateFormat(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+
+  DateTime parsedDate = DateTime.parse(input);
+  String formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
+
+  return formattedDate;
+}
