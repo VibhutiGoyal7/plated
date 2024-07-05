@@ -1,3 +1,4 @@
+import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/payment_method_screen.dart';
 import 'package:Payrio/view/screens/profileSection/qr_scanner_screen.dart';
 import 'package:Payrio/view/screens/web_view_screen.dart';
@@ -398,6 +399,14 @@ class _MyAppState extends State<MyApp> {
                   .settings
                   .arguments as String?;
               return QrScannerScreen();
+            },
+            '/ComingSoonScreen': (context) {
+              final args =
+              ModalRoute
+                  .of(context)!
+                  .settings
+                  .arguments as String?;
+              return ComingSoonScreen();
             }
           }),
     );

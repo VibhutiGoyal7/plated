@@ -712,56 +712,42 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
                         if (index <= 1) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(18),
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue),
-                                  child: Icon(
-                                    _shortcutCardsList[index].icon,
-                                    color: AppColor.WHITE,
+                          return GestureDetector(
+                            onTap: (){
+                              if(_shortcutCardsList[index].title == "Add") {
+                                Navigator.pop(context);
+                                _getKycStatus();
+                              }else{
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/ComingSoonScreen');
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(18),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue),
+                                    child: Icon(
+                                      _shortcutCardsList[index].icon,
+                                      color: AppColor.WHITE,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  _shortcutCardsList[index].title,
-                                  style: TextStyle(
-                                    fontSize: 14,
+                                  Text(
+                                    _shortcutCardsList[index].title,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         } else
                           return Container();
-                        /*    ListTile(
-                            leading: ClipRRect(
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.blue
-                                  ),
-                                  child: Icon(_shortcutCardsList[index].icon),)
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _shortcutCardsList[index].title,
-                                  style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold,
-                                    color:    Colors.black,),
-                                ),
-                                Text("+${_shortcutCardsList[index].title}",
-                                    style: TextStyle(fontSize: 12,
-                                      color: Colors.black,)),
-                              ],
-                            ));*/
-                        // I omit the part to build card items from the list
                       },
                     ),
                   ),
@@ -785,27 +771,33 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 2) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(18),
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue),
-                                  child: Icon(
-                                    _shortcutCardsList[index].icon,
-                                    color: AppColor.WHITE,
+                          return GestureDetector(
+                            onTap: (){
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/ComingSoonScreen');
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(18),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue),
+                                    child: Icon(
+                                      _shortcutCardsList[index].icon,
+                                      color: AppColor.WHITE,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  _shortcutCardsList[index].title,
-                                  style: TextStyle(
-                                    fontSize: 14,
+                                  Text(
+                                    _shortcutCardsList[index].title,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         } else
@@ -833,27 +825,33 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 3) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(18),
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue),
-                                  child: Icon(
-                                    _shortcutCardsList[index].icon,
-                                    color: AppColor.WHITE,
+                          return GestureDetector(
+                            onTap: (){
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context, '/ComingSoonScreen');
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(18),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue),
+                                    child: Icon(
+                                      _shortcutCardsList[index].icon,
+                                      color: AppColor.WHITE,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  _shortcutCardsList[index].title,
-                                  style: TextStyle(
-                                    fontSize: 14,
+                                  Text(
+                                    _shortcutCardsList[index].title,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         } else
