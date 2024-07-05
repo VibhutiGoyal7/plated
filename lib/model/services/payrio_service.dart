@@ -254,6 +254,13 @@ class PayrioService extends BaseService {
           return responseJson;
          // throw UnauthorisedException("${responseBody['message']}");
         }
+      case 404:
+      //final responseBody = response;
+        var responseBody = jsonDecode(response.body);
+        print("Message >>::${responseBody['message']}");
+        dynamic responseJson = jsonDecode(response.body);
+        return responseJson;
+    //throw UnauthorisedException(response.body.toString());
       case 500:
         throw BadRequestException(response.body.toString());
       default:
