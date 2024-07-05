@@ -1,8 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-// Import for Android features.
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-// Import for iOS features.
+  import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -20,11 +20,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String span1 = '';
   String span2 = '';
   String warningText = '';
-  late final WebViewController controller;
+   WebViewController? controller;
+
+  late Timer _timer;
+  bool _isActive = true;
 
   @override
   void initState() {
     super.initState();
+    _timer = Timer(Duration(seconds: 300), () {
+      // Navigate back to the previous page
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    });
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -37,7 +46,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
     controller = WebViewController.fromPlatformCreationParams(params);
     controller
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ?..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (url) {
           setState(() {
@@ -51,6 +60,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         },
         onPageFinished: (url) {
           print("uRL:::{url}");
+          if(url.contains("https://shopkeeper-kappa.vercel.app/shopkeeper")){
+            Navigator.pop(context);
+          }
           setState(() {
             loadingPercentage = 100;
           });
@@ -75,11 +87,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
         Uri.parse("${widget.data}"),
       );
 
-    if (controller.platform is AndroidWebViewController) {
+    if (controller?.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
-      (controller.platform as AndroidWebViewController)
+      (controller?.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
     }
+  }
+
+  @override
+  void dispose() {
+    controller = null;
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    _isActive = false;
+    super.dispose();
   }
 
   void fetchData() async {
@@ -97,18 +119,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
   })();
   ''';
 
-    controller.runJavaScriptReturningResult(jsScript).then((result) {
+    controller?.runJavaScriptReturningResult(jsScript).then((result) {
       String trimmedResult = result.toString().trim();
 
       print('JavaScript executed: $trimmedResult');
 
       // Compare trimmed result
-      if (trimmedResult.contains("Requested AmountPayment Method")) {
-        print('Match found: $trimmedResult');
-        Navigator.of(context).pop();
-      } else {
-        fetchData();
-        print('No match found: $trimmedResult');
+      if(_isActive) {
+        if (trimmedResult.contains("Requested AmountPayment Method")) {
+          print('Match found: $trimmedResult');
+          Navigator.of(context).pop();
+        } else {
+          fetchData();
+          print('No match found: $trimmedResult');
+        }
       }
     }).catchError((error) {
       print('Error executing JavaScript: $error');
@@ -150,7 +174,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         child: Stack(
           children: [
             WebViewWidget(
-              controller: controller,
+              controller: controller as WebViewController,
             ),
             if (loadingPercentage < 100)
               LinearProgressIndicator(

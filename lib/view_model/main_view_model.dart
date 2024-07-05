@@ -8,6 +8,7 @@ import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
@@ -425,6 +426,25 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> dashboardData(String value) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      DashboardResponse dashboardResponse =
+      await MainRepository().dashboardData(value);
+      print("Yess ${dashboardResponse.message}");
+      if (dashboardResponse.customerRecentTxn != null) {
+        _apiResponse = ApiResponse.completed(dashboardResponse);
+      } else {
+        _apiResponse = ApiResponse.error(dashboardResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Catch $e");
     }
     notifyListeners();
   }
