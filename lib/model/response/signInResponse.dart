@@ -20,7 +20,7 @@ class SignInResponse {
   final int? countryId;
   final String? balance;
   final String? vipLevel;
-  final String? isProfileSetupDone;
+  final bool? isProfileSetupDone;
   final String? username;
 
   SignInResponse(
@@ -80,7 +80,7 @@ class SignInResponse {
       balance: json['data']?['customer']?['balance'] as String?,
       username: json['data']?['customer']?['username'] as String?,
       countryId: json['data']?['customer']?['country_id'] as int?,
-      isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as String?,
+      isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as bool?,
       activityPoints: json['data']?['customer']?['activity_points'] as int?,
       token: json['data']?['token'] as String?,
     );

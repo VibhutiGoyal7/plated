@@ -8,6 +8,7 @@ import 'package:Payrio/model/request/exustingUserRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
@@ -21,6 +22,7 @@ import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
 import 'package:Payrio/model/response/signInResponse.dart';
+import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/services/base_service.dart';
 import 'package:Payrio/model/services/payrio_service.dart';
@@ -190,6 +192,16 @@ class MainRepository {
     //print("jsonData $jsonData");
     KycStatusResponse mediaList = KycStatusResponse.fromJson(jsonData);
     //print("object ${mediaList.message}");
+    return mediaList;
+  }
+
+  Future<TransactionListResponse> transactionListData(String value, TransactionListRequest transactionListRequest) async {
+    print(transactionListRequest);
+    dynamic response = await _payrioService.postResponse(value,transactionListRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    TransactionListResponse mediaList = TransactionListResponse.fromJson(jsonData);
     return mediaList;
   }
 }
