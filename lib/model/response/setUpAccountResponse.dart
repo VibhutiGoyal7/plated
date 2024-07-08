@@ -11,7 +11,7 @@ class SetUpAccountResponse {
   final String? kycStatus;
   final String? message;
   final String? username;
-  final int? balance;
+  final String? balance;
   final int? activityPts;
   final String? vipLevel;
   final int? countryId;
@@ -57,7 +57,7 @@ class SetUpAccountResponse {
       kycStatus: json['data']?['kyc_status'] as String?,
       message: json['message'] as String?,
       username: json['data']?['username'] as String?,
-      balance: json['data']?['balance'] as int?,
+      balance: json['data']?['balance'] as String?,
       activityPts: json['data']?['activity_points'] as int?,
       vipLevel: json['data']?['vip_level'] as String?,
       countryId: json['data']?['country_id'] as int?,
@@ -106,7 +106,7 @@ class SetUpAccountResponse {
       address: json['address'] as String?,
       dob: json['dob'] as String?,
       kycStatus: json['kyc_status'] as String?,
-      balance: json['balance'] as int?,
+      balance: json['balance'] as String?,
       activityPts: json['activity_points'] as int?,
       vipLevel: json['vip_level'] as String?,
       countryId: json['country_id'] as int?,

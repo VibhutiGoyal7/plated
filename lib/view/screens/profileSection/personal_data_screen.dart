@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
@@ -22,6 +23,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   bool isLoading = true;
   late VideoPlayerController videoPlayerController;
   String video = "";
+
+  bool isDarkMode = false;
 
 
   var firstName;
@@ -122,13 +125,13 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             geoLocRejectedReason = mediaList?.geolocation?.rejectionReason;
 
 
-            isNationalIdAvailable = mediaList?.nationalIdImage?.availableInCountry as bool;
-            isPassportAvailable = mediaList?.passportImage?.availableInCountry as bool;
-            isDrivingLicenceAvailable = mediaList?.drivingLicenseImage?.availableInCountry as bool;
-            isKycVideoAvailable = mediaList?.videoClipUrl?.availableInCountry as bool;
-            isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry as bool;
-            isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry as bool;
-            isGeoLocAvailable = mediaList?.geolocation?.availableInCountry as bool;
+            isNationalIdAvailable = (mediaList?.nationalIdImage?.availableInCountry !=null ) ? mediaList?.nationalIdImage?.availableInCountry as bool : false;
+            isPassportAvailable = mediaList?.passportImage?.availableInCountry!=null ? mediaList?.passportImage?.availableInCountry as bool :false;
+            isDrivingLicenceAvailable = mediaList?.drivingLicenseImage?.availableInCountry!=null ? mediaList?.drivingLicenseImage?.availableInCountry as bool :false;
+            isKycVideoAvailable = mediaList?.videoClipUrl?.availableInCountry!=null ? mediaList?.videoClipUrl?.availableInCountry as bool :false;
+            isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry!=null ? mediaList?.addressKycData?.availableInCountry as bool:false;
+            isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry!=null ? mediaList?.bankStatement?.availableInCountry as bool :false;
+            isGeoLocAvailable = mediaList?.geolocation?.availableInCountry!=null ?  mediaList?.geolocation?.availableInCountry as bool:false;
 
             isLoading = false;
           });
@@ -153,7 +156,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   Widget build(BuildContext context) {
     // double screenHeight = MediaQuery.of(context).size.height;
     // double screenWidth = MediaQuery.of(context).size.width;
-
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -292,7 +295,42 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             Languages.of(context)!.labelBirthdate,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Icon(Icons.calendar_today),
+          GestureDetector(
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.parse(dob),
+                    firstDate: DateTime(1950),
+                    //DateTime.now() - not to allow to choose before today.
+                    lastDate: DateTime(2100),
+                    helpText: "Date Of Birth",
+                    confirmText: "Confirm",
+                    errorFormatText: 'Enter valid date',
+                    errorInvalidText: 'Enter date in valid range',
+                    builder: (context, child) {
+                      return Theme(
+                        data: isDarkMode
+                            ? ThemeData.dark()
+                            : ThemeData
+                                .light(), // This will change to light theme.
+                        child: child!,
+                      );
+                    });
+
+                if (pickedDate != null) {
+                  print(
+                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(pickedDate);
+                  print(
+                      formattedDate); //formatted date output using intl package =>  2021-03-16
+                  setState(() {
+                    /*_dateController.text =
+                        formattedDate;*/ //set output date to TextField value.
+                  });
+                } else {}
+              },
+              child: Icon(Icons.calendar_today)),
         ],
       ),
     );

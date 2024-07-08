@@ -11,12 +11,13 @@ class DashboardResponse {
 
   factory DashboardResponse.fromJson(Map<String, dynamic> json) {
 
-    var list = json['data']?['customer_recent_transactions'] as List;
+    var list = json['data']?['customer_recent_transactions'] as List?;
     List<DashboardTransaction>? transactionList = list?.map((i) => DashboardTransaction.fromJson(i)).toList();
 
     return DashboardResponse(
       message: json['message'] as String?,
-      customerRecentTxn: transactionList,
+      customerRecentTxn: json['data']?['customer_recent_transactions'] != null
+          ?transactionList : null,
       customerData: json['data']?['customer_data'] != null
           ? new CustomerData.fromJson(json['data']?['customer_data'])
           : null,

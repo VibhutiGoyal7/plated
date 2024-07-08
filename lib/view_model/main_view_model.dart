@@ -358,10 +358,10 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + fetchKycDocResponse.message.toString());
 
        // _apiResponse = ApiResponse.completed(fetchKycDocResponse);
-      if (response.status != null) {
-        _apiResponse = ApiResponse.completed(response);
+      if (fetchKycDocResponse.passportImage != null) {
+        _apiResponse = ApiResponse.completed(fetchKycDocResponse);
       } else {
-        _apiResponse = ApiResponse.error(response.message);
+        _apiResponse = ApiResponse.error(fetchKycDocResponse.message);
       }
          } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -379,14 +379,14 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + countryListResponse.message.toString());
 
         //_apiResponse = ApiResponse.completed(countryListResponse);
-      if (response.data != null) {
-        _apiResponse = ApiResponse.completed(response);
+      if (countryListResponse.countries != null) {
+        _apiResponse = ApiResponse.completed(countryListResponse);
       } else {
-        _apiResponse = ApiResponse.error(response.message);
+        _apiResponse = ApiResponse.error(countryListResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
+      print(" catch ${e}");
     }
     notifyListeners();
   }

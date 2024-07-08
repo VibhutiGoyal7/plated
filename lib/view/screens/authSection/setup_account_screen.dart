@@ -275,7 +275,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     );
   }
 
-  Widget _buildDOBInput(BuildContext context, String text,
+  Widget  _buildDOBInput(BuildContext context, String text,
       TextEditingController dateController, Icon icon) {
     return Card(
       child: Container(

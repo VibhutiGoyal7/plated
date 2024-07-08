@@ -138,7 +138,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if(apiResponse.message== "Invalid access token")
-        {SessionExpiredDialog.showDialogBox(context: context);}
+        {print(apiResponse.message);
+          SessionExpiredDialog.showDialogBox(context: context);}
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -164,8 +165,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         kycStatusApi = kycStatusResponse!.kycStatus!;
 
-        if (kycStatus == "in_progress") {
-          Navigator.pushNamed(context, '/VerifyIdentityScreen');
+        if (kycStatus != "verified") {
+          Navigator.pushNamed(context, '/VerifyIdentityScreen').then(onGoBack);
         }
         //_showPicker(context: context);
 
@@ -953,7 +954,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "in_progress") {
+    if (kycStatus == "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();
