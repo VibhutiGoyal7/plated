@@ -2,7 +2,6 @@ import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../languageSection/Languages.dart';
 import '../../model/apis/api_response.dart';
@@ -16,55 +15,28 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  bool isLoadingMore = false;
-  bool isLoadingPrevious = false;
-  bool isFetching = false;
   String kycStatus = "";
   String amount = "";
   bool expanded = false;
   bool inputValid = false;
-  int currentPage = 1;
-  int firstPage = 1;
-  int totalPage = 1;
-  final ScrollController _scrollController = ScrollController();
-  List<String> _allLogList = [
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-  ];
+  final int _pageSize = 10;
   List<TransactionDetails> transactionList = [];
-  late Map<String, List<TransactionDetails>> groupedTransactions;
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final _numberOfPostsPerRequest = 20;
+  var screenHeight;
+
+  final _scrollController = ScrollController();
+  int _currentPage = 1;
+  bool _isLoadingMore = false;
+  Future<void>? _fetchDataFuture;
 
   @override
   void initState() {
     super.initState();
     inputValid = false;
-    groupedTransactions = groupTransactionsByDate(transactionList);
-    _scrollController.addListener(_scrollListener);
-    _fetchData(currentPage);
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !isLoadingMore) {
-      if (currentPage < totalPage) {
-        print("${currentPage}"  "${totalPage}");
-        _fetchData(++currentPage);
-      }
-    }
-    if (_scrollController.position.pixels <= _scrollController.position.minScrollExtent + 100 && !isLoadingPrevious) {
-      if (firstPage > 1) {
-        _fetchData(--firstPage);
-      }
-    }
+    _scrollController.addListener(_loadMore);
+    _fetchDataFuture = _fetchData(_currentPage);
   }
 
   @override
@@ -74,60 +46,91 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     super.dispose();
   }
 
-  void _isValidInput() {
-    if (_amountController.text.isNotEmpty && _amountController.text.length >= 2) {
+  void _loadMore() async {
+    if (!_isLoadingMore &&
+        _scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
       setState(() {
-        inputValid = true;
+        _isLoadingMore = true;
       });
-    } else {
+      _currentPage++;
+      await _fetchData(_currentPage);
       setState(() {
-        inputValid = false;
+        _isLoadingMore = false;
       });
     }
   }
 
-  Future<Widget> getTransactionData(BuildContext context, ApiResponse apiResponse, int pageNo) async {
-    TransactionListResponse? transactionListResponse = apiResponse.data as TransactionListResponse?;
-    setState(() {
-      if (pageNo > currentPage) {
-        isLoadingMore = true;
-      } else if (pageNo < firstPage) {
-        isLoadingPrevious = true;
-      }
-    });
+  Future<void> _fetchData(int pageKey) async {
+    print("Fetch Data");
+    try {
+      TransactionListRequest request = TransactionListRequest(
+        pageNo: pageKey,
+        pageSize: _numberOfPostsPerRequest,
+        paymentRequestId: "",
+        trxId: "",
+        requestType: "",
+        status: "",
+      );
+      await Provider.of<MainViewModel>(context, listen: false)
+          .transactionListData("api/v1/app/payment_transactions/list", request);
+      ApiResponse apiResponse =
+          Provider.of<MainViewModel>(context, listen: false).response;
+      await getTransactionData(context, apiResponse, pageKey);
+    } catch (error) {
+      print("Error fetching data: $error");
+    }
+  }
+
+  Future<void> getTransactionData(
+      BuildContext context, ApiResponse apiResponse, int pageKey) async {
+    TransactionListResponse? transactionListResponse =
+        apiResponse.data as TransactionListResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return;
       case Status.COMPLETED:
+        final newItems = transactionListResponse?.data ?? [];
         setState(() {
-          int roundedResult = transactionListResponse?.pagy?.totalRow as int;
-          totalPage = (roundedResult / 10).round();
-            print("Total Page ${roundedResult}");
-          transactionList.addAll(transactionListResponse?.data as List<TransactionDetails>);
-          groupedTransactions = groupTransactionsByDate(transactionList);
-          if (pageNo > currentPage) {
-            isLoadingMore = false;
-            currentPage = pageNo;
-          } else if (pageNo < firstPage) {
-            isLoadingPrevious = false;
-            firstPage = pageNo;
-          }
+          transactionList.addAll(newItems);
         });
-        return Container(); // Return an empty container as you'll navigate away
+        return;
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
-        return Center(child: Text('Please try again later!!!'));
+        return;
       case Status.INITIAL:
       default:
-        return Center(child: Text('Search for the song by Artist'));
+        return;
     }
+  }
+
+  Map<String, List<TransactionDetails>> groupTransactionsByDate(
+      List<TransactionDetails> transactions) {
+    Map<String, List<TransactionDetails>> groupedTransactions = {};
+
+    for (var transaction in transactions) {
+      String date = convertDateFormat("${transaction.createdAt}");
+      if (!groupedTransactions.containsKey(date)) {
+        groupedTransactions[date] = [];
+      }
+      groupedTransactions[date]!.add(transaction);
+    }
+
+    return groupedTransactions;
   }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    screenHeight = MediaQuery.of(context).size.height;
+
+    // Group transactions by date
+    Map<String, List<TransactionDetails>> groupedTransactions =
+        groupTransactionsByDate(transactionList);
+    List<String> dates = groupedTransactions.keys.toList();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -142,204 +145,125 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                groupedTransactions.isNotEmpty
-                    ? Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 4),
-                      child: ListView.builder(
-                        physics: AlwaysScrollableScrollPhysics(),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: FutureBuilder(
+                  future: _fetchDataFuture,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error loading data'));
+                    } else {
+                      // Group transactions by date
+                      Map<String, List<TransactionDetails>>
+                          groupedTransactions =
+                          groupTransactionsByDate(transactionList);
+                      List<String> dates = groupedTransactions.keys.toList();
+
+                      return ListView.builder(
                         controller: _scrollController,
-                        itemCount: groupedTransactions.keys.length + (isLoadingMore ? 1 : 0) + (isLoadingPrevious ? 1 : 0),
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.only(bottom: 10),
+                        itemCount: dates.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
-                          if (isLoadingPrevious && index == 0) {
+                          if (index == dates.length) {
                             return Center(child: CircularProgressIndicator());
                           }
-                          if (isLoadingMore && index == groupedTransactions.keys.length + (isLoadingPrevious ? 1 : 0)) {
-                            return Center(child: CircularProgressIndicator());
-                          }
+                          String date = dates[index];
+                          List<TransactionDetails> transactionsForDate =
+                              groupedTransactions[date]!;
 
-                          int actualIndex = index - (isLoadingPrevious ? 1 : 0);
-                          String dateKey = groupedTransactions.keys.elementAt(actualIndex);
-                          List<TransactionDetails> transactionsForDate = groupedTransactions[dateKey]!;
-
-                          return ExpansionTile(
-                            initiallyExpanded: true,
-                            title: Text(
-                              dateKey,
-                              style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-                            ),
-                            children: transactionsForDate.map((transaction) {
-                              return Container(
-                                margin: EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: Card(
-                                            shape: CircleBorder(side: BorderSide(width: 0, color: Colors.blue)),
-                                            color: Colors.blue,
-                                            child: Icon(
-                                              Icons.wallet,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              capitalizeFirstLetter("${transaction.requestType}"),
-                                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                                            ),
-                                            Text("${transaction.bankService}", style: TextStyle(fontSize: 12)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          "${transaction.amount}",
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          convertDateFormat("${transaction.createdAt}"),
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  date,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
                                 ),
-                              );
-                            }).toList(),
+                              ),
+                              ...transactionsForDate.map((transaction) {
+                                return TransactionItem(
+                                    transaction: transaction);
+                              }).toList(),
+                            ],
                           );
                         },
-                      ),
-                    ),
-                    if (isLoadingMore || isLoadingPrevious)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                  ],
-                )
-                    : Text("No Data Found"),
-              ],
-            ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
 
-  _buildCard(BuildContext context, String title, String icon, bool isDarkMode) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+class TransactionItem extends StatelessWidget {
+  final TransactionDetails transaction;
+
+  TransactionItem({required this.transaction});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
       child: Container(
-        width: double.infinity,
-        child: isLoadingMore || isLoadingPrevious
-            ? Shimmer.fromColors(
-          baseColor: Colors.white38,
-          highlightColor: Colors.grey,
-          child: Container(
-            width: double.infinity,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.white38,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        )
-            : Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        margin: EdgeInsets.symmetric(vertical: 4),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              child: Image(
-                alignment: Alignment.topLeft,
-                width: 25,
-                image: AssetImage(icon),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  title,
-                  style: TextStyle(fontSize: 16),
+            Row(
+              children: [
+                Container(
+                  height: 50,
+                  width: 50,
+                  child: Card(
+                    shape: CircleBorder(
+                        side: BorderSide(width: 0, color: Colors.blue)),
+                    color: Colors.blue,
+                    child: Icon(Icons.wallet, color: Colors.white),
+                  ),
                 ),
-              ),
+                SizedBox(width: 8),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      capitalizeFirstLetter("${transaction.requestType}"),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    Text("${transaction.bankService}",
+                        style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ],
             ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.call_made_sharp,
-                color: isDarkMode ? Colors.white : Colors.black,
-                size: 18,
-              ),
+            Column(
+              children: [
+                Text(transaction.amount.toString(),
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(convertDateFormat("${transaction.createdAt}"),
+                    style: TextStyle(fontSize: 12)),
+              ],
             ),
           ],
         ),
       ),
     );
-  }
-
-  Map<String, List<TransactionDetails>> groupTransactionsByDate(List<TransactionDetails> transactions) {
-    Map<String, List<TransactionDetails>> groupedTransactions = {};
-
-    for (var transaction in transactions) {
-      String dateKey = convertDateFormat("${transaction.createdAt}");
-
-      if (!groupedTransactions.containsKey(dateKey)) {
-        groupedTransactions[dateKey] = [];
-      }
-
-      groupedTransactions[dateKey]!.add(transaction);
-    }
-
-    return groupedTransactions;
-  }
-
-  void _fetchData(int pageNo) async {
-    if (isFetching) return;
-    setState(() {
-      isFetching = true;
-    });
-    TransactionListRequest request = TransactionListRequest(
-      pageNo: pageNo,
-      pageSize: 10,
-      paymentRequestId: "",
-      trxId: "",
-      requestType: "",
-      status: "",
-    );
-    await Provider.of<MainViewModel>(context, listen: false).transactionListData("/api/v1/app/transactions/list", request);
-    ApiResponse apiResponse = Provider.of<MainViewModel>(context, listen: false).response;
-    await getTransactionData(context, apiResponse, pageNo);
-    setState(() {
-      isFetching = false;
-    });
   }
 }
