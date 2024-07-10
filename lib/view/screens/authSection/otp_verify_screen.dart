@@ -238,10 +238,12 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+
         children: List.generate(
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
+            alignment: Alignment.center,
             decoration: BoxDecoration(
                 border : Border(
                     top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
@@ -253,6 +255,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             width: screenWidth / 8.1,
             height: 62.0,
             child: TextField(
+              textAlignVertical: TextAlignVertical.center,
               controller: _controllers[index],
               focusNode: _focusNodes[index],
               autofocus: index == 0,
@@ -261,10 +264,9 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               maxLength: 1,
               decoration: InputDecoration(
                 counterText: "", // Remove the counter text
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                border: InputBorder.none,
               ),
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 20),
               onChanged: (value) {
                 _handleOnChange(index, value);
               },

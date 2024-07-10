@@ -8,6 +8,7 @@ import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
@@ -357,10 +358,10 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + fetchKycDocResponse.message.toString());
 
        // _apiResponse = ApiResponse.completed(fetchKycDocResponse);
-      if (response.status != null) {
-        _apiResponse = ApiResponse.completed(response);
+      if (fetchKycDocResponse.passportImage != null) {
+        _apiResponse = ApiResponse.completed(fetchKycDocResponse);
       } else {
-        _apiResponse = ApiResponse.error(response.message);
+        _apiResponse = ApiResponse.error(fetchKycDocResponse.message);
       }
          } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -378,14 +379,14 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + countryListResponse.message.toString());
 
         //_apiResponse = ApiResponse.completed(countryListResponse);
-      if (response.data != null) {
-        _apiResponse = ApiResponse.completed(response);
+      if (countryListResponse.countries != null) {
+        _apiResponse = ApiResponse.completed(countryListResponse);
       } else {
-        _apiResponse = ApiResponse.error(response.message);
+        _apiResponse = ApiResponse.error(countryListResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
+      print(" catch ${e}");
     }
     notifyListeners();
   }
@@ -425,6 +426,25 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> dashboardData(String value) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      DashboardResponse dashboardResponse =
+      await MainRepository().dashboardData(value);
+      print("Yess ${dashboardResponse.message}");
+      if (dashboardResponse.customerRecentTxn != null) {
+        _apiResponse = ApiResponse.completed(dashboardResponse);
+      } else {
+        _apiResponse = ApiResponse.error(dashboardResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Catch $e");
     }
     notifyListeners();
   }

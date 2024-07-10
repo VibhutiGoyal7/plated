@@ -134,11 +134,13 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 
         countryList = countryListResponse!.countries!;
+        print("countriess ${countryList}");
 
         //_showPicker(context: context);
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        print("countriess ${countryList}");
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -330,7 +332,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           padding: const EdgeInsets.all(16.0),
           child: SizedBox(
             width: screenWidth * 0.7,
-            height: 40,
+            //height: 40,
             child: ElevatedButton(
               onPressed: () async {
                 if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
@@ -341,15 +343,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                       .existingUserData(
                           "/api/v1/app/customers/check_customer_existance",
                           request);
-                  /* PhoneRequest phoneRequest = PhoneRequest(
-                      customer: Customer(
-                          phoneNumber: _inputController.text, mobileOtp: ""));*/
-                  /*await Provider.of<MainViewModel>(context, listen: false)
-                    .fetchMediaData(
-                        "/api/v1/app/temp_customers/initiate_customer",
-                        phoneRequest);*/
-                  //Navigator.pushNamed(context, '/OtpVerify', arguments: "${_inputController.text}");
-
                   ApiResponse apiResponse =
                       Provider.of<MainViewModel>(context, listen: false)
                           .response;

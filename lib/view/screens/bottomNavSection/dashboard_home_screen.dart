@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/view/component/news_offer_list_widget.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
@@ -26,14 +27,18 @@ class DashboardHomeScreen extends StatefulWidget {
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatus = "";
   String kycStatusApi = "";
-  String amount = "0.00";
+  String? amount = "0.00";
+  String? currencySymbol = "";
   String? name = "";
   var imageUrl;
+  var flagImg;
   bool isAmountVisible = false;
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist>
-      _shortcutCardsList; // Initialize as late to delay initialization
+      _shortcutCardsList;
+
+  List<DashboardTransaction> transactionList = [];
 
   final List<OfferResponse> imgList = [
     OfferResponse(
@@ -80,33 +85,72 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   void initState() {
     super.initState();
     imageUrl = "";
-
+    flagImg = "";
     _isChecked = List<bool>.generate(
         5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
-    Helper.getProfileDetails().then((userDetails) {
+    _fetchDashboardData();
+    /*Helper.getProfileDetails().then((userDetails) {
       setState(() {
         print("userDetails?.imageUrl${userDetails?.imageUrl}");
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
         imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
         print("imageUrl${imageUrl}");
       });
-    });
+    });*/
     print("isoCountryCode:: $isoCountryCode");
     // Initial setup for 5 checkboxes
   }
 
   FutureOr onGoBack(dynamic value) {
-    Helper.getProfileDetails().then((userDetails) {
+    _fetchDashboardData();
+   /* Helper.getProfileDetails().then((userDetails) {
       setState(() {
         print("userDetails?.imageUrl${userDetails?.imageUrl}");
         name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
         imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
         print("imageUrl${imageUrl}");
       });
-    });
+    });*/
   }
+
+  Widget getDashboardData(BuildContext context, ApiResponse apiResponse) {
+    DashboardResponse? dashboardResponse =
+    apiResponse.data as DashboardResponse?;
+    var message = dashboardResponse?.message.toString();
+    print("message ${message}");
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${dashboardResponse?.customerData?.email}");
+        print("currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
+        setState(() {
+          name = dashboardResponse?.customerData?.firstName == null ? "Name" : dashboardResponse?.customerData?.firstName;
+          imageUrl = dashboardResponse?.customerData?.imageUrl == null ? "" : dashboardResponse?.customerData?.imageUrl;
+          amount = dashboardResponse?.customerData?.balance == null ? "0.00" : dashboardResponse?.customerData?.balance;
+          currencySymbol = dashboardResponse?.customerData?.countryCurrencySymbol == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
+          //   flagImg = dashboardResponse?.customerData?. == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
+          transactionList = dashboardResponse?.customerRecentTxn as List<DashboardTransaction>;
+        });
+
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if(apiResponse.message== "Invalid access token")
+        {print(apiResponse.message);
+          SessionExpiredDialog.showDialogBox(context: context);}
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
 
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
@@ -121,8 +165,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         kycStatusApi = kycStatusResponse!.kycStatus!;
 
-        if (kycStatus == "in_progress") {
-          Navigator.pushNamed(context, '/VerifyIdentityScreen');
+        if (kycStatus != "verified") {
+          Navigator.pushNamed(context, '/VerifyIdentityScreen').then(onGoBack);
         }
         //_showPicker(context: context);
 
@@ -378,8 +422,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                           ),
                           Text(
-                            "${isAmountVisible ? amount : "**"}  "
-                            "${Languages.of(context)!.labelINR} ",
+                            "${currencySymbol} ""${isAmountVisible ? amount : "**"}  "
+                            ,
                             style: TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
@@ -552,7 +596,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           child: ListView.builder(
                             physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
-                            itemCount: _allLogList.length,
+                            itemCount: transactionList.length,
                             shrinkWrap: true,
                             padding: const EdgeInsets.only(bottom: 10),
                             itemBuilder: (BuildContext context, int index) {
@@ -589,12 +633,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              _allLogList[index],
+                                              "${transactionList[index].requestType}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14),
                                             ),
-                                            Text("From Google Pay",
+                                            Text("${transactionList[index].bankService}",
                                                 style: TextStyle(fontSize: 12)),
                                           ],
                                         ),
@@ -603,11 +647,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     Column(
                                       children: [
                                         Text(
-                                          "+INR 100.00",
+                                          "${transactionList[index].amount}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text("05/05/2024",
+                                        Text("${transactionList[index].paymentRequestId}",
                                             style: TextStyle(fontSize: 12)),
                                       ],
                                     ),
@@ -910,7 +954,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "in_progress") {
+    if (kycStatus == "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();
@@ -924,5 +968,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
     getKycStatus(context, apiResponse);
+  }
+
+  void _fetchDashboardData() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MainViewModel>(context, listen: false)
+        .dashboardData("/api/v1/app/customers/dashboard_data");
+    ApiResponse apiResponse =
+        Provider.of<MainViewModel>(context, listen: false).response;
+    getDashboardData(context, apiResponse);
   }
 }

@@ -1,6 +1,13 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../theme/AppColor.dart';
@@ -19,6 +26,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   bool isUsernameRetrieved = false;
   bool isQrCodeGenerated = false;
   late bool isDarkMode;
+  final _repaintBoundaryKey = GlobalKey();
 
   late double screenWidth;
 
@@ -47,6 +55,16 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
             "QR Scanner",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: GestureDetector(
+                onTap: (){
+                  _captureAndSharePng(context);
+                },
+                  child: Icon(Icons.share, color : Colors.white)),
+            )
+          ],
         ),
         body: SafeArea(
           child: Padding(
@@ -55,7 +73,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 //mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
-                children: [_build(context)],
+                children: [_build(context), ],
               )),
         ));
   }
@@ -126,25 +144,46 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
               height: 10,
             ),
             _buildLabelText(context, customerName.toString()),
-            isLoading
-                ? Shimmer.fromColors(
-                    baseColor: Colors.white38,
-                    highlightColor: Colors.grey,
-                    child: Container(
-                      width: 100,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Colors.white38,
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the radius as needed
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                isLoading
+                    ? Shimmer.fromColors(
+                  baseColor: Colors.white38,
+                  highlightColor: Colors.grey,
+                  child: Container(
+                    width: 100,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.white38,
+                      borderRadius: BorderRadius.circular(
+                          8.0), // Adjust the radius as needed
                     ),
-                  )
-                : Text(
-                    userName,
-                    style: TextStyle(fontSize: 14.0),
-                    textAlign: TextAlign.left,
                   ),
+                )
+                    : Text(
+                  userName,
+                  style: TextStyle(fontSize: 14.0),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                GestureDetector(
+                  onTap: () => {
+                    copyTextToClipboard(userName.toString()),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("Text copied to clipboard")),
+                    )
+                  },
+                  child: Icon(
+                    Icons.copy,
+                    size: 16,
+                  ),
+                )
+              ],
+            ),
             SizedBox(
               height: 35,
             ),
@@ -155,22 +194,25 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 child: Center(
                   child: isUsernameRetrieved /*&& isQrCodeGenerated*/
                       ? //Text("data")
-                      QrImageView(
-                          data: userName,
-                          size: screenWidth * 0.82,
-                          backgroundColor:
-                              isDarkMode ? AppColor.WHITE : AppColor.BG_COLOR,
-                          //foregroundColor: isDarkMode ? AppColor.WHITE : AppColor.BLACK,
-                          // You can include embeddedImageStyle Property if you
-                          //wanna embed an image from your Asset folder
-                          embeddedImageStyle: QrEmbeddedImageStyle(
-                              size: const Size(
-                                100,
-                                100,
-                              ),
-                              color:
-                                  isDarkMode ? AppColor.WHITE : AppColor.BLACK),
-                        )
+                      RepaintBoundary(
+                        key: _repaintBoundaryKey,
+                        child: QrImageView(
+                            data: userName,
+                            size: screenWidth * 0.82,
+                            backgroundColor:
+                                isDarkMode ? AppColor.WHITE : AppColor.BG_COLOR,
+                            //foregroundColor: isDarkMode ? AppColor.WHITE : AppColor.BLACK,
+                            // You can include embeddedImageStyle Property if you
+                            //wanna embed an image from your Asset folder
+                            embeddedImageStyle: QrEmbeddedImageStyle(
+                                size: const Size(
+                                  100,
+                                  100,
+                                ),
+                                color:
+                                    isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                          ),
+                      )
                       : Shimmer.fromColors(
                           baseColor: Colors.white38,
                           highlightColor: Colors.grey,
@@ -190,6 +232,22 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         ),
       ),
     );
+  }
+  Future<void> _captureAndSharePng(BuildContext context) async {
+    try {
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/qr_code.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      await Share.shareFiles([file.path], text: 'Here is my QR code');
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   _buildLabelText(BuildContext context, String text) {
@@ -212,5 +270,11 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       isLoading = false;
       isUsernameRetrieved = true;
     });
+  }
+
+  void copyTextToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    // Optionally show a message to the user
+    print("Text copied to clipboard: $text");
   }
 }

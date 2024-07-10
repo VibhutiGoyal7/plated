@@ -94,20 +94,14 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                 mediaList?.bankStatement?.rejectionReason;
             geoLocRejectedReason = mediaList?.geolocation?.rejectionReason;
 
-            isNationalIdAvailable =
-                mediaList?.nationalIdImage?.availableInCountry as bool;
-            isPassportAvailable =
-                mediaList?.passportImage?.availableInCountry as bool;
-            isDrivingLicenceAvailable =
-                mediaList?.drivingLicenseImage?.availableInCountry as bool;
-            isKycVideoAvailable =
-                mediaList?.videoClipUrl?.availableInCountry as bool;
-            isAddressLycAvailable =
-                mediaList?.addressKycData?.availableInCountry as bool;
-            isBankStatementAvailable =
-                mediaList?.bankStatement?.availableInCountry as bool;
-            isGeoLocAvailable =
-                mediaList?.geolocation?.availableInCountry as bool;
+
+            isNationalIdAvailable = (mediaList?.nationalIdImage?.availableInCountry !=null ) ? mediaList?.nationalIdImage?.availableInCountry as bool : false;
+            isPassportAvailable = mediaList?.passportImage?.availableInCountry!=null ? mediaList?.passportImage?.availableInCountry as bool :false;
+            isDrivingLicenceAvailable = mediaList?.drivingLicenseImage?.availableInCountry!=null ? mediaList?.drivingLicenseImage?.availableInCountry as bool :false;
+            isKycVideoAvailable = mediaList?.videoClipUrl?.availableInCountry!=null ? mediaList?.videoClipUrl?.availableInCountry as bool :false;
+            isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry!=null ? mediaList?.addressKycData?.availableInCountry as bool:false;
+            isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry!=null ? mediaList?.bankStatement?.availableInCountry as bool :false;
+            isGeoLocAvailable = mediaList?.geolocation?.availableInCountry!=null ?  mediaList?.geolocation?.availableInCountry as bool:false;
 
             isLoading = false;
           });

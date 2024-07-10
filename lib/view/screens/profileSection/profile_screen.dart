@@ -43,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userName = "";
     imageUrl = "";
     _fetchData();
+    _fetchDataFromPref();
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
         isBiometricEnable = retrievedBiometric ?? false; // Handle null case
@@ -68,20 +69,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
-        ProfileResponse? profileResponse = await Helper.getProfileDetails();
+          await Helper.saveCountry(mediaList?.countryName);
+          await Helper.saveKycStatus(mediaList?.kycStatus);
+          print(mediaList?.countryName);
 
-          await Helper.saveCountry(profileResponse?.countryName);
-          await Helper.saveKycStatus(profileResponse?.kycStatus);
-          print(profileResponse?.countryName);
-          setState(() {
-            customerName =
-                "${profileResponse?.firstName} ${profileResponse?.lastName}";
-            userName = "${profileResponse?.username}";
-            imageUrl = profileResponse?.imageUrl.toString();
-            isLoading = false;
-            isUsernameRetrieved = true;
-          });
-        //});
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("Message : ${apiResponse.message}") ;
@@ -702,5 +693,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+  void _fetchDataFromPref() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileResponse = await Helper.getProfileDetails();
+
+
+    setState(() {
+      customerName =
+      "${profileResponse?.firstName} ${profileResponse?.lastName}";
+      userName = "${profileResponse?.username}";
+      imageUrl = profileResponse?.imageUrl.toString();
+      isLoading = false;
+      isUsernameRetrieved = true;
+    });
+
   }
 }
