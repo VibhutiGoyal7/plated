@@ -60,8 +60,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
   Future<Widget> getAddMoneyResponse(
       BuildContext context, ApiResponse apiResponse) async {
-    AddMoneyResponse? addMoneyResponse =
-    apiResponse.data as AddMoneyResponse?;
+    AddMoneyResponse? addMoneyResponse = apiResponse.data as AddMoneyResponse?;
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -69,11 +68,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${addMoneyResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-        Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
+        Navigator.pushNamed(context, "/WebViewScreen",
+            arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(addMoneyResponse?.message== "Invalid access token")
+        if (addMoneyResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -110,7 +109,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           child: Column(
             //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 18,),
+              SizedBox(
+                height: 18,
+              ),
               Container(
                 height: 70,
                 width: 70,
@@ -119,19 +120,34 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   backgroundColor: AppColor.WHITE,
                   backgroundImage: AssetImage(
                     "assets/bank_statement.png",
-
                   ),
                 ),
               ),
-              SizedBox(height: 15,),
-              Text("Adding via: ${paymentMethod}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-              Text("${username}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: isDarkMode ? Colors.white70:Colors.black54)),
-              Text("Please enter amount to proceed", style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Adding via: ${paymentMethod}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text("${username}",
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                      color: isDarkMode ? Colors.white70 : Colors.black54)),
+              Text(
+                "Please enter amount to proceed",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+              ),
               _buildPhoneInput(
                   context, Languages.of(context)!.labelZero, _amountController),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
-                child: Text("Limit : ${limitAmt}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                child: Text(
+                  "Limit : ${limitAmt}",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
               ),
               Spacer(),
               _buildFooter(context),
@@ -154,8 +170,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         children: [
           //Text("Rs", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal),),
           Container(
-           // height: 60,
-            width: screenWidth*0.85 ,
+            // height: 60,
+            width: screenWidth * 0.85,
             padding: EdgeInsets.symmetric(horizontal: 2.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
@@ -176,12 +192,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
-                counterText: "",
-                border: InputBorder.none,
-                hintText: text,
-                hintStyle: TextStyle(color: Colors.grey),
-                alignLabelWithHint: true
-              ),
+                  counterText: "",
+                  border: InputBorder.none,
+                  hintText: text,
+                  hintStyle: TextStyle(color: Colors.grey),
+                  alignLabelWithHint: true),
             ),
           ),
         ],
@@ -195,24 +210,24 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       child: Column(
         children: [
           SizedBox(
-            width: screenWidth*0.7,
+            width: screenWidth * 0.7,
             child: ElevatedButton(
               onPressed: () async {
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
-                  AddMoneyRequest request = AddMoneyRequest(amount: int.parse(_amountController.text));
+                  AddMoneyRequest request = AddMoneyRequest(
+                      amount: int.parse(_amountController.text));
 
                   await Provider.of<MainViewModel>(context, listen: false)
                       .addMoneyData(
-                      "/api/v1/app/transactions/add_money_to_wallet",
-                      request);
+                          "`api/v1/app/payment_transactions/add_money_to_wallet",
+                          request);
 
                   ApiResponse apiResponse =
                       Provider.of<MainViewModel>(context, listen: false)
                           .response;
                   getAddMoneyResponse(context, apiResponse);
-
                 }
               },
               child: Text(
@@ -282,9 +297,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       },
     );
   }
+
   Future<void> _fetchKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if(kycStatus != "verified"){
+    if (kycStatus != "verified") {
       Navigator.pushNamed(context, '/VerifyIdentityScreen');
     }
   }

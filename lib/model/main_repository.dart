@@ -11,6 +11,7 @@ import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
@@ -25,6 +26,7 @@ import 'package:Payrio/model/response/setUpAccountResponse.dart';
 import 'package:Payrio/model/response/signInResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
+import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:Payrio/model/services/base_service.dart';
 import 'package:Payrio/model/services/payrio_service.dart';
 
@@ -164,6 +166,17 @@ class MainRepository {
     print("Repo $value");
     final jsonData = response;
     AddMoneyResponse mediaList = AddMoneyResponse.fromJson(jsonData);
+    print("RepoJsonData $jsonData");
+    return mediaList;
+  }
+
+
+  Future<dynamic> withDrawData(String value, WithdrawRequest withdrawRequest) async {
+    print(withdrawRequest);
+    dynamic response = await _payrioService.postResponse(value,withdrawRequest);
+    print("Repo $value");
+    final jsonData = response;
+    WithDrawResponse mediaList = WithDrawResponse.fromJson(jsonData);
     print("RepoJsonData $jsonData");
     return mediaList;
   }

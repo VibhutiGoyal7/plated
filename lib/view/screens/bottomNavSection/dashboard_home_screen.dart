@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/news_offer_list_widget.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,8 +35,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isAmountVisible = false;
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
-  late List<Shortcutitemlist>
-      _shortcutCardsList;
+  late List<Shortcutitemlist> _shortcutCardsList;
 
   List<DashboardTransaction> transactionList = [];
 
@@ -73,13 +72,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         daysLeft: "5d left"),
   ];
   final ScrollController _scrollController = ScrollController();
-  List<String> _allLogList = [
-    "Add money",
-    "Add money",
-    "Add money",
-    "Add money",
-  ];
-  List<String> _filteredList = [];
 
   @override
   void initState() {
@@ -91,33 +83,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
     _fetchDashboardData();
-    /*Helper.getProfileDetails().then((userDetails) {
-      setState(() {
-        print("userDetails?.imageUrl${userDetails?.imageUrl}");
-        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
-        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
-        print("imageUrl${imageUrl}");
-      });
-    });*/
+
     print("isoCountryCode:: $isoCountryCode");
     // Initial setup for 5 checkboxes
   }
 
   FutureOr onGoBack(dynamic value) {
     _fetchDashboardData();
-   /* Helper.getProfileDetails().then((userDetails) {
-      setState(() {
-        print("userDetails?.imageUrl${userDetails?.imageUrl}");
-        name = userDetails?.firstName == null ? "Name" : userDetails?.firstName;
-        imageUrl = userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
-        print("imageUrl${imageUrl}");
-      });
-    });*/
   }
 
   Widget getDashboardData(BuildContext context, ApiResponse apiResponse) {
     DashboardResponse? dashboardResponse =
-    apiResponse.data as DashboardResponse?;
+        apiResponse.data as DashboardResponse?;
     var message = dashboardResponse?.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
@@ -125,21 +102,45 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${dashboardResponse?.customerData?.email}");
-        print("currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
+        print(
+            "currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
         setState(() {
-          name = dashboardResponse?.customerData?.firstName == null ? "Name" : dashboardResponse?.customerData?.firstName;
-          imageUrl = dashboardResponse?.customerData?.imageUrl == null ? "" : dashboardResponse?.customerData?.imageUrl;
-          amount = dashboardResponse?.customerData?.balance == null ? "0.00" : dashboardResponse?.customerData?.balance;
-          currencySymbol = dashboardResponse?.customerData?.countryCurrencySymbol == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
+          name = dashboardResponse?.customerData?.firstName == null
+              ? "Name"
+              : dashboardResponse?.customerData?.firstName;
+          imageUrl = dashboardResponse?.customerData?.imageUrl == null
+              ? ""
+              : dashboardResponse?.customerData?.imageUrl;
+          amount = dashboardResponse?.customerData?.balance == null
+              ? "0.00"
+              : dashboardResponse?.customerData?.balance;
+          currencySymbol =
+              dashboardResponse?.customerData?.countryCurrencySymbol == null
+                  ? ""
+                  : dashboardResponse?.customerData?.countryCurrencySymbol;
           //   flagImg = dashboardResponse?.customerData?. == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
-          transactionList = dashboardResponse?.customerRecentTxn as List<DashboardTransaction>;
+          transactionList = dashboardResponse?.customerRecentTxn
+              as List<DashboardTransaction>;
         });
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(apiResponse.message== "Invalid access token")
-        {print(apiResponse.message);
-          SessionExpiredDialog.showDialogBox(context: context);}
+        if (apiResponse.message == "Invalid access token") {
+          print(apiResponse.message);
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {
+          Helper.getProfileDetails().then((userDetails) {
+            setState(() {
+              print("userDetails?.imageUrl${userDetails?.imageUrl}");
+              name = userDetails?.firstName == null
+                  ? "Name"
+                  : userDetails?.firstName;
+              imageUrl =
+                  userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
+              print("imageUrl${imageUrl}");
+            });
+          });
+        }
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -150,7 +151,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         );
     }
   }
-
 
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
@@ -172,8 +172,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(apiResponse.message== "Invalid access token")
-        {SessionExpiredDialog.showDialogBox(context: context);}
+        if (apiResponse.message == "Invalid access token") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        }
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -196,6 +197,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       Shortcutitemlist(
           title: Languages.of(context)!.labelAddMoney,
           icon: Icons.add_rounded,
+          selected: true),
+      Shortcutitemlist(
+          title: Languages.of(context)!.labelWithdraw,
+          icon: Icons.call_made,
           selected: true),
       Shortcutitemlist(
           title: Languages.of(context)!.labelSend,
@@ -321,52 +326,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
                           ),
                           SizedBox(width: 5),
-                         /* Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    Languages.of(context)!.labelStandard,
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.5),
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 4),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.blue),
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 18,
-                                        color: Colors.white,
-                                      )), // Add space between text and card
-                                  Text(
-                                    "100",
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Icon(
-                                    Icons.keyboard_arrow_right,
-                                    size: 20,
-                                  )
-                                ],
-                              ),
-                              Text(
-                                "2900 Points to Silver",
-                                style: TextStyle(fontSize: 14.0),
-                              ),
-                            ],
-                          ),*/
-
                           // Add space between avatar and text
                           Text(
                             "${Languages.of(context)!.labelHi}, $name",
@@ -403,33 +362,37 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       SizedBox(
                         height: 12,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 25,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  Languages.of(context)!.labelTotalBalance,
-                                  style: TextStyle(
-                                      fontSize: 16.0, letterSpacing: 1.25),
-                                ),
-                              ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 25,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    Languages.of(context)!.labelTotalBalance,
+                                    style: TextStyle(
+                                        fontSize: 16.0, letterSpacing: 1.25),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${currencySymbol} ""${isAmountVisible ? amount : "**"}  "
-                            ,
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
+                            Text(
+                              "${currencySymbol} "
+                              "${isAmountVisible ? amount : "**"}  ",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ), // Add space between text and amount
 
                       /*  Row(children: [
@@ -538,61 +501,68 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           ),
                         ),
                       ),
-                      Text(
-                        Languages.of(context)!.labelNews,
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.25),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          Languages.of(context)!.labelNews,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.25),
+                        ),
                       ),
                       // News and Offer List
                       SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       NewsOfferListWidget(data: imgList),
                       SizedBox(
-                        height: 10,
+                        height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${Languages.of(context)!.labelTransaction}s",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${Languages.of(context)!.labelTransaction}s",
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                      context, '/TransactionsScreen')
-                                  .then(onGoBack);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "See all",
-                                  style: TextStyle(
-                                    fontSize: 14.0,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                        context, '/TransactionsScreen')
+                                    .then(onGoBack);
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "View all",
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 14,
-                                )
-                              ],
+                                  /* Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 14,
+                                  )*/
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Expanded(
                         //height: screenSize.height/2,
                         child: Container(
-                          margin: EdgeInsets.only(top: 8),
+                          margin: EdgeInsets.only(top: 8, left: 8, right: 8),
                           child: ListView.builder(
                             physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
@@ -600,62 +570,88 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             shrinkWrap: true,
                             padding: const EdgeInsets.only(bottom: 10),
                             itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+                              return Card(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: Card(
-                                              shape: CircleBorder(
-                                                  side: BorderSide(
-                                                      width: 0,
-                                                      color: Colors.blue)),
-                                              color: Colors.blue,
-                                              child: Icon(
-                                                Icons.wallet,
-                                                color: Colors.white,
-                                              )),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: Card(
+                                                  shape: CircleBorder(
+                                                      side: BorderSide(
+                                                          width: 0,
+                                                          color: colorStatus(
+                                                              capitalizeFirstLetter(
+                                                                  "${transactionList[index].status}")))),
+                                                  color: colorStatus(
+                                                      capitalizeFirstLetter(
+                                                          "${transactionList[index].status}")),
+                                                  child: Icon(
+                                                    Icons.call_made,
+                                                    color: Colors.white,
+                                                  )),
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  capitalizeFirstLetter(
+                                                      "${transactionList[index].paymentRequestId}"),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14),
+                                                ),
+                                                Text(
+                                                    capitalizeFirstLetter(
+                                                        "${transactionList[index].status}"),
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: colorStatus(
+                                                            capitalizeFirstLetter(
+                                                                "${transactionList[index].status}")))),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "${transactionList[index].requestType}",
+                                              capitalizeFirstLetter(
+                                                  "${transactionList[index].amount}"),
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14),
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                            Text("${transactionList[index].bankService}",
+                                            Text(
+                                                convertDateFormat(
+                                                    "${transactionList[index].createdAt}"),
                                                 style: TextStyle(fontSize: 12)),
                                           ],
                                         ),
                                       ],
                                     ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          "${transactionList[index].amount}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("${transactionList[index].paymentRequestId}",
-                                            style: TextStyle(fontSize: 12)),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               );
                               // I omit the part to build card items from the list
@@ -667,56 +663,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               ),
             ),
           )),
-    );
-  }
-
-  void _showModal(BuildContext context, List<Shortcutitemlist> options) {
-    // Initialize _isChecked with false for each option
-    _isChecked =
-        List<bool>.generate(options.length, (index) => options[index].selected);
-    print(_isChecked);
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: Text('Select Options'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(options.length, (index) {
-                  return CheckboxListTile(
-                    checkboxShape: CircleBorder(),
-                    title: Text(options[index].title),
-                    value: _isChecked[index],
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _isChecked[index] = value ?? false;
-                      });
-                    },
-                  );
-                }),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    int selectedCount = _countSelectedItems();
-                    if (selectedCount == 4) {
-                      print('Number of selected items: $selectedCount');
-                      Navigator.of(context).pop();
-                    } else {
-                      ToastComponent.showToast(
-                          context: context, message: "Select minimum 4 items");
-                    }
-                  },
-                  child: Text('Close'),
-                ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 
@@ -758,15 +704,22 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if (index <= 1) {
+                        if (index <= 2) {
                           return GestureDetector(
-                            onTap: (){
-                              if(_shortcutCardsList[index].title == "Add") {
+                            onTap: () {
+                              if (_shortcutCardsList[index].title == "Add") {
                                 Navigator.pop(context);
                                 _getKycStatus();
-                              }else{
+                              } else if (_shortcutCardsList[index].title ==
+                                  Languages.of(context)?.labelWithdraw) {
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/ComingSoonScreen');
+                                Navigator.pushNamed(context, '/WithdrawScreen')
+                                    .then(onGoBack);
+                                ;
+                              } else {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, '/ComingSoonScreen');
                               }
                             },
                             child: Padding(
@@ -817,11 +770,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if (index == 2) {
+                        if (index == 3) {
                           return GestureDetector(
-                            onTap: (){
-                                Navigator.pop(context);
-                                Navigator.pushNamed(context, '/ComingSoonScreen');
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context, '/ComingSoonScreen');
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -871,9 +824,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if (index == 3) {
+                        if (index == 4) {
                           return GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               Navigator.pop(context);
                               Navigator.pushNamed(context, '/ComingSoonScreen');
                             },
@@ -919,6 +872,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     return _isChecked.where((item) => item).length;
   }
 
+  colorStatus(String status) {
+    Color color = Colors.black;
+    if (status == "Pending") {
+      color = Colors.orange;
+    } else if (status == "Success") {
+      color = Colors.green;
+    } else if (status == "Rejected") {
+      color = Colors.red;
+    }
+    return color;
+  }
+
   _buildContainer(BuildContext context, String text, IconData icon) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -939,6 +904,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {_getKycStatus()}
+                      else if (text == Languages.of(context)!.labelWithdraw)
+                        {Navigator.pushNamed(context, '/WithdrawScreen')}
                       else if (text == "More")
                         {_showPicker(context: context)}
                     },
@@ -954,7 +921,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "verified") {
+    if (kycStatus == "in_progress") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();

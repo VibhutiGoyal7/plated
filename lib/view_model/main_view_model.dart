@@ -6,6 +6,7 @@ import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
+import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
@@ -16,6 +17,7 @@ import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
+import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
@@ -341,6 +343,28 @@ class MainViewModel with ChangeNotifier {
         _apiResponse = ApiResponse.completed(response);
       } else {
         _apiResponse = ApiResponse.error(response.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("MainViewModelError $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> withDrawData(String value,
+      WithdrawRequest withDrawRequest) async {
+    _apiResponse = ApiResponse.loading('Fetching artist data');
+    notifyListeners();
+    try {
+      WithDrawResponse response = await MainRepository().withDrawData(value, withDrawRequest);
+
+      //  _apiResponse = ApiResponse.completed(response);
+      if (response.currency != null) {
+        print("MainViewModel ${response.message}");
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        print("MainViewModelError ${response.message}");
+        _apiResponse = ApiResponse.error("${response.message}");
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

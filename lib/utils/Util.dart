@@ -6,6 +6,12 @@ String capitalizeFirstLetter(String input) {
   }
   return input[0].toUpperCase() + input.substring(1);
 }
+String nonCapitalizeString(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+  return input.toLowerCase();
+}
 
 String convertDateFormat(String input) {
   if (input.isEmpty) {
