@@ -12,6 +12,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/exustingUserRequest.dart';
 import '../../../model/response/existingUserResponse.dart';
+import '../../component/connectivity_service.dart';
 
 class PhoneVerifyScreen extends StatefulWidget {
   @override
@@ -28,6 +29,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   final ScrollController _scrollController = ScrollController();
   String phoneCode = "+";
   int countryCode = 0;
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   late double screenWidth;
 
@@ -66,6 +69,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
     ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
     var message = mediaList?.message.toString();
+
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -92,11 +96,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }
   }
 
-  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+  Widget getPhoneVerifyResponse(BuildContext context, ApiResponse apiResponse) {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
     print("message ${message}");
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -467,20 +474,48 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   void _phoneVerifyAPI() async {
+    const maxDuration = Duration(seconds: 2);
     if (phoneNumberValid) {
-      PhoneRequest phoneRequest = PhoneRequest(
-          customer: Customer(
-              phoneNumber: _inputController.text,
-              mobileOtp: "",
-              countryId: countryCode));
-      await Provider.of<MainViewModel>(context, listen: false).fetchMediaData(
-          "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
-      /*  Navigator.pushNamed(context, '/OtpVerify',
+      setState(() {
+        isLoading = true;
+      });
+
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+              Text('No internet connection'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      }else {
+        PhoneRequest phoneRequest = PhoneRequest(
+            customer: Customer(
+                phoneNumber: _inputController.text,
+                mobileOtp: "",
+                countryId: countryCode));
+        await Provider.of<MainViewModel>(context, listen: false).fetchMediaData(
+            "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
+        /*  Navigator.pushNamed(context, '/OtpVerify',
                     arguments: "${_inputController.text}");*/
 
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getMediaWidget(context, apiResponse);
+        ApiResponse apiResponse =
+            Provider
+                .of<MainViewModel>(context, listen: false)
+                .response;
+        getPhoneVerifyResponse(context, apiResponse);
+      }
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter valid phone number and select country code.'),
+          duration: maxDuration,
+        ),
+      );
     }
   }
 

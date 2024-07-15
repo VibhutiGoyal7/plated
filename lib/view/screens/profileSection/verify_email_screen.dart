@@ -61,7 +61,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     super.dispose();
   }
 
-  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+  Widget getEmailOtp(BuildContext context, ApiResponse apiResponse) {
     CreateOtpVerifyEmailResponse? mediaList =
         apiResponse.data as CreateOtpVerifyEmailResponse?;
     switch (apiResponse.status) {
@@ -90,7 +90,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     }
   }
 
-  Widget VerifyGetMediaWidget(BuildContext context, ApiResponse apiResponse) {
+  Widget VerifyOtpResponse(BuildContext context, ApiResponse apiResponse) {
     final mediaList = apiResponse.data;
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -105,7 +105,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         if(mediaList?.message== "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
-          child: Text('Please try again later!!!'),
+          //child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
@@ -189,7 +189,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                                 Provider.of<MainViewModel>(context,
                                         listen: false)
                                     .response;
-                            getMediaWidget(context, apiResponse);
+                            getEmailOtp(context, apiResponse);
                           }
                         },
                         child: Container(
@@ -284,7 +284,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 ApiResponse apiResponse =
                     Provider.of<MainViewModel>(context, listen: false)
                         .response;
-                VerifyGetMediaWidget(context, apiResponse);
+                VerifyOtpResponse(context, apiResponse);
               }
             },
             child: Container(

@@ -22,6 +22,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+  bool inputValid = false;
+
   bool oldPasswordVisible = false;
   bool newPasswordVisible = false;
   bool confirmPasswordVisible = false;
@@ -158,10 +160,49 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   bool _isButtonEnabled() {
-    return _oldPasswordController.text.isNotEmpty &&
+    const maxDuration = Duration(seconds: 2);
+
+    if(_newPasswordController.text.length < 8){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password should have 8 or more characters.'),
+          duration: maxDuration,
+        ),
+      );
+      setState(() {
+        inputValid = false;
+      });
+
+    }else if(_newPasswordController.text != _confirmPasswordController.text){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Password doesn't match"),
+          duration: maxDuration,
+        ),
+      );
+      setState(() {
+        inputValid = false;
+      });
+
+    }else if(_oldPasswordController.text.isNotEmpty &&
         _newPasswordController.text.isNotEmpty &&
         _confirmPasswordController.text.isNotEmpty &&
-        _newPasswordController.text == _confirmPasswordController.text;
+        _newPasswordController.text == _confirmPasswordController.text){
+      setState(() {
+        inputValid = true;
+      });
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please fill the details"),
+          duration: maxDuration,
+        ),
+      );
+      setState(() {
+        inputValid = false;
+      });
+    }
+    return inputValid;
   }
 
   Widget _buildFooter(BuildContext context) {

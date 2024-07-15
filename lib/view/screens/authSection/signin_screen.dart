@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -22,6 +23,8 @@ class SigninScreen extends StatefulWidget {
 
 class _SigninScreenState extends State<SigninScreen> {
   bool passwordVisible = false;
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   bool inputValid = false;
   late double screenWidth;
@@ -35,6 +38,7 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   void _isValidInput() {
+    const maxDuration = Duration(seconds: 2);
     //print(input);
     if (_passwordController.text.isNotEmpty &&
         _phoneNoController.text.isNotEmpty &&
@@ -46,16 +50,26 @@ class _SigninScreenState extends State<SigninScreen> {
       setState(() {
         inputValid = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('Please enter valid details.'),
+          duration: maxDuration,
+        ),
+      );
     }
   }
 
   final TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> getSignInResponse(
       BuildContext context, ApiResponse apiResponse) async {
     SignInResponse? mediaList = apiResponse.data as SignInResponse?;
     var message = mediaList?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -78,11 +92,12 @@ class _SigninScreenState extends State<SigninScreen> {
         String? password = await Helper.getPassword();
         print("password: ${password}");
         var email = mediaList?.email;
+
         if (email?.isEmpty == true) {
           Navigator.pushReplacementNamed(context, '/SetUpAccount');
         }else{
           await Helper.saveProfileDetails(mediaList);
-          await Helper.saveCountry(mediaList?.countryName);
+          //await Helper.saveCountry(mediaList?.countryName);
           await Helper.saveKycStatus(mediaList?.kycStatus);
           Navigator.pushReplacementNamed(context, '/BottomNav');
         }
@@ -97,13 +112,13 @@ class _SigninScreenState extends State<SigninScreen> {
         print("message : ${apiResponse.message}");
         ToastComponent.showToast(context: context, message: apiResponse.message);
         return Center(
-          child: Text('Please try again later!!!'),
-        );
+            // child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
-        );
+            // child: Text('Search for the song by Artist'),
+            );
     }
   }
 
@@ -127,13 +142,13 @@ class _SigninScreenState extends State<SigninScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         return Center(
-          child: Text('Please try again later!!!'),
-        );
+            //child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
-        );
+            //child: Text('Search for the song by Artist'),
+            );
     }
   }
 
@@ -146,7 +161,12 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
+        child:
+        isLoading ?
+        Center(
+          child: CircularProgressIndicator(),
+        )
+        : Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -371,19 +391,49 @@ class _SigninScreenState extends State<SigninScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 _isValidInput();
+                const maxDuration = Duration(seconds: 2);
                 if (inputValid) {
                   SignInRequest request = SignInRequest(
                       customer: CustomerSignIn(
                           phoneNumber: _phoneNoController.text,
                           password: _passwordController.text));
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .signInWithPass("api/v1/app/customers/sign_in", request);
-                  //Navigator.pushNamed(context, '/BottomNav');
 
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  getMediaWidget(context, apiResponse);
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                          Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  }else {
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .signInWithPass(
+                        "api/v1/app/customers/sign_in", request);
+                    //Navigator.pushNamed(context, '/BottomNav');
+
+                    ApiResponse apiResponse =
+                        Provider
+                            .of<MainViewModel>(context, listen: false)
+                            .response;
+                    getSignInResponse(context, apiResponse);
+                  }
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                      Text('Please enter valid details.'),
+                      duration: maxDuration,
+                    ),
+                  );
                 }
               },
               child: Text(

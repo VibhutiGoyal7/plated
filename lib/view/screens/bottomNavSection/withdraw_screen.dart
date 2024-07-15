@@ -8,6 +8,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/withdrawRequest.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class WithdrawScreen extends StatefulWidget {
@@ -25,6 +26,12 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   late double screenWidth;
   late double screenHeight;
   final TextEditingController _inputController = TextEditingController();
+
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   final ScrollController _scrollController = ScrollController();
   List<String> _allLogList = ["100", "200", "300", "400", "500"];
@@ -262,6 +269,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     WithDrawResponse? withDrawResponse = apiResponse.data as WithDrawResponse?;
     String? message = apiResponse.message;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -269,6 +279,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${withDrawResponse?.callbackUrl}";
         print("redirectUrl: ${redirectUrl}");
+
         _showModal(context, "${withDrawResponse?.requestedAmount}");
 
         return Container(); // Return an empty container as you'll navigate away
@@ -300,19 +311,44 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           onPressed: () async {
             print(_inputController.text);
             if (inputValid) {
-              WithdrawRequest request = WithdrawRequest(
-                  amount: _inputController.text,
-                  bankType: "Nagad",
-                  custPhone: customerNumber);
+              setState(() {
+                isLoading = true;
+              });
 
-              await Provider.of<MainViewModel>(context, listen: false)
-                  .withDrawData(
-                      "api/v1/app/payment_transactions/withdraw_money_from_wallet",
-                      request);
+              bool isConnected = await _connectivityService.isConnected();
+              if (!isConnected) {
+                setState(() {
+                  isLoading = false;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('No internet connection'),
+                      duration: maxDuration,
+                    ),
+                  );
+                });
+              } else {
+                WithdrawRequest request = WithdrawRequest(
+                    amount: _inputController.text,
+                    bankType: "Nagad",
+                    custPhone: customerNumber);
 
-              ApiResponse apiResponse =
-                  Provider.of<MainViewModel>(context, listen: false).response;
-              getWithDrawResponse(context, apiResponse);
+                await Provider.of<MainViewModel>(context, listen: false)
+                    .withDrawData(
+                        "api/v1/app/payment_transactions/withdraw_money_from_wallet",
+                        request);
+
+                ApiResponse apiResponse =
+                    Provider.of<MainViewModel>(context, listen: false).response;
+                getWithDrawResponse(context, apiResponse);
+              }
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content:
+                  Text('Enter amount.'),
+                  duration: maxDuration,
+                ),
+              );
             }
           },
           child: Text(

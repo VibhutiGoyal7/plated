@@ -8,7 +8,9 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
+import '../../component/toastMessage.dart';
 
 class ChooseDocScreen extends StatefulWidget {
   @override
@@ -18,6 +20,10 @@ class ChooseDocScreen extends StatefulWidget {
 class _ChooseDocScreenState extends State<ChooseDocScreen> {
   bool isLoading = true;
   bool isCountryNameLoading = true;
+
+  static const maxDuration = Duration(seconds: 2);
+
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   String? countryName = "";
 
@@ -62,9 +68,12 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     _fetchDocData();
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> getDocData(
       BuildContext context, ApiResponse apiResponse) async {
     FetchKycDocResponse? mediaList = apiResponse.data as FetchKycDocResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -108,10 +117,13 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (mediaList?.message == "Invalid access token")
-          SessionExpiredDialog.showDialogBox(context: context);
+        if (mediaList?.message == "Invalid access token"){
+          SessionExpiredDialog.showDialogBox(context: context);}
+        else{
+          ToastComponent.showToast(context: context, message: mediaList?.message);
+        }
         return Center(
-          child: Text('Please try again later!!!'),
+          //child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
@@ -406,11 +418,31 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
 
   Future<void> _fetchDocData() async {
     await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .fetchKycDocData("/api/v1/app/customers/customer_uploaded_documents");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+            Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    }else {
+      await Provider.of<MainViewModel>(context, listen: false)
+          .fetchKycDocData("/api/v1/app/customers/customer_uploaded_documents");
+      ApiResponse apiResponse =
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
+      getDocData(context, apiResponse);
+    }
   }
 
   Future<void> _fetchCountryName() async {
