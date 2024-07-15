@@ -4,6 +4,7 @@ import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/news_offer_list_widget.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -102,8 +103,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${dashboardResponse?.customerData?.email}");
-        print(
-            "currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
+        print("currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
+        if(dashboardResponse?.customerData?.tpin == null || dashboardResponse?.customerData?.tpin == ""){
+          Navigator.pushNamed(context, '/TpinCreateScreen').then(onGoBack);
+        }
         setState(() {
           name = dashboardResponse?.customerData?.firstName == null
               ? "Name"
@@ -162,18 +165,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${kycStatusResponse?.kycStatus}");
-
         kycStatusApi = kycStatusResponse!.kycStatus!;
-
         if (kycStatus != "verified") {
           Navigator.pushNamed(context, '/VerifyIdentityScreen').then(onGoBack);
         }
-        //_showPicker(context: context);
-
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
+        } else{
+          ToastComponent.showToast(context: context, message: apiResponse.message);
         }
         return Center(
           child: Text('Please try again later!!!'),
@@ -921,7 +922,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "in_progress") {
+    if (kycStatus == "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();

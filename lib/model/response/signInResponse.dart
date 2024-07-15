@@ -70,7 +70,7 @@ class SignInResponse {
           : null,*/
       ,
       email: json['data']?['customer']?['email'] as String?,
-      countryName: json['data']?['customer']?['countryName'] as String?,
+      countryName: json['data']?['customer']?['country_name'] as String?,
       address: json['data']?['customer']?['address'] as String?,
       dob: json['data']?['customer']?['dob'] as String?,
       isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
