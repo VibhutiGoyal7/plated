@@ -120,6 +120,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   backgroundColor: AppColor.WHITE,
                   backgroundImage: AssetImage(
                     "assets/bank_statement.png",
+
                   ),
                 ),
               ),
@@ -228,6 +229,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       Provider.of<MainViewModel>(context, listen: false)
                           .response;
                   getAddMoneyResponse(context, apiResponse);
+
                 }
               },
               child: Text(

@@ -422,6 +422,8 @@ class MainViewModel with ChangeNotifier {
       KycStatusResponse kycStatusResponse =
           await MainRepository().kycStatusData(value);
       print("Yess" + kycStatusResponse.message.toString());
+
+        //_apiResponse = ApiResponse.completed(kycStatusResponse);
       if (kycStatusResponse.kycStatus != null) {
         _apiResponse = ApiResponse.completed(kycStatusResponse);
       } else {
