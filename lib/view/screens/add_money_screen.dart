@@ -205,7 +205,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
                   await Provider.of<MainViewModel>(context, listen: false)
                       .addMoneyData(
-                      "/api/v1/app/transactions/add_money_to_wallet",
+                      "/api/v1/app/payment_transactions/add_money_to_wallet",
                       request);
 
                   ApiResponse apiResponse =

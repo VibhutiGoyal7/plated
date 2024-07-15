@@ -335,7 +335,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       requestType: "",
       status: "",
     );
-    await Provider.of<MainViewModel>(context, listen: false).transactionListData("/api/v1/app/transactions/list", request);
+    await Provider.of<MainViewModel>(context, listen: false).transactionListData("/api/v1/app/payment_transactions/list", request);
     ApiResponse apiResponse = Provider.of<MainViewModel>(context, listen: false).response;
     await getTransactionData(context, apiResponse, pageNo);
     setState(() {

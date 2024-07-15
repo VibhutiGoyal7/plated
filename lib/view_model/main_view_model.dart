@@ -400,10 +400,10 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + kycStatusResponse.message.toString());
 
         //_apiResponse = ApiResponse.completed(kycStatusResponse);
-      if (response.data != null) {
-        _apiResponse = ApiResponse.completed(response);
+      if (kycStatusResponse.kycStatus != null) {
+        _apiResponse = ApiResponse.completed(kycStatusResponse);
       } else {
-        _apiResponse = ApiResponse.error(response.message);
+        _apiResponse = ApiResponse.error(kycStatusResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
