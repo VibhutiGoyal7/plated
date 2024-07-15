@@ -275,6 +275,7 @@ abstract class Languages {
 
   String get labelSelectCountryCode;
 
+  String get labelWithdraw;
   /*String get labelEnterValidPhone;
 
   String get labelEnterValidPhone;

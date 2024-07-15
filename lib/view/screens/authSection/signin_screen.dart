@@ -77,10 +77,18 @@ class _SigninScreenState extends State<SigninScreen> {
         await Helper.savePassword(_passwordController.text);
         String? password = await Helper.getPassword();
         print("password: ${password}");
-
+        var email = mediaList?.email;
+        if (email?.isEmpty == true) {
+          Navigator.pushReplacementNamed(context, '/SetUpAccount');
+        }else{
+          await Helper.saveProfileDetails(mediaList);
+          await Helper.saveCountry(mediaList?.countryName);
+          await Helper.saveKycStatus(mediaList?.kycStatus);
+          Navigator.pushReplacementNamed(context, '/BottomNav');
+        }
         //SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
         //print('Retrieved Token: ${retrievedToken}');
-        _fetchData();
+        //_fetchData();
 
         // Navigate to the new screen after receiving the response
         //Navigator.pushNamed(context, '/BottomNav');

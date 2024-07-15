@@ -22,6 +22,7 @@ class SignInResponse {
   final String? vipLevel;
   final bool? isProfileSetupDone;
   final String? username;
+  final String? countryName;
 
   SignInResponse(
       {this.firstName,
@@ -46,6 +47,7 @@ class SignInResponse {
       this.balance,
       this.isProfileSetupDone,
       this.vipLevel,
+      this.countryName,
       this.username});
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,7 @@ class SignInResponse {
           : null,*/
       ,
       email: json['data']?['customer']?['email'] as String?,
+      countryName: json['data']?['customer']?['countryName'] as String?,
       address: json['data']?['customer']?['address'] as String?,
       dob: json['data']?['customer']?['dob'] as String?,
       isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,

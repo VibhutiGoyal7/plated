@@ -22,6 +22,7 @@ class ProfileResponse {
   final String? countryPhoneCode;
   final String? createdAt;
   final bool? isEmailVerified;
+  final String? countryCurrencySymbol;
 
   ProfileResponse({
     this.firstName,
@@ -44,6 +45,7 @@ class ProfileResponse {
     this.activityPts,
     this.kycStatus,
     this.balance,
+    this.countryCurrencySymbol
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,7 @@ class ProfileResponse {
       countryName: json['data']?['country_name'] as String?,
       countryPhoneCode: json['data']?['country_phone_code'] as String?,
       createdAt: json['data']?['created_at'] as String?,
+      countryCurrencySymbol: json['data']?['country_currency_symbol'] as String?,
 
     );
   }
@@ -92,6 +95,7 @@ class ProfileResponse {
     data['country_name'] = this.countryName;
     data['country_phone_code'] = this.countryPhoneCode;
     data['activity_points'] = this.activityPts;
+    data['country_currency_symbol'] = this.countryCurrencySymbol;
     return data;
   }
   factory ProfileResponse.fromPref(Map<String, dynamic> json) {
@@ -114,6 +118,7 @@ class ProfileResponse {
       countryPhoneCode: json['country_phone_code'] as String?,
       createdAt: json['created_at'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,
+      countryCurrencySymbol: json['country_currency_symbol'] as String?,
     );
   }
 }

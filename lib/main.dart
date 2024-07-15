@@ -1,3 +1,5 @@
+import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/payment_method_screen.dart';
 import 'package:Payrio/view/screens/profileSection/qr_scanner_screen.dart';
@@ -407,6 +409,22 @@ class _MyAppState extends State<MyApp> {
                   .settings
                   .arguments as String?;
               return ComingSoonScreen();
+            },
+            '/TransferScreen': (context) {
+              final args =
+              ModalRoute
+                  .of(context)!
+                  .settings
+                  .arguments as String?;
+              return TransferScreen();
+            },
+            '/WithdrawScreen': (context) {
+              final args =
+              ModalRoute
+                  .of(context)!
+                  .settings
+                  .arguments as String?;
+              return WithdrawScreen();
             }
           }),
     );

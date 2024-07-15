@@ -410,4 +410,7 @@ class LanguageEn extends Languages {
   @override
   String get labelComingSoon =>   "Coming Soon";
 
+  @override
+  String get labelWithdraw =>   "Withdraw";
+
 }
