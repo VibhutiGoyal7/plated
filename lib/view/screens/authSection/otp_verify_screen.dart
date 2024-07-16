@@ -10,6 +10,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/request/signInWithPhoneNumber.dart';
 import '../../../model/response/otpVerifyResponse.dart';
 import '../../../model/response/phoneVerifyResponse.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
@@ -32,6 +33,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   bool resendOtp = false;
   String phoneNo = "";
   late double screenWidth;
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -75,12 +78,16 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     OtpVerifyResponse? otpVerifyResponse =
         apiResponse.data as OtpVerifyResponse?;
     var message = otpVerifyResponse?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("OtpVerify ${otpVerifyResponse?.token}");
         //Call Toast
+
         ToastComponent.showToast(context: context, message: message);
         final prefs = await SharedPreferences.getInstance();
         String token = "${otpVerifyResponse?.token}";
@@ -115,11 +122,13 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     }
   }
 
-  Widget getMediaWidgetResendOtp(
-      BuildContext context, ApiResponse apiResponse) {
+  Widget getResendOtpResponse(BuildContext context, ApiResponse apiResponse) {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -150,7 +159,13 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
+
+        child:
+            isLoading?
+            Center(
+              child: CircularProgressIndicator(),
+            )
+            :Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
@@ -160,55 +175,58 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               child: _buildLabelText(context, "PIN \n VERIFICATION ", 28, true),
               alignment: AlignmentDirectional.center,
             ),
-            Container(
-              width: screenWidth,
-              height: screenHeight * 0.72,
-              margin: EdgeInsets.zero,
-              child: Card(
-                margin: EdgeInsets.all(0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /*_buildLabelText(context,
-                        Languages.of(context)!.labelWelcome, 16, false),
+            Expanded(
+              child: Container(
+                width: screenWidth,
+                height: screenHeight * 0.72,
+                margin: EdgeInsets.zero,
+                child: Card(
+                  margin: EdgeInsets.all(0),
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /*_buildLabelText(context,
+                          Languages.of(context)!.labelWelcome, 16, false),
 
-                    SizedBox(height: 4),*/
-                    SizedBox(height: 20),
-                    Center(
-                      child: _buildLabelText(context,
-                          Languages.of(context)!.labelEnterCode, 20, true),
-                    ),
-                    SizedBox(height: 4),
-                    Center(
-                      child: _buildLabelText(
-                          context,
-                          "${Languages.of(context)!.labelSentCode} ${widget.data}",
-                          12,
-                          false),
-                    ),
-                    SizedBox(height: 22),
-                    _buildPhoneInput(context, screenWidth, isDarkMode),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 24),
-                      child: Row(
-                        children: [
-                          _buildLabelText(
-                              context,
-                              "${Languages.of(context)!.labelResendCode} ",
-                              14,
-                              true),
-                          _countdownTimer(),
-                          Spacer(),
-                          if (resendOtp) _resendOtpButton(context)
-                        ],
+                      SizedBox(height: 4),*/
+                      SizedBox(height: 20),
+                      Center(
+                        child: _buildLabelText(context,
+                            Languages.of(context)!.labelEnterCode, 20, true),
                       ),
-                    ),
-                    Spacer(),
-                    _buildFooter(context),
-                  ],
+                      SizedBox(height: 4),
+                      Center(
+                        child: _buildLabelText(
+                            context,
+                            "${Languages.of(context)!.labelSentCode} ${widget.data}",
+                            12,
+                            false),
+                      ),
+                      SizedBox(height: 22),
+                      _buildOtpInput(context, screenWidth, isDarkMode),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 24),
+                        child: Row(
+                          children: [
+                            _buildLabelText(
+                                context,
+                                "${Languages.of(context)!.labelResendCode} ",
+                                14,
+                                true),
+                            _countdownTimer(),
+                            Spacer(),
+                            if (resendOtp) _resendOtpButton(context)
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      _buildFooter(context),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -233,7 +251,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     );
   }
 
-  Widget _buildPhoneInput(
+  Widget _buildOtpInput(
       BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
@@ -303,23 +321,46 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             onPressed: () async {
               String otp =
                   _controllers.map((controller) => controller.text).join();
+              const maxDuration = Duration(seconds: 2);
               if (otp.isNotEmpty && otp.length == 6) {
-                PhoneRequest phoneRequest = PhoneRequest(
-                    customer: Customer(
-                        phoneNumber: widget.data.toString(),
-                        mobileOtp: otp,
-                        countryId: null));
-                await Provider.of<MainViewModel>(context, listen: false)
-                    .fetchOtpVerifyData(
-                        "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                        phoneRequest);
+                setState(() {
+                  isLoading = true;
+                });
 
-                ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false).response;
-                getOtpResponseDataWidget(context, apiResponse);
+                bool isConnected = await _connectivityService.isConnected();
+                if (!isConnected) {
+                  setState(() {
+                    isLoading = false;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('No internet connection'),
+                        duration: maxDuration,
+                      ),
+                    );
+                  });
+                } else {
+                  PhoneRequest phoneRequest = PhoneRequest(
+                      customer: Customer(
+                          phoneNumber: widget.data.toString(),
+                          mobileOtp: otp,
+                          countryId: null));
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .fetchOtpVerifyData(
+                          "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
+                          phoneRequest);
+
+                  ApiResponse apiResponse =
+                      Provider.of<MainViewModel>(context, listen: false)
+                          .response;
+                  getOtpResponseDataWidget(context, apiResponse);
+                }
               } else {
-                SnackBar(
-                  content: Text("Enter 6-digit otp."),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        'Please enter valid phone number and select country code.'),
+                    duration: maxDuration,
+                  ),
                 );
               }
             },
@@ -401,7 +442,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
           ApiResponse apiResponse =
               Provider.of<MainViewModel>(context, listen: false).response;
-          getMediaWidgetResendOtp(context, apiResponse);
+          getResendOtpResponse(context, apiResponse);
         },
         child: Text(
           "Resend Otp",

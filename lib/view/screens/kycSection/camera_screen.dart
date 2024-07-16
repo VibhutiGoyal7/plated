@@ -13,6 +13,8 @@ import 'package:screenshot/screenshot.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/toastMessage.dart';
 
 class DocImageScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -32,9 +34,16 @@ class _DocImageScreenState extends State<DocImageScreen> {
   File? frontImg;
   File? backImg;
   var imageUrl;
+  bool isInputValid = false;
   final picker = ImagePicker();
   final GlobalKey _containerKey = GlobalKey();
   ScreenshotController screenshotController = ScreenshotController();
+
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -49,23 +58,15 @@ class _DocImageScreenState extends State<DocImageScreen> {
     } else if (docType == "video_kyc_clip") {
       isBothSides = false;
     }else if (docType == "address_kyc") {
-      isBothSides = true;
+      isBothSides = false;
     }else if (docType == "bank_statement") {
       isBothSides = true;
     }
     imageName="kyc_file";
-    if (docType == "passport") {
-      isBothSides = false;
-    } else if (docType == "national_id") {
-      isBothSides = true;
-    } else if (docType == "driving_licence") {
-      isBothSides = true;
-    } else if (docType == "video_kyc_clip") {
-      isBothSides = false;
-    }
+
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> submitKycDocResponse(
       BuildContext context, ApiResponse apiResponse) async {
     UploadKycDocResponse? mediaList = apiResponse.data as UploadKycDocResponse?;
     switch (apiResponse.status) {
@@ -77,15 +78,19 @@ class _DocImageScreenState extends State<DocImageScreen> {
             print(imageUrl);
             //imageClicked = true;
             imageUrl = mediaList?.kycDocsImageUrl.toString();
+            isLoading = false;
             Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
           });
        // });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(mediaList?.message== "Invalid access token")
-          SessionExpiredDialog.showDialogBox(context: context);
+        if(mediaList?.message== "Invalid access token"){
+          SessionExpiredDialog.showDialogBox(context: context);}
+        else{
+          ToastComponent.showToast(context: context, message: mediaList?.message);
+        }
         return Center(
-          child: Text('Please try again later!!!'),
+          //child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
@@ -102,6 +107,8 @@ class _DocImageScreenState extends State<DocImageScreen> {
     );
     return false; // Prevent the default back button behavior
   }
+
+
 
 
   @override
@@ -124,87 +131,89 @@ class _DocImageScreenState extends State<DocImageScreen> {
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ),
-          body: Column(children: [
-            Screenshot(
-              controller: screenshotController,
-              child: Column(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        onPressedFrontImage();
-                        //getFrontImage(ImageSource.camera);
-                      },
-                      child: Container(
-                        margin:
-                            EdgeInsets.only(left: 0, right: 00, bottom: 0, top: 0),
-                        alignment: Alignment.center,
-                        height:
-                            isBothSides ? screenHeight * 0.36 : screenHeight * 0.6,
-                        width: double.infinity,
-                        decoration: BoxDecoration(border: Border.all(width: 0.2)),
-                        child: frontImageClicked
-                            ? ClipRRect(
-                                child: Image.file(frontImg as File,
-                                    width: screenWidth, fit: BoxFit.fill),
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [Text("Front Side"), Icon(Icons.add)],
-                              ),
-                      )),
-                  if (isBothSides)
+          body: Stack(
+            children: [Column(children: [
+              Screenshot(
+                controller: screenshotController,
+                child: Column(
+                  children: [
                     GestureDetector(
                         onTap: () {
-                          onPressedBackImage();
-                          //getBackImage(ImageSource.camera);
+                          onPressedFrontImage();
+                          //getFrontImage(ImageSource.camera);
                         },
                         child: Container(
                           margin:
-                          EdgeInsets.only(left: 0, right: 0, bottom: 0, top: 0),
+                              EdgeInsets.only(left: 0, right: 00, bottom: 0, top: 0),
                           alignment: Alignment.center,
-                          height: screenHeight * 0.36,
+                          height:
+                              isBothSides ? screenHeight * 0.36 : screenHeight * 0.6,
                           width: double.infinity,
-                          decoration: BoxDecoration(border: Border.all(width: 0.5)),
-                          child: backImgClicked
+                          decoration: BoxDecoration(border: Border.all(width: 0.2)),
+                          child: frontImageClicked
                               ? ClipRRect(
-                            child: Image.file(backImg as File,
-                                width: screenWidth, fit: BoxFit.fill),
-                          )
+                                  child: Image.file(frontImg as File,
+                                      width: screenWidth, fit: BoxFit.fill),
+                                )
                               : Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Text("Back Side"), Icon(Icons.add)],
-                          ),
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [Text("Front Side"), Icon(Icons.add)],
+                                ),
                         )),
-                ],
+                    if (isBothSides)
+                      GestureDetector(
+                          onTap: () {
+                            onPressedBackImage();
+                            //getBackImage(ImageSource.camera);
+                          },
+                          child: Container(
+                            margin:
+                            EdgeInsets.only(left: 0, right: 0, bottom: 0, top: 0),
+                            alignment: Alignment.center,
+                            height: screenHeight * 0.36,
+                            width: double.infinity,
+                            decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                            child: backImgClicked
+                                ? ClipRRect(
+                              child: Image.file(backImg as File,
+                                  width: screenWidth, fit: BoxFit.fill),
+                            )
+                                : Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [Text("Back Side"), Icon(Icons.add)],
+                            ),
+                          )),
+                  ],
+                ),
               ),
-            ),
 
-            Spacer(),
-            _buildFooter(context),
-            SizedBox(
-              height: 25,
-            )
-          ])),
+              Spacer(),
+              _buildFooter(context),
+              SizedBox(
+                height: 25,
+              )
+            ]),
+              isLoading?
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ): SizedBox()
+      ]
+          )),
     );
   }
 
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
     print(file);
-    //List<int> mergedImageBytes = await mergeImages(file!, backImg!);
-    // print("mergedImageBytes : $mergedImageBytes");
-    // Convert merged image bytes to base64
-    //String base64Image = base64Encode(mergedImageBytes);
-    //File finalFile = await processImagesAndReturnFile(file!, backImg);
-    //File dile = bytesToFile(mergedImageBytes, base64Image) as File;
+
     await Provider.of<MainViewModel>(context, listen: false)
         .postMultiFormResponse(
             "/api/v1/app/kyc_documents", file!, docType, imageName);
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
+    submitKycDocResponse(context, apiResponse);
   }
 
   Future<File> processImagesAndReturnFile(File? files, File? backImg) async {
@@ -330,7 +339,35 @@ class _DocImageScreenState extends State<DocImageScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                _captureAndSaveScreenshot();
+                if(isInputValid){
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                          Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  }else {
+                    _captureAndSaveScreenshot();
+                  }
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                      Text('Capture document image'),
+                      duration: maxDuration,
+                    ),
+                  );
+                }
                 /*      screenshotController
                     .capture(delay: Duration(milliseconds: 10))
                     .then((capturedImage) async {
@@ -347,16 +384,30 @@ class _DocImageScreenState extends State<DocImageScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: Colors.blueAccent,
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  backgroundColor:
+                  isInputValid ? Colors.blueAccent : Colors.white,
                   elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4))),
+                  shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(2))),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void isDataAvailable(){
+    isInputValid = false;
+    if(isBothSides){
+      if(frontImg != null && backImg!=null && frontImageClicked && backImgClicked){
+        isInputValid = true;
+      }
+    }else {
+      if(frontImg!=null && frontImageClicked){
+        isInputValid = true;
+      }
+    }
   }
 
   Future<dynamic> ShowCapturedWidget(

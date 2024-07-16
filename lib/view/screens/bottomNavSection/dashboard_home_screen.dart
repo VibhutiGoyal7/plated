@@ -18,6 +18,7 @@ import '../../../model/response/offersResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
@@ -37,6 +38,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist> _shortcutCardsList;
+
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   List<DashboardTransaction> transactionList = [];
 
@@ -126,7 +133,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           //   flagImg = dashboardResponse?.customerData?. == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
           transactionList = dashboardResponse?.customerRecentTxn
               as List<DashboardTransaction>;
+          isLoading = false;
         });
+
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -168,6 +177,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.COMPLETED:
         print("rwrwr ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;
+        isLoading = false;
         if (kycStatus != "verified") {
           Navigator.pushNamed(context, '/VerifyIdentityScreen').then(onGoBack);
         }
@@ -248,425 +258,431 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           // return Future.value(true);
         }
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: isDarkMode
-              ? SystemUiOverlayStyle.light
-              : SystemUiOverlayStyle.dark,
-          child: Scaffold(
-            body: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: GestureDetector(
-                              onTap: () => {
-                                Navigator.pushNamed(context, '/ProfileScreen')
-                                    .then(onGoBack)
-                              },
-                              child: imageUrl == null || imageUrl == ""
-                                  ? Container(
-                                      height: 40,
-                                      width: 40,
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundColor: AppColor.WHITE,
-                                        backgroundImage: AssetImage(
-                                          "assets/profile_user.png",
-                                        ),
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      child: Image.network(
-                                        imageUrl as String,
-                                        height: 40,
-                                        width: 40,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context,
-                                            Object exception,
-                                            StackTrace? stackTrace) {
-                                          // You can return any widget here to display in case of an error
-                                          return Container(
-                                            height: 40,
-                                            width: 40,
-                                            child: CircleAvatar(
-                                              radius: 30,
-                                              backgroundColor: AppColor.WHITE,
-                                              backgroundImage: AssetImage(
-                                                "assets/profile_user.png",
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.black45,
-                                              highlightColor: Colors.black87,
-                                              child: Container(
-                                                height: 40,
-                                                width: 40,
-                                                color: Colors.grey,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      )),
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          // Add space between avatar and text
-                          Text(
-                            "${Languages.of(context)!.labelHi}, $name",
-                            style: TextStyle(
-                                fontSize: 16.0, fontWeight: FontWeight.bold),
-                          ),
-
-                          Spacer(),
-                          IconButton(
-                            icon: Icon(
-                              isAmountVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              size: 24,
-                            ),
-                            onPressed: () {
-                              setState(
-                                () {
-                                  isAmountVisible = !isAmountVisible;
-                                },
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.notifications),
-                            onPressed: () => {
-                              Navigator.pushNamed(
-                                  context, "/NotificationScreen")
-                            },
-                          ),
-                        ],
-                      ),
-                      // Add space between sections
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        children: [AnnotatedRegion<SystemUiOverlayStyle>(
+            value: isDarkMode
+                ? SystemUiOverlayStyle.light
+                : SystemUiOverlayStyle.dark,
+            child: Scaffold(
+              body: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height: 25,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    Languages.of(context)!.labelTotalBalance,
-                                    style: TextStyle(
-                                        fontSize: 16.0, letterSpacing: 1.25),
-                                  ),
-                                ],
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: GestureDetector(
+                                onTap: () => {
+                                  Navigator.pushNamed(context, '/ProfileScreen')
+                                      .then(onGoBack)
+                                },
+                                child: imageUrl == null || imageUrl == ""
+                                    ? Container(
+                                        height: 40,
+                                        width: 40,
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          backgroundColor: AppColor.WHITE,
+                                          backgroundImage: AssetImage(
+                                            "assets/profile_user.png",
+                                          ),
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                        child: Image.network(
+                                          imageUrl as String,
+                                          height: 40,
+                                          width: 40,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (BuildContext context,
+                                              Object exception,
+                                              StackTrace? stackTrace) {
+                                            // You can return any widget here to display in case of an error
+                                            return Container(
+                                              height: 40,
+                                              width: 40,
+                                              child: CircleAvatar(
+                                                radius: 30,
+                                                backgroundColor: AppColor.WHITE,
+                                                backgroundImage: AssetImage(
+                                                  "assets/profile_user.png",
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent? loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return Shimmer.fromColors(
+                                                baseColor: Colors.black45,
+                                                highlightColor: Colors.black87,
+                                                child: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        )),
                               ),
                             ),
+                            SizedBox(width: 5),
+                            // Add space between avatar and text
                             Text(
-                              "${currencySymbol} "
-                              "${isAmountVisible ? amount : "**"}  ",
+                              "${Languages.of(context)!.labelHi}, $name",
                               style: TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
+                                  fontSize: 16.0, fontWeight: FontWeight.bold),
+                            ),
+
+                            Spacer(),
+                            IconButton(
+                              icon: Icon(
+                                isAmountVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                size: 24,
                               ),
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    isAmountVisible = !isAmountVisible;
+                                  },
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.notifications),
+                              onPressed: () => {
+                                Navigator.pushNamed(
+                                    context, "/NotificationScreen")
+                              },
                             ),
                           ],
                         ),
-                      ), // Add space between text and amount
+                        // Add space between sections
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 25,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      Languages.of(context)!.labelTotalBalance,
+                                      style: TextStyle(
+                                          fontSize: 16.0, letterSpacing: 1.25),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                "${currencySymbol} "
+                                "${isAmountVisible ? amount : "**"}  ",
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ), // Add space between text and amount
 
-                      /*  Row(children: [
+                        /*  Row(children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.38,
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image(
+                                        alignment: Alignment.topLeft,
+                                        image: AssetImage(
+                                            "assets/india_flag_icon.png"),
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                      Spacer(),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${Languages.of(context)!.labelINR} "
+                                                "${isAmountVisible ? amount : "**"}",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(width: 8), // Add space between cards
+                          isUSDVisible
+                              ? Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            height:
+                            MediaQuery.of(context).size.height * 0.15,
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Image(
+                                        alignment: Alignment.topLeft,
+                                        image: AssetImage(
+                                            "assets/united_states_flag_icon.png"),
+                                        width: 35,
+                                        height: 60,
+                                      ),
+                                      Spacer(),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${Languages.of(context)!.labelUSD} "
+                                                "${isAmountVisible ? amount : "**"}",
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          )
+                              : SizedBox(
+                            width: 0,
+                          ),
+                        ]),*/
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.38,
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Image(
-                                      alignment: Alignment.topLeft,
-                                      image: AssetImage(
-                                          "assets/india_flag_icon.png"),
-                                      width: 35,
-                                      height: 35,
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "${Languages.of(context)!.labelINR} "
-                                              "${isAmountVisible ? amount : "**"}",
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ]),
+                          width: screenWidth,
+                          height: screenHeight * 0.15,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: List.generate(
+                              4,
+                              (index) {
+                                if (index <= 2) {
+                                  return _buildContainer(
+                                      context,
+                                      _shortcutCardsList[index].title,
+                                      _shortcutCardsList[index].icon);
+                                } else {
+                                  return _buildContainer(
+                                      context, "More", Icons.more_horiz);
+                                }
+                              },
                             ),
                           ),
                         ),
-
-                        SizedBox(width: 8), // Add space between cards
-                        isUSDVisible
-                            ? Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height:
-                          MediaQuery.of(context).size.height * 0.15,
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Image(
-                                      alignment: Alignment.topLeft,
-                                      image: AssetImage(
-                                          "assets/united_states_flag_icon.png"),
-                                      width: 35,
-                                      height: 60,
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "${Languages.of(context)!.labelUSD} "
-                                              "${isAmountVisible ? amount : "**"}",
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ]),
-                            ),
-                          ),
-                        )
-                            : SizedBox(
-                          width: 0,
-                        ),
-                      ]),*/
-                      Container(
-                        width: screenWidth,
-                        height: screenHeight * 0.15,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: List.generate(
-                            4,
-                            (index) {
-                              if (index <= 2) {
-                                return _buildContainer(
-                                    context,
-                                    _shortcutCardsList[index].title,
-                                    _shortcutCardsList[index].icon);
-                              } else {
-                                return _buildContainer(
-                                    context, "More", Icons.more_horiz);
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          Languages.of(context)!.labelNews,
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.25),
-                        ),
-                      ),
-                      // News and Offer List
-                      SizedBox(
-                        height: 15,
-                      ),
-                      NewsOfferListWidget(data: imgList),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${Languages.of(context)!.labelTransaction}s",
-                              style: TextStyle(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            Languages.of(context)!.labelNews,
+                            style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                        context, '/TransactionsScreen')
-                                    .then(onGoBack);
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "View all",
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  /* Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 14,
-                                  )*/
-                                ],
-                              ),
-                            ),
-                          ],
+                                letterSpacing: 1.25),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        //height: screenSize.height/2,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 8, left: 8, right: 8),
-                          child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            controller: _scrollController,
-                            itemCount: transactionList.length,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(bottom: 10),
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                        // News and Offer List
+                        SizedBox(
+                          height: 15,
+                        ),
+                        NewsOfferListWidget(data: imgList),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${Languages.of(context)!.labelTransaction}s",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 8),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: Card(
-                                                  shape: CircleBorder(
-                                                      side: BorderSide(
-                                                          width: 0,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                          context, '/TransactionsScreen')
+                                      .then(onGoBack);
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "View all",
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    /* Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: 14,
+                                    )*/
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          //height: screenSize.height/2,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 8, left: 8, right: 8),
+                            child: ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: _scrollController,
+                              itemCount: transactionList.length,
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.only(bottom: 10),
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 8),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: Card(
+                                                    shape: CircleBorder(
+                                                        side: BorderSide(
+                                                            width: 0,
+                                                            color: colorStatus(
+                                                                capitalizeFirstLetter(
+                                                                    "${transactionList[index].status}")))),
+                                                    color: colorStatus(
+                                                        capitalizeFirstLetter(
+                                                            "${transactionList[index].status}")),
+                                                    child: Icon(
+                                                      Icons.call_made,
+                                                      color: Colors.white,
+                                                    )),
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    capitalizeFirstLetter(
+                                                        "${transactionList[index].paymentRequestId}"),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14),
+                                                  ),
+                                                  Text(
+                                                      capitalizeFirstLetter(
+                                                          "${transactionList[index].status}"),
+                                                      style: TextStyle(
+                                                          fontSize: 12,
                                                           color: colorStatus(
                                                               capitalizeFirstLetter(
                                                                   "${transactionList[index].status}")))),
-                                                  color: colorStatus(
-                                                      capitalizeFirstLetter(
-                                                          "${transactionList[index].status}")),
-                                                  child: Icon(
-                                                    Icons.call_made,
-                                                    color: Colors.white,
-                                                  )),
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  capitalizeFirstLetter(
-                                                      "${transactionList[index].paymentRequestId}"),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14),
-                                                ),
-                                                Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].status}"),
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: colorStatus(
-                                                            capitalizeFirstLetter(
-                                                                "${transactionList[index].status}")))),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              capitalizeFirstLetter(
-                                                  "${transactionList[index].amount}"),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                                ],
                                               ),
-                                            ),
-                                            Text(
-                                                convertDateFormat(
-                                                    "${transactionList[index].createdAt}"),
-                                                style: TextStyle(fontSize: 12)),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                capitalizeFirstLetter(
+                                                    "${transactionList[index].amount}"),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                  convertDateFormat(
+                                                      "${transactionList[index].createdAt}"),
+                                                  style: TextStyle(fontSize: 12)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                              // I omit the part to build card items from the list
-                            },
+                                );
+                                // I omit the part to build card items from the list
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    ]),
+                      ]),
+                ),
               ),
-            ),
-          )),
+            )),
+          isLoading ? Center(
+            child: CircularProgressIndicator(),
+          ) : SizedBox()
+      ]
+      ),
     );
   }
 
@@ -933,20 +949,60 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   void _fetchKycStatus() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getKycStatus(context, apiResponse);
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+            Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    }else {
+      await Future.delayed(Duration(milliseconds: 2));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
+      ApiResponse apiResponse =
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
+      getKycStatus(context, apiResponse);
+    }
   }
 
   void _fetchDashboardData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .dashboardData("/api/v1/app/customers/dashboard_data");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getDashboardData(context, apiResponse);
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+            Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    }else {
+      await Future.delayed(Duration(milliseconds: 2));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .dashboardData("/api/v1/app/customers/dashboard_data");
+      ApiResponse apiResponse =
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
+      getDashboardData(context, apiResponse);
+    }
   }
 }

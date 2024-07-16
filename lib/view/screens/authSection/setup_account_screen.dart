@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/setUpAccountResponse.dart';
 import '../../../utils/Helper.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
@@ -23,6 +24,8 @@ class SetUpAccountScreen extends StatefulWidget {
 class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   bool inputValid = false;
   bool isDarkMode = false;
@@ -53,6 +56,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       setState(() {
         inputValid = false;
       });
+
     }
   }
 
@@ -69,6 +73,9 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     SetUpAccountResponse? setUpAccountResponse =
         apiResponse.data as SetUpAccountResponse?;
     String? message = setUpAccountResponse?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -86,6 +93,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
         String? password = await Helper.getPassword();
         print("password: ${password}");
         await Helper.getUserDetails();
+
         Navigator.pushReplacementNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -109,7 +117,12 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
+        child:
+              isLoading ?
+              Center(
+                child: CircularProgressIndicator(),
+              )
+              :SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: screenHeight * 0.95),
             child: Padding(
@@ -294,7 +307,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
                     decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: "Enter Date",
+                        hintText: "Date of Birth",
                         hintStyle: TextStyle(color: Colors.grey),
                         icon: icon
                         //icon of text field
@@ -304,10 +317,10 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
+                          initialDate:DateTime.now().subtract(Duration(days: 365*18)),
                           firstDate: DateTime(1950),
                           //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2100),
+                          lastDate: DateTime.now().subtract(Duration(days: 365*18)),
                           helpText: "Select Date Of Birth",
                           confirmText: "Confirm",
                           errorFormatText: 'Enter valid date',
@@ -454,24 +467,84 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
           child: ElevatedButton(
             onPressed: () async {
               _isValidInput();
+              const maxDuration = Duration(seconds: 2);
               print(_nameController.text);
               if (inputValid) {
-                SetUpAccountRequest request = SetUpAccountRequest(
-                    customer: CustomerDetail(
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                  firstName: _nameController.text,
-                  lastName: _lastNameController.text,
-                  dob: _dateController.text,
-                ));
-                await Provider.of<MainViewModel>(context, listen: false)
-                    .fetchSetUpScreenData(
-                        "/api/v1/app/customers/update_customer", request);
-                //Navigator.pushNamed(context, '/BottomNav');
+                setState(() {
+                  isLoading = true;
+                });
 
-                ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false).response;
-                getSetUpAccountWidget(context, apiResponse);
+                bool isConnected = await _connectivityService.isConnected();
+                if (!isConnected) {
+                  setState(() {
+                    isLoading = false;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                        Text('No internet connection'),
+                        duration: maxDuration,
+                      ),
+                    );
+                  });
+                }else {
+                  SetUpAccountRequest request = SetUpAccountRequest(
+                      customer: CustomerDetail(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        firstName: _nameController.text,
+                        lastName: _lastNameController.text,
+                        dob: _dateController.text,
+                      ));
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .fetchSetUpScreenData(
+                      "/api/v1/app/customers/update_customer", request);
+                  //Navigator.pushNamed(context, '/BottomNav');
+
+                  ApiResponse apiResponse =
+                      Provider
+                          .of<MainViewModel>(context, listen: false)
+                          .response;
+                  getSetUpAccountWidget(context, apiResponse);
+                }
+              }else {
+                if(_emailController.text.isEmpty &&
+                    _nameController.text.isEmpty &&
+                    _lastNameController.text.isEmpty &&
+                    _passwordController.text.isEmpty &&
+                    _dateController.text.isEmpty &&
+                    _confirmPasswordController.text.isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please enter all the details'),
+                      duration: maxDuration,
+                    ),
+                  );
+
+                }else if(!EmailValidator.validate(_emailController.text)){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Enter valid email address.'),
+                      duration: maxDuration,
+                    ),
+                  );
+
+                }else if(_passwordController.text.length < 8){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Password should have 8 or more characters.'),
+                      duration: maxDuration,
+                    ),
+                  );
+
+                }else if(_passwordController.text != _confirmPasswordController.text){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Password doesn't match"),
+                      duration: maxDuration,
+                    ),
+                  );
+
+                }
               }
             },
             child: Text(

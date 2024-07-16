@@ -63,7 +63,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     super.dispose();
   }
 
-  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+  Widget getEmailOtp(BuildContext context, ApiResponse apiResponse) {
     CreateOtpVerifyEmailResponse? mediaList =
         apiResponse.data as CreateOtpVerifyEmailResponse?;
     switch (apiResponse.status) {
@@ -111,7 +111,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
             ToastComponent.showToast(context: context, message: message);
           }
         return Center(
-          child: Text('Please try again later!!!'),
+          //child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
@@ -196,7 +196,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                                 Provider.of<MainViewModel>(context,
                                         listen: false)
                                     .response;
-                            getMediaWidget(context, apiResponse);
+                            getEmailOtp(context, apiResponse);
                           }
                         },
                         child: Container(
