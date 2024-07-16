@@ -8,10 +8,11 @@ import 'package:video_player/video_player.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/uploadKycResponse.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VideoKycScreen extends StatefulWidget {
-  final String? data; // Define the 'data' parameter here
+  final String? data;
 
   VideoKycScreen({Key? key, this.data}) : super(key: key);
 
@@ -28,6 +29,11 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   late File frontImg;
   var videoUrl;
 
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +44,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   Future<Widget> getMediaWidget(
       BuildContext context, ApiResponse apiResponse) async {
     UploadKycDocResponse? mediaList = apiResponse.data as UploadKycDocResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -173,9 +182,38 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                if(isVideoRecorded)
-                _uploadProfilePic(frontImg);
-                else _startVideo(ImageSource.camera);
+                if (isVideoRecorded) {
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  } else {
+                    if(frontImg!=null || frontImg !="" )
+                    _uploadProfilePic(frontImg);
+                    else{
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                          Text("Could not record video."),
+                          duration: maxDuration,
+                        ),
+                      );
+                    }
+                  }
+                } else {
+                  _startVideo(ImageSource.camera);
+                }
               },
               child: Text(
                 isVideoRecorded ? "Submit" : "Start Recording",
