@@ -102,7 +102,7 @@ class _SigninScreenState extends State<SigninScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -132,7 +132,7 @@ class _SigninScreenState extends State<SigninScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

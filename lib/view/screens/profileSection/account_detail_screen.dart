@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/utils/Helper.dart';
+import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
 
@@ -56,8 +56,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 isDarkMode: isDarkMode,
                 isEmailVerified: isEmailVerified,
                 onTap: () {
-                  if(isEmailVerified == false )
-                  {
+                  if (isEmailVerified == false) {
                     Navigator.pushNamed(context, '/VerifyEmail');
                   }
                 }),
@@ -66,11 +65,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
               label: Languages.of(context)!.enterPhoneNumber,
               value: phoneNumber ?? '',
             ),
-            _buildPasswordBox(
+            /* _buildPasswordBox(
                 context: context,
                 isPasswordVisibl: isPasswordVisible,
-                isDarkMode: isDarkMode),
-            _buildChangePassword(context,isDarkMode: isDarkMode),
+                isDarkMode: isDarkMode),*/
+            _buildChangePassword(context, isDarkMode: isDarkMode),
             _buildDetailBox(
               context: context,
               label: Languages.of(context)!.labelUserId,
@@ -91,7 +90,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       child: GestureDetector(
-        onTap:  onTap,
+        onTap: onTap,
         child: Card(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
@@ -192,68 +191,8 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     );
   }
 
-  Widget _buildPasswordBox(
-      {required BuildContext context,
-      required bool isPasswordVisibl,
-      required bool isDarkMode}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Card(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                '${Languages.of(context)!.labelPassword} ',
-                style: TextStyle(
-                  fontSize: 13.0,
-                  fontWeight: FontWeight.normal,
-                  color: isDarkMode ? Colors.white : Colors.black,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    isPasswordVisible ? password ?? '' : '********',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  GestureDetector(
-                    onTap: () => {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      })
-                    },
-                    child: Icon(
-                      isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      size: 22,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChangePassword(BuildContext context, {required bool isDarkMode}) {
+  Widget _buildChangePassword(BuildContext context,
+      {required bool isDarkMode}) {
     return Row(
       children: [
         Spacer(),

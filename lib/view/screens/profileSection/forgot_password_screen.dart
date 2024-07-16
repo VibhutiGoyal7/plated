@@ -94,7 +94,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -120,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

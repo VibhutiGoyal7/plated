@@ -5,6 +5,7 @@ import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:Payrio/model/request/createOtpChangePass.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/exustingUserRequest.dart';
+import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
@@ -19,6 +20,7 @@ import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/existingUserResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/model/response/generateTpinResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
@@ -35,36 +37,55 @@ import 'response/otpVerifyResponse.dart';
 class MainRepository {
   BaseService _payrioService = PayrioService();
 
-  Future<PhoneVerifyResponse> fetchMediaList(String value, PhoneRequest phoneRequest  ) async {
+  Future<PhoneVerifyResponse> fetchMediaList(
+      String value, PhoneRequest phoneRequest) async {
     print(phoneRequest);
-    dynamic response = await _payrioService.postResponse(value,phoneRequest);
+    dynamic response = await _payrioService.postResponse(value, phoneRequest);
     final jsonData = response;
     print(jsonData);
     PhoneVerifyResponse mediaList = PhoneVerifyResponse.fromJson(jsonData);
     return mediaList;
   }
 
-  Future<ExistingUserResponse> existingUserData(String value, ExistingUserRequest existingUserRequest  ) async {
+  Future<ExistingUserResponse> existingUserData(
+      String value, ExistingUserRequest existingUserRequest) async {
     print(existingUserRequest);
-    dynamic response = await _payrioService.postResponse(value,existingUserRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, existingUserRequest);
     final jsonData = response;
     print(jsonData);
     ExistingUserResponse mediaList = ExistingUserResponse.fromJson(jsonData);
     return mediaList;
   }
 
-  Future<OtpVerifyResponse> fetchOtpVerifyData(String value, PhoneRequest phoneRequest) async {
+  Future<OtpVerifyResponse> fetchOtpVerifyData(
+      String value, PhoneRequest phoneRequest) async {
     print(phoneRequest);
-    dynamic response = await _payrioService.postResponse(value,phoneRequest);
+    dynamic response = await _payrioService.postResponse(value, phoneRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
     OtpVerifyResponse mediaList = OtpVerifyResponse.fromJson(jsonData);
     return mediaList;
   }
-  Future<SignInResponse> signInWithPass(String value, SignInRequest signInRequest) async {
+
+  Future<GenerateTpinResponse> generateTpinrequestData(
+      String value, GenerateTpinrequest generateTpinrequest) async {
+    print(generateTpinrequest);
+    dynamic response =
+        await _payrioService.postResponse(value, generateTpinrequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    GenerateTpinResponse generateTpinResponse =
+        GenerateTpinResponse.fromJson(jsonData);
+    return generateTpinResponse;
+  }
+
+  Future<SignInResponse> signInWithPass(
+      String value, SignInRequest signInRequest) async {
     print(signInRequest);
-    dynamic response = await _payrioService.postResponse(value,signInRequest);
+    dynamic response = await _payrioService.postResponse(value, signInRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -72,9 +93,11 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<SetUpAccountResponse> fetchSetUpScreenData(String value, SetUpAccountRequest setUpAccountRequest) async {
+  Future<SetUpAccountResponse> fetchSetUpScreenData(
+      String value, SetUpAccountRequest setUpAccountRequest) async {
     print(setUpAccountRequest);
-    dynamic response = await _payrioService.putResponse(value,setUpAccountRequest);
+    dynamic response =
+        await _payrioService.putResponse(value, setUpAccountRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -86,9 +109,7 @@ class MainRepository {
     dynamic response = await _payrioService.getResponse(value);
     print(value);
     final jsonData = response;
-    //print("jsonData $jsonData");
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
-    //print("object ${mediaList.message}");
     return mediaList;
   }
 
@@ -101,8 +122,10 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<UploadKycDocResponse> postMultiFormResponse(String value, File file, String docType,String imageName) async {
-    dynamic response = await _payrioService.postMultiFormResponse(value, file, docType, imageName);
+  Future<UploadKycDocResponse> postMultiFormResponse(
+      String value, File file, String docType, String imageName) async {
+    dynamic response = await _payrioService.postMultiFormResponse(
+        value, file, docType, imageName);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -110,59 +133,73 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<dynamic> ChangeWithOldPasswordData(String value, ChangeOldPassRequest changeOldPassRequest) async {
+  Future<dynamic> ChangeWithOldPasswordData(
+      String value, ChangeOldPassRequest changeOldPassRequest) async {
     print(changeOldPassRequest);
-    dynamic response = await _payrioService.putResponse(value,changeOldPassRequest);
+    dynamic response =
+        await _payrioService.putResponse(value, changeOldPassRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
     return response;
-    //SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
   }
 
-  Future<CreateOtpChangePassResponse> CreateOtpChangePass(String value, CreateOtpChangePassRequest createOtpChangePassRequest) async {
+  Future<CreateOtpChangePassResponse> CreateOtpChangePass(String value,
+      CreateOtpChangePassRequest createOtpChangePassRequest) async {
     print(createOtpChangePassRequest);
-    dynamic response = await _payrioService.postResponse(value,createOtpChangePassRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, createOtpChangePassRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
-    CreateOtpChangePassResponse mediaList = CreateOtpChangePassResponse.fromJson(jsonData);
+    CreateOtpChangePassResponse mediaList =
+        CreateOtpChangePassResponse.fromJson(jsonData);
     return mediaList;
   }
 
-  Future<dynamic> VerifyOtpChangePass(String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
+  Future<dynamic> VerifyOtpChangePass(
+      String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
     print(verifyOtChangePassRequest);
-    dynamic response = await _payrioService.postResponse(value,verifyOtChangePassRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, verifyOtChangePassRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
     return response;
   }
 
-  Future<CreateOtpVerifyEmailResponse> CreateOtpVerifyEmail(String value, CreateOtpEmailVerifyRequest createOtpEmailVerifyRequest) async {
+  Future<CreateOtpVerifyEmailResponse> CreateOtpVerifyEmail(String value,
+      CreateOtpEmailVerifyRequest createOtpEmailVerifyRequest) async {
     print(createOtpEmailVerifyRequest);
-    dynamic response = await _payrioService.postResponse(value,createOtpEmailVerifyRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, createOtpEmailVerifyRequest);
     print(value);
     final jsonData = response;
     final jsonDat = response;
     print(jsonDat);
-    CreateOtpVerifyEmailResponse mediaList = CreateOtpVerifyEmailResponse.fromJson(jsonData);
+    CreateOtpVerifyEmailResponse mediaList =
+        CreateOtpVerifyEmailResponse.fromJson(jsonData);
     print(mediaList.mobileOtp);
     return mediaList;
   }
 
-  Future<dynamic> VerifyOtpVerifyEmail(String value, VerifyOtpEmailVerifyRequest verifyOtpEmailVerifyRequest) async {
+  Future<GenerateTpinResponse> VerifyOtpVerifyEmail(String value,
+      VerifyOtpEmailVerifyRequest verifyOtpEmailVerifyRequest) async {
     print(verifyOtpEmailVerifyRequest);
-    dynamic response = await _payrioService.postResponse(value,verifyOtpEmailVerifyRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, verifyOtpEmailVerifyRequest);
     print(value);
     final jsonData = response;
+    GenerateTpinResponse mediaList = GenerateTpinResponse.fromJson(jsonData);
     print(jsonData);
-    return response;
+    return mediaList;
   }
 
-  Future<dynamic> addMoneyData(String value, AddMoneyRequest addMoneyRequest) async {
+  Future<dynamic> addMoneyData(
+      String value, AddMoneyRequest addMoneyRequest) async {
     print(addMoneyRequest);
-    dynamic response = await _payrioService.postResponse(value,addMoneyRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, addMoneyRequest);
     print("Repo $value");
     final jsonData = response;
     AddMoneyResponse mediaList = AddMoneyResponse.fromJson(jsonData);
@@ -170,10 +207,11 @@ class MainRepository {
     return mediaList;
   }
 
-
-  Future<dynamic> withDrawData(String value, WithdrawRequest withdrawRequest) async {
+  Future<dynamic> withDrawData(
+      String value, WithdrawRequest withdrawRequest) async {
     print(withdrawRequest);
-    dynamic response = await _payrioService.postResponse(value,withdrawRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, withdrawRequest);
     print("Repo $value");
     final jsonData = response;
     WithDrawResponse mediaList = WithDrawResponse.fromJson(jsonData);
@@ -209,13 +247,16 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<TransactionListResponse> transactionListData(String value, TransactionListRequest transactionListRequest) async {
+  Future<TransactionListResponse> transactionListData(
+      String value, TransactionListRequest transactionListRequest) async {
     print(transactionListRequest);
-    dynamic response = await _payrioService.postResponse(value,transactionListRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, transactionListRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
-    TransactionListResponse mediaList = TransactionListResponse.fromJson(jsonData);
+    TransactionListResponse mediaList =
+        TransactionListResponse.fromJson(jsonData);
     return mediaList;
   }
 

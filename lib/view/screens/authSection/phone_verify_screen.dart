@@ -87,7 +87,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -117,7 +117,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -147,7 +147,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -348,13 +348,13 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                           .response;
                   existingUserWidget(context, apiResponse);
                 } else if (countryCode == 0 && phoneCode == "+") {
-                  SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar( SnackBar(
                     content: Text(Languages.of(context)!.labelSelectCountryCode),
-                  );
+                  ));
                 } else {
-                  SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar( SnackBar(
                     content: Text(Languages.of(context)!.labelEnterValidPhone),
-                  );
+                  ));
                 }
               },
               child: Text(

@@ -103,8 +103,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${dashboardResponse?.customerData?.email}");
-        print("currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
-        if(dashboardResponse?.customerData?.tpin == null || dashboardResponse?.customerData?.tpin == ""){
+        print(
+            "currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
+        if (dashboardResponse?.customerData?.tpin == null ||
+            dashboardResponse?.customerData?.tpin == "") {
           Navigator.pushNamed(context, '/TpinCreateScreen').then(onGoBack);
         }
         setState(() {
@@ -173,8 +175,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
-        } else{
-          ToastComponent.showToast(context: context, message: apiResponse.message);
+        } else {
+          ToastComponent.showToast(
+              context: context, message: apiResponse.message);
         }
         return Center(
           child: Text('Please try again later!!!'),

@@ -1,30 +1,35 @@
 import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/model/request/generateTpinRequest.dart';
+import 'package:Payrio/model/response/generateTpinResponse.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/response/phoneVerifyResponse.dart';
 import '../../component/customNumberKeyboard.dart';
+import '../../component/toastMessage.dart';
 
-class TpinCreateScreen extends StatefulWidget {
+class TpinVerifyScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
 
-  TpinCreateScreen({Key? key, this.data}) : super(key: key);
+  TpinVerifyScreen({Key? key, this.data}) : super(key: key);
 
   @override
-  _TpinCreateScreenState createState() => _TpinCreateScreenState();
+  _TpinVerifyScreenState createState() => _TpinVerifyScreenState();
 }
 
-class _TpinCreateScreenState extends State<TpinCreateScreen> {
+class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
-
   String dropdownValue = "";
   bool isValid = false;
   bool resendOtp = false;
   String phoneNo = "";
   late double screenWidth;
+  String _input = '';
   List<String> _inputValues = ['', '', '', ''];
+  List<String> _verifyInputValues = ['', '', '', ''];
 
   void _handleKeyTap(String value) {
     setState(() {
@@ -72,6 +77,61 @@ class _TpinCreateScreenState extends State<TpinCreateScreen> {
     super.dispose();
   }
 
+  Future<Widget> getTpinResponseDataWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    GenerateTpinResponse? generateTpinResponse =
+        apiResponse.data as GenerateTpinResponse?;
+    var message = apiResponse?.message.toString();
+    print("GenerateTpinResponse ${message}");
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        Navigator.pushReplacementNamed(context, "/BottomNav");
+        //Navigate to the new screen after receiving the response
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if(message == "Your TPIN is updated successfully"){
+          Navigator.pushReplacementNamed(context, "/BottomNav");
+        }
+        ToastComponent.showToast(context: context, message: message);
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
+  Widget getMediaWidgetResendOtp(
+      BuildContext context, ApiResponse apiResponse) {
+    GenerateTpinResponse? generateTpinResponse =
+        apiResponse.data as GenerateTpinResponse?;
+    var message = generateTpinResponse?.message.toString();
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${generateTpinResponse?.tpin}");
+        //Call Toast
+        ToastComponent.showToast(context: context, message: message);
+        // Navigate to the new screen after receiving the response
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -106,7 +166,7 @@ class _TpinCreateScreenState extends State<TpinCreateScreen> {
                       SizedBox(height: 20),
                       Center(
                         child: _buildLabelText(
-                            context, "Enter 4 digit TPIN", 20, true),
+                            context, "Verify 4 digit TPIN", 20, true),
                       ),
                       SizedBox(height: 22),
                       _buildPhoneInput(context, screenWidth, isDarkMode),
@@ -119,9 +179,26 @@ class _TpinCreateScreenState extends State<TpinCreateScreen> {
                           String otp = _inputValues
                               .map((controller) => controller)
                               .join();
-                          if (otp.isNotEmpty && otp.length == 4) {
-                            Navigator.of(context).pushNamed("/TpinVerifyScreen",
-                                arguments: "${otp}");
+                          if (otp.isNotEmpty &&
+                              otp.length == 4 &&
+                              otp == widget.data) {
+                            GenerateTpinrequest tpinRequest =
+                                GenerateTpinrequest(tpin: otp);
+                            await Provider.of<MainViewModel>(context,
+                                    listen: false)
+                                .generateTpinrequestData(
+                                    "/api/v1/app/customers/setup_tpin",
+                                    tpinRequest);
+
+                            ApiResponse apiResponse =
+                                Provider.of<MainViewModel>(context,
+                                        listen: false)
+                                    .response;
+                            getTpinResponseDataWidget(context, apiResponse);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Transaction Pin doesn't match"),
+                            ));
                           }
                         } else {
                           _handleKeyTap(value);

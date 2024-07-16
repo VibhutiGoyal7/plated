@@ -55,7 +55,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

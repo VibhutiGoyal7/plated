@@ -147,7 +147,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

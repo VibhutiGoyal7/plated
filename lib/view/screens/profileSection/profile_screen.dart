@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

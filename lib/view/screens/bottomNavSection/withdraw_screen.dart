@@ -285,7 +285,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

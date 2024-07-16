@@ -110,7 +110,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -136,7 +136,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -150,7 +150,6 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -189,7 +188,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                           false),
                     ),
                     SizedBox(height: 22),
-                    _buildPhoneInput(context, screenWidth , isDarkMode),
+                    _buildPhoneInput(context, screenWidth, isDarkMode),
                     SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -234,24 +233,31 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     );
   }
 
-  Widget _buildPhoneInput(BuildContext context, double screenWidth, bool isDarkMode) {
+  Widget _buildPhoneInput(
+      BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-
         children: List.generate(
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                border : Border(
-                    top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
-                borderRadius: BorderRadius.circular(6)
-            ),
+                border: Border(
+                    top: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    bottom: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    right: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    left: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4)),
+                borderRadius: BorderRadius.circular(6)),
             width: screenWidth / 8.1,
             height: 62.0,
             child: TextField(

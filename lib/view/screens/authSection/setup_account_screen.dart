@@ -96,7 +96,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }

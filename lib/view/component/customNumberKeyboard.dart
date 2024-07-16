@@ -12,7 +12,11 @@ class CustomNumberKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        color: Colors.grey[200],
+      ),
+      padding: EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -43,9 +47,23 @@ class CustomNumberKeyboard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _buildKey('⌫'),
+              IconButton(
+                  onPressed: () {
+                    _onKeyPressed("clear");
+                  },
+                  icon: Icon(
+                    Icons.backspace_outlined,
+                    size: 32,
+                  )),
               _buildKey('0'),
-              Icon(Icons.check_circle_outline_outlined, size: 32,)
+              IconButton(
+                  onPressed: () {
+                    _onKeyPressed("submit");
+                  },
+                  icon: Icon(
+                    Icons.check_circle_outline_outlined,
+                    size: 38,
+                  )),
             ],
           ),
         ],
@@ -55,6 +73,7 @@ class CustomNumberKeyboard extends StatelessWidget {
 
   Widget _buildKey(String value) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => _onKeyPressed(value),
       child: Container(
         margin: EdgeInsets.all(8.0),
@@ -63,12 +82,15 @@ class CustomNumberKeyboard extends StatelessWidget {
           shape: BoxShape.circle,
           color: Colors.grey[200],
         ),
-        child: Center(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Center(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 26.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

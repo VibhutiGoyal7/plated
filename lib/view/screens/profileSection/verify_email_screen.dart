@@ -1,10 +1,12 @@
-import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
-import '../../../languageSection/Languages.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
+import 'package:Payrio/model/response/generateTpinResponse.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/createOtpForEmailVerifyResponse.dart';
 import '../../../model/response/profileResponse.dart';
@@ -20,14 +22,14 @@ class VerifyEmailScreen extends StatefulWidget {
 
 class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   late TextEditingController emailController;
+
   //late TextEditingController otpController;
   String phoneNumber = "";
-
 
   final List<String> _otp = List.generate(6, (_) => '');
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
   String dropdownValue = "";
   bool isValid = false;
   bool isOtpBoxVisible = false;
@@ -76,8 +78,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(mediaList?.message== "Invalid access token")
+        if (mediaList?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -85,13 +86,15 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
 
-  Widget VerifyGetMediaWidget(BuildContext context, ApiResponse apiResponse) {
-    final mediaList = apiResponse.data;
+  Future<Widget> VerifyGetMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+    GenerateTpinResponse? generateTpinResponse = apiResponse.data as GenerateTpinResponse?;
+    print("VerifyGetMediaWidget ${generateTpinResponse?.message}");
+    var message = generateTpinResponse?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -101,16 +104,19 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(mediaList?.message== "Invalid access token")
+        if (generateTpinResponse?.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
+        }else
+          {
+            ToastComponent.showToast(context: context, message: message);
+          }
         return Center(
           child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text(''),
         );
     }
   }
@@ -132,7 +138,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ),
-      body:  SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -153,7 +159,8 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 Container(
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4),
                       child: TextField(
                         controller: emailController,
                         decoration: InputDecoration(
@@ -193,7 +200,10 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                           }
                         },
                         child: Container(
-                          child: Text(Languages.of(context)!.labelSubmit, style: TextStyle(fontWeight: FontWeight.bold),),
+                          child: Text(
+                            Languages.of(context)!.labelSubmit,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -210,23 +220,32 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       ),
     );
   }
-  Widget _buildPhoneInput(BuildContext context, double screenWidth, bool isDarkMode) {
+
+  Widget _buildPhoneInput(
+      BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => Container(
+          (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: screenWidth/8.5,
-                decoration: BoxDecoration(
-                    border : Border(
-                        top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                        bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                        right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                        left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
-                    borderRadius: BorderRadius.circular(6)
-                ),
+            width: screenWidth / 8.5,
+            decoration: BoxDecoration(
+                border: Border(
+                    top: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    bottom: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    right: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4),
+                    left: BorderSide(
+                        color: isDarkMode ? Colors.grey : Colors.black54,
+                        width: 0.4)),
+                borderRadius: BorderRadius.circular(6)),
             height: 60.0,
             child: TextField(
               controller: _controllers[index],
@@ -282,8 +301,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                     .VerifyOtpVerifyEmail(
                         "/api/v1/app/customers/verify_email_otp", request);
                 ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false)
-                        .response;
+                    Provider.of<MainViewModel>(context, listen: false).response;
                 VerifyGetMediaWidget(context, apiResponse);
               }
             },
@@ -293,11 +311,6 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 child: Text("Validate")),
           ),
         ),
-        //Text("Your email has been successfully verified"),
-        /*TextButton(
-                      onPressed: () {},
-                      child: Text("Resend via SMS"),
-                    ),*/
       ],
     );
   }
