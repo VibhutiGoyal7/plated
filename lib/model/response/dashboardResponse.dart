@@ -81,6 +81,7 @@ class CustomerData {
   String? countryPhoneCode;
   String? countryCurrencySymbol;
   String? imageUrl;
+  String? tpin;
 
   CustomerData({
     this.firstName,
@@ -91,6 +92,7 @@ class CustomerData {
     this.countryPhoneCode,
     this.countryCurrencySymbol,
     this.imageUrl,
+    this.tpin,
   });
 
   factory CustomerData.fromJson(Map<String, dynamic> json) {
@@ -103,6 +105,7 @@ class CustomerData {
       countryPhoneCode: json["country_phone_code"] as String?,
       countryCurrencySymbol: json["country_currency_symbol"] as String?,
       imageUrl: json["image_url"] as String?,
+      tpin: json["tpin"] as String?,
     );
   }
 }

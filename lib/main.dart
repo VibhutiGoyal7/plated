@@ -1,3 +1,4 @@
+import 'package:Payrio/view/screens/bottomNavSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
@@ -425,6 +426,14 @@ class _MyAppState extends State<MyApp> {
                   .settings
                   .arguments as String?;
               return WithdrawScreen();
+            },
+            '/TpinCreateScreen': (context) {
+              final args =
+              ModalRoute
+                  .of(context)!
+                  .settings
+                  .arguments as String?;
+              return TpinCreateScreen();
             }
           }),
     );
