@@ -5,6 +5,7 @@ import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:Payrio/model/request/createOtpChangePass.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/exustingUserRequest.dart';
+import 'package:Payrio/model/request/generateOtpTpinChange.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
@@ -14,6 +15,7 @@ import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
+import 'package:Payrio/model/response/GenerateOtpTPINChangeResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
@@ -37,7 +39,7 @@ import 'response/otpVerifyResponse.dart';
 class MainRepository {
   BaseService _payrioService = PayrioService();
 
-  Future<PhoneVerifyResponse> fetchMediaList(
+  Future<PhoneVerifyResponse> fetchPhoneVerifyResponse(
       String value, PhoneRequest phoneRequest) async {
     print(phoneRequest);
     dynamic response = await _payrioService.postResponse(value, phoneRequest);
@@ -258,6 +260,26 @@ class MainRepository {
     TransactionListResponse mediaList =
         TransactionListResponse.fromJson(jsonData);
     return mediaList;
+  }
+
+  Future<dynamic> getOtpTPINChange(String value) async {
+    dynamic response = await _payrioService.getResponse(value);
+    print(value);
+    final jsonData = response;
+    GenerateOtpTPINChangeResponse mediaList =
+    GenerateOtpTPINChangeResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<dynamic> verifyOtpTPinChange(
+      String value, VerifyOtpTPinChange generateOtpTPinChange) async {
+    print(generateOtpTPinChange);
+    dynamic response =
+        await _payrioService.postResponse(value, generateOtpTPinChange);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    return response;
   }
 
   Future<DashboardResponse> dashboardData(String value) async {

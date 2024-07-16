@@ -12,6 +12,7 @@ import '../../../model/response/createOtpForEmailVerifyResponse.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
@@ -33,6 +34,11 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   String dropdownValue = "";
   bool isValid = false;
   bool isOtpBoxVisible = false;
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -66,6 +72,9 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   Widget getEmailOtp(BuildContext context, ApiResponse apiResponse) {
     CreateOtpVerifyEmailResponse? mediaList =
         apiResponse.data as CreateOtpVerifyEmailResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -78,8 +87,12 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (mediaList?.message == "Invalid access token")
+        if (mediaList?.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
+        } else {
+          ToastComponent.showToast(
+              context: context, message: mediaList?.message);
+        }
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -91,10 +104,14 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     }
   }
 
-  Future<Widget> VerifyGetMediaWidget(BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> VerifyEmailResponse(
+      BuildContext context, ApiResponse apiResponse) async {
     GenerateTpinResponse? generateTpinResponse = apiResponse.data as GenerateTpinResponse?;
     print("VerifyGetMediaWidget ${generateTpinResponse?.message}");
     var message = generateTpinResponse?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -138,85 +155,114 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  Languages.of(context)!.labelVerifyYourEmail,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  Languages.of(context)!.verifyEmailSubTitle,
-                  style: TextStyle(fontSize: 15),
-                ),
-                SizedBox(height: 20),
-                Container(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4),
-                      child: TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          labelText: Languages.of(context)!.labelEnterEmail,
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      body: Stack(
+        children: [
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextButton(
-                        onPressed: () async {
-                          if (emailController.text.isNotEmpty &&
-                              EmailValidator.validate(emailController.text)) {
-                            CreateOtpEmailVerifyRequest request =
-                                CreateOtpEmailVerifyRequest(
-                                    customer: CustomerGetOtpEmailDetail(
-                              phoneNumber: phoneNumber,
-                              email: emailController.text,
-                            ));
-                            await Provider.of<MainViewModel>(context,
-                                    listen: false)
-                                .CreateOtpVerifyEmail(
-                                    "/api/v1/app/customers/generate_otp_for_email",
-                                    request);
-                            ApiResponse apiResponse =
-                                Provider.of<MainViewModel>(context,
-                                        listen: false)
-                                    .response;
-                            getEmailOtp(context, apiResponse);
-                          }
-                        },
-                        child: Container(
-                          child: Text(
-                            Languages.of(context)!.labelSubmit,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                    SizedBox(height: 20),
+                    Text(
+                      Languages.of(context)!.labelVerifyYourEmail,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      Languages.of(context)!.verifyEmailSubTitle,
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4),
+                          child: TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelText: Languages.of(context)!.labelEnterEmail,
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: TextButton(
+                            onPressed: () async {
+                              if (emailController.text.isNotEmpty &&
+                                  EmailValidator.validate(
+                                      emailController.text)) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+
+                                bool isConnected =
+                                    await _connectivityService.isConnected();
+                                if (!isConnected) {
+                                  setState(() {
+                                    isLoading = false;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('No internet connection'),
+                                        duration: maxDuration,
+                                      ),
+                                    );
+                                  });
+                                } else {
+                                  CreateOtpEmailVerifyRequest request =
+                                      CreateOtpEmailVerifyRequest(
+                                          customer: CustomerGetOtpEmailDetail(
+                                    phoneNumber: phoneNumber,
+                                    email: emailController.text,
+                                  ));
+                                  await Provider.of<MainViewModel>(context,
+                                          listen: false)
+                                      .CreateOtpVerifyEmail(
+                                          "/api/v1/app/customers/generate_otp_for_email",
+                                          request);
+                                  ApiResponse apiResponse =
+                                      Provider.of<MainViewModel>(context,
+                                              listen: false)
+                                          .response;
+                                  getEmailOtp(context, apiResponse);
+                                }
+                              }
+                            },
+                            child: Container(
+                              child: Text(
+                                Languages.of(context)!.labelSubmit,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    if (isOtpBoxVisible) _buildVerifySection(isDarkMode)
                   ],
                 ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                if (isOtpBoxVisible) _buildVerifySection(isDarkMode)
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -290,19 +336,44 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               String otp =
                   _controllers.map((controller) => controller.text).join();
               if (otp.isNotEmpty) {
-                VerifyOtpEmailVerifyRequest request =
-                    VerifyOtpEmailVerifyRequest(
-                        customer: CustomerVerifyOtpEmail(
-                  phoneNumber: phoneNumber,
-                  email: emailController.text,
-                  emailOtp: otp,
-                ));
-                await Provider.of<MainViewModel>(context, listen: false)
-                    .VerifyOtpVerifyEmail(
-                        "/api/v1/app/customers/verify_email_otp", request);
-                ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false).response;
-                VerifyGetMediaWidget(context, apiResponse);
+                setState(() {
+                  isLoading = true;
+                });
+
+                bool isConnected = await _connectivityService.isConnected();
+                if (!isConnected) {
+                  setState(() {
+                    isLoading = false;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('No internet connection'),
+                        duration: maxDuration,
+                      ),
+                    );
+                  });
+                } else {
+                  VerifyOtpEmailVerifyRequest request =
+                      VerifyOtpEmailVerifyRequest(
+                          customer: CustomerVerifyOtpEmail(
+                    phoneNumber: phoneNumber,
+                    email: emailController.text,
+                    emailOtp: otp,
+                  ));
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .VerifyOtpVerifyEmail(
+                          "/api/v1/app/customers/verify_email_otp", request);
+                  ApiResponse apiResponse =
+                      Provider.of<MainViewModel>(context, listen: false)
+                          .response;
+                  VerifyEmailResponse(context, apiResponse);
+                }
+              }else{
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Enter otp sent on your email.'),
+                    duration: maxDuration,
+                  ),
+                );
               }
             },
             child: Container(

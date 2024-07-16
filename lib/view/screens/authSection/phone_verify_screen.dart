@@ -31,6 +31,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   int countryCode = 0;
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
+  static const maxDuration = Duration(seconds: 2);
 
   late double screenWidth;
 
@@ -39,7 +40,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       _locale = locale;
     });
   }
-
   bool phoneNumberValid = false;
 
   List<CountryData> countryList = [];
@@ -63,12 +63,15 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       setState(() {
         phoneNumberValid = false;
       });
-    }/*6283252694*/
+    }
   }
 
   Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
     ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
     var message = mediaList?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
 
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -135,6 +138,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         apiResponse.data as CountryListResponse?;
     var message = countryListResponse?.message.toString();
     print("message ${message}");
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -168,68 +174,82 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children:[
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                Container(
-                  height: screenHeight * 0.15,
-                  child: Text(
-                    "Phone\n Verification",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Container(
+                      height: screenHeight * 0.15,
+                      child: Text(
+                        "Phone\n Verification",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      alignment: AlignmentDirectional.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  alignment: AlignmentDirectional.center,
+                  ],
                 ),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                width: screenWidth,
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 20),
-                        _buildLabelText(
-                            context, "Enter your mobile number", 16, true),
-                        _buildLabelText(context,
-                            "We will send you a confirmation code", 12, false),
-                        Column(
+                Expanded(
+                  child: Container(
+                    width: screenWidth,
+                    child: Card(
+                      margin: EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 40),
-                            _buildPhoneInput(context, isDarkMode),
-                            SizedBox(
-                              height: screenHeight * 0.2,
+                            SizedBox(height: 20),
+                            _buildLabelText(
+                                context, "Enter your mobile number", 16, true),
+                            _buildLabelText(
+                                context,
+                                "We will send you a confirmation code",
+                                12,
+                                false),
+                            Column(
+                              children: [
+                                SizedBox(height: 40),
+                                _buildPhoneInput(context, isDarkMode),
+                                SizedBox(
+                                  height: screenHeight * 0.2,
+                                ),
+                              ],
                             ),
-
+                            Spacer(),
+                            Center(
+                              child: _buildFooter(context, apiResponse),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            )
                           ],
                         ),
-                        Spacer(),
-                        Center(child: _buildFooter(context, apiResponse),),
-                        SizedBox(height: 30,)
-
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                /*_buildLabelText(
+                    context, Languages.of(context)!.appName, 16, false),*/
+              ],
             ),
-            /*_buildLabelText(
-                context, Languages.of(context)!.appName, 16, false),*/
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -344,17 +364,34 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
-                  ExistingUserRequest request = ExistingUserRequest(
-                      customer:
-                          ExistingCustomer(phoneNumber: _inputController.text));
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .existingUserData(
-                          "/api/v1/app/customers/check_customer_existance",
-                          request);
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  existingUserWidget(context, apiResponse);
+                  setState(() {
+                    isLoading = true;
+                  });
+
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  } else {
+                    ExistingUserRequest request = ExistingUserRequest(
+                        customer: ExistingCustomer(
+                            phoneNumber: _inputController.text));
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .existingUserData(
+                            "/api/v1/app/customers/check_customer_existance",
+                            request);
+                    ApiResponse apiResponse =
+                        Provider.of<MainViewModel>(context, listen: false)
+                            .response;
+                    existingUserWidget(context, apiResponse);
+                  }
                 } else if (countryCode == 0 && phoneCode == "+") {
                   ScaffoldMessenger.of(context).showSnackBar( SnackBar(
                     content: Text(Languages.of(context)!.labelSelectCountryCode),
@@ -475,7 +512,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   void _phoneVerifyAPI() async {
-    const maxDuration = Duration(seconds: 2);
     if (phoneNumberValid) {
       setState(() {
         isLoading = true;
@@ -521,11 +557,28 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   void _fetchData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .fetchCountryList("api/v1/app/customers/country_list");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getCountryList(context, apiResponse);
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      await Future.delayed(Duration(milliseconds: 2));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .fetchCountryList("api/v1/app/customers/country_list");
+      ApiResponse apiResponse =
+          Provider.of<MainViewModel>(context, listen: false).response;
+      getCountryList(context, apiResponse);
+    }
   }
 }

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -7,6 +7,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/createOtpChangePass.dart';
 import '../../../model/response/createOtpChangePassResponse.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -25,6 +26,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   bool newPasswordVisible = false;
   bool confirmPasswordVisible = false;
@@ -38,7 +43,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   String dropdownValue = "";
   bool isValid = false;
 
-  bool isLoading = false;
   bool isOtpBoxVisible = false;
   bool timerUp = false;
   String responseMessage = '';
@@ -67,10 +71,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> generateOtpResponse(
       BuildContext context, ApiResponse apiResponse) async {
     CreateOtpChangePassResponse? mediaList =
         apiResponse.data as CreateOtpChangePassResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -102,6 +109,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Future<Widget> verifyOtpGetWidget(BuildContext context, ApiResponse apiResponse) async {
 
     final mediaList = apiResponse.data ;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -144,36 +154,46 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
       //backgroundColor: Theme.of(context).backgroundColor,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Center(
-                child: Image(
-                  alignment: Alignment.topLeft,
-                  //width: screenWidth*0.8,
-                   height: screenHeight*0.22,
-                  image: AssetImage("assets/forgot_password.png"),
-                ),
-              ),
-              _buildPhoneNumberTextField(),
-              if (isOtpBoxVisible) _buildPhoneInput(context, screenWidth, isDarkMode),
-              if (isOtpBoxVisible)_buildPasswordTextFields(isDarkMode),
-              SizedBox(height: 25),
-              if (isOtpBoxVisible) _buildSubmitButton(),
-              if (isLoading) CircularProgressIndicator(),
-              if (responseMessage.isNotEmpty)
-                Text(
-                  responseMessage,
-                  style: TextStyle(
-                    color: responseMessage.contains('successfully')
-                        ? Colors.green
-                        : Colors.red,
+      body: Stack(
+        children: [
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Center(
+                    child: Image(
+                      alignment: Alignment.topLeft,
+                      //width: screenWidth*0.8,
+                      height: screenHeight * 0.22,
+                      image: AssetImage("assets/forgot_password.png"),
+                    ),
                   ),
-                ),
-            ],
+                  _buildPhoneNumberTextField(),
+                  if (isOtpBoxVisible)
+                    _buildOtpInput(context, screenWidth, isDarkMode),
+                  if (isOtpBoxVisible) _buildPasswordTextFields(isDarkMode),
+                  SizedBox(height: 25),
+                  if (isOtpBoxVisible) _buildSubmitButton(),
+                  if (isLoading) CircularProgressIndicator(),
+                  if (responseMessage.isNotEmpty)
+                    Text(
+                      responseMessage,
+                      style: TextStyle(
+                        color: responseMessage.contains('successfully')
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -216,20 +236,46 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: TextButton(
               onPressed: () async {
                 print(_phoneNumberController.text);
+                if (_phoneNumberController.text.isNotEmpty) {
+                  setState(() {
+                    isLoading = true;
+                  });
 
-                CreateOtpChangePassRequest request = CreateOtpChangePassRequest(
-                    customer: CustomerGetOtpPassDetail(
-                  phoneNumber: _phoneNumberController.text,
-                ));
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  } else {
+                    CreateOtpChangePassRequest request =
+                        CreateOtpChangePassRequest(
+                            customer: CustomerGetOtpPassDetail(
+                      phoneNumber: _phoneNumberController.text,
+                    ));
 
-                await Provider.of<MainViewModel>(context, listen: false)
-                    .CreateOtpChangePass(
-                        "/api/v1/app/customers/generate_otp_for_forget_password",
-                        request);
-                ApiResponse apiResponse =
-                    Provider.of<MainViewModel>(context, listen: false)
-                        .response;
-                getMediaWidget(context, apiResponse);
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .CreateOtpChangePass(
+                            "/api/v1/app/customers/generate_otp_for_forget_password",
+                            request);
+                    ApiResponse apiResponse =
+                        Provider.of<MainViewModel>(context, listen: false)
+                            .response;
+                    generateOtpResponse(context, apiResponse);
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Enter registered phone number'),
+                      duration: maxDuration,
+                    ),
+                  );
+                }
               },
               child: Text(
                 Languages.of(context)!.labelSubmit,
@@ -340,7 +386,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _buildPhoneInput(BuildContext context, double screenWidth, bool isDarkMode) {
+  Widget _buildOtpInput(
+      BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -389,24 +436,62 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         onPressed: ()async {
           String otp =
           _controllers.map((controller) => controller.text).join();
-          if (otp.isNotEmpty) {
-            print(_phoneNumberController.text);
+          if (otp.isNotEmpty && _newPasswordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty &&
+              _newPasswordController.text == _confirmPasswordController.text && _newPasswordController.text.length>=8) {
+            setState(() {
+              isLoading = true;
+            });
 
-            VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
-                customer: CustomerVerifyOtpPass(
-                    phoneNumber: _phoneNumberController.text,
-                    password: _newPasswordController.text,
-                    mobileOtp: otp
-                ));
+            bool isConnected = await _connectivityService.isConnected();
+            if (!isConnected) {
+              setState(() {
+                isLoading = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('No internet connection'),
+                    duration: maxDuration,
+                  ),
+                );
+              });
+            } else {
+              print(_phoneNumberController.text);
 
-            await Provider.of<MainViewModel>(context, listen: false)
-                .VerifyOtpChangePass(
-                "/api/v1/app/customers/verify_otp_and_change_password", request);
-            ApiResponse apiResponse =
-                Provider
-                    .of<MainViewModel>(context, listen: false)
-                    .response;
-            verifyOtpGetWidget(context, apiResponse);
+              VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
+                  customer: CustomerVerifyOtpPass(
+                      phoneNumber: _phoneNumberController.text,
+                      password: _newPasswordController.text,
+                      mobileOtp: otp));
+
+              await Provider.of<MainViewModel>(context, listen: false)
+                  .VerifyOtpChangePass(
+                      "/api/v1/app/customers/verify_otp_and_change_password",
+                      request);
+              ApiResponse apiResponse =
+                  Provider.of<MainViewModel>(context, listen: false).response;
+              verifyOtpGetWidget(context, apiResponse);
+            }
+          }else if(_newPasswordController.text.length < 8){
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Password should have 8 or more characters.'),
+                duration: maxDuration,
+              ),
+            );
+
+          }else if(_newPasswordController.text != _confirmPasswordController.text){
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Password doesn't match"),
+                duration: maxDuration,
+              ),
+            );
+          }else{
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Please fill the details"),
+                duration: maxDuration,
+              ),
+            );
           }
         },
         style: ButtonStyle(

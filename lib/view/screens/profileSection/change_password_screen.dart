@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
-import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -28,6 +27,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool newPasswordVisible = false;
   bool confirmPasswordVisible = false;
 
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
+
   @override
   void initState() {
     super.initState();
@@ -36,9 +40,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     confirmPasswordVisible = true;
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> getChangePassResponse(
       BuildContext context, ApiResponse apiResponse) async {
     final mediaList = apiResponse.data;
+    setState(() {
+      isLoading = true;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -62,7 +69,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
   }
 
-  bool isLoading = false;
   String? responseMessage;
 
   @override
@@ -83,108 +89,97 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
       ),
       //backgroundColor: Theme.of(context).backgroundColor,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            //mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(height: 10,),
-              Image(
-                alignment: Alignment.topLeft,
-                width: screenWidth*0.6,
-               // height: screenHeight*0.45,
-                image: AssetImage("assets/change_password.png"),
-              ),
-
-              SizedBox(height: 10,),
-              _buildPasswordInput(
-                  context,
-                  Languages.of(context)!.labelOldPass,
-                  _oldPasswordController,
-                  Icon(
-                    Icons.password,
-                    size: 18,
-                    color: isDarkMode ? Colors.white : Colors.black,
+      body: Stack(
+        children: [
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(),
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    height: 10,
                   ),
-                  oldPasswordVisible,
-                  isDarkMode),
-              _buildPasswordInput(
-                  context,
-                  Languages.of(context)!.labelNewPass,
-                  _newPasswordController,
-                  Icon(
-                    Icons.password,
-                    size: 18,
-                    color: isDarkMode ? Colors.white : Colors.black,
+                  Image(
+                    alignment: Alignment.topLeft,
+                    width: screenWidth * 0.6,
+                    // height: screenHeight*0.45,
+                    image: AssetImage("assets/change_password.png"),
                   ),
-                  newPasswordVisible,
-                  isDarkMode),
-              _buildPasswordInput(
-                  context,
-                  Languages.of(context)!.labelConfirmPass,
-                  _confirmPasswordController,
-                  Icon(
-                    Icons.password,
-                    size: 18,
-                    color: isDarkMode ? Colors.white : Colors.black,
+                  SizedBox(
+                    height: 10,
                   ),
-                  confirmPasswordVisible,
-                  isDarkMode),
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/ForgotPasswordScreen');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      Languages.of(context)!.labelForgotPass,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                  _buildPasswordInput(
+                      context,
+                      Languages.of(context)!.labelOldPass,
+                      _oldPasswordController,
+                      Icon(
+                        Icons.password,
+                        size: 18,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                      oldPasswordVisible,
+                      isDarkMode),
+                  _buildPasswordInput(
+                      context,
+                      Languages.of(context)!.labelNewPass,
+                      _newPasswordController,
+                      Icon(
+                        Icons.password,
+                        size: 18,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                      newPasswordVisible,
+                      isDarkMode),
+                  _buildPasswordInput(
+                      context,
+                      Languages.of(context)!.labelConfirmPass,
+                      _confirmPasswordController,
+                      Icon(
+                        Icons.password,
+                        size: 18,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                      confirmPasswordVisible,
+                      isDarkMode),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/ForgotPasswordScreen');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Languages.of(context)!.labelForgotPass,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 22),
+                  _buildFooter(context)
+                ],
               ),
-              SizedBox(height: 22),
-             _buildFooter(context)
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
   bool _isButtonEnabled() {
     const maxDuration = Duration(seconds: 2);
-
-    if(_newPasswordController.text.length < 8){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password should have 8 or more characters.'),
-          duration: maxDuration,
-        ),
-      );
-      setState(() {
-        inputValid = false;
-      });
-
-    }else if(_newPasswordController.text != _confirmPasswordController.text){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Password doesn't match"),
-          duration: maxDuration,
-        ),
-      );
-      setState(() {
-        inputValid = false;
-      });
-
-    }else if(_oldPasswordController.text.isNotEmpty &&
+    if(_oldPasswordController.text.isNotEmpty &&
         _newPasswordController.text.isNotEmpty &&
         _confirmPasswordController.text.isNotEmpty &&
         _newPasswordController.text == _confirmPasswordController.text){
@@ -192,12 +187,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         inputValid = true;
       });
     }else{
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Please fill the details"),
-          duration: maxDuration,
-        ),
-      );
       setState(() {
         inputValid = false;
       });
@@ -216,24 +205,66 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               onPressed: () async {
                 _isButtonEnabled();
                 if (_isButtonEnabled()) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  } else {
+                    print(_newPasswordController.text);
+                    CustomerChangePassDetail customer =
+                        CustomerChangePassDetail(
+                            password: _oldPasswordController.text,
+                            newPassword: _newPasswordController.text);
 
-                  print(_newPasswordController.text);
-                  CustomerChangePassDetail customer =
-                  CustomerChangePassDetail(
-                      password: _oldPasswordController.text,
-                      newPassword: _newPasswordController.text);
+                    ChangeOldPassRequest request =
+                        ChangeOldPassRequest(customer: customer);
 
-                  ChangeOldPassRequest request =
-                  ChangeOldPassRequest(customer: customer);
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .changeOldPasswordData(
+                            "/api/v1/app/customers/update_password_with_old_password",
+                            request);
+                    ApiResponse apiResponse =
+                        Provider.of<MainViewModel>(context, listen: false)
+                            .response;
+                    getChangePassResponse(context, apiResponse);
+                  }
+                }else if(_newPasswordController.text.length < 8){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Password should have 8 or more characters.'),
+                      duration: maxDuration,
+                    ),
+                  );
 
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .changeOldPasswordData(
-                      "/api/v1/app/customers/update_password_with_old_password",
-                      request);
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  getMediaWidget(context, apiResponse);
+
+                }else if(_newPasswordController.text != _confirmPasswordController.text){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Password doesn't match"),
+                      duration: maxDuration,
+                    ),
+                  );
+                  setState(() {
+                    inputValid = false;
+                  });
+
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please fill the details"),
+                      duration: maxDuration,
+                    ),
+                  );
                 }
               },
               child: Text(
@@ -325,18 +356,5 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _changePassword() async {
-    CustomerChangePassDetail customer = CustomerChangePassDetail(
-        password: _oldPasswordController.text,
-        newPassword: _newPasswordController.text);
-    ChangeOldPassRequest request = ChangeOldPassRequest(customer: customer);
-    await Provider.of<MainViewModel>(context, listen: false)
-        .changeOldPasswordData(
-            "/api/v1/app/customers/update_password_with_old_password", request);
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
   }
 }

@@ -41,7 +41,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
 
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> vidKycUploadResponse(
       BuildContext context, ApiResponse apiResponse) async {
     UploadKycDocResponse? mediaList = apiResponse.data as UploadKycDocResponse?;
     setState(() {
@@ -102,34 +102,41 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ),
-          body: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Column(
-                children: [
-                  Container(
-                      margin:
-                          EdgeInsets.only(left: 0, right: 0, bottom: 4, top: 10),
-                      alignment: Alignment.center,
-                      height: screenHeight * 0.65,
-                      width: double.infinity,
-                      child: isVideoRecorded
-                          ? videoPlayerController != null &&
-                                  videoPlayerController.value.isInitialized
-                              ? AspectRatio(
-                                  aspectRatio:
-                                      videoPlayerController.value.aspectRatio,
-                                  child: VideoPlayer(videoPlayerController),
-                                )
-                              : Text('No video selected')
-                          : GestureDetector(
-                              onTap: () {
-                                _startVideo(ImageSource.camera);
-                              },
-                              child: _buildScreen(context))),
-                  Spacer(),
-                  _buildFooter(context)
-                ],
-              ))),
+          body: Stack(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    children: [
+                      Container(
+                          margin:
+                              EdgeInsets.only(left: 0, right: 0, bottom: 4, top: 10),
+                          alignment: Alignment.center,
+                          height: screenHeight * 0.65,
+                          width: double.infinity,
+                          child: isVideoRecorded
+                              ? videoPlayerController != null &&
+                                      videoPlayerController.value.isInitialized
+                                  ? AspectRatio(
+                                      aspectRatio:
+                                          videoPlayerController.value.aspectRatio,
+                                      child: VideoPlayer(videoPlayerController),
+                                    )
+                                  : Text('No video selected')
+                              : GestureDetector(
+                                  onTap: () {
+                                    _startVideo(ImageSource.camera);
+                                  },
+                                  child: _buildScreen(context))),
+                      Spacer(),
+                      _buildFooter(context)
+                    ],
+                  )),
+              isLoading ? Center(
+                child: CircularProgressIndicator(),
+              ) : SizedBox()
+            ],
+          )),
     );
   }
 
@@ -140,7 +147,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             "video_kyc_clip", "kyc_file");
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
+    vidKycUploadResponse(context, apiResponse);
   }
 
   Widget _buildScreen(BuildContext context){

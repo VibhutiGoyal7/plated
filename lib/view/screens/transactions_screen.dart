@@ -9,6 +9,7 @@ import '../../model/apis/api_response.dart';
 import '../../utils/Helper.dart';
 import '../../utils/Util.dart';
 import '../../view_model/main_view_model.dart';
+import '../component/connectivity_service.dart';
 import '../component/session_expired_dialog.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -39,6 +40,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   int _currentPage = 1;
   bool _isLoadingMore = false;
   Future<void>? _fetchDataFuture;
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -80,19 +85,40 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       int pageKey, bool filterApplied, bool isScroll) async {
     print("Fetch Data");
     try {
-      TransactionListRequest request = TransactionListRequest(
-        pageNo: pageKey,
-        pageSize: _numberOfPostsPerRequest,
-        paymentRequestId: "",
-        trxId: "",
-        requestType: nonCapitalizeString(requestType),
-        status: nonCapitalizeString(status),
-      );
-      await Provider.of<MainViewModel>(context, listen: false)
-          .transactionListData("api/v1/app/payment_transactions/list", request);
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      await getTransactionData(context, apiResponse, pageKey, isScroll);
+      setState(() {
+        isLoading = true;
+      });
+
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+              Text('No internet connection'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      }else {
+        TransactionListRequest request = TransactionListRequest(
+          pageNo: pageKey,
+          pageSize: _numberOfPostsPerRequest,
+          paymentRequestId: "",
+          trxId: "",
+          requestType: nonCapitalizeString(requestType),
+          status: nonCapitalizeString(status),
+        );
+        await Provider.of<MainViewModel>(context, listen: false)
+            .transactionListData(
+            "api/v1/app/payment_transactions/list", request);
+        ApiResponse apiResponse =
+            Provider
+                .of<MainViewModel>(context, listen: false)
+                .response;
+        await getTransactionData(context, apiResponse, pageKey, isScroll);
+      }
     } catch (error) {
       print("Error fetching data: $error");
     }
@@ -102,6 +128,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       int pageKey, bool isScroll) async {
     TransactionListResponse? transactionListResponse =
         apiResponse.data as TransactionListResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return;
@@ -183,112 +212,120 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           )
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Stack(
-                alignment: Alignment.bottomCenter,
-                children: <Widget>[
-                  Column(
-                    children: [
-                      Text(
-                        "Total Balance",
-                        style: TextStyle(
-                            fontSize: 12.0, fontWeight: FontWeight.normal),
-                      ),
-                      Text(
-                        "${countryCurrencySymbol}${countryBalance}",
-                        style: TextStyle(
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
+      body: Stack(
+        children: [
+          isLoading?
+          Center(
+            child: CircularProgressIndicator(),
+          ): SizedBox(),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          Text(
+                            "Total Balance",
+                            style: TextStyle(
+                                fontSize: 12.0, fontWeight: FontWeight.normal),
+                          ),
+                          Text(
+                            "${countryCurrencySymbol}${countryBalance}",
+                            style: TextStyle(
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-              Expanded(
-                child: Card(
-                  elevation: 20,
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40))),
-                  child: Container(
-                    margin: EdgeInsets.only(top: 12),
-                    child: FutureBuilder(
-                      future: _fetchDataFuture,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<void> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text('Error loading data'));
-                        } else {
-                          // Group transactions by date
-                          Map<String, List<TransactionDetails>>
-                              groupedTransactions = groupTransactionsByDate(
-                                  filterApplied
-                                      ? filteredTransactionList
-                                      : transactionList);
-                          List<String> dates =
-                              groupedTransactions.keys.toList();
+                  ),
+                  Expanded(
+                    child: Card(
+                      elevation: 20,
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                              topRight: Radius.circular(40))),
+                      child: Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: FutureBuilder(
+                          future: _fetchDataFuture,
+                          builder:
+                              (BuildContext context, AsyncSnapshot<void> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error loading data'));
+                            } else {
+                              // Group transactions by date
+                              Map<String, List<TransactionDetails>>
+                                  groupedTransactions = groupTransactionsByDate(
+                                      filterApplied
+                                          ? filteredTransactionList
+                                          : transactionList);
+                              List<String> dates =
+                                  groupedTransactions.keys.toList();
 
-                          return ListView.builder(
-                            controller: _scrollController,
-                            itemCount: dates.length + (_isLoadingMore ? 1 : 0),
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == dates.length) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
-                              String date = dates[index];
-                              List<TransactionDetails> transactionsForDate =
-                                  groupedTransactions[date]!;
+                              return ListView.builder(
+                                controller: _scrollController,
+                                itemCount: dates.length + (_isLoadingMore ? 1 : 0),
+                                itemBuilder: (BuildContext context, int index) {
+                                  if (index == dates.length) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  String date = dates[index];
+                                  List<TransactionDetails> transactionsForDate =
+                                      groupedTransactions[date]!;
 
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        date,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12),
-                                      ),
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            date,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                        ...transactionsForDate.map((transaction) {
+                                          return TransactionItem(
+                                              transaction: transaction);
+                                        }).toList(),
+                                      ],
                                     ),
-                                    ...transactionsForDate.map((transaction) {
-                                      return TransactionItem(
-                                          transaction: transaction);
-                                    }).toList(),
-                                  ],
-                                ),
+                                  );
+                                },
                               );
-                            },
-                          );
-                        }
-                      },
+                            }
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

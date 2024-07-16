@@ -5,6 +5,7 @@ import '../../model/response/offersResponse.dart';
 class NewsOfferListWidget extends StatelessWidget {
   late final List<OfferResponse> data;
 
+
   //NewsOfferListWidget(ScrollController scrollController);
 
   NewsOfferListWidget({required this.data});

@@ -10,6 +10,7 @@ import '../../model/response/profileResponse.dart';
 import '../../theme/AppColor.dart';
 import '../../utils/Helper.dart';
 import '../../view_model/main_view_model.dart';
+import '../component/connectivity_service.dart';
 import '../component/session_expired_dialog.dart';
 
 class AddMoneyScreen extends StatefulWidget {
@@ -30,6 +31,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   bool inputValid = false;
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -61,6 +67,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   Future<Widget> getAddMoneyResponse(
       BuildContext context, ApiResponse apiResponse) async {
     AddMoneyResponse? addMoneyResponse = apiResponse.data as AddMoneyResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -103,58 +112,66 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 18,
-              ),
-              Container(
-                height: 70,
-                width: 70,
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: AppColor.WHITE,
-                  backgroundImage: AssetImage(
-                    "assets/bank_statement.png",
-
+      body: Stack(
+        children: [
+          isLoading?
+          Center(
+            child: CircularProgressIndicator(),
+          ): SizedBox(),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                //crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 18,
                   ),
-                ),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: AppColor.WHITE,
+                      backgroundImage: AssetImage(
+                        "assets/bank_statement.png",
+
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "Adding via: ${paymentMethod}",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text("${username}",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                          color: isDarkMode ? Colors.white70 : Colors.black54)),
+                  Text(
+                    "Please enter amount to proceed",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                  ),
+                  _buildPhoneInput(
+                      context, Languages.of(context)!.labelZero, _amountController),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                    child: Text(
+                      "Limit : ${limitAmt}",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Spacer(),
+                  _buildFooter(context),
+                ],
               ),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                "Adding via: ${paymentMethod}",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text("${username}",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                      color: isDarkMode ? Colors.white70 : Colors.black54)),
-              Text(
-                "Please enter amount to proceed",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-              ),
-              _buildPhoneInput(
-                  context, Languages.of(context)!.labelZero, _amountController),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
-                child: Text(
-                  "Limit : ${limitAmt}",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Spacer(),
-              _buildFooter(context),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -217,18 +234,37 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
-                  AddMoneyRequest request = AddMoneyRequest(
-                      amount: int.parse(_amountController.text));
+                  setState(() {
+                    isLoading = true;
+                  });
 
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .addMoneyData(
-                          "api/v1/app/payment_transactions/add_money_to_wallet",
-                          request);
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                          Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  }else {
+                    AddMoneyRequest request = AddMoneyRequest(
+                        amount: int.parse(_amountController.text));
 
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  getAddMoneyResponse(context, apiResponse);
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .addMoneyData(
+                        "api/v1/app/payment_transactions/add_money_to_wallet",
+                        request);
+
+                    ApiResponse apiResponse =
+                        Provider
+                            .of<MainViewModel>(context, listen: false)
+                            .response;
+                    getAddMoneyResponse(context, apiResponse);
+                  }
 
                 }
               },

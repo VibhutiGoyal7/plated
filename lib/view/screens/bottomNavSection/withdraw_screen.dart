@@ -66,148 +66,155 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SafeArea(
-          child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              Languages.of(context)!.labelEnterAmount,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-            ),
-            _buildPhoneInput(
-                context, Languages.of(context)!.labelZero, _inputController),
-
-            /*   Row(
+      body: Stack(
+        children: [
+          isLoading ? Center(
+            child: CircularProgressIndicator(),
+          ): SizedBox(),
+          SafeArea(
+              child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
-                  countryCurrencySymbol,
-                  style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 26.0, color: Colors.grey),
+                  Languages.of(context)!.labelEnterAmount,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: TextField(
-                      style: TextStyle(
-                        fontSize: 26.0,
-                      ),
-                      controller: _inputController,
-                      onChanged: (value) {
-                        amount = value;
-                      },
-                      maxLength: 12,
-                      keyboardType: TextInputType.number,
-                      onSubmitted: (value) {},
-                      decoration: InputDecoration(
-                        counterText: "",
-                        border: InputBorder.none,
-                        hintText: Languages.of(context)?.labelZero,
-                      ),
+                _buildPhoneInput(
+                    context, Languages.of(context)!.labelZero, _inputController),
+
+                /*   Row(
+                  children: [
+                    Text(
+                      countryCurrencySymbol,
+                      style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 26.0, color: Colors.grey),
                     ),
-                  ),
-                ),
-                */
-            /*Text(
-                    Languages.of(context)!.labelINR,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-                  ),*/ /*
-              ],
-            ),*/
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${currentBalance} ",
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
-            ),
-            Container(
-              height: screenHeight * 0.065, // Set the desired height
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const AlwaysScrollableScrollPhysics(),
-                controller: _scrollController,
-                itemCount: _allLogList.length,
-                padding: const EdgeInsets.only(bottom: 10),
-                // Adjust padding if needed
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _inputController.text = _allLogList[index];
-                      });
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width *
-                          0.2, // Adjust width as needed
-                      margin: EdgeInsets.all(4),
-                      child: Card(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              _allLogList[index],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 12),
-                            ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 26.0,
+                          ),
+                          controller: _inputController,
+                          onChanged: (value) {
+                            amount = value;
+                          },
+                          maxLength: 12,
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) {},
+                          decoration: InputDecoration(
+                            counterText: "",
+                            border: InputBorder.none,
+                            hintText: Languages.of(context)?.labelZero,
                           ),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-            Spacer(),
-            /*   Card(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              Languages.of(context)!.labelTransferTo,
-                              style: TextStyle(fontSize: 14.0),
+                    */
+                /*Text(
+                        Languages.of(context)!.labelINR,
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                      ),*/ /*
+                  ],
+                ),*/
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${currentBalance} ",
+                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
+                ),
+                Container(
+                  height: screenHeight * 0.065, // Set the desired height
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    controller: _scrollController,
+                    itemCount: _allLogList.length,
+                    padding: const EdgeInsets.only(bottom: 10),
+                    // Adjust padding if needed
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _inputController.text = _allLogList[index];
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width *
+                              0.2, // Adjust width as needed
+                          margin: EdgeInsets.all(4),
+                          child: Card(
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  _allLogList[index],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
                             ),
-                            Text(
-                              Languages.of(context)!.labelName,
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          Languages.of(context)!.labelChange,
-                          style: TextStyle(
-                              fontSize: 14.0, color: Colors.blueAccent),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
-              ),
-            ),*/
-            _buildFooter(context),
-            SizedBox(height: 10)
-          ],
-        ),
-      )),
+                Spacer(),
+                /*   Card(
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  Languages.of(context)!.labelTransferTo,
+                                  style: TextStyle(fontSize: 14.0),
+                                ),
+                                Text(
+                                  Languages.of(context)!.labelName,
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              Languages.of(context)!.labelChange,
+                              style: TextStyle(
+                                  fontSize: 14.0, color: Colors.blueAccent),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),*/
+                _buildFooter(context),
+                SizedBox(height: 10)
+              ],
+            ),
+          )),
+        ],
+      ),
     );
   }
 

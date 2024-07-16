@@ -106,7 +106,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
     }
   }
 
-  Widget getMediaWidgetResendOtp(
+  Widget generateTpinResponse(
       BuildContext context, ApiResponse apiResponse) {
     GenerateTpinResponse? generateTpinResponse =
         apiResponse.data as GenerateTpinResponse?;

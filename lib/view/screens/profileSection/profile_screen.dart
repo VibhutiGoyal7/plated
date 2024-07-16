@@ -17,6 +17,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -35,6 +36,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final picker = ImagePicker();
   bool isLoading = true;
   bool isBiometricEnable = false;
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isDataLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
+
 
   @override
   void initState() {
@@ -60,10 +67,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print("Text copied to clipboard: $text");
   }
 
-  Future<Widget> getMediaWidget(
+  Future<Widget> getProfileResponse(
       BuildContext context, ApiResponse apiResponse) async {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
     print("apiResponse${apiResponse.status}");
+    setState(() {
+      isDataLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -78,6 +88,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("Message : ${apiResponse.message}") ;
         if(apiResponse.message== "Invalid access token")
           {SessionExpiredDialog.showDialogBox(context: context);}
+        else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Something went wrong.'),
+              duration: maxDuration,
+            ),
+          );
+        }
           print(apiResponse.message) ;
         return Center(
           child: Text('Please try again later!!!'),
@@ -154,207 +172,216 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () => {_showPicker(context: context)},
-                              child: imageUrl == ""
-                                  ? Container(
-                                      height: 60,
-                                      width: 60,
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundColor: AppColor.WHITE,
-                                        backgroundImage:
-                                            AssetImage("assets/profile_user.png"),
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(100.0),
-                                      child: Image.network(
-                                        imageUrl,
-                                        height: 60,
-                                        width: 60,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                          // You can return any widget here to display in case of an error
-                                          return Container(
+        body: Stack(
+          children: [
+            isDataLoading
+                ? Center(
+              child: CircularProgressIndicator(),
+            )
+                : SizedBox(),
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Row(
+                              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => {_showPicker(context: context)},
+                                  child: imageUrl == ""
+                                      ? Container(
+                                          height: 60,
+                                          width: 60,
+                                          child: CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor: AppColor.WHITE,
+                                            backgroundImage:
+                                                AssetImage("assets/profile_user.png"),
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius: BorderRadius.circular(100.0),
+                                          child: Image.network(
+                                            imageUrl,
                                             height: 60,
                                             width: 60,
-                                            child: CircleAvatar(
-                                              radius: 30,
-                                              backgroundColor: AppColor.WHITE,
-                                              backgroundImage: AssetImage(
-                                                "assets/profile_user.png",
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                              // You can return any widget here to display in case of an error
+                                              return Container(
+                                                height: 60,
+                                                width: 60,
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundColor: AppColor.WHITE,
+                                                  backgroundImage: AssetImage(
+                                                    "assets/profile_user.png",
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            loadingBuilder: (BuildContext context,
+                                                Widget child,
+                                                ImageChunkEvent? loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              } else {
+                                                return Shimmer.fromColors(
+                                                  baseColor: Colors.black54,
+                                                  highlightColor: Colors.black45,
+                                                  child: Container(
+                                                    height:60,
+                                                    width: 60,
+                                                    color: Colors.white,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      _buildLabelText(context, customerName.toString()),
+                                      Row(
+                                        children: [
+                                          isLoading
+                                              ? Shimmer.fromColors(
+                                            baseColor: Colors.white38,
+                                            highlightColor: Colors.grey,
+                                            child: Container(
+                                              width: 100,
+                                              height: 20,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white38,
+                                                borderRadius: BorderRadius.circular(
+                                                    8.0), // Adjust the radius as needed
                                               ),
                                             ),
-                                          );
-                                        },
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.black54,
-                                              highlightColor: Colors.black45,
-                                              child: Container(
-                                                height:60,
-                                                width: 60,
-                                                color: Colors.white,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      )),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  _buildLabelText(context, customerName.toString()),
-                                  Row(
-                                    children: [
-                                      isLoading
-                                          ? Shimmer.fromColors(
-                                        baseColor: Colors.white38,
-                                        highlightColor: Colors.grey,
-                                        child: Container(
-                                          width: 100,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white38,
-                                            borderRadius: BorderRadius.circular(
-                                                8.0), // Adjust the radius as needed
-                                          ),
-                                        ),
-                                      )
-                                          : Text(
-                                        userName,
-                                        style: TextStyle(fontSize: 14.0),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => {
-                                          copyTextToClipboard(userName.toString()),
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text("Text copied to clipboard")),
                                           )
-                                        },
-                                        child: Icon(
-                                          Icons.copy,
-                                          size: 16,
-                                        ),
-                                      )
+                                              : Text(
+                                            userName,
+                                            style: TextStyle(fontSize: 14.0),
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () => {
+                                              copyTextToClipboard(userName.toString()),
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                    content: Text("Text copied to clipboard")),
+                                              )
+                                            },
+                                            child: Icon(
+                                              Icons.copy,
+                                              size: 16,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            Spacer(),
-                            IconButton( onPressed: (){
-                              //generateQrCode(userName);
-                              Navigator.pushNamed(context, "/QRScannerScreen");
+                                ),
+                                Spacer(),
+                                IconButton( onPressed: (){
+                                  //generateQrCode(userName);
+                                  Navigator.pushNamed(context, "/QRScannerScreen");
 
-                              },
-                                icon: Icon(Icons.qr_code_2)),
-                          ],
-                        ),
+                                  },
+                                    icon: Icon(Icons.qr_code_2)),
+                              ],
+                            ),
+                          ),
+                          Container(height: 0.5,color: Colors.grey,margin: EdgeInsets.all(15),),
+
+
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //SizedBox(height: 18.0),
+                                /*Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.all(6.0),
+                                    child: _buildLabelText(context,
+                                        Languages.of(context)!.labelProfile)),*/
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/AccountDetailScreen',
+                                        arguments: "");
+                                  },
+                                  child: _buildCard(
+                                      context,
+                                      Languages.of(context)!.labelAccountDetails,
+                                      isDarkMode),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/PersonalInfoScreen',
+                                        arguments: "");
+                                  },
+                                  child: _buildCard(
+                                      context,
+                                      Languages.of(context)!.labelPersonalInfo,
+                                      isDarkMode),
+                                ),
+                                /*Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.all(6.0),
+                                    child: _buildLabelText(context,
+                                        Languages.of(context)!.labelSecurity)),
+                                _buildCard(
+                                    context,
+                                    Languages.of(context)!.labelStepVerification,
+                                    isDarkMode),
+                                _buildBiometricCard(context,
+                                    "Bio-metric Authentication", isDarkMode),*/
+                                Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.all(6.0),
+                                    child: _buildLabelText(context,
+                                        Languages.of(context)!.labelPaymentMethod)),
+                                _buildCard(
+                                    context,
+                                    Languages.of(context)!.labelAddedCard,
+                                    isDarkMode),
+                                Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: EdgeInsets.all(6.0),
+                                    child: _buildLabelText(context,
+                                        Languages.of(context)!.labelHelpSupport)),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/SettingScreen',
+                                        arguments: "");
+                                  },
+                                  child: _buildCard(
+                                      context,
+                                      Languages.of(context)!.labelSettings,
+                                      isDarkMode),
+                                ),
+                              ]),
+                        ],
                       ),
-                      Container(height: 0.5,color: Colors.grey,margin: EdgeInsets.all(15),),
-
-
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //SizedBox(height: 18.0),
-                            /*Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelProfile)),*/
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/AccountDetailScreen',
-                                    arguments: "");
-                              },
-                              child: _buildCard(
-                                  context,
-                                  Languages.of(context)!.labelAccountDetails,
-                                  isDarkMode),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/PersonalInfoScreen',
-                                    arguments: "");
-                              },
-                              child: _buildCard(
-                                  context,
-                                  Languages.of(context)!.labelPersonalInfo,
-                                  isDarkMode),
-                            ),
-                            Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelSecurity)),
-                            _buildCard(
-                                context,
-                                Languages.of(context)!.labelStepVerification,
-                                isDarkMode),
-                            _buildBiometricCard(context,
-                                "Bio-metric Authentication", isDarkMode),
-                            Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelPaymentMethod)),
-                            _buildCard(
-                                context,
-                                Languages.of(context)!.labelAddedCard,
-                                isDarkMode),
-                            Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelHelpSupport)),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/SettingScreen',
-                                    arguments: "");
-                              },
-                              child: _buildCard(
-                                  context,
-                                  Languages.of(context)!.labelSettings,
-                                  isDarkMode),
-                            ),
-                          ]),
-                    ],
-                  ),
-                )),
-          ),
+                    )),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -430,14 +457,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _fetchData() async {
-    String? retrievedToken = await Helper.getUserToken();
-    print("Token $retrievedToken");
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .profileScreenData("/api/v1/app/customers/show_customer_details");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
+    setState(() {
+      isDataLoading = true;
+    });
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isDataLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      String? retrievedToken = await Helper.getUserToken();
+      print("Token $retrievedToken");
+      await Future.delayed(Duration(milliseconds: 2));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .profileScreenData("/api/v1/app/customers/show_customer_details");
+      ApiResponse apiResponse =
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
+      getProfileResponse(context, apiResponse);
+    }
   }
 
   Future<void> _uploadProfilePic(File? file) async {
@@ -447,7 +492,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             "/api/v1/app/customers/update_profile_pic", file!);
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
+    getProfileResponse(context, apiResponse);
   }
 
   _showPicker({required BuildContext context}) {

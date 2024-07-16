@@ -12,6 +12,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class PersonalDataScreen extends StatefulWidget {
@@ -73,6 +74,10 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   final TextEditingController documentNumberController =
   TextEditingController();
 
+  static const maxDuration = Duration(seconds: 2);
+  bool isDataLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
+
   @override
   void initState() {
     super.initState();
@@ -84,13 +89,17 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     nationalIdImg = "" ;
     passportImg="";
     drivingLicenseImg="";
+    isDataLoading = true;
     _fetchData();
     _fetchDocData();
   }
 
-  Future<Widget> getMediaWidget(BuildContext context,
+  Future<Widget> getDocData(BuildContext context,
       ApiResponse apiResponse) async {
     FetchKycDocResponse? mediaList = apiResponse.data as FetchKycDocResponse?;
+    setState(() {
+      isLoading = false;
+    });
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
@@ -139,8 +148,17 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
 
-        if(mediaList?.message== "Invalid access token")
+        if(mediaList?.message== "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
+        }else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+              Text('Try again later!'),
+              duration: maxDuration,
+            ),
+          );
+        }
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -170,90 +188,98 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildProfileSection(
-                Languages.of(context)!.labelFirstname, firstName),
-            buildProfileSection(Languages.of(context)!.labelLastname, lastName),
-            buildProfileSection(Languages.of(context)!.labelEmail, email),
-            buildProfileSection(Languages.of(context)!.labelUsername, userName),
-            buildBirthdateSection(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(Languages.of(context)!.labelUploadedDocs,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-            ),
-            if(isPassportAvailable)
-              _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelPassport,
-                  'passport',
-                  "assets/passport.png",
-                  "${passportStatus}",
-                  "${passportImg}",
-                  "${passportRejectedReason}"),
-            if(isDrivingLicenceAvailable)
-              _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelDrivingLicence,
-                  'driving_licence',
-                  "assets/license.png",
-                  "${drivingLicenceStatus}",
-                  "${drivingLicenseImg}",
-                  "${drivingLicenceRejectedReason}"),
-            if(isNationalIdAvailable)
-              _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelNationalId,
-                  'national_id',
-                  "assets/id_card.png",
-                  "${nationalIdStatus}",
-                  "${nationalIdImg}",
-                  "${nationalIdRejectedReason}"),
-            if(isAddressLycAvailable)
-              _buildDocumentOption(
-                  context,
-                  "Address KYC",
-                  'address_kyc',
-                  "assets/address.png",
-                  "${addressKycStatus}",
-                  "${addressKycImg}",
-                  "${addressKycRejectedReason}"),
-            if(isBankStatementAvailable)
-              _buildDocumentOption(
-                  context,
-                  "Bank Statement",
-                  'bank_statement',
-                  "assets/bank_statement.png",
-                  "${bankStatementStatus}",
-                  "${bankStatementImg}",
-                  "${bankStatementRejectedReason}"),
-            if(isGeoLocAvailable)
-              _buildDocumentOption(
-                  context,
-                  "Geolocation KYC",
-                  'geolocation_kyc',
-                  "assets/geo_Location.jpg",
-                  "${geoLocStatus}",
-                  "${geoLocImg}",
-                  "${geoLocRejectedReason}"),
-            if(isKycVideoAvailable)
-              _buildDocumentOption(
-                  context,
-                  Languages.of(context)!.labelVideoVerification,
-                  'video_kyc_clip',
-                  "assets/video.png",
-                  "${kycVideoStatus}",
-                  "${kycVideo}",
-                  "${kycVideoRejectedReason}"),
+      body: Stack(
+        children: [
+          isLoading?
+          Center(
+            child: CircularProgressIndicator(),
+          ): SizedBox(),
+          SingleChildScrollView(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildProfileSection(
+                    Languages.of(context)!.labelFirstname, firstName),
+                buildProfileSection(Languages.of(context)!.labelLastname, lastName),
+                buildProfileSection(Languages.of(context)!.labelEmail, email),
+                buildProfileSection(Languages.of(context)!.labelUsername, userName),
+                buildBirthdateSection(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(Languages.of(context)!.labelUploadedDocs,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                ),
+                if(isPassportAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelPassport,
+                      'passport',
+                      "assets/passport.png",
+                      "${passportStatus}",
+                      "${passportImg}",
+                      "${passportRejectedReason}"),
+                if(isDrivingLicenceAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelDrivingLicence,
+                      'driving_licence',
+                      "assets/license.png",
+                      "${drivingLicenceStatus}",
+                      "${drivingLicenseImg}",
+                      "${drivingLicenceRejectedReason}"),
+                if(isNationalIdAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelNationalId,
+                      'national_id',
+                      "assets/id_card.png",
+                      "${nationalIdStatus}",
+                      "${nationalIdImg}",
+                      "${nationalIdRejectedReason}"),
+                if(isAddressLycAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Address KYC",
+                      'address_kyc',
+                      "assets/address.png",
+                      "${addressKycStatus}",
+                      "${addressKycImg}",
+                      "${addressKycRejectedReason}"),
+                if(isBankStatementAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Bank Statement",
+                      'bank_statement',
+                      "assets/bank_statement.png",
+                      "${bankStatementStatus}",
+                      "${bankStatementImg}",
+                      "${bankStatementRejectedReason}"),
+                if(isGeoLocAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Geolocation KYC",
+                      'geolocation_kyc',
+                      "assets/geo_Location.jpg",
+                      "${geoLocStatus}",
+                      "${geoLocImg}",
+                      "${geoLocRejectedReason}"),
+                if(isKycVideoAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelVideoVerification,
+                      'video_kyc_clip',
+                      "assets/video.png",
+                      "${kycVideoStatus}",
+                      "${kycVideo}",
+                      "${kycVideoRejectedReason}"),
 
-            // buildDocumentDropdown(),
-            // buildDocumentNumberSection(),
-          ],
-        ),
+                // buildDocumentDropdown(),
+                // buildDocumentNumberSection(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -443,19 +469,36 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         userName = profileDetails?.username;
         dob = profileDetails?.dob;
         email = profileDetails?.email;
+        isDataLoading = false;
       });
     });
     return profileDetails;
   }
 
   Future<void> _fetchDocData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .fetchKycDocData(
-        "/api/v1/app/customers/customer_uploaded_documents");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getMediaWidget(context, apiResponse);
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        //isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+            Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    }else {
+      await Future.delayed(Duration(milliseconds: 2));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .fetchKycDocData(
+          "/api/v1/app/customers/customer_uploaded_documents");
+      ApiResponse apiResponse =
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
+      getDocData(context, apiResponse);
+    }
   }
 
   void _showModal(BuildContext context, String? image, bool isVideo) {

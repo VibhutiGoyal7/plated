@@ -118,121 +118,124 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     return Scaffold(
       body: SafeArea(
         child:
-              isLoading ?
-              Center(
-                child: CircularProgressIndicator(),
-              )
-              :SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: screenHeight * 0.95),
-            child: Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16, top: 12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
+        Stack(
+          children: [
+            SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: screenHeight * 0.95),
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16, top: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLabelText(
-                            context,
-                            Languages.of(context)!.labelAlmostFinish,
-                            15,
-                            false),
-                        SizedBox(height: 1),
-                        _buildLabelText(context,
-                            Languages.of(context)!.labelSetProfile, 20, true),
-                        SizedBox(height: 8),
-                        _buildLabelText(
-                            context,
-                            Languages.of(context)!.labelTellAbtYourself,
-                            18,
-                            false),
-                        SizedBox(height: 20),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildLabelText(
                                 context,
-                                Languages.of(context)!.labelPromoCode,
-                                14,
+                                Languages.of(context)!.labelAlmostFinish,
+                                15,
                                 false),
+                            SizedBox(height: 1),
                             _buildLabelText(context,
-                                Languages.of(context)!.labelRedeem, 14, false),
+                                Languages.of(context)!.labelSetProfile, 20, true),
+                            SizedBox(height: 8),
+                            _buildLabelText(
+                                context,
+                                Languages.of(context)!.labelTellAbtYourself,
+                                18,
+                                false),
+                            SizedBox(height: 20),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildLabelText(
+                                    context,
+                                    Languages.of(context)!.labelPromoCode,
+                                    14,
+                                    false),
+                                _buildLabelText(context,
+                                    Languages.of(context)!.labelRedeem, 14, false),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            _buildPhoneInput(
+                                context,
+                                Languages.of(context)!.labelName,
+                                _nameController,
+                                Icon(
+                                  Icons.person,
+                                  size: 20,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                )),
+                            SizedBox(height: 10),
+                            _buildPhoneInput(
+                                context,
+                                Languages.of(context)!.labelLastname,
+                                _lastNameController,
+                                Icon(
+                                  Icons.person,
+                                  size: 20,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                )),
+                            SizedBox(height: 10),
+                            _buildPhoneInput(
+                                context,
+                                Languages.of(context)!.labelEmail,
+                                _emailController,
+                                Icon(
+                                  Icons.mail,
+                                  size: 18,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                )),
+                            SizedBox(height: 10),
+                            _buildDOBInput(
+                                context,
+                                Languages.of(context)!.labelDOB,
+                                _dateController,
+                                Icon(
+                                  Icons.calendar_month,
+                                  size: 18,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                )
+                            ),
+                            SizedBox(height: 10),
+                            _buildPasswordInput(
+                                context,
+                                Languages.of(context)!.labelPassword,
+                                _passwordController,
+                                Icon(
+                                  Icons.password,
+                                  size: 18,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                passwordVisible,
+                                isDarkMode),
+                            SizedBox(height: 10),
+                            _buildPasswordInput(
+                                context,
+                                Languages.of(context)!.labelConfirmPass,
+                                _confirmPasswordController,
+                                Icon(
+                                  Icons.password,
+                                  size: 18,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                confirmPasswordVisible,
+                                isDarkMode),
                           ],
                         ),
-                        SizedBox(height: 10),
-                        _buildPhoneInput(
-                            context,
-                            Languages.of(context)!.labelName,
-                            _nameController,
-                            Icon(
-                              Icons.person,
-                              size: 20,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            )),
-                        SizedBox(height: 10),
-                        _buildPhoneInput(
-                            context,
-                            Languages.of(context)!.labelLastname,
-                            _lastNameController,
-                            Icon(
-                              Icons.person,
-                              size: 20,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            )),
-                        SizedBox(height: 10),
-                        _buildPhoneInput(
-                            context,
-                            Languages.of(context)!.labelEmail,
-                            _emailController,
-                            Icon(
-                              Icons.mail,
-                              size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            )),
-                        SizedBox(height: 10),
-                        _buildDOBInput(
-                            context,
-                            Languages.of(context)!.labelDOB,
-                            _dateController,
-                            Icon(
-                              Icons.calendar_month,
-                              size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            )
-                        ),
-                        SizedBox(height: 10),
-                        _buildPasswordInput(
-                            context,
-                            Languages.of(context)!.labelPassword,
-                            _passwordController,
-                            Icon(
-                              Icons.password,
-                              size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
-                            passwordVisible,
-                            isDarkMode),
-                        SizedBox(height: 10),
-                        _buildPasswordInput(
-                            context,
-                            Languages.of(context)!.labelConfirmPass,
-                            _confirmPasswordController,
-                            Icon(
-                              Icons.password,
-                              size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
-                            confirmPasswordVisible,
-                            isDarkMode),
+                        _buildFooter(context, apiResponse),
                       ],
-                    ),
-                    _buildFooter(context, apiResponse),
-                  ],
-                )),
-          ),
+                    )),
+              ),
+            ),
+            isLoading ? Center(
+              child: CircularProgressIndicator(),
+            ): SizedBox()
+          ],
         ),
       ),
     );

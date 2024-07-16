@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/utils/Util.dart';
+import 'package:Payrio/view/component/ShimmerList.dart';
 import 'package:Payrio/view/component/news_offer_list_widget.dart';
+import 'package:Payrio/view/component/shimmer_box.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +45,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   static const maxDuration = Duration(seconds: 2);
 
   bool isLoading = false;
+  bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
 
   List<DashboardTransaction> transactionList = [];
@@ -497,7 +500,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         Container(
                           width: screenWidth,
                           height: screenHeight * 0.15,
-                          child: Row(
+                          child:   Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: List.generate(
@@ -514,7 +517,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 }
                               },
                             ),
-                          ),
+                          )
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -574,14 +577,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ],
                           ),
                         ),
+
                         Expanded(
                           //height: screenSize.height/2,
+
                           child: Container(
                             margin: EdgeInsets.only(top: 8, left: 8, right: 8),
-                            child: ListView.builder(
+                            child:isInternetConnected? ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               controller: _scrollController,
-                              itemCount: transactionList.length,
+                              itemCount: transactionList.length ,
                               shrinkWrap: true,
                               padding: const EdgeInsets.only(bottom: 10),
                               itemBuilder: (BuildContext context, int index) {
@@ -592,7 +597,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Container(
+                                    child:  Container(
                                       margin: EdgeInsets.symmetric(vertical: 8),
                                       child: Row(
                                         crossAxisAlignment:
@@ -671,7 +676,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 );
                                 // I omit the part to build card items from the list
                               },
-                            ),
+                            ): ShimmerList(),
                           ),
                         ),
                       ]),
@@ -957,6 +962,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     if (!isConnected) {
       setState(() {
         isLoading = false;
+        isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
@@ -983,9 +989,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     });
 
     bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
     if (!isConnected) {
       setState(() {
         isLoading = false;
+        isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:

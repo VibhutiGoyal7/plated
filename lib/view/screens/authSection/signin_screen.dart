@@ -50,13 +50,6 @@ class _SigninScreenState extends State<SigninScreen> {
       setState(() {
         inputValid = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Please enter valid details.'),
-          duration: maxDuration,
-        ),
-      );
     }
   }
 
@@ -162,82 +155,85 @@ class _SigninScreenState extends State<SigninScreen> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child:
-        isLoading ?
-        Center(
-          child: CircularProgressIndicator(),
-        )
-        : Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Stack(
-              alignment: Alignment.bottomCenter,
+        Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  height: screenHeight * 0.2,
-                  child: Image(
-                    alignment: Alignment.topLeft,
-                    width: screenWidth * 0.9,
-                    height: screenHeight * 0.25,
-                    image: AssetImage("assets/payment_image.png"),
-                  ),
-                  alignment: AlignmentDirectional.center,
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Container(
+                      height: screenHeight * 0.2,
+                      child: Image(
+                        alignment: Alignment.topLeft,
+                        width: screenWidth * 0.9,
+                        height: screenHeight * 0.25,
+                        image: AssetImage("assets/payment_image.png"),
+                      ),
+                      alignment: AlignmentDirectional.center,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            Expanded(
-              child: Container(
-                width: screenWidth,
-                padding: EdgeInsets.zero,
-                child: Card(
-                  elevation: 20,
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40))),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 20),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 20),
-                        _buildLabelText(context, "Welcome Back!", 26, true),
-                        _buildLabelText(
-                            context, "Welcome back we missed you", 14, false),
-                        SizedBox(height: 25),
-                        _buildPhoneInput(
-                          context,
-                          "Phone Number",
-                          _phoneNoController,
-                          Icon(
-                            Icons.person,
-                            size: 20,
-                            color: isDarkMode ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 15),
-                        _buildPasswordInput(
-                            context,
-                            Languages.of(context)!.labelPassword,
-                            _passwordController,
-                            Icon(
-                              Icons.password,
-                              size: 18,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                Expanded(
+                  child: Container(
+                    width: screenWidth,
+                    padding: EdgeInsets.zero,
+                    child: Card(
+                      elevation: 20,
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(40),
+                              topRight: Radius.circular(40))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            _buildLabelText(context, "Welcome Back!", 26, true),
+                            _buildLabelText(
+                                context, "Welcome back we missed you", 14, false),
+                            SizedBox(height: 25),
+                            _buildPhoneInput(
+                              context,
+                              "Phone Number",
+                              _phoneNoController,
+                              Icon(
+                                Icons.person,
+                                size: 20,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
                             ),
-                            passwordVisible,
-                            isDarkMode),
-                        SizedBox(
-                          height: 15,
+                            SizedBox(height: 15),
+                            _buildPasswordInput(
+                                context,
+                                Languages.of(context)!.labelPassword,
+                                _passwordController,
+                                Icon(
+                                  Icons.password,
+                                  size: 18,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                passwordVisible,
+                                isDarkMode),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            _buildFooter(context, apiResponse),
+                          ],
                         ),
-                        _buildFooter(context, apiResponse),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-            )
+                )
+              ],
+            ),
+            isLoading ? Center(
+              child: CircularProgressIndicator(),
+            ): SizedBox()
           ],
         ),
       ),
@@ -432,6 +428,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       content:
                       Text('Please enter valid details.'),
                       duration: maxDuration,
+                    )
                   );
                 }
               },

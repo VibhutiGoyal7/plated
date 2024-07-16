@@ -3,6 +3,7 @@ import 'package:Payrio/utils/Helper.dart';
 import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../component/connectivity_service.dart';
 
 class AccountDetailScreen extends StatefulWidget {
   @override
@@ -17,6 +18,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   var isEmailVerified;
   var isPasswordVisible = false;
 
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +31,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     userId = "";
     isEmailVerified = false;
     isPasswordVisible = false;
+    setState(() {
+      isLoading = true;
+    });
 
     _fetchData();
     _fetchPasswordData();
@@ -49,32 +58,39 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            _buildEmailVerification(
-                context: context,
-                isDarkMode: isDarkMode,
-                isEmailVerified: isEmailVerified,
-                onTap: () {
-                  if (isEmailVerified == false) {
-                    Navigator.pushNamed(context, '/VerifyEmail');
-                  }
-                }),
-            _buildDetailBox(
-              context: context,
-              label: Languages.of(context)!.enterPhoneNumber,
-              value: phoneNumber ?? '',
+            Column(
+              children: [
+                _buildEmailVerification(
+                    context: context,
+                    isDarkMode: isDarkMode,
+                    isEmailVerified: isEmailVerified,
+                    onTap: () {
+                      if (isEmailVerified == false) {
+                        Navigator.pushNamed(context, '/VerifyEmail');
+                      }
+                    }),
+                _buildDetailBox(
+                  context: context,
+                  label: Languages.of(context)!.enterPhoneNumber,
+                  value: phoneNumber ?? '',
+                ),
+                /* _buildPasswordBox(
+                    context: context,
+                    isPasswordVisibl: isPasswordVisible,
+                    isDarkMode: isDarkMode),*/
+                //_buildChangePassword(context, isDarkMode: isDarkMode),
+                _buildDetailBox(
+                  context: context,
+                  label: Languages.of(context)!.labelUserId,
+                  value: userId.toString() ?? '',
+                ),
+              ],
             ),
-            /* _buildPasswordBox(
-                context: context,
-                isPasswordVisibl: isPasswordVisible,
-                isDarkMode: isDarkMode),*/
-            _buildChangePassword(context, isDarkMode: isDarkMode),
-            _buildDetailBox(
-              context: context,
-              label: Languages.of(context)!.labelUserId,
-              value: userId.toString() ?? '',
-            ),
+            isLoading? Center(
+              child: CircularProgressIndicator(),
+            ): SizedBox()
           ],
         ),
       ),
@@ -229,8 +245,10 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         phoneNumber = profileDetails?.phoneNumber;
         userId = profileDetails?.username;
         isEmailVerified = profileDetails?.isEmailVerified;
+        isLoading = false;
       });
     });
+
     return profileDetails;
   }
 

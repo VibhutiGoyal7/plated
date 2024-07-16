@@ -24,10 +24,12 @@ import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';
 import '../model/request/createOtpEmailVerifyRequest.dart';
 import '../model/request/exustingUserRequest.dart';
+import '../model/request/generateOtpTpinChange.dart';
 import '../model/request/generateTpinRequest.dart';
 import '../model/request/signInRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/request/verifyOtpEmailVerifyRequest.dart';
+import '../model/response/GenerateOtpTPINChangeResponse.dart';
 import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
@@ -58,7 +60,7 @@ class MainViewModel with ChangeNotifier {
       print(phoneRequest.customer.phoneNumber);
 
       PhoneVerifyResponse phoneVerifyResponse =
-          await MainRepository().fetchMediaList(value, phoneRequest);
+          await MainRepository().fetchPhoneVerifyResponse(value, phoneRequest);
       print("Yess" + phoneVerifyResponse.mobileOtp.toString());
       if (phoneVerifyResponse.phoneNumber != null) {
         _apiResponse = ApiResponse.completed(phoneVerifyResponse);
@@ -465,6 +467,7 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+
   Future<void> transactionListData(
       String value, TransactionListRequest transactionListRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
@@ -482,6 +485,45 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> getOtpTPINChange(String value) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      GenerateOtpTPINChangeResponse generateOtpTPINChangeResponse =
+      await MainRepository().getOtpTPINChange(value);
+      print("Yess" + response.message.toString());
+      if (generateOtpTPINChangeResponse.otp != null) {
+        _apiResponse = ApiResponse.completed(generateOtpTPINChangeResponse);
+      } else {
+        _apiResponse = ApiResponse.error(generateOtpTPINChangeResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> verifyOtpTPinChange(
+      String value, VerifyOtpTPinChange verifyOtpTPinChange) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${verifyOtpTPinChange.tpin}");
+    notifyListeners();
+    try {
+      final response = await MainRepository()
+          .verifyOtpTPinChange(value, verifyOtpTPinChange);
+      if (response != null) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("TPIN change : $e");
     }
     notifyListeners();
   }

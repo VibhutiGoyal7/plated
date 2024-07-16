@@ -158,80 +158,81 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      body: Stack(
+        children: [
+          isLoading ? Center(
+            child: CircularProgressIndicator(),
+          ): SizedBox(),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: screenWidth,
+                  height: screenHeight * 0.15,
+                  margin: EdgeInsets.zero,
+                  child: _buildLabelText(context, "PIN \n VERIFICATION ", 28, true),
+                  alignment: AlignmentDirectional.center,
+                ),
+                Expanded(
+                  child: Container(
+                    width: screenWidth,
+                    height: screenHeight * 0.72,
+                    margin: EdgeInsets.zero,
+                    child: Card(
+                      margin: EdgeInsets.all(0),
+                      shape:
+                          RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /*_buildLabelText(context,
+                              Languages.of(context)!.labelWelcome, 16, false),
 
-        child:
-            isLoading?
-            Center(
-              child: CircularProgressIndicator(),
-            )
-            :Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: screenWidth,
-              height: screenHeight * 0.15,
-              margin: EdgeInsets.zero,
-              child: _buildLabelText(context, "PIN \n VERIFICATION ", 28, true),
-              alignment: AlignmentDirectional.center,
-            ),
-            Expanded(
-              child: Container(
-                width: screenWidth,
-                height: screenHeight * 0.72,
-                margin: EdgeInsets.zero,
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /*_buildLabelText(context,
-                          Languages.of(context)!.labelWelcome, 16, false),
-
-                      SizedBox(height: 4),*/
-                      SizedBox(height: 20),
-                      Center(
-                        child: _buildLabelText(context,
-                            Languages.of(context)!.labelEnterCode, 20, true),
-                      ),
-                      SizedBox(height: 4),
-                      Center(
-                        child: _buildLabelText(
-                            context,
-                            "${Languages.of(context)!.labelSentCode} ${widget.data}",
-                            12,
-                            false),
-                      ),
-                      SizedBox(height: 22),
-                      _buildOtpInput(context, screenWidth, isDarkMode),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 24),
-                        child: Row(
-                          children: [
-                            _buildLabelText(
+                          SizedBox(height: 4),*/
+                          SizedBox(height: 20),
+                          Center(
+                            child: _buildLabelText(context,
+                                Languages.of(context)!.labelEnterCode, 20, true),
+                          ),
+                          SizedBox(height: 4),
+                          Center(
+                            child: _buildLabelText(
                                 context,
-                                "${Languages.of(context)!.labelResendCode} ",
-                                14,
-                                true),
-                            _countdownTimer(),
-                            Spacer(),
-                            if (resendOtp) _resendOtpButton(context)
-                          ],
-                        ),
+                                "${Languages.of(context)!.labelSentCode} ${widget.data}",
+                                12,
+                                false),
+                          ),
+                          SizedBox(height: 22),
+                          _buildOtpInput(context, screenWidth, isDarkMode),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 24),
+                            child: Row(
+                              children: [
+                                _buildLabelText(
+                                    context,
+                                    "${Languages.of(context)!.labelResendCode} ",
+                                    14,
+                                    true),
+                                _countdownTimer(),
+                                Spacer(),
+                                if (resendOtp) _resendOtpButton(context)
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          _buildFooter(context),
+                        ],
                       ),
-                      Spacer(),
-                      _buildFooter(context),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

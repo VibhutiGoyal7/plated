@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
+import '../../component/connectivity_service.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
 class PersonalInformationScreen extends StatefulWidget {
@@ -14,6 +15,12 @@ class PersonalInformationScreen extends StatefulWidget {
 class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   //final NavController navController;
   bool isEmailVerified = false;
+
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = true;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   // PersonalInformationScreen({required this.navController});
   @override
@@ -41,43 +48,52 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildMenuItem(
-              context: context,
-              text: Languages.of(context)!.labelPersonalData,
-              onTap: () {
-                Navigator.pushNamed(context, '/PersonalDataScreen');
-              },
-            ),
-            _buildMenuItem(
-              context: context,
-              text: Languages.of(context)!.labelAddress,
-              onTap: () {
-                Navigator.pushNamed(context, '/AddressScreen');
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 14.0, top: 8.0),
-              child: Text(
-                Languages.of(context)!.completeProfile,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          isLoading
+              ? Center(
+            child: CircularProgressIndicator(),
+          )
+              : SizedBox(),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMenuItem(
+                  context: context,
+                  text: Languages.of(context)!.labelPersonalData,
+                  onTap: () {
+                    Navigator.pushNamed(context, '/PersonalDataScreen');
+                  },
                 ),
-              ),
+                _buildMenuItem(
+                  context: context,
+                  text: Languages.of(context)!.labelAddress,
+                  onTap: () {
+                    Navigator.pushNamed(context, '/AddressScreen');
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 14.0, top: 8.0),
+                  child: Text(
+                    Languages.of(context)!.completeProfile,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                _buildEmailVerification(
+                  context: context,
+                  //customerDetailsResponse: customerDetailsResponse,
+                  onTap: () {if(isEmailVerified != true ){
+                    Navigator.pushNamed(context, '/VerifyEmail');
+                  }}
+                ),
+              ],
             ),
-            _buildEmailVerification(
-              context: context,
-              //customerDetailsResponse: customerDetailsResponse,
-              onTap: () {if(isEmailVerified != true ){
-                Navigator.pushNamed(context, '/VerifyEmail');
-              }}
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -206,6 +222,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         isEmailVerified = profileDetails!.isEmailVerified!;
+        isLoading = false;
       });
     });
     return profileDetails;
