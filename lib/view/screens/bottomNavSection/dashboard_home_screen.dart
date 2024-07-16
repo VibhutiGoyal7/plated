@@ -941,7 +941,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "verified") {
+    if (kycStatus != "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();

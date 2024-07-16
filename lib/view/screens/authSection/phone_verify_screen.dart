@@ -96,7 +96,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }
   }
 
-  Widget getMediaWidget(BuildContext context, ApiResponse apiResponse) {
+  Future<Widget> getPhoneVerifyResponse(BuildContext context, ApiResponse apiResponse) async {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
@@ -110,7 +110,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.COMPLETED:
         print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
         //Call Toast
-        ToastComponent.showToast(context: context, message: "${phoneVerifyResponse?.mobileOtp}");
+
+        ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response
         await Future.delayed(const Duration(seconds: 4));
         Navigator.pushNamed(context, '/OtpVerify',
