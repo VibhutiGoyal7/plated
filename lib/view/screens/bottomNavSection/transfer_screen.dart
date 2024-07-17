@@ -1,3 +1,4 @@
+import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +11,14 @@ class TransferScreen extends StatefulWidget {
 }
 
 class _TransferScreenState extends State<TransferScreen> {
-  bool inputValid = false;
-  bool isComingSoon = false;
+  bool inputValid = true;
+  bool isComingSoon = true;
   String amount = "0.00";
   final TextEditingController _inputController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+
+  late double screenWidth;
+  late double screenHeight;
 
   final ScrollController _scrollController = ScrollController();
   List<String> _allLogList = [
@@ -26,7 +31,8 @@ class _TransferScreenState extends State<TransferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     DateTime? lastBackPressed;
     return PopScope(
       canPop: true,
@@ -59,20 +65,21 @@ class _TransferScreenState extends State<TransferScreen> {
           child: isComingSoon ? Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   Languages.of(context)!.labelMoneyTransfer,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 Text(
                   Languages.of(context)!.labelEnterAmount,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -85,8 +92,10 @@ class _TransferScreenState extends State<TransferScreen> {
                           controller: _inputController,
                           onChanged: (value) {
                             amount = value;
+                            _checkInputValidation();
                           },
                           maxLength: 12,
+                          textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           onSubmitted: (value) {},
                           decoration: InputDecoration(
@@ -111,6 +120,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   "${Languages.of(context)!.labelBalance}: 7,000 ${Languages.of(context)!.labelINR}",
                   style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
                 ),
+                SizedBox(height: 22,),
                 Container(
                   height: screenHeight * 0.065, // Set the desired height
                   child: ListView.builder(
@@ -167,21 +177,18 @@ class _TransferScreenState extends State<TransferScreen> {
                                   Languages.of(context)!.labelTransferTo,
                                   style: TextStyle(fontSize: 14.0),
                                 ),
-                                Text(
-                                  Languages.of(context)!.labelName,
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
+                                _buildPhoneInput(context, _usernameController)
                               ],
                             ),
                           ),
-                          Padding(
+                         /* Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
                               Languages.of(context)!.labelChange,
                               style: TextStyle(
                                   fontSize: 14.0, color: Colors.blueAccent),
                             ),
-                          ),
+                          ),*/
                         ],
                       ),
                     ),
@@ -212,8 +219,18 @@ class _TransferScreenState extends State<TransferScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 //print(_amountController.text);
+                String user = _usernameController.text;
+                _checkInputValidation();
                 if (inputValid) {
-                  //Navigator.pushNamed(context, '/VerifyIdentityScreen');
+                  if(isNumeric(user)){
+                    InitiateP2PRequest request = InitiateP2PRequest(tpin: "", amount: amount,
+                        receiverUsername: null, receiverPhoneNumber: user);
+                    Navigator.pushNamed(context, '/TransferTPINScreen',arguments: request);
+                  }else{
+                  InitiateP2PRequest request = InitiateP2PRequest(tpin: "", amount: amount,
+                      receiverUsername: _usernameController.text, receiverPhoneNumber: null);
+                  Navigator.pushNamed(context, '/TransferTPINScreen',arguments: request);}
+
                 }
               },
               child: Text(
@@ -231,6 +248,49 @@ class _TransferScreenState extends State<TransferScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _checkInputValidation(){
+    if(_usernameController.text.isNotEmpty && amount.isNotEmpty){
+      inputValid = true;
+    }
+  }
+
+  bool isNumeric(String s) {
+    final numericRegex = RegExp(r'^[0-9]+$');
+    return numericRegex.hasMatch(s);
+  }
+
+  Widget _buildPhoneInput(BuildContext context,
+      TextEditingController nameController) {
+    //nameController.text = widget.data as String;
+    return Container(
+      //height: 60,
+      width: screenWidth*0.8,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Expanded(
+        child: TextField(
+          style: TextStyle(
+            fontSize: 14.0,
+          ),
+          obscureText: false,
+          obscuringCharacter: "*",
+          controller: nameController,
+          onChanged: (value) {
+            _checkInputValidation();
+          },
+          onSubmitted: (value) {},
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.done,
+          decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, style: BorderStyle.solid)),
+            hintText: "Username or phone number",
+            hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
+           // icon: icon,
+          ),
+        ),
       ),
     );
   }

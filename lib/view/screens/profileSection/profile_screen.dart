@@ -5,9 +5,9 @@ import 'package:Payrio/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
-import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -37,6 +37,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoading = true;
   bool isBiometricEnable = false;
 
+  late double screenWidth;
+  late double screenHeight;
+
   static const maxDuration = Duration(seconds: 2);
 
   bool isDataLoading = false;
@@ -50,11 +53,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userName = "";
     imageUrl = "";
     _fetchData();
-    _fetchDataFromPref();
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
         isBiometricEnable = retrievedBiometric ?? false; // Handle null case
-        isLoading = false; // Update loading state
+        //isLoading = false; // Update loading state
       });
     });
     print(Helper.getUserToken());
@@ -83,8 +85,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           await Helper.saveKycStatus(mediaList?.kycStatus);
           print(mediaList?.countryName);
 
+        _fetchDataFromPref();
+
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        _fetchDataFromPref();
         print("Message : ${apiResponse.message}") ;
         if(apiResponse.message== "Invalid access token")
           {SessionExpiredDialog.showDialogBox(context: context);}
@@ -156,6 +161,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
 
     return WillPopScope(
       onWillPop: _onWillPop ,
@@ -175,9 +182,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Stack(
           children: [
             isDataLoading
-                ? Center(
-              child: CircularProgressIndicator(),
-            )
+                ? AbsorbPointer(
+              absorbing: true,
+                  child: Container(/*
+                    color: Colors.black.withOpacity(0.5),*/
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                )
                 : SizedBox(),
             SafeArea(
               child: SingleChildScrollView(
@@ -233,8 +246,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 return child;
                                               } else {
                                                 return Shimmer.fromColors(
-                                                  baseColor: Colors.black54,
-                                                  highlightColor: Colors.black45,
+                                                  baseColor: Colors.white38,
+                                                  highlightColor: Colors.grey,
                                                   child: Container(
                                                     height:60,
                                                     width: 60,
@@ -253,11 +266,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      _buildLabelText(context, customerName.toString()),
+                                      isLoading
+                                          ? Shimmer.fromColors(
+                                              baseColor: Colors.white38,
+                                              highlightColor: Colors.grey,
+                                              child: Container(
+                                                width: 100,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white38,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0), // Adjust the radius as needed
+                                                ),
+                                              ),
+                                            )
+                                          : _buildLabelText(context, customerName.toString()),
                                       Row(
                                         children: [
                                           isLoading
-                                              ? Shimmer.fromColors(
+                                              ? /*Shimmer.fromColors(
                                             baseColor: Colors.white38,
                                             highlightColor: Colors.grey,
                                             child: Container(
@@ -269,7 +297,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     8.0), // Adjust the radius as needed
                                               ),
                                             ),
-                                          )
+                                          )*/
+                                              SizedBox()
                                               : Text(
                                             userName,
                                             style: TextStyle(fontSize: 14.0),
@@ -278,7 +307,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           SizedBox(
                                             width: 4,
                                           ),
-                                          GestureDetector(
+                                          isLoading
+                                              ? SizedBox()
+                                              : GestureDetector(
                                             onTap: () => {
                                               copyTextToClipboard(userName.toString()),
                                               ScaffoldMessenger.of(context).showSnackBar(
@@ -463,6 +494,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
+        _fetchDataFromPref();
         isDataLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -666,7 +698,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  _buildLabelText(context, customerName.toString()),
+                  isLoading
+                      ? Shimmer.fromColors(
+                          baseColor: Colors.white38,
+                          highlightColor: Colors.grey,
+                          child: Container(
+                            width: 100,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: Colors.white38,
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Adjust the radius as needed
+                            ),
+                          ),
+                        )
+                      : _buildLabelText(context, customerName.toString()),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -692,7 +738,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         width: 4,
                       ),
-                      GestureDetector(
+                      isLoading
+                          ? SizedBox()
+                          : GestureDetector(
                         onTap: () => {
                           copyTextToClipboard(userName.toString()),
                           ScaffoldMessenger.of(context).showSnackBar(

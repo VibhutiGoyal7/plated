@@ -1,6 +1,7 @@
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/component/shimmer_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import '../../model/apis/api_response.dart';
 import '../../utils/Helper.dart';
 import '../../utils/Util.dart';
 import '../../view_model/main_view_model.dart';
+import '../component/ShimmerList.dart';
 import '../component/connectivity_service.dart';
 import '../component/session_expired_dialog.dart';
 
@@ -43,6 +45,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   static const maxDuration = Duration(seconds: 2);
 
   bool isLoading = false;
+  bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
@@ -93,6 +96,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       if (!isConnected) {
         setState(() {
           isLoading = false;
+          isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content:
@@ -236,14 +240,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             "Total Balance",
                             style: TextStyle(
                                 fontSize: 12.0, fontWeight: FontWeight.normal),
-                          ),
+                          ),isInternetConnected && !isLoading?
                           Text(
                             "${countryCurrencySymbol}${countryBalance}",
                             style: TextStyle(
                                 fontSize: 32.0,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 2),
-                          ),
+                          ) : ShimmerText(height: 32,width: 100,),
                           SizedBox(
                             height: 20,
                           ),
@@ -261,7 +265,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               topRight: Radius.circular(40))),
                       child: Container(
                         margin: EdgeInsets.only(top: 12),
-                        child: FutureBuilder(
+                        child:isInternetConnected && !isLoading ? FutureBuilder(
                           future: _fetchDataFuture,
                           builder:
                               (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -317,7 +321,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               );
                             }
                           },
-                        ),
+                        ) : Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
+                        child: ShimmerList(),),
                       ),
                     ),
                   ),

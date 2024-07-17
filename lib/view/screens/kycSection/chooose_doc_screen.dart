@@ -78,8 +78,11 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
+
+        print("completed: ${mediaList?.nationalIdImage?.documentType}");
+
+        print("passport ${mediaList?.passportImage?.verificationStatus}");
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          print("completed: ${mediaList?.nationalIdImage?.documentType}");
           setState(() {
             //imageClicked = true;
             nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
@@ -113,10 +116,12 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             isGeoLocAvailable = mediaList?.geolocation?.availableInCountry!=null ?  mediaList?.geolocation?.availableInCountry as bool:false;
 
             isLoading = false;
+
           });
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        print("object");
         if (mediaList?.message == "Invalid access token"){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{

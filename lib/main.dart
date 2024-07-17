@@ -1,3 +1,5 @@
+import 'package:Payrio/model/request/completeP2PRequest.dart';
+import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/screens/add_money_screen.dart';
@@ -13,7 +15,9 @@ import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpin_verify_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transfer_otp_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transfer_tpin_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_access_screen.dart';
@@ -325,6 +329,16 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return ChangeTpinScreen();
+            },
+            '/TransferTPINScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as InitiateP2PRequest?;
+              return TransferTpinScreen(data: args );
+            },
+            '/TransferOtpScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest;
+              return TransferOtpScreen(data: args,);
             }
           }),
     );

@@ -20,6 +20,7 @@ class AddMoneyScreen extends StatefulWidget {
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
   late double screenWidth;
+  late double screenHeight;
   String bankName = "abc bank";
   bool isDarkMode = false;
   String username = "";
@@ -97,6 +98,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -115,8 +117,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       body: Stack(
         children: [
           isLoading?
-          Center(
-            child: CircularProgressIndicator(),
+          Container(
+            height: screenHeight,
+            width: screenWidth,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           ): SizedBox(),
           SafeArea(
             child: Padding(

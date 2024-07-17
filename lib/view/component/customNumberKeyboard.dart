@@ -56,14 +56,18 @@ class CustomNumberKeyboard extends StatelessWidget {
                     size: 32,
                   )),
               _buildKey('0'),
-              IconButton(
-                  onPressed: () {
-                    _onKeyPressed("submit");
-                  },
-                  icon: Icon(
-                    Icons.check_circle_outline_outlined,
-                    size: 38,
-                  )),
+              Container(
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF334a97)),
+                child: IconButton(
+                    onPressed: () {
+                      _onKeyPressed("submit");
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      size: 32,
+                      color: Colors.white,
+                    )),
+              ),
             ],
           ),
         ],

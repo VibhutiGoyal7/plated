@@ -59,6 +59,7 @@ class DocumentData {
   final String? idNumber;
   final String? kycDocsImageUrl;
   final String? pendingReason;
+  final String? displayName;
   final bool? availableInCountry;
 
   DocumentData({
@@ -70,6 +71,7 @@ class DocumentData {
     this.idNumber,
     this.kycDocsImageUrl,
     this.pendingReason,
+    this.displayName,
     this.availableInCountry
   });
 
@@ -83,7 +85,8 @@ class DocumentData {
       idNumber: json['id_number'] as String?,
         pendingReason: json['pending_reason'] as String?,
         availableInCountry: json['available_in_your_country'] as bool?,
-      kycDocsImageUrl: json['kyc_attachment_url'] as String?
+      kycDocsImageUrl: json['kyc_attachment_url'] as String?,
+      displayName: json['display_name'] as String?
     );
   }
 }

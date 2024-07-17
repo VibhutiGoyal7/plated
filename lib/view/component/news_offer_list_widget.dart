@@ -1,20 +1,23 @@
+import 'package:Payrio/view/component/shimmer_box.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/response/offersResponse.dart';
 
 class NewsOfferListWidget extends StatelessWidget {
   late final List<OfferResponse> data;
+  late final bool isInternetConnected;
+  late final bool isLoading;
 
 
   //NewsOfferListWidget(ScrollController scrollController);
 
-  NewsOfferListWidget({required this.data});
+  NewsOfferListWidget({required this.data,required this.isInternetConnected,required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    return Container(
+    return isInternetConnected && !isLoading ? Container(
       width: screenWidth,
       height: 130,
       child: ListView.builder(
@@ -95,7 +98,7 @@ class NewsOfferListWidget extends StatelessWidget {
           );
           // I omit the part to build card items from the list
         },
-      ),
-    );
+      ) ,
+    ): ShimmerBoxes();
   }
 }

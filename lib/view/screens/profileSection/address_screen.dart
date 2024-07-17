@@ -260,7 +260,7 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
   Future<ProfileResponse?> _fetchData() async {
-    await Future.delayed(Duration(milliseconds: 2));
+    //await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {

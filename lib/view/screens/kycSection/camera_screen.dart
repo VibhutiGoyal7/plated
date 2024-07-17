@@ -290,6 +290,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
         frontImg = File(pictures.first);
         print("Front Image: $frontImg");
         frontImageClicked = true;
+        isDataAvailable();
       });
     } catch (exception) {
       // Handle exception here
@@ -305,6 +306,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
         backImg = File(pictures.first);
         print("Back Image: $backImg");
         backImgClicked = true;
+        isDataAvailable();
       });
     } catch (exception) {
       // Handle exception here
@@ -339,6 +341,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
+                isDataAvailable();
                 if(isInputValid){
                   setState(() {
                     isLoading = true;
@@ -381,7 +384,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
               },
               child: Text(
                 "Submit",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color:isInputValid ? Colors.white : Colors.blueAccent),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 10.0),

@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/createOtpChangePass.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/exustingUserRequest.dart';
 import 'package:Payrio/model/request/generateOtpTpinChange.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
+import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
@@ -16,6 +18,7 @@ import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/GenerateOtpTPINChangeResponse.dart';
+import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
@@ -23,6 +26,7 @@ import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/existingUserResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/generateTpinResponse.dart';
+import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
@@ -280,6 +284,31 @@ class MainRepository {
     final jsonData = response;
     print(jsonData);
     return response;
+  }
+  Future<dynamic> initiateP2PTransaction(
+      String value, InitiateP2PRequest initiateP2PRequest) async {
+    print(initiateP2PRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, initiateP2PRequest);
+    print(value);
+    final jsonData = response;
+    InitiateP2PResponse mediaList =
+    InitiateP2PResponse.fromJson(jsonData);
+    print(jsonData);
+    return mediaList;
+  }
+
+  Future<dynamic> completeP2PTransaction(
+      String value, CompleteP2PRequest completeP2PRequest) async {
+    print(completeP2PRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, completeP2PRequest);
+    print(value);
+    final jsonData = response;
+    CompleteP2PResponse mediaList =
+    CompleteP2PResponse.fromJson(jsonData);
+    print(jsonData);
+    return mediaList;
   }
 
   Future<DashboardResponse> dashboardData(String value) async {

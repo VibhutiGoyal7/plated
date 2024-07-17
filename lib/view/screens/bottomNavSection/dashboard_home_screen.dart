@@ -533,7 +533,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         SizedBox(
                           height: 15,
                         ),
-                        NewsOfferListWidget(data: imgList),
+                        NewsOfferListWidget(data: imgList, isInternetConnected : isInternetConnected, isLoading: isLoading,),
                         SizedBox(
                           height: 20,
                         ),
@@ -583,7 +583,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
                           child: Container(
                             margin: EdgeInsets.only(top: 8, left: 8, right: 8),
-                            child:isInternetConnected? ListView.builder(
+                            child:isInternetConnected && !isLoading? ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               controller: _scrollController,
                               itemCount: transactionList.length ,
@@ -946,7 +946,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus != "verified") {
+    if (kycStatus == "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
     } else {
       _fetchKycStatus();

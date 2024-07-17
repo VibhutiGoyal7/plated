@@ -3,14 +3,17 @@ import 'dart:io';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
+import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
+import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
@@ -21,6 +24,7 @@ import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
+import '../model/request/completeP2PRequest.dart';
 import '../model/request/createOtpChangePass.dart';
 import '../model/request/createOtpEmailVerifyRequest.dart';
 import '../model/request/exustingUserRequest.dart';
@@ -413,14 +417,14 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + fetchKycDocResponse.message.toString());
 
       // _apiResponse = ApiResponse.completed(fetchKycDocResponse);
-      if (fetchKycDocResponse.passportImage != null) {
+      if (fetchKycDocResponse.videoClipUrl?.userId != null) {
         _apiResponse = ApiResponse.completed(fetchKycDocResponse);
       } else {
         _apiResponse = ApiResponse.error(fetchKycDocResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
+      print("error ${e}");
     }
     notifyListeners();
   }
@@ -524,6 +528,48 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("TPIN change : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> initiateP2PTransaction(
+      String value, InitiateP2PRequest initiateP2PRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess  ${initiateP2PRequest.tpin}");
+    notifyListeners();
+    try {
+      InitiateP2PResponse initiateP2PResponse = await MainRepository()
+          .initiateP2PTransaction(value, initiateP2PRequest);
+      if (initiateP2PResponse != null &&
+          initiateP2PResponse.otp != null) {
+        _apiResponse = ApiResponse.completed(initiateP2PResponse);
+      } else {
+        _apiResponse = ApiResponse.error(initiateP2PResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> completeP2PTransaction(
+      String value, CompleteP2PRequest completeP2PRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess  ${completeP2PRequest.otp}");
+    notifyListeners();
+    try {
+      CompleteP2PResponse completeP2PResponse = await MainRepository()
+          .completeP2PTransaction(value, completeP2PRequest);
+      if (completeP2PResponse != null &&
+          completeP2PResponse.status != null) {
+        _apiResponse = ApiResponse.completed(completeP2PResponse);
+      } else {
+        _apiResponse = ApiResponse.error(completeP2PResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
     }
     notifyListeners();
   }
