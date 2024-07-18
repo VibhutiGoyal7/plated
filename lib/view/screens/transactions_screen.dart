@@ -44,7 +44,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Future<void>? _fetchDataFuture;
   static const maxDuration = Duration(seconds: 2);
 
-  bool isLoading = false;
+  bool isLoading = true;
   bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
 
@@ -88,9 +88,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       int pageKey, bool filterApplied, bool isScroll) async {
     print("Fetch Data");
     try {
-      setState(() {
+      /*setState(() {
         isLoading = true;
-      });
+      });*/
 
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
@@ -470,9 +470,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       requestType = "";
                       filterApplied = false;
                       Navigator.pop(context);
+                      isLoading = true;
                     });
                     _fetchDataFuture =
                         _fetchData(_currentPage, filterApplied, false);
+                    Navigator.pop(context);
                   },
                   child: Text(
                     "Clear All",
@@ -496,9 +498,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     setState(() {
                       filterApplied = true;
                       _currentPage = 1;
+                      isLoading = true;
                     });
                     _fetchDataFuture =
                         _fetchData(_currentPage, filterApplied, false);
+                    Navigator.pop(context);
                   },
                   child: Text(
                     "Apply",

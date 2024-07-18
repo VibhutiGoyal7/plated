@@ -181,8 +181,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         print("rwrwr ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;
         isLoading = false;
-        if (kycStatus != "verified") {
+        if (kycStatusApi != "verified") {
           Navigator.pushNamed(context, '/VerifyIdentityScreen').then(onGoBack);
+        }else if (kycStatusApi == "verified") {
+          Navigator.pushNamed(context, '/PaymentMethodScreen');
         }
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -946,11 +948,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Future<void> _getKycStatus() async {
     kycStatus = (await Helper.getKycStatus())!;
-    if (kycStatus == "verified") {
+    /*if (kycStatus == "verified") {
       Navigator.pushNamed(context, '/PaymentMethodScreen');
-    } else {
+    } else {*/
       _fetchKycStatus();
-    }
+    // }
   }
 
   void _fetchKycStatus() async {
