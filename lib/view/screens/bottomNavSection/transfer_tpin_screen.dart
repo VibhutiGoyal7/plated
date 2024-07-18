@@ -2,6 +2,7 @@ import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transfer_otp_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +104,11 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
               context: context, message: message);
         }
         CompleteP2PRequest data = CompleteP2PRequest(paymentTransactionId: initiateP2PResponse?.paymentTransactionId,
-            customerOtpId: initiateP2PResponse?.customerOtpId);
+            customerOtpId: initiateP2PResponse?.customerOtpId,amount: widget.data?.amount,
+            receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber);
+
+        InitiateP2PRequest data1 = InitiateP2PRequest(tpin: '', amount: widget.data?.amount,
+          receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,);
 
         Navigator.pushNamed(context, '/TransferOtpScreen', arguments: data);
         // Navigate to the new screen after receiving the response

@@ -327,7 +327,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     return GestureDetector(
       onTap: () async {
         if (verificationStatus == "Pending" ||
-            verificationStatus == "In Progress") {
+            verificationStatus == "Rejected") {
           if (await checkPermissionStatus()) {
             Navigator.pushReplacementNamed(context, route,
                 arguments: "${data}");

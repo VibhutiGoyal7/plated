@@ -1,23 +1,20 @@
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/response/completeP2PResponse.dart';
-import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/signInWithPhoneNumber.dart';
-import '../../../model/response/otpVerifyResponse.dart';
 import '../../../model/response/phoneVerifyResponse.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 import '../../component/toastMessage.dart';
 
 class TransferOtpScreen extends StatefulWidget {
-  final CompleteP2PRequest data; // Define the 'data' parameter here
+  final CompleteP2PRequest data;// Define the 'data' parameter here
 
   TransferOtpScreen({Key? key, required this.data}) : super(key: key);
 
@@ -91,7 +88,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         print("Complete Transaction ${completeP2PResponse?.amount}");
 
         ToastComponent.showToast(context: context, message: message);
-        Navigator.pushReplacementNamed(context, '/TransferScreen');
+        Navigator.pushReplacementNamed(context, '/BottomNav');
 
         return Container();
       case Status.ERROR:
@@ -165,28 +162,26 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               children: <Widget>[
                 Container(
                   width: screenWidth*0.95,
-                  //height: screenHeight * 0.15,
                   margin: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
-                  child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
+                  child:
                   Column(
                     children: [
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("To:"),
-                          //widget.data?.receiverPhoneNumber != null ?
-                          Text("2334"/*${widget.data?.receiverPhoneNumber}*/)
-                         // :Text("${widget.data?.receiverUsername}"),
+                          widget.data.receiverPhoneNumber != null ?
+                          Text("${widget.data.receiverPhoneNumber}")
+                          :Text("${widget.data.receiverUsername}"),
                         ],
                       ),
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Sending:"),
-                          Text("1000"/*${widget.data?.amount}*/),
+                          Text("${widget.data.amount}"),
                         ],
                       ),
                     ],
-                  )
-                  ,
+                  ),
                   alignment: AlignmentDirectional.center,
                 ),
                 Expanded(
@@ -309,7 +304,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   Widget _buildFooter(BuildContext context) {
     return Column(
       children: [
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
           child: Text(
             Languages.of(context)!.labelTandC,
@@ -319,7 +314,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               color: Colors.grey[400],
             ),
           ),
-        ),
+        ),*/
         SizedBox(
           width: screenWidth * 0.7,
           child: ElevatedButton(
