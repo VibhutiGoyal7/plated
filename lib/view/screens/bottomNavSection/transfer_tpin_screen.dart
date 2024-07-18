@@ -216,7 +216,6 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -227,7 +226,6 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     setState(() {
       isLoading = true;
     });
-
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
@@ -246,7 +244,6 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
           .initiateP2PTransaction(
           "/api/v1/app/payment_transactions/initiate_p2p_transaction",
           request);
-
       ApiResponse apiResponse =
           Provider.of<MainViewModel>(context, listen: false)
               .response;

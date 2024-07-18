@@ -91,7 +91,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         print("Complete Transaction ${completeP2PResponse?.amount}");
 
         ToastComponent.showToast(context: context, message: message);
-        Navigator.pushReplacementNamed(context, '/SetUpAccount');
+        Navigator.pushReplacementNamed(context, '/TransferScreen');
 
         return Container();
       case Status.ERROR:

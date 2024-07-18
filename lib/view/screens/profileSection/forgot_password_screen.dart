@@ -1,4 +1,6 @@
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
+import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -85,6 +87,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         print("response: ${apiResponse.message}");
         print("data: ${apiResponse?.data}");
         print("otp ${mediaList?.mobileOtp}");
+
+        ToastComponent.showToast(context: context, message: mediaList?.mobileOtp);
 
         setState(() {
           isOtpBoxVisible = true;
@@ -347,7 +351,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   obscuringCharacter: "*",
                   controller: nameController,
                   textAlignVertical: TextAlignVertical.center,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    isInputValid();
+                  },
                   onSubmitted: (value) {},
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.done,
@@ -420,6 +426,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               style: TextStyle(fontSize: 18),
               onChanged: (value) {
                 _handleOnChange(index, value);
+                isInputValid();
               },
             ),
           ),
@@ -428,90 +435,98 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
+  void isInputValid(){
+    String otp =
+    _controllers.map((controller) => controller.text).join();
+    if (otp.isNotEmpty && otp.length ==6 && _newPasswordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty &&
+        _newPasswordController.text == _confirmPasswordController.text && _newPasswordController.text.length>=8) {
+      isValid = true;
+    }else{
+      isValid = false;
+    }
+  }
+
 
   Widget _buildSubmitButton() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: ElevatedButton(
-        onPressed: ()async {
-          String otp =
-          _controllers.map((controller) => controller.text).join();
-          if (otp.isNotEmpty && _newPasswordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty &&
-              _newPasswordController.text == _confirmPasswordController.text && _newPasswordController.text.length>=8) {
-            setState(() {
-              isLoading = true;
-            });
+      child: SizedBox(
+        width:  screenWidth * 0.7,
+        child: ElevatedButton(
+          onPressed: ()async {
+            String otp =
+            _controllers.map((controller) => controller.text).join();
+            isInputValid();
+            if (otp.isNotEmpty && _newPasswordController.text.isNotEmpty && _confirmPasswordController.text.isNotEmpty &&
+                _newPasswordController.text == _confirmPasswordController.text && _newPasswordController.text.length>=8) {
 
-            bool isConnected = await _connectivityService.isConnected();
-            if (!isConnected) {
               setState(() {
-                isLoading = false;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('No internet connection'),
-                    duration: maxDuration,
-                  ),
-                );
+                isLoading = true;
               });
-            } else {
-              print(_phoneNumberController.text);
 
-              VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
-                  customer: CustomerVerifyOtpPass(
-                      phoneNumber: _phoneNumberController.text,
-                      password: _newPasswordController.text,
-                      mobileOtp: otp));
+              bool isConnected = await _connectivityService.isConnected();
+              if (!isConnected) {
+                setState(() {
+                  isLoading = false;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('No internet connection'),
+                      duration: maxDuration,
+                    ),
+                  );
+                });
+              } else {
+                print(_phoneNumberController.text);
 
-              await Provider.of<MainViewModel>(context, listen: false)
-                  .VerifyOtpChangePass(
-                      "/api/v1/app/customers/verify_otp_and_change_password",
-                      request);
-              ApiResponse apiResponse =
-                  Provider.of<MainViewModel>(context, listen: false).response;
-              verifyOtpGetWidget(context, apiResponse);
+                VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
+                    customer: CustomerVerifyOtpPass(
+                        phoneNumber: _phoneNumberController.text,
+                        password: _newPasswordController.text,
+                        mobileOtp: otp));
+
+                await Provider.of<MainViewModel>(context, listen: false)
+                    .VerifyOtpChangePass(
+                        "/api/v1/app/customers/verify_otp_and_change_password",
+                        request);
+                ApiResponse apiResponse =
+                    Provider.of<MainViewModel>(context, listen: false).response;
+                verifyOtpGetWidget(context, apiResponse);
+              }
+            }else if(_newPasswordController.text.length < 8){
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Password should have 8 or more characters.'),
+                  duration: maxDuration,
+                ),
+              );
+
+            }else if(_newPasswordController.text != _confirmPasswordController.text){
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Password doesn't match"),
+                  duration: maxDuration,
+                ),
+              );
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Please fill the details"),
+                  duration: maxDuration,
+                ),
+              );
             }
-          }else if(_newPasswordController.text.length < 8){
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Password should have 8 or more characters.'),
-                duration: maxDuration,
-              ),
-            );
-
-          }else if(_newPasswordController.text != _confirmPasswordController.text){
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Password doesn't match"),
-                duration: maxDuration,
-              ),
-            );
-          }else{
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Please fill the details"),
-                duration: maxDuration,
-              ),
-            );
-          }
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-        ),
-        child: Container(
-          width: double.infinity,
+          },
           child: Text(
-            Languages.of(context)!.labelSubmit,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
+            Languages.of(context)!.labelValidate,
+            style:
+            TextStyle(color: isValid ? Colors.white : Colors.blueAccent),
           ),
+          style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              backgroundColor: isValid ? AppColor.PRIMARY : Colors.white,
+              elevation: 3,
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(2))),
         ),
       ),
     );

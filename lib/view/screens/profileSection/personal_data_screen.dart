@@ -476,6 +476,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   }
 
   Future<void> _fetchDocData() async {
+    setState(() {
+      isLoading = true;
+    });
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
@@ -513,12 +516,15 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
+
               shape: Border.all(),
               scrollable: false,
               insetPadding: EdgeInsets.all(0),
               contentPadding: EdgeInsets.symmetric(horizontal: 0  , vertical: 0),
                 content:
                 Container(
+                  height:  MediaQuery.of(context).size.height * 0.75,
+                width: MediaQuery.of(context).size.width,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -537,10 +543,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                     return child;
                                   } else {
                                     return Shimmer.fromColors(
-                                      baseColor: Colors.black45,
-                                      highlightColor: Colors.black87,
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
                                       child: Container(
-                                        height: MediaQuery.of(context).size.height * 0.5,
+                                        height: MediaQuery.of(context).size.height * 0.75,
+                                        width: MediaQuery.of(context).size.width,
                                         color: Colors.grey,
                                       ),
                                     );

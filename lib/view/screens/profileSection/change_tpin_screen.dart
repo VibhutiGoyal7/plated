@@ -236,7 +236,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16.0),
-                  backgroundColor: isValid ? Colors.blueAccent : Colors.white,
+                  backgroundColor: isValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),

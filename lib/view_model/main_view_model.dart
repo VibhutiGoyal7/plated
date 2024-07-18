@@ -309,7 +309,7 @@ class MainViewModel with ChangeNotifier {
           .VerifyOtpChangePass(value, verifyOtChangePassRequest);
 
       //_apiResponse = ApiResponse.completed(response);
-      if (response.mobileOtp != null) {
+      if (response != null) {
         _apiResponse = ApiResponse.completed(response);
       } else {
         _apiResponse = ApiResponse.error(response.message);
@@ -350,9 +350,9 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      GenerateTpinResponse generateTpinResponse = await MainRepository().VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
-      print("generateTpinResponse ::: ${generateTpinResponse.message}");
-      if (generateTpinResponse.tpin != null) {
+      final response = await MainRepository().VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
+      print("generateTpinResponse ::: ${response.message}");
+      if (response != null) {
         _apiResponse = ApiResponse.completed(response);
       } else {
         _apiResponse = ApiResponse.error(response.message);
