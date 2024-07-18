@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerList extends StatelessWidget {
+  late int itemCount;
+  ShimmerList({required this.itemCount});
+
   @override
   Widget build(BuildContext context) {
     return  ListView.builder(
-        itemCount: 2, // Adjust the count based on your needs
+        itemCount: itemCount, // Adjust the count based on your needs
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,

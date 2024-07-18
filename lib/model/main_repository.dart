@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:Payrio/model/request/checkCustomerRequest.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/createOtpChangePass.dart';
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
@@ -295,6 +296,19 @@ class MainRepository {
     InitiateP2PResponse mediaList =
     InitiateP2PResponse.fromJson(jsonData);
     print(jsonData);
+    return mediaList;
+  }
+
+  Future<dynamic> checkCustomerByUsername(
+      String value, CheckCustomerRequest checkCustomerRequest) async {
+    print(checkCustomerRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, checkCustomerRequest);
+    print(value);
+    final jsonData = response;
+    print("jsonData::: ${jsonData}");
+    CreateOtpChangePassResponse? mediaList = CreateOtpChangePassResponse.fromJson(jsonData);
+    print("mediaList:: ${mediaList}");
     return mediaList;
   }
 

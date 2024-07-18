@@ -580,13 +580,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
                         Expanded(
                           //height: screenSize.height/2,
-
                           child: Container(
                             margin: EdgeInsets.only(top: 8, left: 8, right: 8),
                             child:isInternetConnected && !isLoading? ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               controller: _scrollController,
-                              itemCount: transactionList.length ,
+                              itemCount: transactionList.length > 0 ? 3 : 0,
                               shrinkWrap: true,
                               padding: const EdgeInsets.only(bottom: 10),
                               itemBuilder: (BuildContext context, int index) {
@@ -676,7 +675,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 );
                                 // I omit the part to build card items from the list
                               },
-                            ): ShimmerList(),
+                            ): ShimmerList(itemCount: 2),
                           ),
                         ),
                       ]),
@@ -1003,14 +1002,17 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         );
       });
     }else {
-      await Future.delayed(Duration(milliseconds: 2));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .dashboardData("/api/v1/app/customers/dashboard_data");
-      ApiResponse apiResponse =
-          Provider
-              .of<MainViewModel>(context, listen: false)
-              .response;
-      getDashboardData(context, apiResponse);
+      if(mounted)
+        {
+          await Future.delayed(Duration(milliseconds: 2));
+          await Provider.of<MainViewModel>(context, listen: false)
+              .dashboardData("/api/v1/app/customers/dashboard_data");
+          ApiResponse apiResponse =
+              Provider
+                  .of<MainViewModel>(context, listen: false)
+                  .response;
+          getDashboardData(context, apiResponse);
+        }
     }
   }
 }

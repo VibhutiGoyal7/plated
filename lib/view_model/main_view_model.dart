@@ -24,6 +24,7 @@ import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
+import '../model/request/checkCustomerRequest.dart';
 import '../model/request/completeP2PRequest.dart';
 import '../model/request/createOtpChangePass.dart';
 import '../model/request/createOtpEmailVerifyRequest.dart';
@@ -286,7 +287,7 @@ class MainViewModel with ChangeNotifier {
       CreateOtpChangePassResponse createOtpChangePassResponse =
           await MainRepository()
               .CreateOtpChangePass(value, createOtpChangePassRequest);
-      print("Yess" + createOtpChangePassResponse.mobileOtp);
+      print("Yess" + "${createOtpChangePassResponse.mobileOtp}");
 
       if (createOtpChangePassResponse.mobileOtp != null) {
         _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
@@ -549,6 +550,32 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> checkCustomerByUsername(
+      String value, CheckCustomerRequest checkCustomerRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess  ${checkCustomerRequest.username}");
+    notifyListeners();
+    try {
+      CreateOtpChangePassResponse createOtpChangePassResponse =
+      await MainRepository()
+          .checkCustomerByUsername(value, checkCustomerRequest);
+      print("Yess" + "${createOtpChangePassResponse.message}");
+
+      if (createOtpChangePassResponse.mobileOtp != null) {
+        _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
+      } else if("${createOtpChangePassResponse.message}" == "Customer found successfully"){
+        _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
+      }
+      else{
+        _apiResponse = ApiResponse.error(createOtpChangePassResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
     }
     notifyListeners();
   }

@@ -1,21 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+
 import '../../../utils/Helper.dart';
 import 'dashboard_home_screen.dart';
 
 class BottomNav extends StatefulWidget {
+
   @override
   _BottomNavState createState() => _BottomNavState();
 }
 
-class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMixin {
+class _BottomNavState extends State<BottomNav>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometric = false;
@@ -27,7 +29,7 @@ class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMix
 
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
-    TransferScreen(),
+    TransferScreen(username: "",),
     PaymentScreen(),
     RewardScreen(),
     ScanQrScreen(),
@@ -59,16 +61,19 @@ class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMix
       _selectedIndex = index;
     });
     _animationController.forward(from: 0.0);
-
   }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
-        child:_selectedIndex!=0? ScaleTransition(scale : _animation,
-            child: _widgetOptions.elementAt(_selectedIndex)): _widgetOptions.elementAt(_selectedIndex),
+        child: _selectedIndex != 0
+            ? ScaleTransition(
+                scale: _animation,
+                child: _widgetOptions.elementAt(_selectedIndex))
+            : _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
       floatingActionButton: FloatingActionButton(
@@ -97,7 +102,9 @@ class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMix
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: () => {_onItemTapped(0)},
+              onTap: () => {
+                _onItemTapped(0)
+              },
               child: Row(
                 children: [
                   SizedBox(width: 14),
@@ -197,7 +204,8 @@ class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMix
       if (!mounted) return;
 
       setState(() {
-        _canCheckBiometric = canCheckBiometric! && availableBiometric.isNotEmpty;
+        _canCheckBiometric =
+            canCheckBiometric! && availableBiometric.isNotEmpty;
       });
 
       if (_canCheckBiometric && !_authenticationAttempted) {
@@ -240,5 +248,4 @@ class _BottomNavState extends State<BottomNav> with SingleTickerProviderStateMix
       SystemNavigator.pop(); // This will close the app
     }
   }
-
 }

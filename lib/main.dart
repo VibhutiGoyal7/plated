@@ -308,7 +308,7 @@ class _MyAppState extends State<MyApp> {
             '/TransferScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return TransferScreen();
+              return TransferScreen(username: args,);
             },
             '/WithdrawScreen': (context) {
               final args =

@@ -1,11 +1,17 @@
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../utils/Helper.dart';
 
 class TransferScreen extends StatefulWidget {
+  final String? username;
+
+  TransferScreen({required this.username});
+
   @override
   _TransferScreenState createState() => _TransferScreenState();
 }
@@ -14,6 +20,9 @@ class _TransferScreenState extends State<TransferScreen> {
   bool inputValid = true;
   bool isComingSoon = true;
   String amount = "0.00";
+  var userName;
+  var countryCurrencySymbol;
+  var countryBalance;
   final TextEditingController _inputController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
 
@@ -21,13 +30,24 @@ class _TransferScreenState extends State<TransferScreen> {
   late double screenHeight;
 
   final ScrollController _scrollController = ScrollController();
-  List<String> _allLogList = [
-    "100",
-    "200",
-    "300",
-    "400",
-    "500"
-  ];
+  List<String> _allLogList = ["100", "200", "300", "400", "500"];
+  @override
+  void initState() {
+    super.initState();
+    inputValid = false;
+    userName = widget.username;
+    print("object ${userName}");
+    if(userName != null)
+      {
+        _usernameController.text = userName;
+      }
+    Helper.getProfileDetails().then((profile) {
+      setState(() {
+        countryCurrencySymbol = profile?.countryCurrencySymbol;
+        countryBalance = profile?.balance;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,172 +57,159 @@ class _TransferScreenState extends State<TransferScreen> {
     return PopScope(
       canPop: true,
       onPopInvoked: (bool didPop) {
-        if (kDebugMode) {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Press back again to exit'),
-                duration: maxDuration,
-              ),
-            );
-            SystemNavigator.pop();
-            //return Future.value(false);
-          } else {
-            SystemNavigator.pop();
-          }
-          // return Future.value(true);
-        }
+        Navigator.pop(context);
       },
-      child: Scaffold(
-        body: SafeArea(
-          child: isComingSoon ? Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Languages.of(context)!.labelMoneyTransfer,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Text(
-                  Languages.of(context)!.labelEnterAmount,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextField(
-                          style: TextStyle(
-                            fontSize: 26.0,
-                          ),
-                          controller: _inputController,
-                          onChanged: (value) {
-                            amount = value;
-                            _checkInputValidation();
-                          },
-                          maxLength: 12,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
-                          onSubmitted: (value) {},
-                          decoration: InputDecoration(
-                            counterText: "",
-                            border: InputBorder.none,
-                            hintText: Languages.of(context)?.labelZero,
+      child: GestureDetector(
+        onTap: () => hideKeyBoard(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: SafeArea(
+            child: isComingSoon
+                ? Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      //crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            Languages.of(context)!.labelMoneyTransfer,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 24.0),
                           ),
                         ),
-                      ),
-                    ),
-                    /*Text(
-                      Languages.of(context)!.labelINR,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-                    ),*/
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  "${Languages.of(context)!.labelBalance}: 7,000 ${Languages.of(context)!.labelINR}",
-                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
-                ),
-                SizedBox(height: 22,),
-                Container(
-                  height: screenHeight * 0.065, // Set the desired height
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    controller: _scrollController,
-                    itemCount: _allLogList.length,
-                    padding: const EdgeInsets.only(bottom: 10),
-                    // Adjust padding if needed
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _inputController.text = _allLogList[index];
-                          });
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width *
-                              0.18, // Adjust width as needed
-                          margin: EdgeInsets.all(4),
-                          child: Card(
-                            child: Center(
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              Languages.of(context)!.labelTransferTo,
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _buildPhoneInput(
+                            context, _usernameController),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              Languages.of(context)!.labelEnterAmount,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal, fontSize: 14.0),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
                               child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  _allLogList[index],
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextField(
+                                  style: TextStyle(
+                                    fontSize: 34.0,
+                                  ),
+                                  controller: _inputController,
+                                  onChanged: (value) {
+                                    amount = value;
+                                    _checkInputValidation();
+                                  },
+                                  maxLength: 12,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 12),
+                                  keyboardType: TextInputType.number,
+                                  onSubmitted: (value) {},
+                                  decoration: InputDecoration(
+                                    counterText: "",
+                                    border: InputBorder.none,
+                                    hintText: Languages.of(context)?.labelZero,
+                                  ),
                                 ),
                               ),
                             ),
+                            /*Text(
+                        Languages.of(context)!.labelINR,
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                      ),*/
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        countryCurrencySymbol != null
+                            ? Text(
+                                "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${countryBalance}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 14.0),
+                              )
+                            : Text(""),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height:
+                              screenHeight * 0.065, // Set the desired height
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            controller: _scrollController,
+                            itemCount: _allLogList.length,
+                            padding: const EdgeInsets.only(bottom: 10),
+                            // Adjust padding if needed
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _inputController.text = _allLogList[index];
+                                  });
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width *
+                                      0.16, // Adjust width as needed
+                                  margin: EdgeInsets.all(4),
+                                  child: Card(
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          _allLogList[index],
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 10),
-                Spacer(),
-                Card(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  Languages.of(context)!.labelTransferTo,
-                                  style: TextStyle(fontSize: 14.0),
-                                ),
-                                _buildPhoneInput(context, _usernameController)
-                              ],
-                            ),
-                          ),
-                         /* Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              Languages.of(context)!.labelChange,
-                              style: TextStyle(
-                                  fontSize: 14.0, color: Colors.blueAccent),
-                            ),
-                          ),*/
-                        ],
-                      ),
+                        Spacer(),
+                        _buildFooter(context),
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      Languages.of(context)!.labelComingSoon,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
-                _buildFooter(context),
-                SizedBox(height: 10)
-              ],
-            ),
-          ) : Center(
-            child: Text(Languages.of(context)!.labelComingSoon, style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold
-            ),),
           ),
         ),
       ),
@@ -211,7 +218,7 @@ class _TransferScreenState extends State<TransferScreen> {
 
   Widget _buildFooter(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         children: [
           SizedBox(
@@ -222,15 +229,23 @@ class _TransferScreenState extends State<TransferScreen> {
                 String user = _usernameController.text;
                 _checkInputValidation();
                 if (inputValid) {
-                  if(isNumeric(user)){
-                    InitiateP2PRequest request = InitiateP2PRequest(tpin: "", amount: amount,
-                        receiverUsername: null, receiverPhoneNumber: user);
-                    Navigator.pushNamed(context, '/TransferTPINScreen',arguments: request);
-                  }else{
-                  InitiateP2PRequest request = InitiateP2PRequest(tpin: "", amount: amount,
-                      receiverUsername: _usernameController.text, receiverPhoneNumber: null);
-                  Navigator.pushNamed(context, '/TransferTPINScreen',arguments: request);}
-
+                  if (isNumeric(user)) {
+                    InitiateP2PRequest request = InitiateP2PRequest(
+                        tpin: "",
+                        amount: amount,
+                        receiverUsername: null,
+                        receiverPhoneNumber: user);
+                    Navigator.pushNamed(context, '/TransferTPINScreen',
+                        arguments: request);
+                  } else {
+                    InitiateP2PRequest request = InitiateP2PRequest(
+                        tpin: "",
+                        amount: amount,
+                        receiverUsername: _usernameController.text,
+                        receiverPhoneNumber: null);
+                    Navigator.pushNamed(context, '/TransferTPINScreen',
+                        arguments: request);
+                  }
                 }
               },
               child: Text(
@@ -252,8 +267,8 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  void _checkInputValidation(){
-    if(_usernameController.text.isNotEmpty && amount.isNotEmpty){
+  void _checkInputValidation() {
+    if (_usernameController.text.isNotEmpty && amount.isNotEmpty) {
       inputValid = true;
     }
   }
@@ -263,33 +278,34 @@ class _TransferScreenState extends State<TransferScreen> {
     return numericRegex.hasMatch(s);
   }
 
-  Widget _buildPhoneInput(BuildContext context,
-      TextEditingController nameController) {
+  Widget _buildPhoneInput(
+      BuildContext context, TextEditingController nameController) {
     //nameController.text = widget.data as String;
     return Container(
-      //height: 60,
-      width: screenWidth*0.8,
+      alignment: Alignment.center,
+      width: screenWidth,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: Expanded(
-        child: TextField(
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-          obscureText: false,
-          obscuringCharacter: "*",
-          controller: nameController,
-          onChanged: (value) {
-            _checkInputValidation();
-          },
-          onSubmitted: (value) {},
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.done,
-          decoration: InputDecoration(
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, style: BorderStyle.solid)),
-            hintText: "Username or phone number",
-            hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
-           // icon: icon,
-          ),
+      child: TextField(
+        style: TextStyle(
+          fontSize: 14.0,
+        ),
+        obscureText: false,
+        obscuringCharacter: "*",
+        controller: nameController,
+        onChanged: (value) {
+          _checkInputValidation();
+        },
+        onSubmitted: (value) {},
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+              borderSide:
+                  BorderSide(color: Colors.black, style: BorderStyle.solid)),
+          hintText: "Username or phone number",
+          hintStyle:
+              TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
+           icon: Icon(Icons.perm_contact_cal),
         ),
       ),
     );

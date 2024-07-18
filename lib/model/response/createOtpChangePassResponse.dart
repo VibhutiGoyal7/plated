@@ -1,8 +1,8 @@
 
 
 class CreateOtpChangePassResponse {
-  String mobileOtp;
-  String message;
+  String? mobileOtp;
+  String? message;
 
   CreateOtpChangePassResponse({
     required this.mobileOtp,
@@ -11,8 +11,9 @@ class CreateOtpChangePassResponse {
 
   factory CreateOtpChangePassResponse.fromJson(Map<String, dynamic> json) {
     return CreateOtpChangePassResponse(
-      mobileOtp: json['data']?["mobile_otp"] as String,
-      message: json["message"] as String,
+      message: json["message"] as String?,
+      mobileOtp: json['data']?["mobile_otp"] as String?,
+
     );
   }
 }

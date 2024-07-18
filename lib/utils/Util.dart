@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 String capitalizeFirstLetter(String input) {
@@ -22,4 +23,9 @@ String convertDateFormat(String input) {
   String formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
 
   return formattedDate;
+}
+
+
+void hideKeyBoard(){
+  FocusManager.instance.primaryFocus?.unfocus();
 }

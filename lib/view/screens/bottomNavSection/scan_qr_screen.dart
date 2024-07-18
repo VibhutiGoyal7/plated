@@ -1,9 +1,17 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:Payrio/model/request/checkCustomerRequest.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../../../model/apis/api_response.dart';
+import '../../../model/response/createOtpChangePassResponse.dart';
+import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/toastMessage.dart';
 
 class ScanQrScreen extends StatefulWidget {
   @override
@@ -15,6 +23,10 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   var flashLightOff = "true";
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -35,87 +47,6 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         child: Column(
           children: <Widget>[
             Expanded(flex: 4, child: _buildQrView(context)),
-            /*    Expanded(
-              flex: 1,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    if (result != null)
-                      Text(
-                          'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                    else
-                      const Text('Scan a code'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.all(8),
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                await controller?.toggleFlash();
-                                setState(() {});
-                              },
-                              child: FutureBuilder(
-                                future: controller?.getFlashStatus(),
-                                builder: (context, snapshot) {
-                                  return Text('Flash: ${snapshot.data}');
-                                },
-                              )),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(8),
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                await controller?.flipCamera();
-                                setState(() {});
-                              },
-                              child: FutureBuilder(
-                                future: controller?.getCameraInfo(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.data != null) {
-                                    return Text(
-                                        'Camera facing ${describeEnum(snapshot.data!)}');
-                                  } else {
-                                    return const Text('loading');
-                                  }
-                                },
-                              )),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.all(8),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.pauseCamera();
-                            },
-                            child: const Text('pause',
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(8),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.resumeCamera();
-                            },
-                            child: const Text('resume',
-                                style: TextStyle(fontSize: 20)),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            )*/
           ],
         ),
       ),
@@ -176,6 +107,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
               ),
             ],
           ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox()
         ],
       ),
     );
@@ -186,8 +122,12 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
+      setState(() async {
         result = scanData;
+        print(result?.code);
+        // reassemble();
+        controller.pauseCamera();
+        _initiateTransaction("${result?.code}");
       });
     });
   }
@@ -198,6 +138,63 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('no Permission')),
       );
+    }
+  }
+
+  Future<void> _initiateTransaction(String userName) async {
+    setState(() {
+      isLoading = true;
+    });
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      CheckCustomerRequest request = CheckCustomerRequest(username: userName);
+      await Provider.of<MainViewModel>(context, listen: false)
+          .checkCustomerByUsername(
+              "api/v1/app/customers/check_customer_by_username", request);
+      ApiResponse apiResponse =
+          Provider.of<MainViewModel>(context, listen: false).response;
+      initiateCheckCustomerResponse(context, apiResponse, userName);
+    }
+  }
+
+  Future<Widget> initiateCheckCustomerResponse(
+      BuildContext context, ApiResponse apiResponse, String userName) async {
+    CreateOtpChangePassResponse? createOtpChangePassResponse =
+        apiResponse.data as CreateOtpChangePassResponse?;
+    var message = createOtpChangePassResponse?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("pushNamed $userName");
+        Navigator.pushReplacementNamed(context, '/TransferScreen',
+            arguments: "${userName}");
+        // Navigate to the new screen after receiving the response
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        ToastComponent.showToast(context: context, message: message);
+        controller?.resumeCamera();
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
     }
   }
 

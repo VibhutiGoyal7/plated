@@ -322,7 +322,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             }
                           },
                         ) : Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-                        child: ShimmerList(),),
+                        child: ShimmerList(itemCount: 2),),
                       ),
                     ),
                   ),

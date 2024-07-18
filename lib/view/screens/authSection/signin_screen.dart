@@ -1,6 +1,7 @@
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/response/signInResponse.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
         if (email?.isEmpty == true) {
           Navigator.pushReplacementNamed(context, '/SetUpAccount');
-        }else{
+        } else {
           await Helper.saveProfileDetails(mediaList);
           //await Helper.saveCountry(mediaList?.countryName);
           await Helper.saveKycStatus(mediaList?.kycStatus);
@@ -103,7 +104,8 @@ class _SigninScreenState extends State<SigninScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("message : ${apiResponse.message}");
-        ToastComponent.showToast(context: context, message: apiResponse.message);
+        ToastComponent.showToast(
+            context: context, message: apiResponse.message);
         return Center(
             // child: Text('Please try again later!!!'),
             );
@@ -125,7 +127,7 @@ class _SigninScreenState extends State<SigninScreen> {
         var email = mediaList?.email;
         if (email?.isEmpty == true) {
           Navigator.pushReplacementNamed(context, '/SetUpAccount');
-        }else{
+        } else {
           await Helper.saveProfileDetails(mediaList);
           await Helper.saveCountry(mediaList?.countryName);
           await Helper.saveKycStatus(mediaList?.kycStatus);
@@ -154,8 +156,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child:
-        Stack(
+        child: Stack(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -194,8 +195,8 @@ class _SigninScreenState extends State<SigninScreen> {
                           children: [
                             SizedBox(height: 20),
                             _buildLabelText(context, "Welcome Back!", 26, true),
-                            _buildLabelText(
-                                context, "Welcome back we missed you", 14, false),
+                            _buildLabelText(context,
+                                "Welcome back we missed you", 14, false),
                             SizedBox(height: 25),
                             _buildPhoneInput(
                               context,
@@ -215,10 +216,30 @@ class _SigninScreenState extends State<SigninScreen> {
                                 Icon(
                                   Icons.password,
                                   size: 18,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
                                 ),
                                 passwordVisible,
                                 isDarkMode),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/ForgotPasswordScreen');
+                                },
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    "Forgot Password",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
                             SizedBox(
                               height: 15,
                             ),
@@ -231,9 +252,11 @@ class _SigninScreenState extends State<SigninScreen> {
                 )
               ],
             ),
-            isLoading ? Center(
-              child: CircularProgressIndicator(),
-            ): SizedBox()
+            isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : SizedBox()
           ],
         ),
       ),
@@ -255,7 +278,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Card(
       child: Container(
         //height: 60,
-        width: screenWidth*0.8,
+        width: screenWidth * 0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -312,7 +335,7 @@ class _SigninScreenState extends State<SigninScreen> {
   ) {
     return Card(
       child: Container(
-        width: screenWidth*0.8,
+        width: screenWidth * 0.8,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -386,6 +409,7 @@ class _SigninScreenState extends State<SigninScreen> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () async {
+                hideKeyBoard();
                 _isValidInput();
                 const maxDuration = Duration(seconds: 2);
                 if (inputValid) {
@@ -404,32 +428,27 @@ class _SigninScreenState extends State<SigninScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                          Text('No internet connection'),
+                          content: Text('No internet connection'),
                           duration: maxDuration,
                         ),
                       );
                     });
-                  }else {
+                  } else {
                     await Provider.of<MainViewModel>(context, listen: false)
                         .signInWithPass(
-                        "api/v1/app/customers/sign_in", request);
+                            "api/v1/app/customers/sign_in", request);
                     //Navigator.pushNamed(context, '/BottomNav');
 
                     ApiResponse apiResponse =
-                        Provider
-                            .of<MainViewModel>(context, listen: false)
+                        Provider.of<MainViewModel>(context, listen: false)
                             .response;
                     getSignInResponse(context, apiResponse);
                   }
-                }else{
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content:
-                      Text('Please enter valid details.'),
-                      duration: maxDuration,
-                    )
-                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Please enter valid details.'),
+                    duration: maxDuration,
+                  ));
                 }
               },
               child: Text(
@@ -461,7 +480,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/ForgotPasswordScreen');
+                  Navigator.pushNamed(context, '/PhoneVerifyScreen');
                 },
                 child: Text(
                   "SignUp here.",

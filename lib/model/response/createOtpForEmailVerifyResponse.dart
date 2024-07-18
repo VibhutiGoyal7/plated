@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 class CreateOtpVerifyEmailResponse {
   String email;
   String emailOtp;

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:flutter/material.dart';
 import 'package:Payrio/utils/Helper.dart';
 
@@ -29,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
           padding: EdgeInsets.all(8),
           child: Center(
             child: Text(
-              "Payario",
+              "${Languages.of(context)!.appName}",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
           ),
