@@ -10,6 +10,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/request/signInWithPhoneNumber.dart';
 import '../../../model/response/otpVerifyResponse.dart';
 import '../../../model/response/phoneVerifyResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
@@ -368,11 +369,11 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             child: Text(
               Languages.of(context)!.labelValidate,
               style:
-                  TextStyle(color: isValid ? Colors.white : Colors.blueAccent),
+                  TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
             ),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
-                backgroundColor: isValid ? Colors.blueAccent : Colors.white,
+                backgroundColor: isValid ? AppColor.PRIMARY : Colors.white,
                 elevation: 3,
                 shape: BeveledRectangleBorder(
                     borderRadius: BorderRadius.circular(2))),

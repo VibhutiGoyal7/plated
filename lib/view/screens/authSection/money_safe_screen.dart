@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../theme/AppColor.dart';
+
 class MoneySafeScreen extends StatefulWidget {
   @override
   _MoneySafeScreenState createState() => _MoneySafeScreenState();
@@ -39,7 +41,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent),
+                    color: AppColor.PRIMARY),
               ),
               Image(
                 alignment: Alignment.topLeft,
@@ -107,7 +109,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: AppColor.PRIMARY,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8))),

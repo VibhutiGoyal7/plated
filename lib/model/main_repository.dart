@@ -19,6 +19,7 @@ import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/GenerateOtpTPINChangeResponse.dart';
+import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
@@ -307,7 +308,7 @@ class MainRepository {
     print(value);
     final jsonData = response;
     print("jsonData::: ${jsonData}");
-    CreateOtpChangePassResponse? mediaList = CreateOtpChangePassResponse.fromJson(jsonData);
+    CheckCustomerResponse? mediaList = CheckCustomerResponse.fromJson(jsonData);
     print("mediaList:: ${mediaList}");
     return mediaList;
   }

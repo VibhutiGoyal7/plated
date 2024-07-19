@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../theme/AppColor.dart';
 
 class VerifyIdentityScreen extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                   child: Text(
                     Languages.of(context)!.labelChooseDoc,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.blueAccent),
+                    style: TextStyle(color: AppColor.PRIMARY),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(

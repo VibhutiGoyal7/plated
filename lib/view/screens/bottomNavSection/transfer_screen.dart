@@ -1,16 +1,21 @@
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../model/response/createOtpChangePassResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../component/connectivity_service.dart';
 
 class TransferScreen extends StatefulWidget {
-  final String? username;
+  final CheckCustomerResponse? data;
 
-  TransferScreen({required this.username});
+  TransferScreen({required this.data});
 
   @override
   _TransferScreenState createState() => _TransferScreenState();
@@ -21,10 +26,15 @@ class _TransferScreenState extends State<TransferScreen> {
   bool isComingSoon = true;
   String amount = "0.00";
   var userName;
+  bool isDarkMode = false;
+  var name;
+  var phoneNo;
+  var imageUrl;
   var countryCurrencySymbol;
   var countryBalance;
   final TextEditingController _inputController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   late double screenWidth;
   late double screenHeight;
@@ -35,12 +45,11 @@ class _TransferScreenState extends State<TransferScreen> {
   void initState() {
     super.initState();
     inputValid = false;
-    userName = widget.username;
+    userName = widget.data?.username;
+    name = "${widget.data?.fullName}";
+    phoneNo = "${widget.data?.phoneNumber}";
+    imageUrl = "${widget.data?.imageUrl}";
     print("object ${userName}");
-    if(userName != null)
-      {
-        _usernameController.text = userName;
-      }
     Helper.getProfileDetails().then((profile) {
       setState(() {
         countryCurrencySymbol = profile?.countryCurrencySymbol;
@@ -53,168 +62,226 @@ class _TransferScreenState extends State<TransferScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     DateTime? lastBackPressed;
-    return PopScope(
-      canPop: true,
-      onPopInvoked: (bool didPop) {
-        Navigator.pop(context);
-      },
-      child: GestureDetector(
-        onTap: () => hideKeyBoard(),
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: SafeArea(
-            child: isComingSoon
-                ? Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            Languages.of(context)!.labelMoneyTransfer,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 24.0),
+    return GestureDetector(
+      onTap: () => hideKeyBoard(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+        leading: GestureDetector(
+          onTap:(){
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back),
+        ),
+          title:  Text(
+            Languages.of(context)!.labelMoneyTransfer,
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 18.0),
+          ),
+        ),
+        body: Stack(
+          children: [
+            isLoading?
+            Container(
+              height: screenHeight,
+              width: screenWidth,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ): SizedBox(),
+            SafeArea(
+              child: isComingSoon
+                  ? Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 8,
                           ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              Languages.of(context)!.labelTransferTo,
-                              style: TextStyle(fontSize: 14.0),
+                          imageUrl == null
+                              ? Container(
+                            height: 48,
+                            width: 48,
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: AppColor.WHITE,
+                              backgroundImage:
+                              AssetImage("assets/profile_user.png"),
                             ),
+                          )
+                              : ClipRRect(
+                              borderRadius: BorderRadius.circular(100.0),
+                              child: Image.network(
+                                imageUrl,
+                                height: 48,
+                                width: 48,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  // You can return any widget here to display in case of an error
+                                  return Container(
+                                    height: 48,
+                                    width: 48,
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: AppColor.WHITE,
+                                      backgroundImage: AssetImage(
+                                        "assets/profile_user.png",
+                                      ),
+                                    ),
+                                  );
+                                },
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.white38,
+                                      highlightColor: Colors.grey,
+                                      child: Container(
+                                        height:48,
+                                        width: 48,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }
+                                },
+                              )),
+                          SizedBox(
+                            height: 12,
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        _buildPhoneInput(
-                            context, _usernameController),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              Languages.of(context)!.labelEnterAmount,
+                          Text(
+                            "Paying: ${name}",
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          ),Text(
+                            "${userName}",
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                          ),
+                         /* Text("${phoneNo}",
                               style: TextStyle(
-                                  fontWeight: FontWeight.normal, fontSize: 14.0),
-                            ),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: isDarkMode ? Colors.white70 : Colors.black54)),*/
+                          SizedBox(height: 10,),
+                          Text(
+                            "Please enter amount",
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: TextField(
-                                  style: TextStyle(
-                                    fontSize: 34.0,
-                                  ),
-                                  controller: _inputController,
-                                  onChanged: (value) {
-                                    amount = value;
-                                    _checkInputValidation();
-                                  },
-                                  maxLength: 12,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  onSubmitted: (value) {},
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    border: InputBorder.none,
-                                    hintText: Languages.of(context)?.labelZero,
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: TextField(
+                                    style: TextStyle(
+                                      fontSize: 38.0,
+                                    ),
+                                    controller: _inputController,
+                                    onChanged: (value) {
+                                      amount = value;
+                                      _checkInputValidation();
+                                    },
+                                    maxLength: 12,
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    onSubmitted: (value) {
+
+                                    },
+                                    decoration: InputDecoration(
+                                      counterText: "",
+                                      border: InputBorder.none,
+                                      hintText: Languages.of(context)?.labelZero,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            /*Text(
-                        Languages.of(context)!.labelINR,
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-                      ),*/
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        countryCurrencySymbol != null
-                            ? Text(
-                                "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${countryBalance}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14.0),
-                              )
-                            : Text(""),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          height:
-                              screenHeight * 0.065, // Set the desired height
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            controller: _scrollController,
-                            itemCount: _allLogList.length,
-                            padding: const EdgeInsets.only(bottom: 10),
-                            // Adjust padding if needed
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _inputController.text = _allLogList[index];
-                                  });
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width *
-                                      0.16, // Adjust width as needed
-                                  margin: EdgeInsets.all(4),
-                                  child: Card(
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          _allLogList[index],
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 14),
+                              /*Text(
+                          Languages.of(context)!.labelINR,
+                          style:
+                              TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                        ),*/
+                            ],
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          countryCurrencySymbol != null
+                              ? Text(
+                                  "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${countryBalance}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 12.0),
+                                )
+                              : Text(""),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          /*Container(
+                            height:
+                                screenHeight * 0.065, // Set the desired height
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: _scrollController,
+                              itemCount: _allLogList.length,
+                              padding: const EdgeInsets.only(bottom: 10),
+                              // Adjust padding if needed
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _inputController.text = _allLogList[index];
+                                    });
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.16, // Adjust width as needed
+                                    margin: EdgeInsets.all(4),
+                                    child: Card(
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(
+                                            _allLogList[index],
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 14),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Spacer(),
-                        _buildFooter(context),
-                      ],
+                                );
+                              },
+                            ),
+                          ),*/
+                          Spacer(),
+                          _buildFooter(context),
+                        ],
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        Languages.of(context)!.labelComingSoon,
+                        style:
+                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  )
-                : Center(
-                    child: Text(
-                      Languages.of(context)!.labelComingSoon,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+
 
   Widget _buildFooter(BuildContext context) {
     return Container(
@@ -226,37 +293,30 @@ class _TransferScreenState extends State<TransferScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 //print(_amountController.text);
-                String user = _usernameController.text;
+                //String user = userName;
                 _checkInputValidation();
                 if (inputValid) {
-                  if (isNumeric(user)) {
+
                     InitiateP2PRequest request = InitiateP2PRequest(
                         tpin: "",
                         amount: amount,
-                        receiverUsername: null,
-                        receiverPhoneNumber: user);
+                        receiverUsername: phoneNo,
+                        receiverPhoneNumber: userName,
+                        fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl);
+                    print("request ${request.receiverPhoneNumber} ${request.receiverUsername}");
                     Navigator.pushNamed(context, '/TransferTPINScreen',
                         arguments: request);
-                  } else {
-                    InitiateP2PRequest request = InitiateP2PRequest(
-                        tpin: "",
-                        amount: amount,
-                        receiverUsername: _usernameController.text,
-                        receiverPhoneNumber: null);
-                    Navigator.pushNamed(context, '/TransferTPINScreen',
-                        arguments: request);
-                  }
                 }
               },
               child: Text(
                 Languages.of(context)!.labelProceed,
                 style: TextStyle(
-                    color: inputValid ? Colors.white : Colors.blueAccent),
+                    color: inputValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
                   backgroundColor:
-                      inputValid ? Colors.blueAccent : Colors.white,
+                      inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),
@@ -268,7 +328,7 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   void _checkInputValidation() {
-    if (_usernameController.text.isNotEmpty && amount.isNotEmpty) {
+    if (/*_usernameController.text.isNotEmpty &&*/ amount.isNotEmpty) {
       inputValid = true;
     }
   }
@@ -278,36 +338,5 @@ class _TransferScreenState extends State<TransferScreen> {
     return numericRegex.hasMatch(s);
   }
 
-  Widget _buildPhoneInput(
-      BuildContext context, TextEditingController nameController) {
-    //nameController.text = widget.data as String;
-    return Container(
-      alignment: Alignment.center,
-      width: screenWidth,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: TextField(
-        style: TextStyle(
-          fontSize: 14.0,
-        ),
-        obscureText: false,
-        obscuringCharacter: "*",
-        controller: nameController,
-        onChanged: (value) {
-          _checkInputValidation();
-        },
-        onSubmitted: (value) {},
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          enabledBorder: UnderlineInputBorder(
-              borderSide:
-                  BorderSide(color: Colors.black, style: BorderStyle.solid)),
-          hintText: "Username or phone number",
-          hintStyle:
-              TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
-           icon: Icon(Icons.perm_contact_cal),
-        ),
-      ),
-    );
-  }
+
 }

@@ -5,6 +5,8 @@ class CompleteP2PRequest {
    String? amount;
    String? receiverUsername;
    String? receiverPhoneNumber;
+   String? fullName;
+   String? imageUrl;
 
    CompleteP2PRequest({
     this.otp,
@@ -13,6 +15,8 @@ class CompleteP2PRequest {
      this.amount,
      this.receiverUsername,
      this.receiverPhoneNumber,
+     this.fullName,
+     this.imageUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +27,8 @@ class CompleteP2PRequest {
       'amount': amount,
       'receiver_username': receiverUsername,
       'receiver_phone_number': receiverPhoneNumber,
+      'full_name': fullName,
+      'image_url': imageUrl,
     };
   }
 }

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../../../model/apis/api_response.dart';
+import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
@@ -384,12 +385,12 @@ class _DocImageScreenState extends State<DocImageScreen> {
               },
               child: Text(
                 "Submit",
-                style: TextStyle(color:isInputValid ? Colors.white : Colors.blueAccent),
+                style: TextStyle(color:isInputValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 10.0),
                   backgroundColor:
-                  isInputValid ? Colors.blueAccent : Colors.white,
+                  isInputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),

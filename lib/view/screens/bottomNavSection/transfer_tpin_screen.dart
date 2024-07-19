@@ -105,7 +105,9 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         }
         CompleteP2PRequest data = CompleteP2PRequest(paymentTransactionId: initiateP2PResponse?.paymentTransactionId,
             customerOtpId: initiateP2PResponse?.customerOtpId,amount: widget.data?.amount,
-            receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber);
+            receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,
+            fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl
+        );
 
         InitiateP2PRequest data1 = InitiateP2PRequest(tpin: '', amount: widget.data?.amount,
           receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,);
@@ -140,89 +142,96 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         },
         child: Icon(Icons.arrow_back),
       ),),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: screenWidth*0.95,
-              //height: screenHeight * 0.15,
-              margin: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
-              child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
-              Column(
-                children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          isLoading ? Center(
+            child: CircularProgressIndicator(),
+          ): SizedBox(),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: screenWidth*0.95,
+                  //height: screenHeight * 0.15,
+                  margin: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
+                  child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
+                  Column(
                     children: [
-                      Text("To:"),
-                      widget.data?.receiverPhoneNumber != null ?
-                      Text("${widget.data?.receiverPhoneNumber}"):
-                      Text("${widget.data?.receiverUsername}"),
-                    ],
-                  ),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Sending:"),
-                      Text("${widget.data?.amount}"),
-                    ],
-                  ),
-                ],
-              )
-              ,
-              alignment: AlignmentDirectional.center,
-            ),
-            Expanded(
-              child: Container(
-                width: screenWidth,
-                height: screenHeight * 0.72,
-                margin: EdgeInsets.zero,
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Center(
-                        child: _buildLabelText(
-                            context, "Enter 4 digit TPIN", 20, true),
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("To:"),
+                          widget.data?.receiverPhoneNumber != null ?
+                          Text("${widget.data?.receiverPhoneNumber}"):
+                          Text("${widget.data?.receiverUsername}"),
+                        ],
                       ),
-                      SizedBox(height: 22),
-                      _buildPhoneInput(context, screenWidth, isDarkMode),
-                      SizedBox(height: 10),
-                      SizedBox(height: 30,),
-                      Center(
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          width: screenWidth*0.55,
-                          child: Text("You are transferring money to ${widget.data?.receiverUsername}",
-                            textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 13),),
-                        ),
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Sending:"),
+                          Text("${widget.data?.amount}"),
+                        ],
                       ),
-                      Spacer(),
-                      CustomNumberKeyboard(onKeyTap: (value) async {
-                        if (value == "clear") {
-                          _handleBackspace();
-                        } else if (value == "submit") {
-                          String tpin = _inputValues
-                              .map((controller) => controller)
-                              .join();
-                          if (tpin.isNotEmpty && tpin.length == 4) {
-                            _initiateTransaction(tpin);
-                          }
-                        } else {
-                          _handleKeyTap(value);
-                        }
-                      }),
                     ],
+                  )
+                  ,
+                  alignment: AlignmentDirectional.center,
+                ),
+                Expanded(
+                  child: Container(
+                    width: screenWidth,
+                    height: screenHeight * 0.72,
+                    margin: EdgeInsets.zero,
+                    child: Card(
+                      margin: EdgeInsets.all(0),
+                      shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20),
+                          Center(
+                            child: _buildLabelText(
+                                context, "Enter 4 digit TPIN", 20, true),
+                          ),
+                          SizedBox(height: 22),
+                          _buildPhoneInput(context, screenWidth, isDarkMode),
+                          SizedBox(height: 10),
+                          SizedBox(height: 30,),
+                          Center(
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              width: screenWidth*0.55,
+                              child: Text("You are transferring money to ${widget.data?.receiverUsername}",
+                                textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 13),),
+                            ),
+                          ),
+                          Spacer(),
+                          CustomNumberKeyboard(onKeyTap: (value) async {
+                            if (value == "clear") {
+                              _handleBackspace();
+                            } else if (value == "submit") {
+                              String tpin = _inputValues
+                                  .map((controller) => controller)
+                                  .join();
+                              if (tpin.isNotEmpty && tpin.length == 4) {
+                                _initiateTransaction(tpin);
+                              }
+                            } else {
+                              _handleKeyTap(value);
+                            }
+                          }),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -244,7 +253,9 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       });
     } else {
       InitiateP2PRequest request = InitiateP2PRequest(tpin: tpin, amount: widget.data?.amount,
-        receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,  );
+        receiverUsername: null, receiverPhoneNumber: widget.data?.receiverPhoneNumber,  );
+      print("phno ${request?.receiverPhoneNumber}");
+      print("username ${request?.receiverUsername}");
       await Provider.of<MainViewModel>(context, listen: false)
           .initiateP2PTransaction(
           "/api/v1/app/payment_transactions/initiate_p2p_transaction",

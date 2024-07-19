@@ -405,12 +405,12 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               child: Text(
                 Languages.of(context)!.labelSubmit,
                 style: TextStyle(
-                    color: phoneNumberValid ? Colors.white : Colors.blueAccent),
+                    color: phoneNumberValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
                   backgroundColor:
-                      phoneNumberValid ? Colors.blueAccent : Colors.white,
+                      phoneNumberValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),

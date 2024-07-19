@@ -2,6 +2,7 @@ import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transfer_contact_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +30,7 @@ class _BottomNavState extends State<BottomNav>
 
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
-    TransferScreen(username: "",),
+    TransferContactScreen(),
     PaymentScreen(),
     RewardScreen(),
     ScanQrScreen(),

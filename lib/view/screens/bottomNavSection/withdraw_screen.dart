@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/request/withdrawRequest.dart';
+import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
@@ -200,7 +201,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                             child: Text(
                               Languages.of(context)!.labelChange,
                               style: TextStyle(
-                                  fontSize: 14.0, color: Colors.blueAccent),
+                                  fontSize: 14.0, color: AppColor.PRIMARY),
                             ),
                           ),
                         ],
@@ -361,11 +362,11 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           child: Text(
             Languages.of(context)!.labelProceed,
             style:
-                TextStyle(color: inputValid ? Colors.white : Colors.blueAccent),
+                TextStyle(color: inputValid ? Colors.white : AppColor.PRIMARY),
           ),
           style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 14.0),
-              backgroundColor: inputValid ? Colors.blueAccent : Colors.white,
+              backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
               elevation: 3,
               shape: BeveledRectangleBorder(
                   borderRadius: BorderRadius.circular(2))),

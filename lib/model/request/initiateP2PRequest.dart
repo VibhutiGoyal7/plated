@@ -3,12 +3,16 @@ class InitiateP2PRequest {
   String? amount;
   String? receiverUsername;
   String? receiverPhoneNumber;
+  String? fullName;
+  String? imageUrl;
 
   InitiateP2PRequest({
     required this.tpin,
     required this.amount,
     required this.receiverUsername,
     required this.receiverPhoneNumber,
+    this.fullName,
+    this.imageUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -17,6 +21,8 @@ class InitiateP2PRequest {
       'amount': amount,
       'receiver_username': receiverUsername,
       'receiver_phone_number': receiverPhoneNumber,
+      'full_name': fullName,
+      'image_url': imageUrl,
     };
   }
 }

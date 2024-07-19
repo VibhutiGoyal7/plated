@@ -28,7 +28,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             "Payrio",
             style: TextStyle(fontSize: 28,
                 fontWeight: FontWeight.bold,
-            color: Colors.blueAccent),
+            color: AppColor.PRIMARY),
           ),
           Image(
             alignment: Alignment.topLeft,
@@ -77,7 +77,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: AppColor.PRIMARY,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),

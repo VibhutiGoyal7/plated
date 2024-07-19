@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/setUpAccountResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
@@ -553,11 +554,11 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
             child: Text(
               Languages.of(context)!.labelConfirm,
               style: TextStyle(
-                  color: inputValid ? Colors.white : Colors.blueAccent),
+                  color: inputValid ? Colors.white : AppColor.PRIMARY),
             ),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 14.0),
-                backgroundColor: inputValid ? Colors.blueAccent : Colors.white,
+                backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
                 elevation: 3,
                 shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),

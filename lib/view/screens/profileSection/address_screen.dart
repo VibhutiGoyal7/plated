@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/profileResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -244,12 +245,12 @@ class _AddressScreenState extends State<AddressScreen> {
               child: Text(
                 Languages.of(context)!.labelConfirm,
                 style: TextStyle(
-                    color: inputValid ? Colors.white : Colors.blueAccent),
+                    color: inputValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
                   backgroundColor:
-                      inputValid ? Colors.blueAccent : Colors.white,
+                      inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape:
                       BeveledRectangleBorder(borderRadius: BorderRadius.zero)),

@@ -9,6 +9,7 @@ import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
+import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
@@ -560,18 +561,18 @@ class MainViewModel with ChangeNotifier {
     print("Yess  ${checkCustomerRequest.username}");
     notifyListeners();
     try {
-      CreateOtpChangePassResponse createOtpChangePassResponse =
+      CheckCustomerResponse checkCustomerResponse =
       await MainRepository()
           .checkCustomerByUsername(value, checkCustomerRequest);
-      print("Yess" + "${createOtpChangePassResponse.message}");
+      print("Yess" + "${checkCustomerResponse.message}");
 
-      if (createOtpChangePassResponse.mobileOtp != null) {
-        _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
-      } else if("${createOtpChangePassResponse.message}" == "Customer found successfully"){
-        _apiResponse = ApiResponse.completed(createOtpChangePassResponse);
+      if (checkCustomerResponse.username != null) {
+        _apiResponse = ApiResponse.completed(checkCustomerResponse);
+      } else if("${checkCustomerResponse.message}" == "Customer found successfully"){
+        _apiResponse = ApiResponse.completed(checkCustomerResponse);
       }
       else{
-        _apiResponse = ApiResponse.error(createOtpChangePassResponse.message);
+        _apiResponse = ApiResponse.error(checkCustomerResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

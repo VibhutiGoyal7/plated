@@ -157,7 +157,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         );
       });
     } else {
-      CheckCustomerRequest request = CheckCustomerRequest(username: userName);
+      CheckCustomerRequest request = CheckCustomerRequest(username: userName, phoneNo: null);
       await Provider.of<MainViewModel>(context, listen: false)
           .checkCustomerByUsername(
               "api/v1/app/customers/check_customer_by_username", request);

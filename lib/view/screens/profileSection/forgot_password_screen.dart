@@ -519,7 +519,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Text(
             Languages.of(context)!.labelValidate,
             style:
-            TextStyle(color: isValid ? Colors.white : Colors.blueAccent),
+            TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
           ),
           style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 16.0),

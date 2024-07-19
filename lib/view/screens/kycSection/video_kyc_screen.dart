@@ -7,6 +7,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/uploadKycResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
@@ -228,7 +229,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: AppColor.PRIMARY,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4))),

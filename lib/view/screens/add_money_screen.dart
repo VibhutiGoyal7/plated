@@ -277,12 +277,12 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               child: Text(
                 Languages.of(context)!.labelProceed,
                 style: TextStyle(
-                    color: inputValid ? Colors.white : Colors.blueAccent),
+                    color: inputValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   backgroundColor:
-                      inputValid ? Colors.blueAccent : Colors.white,
+                      inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(4))),

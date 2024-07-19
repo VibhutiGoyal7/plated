@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../theme/AppColor.dart';
+
 class CameraAccessScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
 
@@ -89,7 +91,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: AppColor.PRIMARY,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4))),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
+import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
@@ -270,12 +271,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               child: Text(
                 Languages.of(context)!.labelProceed,
                 style: TextStyle(
-                    color: _isButtonEnabled() ? Colors.white : Colors.blueAccent),
+                    color: _isButtonEnabled() ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   backgroundColor:
-                  _isButtonEnabled() ? Colors.blueAccent : Colors.white,
+                  _isButtonEnabled() ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape:
                   BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),

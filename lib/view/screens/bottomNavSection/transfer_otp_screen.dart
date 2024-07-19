@@ -1,6 +1,9 @@
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
+import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/completeP2PResponse.dart';
+import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
@@ -86,9 +89,24 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("Complete Transaction ${completeP2PResponse?.amount}");
+        CheckCustomerResponse prefData = CheckCustomerResponse(username: widget.data.receiverUsername,fullName:widget.data.fullName,
+        phoneNumber: widget.data.receiverPhoneNumber, imageUrl: widget.data.imageUrl );
+        print("PrefData ${prefData.username}");
+        List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
+        print("prefResponse ${prefResponse?[0].username}");
+        prefResponse?.add(prefData);
+        bool dataExist = false;
+        for(int i=0;  i < prefResponse!.length;i++){
+          if(prefData.username == prefResponse[i].username){
+            dataExist = true;
+          }
+
+        }
+        if(!dataExist)
+          Helper.saveRecentP2PDetails(prefResponse);
 
         ToastComponent.showToast(context: context, message: message);
-        Navigator.pushReplacementNamed(context, '/BottomNav');
+        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen');
 
         return Container();
       case Status.ERROR:
@@ -100,34 +118,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         }
         return Center(
           //child: Text('Please try again later!!!'),
-        );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
-    }
-  }
-
-  Widget getResendOtpResponse(BuildContext context, ApiResponse apiResponse) {
-    PhoneVerifyResponse? phoneVerifyResponse =
-    apiResponse.data as PhoneVerifyResponse?;
-    var message = phoneVerifyResponse?.message.toString();
-    setState(() {
-      isLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
-      case Status.COMPLETED:
-        print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
-        //Call Toast
-        ToastComponent.showToast(context: context, message: message);
-        // Navigate to the new screen after receiving the response
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        return Center(
-          child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
@@ -303,6 +293,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
 
   Widget _buildFooter(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         /*Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
@@ -315,66 +306,67 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
             ),
           ),
         ),*/
-        SizedBox(
-          width: screenWidth * 0.7,
-          child: ElevatedButton(
-            onPressed: () async {
-              String otp =
-              _controllers.map((controller) => controller.text).join();
-              const maxDuration = Duration(seconds: 2);
-              if (otp.isNotEmpty && otp.length == 6) {
-                setState(() {
-                  isLoading = true;
-                });
-
-                bool isConnected = await _connectivityService.isConnected();
-                if (!isConnected) {
+        Center(
+          child: SizedBox(
+            width: screenWidth * 0.7,
+            child: ElevatedButton(
+              onPressed: () async {
+                String otp =
+                _controllers.map((controller) => controller.text).join();
+                const maxDuration = Duration(seconds: 2);
+                if (otp.isNotEmpty && otp.length == 6) {
                   setState(() {
-                    isLoading = false;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('No internet connection'),
-                        duration: maxDuration,
-                      ),
-                    );
+                    isLoading = true;
                   });
-                } else {
-                  CompleteP2PRequest completeP2PRequest = CompleteP2PRequest(
-                    otp: otp,
-                    customerOtpId: widget.data.customerOtpId,
-                    paymentTransactionId: widget.data.paymentTransactionId
-                  );
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .completeP2PTransaction(
-                      "/api/v1/app/payment_transactions/complete_p2p_transaction",
-                      completeP2PRequest);
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('No internet connection'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  } else {
+                    CompleteP2PRequest completeP2PRequest = CompleteP2PRequest(
+                      otp: otp,
+                      customerOtpId: widget.data.customerOtpId,
+                      paymentTransactionId: widget.data.paymentTransactionId
+                    );
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .completeP2PTransaction(
+                        "/api/v1/app/payment_transactions/complete_p2p_transaction",
+                        completeP2PRequest);
 
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  completeTransactionResponse(context, apiResponse);
+                    ApiResponse apiResponse =
+                        Provider.of<MainViewModel>(context, listen: false)
+                            .response;
+                    completeTransactionResponse(context, apiResponse);
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          'Please enter valid phone number and select country code.'),
+                      duration: maxDuration,
+                    ),
+                  );
                 }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        'Please enter valid phone number and select country code.'),
-                    duration: maxDuration,
-                  ),
-                );
-              }
-            },
-            child: Text(
-              Languages.of(context)!.labelValidate,
-              style:
-              TextStyle(color: isValid ? Colors.white : Colors.blueAccent),
+              },
+              child: Text(
+                Languages.of(context)!.labelValidate,
+                style:
+                TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
+              ),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  backgroundColor: isValid ? AppColor.PRIMARY : Colors.white,
+                  elevation: 3,
+                  shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(2))),
             ),
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                backgroundColor: isValid ? Colors.blueAccent : Colors.white,
-                elevation: 3,
-                shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.circular(2))),
           ),
         ),
         SizedBox(
@@ -417,31 +409,4 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     );
   }
 
-  Widget _resendOtpButton(BuildContext context) {
-    return GestureDetector(
-        onTap: () async {
-          phoneNo = widget.data as String;
-          PhoneRequest phoneRequest = PhoneRequest(
-              customer: Customer(
-                  phoneNumber: phoneNo, mobileOtp: "", countryId: null));
-          await Provider.of<MainViewModel>(context, listen: false)
-              .fetchMediaData(
-              "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
-
-          ApiResponse apiResponse =
-              Provider.of<MainViewModel>(context, listen: false).response;
-          getResendOtpResponse(context, apiResponse);
-        },
-        child: Text(
-          "Resend Otp",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            decoration: TextDecoration.underline,
-          ),
-        ));
-  }
-/*void restartTimer() {
-    countDownTimer.cancel();
-    startTimer();
-  }*/
 }

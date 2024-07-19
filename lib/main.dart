@@ -1,5 +1,6 @@
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
@@ -13,9 +14,11 @@ import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:Payrio/view/screens/authSection/splash_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/payment_successfull_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpin_verify_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transfer_contact_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_otp_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_tpin_screen.dart';
@@ -308,8 +311,8 @@ class _MyAppState extends State<MyApp> {
             },
             '/TransferScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
-              return TransferScreen(username: args,);
+                  ModalRoute.of(context)!.settings.arguments as CheckCustomerResponse?;
+              return TransferScreen(data: args,);
             },
             '/WithdrawScreen': (context) {
               final args =
@@ -340,6 +343,12 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest;
               return TransferOtpScreen(data: args,);
+            },
+            '/TransferContactScreen': (context) {
+              return TransferContactScreen();
+            },
+            '/PaymentSuccessfulScreen': (context) {
+              return PaymentSuccessfulScreen();
             }
           }),
     );
