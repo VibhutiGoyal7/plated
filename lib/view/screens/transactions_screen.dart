@@ -469,7 +469,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       status = "";
                       requestType = "";
                       filterApplied = false;
-                      Navigator.pop(context);
+                      //Navigator.pop(context);
                       isLoading = true;
                     });
                     _fetchDataFuture =

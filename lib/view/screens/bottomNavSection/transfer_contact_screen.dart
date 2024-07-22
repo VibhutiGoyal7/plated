@@ -130,7 +130,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                       SizedBox(
                         height: 25,
                       ),
-                      Padding(
+                     /* Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           "Recents",
@@ -150,8 +150,8 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(bottom: 0),
                         itemBuilder: (BuildContext context, int index) {
-                          return ListTile(/*
-                            tileColor: Colors.white12,*/
+                          return ListTile(*//*
+                            tileColor: Colors.white12,*//*
                             contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                             onTap: () {
                               setState(() {
@@ -220,7 +220,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                           );
                         },
                       ),
-                      ),
+                      ),*/
                     ],
                   ),
                 ),

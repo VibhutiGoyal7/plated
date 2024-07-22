@@ -95,18 +95,20 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
         print("prefResponse ${prefResponse?[0].username}");
         prefResponse?.add(prefData);
+        print("prefResponse ${prefResponse?[0].username}");
         bool dataExist = false;
-        for(int i=0;  i < prefResponse!.length;i++){
-          if(prefData.username == prefResponse[i].username){
-            dataExist = true;
+        if(prefResponse?.length != null) {
+          for (int i = 0; i < prefResponse!.length; i++) {
+            if (prefData.username == prefResponse[i].username) {
+              dataExist = true;
+            }
           }
-
         }
         if(!dataExist)
           Helper.saveRecentP2PDetails(prefResponse);
 
         ToastComponent.showToast(context: context, message: message);
-        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen');
+        Navigator.pushReplacementNamed(context, '/BottomNav');
 
         return Container();
       case Status.ERROR:

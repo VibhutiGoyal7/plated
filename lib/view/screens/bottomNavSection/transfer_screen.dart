@@ -300,8 +300,8 @@ class _TransferScreenState extends State<TransferScreen> {
                     InitiateP2PRequest request = InitiateP2PRequest(
                         tpin: "",
                         amount: amount,
-                        receiverUsername: phoneNo,
-                        receiverPhoneNumber: userName,
+                        receiverUsername: userName,
+                        receiverPhoneNumber: phoneNo,
                         fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl);
                     print("request ${request.receiverPhoneNumber} ${request.receiverUsername}");
                     Navigator.pushNamed(context, '/TransferTPINScreen',

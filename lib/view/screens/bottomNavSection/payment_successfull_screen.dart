@@ -33,103 +33,126 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: Colors.green.shade900,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.check_circle, color: Colors.white,),
-          Text("Payment Successful", style: TextStyle(color: Colors.white,fontSize: 16),),
-          Text("${date} at ${time}", style: TextStyle(color: Colors.white,fontSize: 16),),
-          Card(
-            child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      imageUrl == ""
-                          ? Container(
-                        height: 60,
-                        width: 60,
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: AppColor.WHITE,
-                          backgroundImage:
-                          AssetImage("assets/profile_user.png"),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 80,),
+              Icon(Icons.check_circle, color: Colors.white,),
+              Text("Payment Successful", style: TextStyle(color: Colors.white,fontSize: 16),),
+              SizedBox(height:4,),
+              Text("${date} at ${time}", style: TextStyle(color: Colors.white,fontSize: 16),),
+              SizedBox(height: 80,),
+              Card(
+                child: Container(
+                  height: screenHeight*0.28,
+                  width: screenWidth*0.7,
+                  padding: EdgeInsets.all(16),
+                  child: Center(
+
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            imageUrl == ""
+                                ? Container(
+                              height: 50,
+                              width: 50,
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: AppColor.WHITE,
+                                backgroundImage:
+                                AssetImage("assets/profile_user.png"),
+                              ),
+                            )
+                                : ClipRRect(
+                                borderRadius: BorderRadius.circular(100.0),
+                                child: Image.network(
+                                  imageUrl as String,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    // You can return any widget here to display in case of an error
+                                    return Container(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: AppColor.WHITE,
+                                        backgroundImage: AssetImage(
+                                          "assets/profile_user.png",
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.white38,
+                                        highlightColor: Colors.grey,
+                                        child: Container(
+                                          height:50,
+                                          width: 50,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
+                            Column(
+                              children: [
+
+                                Text("${name}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                Text("${phoneNo}",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.normal,
+                                        color: isDarkMode ? Colors.white70 : Colors.black54)),
+                              ],
+
+                            )
+                          ],
                         ),
-                      )
-                          : ClipRRect(
-                          borderRadius: BorderRadius.circular(100.0),
-                          child: Image.network(
-                            imageUrl as String,
-                            height: 60,
-                            width: 60,
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                              // You can return any widget here to display in case of an error
-                              return Container(
-                                height: 60,
-                                width: 60,
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: AppColor.WHITE,
-                                  backgroundImage: AssetImage(
-                                    "assets/profile_user.png",
-                                  ),
-                                ),
-                              );
-                            },
-                            loadingBuilder: (BuildContext context,
-                                Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return Shimmer.fromColors(
-                                  baseColor: Colors.white38,
-                                  highlightColor: Colors.grey,
-                                  child: Container(
-                                    height:60,
-                                    width: 60,
-                                    color: Colors.white,
-                                  ),
-                                );
-                              }
-                            },
-                          )),
-                      Column(
-                        children: [
+                        SizedBox(height: 20,),
+                        Text("100", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                        SizedBox(height: 20,),
+                        Divider(height: 0.5,color: Colors.grey,),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.share, size: 22,),
+                            SizedBox(width: 6,),
+                            Text("Share", style: TextStyle(fontSize: 16),)
+                          ],
+                        )
 
-                          Text("${name}",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold)),
-                          Text("${phoneNo}",
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: isDarkMode ? Colors.white70 : Colors.black54)),
-                        ],
-
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                  Text("100", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                  Divider(height: 0.5,color: Colors.grey,),
-
-                ],
+                ),
               ),
-            ),
+              SizedBox(height: 200,),
+              _buildFooter(context)
+            ],
           ),
-          SizedBox(
-            height: 20,
-          ),
-          _buildFooter(context)
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildFooter(BuildContext context) {
     return Container(
+      width: screenWidth*0.7,
       //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
@@ -141,11 +164,11 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
               },
               child: Text(
                 Languages.of(context)!.labelProceed,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: AppColor.PRIMARY,
+                  backgroundColor: Colors.white,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
