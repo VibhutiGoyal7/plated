@@ -12,13 +12,16 @@ class CreateOtpChangePassRequest {
 
 class CustomerGetOtpPassDetail {
   String phoneNumber;
+  int countryCode;
 
   CustomerGetOtpPassDetail({
     required this.phoneNumber,
+    required this.countryCode,
   });
   Map<String, dynamic> toJson() {
     return {
       'phone_number': phoneNumber,
+      'country_id': countryCode,
     };
   }
 }

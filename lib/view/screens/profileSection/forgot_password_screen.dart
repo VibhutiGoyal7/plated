@@ -131,7 +131,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
-  Future<Widget> verifyOtpGetWidget(
+  Future<Widget> verifyOtpResponse(
       BuildContext context, ApiResponse apiResponse) async {
     final mediaList = apiResponse.data;
     setState(() {
@@ -141,8 +141,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${apiResponse?.data}");
+        print("rwrwr ");
         //Navigator.pushNamed(context, '/ProfileScreen');
+        ToastComponent.showToast(context: context, message: apiResponse?.message);
         Helper.clearAllSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => SigninScreen()),
@@ -155,7 +156,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         if(apiResponse?.message== "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
-          child: Text('Please try again later!!!'),
+          //child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
@@ -365,6 +366,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         CreateOtpChangePassRequest(
                             customer: CustomerGetOtpPassDetail(
                       phoneNumber: phoneNumber,
+                              countryCode: countryCode
                     ));
 
                     await Provider.of<MainViewModel>(context, listen: false)
@@ -601,7 +603,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     customer: CustomerVerifyOtpPass(
                         phoneNumber: _phoneNumberController.text,
                         password: _newPasswordController.text,
-                        mobileOtp: otp));
+                        mobileOtp: otp,
+                      countryId: countryCode
+                    ));
 
                 await Provider.of<MainViewModel>(context, listen: false)
                     .VerifyOtpChangePass(
@@ -609,7 +613,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         request);
                 ApiResponse apiResponse =
                     Provider.of<MainViewModel>(context, listen: false).response;
-                verifyOtpGetWidget(context, apiResponse);
+                verifyOtpResponse(context, apiResponse);
               }
             } else if (_newPasswordController.text.length < 8) {
               ScaffoldMessenger.of(context).showSnackBar(

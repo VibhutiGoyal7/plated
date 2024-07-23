@@ -283,6 +283,9 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(
             color: isDarkMode ? Colors.grey :Colors.black87, width: 0.7
+          )),focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4),
+          borderSide: BorderSide(
+            color: isDarkMode ? Colors.grey :Colors.black87, width: 0.7
           )),
           hintText: "Username or phone number",
           hintStyle:

@@ -157,11 +157,11 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       //print(signInRequest.customer.phoneNumber);
-      SignInResponse signInResponse =
+      ProfileResponse signInResponse =
           await MainRepository().signInWithPass(value, signInRequest);
-      print("Yess" + signInResponse.toString());
+      print("Yess" + signInResponse.username.toString());
       //_apiResponse = ApiResponse.completed(signInResponse);
-      if (signInResponse != null && signInResponse.email != null) {
+      if (signInResponse.email != null) {
         _apiResponse = ApiResponse.completed(signInResponse);
       } else {
         _apiResponse = ApiResponse.error(signInResponse.message);
@@ -310,12 +310,12 @@ class MainViewModel with ChangeNotifier {
       final response = await MainRepository()
           .VerifyOtpChangePass(value, verifyOtChangePassRequest);
 
-      //_apiResponse = ApiResponse.completed(response);
-      if (response != null) {
+      _apiResponse = ApiResponse.completed(response);
+      /*if (response.message != null) {
         _apiResponse = ApiResponse.completed(response);
       } else {
         _apiResponse = ApiResponse.error(response.message);
-      }
+      }*/
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

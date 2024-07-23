@@ -229,87 +229,87 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             ),
             isInternetConnected && !isLoading
                 ? Column(
-                    children: [
-                      if (isPassportAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelPassport,
-                            Languages.of(context)!.labelPhotoPage,
-                            '/DocImageScreen',
-                            'passport',
-                            "${passportImg}",
-                            "assets/passport.png",
-                            "${passportStatus}",
-                            "${passportRejectedReason}"),
-                      if (isDrivingLicenceAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelDrivingLicence,
-                            Languages.of(context)!.labelFrontNBack,
-                            '/DocImageScreen',
-                            'driving_licence',
-                            "${drivingLicenseImg}",
-                            "assets/license.png",
-                            "${drivingLicenceStatus}",
-                            "${drivingLicenceRejectedReason}"),
-                      if (isNationalIdAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelNationalId,
-                            Languages.of(context)!.labelFrontNBack,
-                            '/DocImageScreen',
-                            'national_id',
-                            "${nationalIdImg}",
-                            "assets/id_card.png",
-                            "${nationalIdStatus}",
-                            "${nationalIdRejectedReason}"),
-                      if (isAddressLycAvailable)
-                        _buildDocumentOption(
-                            context,
-                            "Address KYC",
-                            'Front ',
-                            '/DocImageScreen',
-                            'address_kyc',
-                            "${addressKycImg}",
-                            "assets/address.png",
-                            "${addressKycStatus}",
-                            "${addressKycRejectedReason}"),
-                      if (isBankStatementAvailable)
-                        _buildDocumentOption(
-                            context,
-                            "Bank Statement",
-                            'Front ',
-                            '/DocImageScreen',
-                            'bank_statement',
-                            "${bankStatementImg}",
-                            "assets/bank_statement.png",
-                            "${bankStatementStatus}",
-                            "${bankStatementRejectedReason}"),
-                      if (isGeoLocAvailable)
-                        _buildDocumentOption(
-                          context,
-                          "Geolocation KYC",
-                          'Front ',
-                          '/DocImageScreen',
-                          'geolocation_kyc',
-                          "${geoLocImg}",
-                          "assets/geo_Location.jpg",
-                          "${geoLocStatus}",
-                          "${geoLocRejectedReason}",
-                        ),
-                      if (isKycVideoAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelVideoVerification,
-                            'Front ',
-                            '/VideoKycScreen',
-                            'video_kyc_clip',
-                            "${kycVideo}",
-                            "assets/video.png",
-                            "${kycVideoStatus}",
-                            "${kycVideoRejectedReason}"),
-                    ],
-                  )
+              children: [
+                if (isPassportAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelPassport,
+                      Languages.of(context)!.labelPhotoPage,
+                      '/DocImageScreen',
+                      'passport',
+                      "${passportImg}",
+                      "assets/passport.png",
+                      "${passportStatus}",
+                      "${passportRejectedReason}"),
+                if (isDrivingLicenceAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelDrivingLicence,
+                      Languages.of(context)!.labelFrontNBack,
+                      '/DocImageScreen',
+                      'driving_licence',
+                      "${drivingLicenseImg}",
+                      "assets/license.png",
+                      "${drivingLicenceStatus}",
+                      "${drivingLicenceRejectedReason}"),
+                if (isNationalIdAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelNationalId,
+                      Languages.of(context)!.labelFrontNBack,
+                      '/DocImageScreen',
+                      'national_id',
+                      "${nationalIdImg}",
+                      "assets/id_card.png",
+                      "${nationalIdStatus}",
+                      "${nationalIdRejectedReason}"),
+                if (isAddressLycAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Address KYC",
+                      'Front ',
+                      '/DocImageScreen',
+                      'address_kyc',
+                      "${addressKycImg}",
+                      "assets/address.png",
+                      "${addressKycStatus}",
+                      "${addressKycRejectedReason}"),
+                if (isBankStatementAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Bank Statement",
+                      'Front ',
+                      '/DocImageScreen',
+                      'bank_statement',
+                      "${bankStatementImg}",
+                      "assets/bank_statement.png",
+                      "${bankStatementStatus}",
+                      "${bankStatementRejectedReason}"),
+                if (isGeoLocAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Geolocation KYC",
+                      'Front ',
+                      '/DocImageScreen',
+                      'geolocation_kyc',
+                      "${geoLocImg}",
+                      "assets/geo_Location.jpg",
+                      "${geoLocStatus}",
+                      "${geoLocRejectedReason}")),
+                if (isKycVideoAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelVideoVerification,
+                      'Front ',
+                      '/VideoKycScreen',
+                      'video_kyc_clip',
+                      "${kycVideo}",
+                      "assets/video.png",
+                      "${kycVideoStatus}",
+                      "${kycVideoRejectedReason}"),
+
+              ],
+            )
                 : ShimmerCard(),
 
             // buildDocumentDropdown(),
