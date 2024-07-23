@@ -40,6 +40,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       _locale = locale;
     });
   }
+
   bool phoneNumberValid = false;
 
   List<CountryData> countryList = [];
@@ -79,7 +80,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.COMPLETED:
         print("userfound: ${mediaList?.userFound}");
         // Navigate to the new screen after receiving the response
-        if (mediaList?.userFound == true && mediaList?.isProfileSetupDone == true) {
+        if (mediaList?.userFound == true &&
+            mediaList?.isProfileSetupDone == true) {
           Navigator.pushNamed(context, '/SignInScreen',
               arguments: "${_inputController.text}");
         } else {
@@ -99,7 +101,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     }
   }
 
-  Future<Widget> getPhoneVerifyResponse(BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> getPhoneVerifyResponse(
+      BuildContext context, ApiResponse apiResponse) async {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
     var message = phoneVerifyResponse?.message.toString();
@@ -116,10 +119,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
         ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response
-        await Future.delayed(const Duration(seconds: 4));
         Navigator.pushNamed(context, '/OtpVerify',
             arguments: "${_inputController.text}");
-        ToastComponent.showToast(context: context, message: "${phoneVerifyResponse?.mobileOtp}");
+        ToastComponent.showToast(
+            context: context, message: "${phoneVerifyResponse?.mobileOtp}");
         return Container(); // Return an empty container as yo u'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);
@@ -394,11 +397,12 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     existingUserWidget(context, apiResponse);
                   }
                 } else if (countryCode == 0 && phoneCode == "+") {
-                  ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-                    content: Text(Languages.of(context)!.labelSelectCountryCode),
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content:
+                        Text(Languages.of(context)!.labelSelectCountryCode),
                   ));
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(Languages.of(context)!.labelEnterValidPhone),
                   ));
                 }
@@ -442,7 +446,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min, // Ensure minimal height
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,// Align start
+            mainAxisAlignment: MainAxisAlignment.end, // Align start
             children: <Widget>[
               ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -452,7 +456,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 padding: const EdgeInsets.only(bottom: 0),
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    tileColor: (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.PRIMARY : Colors.white,
+                    tileColor: (phoneCode == "+${countryList[index].phoneCode}")
+                        ? AppColor.PRIMARY
+                        : Colors.white,
                     onTap: () {
                       setState(() {
                         phoneCode = "+${countryList[index].phoneCode}";
@@ -465,7 +471,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                         countryList[index].flagImageUrl as String,
                         height: 28,
                         width: 50,
-                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
                           if (loadingProgress == null) {
                             return child;
                           } else {
@@ -490,14 +497,20 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.WHITE : Colors.black,
+                            color: (phoneCode ==
+                                    "+${countryList[index].phoneCode}")
+                                ? AppColor.WHITE
+                                : Colors.black,
                           ),
                         ),
                         Text(
                           "+${countryList[index].phoneCode}",
                           style: TextStyle(
                             fontSize: 12,
-                            color: (phoneCode == "+${countryList[index].phoneCode}") ? AppColor.WHITE : Colors.black,
+                            color: (phoneCode ==
+                                    "+${countryList[index].phoneCode}")
+                                ? AppColor.WHITE
+                                : Colors.black,
                           ),
                         ),
                       ],
@@ -524,13 +537,12 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content:
-              Text('No internet connection'),
+              content: Text('No internet connection'),
               duration: maxDuration,
             ),
           );
         });
-      }else {
+      } else {
         PhoneRequest phoneRequest = PhoneRequest(
             customer: Customer(
                 phoneNumber: _inputController.text,
@@ -538,19 +550,15 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 countryId: countryCode));
         await Provider.of<MainViewModel>(context, listen: false).fetchMediaData(
             "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
-        /*  Navigator.pushNamed(context, '/OtpVerify',
-                    arguments: "${_inputController.text}");*/
-
         ApiResponse apiResponse =
-            Provider
-                .of<MainViewModel>(context, listen: false)
-                .response;
+            Provider.of<MainViewModel>(context, listen: false).response;
         getPhoneVerifyResponse(context, apiResponse);
       }
-    }else{
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter valid phone number and select country code.'),
+          content:
+              Text('Please enter valid phone number and select country code.'),
           duration: maxDuration,
         ),
       );

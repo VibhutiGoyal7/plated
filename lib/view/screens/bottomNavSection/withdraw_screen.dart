@@ -39,11 +39,17 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
   @override
   void initState() {
-    Helper.getProfileDetails().then((profile) {
+    Helper.getProfileDetails().then((profile){
+      customerNumber = profile?.phoneNumber;
+    });
+    Helper.getUserBalance().then((balance) {
       setState(() {
-        countryCurrencySymbol = profile?.countryCurrencySymbol;
-        currentBalance = profile?.balance;
-        customerNumber = profile?.phoneNumber;
+        currentBalance = balance;
+      });
+    });
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        countryCurrencySymbol = symbol;
       });
     });
     super.initState();

@@ -7,14 +7,16 @@ class ToastComponent {
     required String? message,
     Duration duration = const Duration(seconds: 5),
   }) {
-    toastification.show(
-      context: context,
-      title: Text("${message}"),
-      style: ToastificationStyle.flat,
-      autoCloseDuration: duration,
-      direction: TextDirection.ltr,
-      closeOnClick: true,
-      pauseOnHover: true,
-    );
+    if(message != null && message != "null") {
+      toastification.show(
+        context: context,
+        title: Text("${message}"),
+        style: ToastificationStyle.flat,
+        autoCloseDuration: duration,
+        direction: TextDirection.ltr,
+        closeOnClick: true,
+        pauseOnHover: true,
+      );
+    }
   }
 }

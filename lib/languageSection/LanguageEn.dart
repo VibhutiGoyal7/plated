@@ -169,7 +169,7 @@ class LanguageEn extends Languages {
   String get labelAddress => "Address";
 
   @override
-  String get labelBirthdate => "Birthdate";
+  String get labelBirthdate => "Date of Birth";
 
   @override
   String get labelChooseDoc => "Choose Document";

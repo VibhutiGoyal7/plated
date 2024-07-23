@@ -36,7 +36,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   var screenHeight;
   var screenWidth;
   var countryCurrencySymbol;
-  var countryBalance;
+  var currentBalance;
 
   final _scrollController = ScrollController();
   int _currentPage = 1;
@@ -52,10 +52,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void initState() {
     super.initState();
     inputValid = false;
-    Helper.getProfileDetails().then((profile) {
+    Helper.getUserBalance().then((balance) {
       setState(() {
-        countryCurrencySymbol = profile?.countryCurrencySymbol;
-        countryBalance = profile?.balance;
+        currentBalance = balance;
+      });
+    });
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        countryCurrencySymbol = symbol;
       });
     });
     _scrollController.addListener(_loadMore);
@@ -240,9 +244,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             "Total Balance",
                             style: TextStyle(
                                 fontSize: 12.0, fontWeight: FontWeight.normal),
-                          ),isInternetConnected && !isLoading?
+                          ),
+
+                          isInternetConnected && !isLoading?
                           Text(
-                            "${countryCurrencySymbol}${countryBalance}",
+                            "${countryCurrencySymbol}${currentBalance}",
                             style: TextStyle(
                                 fontSize: 32.0,
                                 fontWeight: FontWeight.bold,

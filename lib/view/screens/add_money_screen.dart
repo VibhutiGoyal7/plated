@@ -163,14 +163,14 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   ),
                   _buildPhoneInput(
                       context, Languages.of(context)!.labelZero, _amountController),
-                  Padding(
+             /*     Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
                     child: Text(
                       "Limit : ${limitAmt}",
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  ),*/
                   Spacer(),
                   _buildFooter(context),
                 ],

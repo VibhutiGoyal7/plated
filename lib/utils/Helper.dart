@@ -13,6 +13,14 @@ class Helper {
   static String valueSharedPreferences = '';
   static String pref_token = 'token';
   static String biometricPref = 'biometricPref';
+  static String userBalancePref = 'UserBalance';
+  static String currencySymbolPref = 'CurrencySymbol';
+  static String userDetailsPref = 'UserDetails';
+  static String countryPref = 'Country';
+  static String kycStatusPref = 'KycStatus';
+  static String passwordPref = 'Password';
+  static String recentP2PPref = 'RecentP2P';
+  static String profileDetailPref = 'ProfileDetail';
   static const String prefSelectedLanguageCode = "SelectedLanguageCode";
 
 // Write DATA
@@ -41,26 +49,47 @@ class Helper {
 
   static Future<bool> savePassword(token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return await sharedPreferences.setString("Password", token);
+    return await sharedPreferences.setString(passwordPref, token);
   }
 
   // Read Data
   static Future<String?> getPassword() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString("Password");
+    return sharedPreferences.getString(passwordPref);
+  }
+
+  static Future<bool> saveUserBalance(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(userBalancePref, token);
+  }
+
+  // Read Data
+  static Future<String?> getUserBalance() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(userBalancePref);
+  }
+  static Future<bool> saveCurrencySymbol(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(currencySymbolPref, token);
+  }
+
+  // Read Data
+  static Future<String?> getCurrencySymbol() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(currencySymbolPref);
   }
 
 
   static Future<bool> saveProfileDetails(_ProfileDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String ProfileDetailJson = jsonEncode(_ProfileDetail.toJson());
-    return await sharedPreferences.setString("ProfileDetail", ProfileDetailJson);
+    return await sharedPreferences.setString(profileDetailPref, ProfileDetailJson);
   }
 
 // Read Data
   static Future<ProfileResponse?> getProfileDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final String? ProfileDetailJson = sharedPreferences.getString("ProfileDetail");
+    final String? ProfileDetailJson = sharedPreferences.getString(profileDetailPref);
 
     if (ProfileDetailJson == null) {
       return null;
@@ -73,13 +102,13 @@ class Helper {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<String> RecentP2PJson = _RecentP2P.map<String>(( CheckCustomerResponse user) => user.toJsonString()).toList();
     print("helper save ${RecentP2PJson}");
-    return await sharedPreferences.setStringList("RecentP2P", RecentP2PJson);
+    return await sharedPreferences.setStringList(recentP2PPref, RecentP2PJson);
   }
 
 // Read Data
   static Future<List<CheckCustomerResponse>?> getRecentP2PDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final List<String>? jsonList = sharedPreferences.getStringList("RecentP2P");
+    final List<String>? jsonList = sharedPreferences.getStringList(recentP2PPref);
     print("helper jsonList  ${jsonList}");
 
     if (jsonList == null) {
@@ -104,13 +133,13 @@ class Helper {
   static Future<bool> saveUserDetails(_UserDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String UserDetailJson = jsonEncode(_UserDetail.toJson());
-    return await sharedPreferences.setString("UserDetails", UserDetailJson);
+    return await sharedPreferences.setString(userDetailsPref, UserDetailJson);
   }
 
   // Read Data
   static Future<SetUpAccountResponse?> getUserDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final String? UserDetailJson = sharedPreferences.getString("UserDetails");
+    final String? UserDetailJson = sharedPreferences.getString(userDetailsPref);
 
     if (UserDetailJson == null) {
       return null;
@@ -134,24 +163,24 @@ class Helper {
 
   static Future<bool> saveCountry(token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return await sharedPreferences.setString("Country", token);
+    return await sharedPreferences.setString(countryPref, token);
   }
 
   // Read Data
   static Future<String?> getCountry() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString("Country");
+    return sharedPreferences.getString(countryPref);
   }
 
   static Future<bool> saveKycStatus(token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return await sharedPreferences.setString("KycStatus", token);
+    return await sharedPreferences.setString(kycStatusPref, token);
   }
 
   // Read Data
   static Future<String?> getKycStatus() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString("KycStatus");
+    return sharedPreferences.getString(kycStatusPref);
   }
 
 

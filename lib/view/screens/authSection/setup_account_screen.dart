@@ -311,7 +311,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
 
                     decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: "Date of Birth",
+                        hintText: Languages.of(context)!.labelBirthdate,
                         hintStyle: TextStyle(color: Colors.grey),
                         icon: icon
                         //icon of text field
