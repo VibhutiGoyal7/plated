@@ -92,7 +92,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
-              context: context, message: mediaList?.message);
+              context: context, message: apiResponse?.message);
         }
         return Center(
           child: Text('Please try again later!!!'),

@@ -88,7 +88,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
         if(mediaList?.message== "Invalid access token"){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
-          ToastComponent.showToast(context: context, message: mediaList?.message);
+          ToastComponent.showToast(context: context, message: apiResponse?.message);
         }
         return Center(
           //child: Text('Please try again later!!!'),

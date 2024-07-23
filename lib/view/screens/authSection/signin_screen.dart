@@ -170,9 +170,10 @@ class _SigninScreenState extends State<SigninScreen> {
                       height: screenHeight * 0.2,
                       child: Image(
                         alignment: Alignment.topLeft,
-                        width: screenWidth * 0.9,
-                        height: screenHeight * 0.25,
-                        image: AssetImage("assets/payment_image.png"),
+                        width: screenWidth * 0.54,
+                        height: screenHeight * 0.2,
+                        image: AssetImage("assets/sign-in.png"),
+                        fit: BoxFit.fitWidth,
                       ),
                       alignment: AlignmentDirectional.center,
                     ),
@@ -235,7 +236,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                     "Forgot Password",
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: Colors.blue,
+                                        color: AppColor.PRIMARY,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -487,7 +488,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   "SignUp here.",
                   style: TextStyle(
                       fontSize: 14,
-                      color: Colors.blue,
+                      color: AppColor.PRIMARY,
                       fontWeight: FontWeight.bold),
                 ),
               ),

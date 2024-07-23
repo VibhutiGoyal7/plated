@@ -523,7 +523,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                       duration: maxDuration,
                     ),
                   );
-
                 }else if(!EmailValidator.validate(_emailController.text)){
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

@@ -422,7 +422,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
-                              color: Colors.blue),
+                              color: AppColor.PRIMARY),
                         ),
                         SizedBox(
                           height: 10,

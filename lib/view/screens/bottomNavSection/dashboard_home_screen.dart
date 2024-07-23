@@ -566,7 +566,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       "View all",
                                       style: TextStyle(
                                           fontSize: 14.0,
-                                          color: Colors.blue,
+                                          color: AppColor.PRIMARY,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     /* Icon(
@@ -741,7 +741,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(context, '/WithdrawScreen')
                                     .then(onGoBack);
-                                ;
+
+                              } else if (_shortcutCardsList[index].title ==
+                                  Languages.of(context)?.labelTransfer) {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/TransferScreen')
+                                    .then(onGoBack);
+
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
@@ -756,7 +762,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     padding: EdgeInsets.all(18),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.blue),
+                                        color: AppColor.PRIMARY),
                                     child: Icon(
                                       _shortcutCardsList[index].icon,
                                       color: AppColor.WHITE,
@@ -810,7 +816,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     padding: EdgeInsets.all(18),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.blue),
+                                        color: AppColor.PRIMARY),
                                     child: Icon(
                                       _shortcutCardsList[index].icon,
                                       color: AppColor.WHITE,
@@ -864,7 +870,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     padding: EdgeInsets.all(18),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.blue),
+                                        color: AppColor.PRIMARY),
                                     child: Icon(
                                       _shortcutCardsList[index].icon,
                                       color: AppColor.WHITE,
@@ -919,13 +925,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             width: 62,
             height: 62,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: AppColor.PRIMARY,
               borderRadius: BorderRadius.circular(40.0),
             ),
             child: IconButton(
                 onPressed: () => {
                       if (text == Languages.of(context)!.labelTransfer)
-                        {}
+                        {Navigator.pushNamed(context, '/TransferScreen')}
                       else if (text == Languages.of(context)!.labelSend)
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)

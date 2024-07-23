@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../model/request/completeP2PRequest.dart';
 
 class PaymentSuccessfulScreen extends StatefulWidget {
+
+  final CompleteP2PRequest? data;// Define the 'data' parameter here
+
+  PaymentSuccessfulScreen({Key? key, required this.data}) : super(key: key);
+
+
   @override
   _PaymentSuccessfulScreenState createState() => _PaymentSuccessfulScreenState();
 }
 
 class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
   String token = "";
-  String date="19 July 2024";
-  String time="10:00 AM";
+  String date="";
+  String time="";
   String imageUrl="";
-  String name="Vibhuti";
-  String phoneNo="1234567890";
+  String name="";
+  String phoneNo="";
+  String amount="";
   late double screenWidth;
   late double screenHeight;
   late bool isDarkMode;
@@ -23,6 +32,12 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
   @override
   void initState() {
     super.initState();
+     date="${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
+     time="${DateFormat('hh:mm a').format(DateTime.now())}";
+     imageUrl="${widget.data?.imageUrl}";
+     name="${widget.data?.fullName}";
+     phoneNo="${widget.data?.receiverPhoneNumber}";
+     amount="${widget.data?.amount}";
   }
 
   @override
@@ -38,15 +53,15 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 80,),
-              Icon(Icons.check_circle, color: Colors.white,),
-              Text("Payment Successful", style: TextStyle(color: Colors.white,fontSize: 16),),
+              SizedBox(height: 70,),
+              Icon(Icons.check_circle, color: Colors.white, size: 65,),
+              Text("Payment Successful", style: TextStyle(color: Colors.white,fontSize: 20, fontWeight: FontWeight.bold),),
               SizedBox(height:4,),
-              Text("${date} at ${time}", style: TextStyle(color: Colors.white,fontSize: 16),),
-              SizedBox(height: 80,),
+              Text("${date} at ${time}", style: TextStyle(color: Colors.yellow,fontSize: 13),),
+              SizedBox(height: 55,),
               Card(
                 child: Container(
-                  height: screenHeight*0.28,
+                  height: screenHeight*0.25,
                   width: screenWidth*0.7,
                   padding: EdgeInsets.all(16),
                   child: Center(
@@ -57,8 +72,8 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                           children: [
                             imageUrl == ""
                                 ? Container(
-                              height: 50,
-                              width: 50,
+                              height: 45,
+                              width: 45,
                               child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: AppColor.WHITE,
@@ -70,14 +85,14 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                 borderRadius: BorderRadius.circular(100.0),
                                 child: Image.network(
                                   imageUrl as String,
-                                  height: 50,
-                                  width: 50,
+                                  height: 45,
+                                  width: 45,
                                   fit: BoxFit.cover,
                                   errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                     // You can return any widget here to display in case of an error
                                     return Container(
-                                      height: 50,
-                                      width: 50,
+                                      height: 45,
+                                      width: 45,
                                       child: CircleAvatar(
                                         radius: 30,
                                         backgroundColor: AppColor.WHITE,
@@ -97,15 +112,17 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                         baseColor: Colors.white38,
                                         highlightColor: Colors.grey,
                                         child: Container(
-                                          height:50,
-                                          width: 50,
+                                          height:45,
+                                          width: 45,
                                           color: Colors.white,
                                         ),
                                       );
                                     }
                                   },
                                 )),
+                            SizedBox(width: 6,),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
                                 Text("${name}",
@@ -122,11 +139,11 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                             )
                           ],
                         ),
-                        SizedBox(height: 20,),
-                        Text("100", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 14,),
+                        Text("${amount}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                        SizedBox(height: 14,),
                         Divider(height: 0.5,color: Colors.grey,),
-                        SizedBox(height: 20,),
+                        Spacer(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

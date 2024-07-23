@@ -89,6 +89,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         print("otp ${mediaList?.mobileOtp}");
 
         ToastComponent.showToast(context: context, message: mediaList?.mobileOtp);
+        ToastComponent.showToast(context: context, message: apiResponse?.message);
 
         setState(() {
           isOtpBoxVisible = true;
@@ -97,8 +98,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
 
-        if(mediaList?.message== "Invalid access token")
-          SessionExpiredDialog.showDialogBox(context: context);
+        if(mediaList?.message== "Invalid access token"){
+          SessionExpiredDialog.showDialogBox(context: context);}
+        else{
+          ToastComponent.showToast(context: context, message: apiResponse?.message);
+        }
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -121,7 +125,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${apiResponse?.data}");
-        Navigator.pushNamed(context, '/ProfileScreen');
+        //Navigator.pushNamed(context, '/ProfileScreen');
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:

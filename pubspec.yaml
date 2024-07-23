@@ -95,6 +95,7 @@ flutter:
       - assets/video-recording.png
       - assets/change_password.png
       - assets/forgot_password.png
+      - assets/sign-in.png
 
   fonts:
     - family: CustomFont

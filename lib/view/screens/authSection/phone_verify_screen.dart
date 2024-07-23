@@ -119,6 +119,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         await Future.delayed(const Duration(seconds: 4));
         Navigator.pushNamed(context, '/OtpVerify',
             arguments: "${_inputController.text}");
+        ToastComponent.showToast(context: context, message: "${phoneVerifyResponse?.mobileOtp}");
         return Container(); // Return an empty container as yo u'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);

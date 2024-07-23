@@ -348,7 +348,9 @@ class _MyAppState extends State<MyApp> {
               return TransferContactScreen();
             },
             '/PaymentSuccessfulScreen': (context) {
-              return PaymentSuccessfulScreen();
+              final args =
+              ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest?;
+              return PaymentSuccessfulScreen(data : args);
             }
           }),
     );

@@ -93,9 +93,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         phoneNumber: widget.data.receiverPhoneNumber, imageUrl: widget.data.imageUrl );
         print("PrefData ${prefData.username}");
         List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
-        print("prefResponse ${prefResponse?[0].username}");
-        prefResponse?.add(prefData);
-        print("prefResponse ${prefResponse?[0].username}");
+       // print("prefResponse ${prefResponse?[0].username}");
         bool dataExist = false;
         if(prefResponse?.length != null) {
           for (int i = 0; i < prefResponse!.length; i++) {
@@ -103,12 +101,35 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               dataExist = true;
             }
           }
+        }else{
+          dataExist = false;
         }
-        if(!dataExist)
-          Helper.saveRecentP2PDetails(prefResponse);
+        if(!dataExist) {
+          if(prefResponse!=null) {
+            prefResponse.add(prefData);
+            print("prefResponse ${prefResponse[0].username}");
+            Helper.saveRecentP2PDetails(prefResponse);
+          }else{
+            List<CheckCustomerResponse>? dataList = [] ;
+            Helper.saveRecentP2PDetails(dataList);
+
+          }
+        }
 
         ToastComponent.showToast(context: context, message: message);
-        Navigator.pushReplacementNamed(context, '/BottomNav');
+
+        CompleteP2PRequest data = CompleteP2PRequest(
+            otp: "",
+            customerOtpId: widget.data.customerOtpId,
+            paymentTransactionId: widget.data.paymentTransactionId,
+          amount: widget.data.amount,
+          imageUrl: widget.data.imageUrl,
+          fullName: widget.data.fullName,
+          receiverUsername: widget.data.receiverUsername,
+          receiverPhoneNumber: widget.data.receiverPhoneNumber,
+        );
+
+        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen', arguments: data);
 
         return Container();
       case Status.ERROR:
