@@ -88,7 +88,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (mediaList?.message == "Invalid access token") {
+        if (apiResponse?.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -108,8 +108,8 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   Future<Widget> VerifyEmailResponse(
       BuildContext context, ApiResponse apiResponse) async {
     GenerateTpinResponse? generateTpinResponse = apiResponse.data as GenerateTpinResponse?;
-    print("VerifyGetMediaWidget ${generateTpinResponse?.message}");
-    var message = generateTpinResponse?.message.toString();
+    print("VerifyGetMediaWidget ${apiResponse?.message}");
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -122,7 +122,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (generateTpinResponse?.message == "Invalid access token") {
+        if (apiResponse?.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
         }else
           {

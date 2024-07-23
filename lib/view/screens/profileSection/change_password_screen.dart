@@ -57,7 +57,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
 
-        if(mediaList?.message== "Invalid access token")
+        if(apiResponse?.message== "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -161,7 +161,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                            color: AppColor.PRIMARY,
                           ),
                         ),
                       ),

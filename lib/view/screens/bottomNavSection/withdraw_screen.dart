@@ -298,7 +298,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (withDrawResponse?.message == "Invalid access token")
+        if (apiResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         else {
           _inputController.text = "";

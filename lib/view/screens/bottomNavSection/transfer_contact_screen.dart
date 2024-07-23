@@ -46,7 +46,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     CheckCustomerResponse? checkCustomerResponse =
     apiResponse.data as CheckCustomerResponse?;
-    var message = checkCustomerResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -101,24 +101,42 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          Languages.of(context)!.labelMoneyTransfer,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 24.0),
+
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            Languages.of(context)!.labelMoneyTransfer,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 24.0),
+                          ),
                         ),
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 12,
                       ),
-                      Padding(
+
+                      /*Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             Languages.of(context)!.labelTransferTo,
                             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),*/
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Please enter phone number registered with Payorio or username to(such as XXXXX@payorio) to which you want to transfer money.",
+                            style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
                           ),
                         ),
                       ),

@@ -1,6 +1,7 @@
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -10,6 +11,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/createOtpChangePass.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../model/response/createOtpChangePassResponse.dart';
+import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
@@ -112,11 +114,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (mediaList?.message == "Invalid access token") {
-          SessionExpiredDialog.showDialogBox(context: context);
-        } else {
-          ToastComponent.showToast(
-              context: context, message: apiResponse?.message);
+
+        if(apiResponse?.message== "Invalid access token"){
+          SessionExpiredDialog.showDialogBox(context: context);}
+        else{
+          ToastComponent.showToast(context: context, message: apiResponse?.message);
         }
         return Center(
           child: Text('Please try again later!!!'),
@@ -141,10 +143,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.COMPLETED:
         print("rwrwr ${apiResponse?.data}");
         //Navigator.pushNamed(context, '/ProfileScreen');
+        Helper.clearAllSharedPreferences();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SigninScreen()),
+              (Route<dynamic> route) => false,
+        );
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (mediaList?.message == "Invalid access token")
+
+        if(apiResponse?.message== "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),

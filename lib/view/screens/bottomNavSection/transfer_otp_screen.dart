@@ -80,7 +80,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     CompleteP2PResponse? completeP2PResponse =
     apiResponse.data as CompleteP2PResponse?;
-    var message = completeP2PResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });

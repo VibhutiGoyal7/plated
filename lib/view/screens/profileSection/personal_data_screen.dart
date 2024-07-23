@@ -1,7 +1,10 @@
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
+import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/ShimmerList.dart';
 import 'package:Payrio/view/component/shimmer_box.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
@@ -170,7 +173,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (mediaList?.message == "Invalid access token") {
+
+        if(apiResponse?.message== "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -236,64 +240,77 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                   _buildDocumentOption(
                       context,
                       Languages.of(context)!.labelPassport,
+                      Languages.of(context)!.labelPhotoPage,
+                      '/DocImageScreen',
                       'passport',
+                      "${passportImg}",
                       "assets/passport.png",
                       "${passportStatus}",
-                      "${passportImg}",
                       "${passportRejectedReason}"),
                 if (isDrivingLicenceAvailable)
                   _buildDocumentOption(
                       context,
                       Languages.of(context)!.labelDrivingLicence,
+                      Languages.of(context)!.labelFrontNBack,
+                      '/DocImageScreen',
                       'driving_licence',
+                      "${drivingLicenseImg}",
                       "assets/license.png",
                       "${drivingLicenceStatus}",
-                      "${drivingLicenseImg}",
                       "${drivingLicenceRejectedReason}"),
                 if (isNationalIdAvailable)
                   _buildDocumentOption(
                       context,
                       Languages.of(context)!.labelNationalId,
+                      Languages.of(context)!.labelFrontNBack,
+                      '/DocImageScreen',
                       'national_id',
+                      "${nationalIdImg}",
                       "assets/id_card.png",
                       "${nationalIdStatus}",
-                      "${nationalIdImg}",
                       "${nationalIdRejectedReason}"),
                 if (isAddressLycAvailable)
                   _buildDocumentOption(
                       context,
                       "Address KYC",
+                      'Front ',
+                      '/DocImageScreen',
                       'address_kyc',
+                      "${addressKycImg}",
                       "assets/address.png",
                       "${addressKycStatus}",
-                      "${addressKycImg}",
                       "${addressKycRejectedReason}"),
                 if (isBankStatementAvailable)
                   _buildDocumentOption(
                       context,
                       "Bank Statement",
+                      'Front ',
+                      '/DocImageScreen',
                       'bank_statement',
+                      "${bankStatementImg}",
                       "assets/bank_statement.png",
                       "${bankStatementStatus}",
-                      "${bankStatementImg}",
                       "${bankStatementRejectedReason}"),
                 if (isGeoLocAvailable)
                   _buildDocumentOption(
                       context,
                       "Geolocation KYC",
+                      'Front ',
+                      '/DocImageScreen',
                       'geolocation_kyc',
                       "assets/geo_Location.jpg",
                       "${geoLocStatus}",
-                      "${geoLocImg}",
                       "${geoLocRejectedReason}"),
                 if (isKycVideoAvailable)
                   _buildDocumentOption(
                       context,
                       Languages.of(context)!.labelVideoVerification,
+                      'Front ',
+                      '/VideoKycScreen',
                       'video_kyc_clip',
+                      "${kycVideo}",
                       "assets/video.png",
                       "${kycVideoStatus}",
-                      "${kycVideo}",
                       "${kycVideoRejectedReason}"),
 
               ],
@@ -406,8 +423,16 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     );
   }
 
-  Widget _buildDocumentOption(BuildContext context, String title, String data,
-      String icon, String status, String image, String rejectionReason) {
+  Widget _buildDocumentOption(
+      BuildContext context,
+      String title,
+      String subtitle,
+      String route,
+      String data,
+      String image,
+      String icon,
+      String status,
+      String rejectionReason) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
@@ -426,10 +451,142 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       textColor = Colors.orange;
     }
     return GestureDetector(
+      onTap: () async {
+        if(verificationStatus == "Pending"){
+          if (await checkPermissionStatus()) {
+            Navigator.pushReplacementNamed(context, route,
+                arguments: "${data}");
+          } else {
+            Navigator.pushNamed(context, "/CameraAccessScreen",
+                arguments: "${data}");
+          }
+        }else {
+          if ( title != Languages.of(context)!.labelVideoVerification) {
+            _showModal(context, image, false, verificationStatus, route, data, rejectionReason);
+          }
+        }
+
+        /*if (verificationStatus == "Pending" ||
+            verificationStatus == "Rejected") {
+          if (await checkPermissionStatus()) {
+            Navigator.pushReplacementNamed(context, route,
+                arguments: "${data}");
+          } else {
+            Navigator.pushNamed(context, "/CameraAccessScreen",
+                arguments: "${data}");
+          }
+        }*/
+      },
+      child: Card(
+        child: isLoading
+            ? Shimmer.fromColors(
+          baseColor: Colors.white38,
+          highlightColor: Colors.grey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
+            child: Container(
+              width: double.infinity,
+              //height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white38,
+                borderRadius: BorderRadius.circular(
+                    8.0), // Adjust the radius as needed
+              ),
+            ),
+          ),
+        )
+            : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+              child: Container(
+                child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Image(
+                    alignment: Alignment.topLeft,
+                    width: 25,
+                    image: AssetImage(icon),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          (status == "rejected")
+                              ? rejectionReason
+                              : subtitle,
+                          style: TextStyle(
+                            color: (status == "rejected")
+                                ? textColor
+                                : isDarkMode
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 6),
+                  child: Text(
+                    verificationStatus,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: textColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                          ],
+                        ),
+              ),
+            ),
+      ),
+    );
+  }
+
+
+  /*Widget _buildDocumentOption( BuildContext context,
+      String title,
+      String data,
+      String icon,
+      String status,
+      String image,
+      String rejectionReason) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    String verificationStatus = "";
+    Color textColor = isDarkMode ? Colors.white : Colors.black;
+
+    if (status == "verified") {
+      verificationStatus = Languages.of(context)!.labelVerified;
+      textColor = Colors.green;
+    } else if (status == "rejected") {
+      verificationStatus = "Rejected";
+      textColor = Colors.red;
+    }else if(status == "in_progress"){
+      verificationStatus = Languages.of(context)!.labelInProgress;
+      textColor = Colors.deepOrange;
+    } else {
+      verificationStatus = Languages.of(context)!.labelPending;
+      textColor = Colors.orange;
+    }
+    return GestureDetector(
       onTap: () {
-        if (title != Languages.of(context)!.labelVideoVerification) {
+        if ( title != Languages.of(context)!.labelVideoVerification) {
           _showModal(context, image, false);
-        } /*else {
+        }*//*else {
           print(video);
           videoPlayerController = VideoPlayerController.network(
             video, // Replace with your video URL
@@ -437,7 +594,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             setState(() {});  // Ensure the first frame is shown after the video is initialized
           });
           _showModal(context,  image, true);
-        }*/
+        }*//*
       },
       child: Container(
         width: double.infinity,
@@ -495,7 +652,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         ),
       ),
     );
-  }
+  }*/
 
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
@@ -539,11 +696,21 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     }
   }
 
-  void _showModal(BuildContext context, String? image, bool isVideo) {
-    if (isVideo) {
+  void _showModal(BuildContext context, String? image, bool isVideo, String status, String route,String data,String rejectionReason) {
+    if(isVideo){
       setState(() {
         video = image as String;
-      });
+      });}
+
+    Color textColor = isDarkMode ? Colors.white : Colors.black;
+    if (status == "Verified") {
+      textColor = Colors.green;
+    } else if (status == "Rejected") {
+      textColor = Colors.red;
+    } else if (status == "In Progress") {
+      textColor = Colors.deepOrange;
+    } else {
+      textColor = Colors.orange;
     }
     showDialog(
       barrierDismissible: false,
@@ -552,90 +719,124 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
+
               shape: Border.all(),
               scrollable: false,
               insetPadding: EdgeInsets.all(0),
-              contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              content: Container(
-                height: MediaQuery.of(context).size.height * 0.75,
+              contentPadding: EdgeInsets.symmetric(horizontal: 0  , vertical: 0),
+                content:
+                Container(
+                  height:  MediaQuery.of(context).size.height * 0.78,
                 width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: <Widget>[
-                        Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.center,
+                              child: (!isVideo)?(image != "" || image!.isNotEmpty) ? ClipRRect(
+                                child:
+                                Image.network(image as String,
+                                    fit: BoxFit.fill,
+                                loadingBuilder: (BuildContext context, Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Container(
+                                        height: MediaQuery.of(context).size.height * 0.72,
+                                        width: MediaQuery.of(context).size.width,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  }
+                                },
+                                )
+                              ) : Text(Languages.of(context)!.labelStatusPending)
+                                  :
+                              videoPlayerController != null &&
+                                  videoPlayerController.value.isInitialized
+                                  ? AspectRatio(
+                                aspectRatio:
+                                videoPlayerController.value.aspectRatio,
+                                child: VideoPlayer(videoPlayerController),
+                              ): Text(Languages.of(context)!.labelStatusPending)
+                          ) ,
+
+                          Align(
                             alignment: Alignment.center,
-                            child: (!isVideo)
-                                ? (image != "" || image!.isNotEmpty)
-                                    ? ClipRRect(
-                                        child: Image.network(
-                                        image as String,
-                                        fit: BoxFit.fill,
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.grey[300]!,
-                                              highlightColor: Colors.grey[100]!,
-                                              child: Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.75,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                color: Colors.grey,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ))
-                                    : Text(Languages.of(context)!
-                                        .labelStatusPending)
-                                : videoPlayerController != null &&
-                                        videoPlayerController
-                                            .value.isInitialized
-                                    ? AspectRatio(
-                                        aspectRatio: videoPlayerController
-                                            .value.aspectRatio,
-                                        child:
-                                            VideoPlayer(videoPlayerController),
-                                      )
-                                    : Text(Languages.of(context)!
-                                        .labelStatusPending)),
-                        Align(
+                            child: Container(
+                              width: double.infinity,
+                              color: textColor,
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                              child: Text((status == "Rejected") ?
+                                "${status} - ${rejectionReason}" : "${status}",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,), textAlign: TextAlign.center,
+                              ) ,
+                            ),
+                          ),
+
+
+                          Align(
                             alignment: Alignment.topRight,
                             child: Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(7.0),
                               child: GestureDetector(
                                   onTap: () {
                                     Navigator.pop(context);
                                   },
                                   child: Container(
-                                      padding: EdgeInsets.all(2),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.black),
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.white70,
-                                      ))),
-                            ))
-                      ],
-                    ),
-                  ],
+                                    padding: EdgeInsets.all(2),
+                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                                      child: Icon(Icons.close ,color: Colors.black,))),
+                            )
+                          ),
+
+                        ],
+                      ),
+                      status == "Rejected" ?
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (await checkPermissionStatus()) {
+                              Navigator.pushReplacementNamed(context, route,
+                                  arguments: "${data}");
+                            } else {
+                              Navigator.pushNamed(context, "/CameraAccessScreen",
+                                  arguments: "${data}");
+                            }
+                          },
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              width: double.infinity,
+                              color: AppColor.PRIMARY,
+                              //margin: EdgeInsets.symmetric(horizontal: 5),
+                              padding: EdgeInsets.all(12),
+                              child: Text(
+                                "Re-upload",style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,
+                              ) ,
+                            ),
+                          ),
+                        ),
+                      ): SizedBox(),
+                    ],
+                  ),
                 ),
-              ),
             );
           },
         );
       },
     );
+  }
+  Future<bool> checkPermissionStatus() async {
+    bool isCameraGranted = await Permission.camera.request().isGranted;
+    print(isCameraGranted);
+    return await isCameraGranted;
   }
 }

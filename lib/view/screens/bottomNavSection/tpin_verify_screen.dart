@@ -110,7 +110,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
       BuildContext context, ApiResponse apiResponse) {
     GenerateTpinResponse? generateTpinResponse =
         apiResponse.data as GenerateTpinResponse?;
-    var message = generateTpinResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());

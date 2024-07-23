@@ -82,7 +82,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (addMoneyResponse?.message == "Invalid access token")
+        if (apiResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:Payrio/model/request/checkCustomerRequest.dart';
+import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -169,9 +170,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   Future<Widget> initiateCheckCustomerResponse(
       BuildContext context, ApiResponse apiResponse, String userName) async {
-    CreateOtpChangePassResponse? createOtpChangePassResponse =
-        apiResponse.data as CreateOtpChangePassResponse?;
-    var message = createOtpChangePassResponse?.message.toString();
+    CheckCustomerResponse? checkCustomerResponse =
+        apiResponse.data;
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -180,8 +181,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("pushNamed $userName");
-        Navigator.pushReplacementNamed(context, '/TransferScreen',
-            arguments: "${userName}");
+        Navigator.pushNamed(context, '/TransferScreen',
+            arguments: checkCustomerResponse);
         // Navigate to the new screen after receiving the response
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:

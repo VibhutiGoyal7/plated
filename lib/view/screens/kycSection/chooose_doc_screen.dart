@@ -122,7 +122,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("object");
-        if (mediaList?.message == "Invalid access token"){
+        if (apiResponse?.message == "Invalid access token"){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(context: context, message: apiResponse?.message);

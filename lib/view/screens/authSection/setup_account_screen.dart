@@ -73,7 +73,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     SetUpAccountResponse? setUpAccountResponse =
         apiResponse.data as SetUpAccountResponse?;
-    String? message = setUpAccountResponse?.message.toString();
+    String? message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });
