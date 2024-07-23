@@ -60,7 +60,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   Future<Widget> getSignInResponse(
       BuildContext context, ApiResponse apiResponse) async {
-    SignInResponse? mediaList = apiResponse.data as SignInResponse?;
+    ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
@@ -70,8 +70,9 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
+       /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
+            username: mediaList?.username,userId: mediaList?.id, email: mediaList?.email,   );*/
 
-        await Helper.saveUserDetails(mediaList);
         String token = "${mediaList?.token}";
         bool isSaved = await Helper.saveUserToken(token);
 
@@ -81,7 +82,7 @@ class _SigninScreenState extends State<SigninScreen> {
         } else {
           print('Failed to save token.');
         }
-        //if (await Helper.saveProfileDetails(mediaList)) print("data saved");
+        if (await Helper.saveProfileDetails(mediaList)) print("data saved");
 
         await Helper.savePassword(_passwordController.text);
         String? password = await Helper.getPassword();
@@ -92,6 +93,8 @@ class _SigninScreenState extends State<SigninScreen> {
           Navigator.pushReplacementNamed(context, '/SetUpAccount');
         } else {
           await Helper.saveProfileDetails(mediaList);
+          ProfileResponse? prefData = await Helper.getProfileDetails();
+          print("prefData : ${prefData?.username}");
           //await Helper.saveCountry(mediaList?.countryName);
           await Helper.saveKycStatus(mediaList?.kycStatus);
           Navigator.pushReplacementNamed(context, '/BottomNav');

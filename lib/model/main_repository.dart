@@ -90,14 +90,14 @@ class MainRepository {
     return generateTpinResponse;
   }
 
-  Future<SignInResponse> signInWithPass(
+  Future<ProfileResponse> signInWithPass(
       String value, SignInRequest signInRequest) async {
     print(signInRequest);
     dynamic response = await _payrioService.postResponse(value, signInRequest);
     print(value);
     final jsonData = response;
-    print(jsonData);
-    SignInResponse mediaList = SignInResponse.fromJson(jsonData);
+    print(" ${jsonData}");
+    ProfileResponse mediaList = ProfileResponse.fromSignIn(jsonData);
     return mediaList;
   }
 

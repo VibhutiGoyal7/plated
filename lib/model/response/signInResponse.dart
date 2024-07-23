@@ -4,7 +4,6 @@ class SignInResponse {
   final int? id;
   final String? phoneNumber;
   final String? createdAt;
-  final String? updatedAt;
   final String? email;
   final String? address;
   final String? dob;
@@ -12,10 +11,7 @@ class SignInResponse {
   final String? kycStatus;
   final String? status;
   final bool? isEmailVerified;
-  final int? mobileOtpExpireAt;
-  final String? mobileOtp;
   final String? message;
-  final String? currentToken;
   final int? activityPoints;
   final int? countryId;
   final String? balance;
@@ -23,6 +19,9 @@ class SignInResponse {
   final bool? isProfileSetupDone;
   final String? username;
   final String? countryName;
+  final String? countryCurrencySymbol;
+  final String? tpin;
+  final String? countryPhoneCode;
 
   SignInResponse(
       {this.firstName,
@@ -30,24 +29,23 @@ class SignInResponse {
       this.id,
       this.phoneNumber,
       this.createdAt,
-      this.updatedAt,
       this.email,
       this.address,
       this.dob,
       this.status,
       this.isEmailVerified,
-      this.mobileOtpExpireAt,
-      this.mobileOtp,
       this.token,
       this.message,
       this.kycStatus,
-      this.currentToken,
       this.activityPoints,
       this.countryId,
       this.balance,
       this.isProfileSetupDone,
       this.vipLevel,
       this.countryName,
+      this.countryCurrencySymbol,
+      this.tpin,
+      this.countryPhoneCode,
       this.username});
 
   factory SignInResponse.fromJson(Map<String, dynamic> json) {
@@ -57,31 +55,19 @@ class SignInResponse {
       lastName: json['data']?['customer']?['last_name'] as String?,
       id: json['data']?['customer']?['id'] as int?,
       phoneNumber: json['data']?['customer']?['phone_number'] as String?,
-      createdAt: json['data']?['customer']?[
-              'created_at'] /*!= null
-          ? DateTime.parse(json['data']['customer']?['created_at']*/
-          as String? /*)
-          : null,*/
-      ,
-      updatedAt: json['data']?['customer']?[
-              'updated_at'] /*!= null
-          ? DateTime.parse(json['data']['customer']?['updated_at']*/
-          as String? /*)
-          : null,*/
-      ,
+      createdAt: json['data']?['customer']?['created_at'] as String?,
       email: json['data']?['customer']?['email'] as String?,
       countryName: json['data']?['customer']?['country_name'] as String?,
       address: json['data']?['customer']?['address'] as String?,
       dob: json['data']?['customer']?['dob'] as String?,
       isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
-      mobileOtpExpireAt:
-          json['data']?['customer']?['mobile_otp_expire_at'] as int?,
-      mobileOtp: json['data']?['customer']?['mobile_otp'] as String?,
       kycStatus: json['data']?['customer']?['kyc_status'] as String?,
-      currentToken: json['data']?['customer']?['current_token'] as String?,
       vipLevel: json['data']?['customer']?['vip_level'] as String?,
       balance: json['data']?['customer']?['balance'] as String?,
       username: json['data']?['customer']?['username'] as String?,
+      countryCurrencySymbol: json['data']?['customer']?['country_currency_symbol'] as String?,
+      countryPhoneCode: json['data']?['customer']?['country_phone_code'] as String?,
+      tpin: json['data']?['customer']?['tpin'] as String?,
       countryId: json['data']?['customer']?['country_id'] as int?,
       isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as bool?,
       activityPoints: json['data']?['customer']?['activity_points'] as int?,
@@ -100,11 +86,11 @@ class SignInResponse {
     data['address'] = this.address;
     data['kyc_status'] = this.kycStatus;
     data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
     data['status'] = this.status;
     data['dob'] = this.dob;
-    data['mobile_otp'] = this.mobileOtp;
-    data['mobile_otp_expire_at'] = this.mobileOtpExpireAt;
+    data['country_currency_symbol'] = this.countryCurrencySymbol;
+    data['country_phone_code'] = this.countryPhoneCode;
+    data['tpin'] = this.tpin;
     data['is_email_verified'] = this.isEmailVerified;
     return data;
   }
@@ -121,18 +107,13 @@ class SignInResponse {
           as String /*)
           : null*/
       ,
-      updatedAt: json[
-              'updated_at'] /* != null
-          ? DateTime.parse(json['updated_at']*/
-          as String? /*)
-          : null*/
-      ,
       email: json['email'] as String?,
+      countryCurrencySymbol: json['country_currency_symbol'] as String?,
+      countryPhoneCode: json['country_phone_code'] as String?,
+      tpin: json['tpin'] as String?,
       address: json['address'] as String?,
       dob: json['dob'] as String?,
       kycStatus: json['kyc_status'] as String?,
-      mobileOtp: json['mobile_otp'] as String?,
-      mobileOtpExpireAt: json['mobile_otp_expire_at'] as int?,
       isEmailVerified: json['is_email_verified'] as bool?,
     );
   }

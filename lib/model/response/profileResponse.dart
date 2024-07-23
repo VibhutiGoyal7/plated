@@ -21,8 +21,12 @@ class ProfileResponse {
   final String? countryName;
   final String? countryPhoneCode;
   final String? createdAt;
+  final bool? isProfileSetupDone;
+  final int? activityPoints;
   final bool? isEmailVerified;
   final String? countryCurrencySymbol;
+  final String? tpin;
+  final String? token;
 
   ProfileResponse({
     this.firstName,
@@ -45,7 +49,11 @@ class ProfileResponse {
     this.activityPts,
     this.kycStatus,
     this.balance,
-    this.countryCurrencySymbol
+    this.countryCurrencySymbol,
+    this.tpin,
+    this.activityPoints,
+    this.isProfileSetupDone,
+    this.token
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -69,10 +77,40 @@ class ProfileResponse {
       countryName: json['data']?['country_name'] as String?,
       countryPhoneCode: json['data']?['country_phone_code'] as String?,
       createdAt: json['data']?['created_at'] as String?,
+      tpin: json['data']?['customer']?['tpin'] as String?,
       countryCurrencySymbol: json['data']?['country_currency_symbol'] as String?,
+      token: json['data']?['token'] as String?,
 
     );
   }
+
+  factory ProfileResponse.fromSignIn(Map<String, dynamic> json) {
+    return ProfileResponse(
+      message: json['message'] as String?,
+      firstName: json['data']?['customer']?['first_name'] as String?,
+      lastName: json['data']?['customer']?['last_name'] as String?,
+      userId: json['data']?['customer']?['id'] as int?,
+      phoneNumber: json['data']?['customer']?['phone_number'] as String?,
+      createdAt: json['data']?['customer']?['created_at'] as String?,
+      email: json['data']?['customer']?['email'] as String?,
+      countryName: json['data']?['customer']?['country_name'] as String?,
+      address: json['data']?['customer']?['address'] as String?,
+      dob: json['data']?['customer']?['dob'] as String?,
+      isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
+      kycStatus: json['data']?['customer']?['kyc_status'] as String?,
+      vipLevel: json['data']?['customer']?['vip_level'] as String?,
+      balance: json['data']?['customer']?['balance'] as String?,
+      username: json['data']?['customer']?['username'] as String?,
+      countryCurrencySymbol: json['data']?['customer']?['country_currency_symbol'] as String?,
+      countryPhoneCode: json['data']?['customer']?['country_phone_code'] as String?,
+      tpin: json['data']?['customer']?['tpin'] as String?,
+      countryId: json['data']?['customer']?['country_id'] as int?,
+      isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as bool?,
+      activityPoints: json['data']?['customer']?['activity_points'] as int?,
+      token: json['data']?['token'] as String?,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
 
@@ -95,6 +133,7 @@ class ProfileResponse {
     data['country_name'] = this.countryName;
     data['country_phone_code'] = this.countryPhoneCode;
     data['activity_points'] = this.activityPts;
+    data['tpin'] = this.tpin;
     data['country_currency_symbol'] = this.countryCurrencySymbol;
     return data;
   }
@@ -118,6 +157,7 @@ class ProfileResponse {
       countryPhoneCode: json['country_phone_code'] as String?,
       createdAt: json['created_at'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,
+      tpin: json['tpin'] as String?,
       countryCurrencySymbol: json['country_currency_symbol'] as String?,
     );
   }

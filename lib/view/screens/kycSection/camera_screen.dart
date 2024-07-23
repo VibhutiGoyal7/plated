@@ -61,7 +61,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
     }else if (docType == "address_kyc") {
       isBothSides = false;
     }else if (docType == "bank_statement") {
-      isBothSides = true;
+      isBothSides = false;
     }
     imageName="kyc_file";
 

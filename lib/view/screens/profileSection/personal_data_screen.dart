@@ -298,6 +298,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       'Front ',
                       '/DocImageScreen',
                       'geolocation_kyc',
+                      "${geoLocImg}",
                       "assets/geo_Location.jpg",
                       "${geoLocStatus}",
                       "${geoLocRejectedReason}"),
