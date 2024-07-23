@@ -66,13 +66,13 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     Navigator.pushNamed(context, '/PersonalDataScreen');
                   },
                 ),
-                _buildMenuItem(
+               /* _buildMenuItem(
                   context: context,
                   text: Languages.of(context)!.labelAddress,
                   onTap: () {
                     Navigator.pushNamed(context, '/AddressScreen');
                   },
-                ),
+                ),*/
                 Padding(
                   padding: const EdgeInsets.only(left: 14.0, top: 8.0),
                   child: Text(

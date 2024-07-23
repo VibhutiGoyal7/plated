@@ -1,4 +1,5 @@
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
@@ -239,14 +240,16 @@ class _BottomNavState extends State<BottomNav>
 
     if (authenticated) {
       print("User authenticated successfully.");
+      ToastComponent.showToast(context: context, message: "User authenticated successfully.");
       // Proceed with authorized action
       // For example:
-      // Navigator.pushReplacementNamed(context, '/home');
+     // Navigator.pushReplacementNamed(context, '/home');
     } else {
       // User cancelled authentication
       print("User cancelled authentication.");
+      ToastComponent.showToast(context: context, message: "User cancelled authentication.");
       // Close the app or show a message and handle accordingly
-      SystemNavigator.pop(); // This will close the app
+      //SystemNavigator.pop(); // This will close the app
     }
   }
 }

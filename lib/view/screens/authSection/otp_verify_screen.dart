@@ -78,7 +78,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     OtpVerifyResponse? otpVerifyResponse =
         apiResponse.data as OtpVerifyResponse?;
-    var message = otpVerifyResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -126,7 +126,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   Widget getResendOtpResponse(BuildContext context, ApiResponse apiResponse) {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
-    var message = phoneVerifyResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });

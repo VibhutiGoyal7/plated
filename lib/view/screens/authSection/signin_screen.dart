@@ -61,7 +61,7 @@ class _SigninScreenState extends State<SigninScreen> {
   Future<Widget> getSignInResponse(
       BuildContext context, ApiResponse apiResponse) async {
     SignInResponse? mediaList = apiResponse.data as SignInResponse?;
-    var message = mediaList?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });

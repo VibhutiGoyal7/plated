@@ -68,7 +68,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
     ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
-    var message = mediaList?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -102,7 +102,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Future<Widget> getPhoneVerifyResponse(BuildContext context, ApiResponse apiResponse) async {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
-    var message = phoneVerifyResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;
@@ -137,7 +137,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = countryListResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

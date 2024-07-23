@@ -87,7 +87,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     InitiateP2PResponse? initiateP2PResponse =
     apiResponse.data as InitiateP2PResponse?;
-    var message = initiateP2PResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
     });

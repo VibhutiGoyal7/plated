@@ -106,7 +106,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget getDashboardData(BuildContext context, ApiResponse apiResponse) {
     DashboardResponse? dashboardResponse =
         apiResponse.data as DashboardResponse?;
-    var message = dashboardResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -172,7 +172,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
         apiResponse.data as KycStatusResponse?;
-    var message = kycStatusResponse?.message.toString();
+    var message = apiResponse?.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -209,10 +209,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     _shortcutCardsList = [
+
       Shortcutitemlist(
-          title: Languages.of(context)!.labelTransfer,
-          icon: Icons.transfer_within_a_station_sharp,
+          title: Languages.of(context)!.labelSend,
+          icon: Icons.send,
           selected: true),
+
       Shortcutitemlist(
           title: Languages.of(context)!.labelAddMoney,
           icon: Icons.add_rounded,
@@ -222,8 +224,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           icon: Icons.call_made,
           selected: true),
       Shortcutitemlist(
-          title: Languages.of(context)!.labelSend,
-          icon: Icons.send,
+          title: Languages.of(context)!.labelTransfer,
+          icon: Icons.transfer_within_a_station_sharp,
           selected: true),
       Shortcutitemlist(
           title: Languages.of(context)!.labelExchange,
@@ -740,12 +742,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   Languages.of(context)?.labelWithdraw) {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(context, '/WithdrawScreen')
-                                    .then(onGoBack);
-
-                              } else if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)?.labelTransfer) {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(context, '/TransferScreen')
                                     .then(onGoBack);
 
                               } else {
