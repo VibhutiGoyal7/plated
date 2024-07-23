@@ -68,6 +68,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.initState();
     isValid = false;
     phoneNumberValid = false;
+    newPasswordVisible = true;
+    confirmPasswordVisible = true;
     _fetchData();
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
@@ -114,11 +116,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(apiResponse?.message== "Invalid access token"){
-          SessionExpiredDialog.showDialogBox(context: context);}
-        else{
-          ToastComponent.showToast(context: context, message: apiResponse?.message);
+        if (apiResponse?.message == "Invalid access token") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {
+          ToastComponent.showToast(
+              context: context, message: apiResponse?.message);
         }
         return Center(
           child: Text('Please try again later!!!'),
@@ -143,21 +145,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.COMPLETED:
         print("rwrwr ");
         //Navigator.pushNamed(context, '/ProfileScreen');
-        ToastComponent.showToast(context: context, message: apiResponse?.message);
+        ToastComponent.showToast(
+            context: context, message: apiResponse?.message);
         Helper.clearAllSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => SigninScreen()),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(apiResponse?.message== "Invalid access token")
+        if (apiResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
-          //child: Text('Please try again later!!!'),
-        );
+            //child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
@@ -203,66 +205,81 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    bool isLoading = false;
 
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return Stack(children: [
+      isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SizedBox(),
+      Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            Languages.of(context)!.labelForgotPass,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
         ),
-        title: Text(
-          Languages.of(context)!.labelForgotPass,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      //backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
-        children: [
-          isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SizedBox(),
-          SingleChildScrollView(
-            child: SafeArea(
-              child: Column(
-                children: [
-                  Center(
-                    child: Image(
-                      alignment: Alignment.topLeft,
-                      //width: screenWidth*0.8,
-                      height: screenHeight * 0.22,
-                      image: AssetImage("assets/forgot_password.png"),
-                    ),
-                  ),
-                  _buildPhoneNumberTextField(),
-                  if (isOtpBoxVisible)
-                    _buildOtpInput(context, screenWidth, isDarkMode),
-                  if (isOtpBoxVisible) _buildPasswordTextFields(isDarkMode),
-                  SizedBox(height: 25),
-                  if (isOtpBoxVisible) _buildSubmitButton(),
-                  if (isLoading) CircularProgressIndicator(),
-                  if (responseMessage.isNotEmpty)
-                    Text(
-                      responseMessage,
-                      style: TextStyle(
-                        color: responseMessage.contains('successfully')
-                            ? Colors.green
-                            : Colors.red,
+        //backgroundColor: Theme.of(context).backgroundColor,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Center(
+                      child: Image(
+                        alignment: Alignment.topLeft,
+                        //width: screenWidth*0.8,
+                        height: screenHeight * 0.22,
+                        image: AssetImage("assets/forgot_password.png"),
                       ),
                     ),
-                ],
+                    _buildPhoneNumberTextField(),
+                    if (isOtpBoxVisible)
+                      _buildOtpInput(context, screenWidth, isDarkMode),
+                    if (isOtpBoxVisible) _buildPasswordTextFields(isDarkMode),
+                    SizedBox(height: 25),
+                    if (isOtpBoxVisible) _buildSubmitButton(),
+                    //if (isLoading) CircularProgressIndicator(),
+                    if (responseMessage.isNotEmpty)
+                      Text(
+                        responseMessage,
+                        style: TextStyle(
+                          color: responseMessage.contains('successfully')
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            isLoading
+                ? Stack(
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black.withOpacity(0.3)),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+          ],
+        ),
       ),
-    );
+    ]);
   }
 
   Widget _buildPhoneNumberTextField() {
@@ -361,13 +378,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 onPressed: () async {
                   if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
                     print(_phoneNumberController.text);
+                    setState(() {
+                      isLoading = true;
+                    });
                     var phoneNumber = "${_phoneNumberController.text}";
                     CreateOtpChangePassRequest request =
                         CreateOtpChangePassRequest(
                             customer: CustomerGetOtpPassDetail(
-                      phoneNumber: phoneNumber,
-                              countryCode: countryCode
-                    ));
+                                phoneNumber: phoneNumber,
+                                countryCode: countryCode));
 
                     await Provider.of<MainViewModel>(context, listen: false)
                         .CreateOtpChangePass(
@@ -598,14 +617,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 });
               } else {
                 print(_phoneNumberController.text);
-
+                setState(() {
+                  isLoading = true;
+                });
                 VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
                     customer: CustomerVerifyOtpPass(
                         phoneNumber: _phoneNumberController.text,
                         password: _newPasswordController.text,
                         mobileOtp: otp,
-                      countryId: countryCode
-                    ));
+                        countryId: countryCode));
 
                 await Provider.of<MainViewModel>(context, listen: false)
                     .VerifyOtpChangePass(

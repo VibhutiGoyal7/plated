@@ -295,7 +295,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       "${geoLocImg}",
                       "assets/geo_Location.jpg",
                       "${geoLocStatus}",
-                      "${geoLocRejectedReason}")),
+                      "${geoLocRejectedReason}"),
                 if (isKycVideoAvailable)
                   _buildDocumentOption(
                       context,

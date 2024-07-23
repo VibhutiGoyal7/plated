@@ -1,6 +1,5 @@
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
-import 'package:Payrio/model/response/signInResponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
@@ -70,7 +69,7 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${mediaList?.firstName}");
-       /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
+        /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
             username: mediaList?.username,userId: mediaList?.id, email: mediaList?.email,   );*/
 
         String token = "${mediaList?.token}";
@@ -228,10 +227,12 @@ class _SigninScreenState extends State<SigninScreen> {
                                 isDarkMode),
                             SizedBox(height: 8),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 32.0),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/ForgotPasswordScreen');
+                                  Navigator.pushNamed(
+                                      context, '/ForgotPasswordScreen');
                                 },
                                 child: Align(
                                   alignment: Alignment.topRight,
@@ -258,8 +259,17 @@ class _SigninScreenState extends State<SigninScreen> {
               ],
             ),
             isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
+                ? Stack(
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black.withOpacity(0.3)),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
                   )
                 : SizedBox()
           ],
@@ -463,8 +473,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 10.0),
-                  backgroundColor:
-                      inputValid ? AppColor.PRIMARY : Colors.white,
+                  backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),
