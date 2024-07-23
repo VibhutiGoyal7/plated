@@ -77,9 +77,13 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
     screenHeight = MediaQuery.of(context).size.height;
      isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (bool didPop) {
-        Navigator.pop(context);
+        if(didPop)
+        {
+          return;
+        }
+       Navigator.pushNamed(context, "/BottomNav");
       },
       child: GestureDetector(
         onTap: () => hideKeyBoard(),
@@ -101,7 +105,6 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       SizedBox(
                         height: 10,
                       ),

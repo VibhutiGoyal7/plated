@@ -19,30 +19,13 @@ class _RewardScreenState extends State<RewardScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     DateTime? lastBackPressed;
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (bool didPop) {
-        if (kDebugMode) {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Press back again to exit'),
-                duration: maxDuration,
-              ),
-            );
-            SystemNavigator.pop();
-            //return Future.value(false);
-          } else {
-            SystemNavigator.pop();
-          }
-          // return Future.value(true);
+        if(didPop)
+        {
+          return;
         }
+        Navigator.pushNamed(context, "/BottomNav");
       },
       child: Scaffold(
           body: SafeArea(

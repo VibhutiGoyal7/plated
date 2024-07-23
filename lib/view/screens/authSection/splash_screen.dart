@@ -16,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _fetchToken();
+
     Timer(Duration(seconds: 2), () {
       _navigation();
     });
@@ -40,6 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _fetchToken() async {
+    await Helper.saveUserAuthenticated(false);
     await Future.delayed(Duration(milliseconds: 2));
     token = await Helper.getUserToken() as String;
   }

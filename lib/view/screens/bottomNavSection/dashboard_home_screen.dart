@@ -249,8 +249,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     DateTime? lastBackPressed;
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (bool didPop) {
+        print("DashBoard $didPop");
+        if(didPop)
+          {
+            return;
+          }
         if (kDebugMode) {
           print("$didPop");
           final now = DateTime.now();
@@ -266,8 +271,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 duration: maxDuration,
               ),
             );
-            SystemNavigator.pop();
-            //return Future.value(false);
+            //SystemNavigator.pop();
+           // return Future.value(false);
           } else {
             SystemNavigator.pop();
           }

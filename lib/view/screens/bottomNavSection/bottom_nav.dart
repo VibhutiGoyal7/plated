@@ -189,32 +189,35 @@ class _BottomNavState extends State<BottomNav>
 
   Future<void> _initializeBiometrics() async {
     bool? retrievedBiometric = await Helper.getBiometric();
+    bool? isUserAuthenticated = await Helper.getUserAuthenticated();
     bool? canCheckBiometric = retrievedBiometric;
     print('Can CheckBiometric: $canCheckBiometric');
+    if(isUserAuthenticated != true)
+      {
+        if (canCheckBiometric != null && canCheckBiometric == true) {
+          List<BiometricType> availableBiometric = [];
+          try {
+            canCheckBiometric = await auth.canCheckBiometrics;
+            if (canCheckBiometric) {
+              availableBiometric = await auth.getAvailableBiometrics();
+            }
+          } on PlatformException catch (e) {
+            print(e);
+          }
 
-    if (canCheckBiometric != null && canCheckBiometric == true) {
-      List<BiometricType> availableBiometric = [];
-      try {
-        canCheckBiometric = await auth.canCheckBiometrics;
-        if (canCheckBiometric) {
-          availableBiometric = await auth.getAvailableBiometrics();
+          if (!mounted) return;
+
+          setState(() {
+            _canCheckBiometric =
+                canCheckBiometric! && availableBiometric.isNotEmpty;
+          });
+
+          if (_canCheckBiometric && !_authenticationAttempted) {
+            print("Checking Number of times");
+            _authenticate(); // Only call authenticate if not attempted before
+          }
         }
-      } on PlatformException catch (e) {
-        print(e);
       }
-
-      if (!mounted) return;
-
-      setState(() {
-        _canCheckBiometric =
-            canCheckBiometric! && availableBiometric.isNotEmpty;
-      });
-
-      if (_canCheckBiometric && !_authenticationAttempted) {
-        print("Checking Number of times");
-        _authenticate(); // Only call authenticate if not attempted before
-      }
-    }
   }
 
   Future<void> _authenticate() async {
@@ -239,15 +242,17 @@ class _BottomNavState extends State<BottomNav>
     });
 
     if (authenticated) {
+      await Helper.saveUserAuthenticated(true);
       print("User authenticated successfully.");
-      ToastComponent.showToast(context: context, message: "User authenticated successfully.");
+      //ToastComponent.showToast(context: context, message: "User authenticated successfully.");
       // Proceed with authorized action
       // For example:
      // Navigator.pushReplacementNamed(context, '/home');
     } else {
+      await Helper.saveUserAuthenticated(true);
       // User cancelled authentication
       print("User cancelled authentication.");
-      ToastComponent.showToast(context: context, message: "User cancelled authentication.");
+      //ToastComponent.showToast(context: context, message: "User cancelled authentication.");
       // Close the app or show a message and handle accordingly
       //SystemNavigator.pop(); // This will close the app
     }

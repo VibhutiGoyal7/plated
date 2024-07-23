@@ -50,10 +50,14 @@ class _TransferScreenState extends State<TransferScreen> {
     phoneNo = "${widget.data?.phoneNumber}";
     imageUrl = "${widget.data?.imageUrl}";
     print("object ${userName}");
-    Helper.getProfileDetails().then((profile) {
+    Helper.getUserBalance().then((balance) {
       setState(() {
-        countryCurrencySymbol = profile?.countryCurrencySymbol;
-        countryBalance = profile?.balance;
+        countryBalance = balance;
+      });
+    });
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        countryCurrencySymbol = symbol;
       });
     });
   }

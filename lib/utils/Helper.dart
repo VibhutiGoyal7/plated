@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:Payrio/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/response/profileResponse.dart';
@@ -13,6 +11,7 @@ class Helper {
   static String valueSharedPreferences = '';
   static String pref_token = 'token';
   static String biometricPref = 'biometricPref';
+  static String isAuthenticatedPref = 'isAuthenticatedPref';
   static String userBalancePref = 'UserBalance';
   static String currencySymbolPref = 'CurrencySymbol';
   static String userDetailsPref = 'UserDetails';
@@ -29,22 +28,34 @@ class Helper {
     return await sharedPreferences.setString(pref_token, token);
   }
 
- // Read Data
+  // Read Data
   static Future<String?> getUserToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(pref_token);
   }
 
-// Write DATA
+  // Write DATA
   static Future<bool> saveBiometric(isEnable) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return await sharedPreferences.setBool(biometricPref, isEnable);
   }
 
-// Read Data
+  // Read Data
   static Future<bool?> getBiometric() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool(biometricPref);
+  }
+
+  // Write DATA
+  static Future<bool> saveUserAuthenticated(isAuthenticated) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setBool(isAuthenticatedPref, isAuthenticated);
+  }
+
+  // Read Data
+  static Future<bool?> getUserAuthenticated() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(isAuthenticatedPref);
   }
 
   static Future<bool> savePassword(token) async {
@@ -68,6 +79,7 @@ class Helper {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(userBalancePref);
   }
+
   static Future<bool> saveCurrencySymbol(token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return await sharedPreferences.setString(currencySymbolPref, token);
@@ -79,28 +91,30 @@ class Helper {
     return sharedPreferences.getString(currencySymbolPref);
   }
 
-
   static Future<bool> saveProfileDetails(_ProfileDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String ProfileDetailJson = jsonEncode(_ProfileDetail.toJson());
-    return await sharedPreferences.setString(profileDetailPref, ProfileDetailJson);
+    return await sharedPreferences.setString(
+        profileDetailPref, ProfileDetailJson);
   }
 
 // Read Data
   static Future<ProfileResponse?> getProfileDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final String? ProfileDetailJson = sharedPreferences.getString(profileDetailPref);
+    final String? ProfileDetailJson =
+        sharedPreferences.getString(profileDetailPref);
 
     if (ProfileDetailJson == null) {
       return null;
     }
     final Map<String, dynamic> ProfileDetailMap = jsonDecode(ProfileDetailJson);
-    return ProfileResponse.fromPref(ProfileDetailMap);  }
-
+    return ProfileResponse.fromPref(ProfileDetailMap);
+  }
 
   static Future<bool> saveRecentP2PDetails(_RecentP2P) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    List<String> RecentP2PJson = _RecentP2P.map<String>(( CheckCustomerResponse user) => user.toJsonString()).toList();
+    List<String> RecentP2PJson = _RecentP2P.map<String>(
+        (CheckCustomerResponse user) => user.toJsonString()).toList();
     print("helper save ${RecentP2PJson}");
     return await sharedPreferences.setStringList(recentP2PPref, RecentP2PJson);
   }
@@ -108,7 +122,8 @@ class Helper {
 // Read Data
   static Future<List<CheckCustomerResponse>?> getRecentP2PDetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final List<String>? jsonList = sharedPreferences.getStringList(recentP2PPref);
+    final List<String>? jsonList =
+        sharedPreferences.getStringList(recentP2PPref);
     print("helper jsonList  ${jsonList}");
 
     if (jsonList == null) {
@@ -127,8 +142,8 @@ class Helper {
         response = CheckCustomerResponse(username: 'Error');
       }
       return response;
-    }).toList(); }
-
+    }).toList();
+  }
 
   static Future<bool> saveUserDetails(_UserDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -145,9 +160,8 @@ class Helper {
       return null;
     }
     final Map<String, dynamic> UserDetailMap = jsonDecode(UserDetailJson);
-    return SetUpAccountResponse.fromPref(UserDetailMap);  }
-
-
+    return SetUpAccountResponse.fromPref(UserDetailMap);
+  }
 
   static Future<Locale> setLocale(String languageCode) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -183,15 +197,14 @@ class Helper {
     return sharedPreferences.getString(kycStatusPref);
   }
 
-
-
   static Locale _locale(String languageCode) {
     return languageCode != null && languageCode.isNotEmpty
         ? Locale(languageCode, '')
         : Locale('en', '');
   }
 
-  static void changeLanguage(BuildContext context, String selectedLanguageCode) async {
+  static void changeLanguage(
+      BuildContext context, String selectedLanguageCode) async {
     var _locale = await setLocale(selectedLanguageCode);
     //_MyAPp.setLocale(context, _locale);
   }
@@ -201,5 +214,4 @@ class Helper {
     await prefs.clear();
     print('All shared preferences cleared');
   }
-
 }
