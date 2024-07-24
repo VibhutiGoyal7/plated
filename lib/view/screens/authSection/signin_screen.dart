@@ -133,6 +133,7 @@ class _SigninScreenState extends State<SigninScreen> {
         } else {
           await Helper.saveProfileDetails(mediaList);
           await Helper.saveCountry(mediaList?.countryName);
+          await Helper.saveCurrencySymbol(mediaList?.countryCurrencySymbol);
           await Helper.saveKycStatus(mediaList?.kycStatus);
           Navigator.pushReplacementNamed(context, '/BottomNav');
         }

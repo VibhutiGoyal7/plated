@@ -32,6 +32,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
+  String dropdownValue = "";
 
   late double screenWidth;
 
@@ -252,7 +253,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           isLoading
               ? Stack(
             children: [
-              // Block interaction
               ModalBarrier(
                   dismissible: false,
                   color: Colors.black.withOpacity(0.3)),
@@ -279,6 +279,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
+    String? selectedItem;
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,7 +315,137 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GestureDetector(
+                Container(
+                width: 70, // Width of the dropdown button
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButtonFormField<String>(
+                    //hint: Text('Select'),
+                    isExpanded: true,
+                    value: selectedItem,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedItem = newValue;
+                      });
+                    },
+                    selectedItemBuilder: (BuildContext context) {
+                      return countryList.map((item) {
+                        return Container(
+                          width: 70,
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                child: Image.network(
+                                  item.flagImageUrl as String,
+                                  height: 22,
+                                  width: 35,
+                                  loadingBuilder: (BuildContext context, Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.white30,
+                                        highlightColor: Colors.grey,
+                                        child: Container(
+                                          height: 22,
+                                          width: 35,
+                                          color: Colors.grey,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                              /*SizedBox(width: 2.5),
+                              Text(
+                                "+${item.phoneCode}",
+                                style: TextStyle(fontSize: 11),
+                                overflow: TextOverflow.ellipsis,
+
+                              ),*/
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    },
+                    items: countryList.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item.phoneCode,
+
+                        child: Container(
+                          width: 200,
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                child: Image.network(
+                                  item.flagImageUrl as String,
+                                  height: 24,
+                                  width: 40,
+                                  loadingBuilder: (BuildContext context, Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.white30,
+                                        highlightColor: Colors.grey,
+                                        child: Container(
+                                          height: 24,
+                                          width: 40,
+                                          color: Colors.grey,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "+${item.phoneCode}",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+                /*  Container(
+                    width: screenWidth*0.1,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        //hint: Text('Select a fruit'),
+                        value: selectedItem,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedItem = newValue;
+                          });
+                        },
+                        items: countryList.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item.phoneCode,
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  "${item.flagImageUrl}",
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                SizedBox(width: 10),
+                                Text("${item.phoneCode}"),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),*/
+                  /* GestureDetector(
                     onTap: () async {
                       _showPicker(context: context);
                     },
@@ -330,7 +461,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   SizedBox(width: 16),
                   Expanded(
                     child: TextField(
@@ -558,8 +689,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 phoneNumber: _inputController.text,
                 mobileOtp: "",
                 countryId: countryCode));
-        await Provider.of<MainViewModel>(context, listen: false).fetchMediaData(
-            "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
+        await Provider.of<MainViewModel>(context, listen: false)
+            .PhoneVerifyData(
+                "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         getPhoneVerifyResponse(context, apiResponse);

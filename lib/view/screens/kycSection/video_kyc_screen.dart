@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Payrio/model/documentData.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VideoKycScreen extends StatefulWidget {
-  final String? data;
+  final DocumentData? data;
 
   VideoKycScreen({Key? key, this.data}) : super(key: key);
 
@@ -133,9 +134,20 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                       _buildFooter(context)
                     ],
                   )),
-              isLoading ? Center(
-                child: CircularProgressIndicator(),
-              ) : SizedBox()
+              isLoading
+                  ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(
+                      dismissible: false,
+                      color: Colors.black.withOpacity(0.3)),
+                  // Loader indicator
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              )
+                  : SizedBox(),
             ],
           )),
     );
@@ -244,21 +256,38 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     final pickedFile = await picker.pickVideo(
       source: img,
       maxDuration: const Duration(seconds: 15),
+      preferredCameraDevice: CameraDevice.front,
     );
     XFile? xfilePick = pickedFile;
     setState(
       () {
         if (xfilePick != null) {
           setState(() {
+
             frontImg = File(pickedFile!.path) as File;
             videoPlayerController = VideoPlayerController.file(frontImg)
               ..initialize().then((_) {
-                setState(() {});
-                videoPlayerController.play(); //.pause() for pausing
-                videoPlayerController.setVolume(0.0);
+
+                setState(() {
+                  final duration = videoPlayerController?.value.duration;
+                  if (duration != null && duration < Duration(seconds: 5)) {
+                    // Handle the case where the video is too short
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Video is too short. Minimum duration is 5 seconds.')),
+                    );
+                    isVideoRecorded = false;
+
+                    // Optionally, you can delete the video file if it doesn't meet your criteria
+                    File(xfilePick.path).delete();
+                  } else {
+                    videoPlayerController.play(); //.pause() for pausing
+                    videoPlayerController.setVolume(0.0);
+                    isVideoRecorded = true;
+                  }
+                });
+
               });
             setState(() {});
-            isVideoRecorded = true;
           });
           print("image : ${frontImg}");
         } else {

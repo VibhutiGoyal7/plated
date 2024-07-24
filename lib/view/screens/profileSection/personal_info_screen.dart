@@ -50,11 +50,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Stack(
         children: [
-          isLoading
-              ? Center(
-            child: CircularProgressIndicator(),
-          )
-              : SizedBox(),
+
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,6 +89,20 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
               ],
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );

@@ -222,10 +222,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       body: Stack(
         children: [
-          isLoading?
-          Center(
-            child: CircularProgressIndicator(),
-          ): SizedBox(),
+
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -248,7 +245,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                           isInternetConnected && !isLoading?
                           Text(
-                            "${countryCurrencySymbol}${currentBalance}",
+                            addCurrencySymbol(countryCurrencySymbol,currentBalance),
                             style: TextStyle(
                                 fontSize: 32.0,
                                 fontWeight: FontWeight.bold,
@@ -318,7 +315,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                         ),
                                         ...transactionsForDate.map((transaction) {
                                           return TransactionItem(
-                                              transaction: transaction);
+                                              transaction: transaction, symbol: countryCurrencySymbol,);
                                         }).toList(),
                                       ],
                                     ),
@@ -336,6 +333,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );
@@ -532,8 +543,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
 class TransactionItem extends StatelessWidget {
   final TransactionDetails transaction;
+  final String symbol;
 
-  TransactionItem({required this.transaction});
+  TransactionItem({required this.transaction,required this.symbol});
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -592,9 +606,9 @@ class TransactionItem extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(transaction.amount.toString(),
+                    Text(addCurrencySymbol(symbol , "${transaction.amount}"),
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
+                            fontWeight: FontWeight.bold, fontSize: 15)),
                     /*Text(convertDateFormat("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 12)),*/
                   ],

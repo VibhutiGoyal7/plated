@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:Payrio/model/documentData.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -80,7 +81,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
             //imageClicked = true;
             imageUrl = mediaList?.kycDocsImageUrl.toString();
             isLoading = false;
-            Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
+            Navigator.pushReplacementNamed(context, "/VideoKycScreen");
           });
        // });
         return Container(); // Return an empty container as you'll navigate away
@@ -196,10 +197,20 @@ class _DocImageScreenState extends State<DocImageScreen> {
                 height: 25,
               )
             ]),
-              isLoading?
+              isLoading
+                  ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(
+                      dismissible: false,
+                      color: Colors.black.withOpacity(0.3)),
+                  // Loader indicator
                   Center(
                     child: CircularProgressIndicator(),
-                  ): SizedBox()
+                  ),
+                ],
+              )
+                  : SizedBox(),
       ]
           )),
     );
@@ -208,13 +219,16 @@ class _DocImageScreenState extends State<DocImageScreen> {
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
     print(file);
+    DocumentData data = DocumentData(imageFile: file, docType: docType, imageName: imageName);
 
-    await Provider.of<MainViewModel>(context, listen: false)
+    Navigator.pushReplacementNamed(context, "/VideoKycScreen", arguments: data);
+
+    /*await Provider.of<MainViewModel>(context, listen: false)
         .postMultiFormResponse(
             "/api/v1/app/kyc_documents", file!, docType, imageName);
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
-    submitKycDocResponse(context, apiResponse);
+    submitKycDocResponse(context, apiResponse);*/
   }
 
   Future<File> processImagesAndReturnFile(File? files, File? backImg) async {

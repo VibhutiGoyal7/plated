@@ -42,7 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   static const maxDuration = Duration(seconds: 2);
 
-  bool isDataLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
 
 
@@ -52,6 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     customerName = "";
     userName = "";
     imageUrl = "";
+    _fetchDataFromPref();
     _fetchData();
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
     print("apiResponse${apiResponse.status}");
     setState(() {
-      isDataLoading = false;
+      isLoading = false;
     });
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -90,7 +90,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        _fetchDataFromPref();
         print("Message : ${apiResponse.message}") ;
         if(apiResponse.message== "Invalid access token")
           {SessionExpiredDialog.showDialogBox(context: context);}
@@ -473,14 +472,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _fetchData() async {
-    setState(() {
-      isDataLoading = true;
-    });
+    await Future.delayed(Duration(milliseconds: 2));
+    if(customerName == null || customerName == "" || userName == null || userName == "") {
+      setState(() {
+        isLoading = true;
+      });
+    }
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
         _fetchDataFromPref();
-        isDataLoading = false;
+        isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('No internet connection'),
@@ -491,7 +493,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       String? retrievedToken = await Helper.getUserToken();
       print("Token $retrievedToken");
-      await Future.delayed(Duration(milliseconds: 2));
       await Provider.of<MainViewModel>(context, listen: false)
           .profileScreenData("/api/v1/app/customers/show_customer_details");
       ApiResponse apiResponse =

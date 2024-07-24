@@ -7,6 +7,8 @@ import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/customNumberKeyboard.dart';
 import '../../component/toastMessage.dart';
@@ -30,6 +32,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
   bool resendOtp = false;
   String phoneNo = "";
   late double screenWidth;
+  String? currencySymbol = "";
   List<String> _inputValues = ['', '', '', ''];
   static const maxDuration = Duration(seconds: 2);
 
@@ -73,6 +76,11 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         }
       });
     }
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        currencySymbol = symbol;
+      });
+    });
   }
 
   @override
@@ -167,7 +175,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Sending:"),
-                          Text("${widget.data?.amount}"),
+                          Text(addCurrencySymbol(currencySymbol , "${widget.data?.amount}")),
                         ],
                       ),
                     ],

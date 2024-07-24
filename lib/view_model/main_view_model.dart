@@ -58,7 +58,7 @@ class MainViewModel with ChangeNotifier {
 
   /// Call the media service and gets the data of requested media data of
   /// an artist.
-  Future<void> fetchMediaData(String value, PhoneRequest phoneRequest) async {
+  Future<void> PhoneVerifyData(String value, PhoneRequest phoneRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
     //String requestAsString = phoneRequestToString(request);
     notifyListeners();
@@ -265,11 +265,9 @@ class MainViewModel with ChangeNotifier {
       final response = await MainRepository()
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
       //print("Yess"+ setUpAccountResponse.email.toString());
-      if (response != null) {
+      //if (response != null) {
         _apiResponse = ApiResponse.completed(response);
-      } else {
-        _apiResponse = ApiResponse.error(response.message);
-      }
+
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -354,11 +352,9 @@ class MainViewModel with ChangeNotifier {
     try {
       final response = await MainRepository().VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
       print("generateTpinResponse ::: ${response.message}");
-      if (response != null) {
+
         _apiResponse = ApiResponse.completed(response);
-      } else {
-        _apiResponse = ApiResponse.error(response.message);
-      }
+
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -371,14 +367,14 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      AddMoneyResponse response =
+      AddMoneyResponse addMoneyResponse =
           await MainRepository().addMoneyData(value, addMoneyRequest);
       print("MainViewModel $response");
       //  _apiResponse = ApiResponse.completed(response);
-      if (response.redirectUrl != null) {
-        _apiResponse = ApiResponse.completed(response);
+      if (addMoneyResponse.redirectUrl != null) {
+        _apiResponse = ApiResponse.completed(addMoneyResponse);
       } else {
-        _apiResponse = ApiResponse.error(response.message);
+        _apiResponse = ApiResponse.error(addMoneyResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -392,16 +388,16 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      WithDrawResponse response =
+      WithDrawResponse withDrawResponse =
           await MainRepository().withDrawData(value, withDrawRequest);
 
       //  _apiResponse = ApiResponse.completed(response);
-      if (response.currency != null) {
-        print("MainViewModel ${response.message}");
-        _apiResponse = ApiResponse.completed(response);
+      if (withDrawResponse.currency != null) {
+        print("MainViewModel ${withDrawResponse.message}");
+        _apiResponse = ApiResponse.completed(withDrawResponse);
       } else {
-        print("MainViewModelError ${response.message}");
-        _apiResponse = ApiResponse.error("${response.message}");
+        print("MainViewModelError ${withDrawResponse.message}");
+        _apiResponse = ApiResponse.error("${withDrawResponse.message}");
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -522,11 +518,9 @@ class MainViewModel with ChangeNotifier {
     try {
       final response = await MainRepository()
           .verifyOtpTPinChange(value, verifyOtpTPinChange);
-      if (response != null) {
+
         _apiResponse = ApiResponse.completed(response);
-      } else {
-        _apiResponse = ApiResponse.error(response.message);
-      }
+
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("TPIN change : $e");
@@ -589,8 +583,7 @@ class MainViewModel with ChangeNotifier {
     try {
       CompleteP2PResponse completeP2PResponse = await MainRepository()
           .completeP2PTransaction(value, completeP2PRequest);
-      if (completeP2PResponse != null &&
-          completeP2PResponse.status != null) {
+      if (completeP2PResponse.paymentRequestId != null) {
         _apiResponse = ApiResponse.completed(completeP2PResponse);
       } else {
         _apiResponse = ApiResponse.error(completeP2PResponse.message);

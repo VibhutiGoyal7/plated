@@ -31,7 +31,7 @@ class _TransferScreenState extends State<TransferScreen> {
   var phoneNo;
   var imageUrl;
   var countryCurrencySymbol;
-  var countryBalance;
+  String countryBalance = "";
   final TextEditingController _inputController = TextEditingController();
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -52,7 +52,7 @@ class _TransferScreenState extends State<TransferScreen> {
     print("object ${userName}");
     Helper.getUserBalance().then((balance) {
       setState(() {
-        countryBalance = balance;
+        countryBalance = balance!;
       });
     });
     Helper.getCurrencySymbol().then((symbol) {
@@ -172,6 +172,8 @@ class _TransferScreenState extends State<TransferScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              /*Text("${countryCurrencySymbol}", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal,
+                                  color: Colors.grey),),*/
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.8,
                                 child: Padding(
@@ -183,7 +185,12 @@ class _TransferScreenState extends State<TransferScreen> {
                                     ),
                                     controller: _inputController,
                                     onChanged: (value) {
-                                      amount = value;
+                                  /*    int balance = extractNumber(countryBalance) - extractNumber(amount);
+                                      print(balance);*/
+                                      setState(() {
+                                        amount = value;
+                                       // countryBalance = balance as String ;
+                                      });
                                       _checkInputValidation();
                                     },
                                     maxLength: 12,
@@ -212,7 +219,8 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                           countryCurrencySymbol != null
                               ? Text(
-                                  "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${countryBalance}",
+
+                                  "${Languages.of(context)!.labelBalance}: ${addCurrencySymbol(countryCurrencySymbol , countryBalance)}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.normal,
                                       fontSize: 12.0),
@@ -339,8 +347,31 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   void _checkInputValidation() {
-    if (/*_usernameController.text.isNotEmpty &&*/ amount.isNotEmpty) {
-      inputValid = true;
+    print(amount);
+    int balance =  extractNumber(countryBalance);
+    int amt =  amount != null|| amount!="" ?extractNumber(amount) : 0;
+    print(amt);
+    print(balance);
+    if (/*_usernameController.text.isNotEmpty &&*/ amount.isNotEmpty && balance>=amt && amount!="") {
+      setState(() {
+        inputValid = true;
+
+      });
+    }else {
+      setState(() {
+        inputValid = false;
+      });
+
+    }
+  }
+
+  int extractNumber(String str) {
+    final regex = RegExp(r'\d+');
+    final match = regex.firstMatch(str);
+    if (match != null) {
+      return int.parse(match.group(0)!);
+    } else {
+      throw FormatException('No number found in the string');
     }
   }
 

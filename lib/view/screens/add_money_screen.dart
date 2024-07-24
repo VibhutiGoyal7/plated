@@ -28,6 +28,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   String limitAmt = "1000";
   String kycStatus = "";
   String amount = "";
+  String? countryCurrencySymbol;
   bool expanded = false;
   bool inputValid = false;
   final tokenInputController = TextEditingController();
@@ -43,12 +44,18 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     super.initState();
     inputValid = false;
     _fetchData();
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        countryCurrencySymbol = symbol;
+      });
+    });
   }
 
   @override
   void dispose() {
     tokenInputController.dispose();
     super.dispose();
+
   }
 
   void _isValidInput() {
@@ -192,7 +199,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          //Text("Rs", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal),),
+         /* Text("${countryCurrencySymbol}", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal,
+              color: Colors.grey),),*/
           Container(
             // height: 60,
             width: screenWidth * 0.85,

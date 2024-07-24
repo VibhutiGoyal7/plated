@@ -92,11 +92,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       //backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: [
-          isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SizedBox(),
+
           SingleChildScrollView(
             child: SafeArea(
               child: Column(
@@ -173,6 +169,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ),
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );

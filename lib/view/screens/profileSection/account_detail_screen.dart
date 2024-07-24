@@ -88,9 +88,20 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 ),
               ],
             ),
-            isLoading? Center(
-              child: CircularProgressIndicator(),
-            ): SizedBox()
+            isLoading
+                ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+                : SizedBox(),
           ],
         ),
       ),

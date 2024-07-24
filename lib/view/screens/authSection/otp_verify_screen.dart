@@ -452,7 +452,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               customer: Customer(
                   phoneNumber: phoneNo, mobileOtp: "", countryId: null));
           await Provider.of<MainViewModel>(context, listen: false)
-              .fetchMediaData(
+              .PhoneVerifyData(
                   "/api/v1/app/temp_customers/initiate_customer", phoneRequest);
 
           ApiResponse apiResponse =

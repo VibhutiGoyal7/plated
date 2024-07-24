@@ -1,3 +1,4 @@
+import 'package:Payrio/model/documentData.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
@@ -281,8 +282,8 @@ class _MyAppState extends State<MyApp> {
             },
             '/VideoKycScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
-              return VideoKycScreen();
+                  ModalRoute.of(context)!.settings.arguments as DocumentData?;
+              return VideoKycScreen(data: args,);
             },
             '/PaymentScreen': (context) {
               final args =

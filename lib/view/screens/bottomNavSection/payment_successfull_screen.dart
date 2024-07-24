@@ -5,6 +5,8 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/completeP2PRequest.dart';
+import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 
 class PaymentSuccessfulScreen extends StatefulWidget {
 
@@ -25,6 +27,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
   String name="";
   String phoneNo="";
   String amount="";
+  String? currencySymbol="";
   late double screenWidth;
   late double screenHeight;
   late bool isDarkMode;
@@ -38,6 +41,11 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
      name="${widget.data?.fullName}";
      phoneNo="${widget.data?.receiverPhoneNumber}";
      amount="${widget.data?.amount}";
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        currencySymbol = symbol;
+      });
+    });
   }
 
   @override
@@ -140,7 +148,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                           ],
                         ),
                         SizedBox(height: 14,),
-                        Text("${amount}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                        Text(addCurrencySymbol(currencySymbol , amount), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                         SizedBox(height: 14,),
                         Divider(height: 0.5,color: Colors.grey,),
                         Spacer(),

@@ -92,6 +92,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       setState(() {
         name = profile?.firstName;
         imageUrl = profile?.imageUrl;
+        currencySymbol = profile?.countryCurrencySymbol;
       });
     });
 
@@ -421,8 +422,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 ),
                               ),
                               Text(
-                                "${currencySymbol} "
-                                "${isAmountVisible ? amount : "**"}  ",
+                                addCurrencySymbol(currencySymbol , "${isAmountVisible ? amount : "**"}  "),
                                 style: TextStyle(
                                   fontSize: 24.0,
                                   fontWeight: FontWeight.bold,

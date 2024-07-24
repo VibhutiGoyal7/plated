@@ -226,7 +226,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     context,
                     Languages.of(context)!.labelPassport,
                     Languages.of(context)!.labelPhotoPage,
-                    '/DocImageScreen',
                     'passport',
                     "assets/passport.png",
                     "${passportStatus}",
@@ -236,7 +235,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     context,
                     Languages.of(context)!.labelDrivingLicence,
                     Languages.of(context)!.labelFrontNBack,
-                    '/DocImageScreen',
                     'driving_licence',
                     "assets/license.png",
                     "${drivingLicenceStatus}",
@@ -246,7 +244,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     context,
                     Languages.of(context)!.labelNationalId,
                     Languages.of(context)!.labelFrontNBack,
-                    '/DocImageScreen',
                     'national_id',
                     "assets/id_card.png",
                     "${nationalIdStatus}",
@@ -256,7 +253,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     context,
                     "Address KYC",
                     'Front ',
-                    '/DocImageScreen',
                     'address_kyc',
                     "assets/address.png",
                     "${addressKycStatus}",
@@ -266,7 +262,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     context,
                     "Bank Statement",
                     'Front ',
-                    '/DocImageScreen',
                     'bank_statement',
                     "assets/bank_statement.png",
                     "${bankStatementStatus}",
@@ -276,12 +271,11 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     context,
                     "Geolocation KYC",
                     'Front ',
-                    '/DocImageScreen',
                     'geolocation_kyc',
                     "assets/geo_Location.jpg",
                     "${geoLocStatus}",
                     "${geoLocRejectedReason}"),
-              if (isKycVideoAvailable)
+              /*if (isKycVideoAvailable)
                 _buildDocumentOption(
                     context,
                     Languages.of(context)!.labelVideoVerification,
@@ -290,7 +284,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                     'video_kyc_clip',
                     "assets/video.png",
                     "${kycVideoStatus}",
-                    "${kycVideoRejectedReason}"),
+                    "${kycVideoRejectedReason}"),*/
             ],
           ),
         ),
@@ -302,7 +296,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
       BuildContext context,
       String title,
       String subtitle,
-      String route,
       String data,
       String icon,
       String status,
@@ -329,7 +322,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         if (verificationStatus == "Pending" ||
             verificationStatus == "Rejected") {
           if (await checkPermissionStatus()) {
-            Navigator.pushReplacementNamed(context, route,
+            Navigator.pushReplacementNamed(context, "/DocImageScreen",
                 arguments: "${data}");
           } else {
             Navigator.pushNamed(context, "/CameraAccessScreen",

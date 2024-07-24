@@ -209,11 +209,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Stack(children: [
-      isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SizedBox(),
+
       Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -279,6 +275,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ],
         ),
       ),
+      isLoading
+          ? Stack(
+        children: [
+          // Block interaction
+          ModalBarrier(
+              dismissible: false,
+              color: Colors.black.withOpacity(0.3)),
+          // Loader indicator
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      )
+          : SizedBox(),
     ]);
   }
 

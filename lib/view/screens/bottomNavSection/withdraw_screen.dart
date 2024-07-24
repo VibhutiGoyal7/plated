@@ -8,6 +8,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/withdrawRequest.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
@@ -75,9 +76,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       ),
       body: Stack(
         children: [
-          isLoading ? Center(
-            child: CircularProgressIndicator(),
-          ): SizedBox(),
+
           SafeArea(
               child: Padding(
             padding: EdgeInsets.all(16.0),
@@ -137,7 +136,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   height: 15,
                 ),
                 Text(
-                  "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${currentBalance} ",
+                  "${Languages.of(context)!.labelBalance}: ${addCurrencySymbol(countryCurrencySymbol , currentBalance)} ",
                   style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
                 ),
                 Container(
@@ -220,6 +219,20 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               ],
             ),
           )),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );
@@ -434,7 +447,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 10,
                         ),
                         Text(
-                          "You withdrawed $countryCurrencySymbol$amount",
+                          "You withdrawed ${addCurrencySymbol(countryCurrencySymbol , amount)}",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 14),
                         ),

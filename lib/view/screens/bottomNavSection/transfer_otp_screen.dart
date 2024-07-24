@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/request/signInWithPhoneNumber.dart';
 import '../../../model/response/phoneVerifyResponse.dart';
+import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 import '../../component/toastMessage.dart';
@@ -35,6 +36,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   bool isValid = false;
   bool resendOtp = false;
   String phoneNo = "";
+  String? currencySymbol = "";
   late double screenWidth;
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -53,6 +55,11 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         }
       });
     }
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        currencySymbol = symbol;
+      });
+    });
   }
 
   @override
@@ -187,7 +194,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Sending:"),
-                          Text("${widget.data.amount}"),
+                          Text(addCurrencySymbol(currencySymbol , "${widget.data.amount}")),
                         ],
                       ),
                     ],
