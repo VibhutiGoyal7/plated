@@ -432,7 +432,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             ),
           ),
         ),
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
             Languages.of(context)!.labelNeedHelp,
@@ -441,7 +441,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               color: Colors.grey[400],
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

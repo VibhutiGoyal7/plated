@@ -371,6 +371,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.cancel_outlined),
+                        style: ButtonStyle(
+                          iconSize: WidgetStateProperty.all(30)
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

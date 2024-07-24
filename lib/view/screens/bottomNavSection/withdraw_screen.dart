@@ -366,7 +366,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             }
           },
           child: Text(
-            Languages.of(context)!.labelProceed,
+            "Move Money",
             style:
                 TextStyle(color: inputValid ? Colors.white : AppColor.PRIMARY),
           ),
@@ -434,7 +434,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 10,
                         ),
                         Text(
-                          "You withdrawed $countryCurrencySymbol$amount",
+                          "You withdraw $countryCurrencySymbol$amount",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 14),
                         ),

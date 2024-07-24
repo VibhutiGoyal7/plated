@@ -148,7 +148,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                 18,
                                 false),
                             SizedBox(height: 20),
-                            Row(
+                            /*Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -160,7 +160,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                 _buildLabelText(context,
                                     Languages.of(context)!.labelRedeem, 14, false),
                               ],
-                            ),
+                            ),*/
                             SizedBox(height: 10),
                             _buildPhoneInput(
                                 context,
@@ -352,7 +352,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         print(
                             pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                         String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                            DateFormat('dd-MM-yyyy').format(pickedDate);
                         print(
                             formattedDate); //formatted date output using intl package =>  2021-03-16
                         setState(() {
@@ -571,7 +571,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
-        Padding(
+     /*   Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
             "Do you need any help?",
@@ -580,7 +580,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               color: Colors.grey[400],
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

@@ -61,7 +61,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         onPageFinished: (url) {
           print("uRL:::{url}");
           if(url.contains("https://shopkeeper-kappa.vercel.app/shopkeeper")){
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, "/BottomNav");
           }
           setState(() {
             loadingPercentage = 100;
@@ -128,7 +128,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       if(_isActive) {
         if (trimmedResult.contains("Requested AmountPayment Method")) {
           print('Match found: $trimmedResult');
-          Navigator.of(context).pop();
+          Navigator.pushReplacementNamed(context, "/BottomNav");
         } else {
           fetchData();
           print('No match found: $trimmedResult');

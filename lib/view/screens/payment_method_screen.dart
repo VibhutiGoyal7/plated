@@ -52,7 +52,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushNamed(context, '/BottomNav');
             },
           ),
           title: Text(
