@@ -166,9 +166,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       ),),
       body: Stack(
         children: [
-          isLoading ? Center(
-            child: CircularProgressIndicator(),
-          ): SizedBox(),
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -244,6 +241,20 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               ],
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );

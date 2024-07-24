@@ -90,14 +90,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
         child: Scaffold(
           body: Stack(
             children: [
-              isLoading?
-              Container(
-                height: screenHeight,
-                width: screenWidth,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ): SizedBox(),
+
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -246,6 +239,20 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                   ),
                 ),
               ),
+              isLoading
+                  ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(
+                      dismissible: false,
+                      color: Colors.black.withOpacity(0.3)),
+                  // Loader indicator
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              )
+                  : SizedBox(),
             ],
           ),
         ),

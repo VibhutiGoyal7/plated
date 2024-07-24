@@ -92,7 +92,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
-              context: context, message: apiResponse?.message);
+              context: context, message: apiResponse.message);
         }
         return Center(
           child: Text('Please try again later!!!'),
@@ -158,11 +158,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
       ),
       body: Stack(
         children: [
-          isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SizedBox(),
+
           SafeArea(
             child: SingleChildScrollView(
               child: Padding(
@@ -263,6 +259,20 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               ),
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );

@@ -717,11 +717,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 ),
               ),
             )),
-        isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : SizedBox()
       ]),
     );
   }

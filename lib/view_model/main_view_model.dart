@@ -333,12 +333,12 @@ class MainViewModel with ChangeNotifier {
       CreateOtpVerifyEmailResponse createOtpVerifyEmailResponse =
           await MainRepository()
               .CreateOtpVerifyEmail(value, createOtpEmailVerifyRequest);
-      print("Yess" + createOtpVerifyEmailResponse.mobileOtp);
+      print("Yess  ${createOtpVerifyEmailResponse.mobileOtp}" );
 
       if (createOtpVerifyEmailResponse.userId != null) {
         _apiResponse = ApiResponse.completed(createOtpVerifyEmailResponse);
       } else {
-        _apiResponse = ApiResponse.error(createOtpVerifyEmailResponse.message);
+        _apiResponse = ApiResponse.error("${createOtpVerifyEmailResponse.message}");
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

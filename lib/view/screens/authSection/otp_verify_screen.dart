@@ -162,9 +162,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          isLoading ? Center(
-            child: CircularProgressIndicator(),
-          ): SizedBox(),
+
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -234,6 +232,20 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               ],
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );

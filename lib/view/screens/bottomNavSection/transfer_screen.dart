@@ -87,14 +87,7 @@ class _TransferScreenState extends State<TransferScreen> {
         ),
         body: Stack(
           children: [
-            isLoading?
-            Container(
-              height: screenHeight,
-              width: screenWidth,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ): SizedBox(),
+
             SafeArea(
               child: isComingSoon
                   ? Padding(
@@ -279,6 +272,20 @@ class _TransferScreenState extends State<TransferScreen> {
                       ),
                     ),
             ),
+            isLoading
+                ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+                : SizedBox(),
           ],
         ),
       ),

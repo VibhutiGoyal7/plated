@@ -180,11 +180,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SizedBox(),
+
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -253,6 +249,20 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               ],
             ),
           ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black.withOpacity(0.3)),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
         ],
       ),
     );

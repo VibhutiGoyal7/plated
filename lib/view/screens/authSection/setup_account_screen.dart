@@ -233,8 +233,17 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     )),
               ),
             ),
-            isLoading ? Center(
-              child: CircularProgressIndicator(),
+            isLoading ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
             ): SizedBox()
           ],
         ),
