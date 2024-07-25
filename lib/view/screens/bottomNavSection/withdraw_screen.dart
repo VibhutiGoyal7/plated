@@ -72,7 +72,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -81,7 +81,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           ),
           title: Text(
             "${Languages.of(context)!.labelWithdraw}",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: Stack(
@@ -99,7 +99,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   Text(
                     Languages.of(context)!.labelEnterAmount,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
                   ),
                   _buildPhoneInput(
                       context, Languages.of(context)!.labelZero, _inputController),
@@ -109,7 +109,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                       Text(
                         countryCurrencySymbol,
                         style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 26.0, color: Colors.grey),
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 26.0, color: Colors.grey),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.8,
@@ -138,7 +138,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   /*Text(
                           Languages.of(context)!.labelINR,
                           style:
-                              TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                              TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
                         ),*/ /*
                     ],
                   ),*/
@@ -450,7 +450,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         Text(
                           "Awesome!",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 18,
                               color: AppColor.PRIMARY),
                         ),
@@ -460,7 +460,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         Text(
                           "You withdraw ${addCurrencySymbol(countryCurrencySymbol , amount)}",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14),
+                              fontWeight: FontWeight.w600, fontSize: 14),
                         ),
                         SizedBox(
                           height: 40,

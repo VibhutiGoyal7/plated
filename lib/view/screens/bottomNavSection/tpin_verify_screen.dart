@@ -250,7 +250,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }

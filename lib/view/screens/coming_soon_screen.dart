@@ -14,7 +14,7 @@ class _ComingSoonScreenState extends State<ComingSoonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -23,7 +23,7 @@ class _ComingSoonScreenState extends State<ComingSoonScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelComingSoon,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: SafeArea(
@@ -32,7 +32,7 @@ class _ComingSoonScreenState extends State<ComingSoonScreen> {
           child: Center(
               child: Text(
             Languages.of(context)!.labelComingSoon,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
           ))),
     ));
   }

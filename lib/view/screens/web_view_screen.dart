@@ -164,10 +164,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     print("redirectUrl: ${widget.data}");
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         title: Text(
           "Add Money",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),
       body: SafeArea(

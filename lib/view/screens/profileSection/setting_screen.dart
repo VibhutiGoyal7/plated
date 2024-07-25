@@ -16,6 +16,13 @@ class SettingScreen extends StatefulWidget {
   _SettingScreenState createState() => _SettingScreenState();
 }
 
+class Language {
+  final String name;
+  final String code;
+
+  Language(this.name, this.code);
+}
+
 class _SettingScreenState extends State<SettingScreen> {
   //AccountDetailScreen({required this.navController});
   var password;
@@ -23,9 +30,12 @@ class _SettingScreenState extends State<SettingScreen> {
   var userId;
   bool isLoading = false;
   bool isApiLoading = false;
-
   var isEmailVerified;
-  var mCities = ["en", "ar", "hi"];
+  var mCities = [
+    Language("English", "en"),
+    Language("Arabic", "ar"),
+    Language("Hindi", "hi")
+  ];
   String dropdownValue = "";
   bool isBiometricEnable = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -37,7 +47,7 @@ class _SettingScreenState extends State<SettingScreen> {
     phoneNumber = "";
     userId = "";
     isEmailVerified = false;
-    dropdownValue = mCities.first;
+    dropdownValue = mCities.first.code;
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
         isBiometricEnable = retrievedBiometric ?? false; // Handle null case
@@ -52,10 +62,10 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     bool isPasswordVisible = false;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
+    var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -64,7 +74,7 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelSettings,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         actions: [
           Row(
@@ -86,7 +96,7 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -101,7 +111,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       Text(
                         Languages.of(context)!.labelLanguage,
                         style: TextStyle(
-                            fontSize: 16.0, fontWeight: FontWeight.bold),
+                            fontSize: 15.0, fontWeight: FontWeight.w600),
                       ),
                       Container(
                         width: 120,
@@ -118,11 +128,11 @@ class _SettingScreenState extends State<SettingScreen> {
                             alignment: Alignment.center,
                             padding: EdgeInsets.only(left: 10),
                             value: dropdownValue,
-                            items: mCities.map((String items) {
+                            items: mCities.map((Language items) {
                               return DropdownMenuItem(
-                                value: items,
+                                value: items.code,
                                 alignment: Alignment.centerLeft,
-                                child: Text(items,
+                                child: Text(items.name,
                                     style: TextStyle(
                                       fontSize: 12,
                                     )),
@@ -152,30 +162,71 @@ class _SettingScreenState extends State<SettingScreen> {
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
                   padding: EdgeInsets.all(6.0),
-                  child: _buildLabelText(
-                      context, Languages.of(context)!.labelSecurity)),
-              DetailBox(heading: Languages.of(context)!.labelStepVerification, subHeading: "subHeading", icon: Icons.verified_user,headingTextSize: 15, subHeadingTextSize: 14,),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildLabelText(
+                          context, Languages.of(context)!.labelSecurity),
+                      SizedBox(width: 10,),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          width: screenWidth * 0.7,
+                          height: 0.5,
+                          decoration: BoxDecoration(color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  )),
+              DetailBox(
+                heading: Languages.of(context)!.labelStepVerification,
+                subHeading: "subHeading",
+                icon: Icons.verified_user,
+                headingTextSize: 14,
+                subHeadingTextSize: 13,
+              ),
               _buildBiometricCard(context, "Enable App Lock", isDarkMode),
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
                   padding: EdgeInsets.all(6.0),
-                  child: _buildLabelText(context, "Privacy")),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildLabelText(context, "Privacy"),
+                      SizedBox(width: 10,),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          width: screenWidth * 0.7,
+                          height: 0.5,
+                          decoration: BoxDecoration(color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  )),
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, '/ChangePasswordScreen');
                 },
-                child:
-
-                DetailBox(heading: "Change Password", subHeading: "subHeading", icon:Icons.password, headingTextSize: 15, subHeadingTextSize: 14,),
-
+                child: DetailBox(
+                  heading: "Change Password",
+                  subHeading: "subHeading",
+                  icon: Icons.password,
+                  headingTextSize: 14,
+                  subHeadingTextSize: 13,
+                ),
               ),
               GestureDetector(
                 onTap: () async {
                   Navigator.pushNamed(context, '/ChangeTPinScreen');
                 },
-                child:
-                DetailBox(heading:"Change Transaction Pin(TPIN)", subHeading: "subHeading", icon:Icons.pin,headingTextSize: 15, subHeadingTextSize: 14,),
-
+                child: DetailBox(
+                  heading: "Change Transaction Pin(TPIN)",
+                  subHeading: "subHeading",
+                  icon: Icons.pin,
+                  headingTextSize: 14,
+                  subHeadingTextSize: 13,
+                ),
               ),
             ],
           ),
@@ -233,7 +284,7 @@ class _SettingScreenState extends State<SettingScreen> {
   _buildLabelText(BuildContext context, String text) {
     return Text(
       text,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.0),
       textAlign: TextAlign.left,
     );
   }
@@ -253,7 +304,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               Text(text,
                   style:
-                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600)),
             ],
           ),
           /*Icon(
@@ -287,7 +338,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   Text(text,
                       style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold)),
+                          fontSize: 14.0, fontWeight: FontWeight.w600)),
                 ],
               ),
               Transform.scale(

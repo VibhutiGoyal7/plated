@@ -50,7 +50,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -58,7 +58,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
           },
         ),
         title: Text(Languages.of(context)!.labelIssuingCountry,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),),
       ),
       body: SafeArea(
         child: Padding(
@@ -66,7 +66,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.all(6.0),
-              child: Text(Languages.of(context)!.labelSuggestedCountry, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              child: Text(Languages.of(context)!.labelSuggestedCountry, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
             Container(
               //height: 40,

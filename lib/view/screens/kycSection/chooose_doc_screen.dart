@@ -152,7 +152,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -161,7 +161,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
           ),
           title: Text(
             "Choose Your Document",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: Padding(
@@ -410,7 +410,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                         style: TextStyle(
                             fontSize: 12,
                             color: textColor,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],

@@ -121,7 +121,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
     return WillPopScope(
       onWillPop: _onWillPop ,
       child: Scaffold(
-          appBar: AppBar(
+          appBar: AppBar(toolbarHeight: 65,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -130,7 +130,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
             ),
             title: Text(
               "${docType.toUpperCase()}",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
             ),
           ),
           body: Stack(
@@ -434,7 +434,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
       useSafeArea: false,
       context: context,
       builder: (context) => Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           title: Text("Captured widget screenshot"),
         ),
         body: Center(child: Image.memory(capturedImage)),

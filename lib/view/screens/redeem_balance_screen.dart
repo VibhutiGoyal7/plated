@@ -18,7 +18,7 @@ class _RedeemBalanceScreenState extends State<RedeemBalanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {

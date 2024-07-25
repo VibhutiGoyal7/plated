@@ -256,7 +256,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       text,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }

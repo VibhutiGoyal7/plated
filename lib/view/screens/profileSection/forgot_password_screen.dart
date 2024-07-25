@@ -211,7 +211,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Stack(children: [
 
       Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -220,7 +220,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelForgotPass,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         //backgroundColor: Theme.of(context).backgroundColor,
@@ -422,7 +422,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Languages.of(context)!.labelSubmit,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -711,7 +711,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       text,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }
@@ -776,7 +776,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           countryList[index].name as String,
                           style: TextStyle(
                             fontSize: 11,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: (phoneCode ==
                                     "+${countryList[index].phoneCode}")
                                 ? AppColor.WHITE

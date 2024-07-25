@@ -72,7 +72,7 @@ class _TransferScreenState extends State<TransferScreen> {
       onTap: () => hideKeyBoard(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
         leading: GestureDetector(
           onTap:(){
             Navigator.pop(context);
@@ -82,7 +82,7 @@ class _TransferScreenState extends State<TransferScreen> {
           title:  Text(
             Languages.of(context)!.labelMoneyTransfer,
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 18.0),
+                fontWeight: FontWeight.w600, fontSize: 18.0),
           ),
         ),
         body: Stack(
@@ -153,7 +153,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                           Text(
                             "Paying: ${name}",
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                           ),Text(
                             "${userName}",
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
@@ -210,7 +210,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               /*Text(
                           Languages.of(context)!.labelINR,
                           style:
-                              TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                              TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
                         ),*/
                             ],
                           ),
@@ -276,7 +276,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       child: Text(
                         Languages.of(context)!.labelComingSoon,
                         style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
             ),

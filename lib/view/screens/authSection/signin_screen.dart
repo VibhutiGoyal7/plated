@@ -205,7 +205,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.blue,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ),
                               ),
@@ -247,7 +247,7 @@ class _SigninScreenState extends State<SigninScreen> {
       text,
       style: TextStyle(
           fontSize: size,
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+          fontWeight: isBold ? FontWeight.w600 : FontWeight.normal),
     );
   }
 
@@ -465,7 +465,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   style: TextStyle(
                       fontSize: 14,
                       color: Colors.blue,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ],

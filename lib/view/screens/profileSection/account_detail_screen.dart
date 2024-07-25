@@ -198,7 +198,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -207,7 +207,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelAccountDetails,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -247,7 +247,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         Languages.of(context)!.labelUploadedDocs,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                     ),
                   ),
@@ -393,7 +393,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                             : Languages.of(context)!.labelVerifyEmail,
                         style: TextStyle(
                           fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       isEmailVerified
@@ -463,7 +463,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                   heading,
                   style: TextStyle(
                     fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     //color: isDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
@@ -615,7 +615,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                     style: TextStyle(
                         fontSize: 12,
                         color: textColor,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -728,7 +728,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                                   : "${status}",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                               textAlign: TextAlign.center,
                             ),

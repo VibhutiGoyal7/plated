@@ -197,7 +197,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     // double screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -206,7 +206,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelPersonalData,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
       body: SingleChildScrollView(
@@ -224,7 +224,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 Languages.of(context)!.labelUploadedDocs,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
               ),
             ),
             isInternetConnected && !isLoading
@@ -334,7 +334,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
           children: [
             Text(
               label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 5),
             Text(
@@ -364,7 +364,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               children: [
                 Text(
                   Languages.of(context)!.labelBirthdate,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 5),
                 Text(
@@ -505,7 +505,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                           style: TextStyle(
                               fontSize: 12,
                               color: textColor,
-                              fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
@@ -653,7 +653,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                   : "${status}",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                               textAlign: TextAlign.center,
                             ),

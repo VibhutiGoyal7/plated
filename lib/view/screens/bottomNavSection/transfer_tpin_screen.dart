@@ -144,7 +144,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(leading: GestureDetector(
+      appBar: AppBar(toolbarHeight: 65,leading: GestureDetector(
         onTap: (){
           Navigator.pop(context);
         },
@@ -322,7 +322,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }

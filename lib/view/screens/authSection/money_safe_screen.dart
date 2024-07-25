@@ -43,10 +43,10 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
             children: [
               SizedBox(height: 50,),
               Text(
-                "Payrio",
+                "Payorio",
                 style: TextStyle(
                     fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: AppColor.PRIMARY),
               ),
 
@@ -109,7 +109,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
         ),
         Text(
           "Add your money and manage",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
           height: 8,
@@ -140,7 +140,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
         ),
         Text(
           "Your Money Stays Safe",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
           height: 8,

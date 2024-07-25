@@ -93,7 +93,7 @@ class CustomNumberKeyboard extends StatelessWidget {
               value,
               style: TextStyle(
                 fontSize: 26.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

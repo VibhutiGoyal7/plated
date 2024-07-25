@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'AppColor.dart';
 
@@ -6,15 +7,11 @@ class AppTheme {
   static ThemeData getAppTheme() {
     return ThemeData(
       appBarTheme: AppBarTheme(
-        titleTextStyle: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
+        titleTextStyle: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.BLACK, letterSpacing: 0.5),
         actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
-        iconTheme: const IconThemeData(color: AppColor.WHITE),
-        backgroundColor: AppColor.BODY_COLOR,
+        iconTheme: const IconThemeData(color: AppColor.BLACK),
+        backgroundColor: AppColor.WHITE,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.WHITE4,
@@ -22,66 +19,34 @@ class AppTheme {
       tabBarTheme: TabBarTheme(
         dividerColor: Colors.black,
         labelColor: Colors.black,
-          unselectedLabelColor: Colors.black45,
-          indicatorColor: Colors.black,
-          unselectedLabelStyle: TextStyle(fontSize: 12),
-      /*indicatorSize: TabBarIndicatorSize.label*/),
-      cardTheme: const CardTheme(color: AppColor.WHITE4),
+        unselectedLabelColor: Colors.black45,
+        indicatorColor: Colors.black,
+        unselectedLabelStyle: TextStyle(
+            fontSize: 12), /*indicatorSize: TabBarIndicatorSize.label*/
+      ),
+      cardTheme: const CardTheme(color: AppColor.WHITE),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.BG_COLOR,
       textTheme: TextTheme(
-        displayLarge: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: AppColor.BLACK,
-        ),
-        displayMedium: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColor.BLACK,
-        ),
-        displaySmall: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: AppColor.BLACK,
-        ),
-        titleLarge: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColor.BLACK,
-        ),
-        titleMedium: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: AppColor.BLACK,
-        ),
-        titleSmall: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: AppColor.BLACK,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 16,
-          color: AppColor.BLACK,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 14,
-          color: AppColor.BLACK,
-        ),
-        bodySmall: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 12,
-          color: AppColor.BLACK.withOpacity(0.4),
-        ),
+        displayLarge: GoogleFonts.getFont('Poppins',
+            fontSize: 20, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        displayMedium: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        displaySmall: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        titleLarge: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        titleMedium: GoogleFonts.getFont('Poppins',
+            fontSize: 14, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        titleSmall: GoogleFonts.getFont('Poppins',
+            fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        bodyLarge: GoogleFonts.getFont('Poppins',
+            fontSize: 16, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        bodyMedium: GoogleFonts.getFont('Poppins',
+            fontSize: 14, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        bodySmall: GoogleFonts.getFont('Poppins',
+            fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.BLACK),
       ),
       listTileTheme: ListTileThemeData(
           iconColor: AppColor.BLACK,
@@ -92,13 +57,8 @@ class AppTheme {
           titleTextStyle: TextStyle(color: AppColor.BLACK, fontSize: 22),
           iconColor: AppColor.BLACK),
       datePickerTheme: DatePickerThemeData(
-          dayStyle: TextStyle(
-              color: Colors.black,
-            fontSize: 12
-          ),
+        dayStyle: TextStyle(color: Colors.black, fontSize: 12),
         shape: Border(),
-
-
       ),
       iconTheme: IconThemeData(color: AppColor.PRIMARY),
       iconButtonTheme: IconButtonThemeData(
@@ -143,12 +103,8 @@ class AppTheme {
   static ThemeData getDarkTheme() {
     return ThemeData(
       appBarTheme: AppBarTheme(
-        titleTextStyle: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
+        titleTextStyle: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.w600, color: AppColor.WHITE),
         actionsIconTheme: const IconThemeData(color: AppColor.WHITE),
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
@@ -156,11 +112,8 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.DARK_CARD_COLOR,
       ),
-      datePickerTheme: DatePickerThemeData(
-        dayStyle: TextStyle(
-          color: Colors.white
-        )
-      ),
+      datePickerTheme:
+          DatePickerThemeData(dayStyle: TextStyle(color: Colors.white)),
       cardTheme: const CardTheme(
         color: AppColor.DARK_CARD_COLOR,
       ),
@@ -176,60 +129,28 @@ class AppTheme {
         labelColor: Colors.white,
         unselectedLabelColor: Colors.white24,
         indicatorColor: Colors.white,
-        unselectedLabelStyle: TextStyle(fontSize: 12),
-        /*indicatorSize: TabBarIndicatorSize.label*/),
+        unselectedLabelStyle: TextStyle(
+            fontSize: 12), /*indicatorSize: TabBarIndicatorSize.label*/
+      ),
       textTheme: TextTheme(
-        displayLarge: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
-        displayMedium: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
-        displaySmall: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
-        titleLarge: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
-        titleMedium: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
-        titleSmall: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: AppColor.WHITE,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 16,
-          color: AppColor.WHITE,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 14,
-          color: AppColor.WHITE,
-        ),
-        bodySmall: TextStyle(
-          fontFamily: 'CustomFont',
-          fontSize: 12,
-          color: AppColor.WHITE.withOpacity(0.4),
-        ),
+        displayLarge: GoogleFonts.getFont('Poppins',
+            fontSize: 20, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        displayMedium: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        displaySmall: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        titleLarge: GoogleFonts.getFont('Poppins',
+            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        titleMedium: GoogleFonts.getFont('Poppins',
+            fontSize: 14, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        titleSmall: GoogleFonts.getFont('Poppins',
+            fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        bodyLarge: GoogleFonts.getFont('Poppins',
+            fontSize: 16, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        bodyMedium: GoogleFonts.getFont('Poppins',
+            fontSize: 14, fontWeight: FontWeight.normal, color: AppColor.WHITE),
+        bodySmall: GoogleFonts.getFont('Poppins',
+            fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.WHITE),
       ),
       iconTheme: IconThemeData(color: AppColor.PRIMARY),
       iconButtonTheme: IconButtonThemeData(

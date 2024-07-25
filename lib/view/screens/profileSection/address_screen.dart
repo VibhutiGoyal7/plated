@@ -58,7 +58,7 @@ class _AddressScreenState extends State<AddressScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -67,7 +67,7 @@ class _AddressScreenState extends State<AddressScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelAddressDetails,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
       body: SafeArea(
@@ -212,7 +212,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),

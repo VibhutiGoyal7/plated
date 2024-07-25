@@ -13,7 +13,7 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -22,7 +22,7 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelLevelBenefit,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           actions: [
             IconButton(
@@ -54,7 +54,7 @@ class _LevelBenefitScreenState extends State<LevelBenefitScreen> {
                             Languages.of(context)!.labelStandard,
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -161,7 +161,7 @@ class Standard extends StatelessWidget {
               child: Text(
                 Languages.of(context)!.labelLevelExclusives,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
@@ -186,7 +186,7 @@ class Standard extends StatelessWidget {
               child: Text(
                 Languages.of(context)!.labelMultipliers,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
@@ -220,7 +220,7 @@ class Standard extends StatelessWidget {
                           Text(
                             Languages.of(context)!.labelOnlinePayments,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
                             ),
                           ),
@@ -278,14 +278,14 @@ class Silver extends StatelessWidget {
                       Languages.of(context)!.labelUnlockWith,
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       '3,000',
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -297,7 +297,7 @@ class Silver extends StatelessWidget {
               child: Text(
                 Languages.of(context)!.labelLevelExclusives,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
@@ -322,7 +322,7 @@ class Silver extends StatelessWidget {
               child: Text(
                 Languages.of(context)!.labelMultipliers,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
@@ -358,7 +358,7 @@ class Silver extends StatelessWidget {
                           Text(
                             Languages.of(context)!.labelOnlinePayments,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
                             ),
                           ),
@@ -415,14 +415,14 @@ class Gold extends StatelessWidget {
                       Languages.of(context)!.labelUnlockWith,
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       '10,000',
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -434,7 +434,7 @@ class Gold extends StatelessWidget {
               child: Text(
                 Languages.of(context)!.labelLevelExclusives,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
@@ -459,7 +459,7 @@ class Gold extends StatelessWidget {
               child: Text(
                 Languages.of(context)!.labelMultipliers,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
@@ -494,7 +494,7 @@ class Gold extends StatelessWidget {
                           Text(
                             Languages.of(context)!.labelOnlinePayments,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 16,
                             ),
                           ),

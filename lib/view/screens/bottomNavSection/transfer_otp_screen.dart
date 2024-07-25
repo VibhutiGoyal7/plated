@@ -165,7 +165,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(leading: GestureDetector(
+      appBar: AppBar(toolbarHeight: 65,leading: GestureDetector(
         onTap: (){
           Navigator.of(context).pop;
         },
@@ -273,7 +273,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       format: CountDownTimerFormat.minutesSeconds,
       enableDescriptions: false,
       spacerWidth: 2,
-      timeTextStyle: TextStyle(fontWeight: FontWeight.bold),
+      timeTextStyle: TextStyle(fontWeight: FontWeight.w600),
       onEnd: () {
         setState(() {
           resendOtp = true;
@@ -445,7 +445,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }

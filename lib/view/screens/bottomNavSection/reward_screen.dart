@@ -36,7 +36,7 @@ class _RewardScreenState extends State<RewardScreen> {
               children: [
                 Text(
                   Languages.of(context)!.labelRewards,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -66,7 +66,7 @@ class _RewardScreenState extends State<RewardScreen> {
                                     Text("100",
                                         style: TextStyle(
                                             fontSize: 26.0,
-                                            fontWeight: FontWeight.bold)),
+                                            fontWeight: FontWeight.w600)),
                                     SizedBox(
                                       width: 10,
                                     ),
@@ -139,7 +139,7 @@ class _RewardScreenState extends State<RewardScreen> {
               child: Text(Languages.of(context)!.labelComingSoon,
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w600
               ),),
             ),
       )),

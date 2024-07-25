@@ -16,7 +16,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -40,7 +40,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                             data.notificationHeading!,
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),

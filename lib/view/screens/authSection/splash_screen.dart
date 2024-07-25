@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Center(
             child: Text(
               "${Languages.of(context)!.appName}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
             ),
           ),
         ),

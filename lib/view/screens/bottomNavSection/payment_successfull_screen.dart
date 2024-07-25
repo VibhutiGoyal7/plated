@@ -63,7 +63,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
             children: [
               SizedBox(height: 70,),
               Icon(Icons.check_circle, color: Colors.white, size: 65,),
-              Text("Payment Successful", style: TextStyle(color: Colors.white,fontSize: 20, fontWeight: FontWeight.bold),),
+              Text("Payment Successful", style: TextStyle(color: Colors.white,fontSize: 20, fontWeight: FontWeight.w600),),
               SizedBox(height:4,),
               Text("${date} at ${time}", style: TextStyle(color: Colors.yellow,fontSize: 13),),
               SizedBox(height: 55,),
@@ -136,7 +136,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                 Text("${name}",
                                     style: TextStyle(
                                         fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
+                                        fontWeight: FontWeight.w600)),
                                 Text("${phoneNo}",
                                     style: TextStyle(
                                         fontSize: 13,
@@ -148,7 +148,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                           ],
                         ),
                         SizedBox(height: 14,),
-                        Text(addCurrencySymbol(currencySymbol , amount), style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                        Text(addCurrencySymbol(currencySymbol , amount), style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),),
                         SizedBox(height: 14,),
                         Divider(height: 0.5,color: Colors.grey,),
                         Spacer(),

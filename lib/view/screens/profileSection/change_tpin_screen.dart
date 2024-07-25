@@ -119,7 +119,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
      screenHeight = MediaQuery.of(context).size.height;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -128,7 +128,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         ),
         title: Text(
           "Change TPIN",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
       body: SingleChildScrollView(
@@ -319,7 +319,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }

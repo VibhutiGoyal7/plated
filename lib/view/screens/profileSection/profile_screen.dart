@@ -201,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             /* Text(
                               Languages.of(context)!.labelProfile,
                               style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                                  fontSize: 18.0, fontWeight: FontWeight.w600),
                             ),*/
                           ],
                         ),
@@ -283,10 +283,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Stack(
                                 children: [
                                   GestureDetector(
-                                    onTap: () =>
-                                        {
-                                    Navigator.pushNamed(context, "/QRScannerScreen")
-                                        },
+                                    onTap: () => {
+                                      Navigator.pushNamed(
+                                          context, "/QRScannerScreen")
+                                    },
                                     child: imageUrl == ""
                                         ? Container(
                                             height: 90,
@@ -362,7 +362,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               Navigator.pushNamed(
                                                   context, "/QRScannerScreen");
                                             },
-                                            icon: Icon(Icons.qr_code_2, color: Colors.black,),
+                                            icon: Icon(
+                                              Icons.qr_code_2,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -421,10 +424,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           arguments: "");
                                     },
                                     child: _buildCard(
-                                        context,
-                                        Languages.of(context)!
-                                            .labelPersonalInfo,
-                                        isDarkMode,
+                                      context,
+                                      Languages.of(context)!.labelPersonalInfo,
+                                      isDarkMode,
                                       Icon(
                                         Icons.person_outline_rounded,
                                         size: 24,
@@ -452,9 +454,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               .labelPaymentMethod,
                                           16.0)),
                                   _buildCard(
-                                      context,
-                                      Languages.of(context)!.labelAddedCard,
-                                      isDarkMode,
+                                    context,
+                                    Languages.of(context)!.labelAddedCard,
+                                    isDarkMode,
                                     Icon(
                                       Icons.account_balance_wallet,
                                       size: 24,
@@ -476,9 +478,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           arguments: "");
                                     },
                                     child: _buildCard(
-                                        context,
-                                        Languages.of(context)!.labelSettings,
-                                        isDarkMode,
+                                      context,
+                                      Languages.of(context)!.labelSettings,
+                                      isDarkMode,
                                       Icon(
                                         Icons.settings,
                                         size: 24,
@@ -501,7 +503,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _buildLabelText(BuildContext context, String text, double size) {
     return Text(
       text,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: size),
+      style: TextStyle(fontWeight: FontWeight.w600, fontSize: size),
       textAlign: TextAlign.left,
     );
   }
@@ -522,7 +524,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(text, style: TextStyle(fontSize: 16.0)),
             ],
           ),
-         /* Icon(
+          /* Icon(
             Icons.arrow_forward_ios_outlined,
             size: 16,
           )*/
@@ -571,7 +573,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
-    if(customerName == null || customerName == "" || userName == null || userName == "") {
+    if (customerName == null ||
+        customerName == "" ||
+        userName == null ||
+        userName == "") {
       setState(() {
         isLoading = true;
       });

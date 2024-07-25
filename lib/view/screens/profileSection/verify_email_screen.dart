@@ -144,7 +144,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar ( toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -153,7 +153,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelVerifyEmail,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),
       body: Stack(
@@ -170,7 +170,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                     Text(
                       Languages.of(context)!.labelVerifyYourEmail,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                     SizedBox(height: 10),
                     Text(
@@ -243,7 +243,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                             child: Container(
                               child: Text(
                                 Languages.of(context)!.labelSubmit,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ),
                           ),

@@ -198,7 +198,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                         "Phone\n Verification",
                         style: TextStyle(
                           fontSize: 28,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -276,7 +276,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       text,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }
@@ -533,7 +533,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                   "Login",
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: Colors.blue,
                   ),
                 ),
@@ -605,7 +605,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                           countryList[index].name as String,
                           style: TextStyle(
                             fontSize: 11,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: (phoneCode ==
                                     "+${countryList[index].phoneCode}")
                                 ? AppColor.WHITE

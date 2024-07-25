@@ -25,7 +25,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -34,7 +34,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelVerifyIdentity,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: Padding(
@@ -45,7 +45,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
               children: [
                 Text(Languages.of(context)!.labelAllowCamAccess,
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
                 SizedBox(height: 10),
                 Text(
                   Languages.of(context)!.labelAllowAccessSubtitle,

@@ -25,7 +25,7 @@ class _RedeemScreenState extends State<RedeemScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {

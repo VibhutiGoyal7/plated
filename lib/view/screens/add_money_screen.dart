@@ -120,7 +120,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -129,7 +129,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelAddMoney,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: Stack(
@@ -168,7 +168,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     ),
                     Text(
                       "Adding via: ${paymentMethod}",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                     Text("${username}",
                         style: TextStyle(
@@ -186,7 +186,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                           const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
                       child: Text(
                         "Limit : ${limitAmt}",
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                     ),*/
                     Spacer(),

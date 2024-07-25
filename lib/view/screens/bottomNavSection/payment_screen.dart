@@ -32,7 +32,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: Center(
                 child: Text(
               Languages.of(context)!.labelComingSoon,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
             ))),
       )),
     );

@@ -13,7 +13,7 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -22,7 +22,7 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelKYCVerification,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         //backgroundColor: Theme.of(context).backgroundColor,
@@ -43,14 +43,14 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                         context,
                         Languages.of(context)!.labelVerifyIdentity,
                         26,
-                        FontWeight.bold),
+                        FontWeight.w600),
                     _buildText(context, Languages.of(context)!.labelTakeFewMinutes, 16,
                     FontWeight.normal),
                 SizedBox(
                   height: 8,
                 ),
                 _buildText(
-                    context, Languages.of(context)!.labelUseDevice, 18, FontWeight.bold),
+                    context, Languages.of(context)!.labelUseDevice, 18, FontWeight.w600),
                 _buildText(
                     context,
                     Languages.of(context)!.labelTakePhoto,

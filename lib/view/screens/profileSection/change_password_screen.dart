@@ -77,7 +77,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -86,7 +86,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelChangePass,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),
       //backgroundColor: Theme.of(context).backgroundColor,
@@ -156,7 +156,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           Languages.of(context)!.labelForgotPass,
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: AppColor.PRIMARY,
                           ),
                         ),

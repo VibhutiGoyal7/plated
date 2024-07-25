@@ -195,7 +195,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -204,7 +204,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
         title: Text(
           "${Languages.of(context)!.labelTransaction}s",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
@@ -249,7 +249,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             addCurrencySymbol(countryCurrencySymbol,currentBalance),
                             style: TextStyle(
                                 fontSize: 32.0,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 letterSpacing: 2),
                           ) : ShimmerText(height: 32,width: 100,),
                           SizedBox(
@@ -310,7 +310,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                           child: Text(
                                             date,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                                 fontSize: 12),
                                           ),
                                         ),
@@ -598,7 +598,7 @@ class TransactionItem extends StatelessWidget {
                           capitalizeFirstLetter(
                               "${transaction.paymentRequestId}"),
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14),
+                              fontWeight: FontWeight.w600, fontSize: 14),
                         ),
                         Text(capitalizeFirstLetter("${transaction.status}"),
                             style: TextStyle(
@@ -613,7 +613,7 @@ class TransactionItem extends StatelessWidget {
                   children: [
                     Text(addCurrencySymbol(symbol , "${transaction.amount}"),
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15)),
+                            fontWeight: FontWeight.w600, fontSize: 15)),
                     /*Text(convertDateFormat("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 12)),*/
                   ],

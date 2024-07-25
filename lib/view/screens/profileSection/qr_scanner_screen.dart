@@ -44,7 +44,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -53,7 +53,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
           ),
           title: Text(
             "QR Scanner",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           actions: [
             Padding(
@@ -253,7 +253,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   _buildLabelText(BuildContext context, String text) {
     return Text(
       text,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.0),
       textAlign: TextAlign.left,
     );
   }

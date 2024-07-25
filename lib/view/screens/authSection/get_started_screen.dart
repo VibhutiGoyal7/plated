@@ -27,7 +27,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
           Text(
             "Payrio",
             style: TextStyle(fontSize: 28,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
             color: AppColor.PRIMARY),
           ),
           Image(
@@ -41,7 +41,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
           ),
           Text(
             "Add your money and manage",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: 8,

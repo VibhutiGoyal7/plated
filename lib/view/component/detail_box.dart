@@ -19,8 +19,7 @@ class DetailBox extends StatelessWidget  {
       return Padding(
         padding: const EdgeInsets.symmetric( vertical: 2.0),
         child: Container(
-
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 18.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -37,7 +36,7 @@ class DetailBox extends StatelessWidget  {
                     heading,
                     style: TextStyle(
                       fontSize: headingTextSize,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       //color: isDarkMode ? Colors.white : Colors.black,
                     ),
                   ),

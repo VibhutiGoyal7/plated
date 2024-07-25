@@ -92,7 +92,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     return WillPopScope(
       onWillPop: _onWillPop ,
       child: Scaffold(
-          appBar: AppBar(
+          appBar: AppBar(toolbarHeight: 65,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -101,7 +101,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             ),
             title: Text(
               "Verify your Identity",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
             ),
           ),
           body: Stack(
@@ -180,9 +180,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("Record a video", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+            Text("Record a video", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),),
             SizedBox(height: 10,),
-            Text("This is to verify you are a real person", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
+            Text("This is to verify you are a real person", style: TextStyle(fontWeight: FontWeight.w600,fontSize: 14),),
             SizedBox(height: 6,),
             Text("1. First position your face in the frame.", style: TextStyle(fontSize: 14),),
             SizedBox(height: 6,),

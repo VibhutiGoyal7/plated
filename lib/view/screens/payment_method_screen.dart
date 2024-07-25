@@ -48,7 +48,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
+        appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -57,7 +57,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           ),
           title: Text(
             Languages.of(context)!.labelAddMoney,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: SafeArea(
@@ -69,7 +69,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               padding: const EdgeInsets.all(4.0),
               child: Text(
                 "Payment Methods",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
             SizedBox(

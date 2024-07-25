@@ -57,7 +57,7 @@ class NewsOfferListWidget extends StatelessWidget {
                       child: Card(
                         child: Center(child: Text(data[index].daysLeft, style: TextStyle(
                           fontSize: 11,
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.w600
                         ),)),
                       ),
                     ),
@@ -78,7 +78,7 @@ class NewsOfferListWidget extends StatelessWidget {
                                   Text(
                                     data[index].title,
                                     style: TextStyle(fontSize: 14,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w600),
                                     textAlign: TextAlign.start,
                                   ),
                                   SizedBox(height: 5,),

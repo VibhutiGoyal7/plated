@@ -95,7 +95,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     // double screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -104,7 +104,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         ),
         title: Text(
           Languages.of(context)!.labelPersonalInfo,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
       body: SingleChildScrollView(
@@ -239,7 +239,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           children: [
             Text(
               label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 5),
             Text(
@@ -269,7 +269,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
               children: [
                 Text(
                   Languages.of(context)!.labelBirthdate,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 5),
                 Text(

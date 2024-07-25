@@ -257,7 +257,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       format: CountDownTimerFormat.minutesSeconds,
       enableDescriptions: false,
       spacerWidth: 2,
-      timeTextStyle: TextStyle(fontWeight: FontWeight.bold),
+      timeTextStyle: TextStyle(fontWeight: FontWeight.w600),
       onEnd: () {
         setState(() {
           resendOtp = true;
@@ -439,7 +439,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: size.toDouble(),
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
   }
@@ -462,7 +462,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         child: Text(
           "Resend Otp",
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             decoration: TextDecoration.underline,
           ),
         ));

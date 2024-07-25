@@ -104,7 +104,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                           child: Text(
                             Languages.of(context)!.labelMoneyTransfer,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 24.0),
+                                fontWeight: FontWeight.w600, fontSize: 24.0),
                           ),
                         ),
                       ),
@@ -118,7 +118,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             Languages.of(context)!.labelTransferTo,
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),*/
@@ -146,7 +146,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                         child: Text(
                           "Recents",
                           style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                              fontSize: 18.0, fontWeight: FontWeight.w600),
                         ),
                       ),
                       SizedBox(
