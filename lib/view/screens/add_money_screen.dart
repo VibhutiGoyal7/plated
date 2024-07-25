@@ -103,89 +103,100 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.pushReplacementNamed(
+      context,
+      "/BottomNav",
+    );
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushNamed(context, '/BottomNav');
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamed(context, '/BottomNav');
+            },
+          ),
+          title: Text(
+            Languages.of(context)!.labelAddMoney,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
         ),
-        title: Text(
-          Languages.of(context)!.labelAddMoney,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Stack(
-        children: [
-          isLoading?
-          Container(
-            height: screenHeight,
-            width: screenWidth,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ): SizedBox(),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Container(
-                    height: 70,
-                    width: 70,
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: AppColor.WHITE,
-                      backgroundImage: AssetImage(
-                        "assets/bank_statement.png",
+        body: Stack(
+          children: [
+            isLoading?
+            Container(
+              height: screenHeight,
+              width: screenWidth,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ): SizedBox(),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 18,
+                    ),
+                    Container(
+                      height: 70,
+                      width: 70,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: AppColor.WHITE,
+                        backgroundImage: AssetImage(
+                          "assets/bank_statement.png",
 
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    "Adding via: ${paymentMethod}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text("${username}",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: isDarkMode ? Colors.white70 : Colors.black54)),
-                  Text(
-                    "Please enter amount to proceed",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                  ),
-                  _buildPhoneInput(
-                      context, Languages.of(context)!.labelZero, _amountController),
-             /*     Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
-                    child: Text(
-                      "Limit : ${limitAmt}",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    SizedBox(
+                      height: 15,
                     ),
-                  ),*/
-                  Spacer(),
-                  _buildFooter(context),
-                ],
+                    Text(
+                      "Adding via: ${paymentMethod}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text("${username}",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                            color: isDarkMode ? Colors.white70 : Colors.black54)),
+                    Text(
+                      "Please enter amount to proceed",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                    ),
+                    _buildPhoneInput(
+                        context, Languages.of(context)!.labelZero, _amountController),
+               /*     Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                      child: Text(
+                        "Limit : ${limitAmt}",
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),*/
+                    Spacer(),
+                    _buildFooter(context),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

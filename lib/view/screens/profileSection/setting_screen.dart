@@ -1,5 +1,6 @@
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Helper.dart';
+import 'package:Payrio/view/component/detail_box.dart';
 import 'package:Payrio/view/screens/authSection/money_safe_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,8 @@ class _SettingScreenState extends State<SettingScreen> {
   var password;
   var phoneNumber;
   var userId;
-  bool isLoading = true;
+  bool isLoading = false;
+  bool isApiLoading = false;
 
   var isEmailVerified;
   var mCities = ["en", "ar", "hi"];
@@ -42,6 +44,7 @@ class _SettingScreenState extends State<SettingScreen> {
         isLoading = false; // Update loading state
       });
     });
+    isLoading = true;
     _fetchData();
   }
 
@@ -152,15 +155,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   padding: EdgeInsets.all(6.0),
                   child: _buildLabelText(
                       context, Languages.of(context)!.labelSecurity)),
-              _buildCard(
-                context,
-                Languages.of(context)!.labelStepVerification,
-                isDarkMode,
-                Icon(
-                  Icons.verified_user,
-                  size: 24,
-                ),
-              ),
+              DetailBox(heading: Languages.of(context)!.labelStepVerification, subHeading: "subHeading", icon: Icons.verified_user,headingTextSize: 15, subHeadingTextSize: 14,),
               _buildBiometricCard(context, "Enable App Lock", isDarkMode),
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
@@ -170,29 +165,18 @@ class _SettingScreenState extends State<SettingScreen> {
                 onTap: () {
                   Navigator.pushNamed(context, '/ChangePasswordScreen');
                 },
-                child: _buildCard(
-                  context,
-                  "Change Password",
-                  isDarkMode,
-                  Icon(
-                    Icons.password,
-                    size: 24,
-                  ),
-                ),
+                child:
+
+                DetailBox(heading: "Change Password", subHeading: "subHeading", icon:Icons.password, headingTextSize: 15, subHeadingTextSize: 14,),
+
               ),
               GestureDetector(
                 onTap: () async {
                   Navigator.pushNamed(context, '/ChangeTPinScreen');
                 },
-                child: _buildCard(
-                  context,
-                  "Change Transaction Pin(TPIN)",
-                  isDarkMode,
-                  Icon(
-                    Icons.pin,
-                    size: 24,
-                  ),
-                ),
+                child:
+                DetailBox(heading:"Change Transaction Pin(TPIN)", subHeading: "subHeading", icon:Icons.pin,headingTextSize: 15, subHeadingTextSize: 14,),
+
               ),
             ],
           ),
@@ -304,7 +288,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   Text(text,
                       style: TextStyle(
-                          fontSize: 14.0, fontWeight: FontWeight.bold)),
+                          fontSize: 15.0, fontWeight: FontWeight.bold)),
                 ],
               ),
               Transform.scale(

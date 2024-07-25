@@ -97,6 +97,8 @@ flutter:
       - assets/change_password.png
       - assets/forgot_password.png
       - assets/sign-in.png
+      - assets/header.png
+
 
   fonts:
     - family: CustomFont

@@ -43,6 +43,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   static const maxDuration = Duration(seconds: 2);
 
   bool isLoading = false;
+  bool isApiLoading = false;
   bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
 
@@ -125,7 +126,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             "currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
         if (dashboardResponse?.customerData?.tpin == null ||
             dashboardResponse?.customerData?.tpin == "") {
-          Navigator.pushNamed(context, '/TpinCreateScreen').then(onGoBack);
+          Navigator.pushNamed(context, '/TpinCreateScreen');
         }
         await Helper.saveUserBalance(dashboardResponse?.customerData?.balance);
         await Helper.saveCurrencySymbol(
@@ -183,6 +184,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     KycStatusResponse? kycStatusResponse =
         apiResponse.data as KycStatusResponse?;
     var message = apiResponse.message.toString();
+    setState(() {
+
+      isApiLoading = false;
+    });
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -190,10 +195,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.COMPLETED:
         print("rwrwr ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;
-        isLoading = false;
         if (kycStatusApi != "verified") {
-          Navigator.pushNamed(context, '/ChooseDocScreen').then(onGoBack);
+          isApiLoading = false;
+          Navigator.pushNamed(context, '/ChooseDocScreen');
         } else if (kycStatusApi == "verified") {
+          isApiLoading = false;
           Navigator.pushNamed(context, '/PaymentMethodScreen');
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -302,7 +308,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               child: GestureDetector(
                                 onTap: () => {
                                   Navigator.pushNamed(context, '/ProfileScreen')
-                                      .then(onGoBack)
                                 },
                                 child: imageUrl == null || imageUrl == ""
                                     ? Container(
@@ -376,6 +381,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                                 size: 24,
+                                color: isDarkMode ? Colors.white : Colors.black,
                               ),
                               onPressed: () {
                                 setState(
@@ -386,7 +392,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               },
                             ),
                             IconButton(
-                              icon: Icon(Icons.notifications),
+                              icon: Icon(Icons.notifications, color: isDarkMode ? Colors.white : Colors.black,),
                               onPressed: () => {
                                 Navigator.pushNamed(
                                     context, "/NotificationScreen")
@@ -576,8 +582,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(
-                                          context, '/TransactionsScreen')
-                                      .then(onGoBack);
+                                          context, '/TransactionsScreen');
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -604,7 +609,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         Expanded(
                           //height: screenSize.height/2,
                           child: Container(
-                            margin: EdgeInsets.only(top: 8, left: 8, right: 8),
+                            margin: EdgeInsets.only(top: 6, left: 6, right: 6),
                             child: isInternetConnected && !isLoading
                                 ? ListView.builder(
                                     physics:
@@ -613,7 +618,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     itemCount:
                                         transactionList.length > 0 ? 3 : 0,
                                     shrinkWrap: true,
-                                    padding: const EdgeInsets.only(bottom: 10),
+                                    padding: const EdgeInsets.only(bottom: 6 ),
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Card(
@@ -623,7 +628,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               BorderRadius.circular(12),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
+                                          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2),
                                           child: Container(
                                             margin: EdgeInsets.symmetric(
                                                 vertical: 8),
@@ -718,6 +723,20 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 ),
               ),
             )),
+        isApiLoading ?
+        Stack(
+          children: [
+            // Block interaction
+            ModalBarrier(
+                dismissible: false,
+                color: Colors.black.withOpacity(0.3)),
+            // Loader indicator
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        )
+            : SizedBox(),
       ]),
     );
   }
@@ -769,13 +788,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelWithdraw) {
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/WithdrawScreen')
-                                    .then(onGoBack);
+                                Navigator.pushNamed(context, '/WithdrawScreen');
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelTransfer) {
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/TransferScreen')
-                                    .then(onGoBack);
+                                Navigator.pushNamed(context, '/TransferScreen');
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
@@ -990,13 +1007,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   void _fetchKycStatus() async {
     setState(() {
-      isLoading = true;
+      isApiLoading = true;
     });
 
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
-        isLoading = false;
+        isApiLoading = false;
         isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1006,7 +1023,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         );
       });
     } else {
-      await Future.delayed(Duration(milliseconds: 1));
+      //await Future.delayed(Duration(milliseconds: 1));
       await Provider.of<MainViewModel>(context, listen: false)
           .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
       ApiResponse apiResponse =
@@ -1035,7 +1052,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       });
     } else {
       if (mounted) {
-        await Future.delayed(Duration(milliseconds: 1));
+        //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
             .dashboardData("/api/v1/app/customers/dashboard_data");
         ApiResponse apiResponse =
