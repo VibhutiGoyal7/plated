@@ -108,7 +108,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 15),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

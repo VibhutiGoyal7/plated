@@ -363,11 +363,16 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30.0, bottom: 5.0),
-            child: Text("Manage App Lock",
-                style: TextStyle(
-                    fontSize: 14.0,
-                    color: AppColor.PRIMARY,
-                    fontWeight: FontWeight.w500)),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.pushNamed(context, "/ManageAppLockScreen");
+              },
+              child: Text("Manage App Lock",
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      color: AppColor.PRIMARY,
+                      fontWeight: FontWeight.w500)),
+            ),
           ),
         ],
       ),

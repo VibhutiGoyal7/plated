@@ -4,6 +4,7 @@ import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/ShimmerList.dart';
+import 'package:Payrio/view/component/news_offer_list_widget.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

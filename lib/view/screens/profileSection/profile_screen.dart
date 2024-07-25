@@ -364,7 +364,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                             icon: Icon(
                                               Icons.qr_code_2,
-                                              color: Colors.black,
                                             ),
                                           ),
                                         ),

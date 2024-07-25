@@ -40,6 +40,7 @@ import 'package:Payrio/view/screens/profileSection/address_screen.dart';
 import 'package:Payrio/view/screens/profileSection/change_password_screen.dart';
 import 'package:Payrio/view/screens/profileSection/change_tpin_screen.dart';
 import 'package:Payrio/view/screens/profileSection/forgot_password_screen.dart';
+import 'package:Payrio/view/screens/profileSection/manage_applock_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_data_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
@@ -294,6 +295,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return ScanQrScreen();
+            },
+            '/ManageAppLockScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return ManageAppLockScreen();
             },
             '/TransactionsScreen': (context) {
               final args =
