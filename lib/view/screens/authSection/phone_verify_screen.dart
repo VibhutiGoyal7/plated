@@ -35,6 +35,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   String dropdownValue = "";
 
   late double screenWidth;
+  String selectedItem ="";
 
   void setLocale(Locale locale) {
     setState(() {
@@ -153,6 +154,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 
         countryList = countryListResponse!.countries!;
+        selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
         print("countriess ${countryList}");
 
         //_showPicker(context: context);
@@ -181,7 +183,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,16 +253,16 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           ),
           isLoading
               ? Stack(
-            children: [
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
+                  children: [
+                    ModalBarrier(
+                        dismissible: false,
+                        color: Colors.black.withOpacity(0.3)),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox(),
         ],
       ),
@@ -278,8 +279,17 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     );
   }
 
+  void _changeItem(CountryData? newValue) {
+    setState(() {
+      print("${newValue?.id}");
+      countryCode =  int.parse("${newValue?.id}");
+      phoneCode =  "${newValue?.code}";
+      selectedItem = "${newValue?.flagImageUrl}";
+    });
+  }
+
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
-    String? selectedItem;
+
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,153 +325,91 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                Container(
-                width: 70, // Width of the dropdown button
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButtonFormField<String>(
-                    //hint: Text('Select'),
-                    isExpanded: true,
-                    value: selectedItem,
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedItem = newValue;
-                      });
-                    },
-                    selectedItemBuilder: (BuildContext context) {
-                      return countryList.map((item) {
-                        return Container(
-                          width: 70,
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                child: Image.network(
-                                  item.flagImageUrl as String,
-                                  height: 22,
-                                  width: 35,
-                                  loadingBuilder: (BuildContext context, Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Shimmer.fromColors(
-                                        baseColor: Colors.white30,
-                                        highlightColor: Colors.grey,
-                                        child: Container(
-                                          height: 22,
-                                          width: 35,
-                                          color: Colors.grey,
-                                        ),
-                                      );
-                                    }
-                                  },
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                          showMenu(
+                            context: context,
+                            position: RelativeRect.fromRect(
+                              Rect.fromLTWH(0, 290, overlay.size.width, overlay.size.height),
+                              Offset.zero & overlay.size,
+                            ),
+                            items: countryList.map((item) {
+                              return PopupMenuItem<CountryData>(
+                                value: item,
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      child: Image.network(
+                                        "${item.flagImageUrl}",
+                                        height: 24,
+                                        width: 40,
+                                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.white30,
+                                              highlightColor: Colors.grey,
+                                              child: Container(
+                                                height: 24,
+                                                width: 40,
+                                                color: Colors.grey,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      "+${item.phoneCode}",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              /*SizedBox(width: 2.5),
-                              Text(
-                                "+${item.phoneCode}",
-                                style: TextStyle(fontSize: 11),
-                                overflow: TextOverflow.ellipsis,
-
-                              ),*/
-                            ],
-                          ),
-                        );
-                      }).toList();
-                    },
-                    items: countryList.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item.phoneCode,
-
-                        child: Container(
-                          width: 200,
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                child: Image.network(
-                                  item.flagImageUrl as String,
-                                  height: 24,
-                                  width: 40,
-                                  loadingBuilder: (BuildContext context, Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Shimmer.fromColors(
-                                        baseColor: Colors.white30,
-                                        highlightColor: Colors.grey,
-                                        child: Container(
-                                          height: 24,
-                                          width: 40,
-                                          color: Colors.grey,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                "+${item.phoneCode}",
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-                /*  Container(
-                    width: screenWidth*0.1,
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        //hint: Text('Select a fruit'),
-                        value: selectedItem,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedItem = newValue;
+                              );
+                            }).toList(),
+                          ).then((value) {
+                            if (value != null) {
+                              _changeItem(value);
+                            }
                           });
                         },
-                        items: countryList.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item.phoneCode,
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  "${item.flagImageUrl}",
-                                  width: 24,
-                                  height: 24,
-                                ),
-                                SizedBox(width: 10),
-                                Text("${item.phoneCode}"),
-                              ],
+                        child: Row(
+                          children: [
+                            selectedItem.isEmpty
+                                ? Container(width: 40)
+                                : Image.network(
+                              "${Uri.parse(selectedItem)}",
+                              height: 24,
+                              width: 40,
+                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.white30,
+                                    highlightColor: Colors.grey,
+                                    child: Container(
+                                      height: 24,
+                                      width: 40,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),*/
-                  /* GestureDetector(
-                    onTap: () async {
-                      _showPicker(context: context);
-                    },
-                    child: SizedBox(
-                      height: 55,
-                      width: 40,
-                      child: Center(
-                        child: Text(
-                          phoneCode,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: isDarkMode ? Colors.white : Colors.black),
+                            SizedBox(width: 5),
+                            Icon(Icons.keyboard_arrow_down_sharp),
+                          ],
                         ),
                       ),
-                    ),
-                  ),*/
+                    ],
+                  ),
                   SizedBox(width: 16),
                   Expanded(
                     child: TextField(
@@ -563,16 +511,34 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
             ),
           ),
         ),
-        /*Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Text(
-            Languages.of(context)!.labelNeedHelp,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[400],
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacementNamed(context, "/SignInScreen");
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Already have an account? ",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[400],
+                  ),
+                ),
+                Text(
+                  "Login",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),*/
+        ),
       ],
     );
   }

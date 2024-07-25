@@ -144,7 +144,6 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                         ),
                       ),
-
                     ]),
               ),
               Container(

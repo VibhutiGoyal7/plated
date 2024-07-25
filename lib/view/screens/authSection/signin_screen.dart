@@ -201,10 +201,10 @@ class _SigninScreenState extends State<SigninScreen> {
                                 child: Align(
                                   alignment: Alignment.topRight,
                                   child: Text(
-                                    "Forgot Password",
+                                   "${Languages.of(context)?.labelForgotPass}",
                                     style: TextStyle(
                                         fontSize: 12,
-                                        color: AppColor.PRIMARY,
+                                        color: Colors.blue,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -464,7 +464,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   "SignUp here.",
                   style: TextStyle(
                       fontSize: 14,
-                      color: AppColor.PRIMARY,
+                      color: Colors.blue,
                       fontWeight: FontWeight.bold),
                 ),
               ),

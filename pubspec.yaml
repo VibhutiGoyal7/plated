@@ -62,7 +62,7 @@ dependencies:
   share_plus: ^6.0.0
   connectivity_plus: ^6.0.3
   smooth_page_indicator: ^1.1.0
-
+  dropdown_button2: ^2.3.9
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -97,6 +97,7 @@ flutter:
       - assets/change_password.png
       - assets/forgot_password.png
       - assets/sign-in.png
+      - assets/header.png
 
   fonts:
     - family: CustomFont

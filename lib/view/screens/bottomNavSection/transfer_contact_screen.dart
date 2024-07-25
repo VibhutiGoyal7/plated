@@ -155,7 +155,8 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                       isRecentDataEmpty
                           ? Expanded(
                               child: Center(
-                                child: Text("Make some transactions..."),
+                                child: Text("Make some transactions...",
+                                style: TextStyle(color: isDarkMode ? Colors.grey : Colors.white70),),
                               ),
                             )
                           : Expanded(
