@@ -1,5 +1,6 @@
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
 import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -113,7 +114,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/BottomNav');
           },
         ),
         title: Text(
@@ -245,6 +246,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             width: screenWidth * 0.7,
             child: ElevatedButton(
               onPressed: () async {
+                hideKeyBoard();
                 _isValidInput();
                 print(_amountController.text);
                 if (inputValid) {
@@ -259,12 +261,13 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content:
-                          Text('No internet connection'),
+                          Text('No internet connection', style: TextStyle(color: AppColor.WHITE),),
                           duration: maxDuration,
                         ),
                       );
                     });
                   }else {
+
                     AddMoneyRequest request = AddMoneyRequest(
                         amount: int.parse(_amountController.text));
 

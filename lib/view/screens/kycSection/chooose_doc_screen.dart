@@ -54,11 +54,12 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchDocData();
     Helper.getCountry().then((country) {
       isCountryNameLoading = false;
       countryName = country;
     });
+    _fetchDocData();
+
   }
 
   @override

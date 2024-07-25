@@ -44,7 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final ConnectivityService _connectivityService = ConnectivityService();
 
-
   @override
   void initState() {
     super.initState();
@@ -60,7 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     });
     print(Helper.getUserToken());
-
   }
 
   void copyTextToClipboard(String text) {
@@ -82,18 +80,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
         await Helper.saveUserBalance(mediaList?.balance);
-          await Helper.saveCountry(mediaList?.countryName);
-          await Helper.saveKycStatus(mediaList?.kycStatus);
-          print(mediaList?.countryName);
+        await Helper.saveCountry(mediaList?.countryName);
+        await Helper.saveKycStatus(mediaList?.kycStatus);
+        print(mediaList?.countryName);
 
         _fetchDataFromPref();
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        print("Message : ${apiResponse.message}") ;
-        if(apiResponse.message== "Invalid access token")
-          {SessionExpiredDialog.showDialogBox(context: context);}
-        else{
+        _fetchDataFromPref();
+        print("Message : ${apiResponse.message}");
+        if (apiResponse.message == "Invalid access token") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Something went wrong.'),
@@ -101,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         }
-          print(apiResponse.message) ;
+        print(apiResponse.message);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -164,9 +163,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     screenHeight = MediaQuery.of(context).size.height;
 
     return WillPopScope(
-      onWillPop: _onWillPop ,
+      onWillPop: _onWillPop,
       child: Scaffold(
-        appBar: AppBar(
+        /* appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -177,258 +176,363 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Languages.of(context)!.labelProfile,
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ),*/
+        body: Stack(children: [
+          Column(
+            children: [
+              Stack(
+                alignment: Alignment.centerLeft,
+                children: <Widget>[
+                  Container(
+                    height: screenHeight * 0.3,
+                    child: Image(
+                      height: screenHeight * 0.3,
+                      image: AssetImage("assets/header.png"),
+                      fit: BoxFit.fill,
+                    ),
+                    alignment: AlignmentDirectional.center,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () => {_showPicker(context: context)},
-                              child: imageUrl == ""
-                                  ? Container(
-                                      height: 60,
-                                      width: 60,
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        backgroundColor: AppColor.WHITE,
-                                        backgroundImage:
-                                            AssetImage("assets/profile_user.png"),
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(100.0),
-                                      child: Image.network(
-                                        imageUrl,
-                                        height: 60,
-                                        width: 60,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                          // You can return any widget here to display in case of an error
-                                          return Container(
-                                            height: 60,
-                                            width: 60,
+                            IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                    context, "/BottomNav");
+                              },
+                            ),
+
+                            /* Text(
+                              Languages.of(context)!.labelProfile,
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),*/
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    isLoading
+                                        ? Shimmer.fromColors(
+                                            baseColor: Colors.white38,
+                                            highlightColor: Colors.grey,
+                                            child: Container(
+                                              width: 100,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white38,
+                                                borderRadius: BorderRadius.circular(
+                                                    8.0), // Adjust the radius as needed
+                                              ),
+                                            ),
+                                          )
+                                        : _buildLabelText(context,
+                                            customerName.toString(), 20.0),
+                                    Row(
+                                      children: [
+                                        isLoading
+                                            ? SizedBox()
+                                            : Row(
+                                                children: [
+                                                  Text(
+                                                    "User ID: ",
+                                                    style: TextStyle(
+                                                        fontSize: 14.0),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                  Text(
+                                                    userName,
+                                                    style: TextStyle(
+                                                        fontSize: 14.0),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ],
+                                              ),
+                                        SizedBox(
+                                          width: 4,
+                                        ),
+                                        isLoading
+                                            ? SizedBox()
+                                            : GestureDetector(
+                                                onTap: () => {
+                                                  copyTextToClipboard(
+                                                      userName.toString()),
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                        content: Text(
+                                                            "Text copied to clipboard")),
+                                                  )
+                                                },
+                                                child: Icon(
+                                                  Icons.copy,
+                                                  size: 16,
+                                                ),
+                                              )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        {_showPicker(context: context)},
+                                    child: imageUrl == ""
+                                        ? Container(
+                                            height: 90,
+                                            width: 90,
                                             child: CircleAvatar(
                                               radius: 30,
                                               backgroundColor: AppColor.WHITE,
                                               backgroundImage: AssetImage(
-                                                "assets/profile_user.png",
-                                              ),
+                                                  "assets/profile_user.png"),
                                             ),
-                                          );
-                                        },
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.white38,
-                                              highlightColor: Colors.grey,
-                                              child: Container(
-                                                height:60,
-                                                width: 60,
-                                                color: Colors.white,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      )),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  isLoading
-                                      ? Shimmer.fromColors(
-                                          baseColor: Colors.white38,
-                                          highlightColor: Colors.grey,
-                                          child: Container(
-                                            width: 100,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white38,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      8.0), // Adjust the radius as needed
-                                            ),
-                                          ),
-                                        )
-                                      : _buildLabelText(context, customerName.toString()),
-                                  Row(
-                                    children: [
-                                      isLoading
-                                          ? /*Shimmer.fromColors(
-                                        baseColor: Colors.white38,
-                                        highlightColor: Colors.grey,
-                                        child: Container(
-                                          width: 100,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white38,
-                                            borderRadius: BorderRadius.circular(
-                                                8.0), // Adjust the radius as needed
-                                          ),
-                                        ),
-                                      )*/
-                                          SizedBox()
-                                          : Text(
-                                        userName,
-                                        style: TextStyle(fontSize: 14.0),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      isLoading
-                                          ? SizedBox()
-                                          : GestureDetector(
-                                        onTap: () => {
-                                          copyTextToClipboard(userName.toString()),
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text("Text copied to clipboard")),
                                           )
-                                        },
-                                        child: Icon(
-                                          Icons.copy,
-                                          size: 16,
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100.0),
+                                            child: Image.network(
+                                              imageUrl,
+                                              height: 90,
+                                              width: 90,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (BuildContext context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                                return Container(
+                                                  height: 90,
+                                                  width: 90,
+                                                  child: CircleAvatar(
+                                                    radius: 30,
+                                                    backgroundColor:
+                                                        AppColor.WHITE,
+                                                    backgroundImage: AssetImage(
+                                                      "assets/profile_user.png",
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              loadingBuilder:
+                                                  (BuildContext context,
+                                                      Widget child,
+                                                      ImageChunkEvent?
+                                                          loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                } else {
+                                                  return Shimmer.fromColors(
+                                                    baseColor: Colors.white38,
+                                                    highlightColor: Colors.grey,
+                                                    child: Container(
+                                                      height: 80,
+                                                      width: 80,
+                                                      color: Colors.white,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                  ),
+                                  Positioned(
+                                    bottom: -3,
+                                    right: 5,
+                                    child: Container(
+                                      height: 45,
+                                      width: 45,
+                                      child: Card(
+                                        shape: CircleBorder(),
+                                        child: IconButton(
+                                          iconSize: 25,
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, "/QRScannerScreen");
+                                          },
+                                          icon: Icon(Icons.qr_code_2),
                                         ),
-                                      )
-                                    ],
+                                      ),
+                                    ),
                                   ),
                                 ],
-                              ),
-                            ),
-                            Spacer(),
-                            IconButton( onPressed: (){
-                              //generateQrCode(userName);
-                              Navigator.pushNamed(context, "/QRScannerScreen");
-
-                              },
-                                icon: Icon(Icons.qr_code_2)),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(color: AppColor.BG_COLOR),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 10.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          children: [
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 18.0),
+                                  /*Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  padding: EdgeInsets.all(6.0),
+                                  child: _buildLabelText(context,
+                                      Languages.of(context)!.labelProfile)),*/
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/AccountDetailScreen',
+                                          arguments: "");
+                                    },
+                                    child: _buildCard(
+                                      context,
+                                      Languages.of(context)!
+                                          .labelAccountDetails,
+                                      isDarkMode,
+                                      Icon(
+                                        Icons.account_box_outlined,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/PersonalInfoScreen',
+                                          arguments: "");
+                                    },
+                                    child: _buildCard(
+                                        context,
+                                        Languages.of(context)!
+                                            .labelPersonalInfo,
+                                        isDarkMode,
+                                      Icon(
+                                        Icons.person_outline_rounded,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  /*Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  padding: EdgeInsets.all(6.0),
+                                  child: _buildLabelText(context,
+                                      Languages.of(context)!.labelSecurity)),
+                              _buildCard(
+                                  context,
+                                  Languages.of(context)!.labelStepVerification,
+                                  isDarkMode),
+                              _buildBiometricCard(context,
+                                  "Bio-metric Authentication", isDarkMode),*/
+                                  Container(
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 8.0),
+                                      padding: EdgeInsets.all(6.0),
+                                      child: _buildLabelText(
+                                          context,
+                                          Languages.of(context)!
+                                              .labelPaymentMethod,
+                                          16.0)),
+                                  _buildCard(
+                                      context,
+                                      Languages.of(context)!.labelAddedCard,
+                                      isDarkMode,
+                                    Icon(
+                                      Icons.account_balance_wallet,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 8.0),
+                                      padding: EdgeInsets.all(6.0),
+                                      child: _buildLabelText(
+                                          context,
+                                          Languages.of(context)!
+                                              .labelHelpSupport,
+                                          16.0)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/SettingScreen',
+                                          arguments: "");
+                                    },
+                                    child: _buildCard(
+                                        context,
+                                        Languages.of(context)!.labelSettings,
+                                        isDarkMode,
+                                      Icon(
+                                        Icons.settings,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                ]),
                           ],
                         ),
-                      ),
-                      Container(height: 0.5,color: Colors.grey,margin: EdgeInsets.all(15),),
-
-
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //SizedBox(height: 18.0),
-                            /*Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelProfile)),*/
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/AccountDetailScreen',
-                                    arguments: "");
-                              },
-                              child: _buildCard(
-                                  context,
-                                  Languages.of(context)!.labelAccountDetails,
-                                  isDarkMode),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/PersonalInfoScreen',
-                                    arguments: "");
-                              },
-                              child: _buildCard(
-                                  context,
-                                  Languages.of(context)!.labelPersonalInfo,
-                                  isDarkMode),
-                            ),
-                            /*Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelSecurity)),
-                            _buildCard(
-                                context,
-                                Languages.of(context)!.labelStepVerification,
-                                isDarkMode),
-                            _buildBiometricCard(context,
-                                "Bio-metric Authentication", isDarkMode),*/
-                            Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelPaymentMethod)),
-                            _buildCard(
-                                context,
-                                Languages.of(context)!.labelAddedCard,
-                                isDarkMode),
-                            Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0),
-                                padding: EdgeInsets.all(6.0),
-                                child: _buildLabelText(context,
-                                    Languages.of(context)!.labelHelpSupport)),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/SettingScreen',
-                                    arguments: "");
-                              },
-                              child: _buildCard(
-                                  context,
-                                  Languages.of(context)!.labelSettings,
-                                  isDarkMode),
-                            ),
-                          ]),
-                    ],
-                  ),
-                )),
-          ),
-        ),
+                      )),
+                ),
+              ),
+            ],
+          )
+        ]),
       ),
     );
   }
 
-  _buildLabelText(BuildContext context, String text) {
+  _buildLabelText(BuildContext context, String text, double size) {
     return Text(
       text,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: size),
       textAlign: TextAlign.left,
     );
   }
 
-  _buildCard(BuildContext context, String text, bool isDarkMode) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(14.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(text, style: TextStyle(fontSize: 14.0)),
-            Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 16,
-            )
-          ],
-        ),
+  _buildCard(BuildContext context, String text, bool isDarkMode, Icon icon) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(14.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              icon,
+              SizedBox(
+                width: 15,
+              ),
+              Text(text, style: TextStyle(fontSize: 16.0)),
+            ],
+          ),
+         /* Icon(
+            Icons.arrow_forward_ios_outlined,
+            size: 16,
+          )*/
+        ],
       ),
     );
   }
@@ -496,9 +600,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await Provider.of<MainViewModel>(context, listen: false)
           .profileScreenData("/api/v1/app/customers/show_customer_details");
       ApiResponse apiResponse =
-          Provider
-              .of<MainViewModel>(context, listen: false)
-              .response;
+          Provider.of<MainViewModel>(context, listen: false).response;
       getProfileResponse(context, apiResponse);
     }
   }
@@ -611,7 +713,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showModal(BuildContext context, String username) {
     showDialog(
       barrierDismissible: true,
-
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
@@ -632,54 +733,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () => {_showPicker(context: context)},
                     child: imageUrl == ""
                         ? Container(
-                      height: 60,
-                      width: 60,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColor.WHITE,
-                        backgroundImage:
-                        AssetImage("assets/profile_user.png"),
-                      ),
-                    )
+                            height: 60,
+                            width: 60,
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: AppColor.WHITE,
+                              backgroundImage:
+                                  AssetImage("assets/profile_user.png"),
+                            ),
+                          )
                         : ClipRRect(
-                        borderRadius: BorderRadius.circular(100.0),
-                        child: Image.network(
-                          imageUrl,
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                            // You can return any widget here to display in case of an error
-                            return Container(
+                            borderRadius: BorderRadius.circular(100.0),
+                            child: Image.network(
+                              imageUrl,
                               height: 60,
                               width: 60,
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundColor: AppColor.WHITE,
-                                backgroundImage: AssetImage(
-                                  "assets/profile_user.png",
-                                ),
-                              ),
-                            );
-                          },
-                          loadingBuilder: (BuildContext context,
-                              Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.black54,
-                                highlightColor: Colors.black45,
-                                child: Container(
-                                  height:60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                // You can return any widget here to display in case of an error
+                                return Container(
+                                  height: 60,
                                   width: 60,
-                                  color: Colors.white,
-                                ),
-                              );
-                            }
-                          },
-                        )),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: AppColor.WHITE,
+                                    backgroundImage: AssetImage(
+                                      "assets/profile_user.png",
+                                    ),
+                                  ),
+                                );
+                              },
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.black54,
+                                    highlightColor: Colors.black45,
+                                    child: Container(
+                                      height: 60,
+                                      width: 60,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }
+                              },
+                            )),
                   ),
                   SizedBox(
                     height: 10,
@@ -698,71 +800,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         )
-                      : _buildLabelText(context, customerName.toString()),
+                      : _buildLabelText(context, customerName.toString(), 14.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       isLoading
                           ? Shimmer.fromColors(
-                        baseColor: Colors.white38,
-                        highlightColor: Colors.grey,
-                        child: Container(
-                          width: 100,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.white38,
-                            borderRadius: BorderRadius.circular(
-                                8.0), // Adjust the radius as needed
-                          ),
-                        ),
-                      )
+                              baseColor: Colors.white38,
+                              highlightColor: Colors.grey,
+                              child: Container(
+                                width: 100,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.white38,
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // Adjust the radius as needed
+                                ),
+                              ),
+                            )
                           : Text(
-                        userName,
-                        style: TextStyle(fontSize: 14.0),
-                        textAlign: TextAlign.left,
-                      ),
+                              userName,
+                              style: TextStyle(fontSize: 14.0),
+                              textAlign: TextAlign.left,
+                            ),
                       SizedBox(
                         width: 4,
                       ),
                       isLoading
                           ? SizedBox()
                           : GestureDetector(
-                        onTap: () => {
-                          copyTextToClipboard(userName.toString()),
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text("Text copied to clipboard")),
-                          )
-                        },
-                        child: Icon(
-                          Icons.copy,
-                          size: 16,
-                        ),
-                      )
+                              onTap: () => {
+                                copyTextToClipboard(userName.toString()),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text("Text copied to clipboard")),
+                                )
+                              },
+                              child: Icon(
+                                Icons.copy,
+                                size: 16,
+                              ),
+                            )
                     ],
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(
+                    height: 15,
+                  ),
                   Container(
                     alignment: Alignment.center,
                     child: Padding(
                       padding: EdgeInsets.all(15),
                       child: isUsernameRetrieved && isQrCodeGenerated
                           ? //Text("data")
-                      qrCodeImage != null
-                          ? Image.memory(qrCodeImage!)
-                          : Text("Error loading QR code")
+                          qrCodeImage != null
+                              ? Image.memory(qrCodeImage!)
+                              : Text("Error loading QR code")
                           : Shimmer.fromColors(
-                        baseColor: Colors.white38,
-                        highlightColor: Colors.grey,
-                        child: Container(
-                          width: 160,
-                          height: 160,
-                          decoration: BoxDecoration(
-                            color: Colors.white38,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
+                              baseColor: Colors.white38,
+                              highlightColor: Colors.grey,
+                              child: Container(
+                                width: 160,
+                                height: 160,
+                                decoration: BoxDecoration(
+                                  color: Colors.white38,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -773,19 +878,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
+
   void _fetchDataFromPref() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileResponse = await Helper.getProfileDetails();
 
-
     setState(() {
       customerName =
-      "${profileResponse?.firstName} ${profileResponse?.lastName}";
+          "${profileResponse?.firstName} ${profileResponse?.lastName}";
       userName = "${profileResponse?.username}";
       imageUrl = profileResponse?.imageUrl.toString();
       isLoading = false;
       isUsernameRetrieved = true;
     });
-
   }
 }

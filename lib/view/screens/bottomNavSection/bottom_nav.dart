@@ -1,10 +1,8 @@
 import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_contact_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
@@ -13,7 +11,6 @@ import '../../../utils/Helper.dart';
 import 'dashboard_home_screen.dart';
 
 class BottomNav extends StatefulWidget {
-
   @override
   _BottomNavState createState() => _BottomNavState();
 }
@@ -104,9 +101,7 @@ class _BottomNavState extends State<BottomNav>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: () => {
-                _onItemTapped(0)
-              },
+              onTap: () => {_onItemTapped(0)},
               child: Row(
                 children: [
                   SizedBox(width: 14),
@@ -192,32 +187,31 @@ class _BottomNavState extends State<BottomNav>
     bool? isUserAuthenticated = await Helper.getUserAuthenticated();
     bool? canCheckBiometric = retrievedBiometric;
     print('Can CheckBiometric: $canCheckBiometric');
-    if(isUserAuthenticated != true)
-      {
-        if (canCheckBiometric != null && canCheckBiometric == true) {
-          List<BiometricType> availableBiometric = [];
-          try {
-            canCheckBiometric = await auth.canCheckBiometrics;
-            if (canCheckBiometric) {
-              availableBiometric = await auth.getAvailableBiometrics();
-            }
-          } on PlatformException catch (e) {
-            print(e);
+    if (isUserAuthenticated != true) {
+      if (canCheckBiometric != null && canCheckBiometric == true) {
+        List<BiometricType> availableBiometric = [];
+        try {
+          canCheckBiometric = await auth.canCheckBiometrics;
+          if (canCheckBiometric) {
+            availableBiometric = await auth.getAvailableBiometrics();
           }
+        } on PlatformException catch (e) {
+          print(e);
+        }
 
-          if (!mounted) return;
+        if (!mounted) return;
 
-          setState(() {
-            _canCheckBiometric =
-                canCheckBiometric! && availableBiometric.isNotEmpty;
-          });
+        setState(() {
+          _canCheckBiometric =
+              canCheckBiometric! && availableBiometric.isNotEmpty;
+        });
 
-          if (_canCheckBiometric && !_authenticationAttempted) {
-            print("Checking Number of times");
-            _authenticate(); // Only call authenticate if not attempted before
-          }
+        if (_canCheckBiometric && !_authenticationAttempted) {
+          print("Checking Number of times");
+          _authenticate(); // Only call authenticate if not attempted before
         }
       }
+    }
   }
 
   Future<void> _authenticate() async {
@@ -247,7 +241,7 @@ class _BottomNavState extends State<BottomNav>
       //ToastComponent.showToast(context: context, message: "User authenticated successfully.");
       // Proceed with authorized action
       // For example:
-     // Navigator.pushReplacementNamed(context, '/home');
+      // Navigator.pushReplacementNamed(context, '/home');
     } else {
       await Helper.saveUserAuthenticated(true);
       // User cancelled authentication

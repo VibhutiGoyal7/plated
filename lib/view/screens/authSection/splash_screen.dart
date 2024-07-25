@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigation() {
     if (token.isEmpty) {
-      Navigator.pushReplacementNamed(context, "/GetStartedScreen");
+      Navigator.pushReplacementNamed(context, "/MoneySafeScreen");
     } else {
       Navigator.pushReplacementNamed(context, "/BottomNav");
     }

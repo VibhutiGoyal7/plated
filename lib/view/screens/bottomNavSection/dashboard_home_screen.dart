@@ -182,7 +182,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
         apiResponse.data as KycStatusResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -192,7 +192,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         kycStatusApi = kycStatusResponse!.kycStatus!;
         isLoading = false;
         if (kycStatusApi != "verified") {
-          Navigator.pushNamed(context, '/VerifyIdentityScreen').then(onGoBack);
+          Navigator.pushNamed(context, '/ChooseDocScreen').then(onGoBack);
         } else if (kycStatusApi == "verified") {
           Navigator.pushNamed(context, '/PaymentMethodScreen');
         }
@@ -219,12 +219,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     _shortcutCardsList = [
-
       Shortcutitemlist(
           title: Languages.of(context)!.labelSend,
           icon: Icons.send,
           selected: true),
-
       Shortcutitemlist(
           title: Languages.of(context)!.labelAddMoney,
           icon: Icons.add_rounded,
@@ -253,10 +251,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       canPop: false,
       onPopInvoked: (bool didPop) {
         print("DashBoard $didPop");
-        if(didPop)
-          {
-            return;
-          }
+        if (didPop) {
+          return;
+        }
         if (kDebugMode) {
           print("$didPop");
           final now = DateTime.now();
@@ -273,7 +270,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               ),
             );
             //SystemNavigator.pop();
-           // return Future.value(false);
+            // return Future.value(false);
           } else {
             SystemNavigator.pop();
           }
@@ -293,6 +290,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(height: 10,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -308,8 +306,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 },
                                 child: imageUrl == null || imageUrl == ""
                                     ? Container(
-                                        height: 40,
-                                        width: 40,
+                                        height: 45,
+                                        width: 45,
                                         child: CircleAvatar(
                                           radius: 30,
                                           backgroundColor: AppColor.WHITE,
@@ -323,16 +321,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             BorderRadius.circular(100.0),
                                         child: Image.network(
                                           imageUrl as String,
-                                          height: 40,
-                                          width: 40,
+                                          height: 45,
+                                          width: 45,
                                           fit: BoxFit.cover,
                                           errorBuilder: (BuildContext context,
                                               Object exception,
                                               StackTrace? stackTrace) {
                                             // You can return any widget here to display in case of an error
                                             return Container(
-                                              height: 40,
-                                              width: 40,
+                                              height: 45,
+                                              width: 45,
                                               child: CircleAvatar(
                                                 radius: 30,
                                                 backgroundColor: AppColor.WHITE,
@@ -363,7 +361,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         )),
                               ),
                             ),
-                            SizedBox(width: 5),
+                            SizedBox(width: 8),
                             // Add space between avatar and text
                             Text(
                               "${Languages.of(context)!.labelHi}, $name",
@@ -398,7 +396,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ),
                         // Add space between sections
                         SizedBox(
-                          height: 12,
+                          height: 18,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -516,6 +514,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             width: 0,
                           ),
                         ]),*/
+                        SizedBox(
+                          height: 5,
+                        ),
                         Container(
                             width: screenWidth,
                             height: screenHeight * 0.15,
@@ -537,7 +538,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 },
                               ),
                             )),
-                        Padding(
+                        /*Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             Languages.of(context)!.labelNews,
@@ -546,16 +547,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.25),
                           ),
-                        ),
+                        ),*/
                         // News and Offer List
-                        SizedBox(
+                       /* SizedBox(
                           height: 15,
                         ),
                         NewsOfferListWidget(
                           data: imgList,
                           isInternetConnected: isInternetConnected,
                           isLoading: isLoading,
-                        ),
+                        ),*/
                         SizedBox(
                           height: 20,
                         ),
@@ -770,13 +771,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(context, '/WithdrawScreen')
                                     .then(onGoBack);
-
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelTransfer) {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(context, '/TransferScreen')
                                     .then(onGoBack);
-
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(

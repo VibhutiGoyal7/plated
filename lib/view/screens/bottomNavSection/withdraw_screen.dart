@@ -136,7 +136,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   height: 15,
                 ),
                 Text(
-                  "${Languages.of(context)!.labelBalance}: ${addCurrencySymbol(countryCurrencySymbol , currentBalance)} ",
+                  "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${currentBalance} ",
                   style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
                 ),
                 Container(
@@ -379,7 +379,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             }
           },
           child: Text(
-            Languages.of(context)!.labelProceed,
+            "Move Money",
             style:
                 TextStyle(color: inputValid ? Colors.white : AppColor.PRIMARY),
           ),
@@ -447,7 +447,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 10,
                         ),
                         Text(
-                          "You withdrawed ${addCurrencySymbol(countryCurrencySymbol , amount)}",
+                          "You withdraw ${addCurrencySymbol(countryCurrencySymbol , amount)}",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 14),
                         ),

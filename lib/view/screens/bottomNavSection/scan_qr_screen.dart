@@ -44,6 +44,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      backgroundColor: AppColor.BLACK,
       body: SafeArea(
         child: Column(
           children: <Widget>[

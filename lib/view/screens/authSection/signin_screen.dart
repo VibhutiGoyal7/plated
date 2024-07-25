@@ -94,16 +94,10 @@ class _SigninScreenState extends State<SigninScreen> {
           await Helper.saveProfileDetails(mediaList);
           ProfileResponse? prefData = await Helper.getProfileDetails();
           print("prefData : ${prefData?.username}");
-          //await Helper.saveCountry(mediaList?.countryName);
+          await Helper.saveCountry(mediaList?.countryName);
           await Helper.saveKycStatus(mediaList?.kycStatus);
           Navigator.pushReplacementNamed(context, '/BottomNav');
         }
-        //SetUpAccountResponse? retrievedToken = await Helper.getUserDetails();
-        //print('Retrieved Token: ${retrievedToken}');
-        //_fetchData();
-
-        // Navigate to the new screen after receiving the response
-        //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("message : ${apiResponse.message}");
@@ -117,37 +111,6 @@ class _SigninScreenState extends State<SigninScreen> {
         return Center(
             // child: Text('Search for the song by Artist'),
             );
-    }
-  }
-
-  Future<Widget> getProfileWidget(
-      BuildContext context, ApiResponse apiResponse) async {
-    ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
-      case Status.COMPLETED:
-        var email = mediaList?.email;
-        if (email?.isEmpty == true) {
-          Navigator.pushReplacementNamed(context, '/SetUpAccount');
-        } else {
-          await Helper.saveProfileDetails(mediaList);
-          await Helper.saveCountry(mediaList?.countryName);
-          await Helper.saveCurrencySymbol(mediaList?.countryCurrencySymbol);
-          await Helper.saveKycStatus(mediaList?.kycStatus);
-          Navigator.pushReplacementNamed(context, '/BottomNav');
-        }
-
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        return Center(
-            //child: Text('Please try again later!!!'),
-            );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
     }
   }
 
@@ -510,17 +473,6 @@ class _SigninScreenState extends State<SigninScreen> {
         ),
       ],
     );
-  }
-
-  Future<void> _fetchData() async {
-    String? retrievedToken = await Helper.getUserToken();
-    print("Token $retrievedToken");
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .profileScreenData("/api/v1/app/customers/show_customer_details");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getProfileWidget(context, apiResponse);
   }
 
   void Validate(String email) {
