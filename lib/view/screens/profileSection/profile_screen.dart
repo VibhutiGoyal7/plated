@@ -362,7 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               Navigator.pushNamed(
                                                   context, "/QRScannerScreen");
                                             },
-                                            icon: Icon(Icons.qr_code_2, color: Colors.black,),
+                                            icon: Icon(Icons.qr_code_2,),
                                           ),
                                         ),
                                       ),

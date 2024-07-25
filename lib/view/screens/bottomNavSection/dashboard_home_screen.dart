@@ -622,7 +622,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Card(
-                                        elevation: 0,
+                                        //elevation: 0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -630,7 +630,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2),
                                           child: Container(
-                                            margin: EdgeInsets.symmetric(
+                                            margin: EdgeInsets.symmetric(horizontal: 5,
                                                 vertical: 8),
                                             child: Row(
                                               crossAxisAlignment:

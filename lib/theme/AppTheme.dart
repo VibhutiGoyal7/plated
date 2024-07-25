@@ -26,7 +26,7 @@ class AppTheme {
           indicatorColor: Colors.black,
           unselectedLabelStyle: TextStyle(fontSize: 12),
       /*indicatorSize: TabBarIndicatorSize.label*/),
-      cardTheme: const CardTheme(color: AppColor.WHITE4),
+      cardTheme: const CardTheme(color: Colors.white),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.BG_COLOR,

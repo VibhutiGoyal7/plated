@@ -30,30 +30,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 fontWeight: FontWeight.bold,
             color: AppColor.PRIMARY),
           ),
-          Image(
-            alignment: Alignment.topLeft,
-            width: screenWidth*0.9,
-            height: screenHeight*0.4,
-            image: AssetImage("assets/payment_image.png"),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            "Add your money and manage",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Text(
-            "The application for reaching your saving goal , send and receive money. Use QR codes and payment links to accept cards",
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: 20,
-          ),
+
           _buildFooter(context)
         ],
       ),
