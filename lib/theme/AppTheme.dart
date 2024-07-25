@@ -100,11 +100,11 @@ class AppTheme {
 
 
       ),
-      iconTheme: IconThemeData(color: AppColor.BLACK),
+      iconTheme: IconThemeData(color: AppColor.PRIMARY),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-        foregroundColor: MaterialStateProperty.all<Color>(AppColor.BLACK),
+        foregroundColor: MaterialStateProperty.all<Color>(AppColor.PRIMARY),
       )),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
@@ -231,11 +231,11 @@ class AppTheme {
           color: AppColor.WHITE.withOpacity(0.4),
         ),
       ),
-      iconTheme: IconThemeData(color: AppColor.WHITE),
+      iconTheme: IconThemeData(color: AppColor.PRIMARY),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-        foregroundColor: MaterialStateProperty.all<Color>(AppColor.WHITE),
+        foregroundColor: MaterialStateProperty.all<Color>(AppColor.PRIMARY),
       )),
       listTileTheme: ListTileThemeData(
           iconColor: AppColor.WHITE,

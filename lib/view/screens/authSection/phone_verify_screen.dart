@@ -84,8 +84,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         // Navigate to the new screen after receiving the response
         if (mediaList?.userFound == true &&
             mediaList?.isProfileSetupDone == true) {
-          Navigator.pushNamed(context, '/SignInScreen',
-              arguments: "${_inputController.text}");
+          /*Navigator.pushNamed(context, '/SignInScreen',
+              arguments: "${_inputController.text}");*/
+          ToastComponent.showToast(
+              context: context, message: apiResponse.message);
         } else {
           _phoneVerifyAPI();
         }

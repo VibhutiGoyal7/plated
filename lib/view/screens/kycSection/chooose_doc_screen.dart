@@ -139,154 +139,165 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.pushReplacementNamed(
+      context,
+      "/BottomNav",
+    );
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamed(context, '/BottomNav');
+            },
+          ),
+          title: Text(
+            "Choose Your Document",
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
         ),
-        title: Text(
-          "Choose Your Document",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                child: Text(
-                  'ISSUING COUNTRY',
-                  style: TextStyle(
-                    fontSize: 14,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                  child: Text(
+                    'ISSUING COUNTRY',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 0.2,
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 0.2,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: isCountryNameLoading
-                            ? Shimmer.fromColors(
-                                baseColor: Colors.white38,
-                                highlightColor: Colors.grey,
-                                child: Container(
-                                  width: 60,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white38,
-                                    borderRadius: BorderRadius.circular(
-                                        8.0), // Adjust the radius as needed
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: isCountryNameLoading
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.white38,
+                                  highlightColor: Colors.grey,
+                                  child: Container(
+                                    width: 60,
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white38,
+                                      borderRadius: BorderRadius.circular(
+                                          8.0), // Adjust the radius as needed
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  "${countryName}",
+                                  style: TextStyle(
+                                    fontSize: 18,
                                   ),
                                 ),
-                              )
-                            : Text(
-                                "${countryName}",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                child: Text(
-                  'ACCEPTED DOCUMENTS',
-                  style: TextStyle(
-                    fontSize: 16,
+                    ],
                   ),
                 ),
-              ),
-              if (isPassportAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelPassport,
-                    Languages.of(context)!.labelPhotoPage,
-                    'passport',
-                    "assets/passport.png",
-                    "${passportStatus}",
-                    "${passportRejectedReason}"),
-              if (isDrivingLicenceAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelDrivingLicence,
-                    Languages.of(context)!.labelFrontNBack,
-                    'driving_licence',
-                    "assets/license.png",
-                    "${drivingLicenceStatus}",
-                    "${drivingLicenceRejectedReason}"),
-              if (isNationalIdAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelNationalId,
-                    Languages.of(context)!.labelFrontNBack,
-                    'national_id',
-                    "assets/id_card.png",
-                    "${nationalIdStatus}",
-                    "${nationalIdRejectedReason}"),
-              if (isAddressLycAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Address KYC",
-                    'Front ',
-                    'address_kyc',
-                    "assets/address.png",
-                    "${addressKycStatus}",
-                    "${addressKycRejectedReason}"),
-              if (isBankStatementAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Bank Statement",
-                    'Front ',
-                    'bank_statement',
-                    "assets/bank_statement.png",
-                    "${bankStatementStatus}",
-                    "${bankStatementRejectedReason}"),
-              if (isGeoLocAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Geolocation KYC",
-                    'Front ',
-                    'geolocation_kyc',
-                    "assets/geo_Location.jpg",
-                    "${geoLocStatus}",
-                    "${geoLocRejectedReason}"),
-              /*if (isKycVideoAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelVideoVerification,
-                    'Front ',
-                    '/VideoKycScreen',
-                    'video_kyc_clip',
-                    "assets/video.png",
-                    "${kycVideoStatus}",
-                    "${kycVideoRejectedReason}"),*/
-            ],
+                SizedBox(height: 12),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                  child: Text(
+                    'ACCEPTED DOCUMENTS',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                if (isPassportAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelPassport,
+                      Languages.of(context)!.labelPhotoPage,
+                      'passport',
+                      "assets/passport.png",
+                      "${passportStatus}",
+                      "${passportRejectedReason}"),
+                if (isDrivingLicenceAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelDrivingLicence,
+                      Languages.of(context)!.labelFrontNBack,
+                      'driving_licence',
+                      "assets/license.png",
+                      "${drivingLicenceStatus}",
+                      "${drivingLicenceRejectedReason}"),
+                if (isNationalIdAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelNationalId,
+                      Languages.of(context)!.labelFrontNBack,
+                      'national_id',
+                      "assets/id_card.png",
+                      "${nationalIdStatus}",
+                      "${nationalIdRejectedReason}"),
+                if (isAddressLycAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Address KYC",
+                      'Front ',
+                      'address_kyc',
+                      "assets/address.png",
+                      "${addressKycStatus}",
+                      "${addressKycRejectedReason}"),
+                if (isBankStatementAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Bank Statement",
+                      'Front ',
+                      'bank_statement',
+                      "assets/bank_statement.png",
+                      "${bankStatementStatus}",
+                      "${bankStatementRejectedReason}"),
+                if (isGeoLocAvailable)
+                  _buildDocumentOption(
+                      context,
+                      "Geolocation KYC",
+                      'Front ',
+                      'geolocation_kyc',
+                      "assets/geo_Location.jpg",
+                      "${geoLocStatus}",
+                      "${geoLocRejectedReason}"),
+                /*if (isKycVideoAvailable)
+                  _buildDocumentOption(
+                      context,
+                      Languages.of(context)!.labelVideoVerification,
+                      'Front ',
+                      '/VideoKycScreen',
+                      'video_kyc_clip',
+                      "assets/video.png",
+                      "${kycVideoStatus}",
+                      "${kycVideoRejectedReason}"),*/
+              ],
+            ),
           ),
         ),
       ),

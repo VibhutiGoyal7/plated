@@ -37,6 +37,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   var screenWidth;
   var countryCurrencySymbol;
   var currentBalance;
+  late bool isDarkMode;
 
   final _scrollController = ScrollController();
   int _currentPage = 1;
@@ -181,7 +182,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
@@ -430,16 +431,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
       },
       child: Card(
-        color: status == text ? AppColor.PRIMARY : AppColor.WHITE,
+        color: status == text ? AppColor.PRIMARY : isDarkMode? AppColor.DARK_CARD_COLOR:  AppColor.WHITE,
         shape: RoundedRectangleBorder(
-            side: BorderSide(width: 0.5, color: Colors.black),
+            side: BorderSide(width: 0.5, color: status ==  text ? AppColor.PRIMARY : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: Text(
             text,
             style: TextStyle(
-              color: status == text ? AppColor.WHITE : AppColor.BLACK,
+              color: status == text ? AppColor.WHITE : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR,
             ),
           ),
         ),
@@ -455,16 +456,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
       },
       child: Card(
-        color: requestType == text ? AppColor.PRIMARY : AppColor.WHITE,
+        color: requestType == text ? AppColor.PRIMARY : isDarkMode? AppColor.DARK_CARD_COLOR:  AppColor.WHITE,
         shape: RoundedRectangleBorder(
-            side: BorderSide(width: 0.5, color: Colors.black),
+            side: BorderSide(width: 0.5, color:  requestType ==  text ? AppColor.PRIMARY : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: Text(
             text,
             style: TextStyle(
-              color: requestType == text ? AppColor.WHITE : AppColor.BLACK,
+              color: requestType == text ? AppColor.WHITE : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR,
             ),
           ),
         ),
@@ -554,11 +555,12 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(width: 0.2, color: Colors.black)),
+          side: BorderSide(width: 0.2, color:isDarkMode?AppColor.WHITE: Colors.black)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(

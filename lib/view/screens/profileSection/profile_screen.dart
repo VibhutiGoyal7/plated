@@ -165,18 +165,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        /* appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, "/BottomNav");
-            },
-          ),
-          title: Text(
-            Languages.of(context)!.labelProfile,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-        ),*/
         body: Stack(children: [
           Column(
             children: [
@@ -296,7 +284,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () =>
-                                        {_showPicker(context: context)},
+                                        {
+                                    Navigator.pushNamed(context, "/QRScannerScreen")
+                                        },
                                     child: imageUrl == ""
                                         ? Container(
                                             height: 90,
@@ -356,20 +346,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                   ),
                                   Positioned(
-                                    bottom: -3,
-                                    right: 5,
-                                    child: Container(
-                                      height: 45,
-                                      width: 45,
-                                      child: Card(
-                                        shape: CircleBorder(),
-                                        child: IconButton(
-                                          iconSize: 25,
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, "/QRScannerScreen");
-                                          },
-                                          icon: Icon(Icons.qr_code_2),
+                                    bottom: -5,
+                                    right: -4,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1.50),
+                                      child: Container(
+                                        height: 45,
+                                        width: 45,
+                                        child: Card(
+                                          color: Colors.white,
+                                          shape: CircleBorder(),
+                                          child: IconButton(
+                                            iconSize: 20,
+                                            onPressed: () {
+                                              Navigator.pushNamed(
+                                                  context, "/QRScannerScreen");
+                                            },
+                                            icon: Icon(Icons.qr_code_2, color: Colors.black,),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -386,7 +380,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(color: AppColor.BG_COLOR),
+                  //decoration: BoxDecoration(color: AppColor.BG_COLOR),
                   child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 10.0),
@@ -514,7 +508,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _buildCard(BuildContext context, String text, bool isDarkMode, Icon icon) {
     return Container(
-      width: double.infinity,
+      width: screenWidth,
       padding: EdgeInsets.all(14.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
