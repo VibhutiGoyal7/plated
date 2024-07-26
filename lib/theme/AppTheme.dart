@@ -24,6 +24,9 @@ class AppTheme {
         unselectedLabelStyle: TextStyle(
             fontSize: 12), /*indicatorSize: TabBarIndicatorSize.label*/
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: AppColor.PRIMARY,
+      ),
       cardTheme: const CardTheme(color: AppColor.WHITE),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
@@ -108,6 +111,9 @@ class AppTheme {
         actionsIconTheme: const IconThemeData(color: AppColor.WHITE),
         iconTheme: const IconThemeData(color: AppColor.WHITE),
         backgroundColor: AppColor.BODY_COLOR,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: AppColor.PRIMARY,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.DARK_CARD_COLOR,

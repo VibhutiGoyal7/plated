@@ -193,7 +193,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   )),
               DetailBox(
                 heading: Languages.of(context)!.labelStepVerification,
-                subHeading: "subHeading",
+                subHeading: "Secure your account",
                 icon: Icons.verified_user,
                 headingTextSize: 14,
                 subHeadingTextSize: 13,
@@ -226,7 +226,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 },
                 child: DetailBox(
                   heading: "Change Password",
-                  subHeading: "subHeading",
+                  subHeading: "Update Current Password",
                   icon: Icons.password,
                   headingTextSize: 14,
                   subHeadingTextSize: 13,
@@ -238,7 +238,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 },
                 child: DetailBox(
                   heading: "Change Transaction Pin(TPIN)",
-                  subHeading: "subHeading",
+                  subHeading: "Update Transaction Pin",
                   icon: Icons.pin,
                   headingTextSize: 14,
                   subHeadingTextSize: 13,
@@ -381,7 +381,7 @@ class _SettingScreenState extends State<SettingScreen> {
             padding: const EdgeInsets.only(left: 30.0, bottom: 5.0),
             child: GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, "/ManageAppLockScreen");
+                //Navigator.pushNamed(context, "/ManageAppLockScreen");
               },
               child: Text("Manage App Lock",
                   style: TextStyle(

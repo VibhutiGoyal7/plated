@@ -144,7 +144,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                       confirmPasswordVisible,
                       isDarkMode),
-                  Align(
+                /*  Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () {
@@ -162,7 +162,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   SizedBox(height: 22),
                   _buildFooter(context)
                 ],

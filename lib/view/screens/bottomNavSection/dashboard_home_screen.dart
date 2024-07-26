@@ -250,14 +250,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     });
 
   }
+
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     _shortcutCardsList = [
-      Shortcutitemlist(
-          title: Languages.of(context)!.labelSend,
-          icon: Icons.send,
-          selected: true),
+
       Shortcutitemlist(
           title: Languages.of(context)!.labelAddMoney,
           icon: Icons.add_rounded,
@@ -267,9 +265,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           icon: Icons.call_made,
           selected: true),
       Shortcutitemlist(
+          title: Languages.of(context)!.labelSend,
+          icon: Icons.send,
+          selected: true),
+  /*    Shortcutitemlist(
           title: Languages.of(context)!.labelTransfer,
           icon: Icons.transfer_within_a_station_sharp,
-          selected: true),
+          selected: true),*/
+
       Shortcutitemlist(
           title: Languages.of(context)!.labelExchange,
           icon: Icons.currency_exchange,
@@ -434,21 +437,31 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                           SizedBox(width: 3),
                                           // Add space between avatar and text
                                           Container(
-                                            width: screenWidth *0.4,
-                                            child: Text(
-                                              "${Languages.of(context)!.labelHi}, $name",
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.w600),
+                                            width: screenWidth * 0.5,
+                                            child: Row(
+                                              children: [
+                                                Flexible(
+                                                  child: Container(
+                                                    child: Text(
+                                                     "${Languages.of(context)!.labelHi}, ${capitalizeFirstLetter("${name}")}",
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                dashBoardKycStatus == "verified"
+                                                    ? Icon(
+                                                  Icons.verified,
+                                                  color: Colors.green.shade700,
+                                                )
+                                                    : SizedBox(),
+                                              ],
                                             ),
                                           ),
-                                          dashBoardKycStatus == "verified"
-                                              ? Icon(
-                                            Icons.verified,
-                                            color: Colors.green.shade700,
-                                          )
-                                              : SizedBox(),
+
                                         ],
                                       ),
 
@@ -700,129 +713,118 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                             ),
 
-                            Container(
-                              margin:
-                                  EdgeInsets.only(top: 6, left: 6, right: 6),
-                              child: isInternetConnected && !isLoading
-                                  ? ListView.builder(
-                                      physics:
-                                          const AlwaysScrollableScrollPhysics(),
-                                      controller: _scrollController,
-                                      itemCount:
-                                          transactionList.length > 0 ? 3 : 0,
-                                      shrinkWrap: true,
-                                      padding: const EdgeInsets.only(bottom: 6),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Card(
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 4),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        height: 50,
-                                                        width: 50,
-                                                        child: Card(
-                                                            shape: CircleBorder(
-                                                                side: BorderSide(
-                                                                    width: 0,
-                                                                    color: colorStatus(
-                                                                        capitalizeFirstLetter(
-                                                                            "${transactionList[index].status}")))),
-                                                            color: colorStatus(
-                                                                capitalizeFirstLetter(
-                                                                    "${transactionList[index].status}")),
-                                                            child: Icon(
-                                                              Icons.call_made,
-                                                              color:
-                                                                  Colors.white,
-                                                            )),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 8,
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            capitalizeFirstLetter(
-                                                                "${transactionList[index].paymentRequestId}"),
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 13),
-                                                          ),
-                                                          Text(
-                                                              capitalizeFirstLetter(
-                                                                  "${transactionList[index].status}"),
-                                                              style: TextStyle(
-                                                                  fontSize: 11,
-                                                                  color: colorStatus(
-                                                                      capitalizeFirstLetter(
-                                                                          "${transactionList[index].status}")))),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      Text(
-                                                          addCurrencySymbolTransaction(
-                                                              currencySymbol,
-                                                              "${transactionList[index].amount}",
-                                                              capitalizeFirstLetter(
-                                                                  "${transactionList[index].requestType}")),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 13,
-                                                              color: colorPaymentType(
-                                                                  capitalizeFirstLetter(
-                                                                      "${transactionList[index].requestType}")))),
-                                                      Text(
-                                                          convertDateFormat(
-                                                              "${transactionList[index].createdAt}"),
-                                                          style: TextStyle(
-                                                              fontSize: 11)),
-                                                    ],
-                                                  ),
-                                                ],
+                        Container(
+                          height: screenHeight * 0.3,
+                          margin: EdgeInsets.only(top: 6, left: 6, right: 6),
+                          child: isInternetConnected && !isLoading
+                              ? transactionList.isNotEmpty
+                              ? ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            controller: _scrollController,
+                            itemCount: transactionList.length > 0 ? transactionList.length : 0,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.only(bottom: 6),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 4),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: Card(
+                                                shape: CircleBorder(
+                                                    side: BorderSide(
+                                                        width: 0,
+                                                        color: colorStatus(capitalizeFirstLetter(
+                                                            "${transactionList[index].status}")))),
+                                                color: colorStatus(capitalizeFirstLetter(
+                                                    "${transactionList[index].status}")),
+                                                child: Icon(
+                                                  Icons.call_made,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                        // I omit the part to build card items from the list
-                                      },
-                                    )
-                                  : Container(
-                                      child: ShimmerList(
-                                      itemCount: 3,
-                                    )),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  capitalizeFirstLetter(
+                                                      "${transactionList[index].paymentRequestId}"),
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                                Text(
+                                                  capitalizeFirstLetter(
+                                                      "${transactionList[index].status}"),
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: colorStatus(capitalizeFirstLetter(
+                                                          "${transactionList[index].status}"))),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              addCurrencySymbolTransaction(
+                                                  currencySymbol,
+                                                  "${transactionList[index].amount}",
+                                                  capitalizeFirstLetter(
+                                                      "${transactionList[index].requestType}")),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 13,
+                                                  color: colorPaymentType(capitalizeFirstLetter(
+                                                      "${transactionList[index].requestType}"))),
+                                            ),
+                                            Text(
+                                              convertDateFormat(
+                                                  "${transactionList[index].createdAt}"),
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                              : Center(
+                            child: Text(
+                              "No Transactions",
+                              style: TextStyle(fontSize: 15, color: Colors.grey),
                             ),
-                          ],
+                          )
+                              : Container(
+                            child: ShimmerList(
+                              itemCount: 3,
+                            ),
+                          ),
+                        ),
+
+                        ],
                         ),
                       ),
                     ],
@@ -888,7 +890,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if (index <= 2) {
+                        if (index <= 1) {
                           return GestureDetector(
                             onTap: () {
                               if (_shortcutCardsList[index].title == "Add") {
@@ -959,7 +961,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if (index == 3) {
+                        if (index == 2) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.pop(context);
@@ -1013,7 +1015,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       shrinkWrap: true,
                       padding: const EdgeInsets.only(bottom: 0),
                       itemBuilder: (BuildContext context, int index) {
-                        if (index == 4) {
+                        if (index == 3) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.pop(context);

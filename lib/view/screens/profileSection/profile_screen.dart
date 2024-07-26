@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -36,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final picker = ImagePicker();
   bool isLoading = true;
   bool isBiometricEnable = false;
-
+  String dashBoardKycStatus = "";
   late double screenWidth;
   late double screenHeight;
 
@@ -83,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await Helper.saveCountry(mediaList?.countryName);
         await Helper.saveKycStatus(mediaList?.kycStatus);
         print(mediaList?.countryName);
-
+        dashBoardKycStatus = "${mediaList?.kycStatus}";
         _fetchDataFromPref();
 
         return Container(); // Return an empty container as you'll navigate away
@@ -234,9 +235,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           )
                                         :
                                     Container(
-                                      width: screenWidth*0.65,
-                                      child: _buildLabelText(context,
-                                          customerName.toString(), 20.0),
+                                      width: screenWidth * 0.65,
+                                      child: Row(
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              child: Text(
+                                                "${capitalizeFirstLetter("${customerName}")}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          dashBoardKycStatus == "verified"
+                                              ? Icon(
+                                            Icons.verified,
+                                            color: Colors.green.shade700,
+                                          )
+                                              : SizedBox(),
+                                        ],
+                                      ),
                                     ),
                                     Row(
                                       children: [

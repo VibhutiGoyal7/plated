@@ -301,79 +301,95 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           child: Container(
                             margin: EdgeInsets.only(top: 12),
                             child: isInternetConnected && !isLoading
-                                ? FutureBuilder(
-                                    future: _fetchDataFuture,
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<void> snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      } else if (snapshot.hasError) {
-                                        return Center(
-                                            child: Text('Error loading data'));
-                                      } else {
-                                        // Group transactions by date
-                                        Map<String, List<TransactionDetails>>
-                                            groupedTransactions =
-                                            groupTransactionsByDate(
-                                                filterApplied
-                                                    ? filteredTransactionList
-                                                    : transactionList);
-                                        List<String> dates =
-                                            groupedTransactions.keys.toList();
+                                ? checkListEmpty()
+                                    ? FutureBuilder(
+                                        future: _fetchDataFuture,
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<void> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          } else if (snapshot.hasError) {
+                                            return Center(
+                                                child:
+                                                    Text('Error loading data'));
+                                          } else {
+                                            // Group transactions by date
+                                            Map<String,
+                                                    List<TransactionDetails>>
+                                                groupedTransactions =
+                                                groupTransactionsByDate(
+                                                    filterApplied
+                                                        ? filteredTransactionList
+                                                        : transactionList);
+                                            List<String> dates =
+                                                groupedTransactions.keys
+                                                    .toList();
 
-                                        return ListView.builder(
-                                          controller: _scrollController,
-                                          itemCount: dates.length +
-                                              (_isLoadingMore ? 1 : 0),
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            if (index == dates.length) {
-                                              return Center(
-                                                  child:
-                                                      CircularProgressIndicator());
-                                            }
-                                            String date = dates[index];
-                                            List<TransactionDetails>
-                                                transactionsForDate =
-                                                groupedTransactions[date]!;
+                                            return ListView.builder(
+                                              controller: _scrollController,
+                                              itemCount: dates.length +
+                                                  (_isLoadingMore ? 1 : 0),
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                if (index == dates.length) {
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+                                                String date = dates[index];
+                                                List<TransactionDetails>
+                                                    transactionsForDate =
+                                                    groupedTransactions[date]!;
 
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
-                                                      date,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 12),
-                                                    ),
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          date,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 12),
+                                                        ),
+                                                      ),
+                                                      ...transactionsForDate
+                                                          .map((transaction) {
+                                                        return TransactionItem(
+                                                          transaction:
+                                                              transaction,
+                                                          symbol:
+                                                              countryCurrencySymbol,
+                                                        );
+                                                      }).toList(),
+                                                    ],
                                                   ),
-                                                  ...transactionsForDate
-                                                      .map((transaction) {
-                                                    return TransactionItem(
-                                                      transaction: transaction,
-                                                      symbol:
-                                                          countryCurrencySymbol,
-                                                    );
-                                                  }).toList(),
-                                                ],
-                                              ),
+                                                );
+                                              },
                                             );
-                                          },
-                                        );
-                                      }
-                                    },
-                                  )
+                                          }
+                                        },
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          "No Transactions",
+                                          style: TextStyle(
+                                              fontSize: 15, color: Colors.grey),
+                                        ),
+                                      )
                                 : Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 18),
@@ -626,6 +642,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ],
     );
   }
+
+  bool checkListEmpty() {
+    bool isListEmpty = false;
+    if(!filterApplied)
+      {
+        isListEmpty= transactionList.isNotEmpty;
+      }else{
+      isListEmpty = filteredTransactionList.isNotEmpty;
+    }
+    return  isListEmpty;
+  }
 }
 
 class TransactionItem extends StatelessWidget {
@@ -783,17 +810,18 @@ class TransactionItem extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Amount :"),
-                                      Text(addCurrencySymbolTransaction(
-                                          symbol,
-                                          "${transaction.amount}",
-                                          capitalizeFirstLetter(
-                                              "${transaction.requestType}")),
+                                      Text(
+                                          addCurrencySymbolTransaction(
+                                              symbol,
+                                              "${transaction.amount}",
+                                              capitalizeFirstLetter(
+                                                  "${transaction.requestType}")),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 14,
-                                              color: colorPaymentType(capitalizeFirstLetter(
-                                                  "${transaction.requestType}")))
-                                      )
+                                              color: colorPaymentType(
+                                                  capitalizeFirstLetter(
+                                                      "${transaction.requestType}"))))
                                     ],
                                   )
                                 : SizedBox(),
