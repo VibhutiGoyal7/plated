@@ -30,6 +30,7 @@ class DashboardHomeScreen extends StatefulWidget {
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatus = "";
+  String dashBoardKycStatus = "";
   String kycStatusApi = "";
   String? amount = "0.00";
   String? currencySymbol = "";
@@ -133,6 +134,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         await Helper.saveCurrencySymbol(
             dashboardResponse?.customerData?.countryCurrencySymbol);
         setState(() {
+          dashBoardKycStatus = dashboardResponse?.customerData?.kycStatus == null
+              ? ""
+              : "${dashboardResponse?.customerData?.kycStatus}";
           name = dashboardResponse?.customerData?.firstName == null
               ? "Name"
               : dashboardResponse?.customerData?.firstName;
@@ -424,6 +428,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               fontWeight:
                                               FontWeight.w600),
                                         ),
+                                        SizedBox(width: 4,),
+                                        dashBoardKycStatus == "verified" ? Icon(Icons.verified, color: Colors.green.shade700,): SizedBox(),
 
                                         Spacer(),
                                         IconButton(
@@ -462,9 +468,39 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                height: 35,
-                              ),
+                              (dashBoardKycStatus != "" && dashBoardKycStatus != "verified" && dashBoardKycStatus!= null)?
+                              Column(
+                                children: [
+                                  SizedBox(height: 15,),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(horizontal: 5, ),
+                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                      decoration: BoxDecoration(
+                                          color: AppColor.WHITE,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border(top: BorderSide(color:  Colors.red,width: 0.8), bottom:  BorderSide(color:  Colors.red,width: 0.8),
+                                              left:  BorderSide(color:  Colors.red,width: 0.8), right:  BorderSide(color:  Colors.red,width: 0.8))
+                                      ),
+                                      child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text("KYC NON-VERIFIED", style: TextStyle(fontSize: 10),),
+                                            SizedBox(width: 4,),
+                                            Icon(Icons.do_not_disturb_on, size: 18,color: Colors.red,)
+                                          ]
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                ],
+                              ) : SizedBox(height: 36,),
+
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0),
@@ -510,10 +546,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               Card(
                                 elevation: 2,
                                 margin: EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 18),
+                                    vertical: 0, horizontal: 8),
                                 child: Container(
                                     width: screenWidth,
-                                    height: screenHeight * 0.16,
+                                    height: screenHeight * 0.14,
                                     child: Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -740,7 +776,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   },
                                 )
                                     : Container(
-                                    //child: ShimmerCard()
+                                    child: ShimmerList(itemCount: 3,)
                                 ),
                               ),
                             ],
@@ -997,8 +1033,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       children: [
         Container(
             margin: EdgeInsets.only(bottom: 5),
-            width: 62,
-            height: 62,
+            width: 51,
+            height: 51,
             decoration: BoxDecoration(
               color: AppColor.PRIMARY,
               borderRadius: BorderRadius.circular(40.0),
@@ -1019,7 +1055,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 icon: Icon(
                   icon,
                   color: AppColor.WHITE,
-                  size: 28,
+                  size: 22,
                 ))),
         Text(text, style: TextStyle(fontSize: 12))
       ],

@@ -11,6 +11,7 @@ import '../../../model/response/createOtpChangePassResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/toastMessage.dart';
 
 class TransferScreen extends StatefulWidget {
   final CheckCustomerResponse? data;
@@ -40,7 +41,7 @@ class _TransferScreenState extends State<TransferScreen> {
   late double screenHeight;
 
   final ScrollController _scrollController = ScrollController();
-  List<String> _allLogList = ["100", "200", "300", "400", "500"];
+  List<String> _allLogList = ["100", "200", "300", "400", "550"];
   @override
   void initState() {
     super.initState();
@@ -100,8 +101,8 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                           imageUrl == null
                               ? Container(
-                            height: 48,
-                            width: 48,
+                            height: 55,
+                            width: 55,
                             child: CircleAvatar(
                               radius: 30,
                               backgroundColor: AppColor.WHITE,
@@ -113,14 +114,14 @@ class _TransferScreenState extends State<TransferScreen> {
                               borderRadius: BorderRadius.circular(100.0),
                               child: Image.network(
                                 imageUrl,
-                                height: 48,
-                                width: 48,
+                                height: 55,
+                                width: 55,
                                 fit: BoxFit.cover,
                                 errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                   // You can return any widget here to display in case of an error
                                   return Container(
-                                    height: 48,
-                                    width: 48,
+                                    height: 55,
+                                    width: 55,
                                     child: CircleAvatar(
                                       radius: 30,
                                       backgroundColor: AppColor.WHITE,
@@ -140,8 +141,8 @@ class _TransferScreenState extends State<TransferScreen> {
                                       baseColor: Colors.white38,
                                       highlightColor: Colors.grey,
                                       child: Container(
-                                        height:48,
-                                        width: 48,
+                                        height:55,
+                                        width: 55,
                                         color: Colors.white,
                                       ),
                                     );
@@ -347,12 +348,7 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   void _checkInputValidation() {
-    print(amount);
-    int balance =  extractNumber(countryBalance);
-    int amt =  amount != null|| amount!="" ?extractNumber(amount) : 0;
-    print(amt);
-    print(balance);
-    if (/*_usernameController.text.isNotEmpty &&*/ amount.isNotEmpty && balance>=amt && amount!="") {
+    if (_inputController.text.length >=1 && amount.isNotEmpty && isBalanceMoreThanAmount(countryBalance, amount, context)) {
       setState(() {
         inputValid = true;
 

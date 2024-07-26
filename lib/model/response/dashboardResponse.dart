@@ -81,6 +81,7 @@ class CustomerData {
   String? countryPhoneCode;
   String? countryCurrencySymbol;
   String? imageUrl;
+  String? kycStatus;
   String? tpin;
 
   CustomerData({
@@ -92,6 +93,7 @@ class CustomerData {
     this.countryPhoneCode,
     this.countryCurrencySymbol,
     this.imageUrl,
+    this.kycStatus,
     this.tpin,
   });
 
@@ -105,6 +107,7 @@ class CustomerData {
       countryPhoneCode: json["country_phone_code"] as String?,
       countryCurrencySymbol: json["country_currency_symbol"] as String?,
       imageUrl: json["image_url"] as String?,
+      kycStatus: json["kyc_status"] as String?,
       tpin: json["tpin"] as String?,
     );
   }

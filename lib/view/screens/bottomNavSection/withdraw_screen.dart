@@ -1,5 +1,6 @@
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -69,181 +70,212 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     DateTime? lastBackPressed;
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(toolbarHeight: 65,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("DashBoard $didPop");
+        if (didPop) {
+          return;
+        }
+        if (kDebugMode) {
+          _onWillPop();
+          // return Future.value(true);
+        }
+      },
+      child: GestureDetector(
+        onTap: (){
+          hideKeyBoard();
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(toolbarHeight: 65,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              "${Languages.of(context)!.labelWithdraw}",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+            ),
           ),
-          title: Text(
-            "${Languages.of(context)!.labelWithdraw}",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-          ),
-        ),
-        body: Stack(
-          children: [
+          body: Stack(
+            children: [
 
-            SafeArea(
-                child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    Languages.of(context)!.labelEnterAmount,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
-                  ),
-                  _buildPhoneInput(
-                      context, Languages.of(context)!.labelZero, _inputController),
+              SafeArea(
+                  child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      Languages.of(context)!.labelEnterAmount,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
+                    ),
+                    _buildPhoneInput(
+                        context, Languages.of(context)!.labelZero, _inputController),
 
-                  /*   Row(
-                    children: [
-                      Text(
-                        countryCurrencySymbol,
-                        style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 26.0, color: Colors.grey),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: TextField(
-                            style: TextStyle(
-                              fontSize: 26.0,
-                            ),
-                            controller: _inputController,
-                            onChanged: (value) {
-                              amount = value;
-                            },
-                            maxLength: 12,
-                            keyboardType: TextInputType.number,
-                            onSubmitted: (value) {},
-                            decoration: InputDecoration(
-                              counterText: "",
-                              border: InputBorder.none,
-                              hintText: Languages.of(context)?.labelZero,
+                    /*   Row(
+                      children: [
+                        Text(
+                          countryCurrencySymbol,
+                          style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 26.0, color: Colors.grey),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextField(
+                              style: TextStyle(
+                                fontSize: 26.0,
+                              ),
+                              controller: _inputController,
+                              onChanged: (value) {
+                                amount = value;
+                              },
+                              maxLength: 12,
+                              keyboardType: TextInputType.number,
+                              onSubmitted: (value) {},
+                              decoration: InputDecoration(
+                                counterText: "",
+                                border: InputBorder.none,
+                                hintText: Languages.of(context)?.labelZero,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      */
-                  /*Text(
-                          Languages.of(context)!.labelINR,
-                          style:
-                              TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
-                        ),*/ /*
-                    ],
-                  ),*/
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    "${Languages.of(context)!.labelBalance}: ${countryCurrencySymbol}${currentBalance} ",
-                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
-                  ),
-                  Container(
-                    height: screenHeight * 0.065, // Set the desired height
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      controller: _scrollController,
-                      itemCount: _allLogList.length,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      // Adjust padding if needed
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _inputController.text = _allLogList[index];
-                            });
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width *
-                                0.2, // Adjust width as needed
-                            margin: EdgeInsets.all(4),
-                            child: Card(
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    _allLogList[index],
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 12),
+                        */
+                    /*Text(
+                            Languages.of(context)!.labelINR,
+                            style:
+                                TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                          ),*/ /*
+                      ],
+                    ),*/
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "${Languages.of(context)!.labelBalance}: ${addCurrencySymbol(countryCurrencySymbol, currentBalance)}",
+                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
+                    ),
+                    Container(
+                      height: screenHeight * 0.065, // Set the desired height
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: _scrollController,
+                        itemCount: _allLogList.length,
+                        padding: const EdgeInsets.only(bottom: 10),
+                        // Adjust padding if needed
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _inputController.text = _allLogList[index];
+                              });
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width *
+                                  0.2, // Adjust width as needed
+                              margin: EdgeInsets.all(4),
+                              child: Card(
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      _allLogList[index],
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Spacer(),
-                  /*   Card(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    Languages.of(context)!.labelTransferTo,
-                                    style: TextStyle(fontSize: 14.0),
-                                  ),
-                                  Text(
-                                    Languages.of(context)!.labelName,
-                                    style: TextStyle(fontSize: 16.0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                Languages.of(context)!.labelChange,
-                                style: TextStyle(
-                                    fontSize: 14.0, color: AppColor.PRIMARY),
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
                     ),
-                  ),*/
-                  _buildFooter(context),
-                  SizedBox(height: 10)
-                ],
-              ),
-            )),
-            isLoading
-                ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,
-                    color: Colors.black.withOpacity(0.3)),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
+                    Center(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        width: screenWidth*0.58,
+                        child: Text("Minimum amount you can withdraw is ${addCurrencySymbol(countryCurrencySymbol, "50")}",
+                          textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 12),),
+                      ),
+                    ),
+
+                    /*Text(
+                      "Minimum amount you can withdraw is ${addCurrencySymbol(countryCurrencySymbol, "50")}  ",
+                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12.0),
+                    ),*/
+                    Spacer(),
+                    /*   Card(
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      Languages.of(context)!.labelTransferTo,
+                                      style: TextStyle(fontSize: 14.0),
+                                    ),
+                                    Text(
+                                      Languages.of(context)!.labelName,
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  Languages.of(context)!.labelChange,
+                                  style: TextStyle(
+                                      fontSize: 14.0, color: AppColor.PRIMARY),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),*/
+                    _buildFooter(context),
+                    SizedBox(height: 10)
+                  ],
                 ),
-              ],
-            )
-                : SizedBox(),
-          ],
+              )),
+              isLoading
+                  ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(
+                      dismissible: false,
+                      color: Colors.black.withOpacity(0.3)),
+                  // Loader indicator
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              )
+                  : SizedBox(),
+            ],
+          ),
         ),
       ),
     );
@@ -270,8 +302,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               obscuringCharacter: "*",
               controller: amountController,
               onChanged: (value) {
+                setState(() {
+                  amount = value;
+                  // countryBalance = balance as String ;
+                });
                 _isValidInput();
               },
+              autofocus: true,
               maxLength: 6,
               textAlign: TextAlign.center,
               onSubmitted: (value) {},
@@ -291,8 +328,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   }
 
   void _isValidInput() {
-    //print(input);
-    if (_inputController.text.isNotEmpty && _inputController.text.length >= 2) {
+    if (_inputController.text.isNotEmpty && _inputController.text.length >= 1 &&isBalanceMoreThanAmount(currentBalance, _inputController.text, context)) {
       setState(() {
         inputValid = true;
       });
@@ -347,6 +383,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: ElevatedButton(
           onPressed: () async {
+            hideKeyBoard();
             print(_inputController.text);
             if (inputValid) {
               setState(() {

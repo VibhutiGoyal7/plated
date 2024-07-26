@@ -2,6 +2,7 @@ import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/shimmer_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -180,6 +181,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return groupedTransactions;
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.pushReplacementNamed(
+      context,
+      "/BottomNav",
+    );
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -193,162 +202,182 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             filterApplied ? filteredTransactionList : transactionList);
     List<String> dates = groupedTransactions.keys.toList();
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(toolbarHeight: 65,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("DashBoard $didPop");
+        if (didPop) {
+          return;
+        }
+        if (kDebugMode) {
+          Navigator.pushReplacementNamed(
+            context,
+            "/BottomNav",
+          );
+          // return Future.value(true);
+        }
+        Navigator.pushReplacementNamed(
+          context,
+          "/BottomNav",
+        );
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            "${Languages.of(context)!.labelTransaction}s",
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  _showModal(context, apiResponse);
+                },
+                icon: Icon(
+                  Icons.filter_list,
+                  color: Colors.white,
+                  size: 28,
+                )),
+            SizedBox(
+              width: 5,
+            )
+          ],
         ),
-        title: Text(
-          "${Languages.of(context)!.labelTransaction}s",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                _showModal(context, apiResponse);
-              },
-              icon: Icon(
-                Icons.filter_list,
-                color: Colors.white,
-                size: 28,
-              )),
-          SizedBox(
-            width: 5,
-          )
-        ],
-      ),
-      body: Stack(
-        children: [
+        body: Stack(
+          children: [
 
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      Column(
-                        children: [
-                          Text(
-                            "Total Balance",
-                            style: TextStyle(
-                                fontSize: 12.0, fontWeight: FontWeight.normal),
-                          ),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        Column(
+                          children: [
+                            Text(
+                              "Total Balance",
+                              style: TextStyle(
+                                  fontSize: 12.0, fontWeight: FontWeight.normal),
+                            ),
 
-                          isInternetConnected && !isLoading?
-                          Text(
-                            addCurrencySymbol(countryCurrencySymbol,currentBalance),
-                            style: TextStyle(
-                                fontSize: 32.0,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 2),
-                          ) : ShimmerText(height: 32,width: 100,),
-                          SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Expanded(
-                    child: Card(
-                      elevation: 20,
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40),
-                              topRight: Radius.circular(40))),
-                      child: Container(
-                        margin: EdgeInsets.only(top: 12),
-                        child:isInternetConnected && !isLoading ? FutureBuilder(
-                          future: _fetchDataFuture,
-                          builder:
-                              (BuildContext context, AsyncSnapshot<void> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Center(child: Text('Error loading data'));
-                            } else {
-                              // Group transactions by date
-                              Map<String, List<TransactionDetails>>
-                                  groupedTransactions = groupTransactionsByDate(
-                                      filterApplied
-                                          ? filteredTransactionList
-                                          : transactionList);
-                              List<String> dates =
-                                  groupedTransactions.keys.toList();
+                            isInternetConnected && !isLoading?
+                            Text(
+                              addCurrencySymbol(countryCurrencySymbol,currentBalance),
+                              style: TextStyle(
+                                  fontSize: 32.0,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 2),
+                            ) : ShimmerText(height: 32,width: 100,),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    Expanded(
+                      child: Card(
+                        elevation: 20,
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40))),
+                        child: Container(
+                          margin: EdgeInsets.only(top: 12),
+                          child:isInternetConnected && !isLoading ? FutureBuilder(
+                            future: _fetchDataFuture,
+                            builder:
+                                (BuildContext context, AsyncSnapshot<void> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(child: Text('Error loading data'));
+                              } else {
+                                // Group transactions by date
+                                Map<String, List<TransactionDetails>>
+                                    groupedTransactions = groupTransactionsByDate(
+                                        filterApplied
+                                            ? filteredTransactionList
+                                            : transactionList);
+                                List<String> dates =
+                                    groupedTransactions.keys.toList();
 
-                              return ListView.builder(
-                                controller: _scrollController,
-                                itemCount: dates.length + (_isLoadingMore ? 1 : 0),
-                                itemBuilder: (BuildContext context, int index) {
-                                  if (index == dates.length) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                  String date = dates[index];
-                                  List<TransactionDetails> transactionsForDate =
-                                      groupedTransactions[date]!;
+                                return ListView.builder(
+                                  controller: _scrollController,
+                                  itemCount: dates.length + (_isLoadingMore ? 1 : 0),
+                                  itemBuilder: (BuildContext context, int index) {
+                                    if (index == dates.length) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                    String date = dates[index];
+                                    List<TransactionDetails> transactionsForDate =
+                                        groupedTransactions[date]!;
 
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            date,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 12),
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              date,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 12),
+                                            ),
                                           ),
-                                        ),
-                                        ...transactionsForDate.map((transaction) {
-                                          return TransactionItem(
-                                              transaction: transaction, symbol: countryCurrencySymbol,);
-                                        }).toList(),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ) : Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-                        child: ShimmerList(itemCount: 2),),
+                                          ...transactionsForDate.map((transaction) {
+                                            return TransactionItem(
+                                                transaction: transaction, symbol: countryCurrencySymbol,);
+                                          }).toList(),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          ) : Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
+                          child: ShimmerList(itemCount: 2),),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          isLoading
-              ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
-              : SizedBox(),
-        ],
+            isLoading
+                ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+                : SizedBox(),
+          ],
+        ),
       ),
     );
   }

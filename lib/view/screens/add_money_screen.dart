@@ -1,6 +1,7 @@
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/utils/Util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
 import 'package:provider/provider.dart';
@@ -104,7 +105,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   }
 
   Future<bool> _onWillPop() async {
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamed(
       context,
       "/BottomNav",
     );
@@ -116,8 +117,25 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("DashBoard $didPop");
+        if (didPop) {
+          return;
+        }
+        if (kDebugMode) {
+          Navigator.pushReplacementNamed(
+            context,
+            "/BottomNav",
+          );
+          // return Future.value(true);
+        }
+        Navigator.pushReplacementNamed(
+          context,
+          "/BottomNav",
+        );
+      },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(toolbarHeight: 65,
