@@ -344,7 +344,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/TransferTPINScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as InitiateP2PRequest?;
+                  ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest?;
               return TransferTpinScreen(data: args );
             },
             '/TransferOtpScreen': (context) {
@@ -363,7 +363,9 @@ class _MyAppState extends State<MyApp> {
             '/LanguageSelectionScreen': (context) {
               final args =
               ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest?;
-              return LanguageSelectionScreen();
+              return LanguageSelectionScreen(
+                setLocale: setLocale,
+              );
             }
           }),
     );

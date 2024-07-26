@@ -199,25 +199,25 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     List<String> dates = groupedTransactions.keys.toList();
 
     return PopScope(
-        canPop: false,
-        onPopInvoked: (bool didPop) {
-          print("DashBoard $didPop");
-          if (didPop) {
-            return;
-          }
-          if (kDebugMode) {
-            Navigator.pushReplacementNamed(
-              context,
-              "/BottomNav",
-            );
-            // return Future.value(true);
-          }
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("DashBoard $didPop");
+        if (didPop) {
+          return;
+        }
+        if (kDebugMode) {
           Navigator.pushReplacementNamed(
             context,
             "/BottomNav",
           );
-        },
-        child: Scaffold(
+          // return Future.value(true);
+        }
+        Navigator.pushReplacementNamed(
+          context,
+          "/BottomNav",
+        );
+      },
+      child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           toolbarHeight: 65,
@@ -238,7 +238,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 },
                 icon: Icon(
                   Icons.filter_list,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 28,
                 )),
             SizedBox(
@@ -250,7 +250,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           children: [
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -265,7 +265,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             Text(
                               "Total Balance",
                               style: TextStyle(
-                                  fontSize: 12.0, fontWeight: FontWeight.normal),
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.normal),
                             ),
                             isInternetConnected && !isLoading
                                 ? Text(
@@ -288,76 +289,96 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ],
                     ),
                     Expanded(
-                      child: Card(
-                        elevation: 20,
-                        margin: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40))),
-                        child: Container(
-                          margin: EdgeInsets.only(top: 12),
-                          child: isInternetConnected && !isLoading
-                              ? FutureBuilder(
-                                  future: _fetchDataFuture,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<void> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    } else if (snapshot.hasError) {
-                                      return Center(
-                                          child: Text('Error loading data'));
-                                    } else {
-                                      // Group transactions by date
-                                      Map<String, List<TransactionDetails>>
-                                          groupedTransactions =
-                                          groupTransactionsByDate(filterApplied
-                                              ? filteredTransactionList
-                                              : transactionList);
-                                      List<String> dates =
-                                          groupedTransactions.keys.toList();
+                      child: Container(
+                        width: screenWidth,
+                        child: Card(
+                          elevation: 20,
+                          margin: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40))),
+                          child: Container(
+                            margin: EdgeInsets.only(top: 12),
+                            child: isInternetConnected && !isLoading
+                                ? FutureBuilder(
+                                    future: _fetchDataFuture,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<void> snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                            child: Text('Error loading data'));
+                                      } else {
+                                        // Group transactions by date
+                                        Map<String, List<TransactionDetails>>
+                                            groupedTransactions =
+                                            groupTransactionsByDate(
+                                                filterApplied
+                                                    ? filteredTransactionList
+                                                    : transactionList);
+                                        List<String> dates =
+                                            groupedTransactions.keys.toList();
 
-                                return ListView.builder(
-                                  controller: _scrollController,
-                                  itemCount: dates.length + (_isLoadingMore ? 1 : 0),
-                                  itemBuilder: (BuildContext context, int index) {
-                                    if (index == dates.length) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-                                    String date = dates[index];
-                                    List<TransactionDetails> transactionsForDate =
-                                        groupedTransactions[date]!;
+                                        return ListView.builder(
+                                          controller: _scrollController,
+                                          itemCount: dates.length +
+                                              (_isLoadingMore ? 1 : 0),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            /* if (index == dates.length) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }*/
+                                            String date = dates[index];
+                                            List<TransactionDetails>
+                                                transactionsForDate =
+                                                groupedTransactions[date]!;
 
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              date,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                          ...transactionsForDate.map((transaction) {
-                                            return TransactionItem(
-                                                transaction: transaction, symbol: countryCurrencySymbol,);
-                                          }).toList(),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          ) : Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-                          child: ShimmerList(itemCount: 2),),
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      date,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 12),
+                                                    ),
+                                                  ),
+                                                  ...transactionsForDate
+                                                      .map((transaction) {
+                                                    return TransactionItem(
+                                                      transaction: transaction,
+                                                      symbol:
+                                                          countryCurrencySymbol,
+                                                    );
+                                                  }).toList(),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  )
+                                : Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 18),
+                                    child: ShimmerList(itemCount: 2),
+                                  ),
+                          ),
                         ),
                       ),
                     ),
@@ -365,7 +386,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
               ),
             ),
-            isLoading
+            /*    isLoading
                 ? Stack(
               children: [
                 // Block interaction
@@ -378,83 +399,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
               ],
             )
-                : SizedBox(),
+                : SizedBox(),*/
           ],
         ),
-                                    return ListView.builder(
-                                      controller: _scrollController,
-                                      itemCount: dates.length +
-                                          (_isLoadingMore ? 1 : 0),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        if (index == dates.length) {
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        }
-                                        String date = dates[index];
-                                        List<TransactionDetails>
-                                            transactionsForDate =
-                                            groupedTransactions[date]!;
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  date,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 12),
-                                                ),
-                                              ),
-                                              ...transactionsForDate
-                                                  .map((transaction) {
-                                                return TransactionItem(
-                                                  transaction: transaction,
-                                                  symbol: countryCurrencySymbol,
-                                                );
-                                              }).toList(),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                              )
-                            : Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 18),
-                                child: ShimmerList(itemCount: 2),
-                              ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          isLoading
-              ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(
-                        dismissible: false,
-                        color: Colors.black.withOpacity(0.3)),
-                    // Loader indicator
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
-              : SizedBox(),
-        ],
       ),
     );
   }
@@ -743,10 +690,17 @@ class TransactionItem extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(addCurrencySymbolTransaction(symbol, "${transaction.amount}", capitalizeFirstLetter("${transaction.requestType}")),
+                    Text(
+                        addCurrencySymbolTransaction(
+                            symbol,
+                            "${transaction.amount}",
+                            capitalizeFirstLetter(
+                                "${transaction.requestType}")),
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14,
-                        color: colorPaymentType(capitalizeFirstLetter("${transaction.requestType}")))),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: colorPaymentType(capitalizeFirstLetter(
+                                "${transaction.requestType}")))),
                     /*Text(convertDateFormat("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 12)),*/
                   ],
@@ -793,34 +747,43 @@ class TransactionItem extends StatelessWidget {
                           alignment: Alignment.center,
                           child: Text(
                             capitalizeFirstLetter("${transaction.requestType}"),
-                            style: TextStyle(fontWeight: FontWeight.w700,
-                            fontSize: 16),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 16),
                           ),
                         ),
                         Column(
                           children: [
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Bank Service :"),
-                                Text(capitalizeFirstLetter("${transaction.bankService}"))
-                              ],
-                            ),
+                            transaction.bankService != null
+                                ? Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Bank Service :"),
+                                          Text(capitalizeFirstLetter(
+                                              "${transaction.bankService}"))
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
                             SizedBox(
                               height: 8,
                             ),
                             transaction.amount != null
                                 ? Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Amount :"),
-                                Text(addCurrencySymbol(symbol, "${transaction.amount}"))
-                              ],
-                            )
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Amount :"),
+                                      Text(addCurrencySymbol(
+                                          symbol, "${transaction.amount}"))
+                                    ],
+                                  )
                                 : SizedBox(),
                             SizedBox(
                               height: 8,
@@ -829,28 +792,33 @@ class TransactionItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Status :"),
-                                Text(capitalizeFirstLetter("${transaction.status}"),
-                                style: TextStyle(
-                                    color: colorStatus(capitalizeFirstLetter(
-                                        "${transaction.status}"))
-                                ),)
+                                Text(
+                                  capitalizeFirstLetter(
+                                      "${transaction.status}"),
+                                  style: TextStyle(
+                                      color: colorStatus(capitalizeFirstLetter(
+                                          "${transaction.status}"))),
+                                )
                               ],
                             ),
-
-                            transaction.bankType != null ? Column(
-                              children: [
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Bank Type :"),
-                                    Text(capitalizeFirstLetter("${transaction.bankType}"))
-                                  ],
-                                ),
-                              ],
-                            ) : SizedBox(),
+                            transaction.bankType != null
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Bank Type :"),
+                                          Text(capitalizeFirstLetter(
+                                              "${transaction.bankType}"))
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
                             SizedBox(
                               height: 8,
                             ),
@@ -883,7 +851,6 @@ class TransactionItem extends StatelessWidget {
                             ),
                           ],
                         )
-
                       ],
                     ),
                   ),
@@ -895,5 +862,4 @@ class TransactionItem extends StatelessWidget {
       },
     );
   }
-
 }

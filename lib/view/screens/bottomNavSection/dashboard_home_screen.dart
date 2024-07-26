@@ -17,6 +17,7 @@ import '../../../model/response/offersResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
@@ -723,14 +724,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                             FontWeight
                                                                 .bold,
                                                             fontSize:
-                                                            14),
+                                                            13),
                                                       ),
                                                       Text(
                                                           capitalizeFirstLetter(
                                                               "${transactionList[index].status}"),
                                                           style: TextStyle(
                                                               fontSize:
-                                                              12,
+                                                              11,
                                                               color:
                                                               colorStatus(capitalizeFirstLetter("${transactionList[index].status}")))),
                                                     ],
@@ -739,22 +740,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               ),
                                               Column(
                                                 children: [
-                                                  Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].amount}"),
-                                                    style:
-                                                    TextStyle(
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w600,
-                                                    ),
-                                                  ),
+                                                  Text(addCurrencySymbolTransaction(currencySymbol, "${transactionList[index].amount}", capitalizeFirstLetter("${transactionList[index].requestType}")),
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.w600, fontSize: 13,
+                                                          color: colorPaymentType(capitalizeFirstLetter("${transactionList[index].requestType}")))),
                                                   Text(
                                                       convertDateFormat(
                                                           "${transactionList[index].createdAt}"),
                                                       style: TextStyle(
                                                           fontSize:
-                                                          12)),
+                                                          11)),
                                                 ],
                                               ),
                                             ],

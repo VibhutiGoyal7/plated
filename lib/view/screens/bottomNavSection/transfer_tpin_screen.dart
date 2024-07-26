@@ -1,20 +1,20 @@
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
-import 'package:Payrio/model/request/initiateP2PRequest.dart';
-import 'package:Payrio/model/response/initiateP2PResponse.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transfer_otp_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/response/checkCustomerReponse.dart';
+import '../../../model/response/completeP2PResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/customNumberKeyboard.dart';
+import '../../component/session_expired_dialog.dart';
 import '../../component/toastMessage.dart';
 
 class TransferTpinScreen extends StatefulWidget {
-  final InitiateP2PRequest? data; // Define the 'data' parameter here
+  final CompleteP2PRequest? data; // Define the 'data' parameter here
 
   TransferTpinScreen({Key? key, this.data}) : super(key: key);
 
@@ -25,7 +25,7 @@ class TransferTpinScreen extends StatefulWidget {
 class _TransferTpinScreenState extends State<TransferTpinScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
 
   String dropdownValue = "";
   bool isValid = false;
@@ -35,7 +35,6 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
   String? currencySymbol = "";
   List<String> _inputValues = ['', '', '', ''];
   static const maxDuration = Duration(seconds: 2);
-
 
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -91,10 +90,10 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     super.dispose();
   }
 
-  Future<Widget> initiateTransactionResponse(
+  Future<Widget> completeTransactionResponse(
       BuildContext context, ApiResponse apiResponse) async {
-    InitiateP2PResponse? initiateP2PResponse =
-    apiResponse.data as InitiateP2PResponse?;
+    CompleteP2PResponse? completeP2PResponse =
+        apiResponse.data as CompleteP2PResponse?;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
@@ -103,31 +102,64 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("TPIN ${initiateP2PResponse?.otp}");
-        if(initiateP2PResponse?.otp!=null){
-          ToastComponent.showToast(
-              context: context, message: initiateP2PResponse?.otp);
-        }else {
-          ToastComponent.showToast(
-              context: context, message: message);
+        print("Complete Transaction ${completeP2PResponse?.amount}");
+        CheckCustomerResponse prefData = CheckCustomerResponse(
+            username: widget.data?.receiverUsername,
+            fullName: widget.data?.fullName,
+            phoneNumber: widget.data?.receiverPhoneNumber,
+            imageUrl: widget.data?.imageUrl);
+        print("PrefData ${prefData.username}");
+        List<CheckCustomerResponse>? prefResponse =
+            await Helper.getRecentP2PDetails();
+        // print("prefResponse ${prefResponse?[0].username}");
+        bool dataExist = false;
+        if (prefResponse?.length != null) {
+          for (int i = 0; i < prefResponse!.length; i++) {
+            if (prefData.username == prefResponse[i].username) {
+              dataExist = true;
+            }
+          }
+        } else {
+          dataExist = false;
         }
-        CompleteP2PRequest data = CompleteP2PRequest(paymentTransactionId: initiateP2PResponse?.paymentTransactionId,
-            customerOtpId: initiateP2PResponse?.customerOtpId,amount: widget.data?.amount,
-            receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,
-            fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl
-        );
+        if (!dataExist) {
+          if (prefResponse != null) {
+            prefResponse.add(prefData);
+            print("prefResponse ${prefResponse[0].username}");
+            Helper.saveRecentP2PDetails(prefResponse);
+          } else {
+            List<CheckCustomerResponse>? dataList = [];
+            Helper.saveRecentP2PDetails(dataList);
+          }
+        }
 
-        InitiateP2PRequest data1 = InitiateP2PRequest(tpin: '', amount: widget.data?.amount,
-          receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,);
-
-        Navigator.pushNamed(context, '/TransferOtpScreen', arguments: data);
-        // Navigate to the new screen after receiving the response
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);
-        return Center(
-          child: Text('Please try again later!!!'),
+
+        CompleteP2PRequest data = CompleteP2PRequest(
+          otp: widget.data?.otp,
+          customerOtpId: widget.data?.customerOtpId,
+          paymentTransactionId: widget.data?.paymentTransactionId,
+          amount: widget.data?.amount,
+          imageUrl: widget.data?.imageUrl,
+          fullName: widget.data?.fullName,
+          receiverUsername: widget.data?.receiverUsername,
+          receiverPhoneNumber: widget.data?.receiverPhoneNumber,
         );
+
+        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen',
+            arguments: data);
+
+        return Container();
+      case Status.ERROR:
+        if (apiResponse.message == "Invalid access token") {
+          print(apiResponse.message);
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {
+          ToastComponent.showToast(context: context, message: message);
+        }
+        return Center(
+            //child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
@@ -149,57 +181,73 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
        ),*/
       body: Stack(
         children: [
-
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: screenWidth*0.95,
+                  width: screenWidth * 0.95,
                   //height: screenHeight * 0.15,
                   margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8),
                   child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
-                  Column(
+                      Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 2),
-                        child: Row(//mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 2),
+                        child: Row(
+                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pop(context);
                               },
                               child: Icon(Icons.arrow_back),
                             ),
-                            SizedBox(width: 8,),
-                            Text("Paying to:", style: TextStyle(fontSize: 16),),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              "Paying to:",
+                              style: TextStyle(fontSize: 16),
+                            ),
                             Spacer(),
-                            Text("${widget.data?.fullName}", style: TextStyle(fontSize: 13 , fontWeight: FontWeight.bold))
+                            Text("${widget.data?.fullName}",
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.bold))
                           ],
                         ),
                       ),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Phone No:"),
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 10,
+                          ),
                           //Text("${widget.data?.fullName}"),
 
-                          widget.data?.receiverPhoneNumber != null ?
-                          Text("${widget.data?.receiverPhoneNumber}"):
-                          Text("${widget.data?.receiverUsername}"),
+                          widget.data?.receiverPhoneNumber != null
+                              ? Text("${widget.data?.receiverPhoneNumber}")
+                              : Text("${widget.data?.receiverUsername}"),
                         ],
                       ),
-                      SizedBox(height: 2,),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Sending:"),
-                          SizedBox(width: 10,),
-                          Text(addCurrencySymbol(currencySymbol , "${widget.data?.amount}")),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(addCurrencySymbol(
+                              currencySymbol, "${widget.data?.amount}")),
                         ],
                       ),
                     ],
-                  )
-                  ,
+                  ),
                   alignment: AlignmentDirectional.center,
                 ),
                 Expanded(
@@ -209,8 +257,8 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                     margin: EdgeInsets.zero,
                     child: Card(
                       margin: EdgeInsets.all(0),
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -222,15 +270,25 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                           SizedBox(height: 22),
                           _buildPhoneInput(context, screenWidth, isDarkMode),
                           SizedBox(height: 10),
-                          SizedBox(height: 30,),
+                          SizedBox(
+                            height: 30,
+                          ),
                           Center(
                             child: Container(
                               alignment: Alignment.center,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                              width: screenWidth*0.65,
-                              child: Text("You are transferring money to ${widget.data?.receiverUsername}",
-                                textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 13),),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.yellow.shade700,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                              width: screenWidth * 0.65,
+                              child: Text(
+                                "You are transferring money to ${widget.data?.receiverUsername}",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 13),
+                              ),
                             ),
                           ),
                           Spacer(),
@@ -258,24 +316,24 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
           ),
           isLoading
               ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false,
+                        color: Colors.black.withOpacity(0.3)),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox(),
         ],
       ),
     );
   }
 
-  Future<void> _initiateTransaction( String tpin) async {
+  Future<void> _initiateTransaction(String tpin) async {
     setState(() {
       isLoading = true;
     });
@@ -291,18 +349,19 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         );
       });
     } else {
-      InitiateP2PRequest request = InitiateP2PRequest(tpin: tpin, amount: widget.data?.amount,
-        receiverUsername: null, receiverPhoneNumber: widget.data?.receiverPhoneNumber,  );
-      print("phno ${request?.receiverPhoneNumber}");
-      print("username ${request?.receiverUsername}");
+      CompleteP2PRequest completeP2PRequest = CompleteP2PRequest(
+          otp: widget.data?.otp,
+          tpin: tpin,
+          customerOtpId: widget.data?.customerOtpId,
+          paymentTransactionId: widget.data?.paymentTransactionId);
       await Provider.of<MainViewModel>(context, listen: false)
-          .initiateP2PTransaction(
-          "/api/v1/app/payment_transactions/initiate_p2p_transaction",
-          request);
+          .completeP2PTransaction(
+              "/api/v1/app/payment_transactions/complete_p2p_transaction",
+              completeP2PRequest);
+
       ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false)
-              .response;
-      initiateTransactionResponse(context, apiResponse);
+          Provider.of<MainViewModel>(context, listen: false).response;
+      completeTransactionResponse(context, apiResponse);
     }
   }
 
@@ -313,7 +372,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           4,
-              (index) => Container(
+          (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(

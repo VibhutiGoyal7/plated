@@ -1,3 +1,4 @@
+import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/screens/profileSection/setting_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +6,9 @@ import '../../../languageSection/Languages.dart';
 import '../../../utils/Helper.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
+  final Function(Locale) setLocale;
+
+  LanguageSelectionScreen({required this.setLocale});
   @override
   _LanguageSelectionScreenState createState() =>
       _LanguageSelectionScreenState();
@@ -55,10 +59,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(Languages.of(context)!.labelNotification),
+        title: Text(Languages.of(context)!.labelLanguage),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,11 +85,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
+                          setState(() async {
                             selectedLanguageName = mCities[index].name;
+                            await Helper.setLocale(mCities[index].code);
+                            if (mounted) {
+                              setState(() {
+                                selectedLanguageValue = mCities[index].code!;
+                              });
+                            }
+                            widget.setLocale(Locale(mCities[index].code, ''));
+                            print(selectedLanguageValue);
                           });
                         },
-                        child: LanguageItem(data: mCities[index]),
+                        child: LanguageItem(data: mCities[index], selectedLanguageCode: selectedLanguageValue,),
                       );
                     },
                   ),
@@ -101,18 +113,21 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
 class LanguageItem extends StatelessWidget {
   final Language data;
+  final String selectedLanguageCode;
   var screenWidth;
 
-  LanguageItem({required this.data});
+  LanguageItem({required this.data,required this.selectedLanguageCode});
 
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+      padding: EdgeInsets.zero,
       child: Container(
+        margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
+          color: selectedLanguageCode == data.code? AppColor.PRIMARY : AppColor.WHITE
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,19 +135,20 @@ class LanguageItem extends StatelessWidget {
             if (data.name != null)
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12.0, vertical: 10.0),
+                    horizontal: 12.0, vertical: 14.0),
                 child: Text(
                   data.name!,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16,
+                      color: selectedLanguageCode == data.code? AppColor.WHITE : AppColor.BLACK),
                 ),
               ),
             Align(
               alignment: Alignment.center,
               child: Container(
-                margin: EdgeInsets.only(bottom: 3),
-                width: screenWidth * 0.8,
+                margin: EdgeInsets.only(bottom: 0),
+                width: screenWidth * 0.85,
                 height: 0.3,
-                decoration: BoxDecoration(color: Colors.grey),
+                decoration: BoxDecoration(color: selectedLanguageCode == data.code? AppColor.WHITE : Colors.grey),
               ),
             ),
           ],

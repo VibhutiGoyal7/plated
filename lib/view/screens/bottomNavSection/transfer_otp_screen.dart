@@ -248,7 +248,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               ],
             ),
           ),
-          isLoading
+         /* isLoading
               ? Stack(
             children: [
               // Block interaction
@@ -261,7 +261,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               ),
             ],
           )
-              : SizedBox(),
+              : SizedBox(),*/
         ],
       ),
     );
@@ -357,10 +357,10 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                 const maxDuration = Duration(seconds: 2);
                 if (otp.isNotEmpty && otp.length == 6) {
                   setState(() {
-                    isLoading = true;
+                    //isLoading = true;
                   });
                   bool isConnected = await _connectivityService.isConnected();
-                  if (!isConnected) {
+                 /* if (!isConnected) {
                     setState(() {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -385,7 +385,20 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                         Provider.of<MainViewModel>(context, listen: false)
                             .response;
                     completeTransactionResponse(context, apiResponse);
-                  }
+                  }*/
+
+                  CompleteP2PRequest data = CompleteP2PRequest(
+                    otp: otp,
+                    customerOtpId: widget.data.customerOtpId,
+                    paymentTransactionId: widget.data.paymentTransactionId,
+                    amount: widget.data.amount,
+                    imageUrl: widget.data.imageUrl,
+                    fullName: widget.data.fullName,
+                    receiverUsername: widget.data.receiverUsername,
+                    receiverPhoneNumber: widget.data.receiverPhoneNumber,
+                  );
+
+                  Navigator.pushReplacementNamed(context, '/TransferTPINScreen', arguments: data);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

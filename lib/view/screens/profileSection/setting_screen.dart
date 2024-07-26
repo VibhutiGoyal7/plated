@@ -108,58 +108,65 @@ class _SettingScreenState extends State<SettingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                       /* onTap: (){
-                          Navigator.of(context).pushNamed("/LanguageSelectionScreen");
-                        },*/
-                        child: Text(
-                          Languages.of(context)!.labelLanguage,
-                          style: TextStyle(
-                              fontSize: 15.0, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Container(
-                        width: 120,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: isDarkMode ? Colors.white60 : Colors.grey),
-                          borderRadius: BorderRadius.all(Radius.circular(2)),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            dropdownColor:
-                                isDarkMode ? Colors.grey : Colors.white,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.only(left: 10),
-                            value: dropdownValue,
-                            items: mCities.map((Language items) {
-                              return DropdownMenuItem(
-                                value: items.code,
-                                alignment: Alignment.centerLeft,
-                                child: Text(items.name,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    )),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) async {
-                              await Helper.setLocale(newValue!);
-                              if (mounted) {
-                                setState(() {
-                                  dropdownValue = newValue!;
-                                });
-                              }
-                              widget.setLocale(Locale(newValue, ''));
-                              print(dropdownValue);
-                            },
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Languages.of(context)!.labelLanguage,
                             style: TextStyle(
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
-                            hint: Text(
-                              "en",
-                            ),
+                                fontSize: 15.0, fontWeight: FontWeight.w600),
                           ),
+                          Text(
+                            "Selected Language",
+                            style: TextStyle(
+                                fontSize: 11.0, fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.of(context).pushNamed("/LanguageSelectionScreen");
+                        },
+                        child: Container(
+                          child: Text("Edit", style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 14
+                          ),) /*DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              dropdownColor:
+                                  isDarkMode ? Colors.grey : Colors.white,
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.only(left: 10),
+                              value: dropdownValue,
+                              items: mCities.map((Language items) {
+                                return DropdownMenuItem(
+                                  value: items.code,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(items.name,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      )),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) async {
+                                await Helper.setLocale(newValue!);
+                                if (mounted) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                }
+                                widget.setLocale(Locale(newValue, ''));
+                                print(dropdownValue);
+                              },
+                              style: TextStyle(
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black),
+                              hint: Text(
+                                "en",
+                              ),
+                            ),
+                          )*/,
                         ),
                       ),
                     ]),

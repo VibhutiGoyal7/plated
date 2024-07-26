@@ -4,12 +4,17 @@ import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../model/request/completeP2PRequest.dart';
 import '../../../model/response/createOtpChangePassResponse.dart';
+import '../../../model/response/initiateP2PResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
@@ -36,7 +41,7 @@ class _TransferScreenState extends State<TransferScreen> {
   final TextEditingController _inputController = TextEditingController();
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
-
+  static const maxDuration = Duration(seconds: 2);
   late double screenWidth;
   late double screenHeight;
 
@@ -78,7 +83,7 @@ class _TransferScreenState extends State<TransferScreen> {
           onTap:(){
             Navigator.pop(context);
           },
-          child: Icon(Icons.arrow_back),
+          child: Icon(Icons.arrow_back, size: 24,),
         ),
           title:  Text(
             Languages.of(context)!.labelMoneyTransfer,
@@ -316,16 +321,17 @@ class _TransferScreenState extends State<TransferScreen> {
                 //String user = userName;
                 _checkInputValidation();
                 if (inputValid) {
+                  InitiateP2PRequest request = InitiateP2PRequest(
+                      tpin: "",
+                      amount: amount,
+                      receiverUsername: userName,
+                      receiverPhoneNumber: phoneNo,
+                      fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl);
+                  _initiateTransaction();
 
-                    InitiateP2PRequest request = InitiateP2PRequest(
-                        tpin: "",
-                        amount: amount,
-                        receiverUsername: userName,
-                        receiverPhoneNumber: phoneNo,
-                        fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl);
-                    print("request ${request.receiverPhoneNumber} ${request.receiverUsername}");
+                   /* print("request ${request.receiverPhoneNumber} ${request.receiverUsername}");
                     Navigator.pushNamed(context, '/TransferTPINScreen',
-                        arguments: request);
+                        arguments: request);*/
                 }
               },
               child: Text(
@@ -345,6 +351,86 @@ class _TransferScreenState extends State<TransferScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _initiateTransaction() async {
+    setState(() {
+      isLoading = true;
+    });
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No internet connection'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      InitiateP2PRequest request = InitiateP2PRequest(tpin: "", amount: amount,
+        receiverUsername: null, receiverPhoneNumber: phoneNo,  );
+      print("phno ${request.receiverPhoneNumber}");
+      print("username ${request.receiverUsername}");
+      await Provider.of<MainViewModel>(context, listen: false)
+          .initiateP2PTransaction(
+          "/api/v1/app/payment_transactions/initiate_p2p_transaction",
+          request);
+      ApiResponse apiResponse =
+          Provider.of<MainViewModel>(context, listen: false)
+              .response;
+      initiateTransactionResponse(context, apiResponse);
+    }
+  }
+
+  Future<Widget> initiateTransactionResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    InitiateP2PResponse? initiateP2PResponse =
+    apiResponse.data as InitiateP2PResponse?;
+    var message = apiResponse?.message.toString();
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("TPIN ${initiateP2PResponse?.otp}");
+        if(initiateP2PResponse?.otp!=null){
+          ToastComponent.showToast(
+              context: context, message: initiateP2PResponse?.otp);
+        }else {
+          ToastComponent.showToast(
+              context: context, message: message);
+        }
+        CompleteP2PRequest data = CompleteP2PRequest(
+            paymentTransactionId: initiateP2PResponse?.paymentTransactionId,
+            customerOtpId: initiateP2PResponse?.customerOtpId,
+            amount: amount,
+            receiverUsername: userName,
+            receiverPhoneNumber: phoneNo,
+            fullName:name,
+            imageUrl: ""
+        );
+
+        /*InitiateP2PRequest data1 = InitiateP2PRequest(tpin: '', amount: widget.data?.amount,
+          receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,);*/
+
+        Navigator.pushNamed(context, '/TransferOtpScreen', arguments: data);
+        // Navigate to the new screen after receiving the response
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        ToastComponent.showToast(context: context, message: message);
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
   }
 
   void _checkInputValidation() {
