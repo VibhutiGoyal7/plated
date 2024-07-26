@@ -40,6 +40,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist> _shortcutCardsList;
+  bool _isRefreshing = false;
+  double _dragOffset = 0.0;
 
   static const maxDuration = Duration(seconds: 2);
 
@@ -231,6 +233,23 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     }
   }
 
+  Future<void> _refresh() async {
+    // Simulate a network request or some other async operation
+    //await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    // Simulate a network request
+    await Future.delayed(Duration(seconds: 2));
+    _fetchDashboardData();
+
+    setState(() {
+      _isRefreshing = false;
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;

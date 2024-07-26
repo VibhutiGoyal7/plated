@@ -222,8 +222,10 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                       );
                     });
                   } else {
-                    if(videoFile!=null || videoFile !="" )
-                    _uploadProfilePic(videoFile);
+                    if(videoFile!=null || videoFile !="" ) {
+                      isVideoRecorded =true;
+                      _uploadProfilePic(videoFile);
+                    }
                     else{
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

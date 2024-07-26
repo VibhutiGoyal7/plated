@@ -273,8 +273,82 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       },
     );
   }
+/*
 
-  Widget _buildOtpInput(
+  Widget _buildOtpInput(BuildContext context, double screenWidth, bool isDarkMode) {
+    return  Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          6,
+              (index) => Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black54,
+                width: 0.4,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            width: 50.0,
+            height: 62.0,
+            child: TextField(
+              controller: _controllers[index],
+              focusNode: _focusNodes[index],
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              maxLength: 1,
+              decoration: InputDecoration(
+                counterText: "", // Remove the counter text
+                border: InputBorder.none,
+              ),
+              style: TextStyle(fontSize: 20),
+              onChanged: (value) {
+                _handleOnChange(index, value);
+              },
+              onEditingComplete: () {
+                // Explicitly call requestFocus on the next node
+                Future.delayed(Duration(milliseconds: 50), () {
+                  if (index < _focusNodes.length - 1) {
+                    FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+                  }
+                });
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _handleOnChange(int index, String value) {
+    setState(() {
+      _otp[index] = value;
+    });
+
+    // Move focus based on input
+    if (value.isNotEmpty) {
+      if (index < _focusNodes.length - 1) {
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      }
+    } else {
+      if (index > 0) {
+        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+      }
+    }
+
+    String otpString = _otp.join('');
+    if (otpString.length == 6) {
+      isValid = true;
+    } else {
+      isValid = false;
+    }
+  }
+*/
+
+
+   Widget _buildOtpInput(
       BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
@@ -323,7 +397,6 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       ),
     );
   }
-
   Widget _buildFooter(BuildContext context) {
     return Column(
       children: [
