@@ -62,7 +62,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 onTap: (){
                   _captureAndSharePng(context);
                 },
-                  child: Icon(Icons.share, color : Colors.white)),
+                  child: Icon(Icons.share)),
             )
           ],
         ),

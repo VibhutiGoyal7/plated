@@ -42,8 +42,8 @@ String addCurrencySymbol(String? currencySymbol, String input) {
 }
 
 bool isBalanceMoreThanAmount(String balance, String amt, BuildContext context){
-  int intBalance =  extractNumber(balance);
-  int inrAmt =  amt != null|| amt!="" ?extractNumber(amt) : 0;
+  double intBalance =  extractFloat(balance);
+  double inrAmt =  amt != null|| amt!="" ?extractFloat(amt) : 0;
   if(intBalance<=inrAmt){
     ToastComponent.showToast(context: context, message: 'You do not have enough balance.');
     return false;
@@ -52,14 +52,14 @@ bool isBalanceMoreThanAmount(String balance, String amt, BuildContext context){
   }
 
 }
-
-int extractNumber(String str) {
-  final regex = RegExp(r'\d+');
+double extractFloat(String str) {
+  // Regular expression to match floating-point numbers, including those with decimals and negative sign
+  final regex = RegExp(r'-?\d+(\.\d+)?');
   final match = regex.firstMatch(str);
   if (match != null) {
-    return int.parse(match.group(0)!);
+    return double.parse(match.group(0)!);
   } else {
-    throw FormatException('No number found in the string');
+    throw FormatException('No floating-point number found in the string');
   }
 }
 

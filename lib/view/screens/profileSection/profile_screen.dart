@@ -232,8 +232,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                             ),
                                           )
-                                        : _buildLabelText(context,
-                                            customerName.toString(), 20.0),
+                                        :
+                                    Container(
+                                      width: screenWidth*0.65,
+                                      child: _buildLabelText(context,
+                                          customerName.toString(), 20.0),
+                                    ),
                                     Row(
                                       children: [
                                         isLoading
@@ -249,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   Text(
                                                     userName,
                                                     style: TextStyle(
-                                                        fontSize: 14.0),
+                                                        fontSize: 13.0),
                                                     textAlign: TextAlign.left,
                                                   ),
                                                 ],
@@ -504,6 +508,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       text,
       style: TextStyle(fontWeight: FontWeight.w600, fontSize: size),
       textAlign: TextAlign.left,
+      overflow: TextOverflow.ellipsis,
     );
   }
 

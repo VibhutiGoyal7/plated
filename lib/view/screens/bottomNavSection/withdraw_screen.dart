@@ -37,7 +37,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   final ConnectivityService _connectivityService = ConnectivityService();
 
   final ScrollController _scrollController = ScrollController();
-  List<String> _allLogList = ["100", "200", "300", "400", "500"];
+  List<String> _allLogList = ["50", "100", "300", "500"];
 
   @override
   void initState() {
@@ -306,12 +306,18 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   amount = value;
                   // countryBalance = balance as String ;
                 });
-                _isValidInput();
+                //_isValidInput();
               },
               autofocus: true,
               maxLength: 6,
               textAlign: TextAlign.center,
-              onSubmitted: (value) {},
+              onSubmitted: (value) {
+                setState(() {
+                  amount = value;
+                  // countryBalance = balance as String ;
+                });
+                _isValidInput();
+              },
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
@@ -328,7 +334,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   }
 
   void _isValidInput() {
-    if (_inputController.text.isNotEmpty && _inputController.text.length >= 1 &&isBalanceMoreThanAmount(currentBalance, _inputController.text, context)) {
+    if (_inputController.text.isNotEmpty && _inputController.text.length >= 1 &&isBalanceMoreThanAmount(currentBalance, _inputController.text, context) && extractFloat(_inputController.text)>=50) {
       setState(() {
         inputValid = true;
       });
