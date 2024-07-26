@@ -389,16 +389,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             isLoading
                 ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            )
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                        dismissible: false,
+                      ),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
           ],
         ),
@@ -572,6 +573,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       filterApplied = false;
                       //Navigator.pop(context);
                       isLoading = true;
+                      filteredTransactionList.clear();
+                      transactionList.clear();
                     });
                     _fetchDataFuture =
                         _fetchData(_currentPage, filterApplied, false);
@@ -780,8 +783,17 @@ class TransactionItem extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Amount :"),
-                                      Text(addCurrencySymbol(
-                                          symbol, "${transaction.amount}"))
+                                      Text(addCurrencySymbolTransaction(
+                                          symbol,
+                                          "${transaction.amount}",
+                                          capitalizeFirstLetter(
+                                              "${transaction.requestType}")),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                              color: colorPaymentType(capitalizeFirstLetter(
+                                                  "${transaction.requestType}")))
+                                      )
                                     ],
                                   )
                                 : SizedBox(),

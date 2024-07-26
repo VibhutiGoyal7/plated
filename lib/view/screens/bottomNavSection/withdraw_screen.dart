@@ -91,8 +91,10 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           appBar: AppBar(toolbarHeight: 65,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                hideKeyBoard();
+                await Future.delayed(Duration(milliseconds: 2));
+                Navigator.pushReplacementNamed(context, "/BottomNav");
               },
             ),
             title: Text(

@@ -26,7 +26,7 @@ class PersonalInformationScreen extends StatefulWidget {
 }
 
 class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
-  bool isLoading = true;
+  bool isLoading = false;
   bool isInternetConnected = true;
   bool isDarkMode = false;
 
@@ -50,7 +50,16 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     dob = "";
     email = "";
     isDataLoading = true;
-    _fetchData();
+    Helper.getProfileDetails().then((profileDetails) {
+      setState(() {
+        firstName = profileDetails?.firstName;
+        lastName = profileDetails?.lastName;
+        dob = profileDetails?.dob;
+        email = profileDetails?.email;
+        imageUrl = profileDetails?.imageUrl;
+        isDataLoading = false;
+      });
+    });
   }
 
   Future<Widget> getProfileResponse(
@@ -64,8 +73,17 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
+        await Helper.saveProfileDetails(mediaList);
+        await Helper.saveUserBalance(mediaList?.balance);
+        await Helper.saveCountry(mediaList?.countryName);
+        await Helper.saveKycStatus(mediaList?.kycStatus);
+        print(mediaList?.countryName);
+
+        _fetchDataFromPref();
+
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
         if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
@@ -89,13 +107,32 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     }
   }
 
+
+  void _fetchDataFromPref() async {
+    await Future.delayed(Duration(milliseconds: 2));
+    ProfileResponse? profileResponse = await Helper.getProfileDetails();
+
+    setState(() {
+      isLoading = false;
+      //customerName = "${profileResponse?.firstName} ${profileResponse?.lastName}";
+      //firstName = "${profileResponse?.firstName}";
+      //lastName = "${profileResponse?.lastName}";
+      //dob = "${profileResponse?.dob}";
+      //email = "${profileResponse?.email}";
+      imageUrl = profileResponse?.imageUrl.toString();
+
+      //isUsernameRetrieved = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // double screenHeight = MediaQuery.of(context).size.height;
     // double screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
+      appBar: AppBar(
+        toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -107,120 +144,147 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 30),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () => {_showPicker(context: context)},
-                    child: imageUrl == ""
-                        ? Container(
-                            height: 110,
-                            width: 110,
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundColor: AppColor.WHITE,
-                              backgroundImage:
-                                  AssetImage("assets/profile_user.png"),
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(100.0),
-                            child: Image.network(
-                              "${imageUrl}",
-                              height: 110,
-                              width: 110,
-                              fit: BoxFit.cover,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace) {
-                                return Container(
+                  Center(
+                    child: Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () => {_showPicker(context: context)},
+                          child: imageUrl == ""
+                              ? Container(
                                   height: 110,
                                   width: 110,
                                   child: CircleAvatar(
                                     radius: 30,
                                     backgroundColor: AppColor.WHITE,
-                                    backgroundImage: AssetImage(
-                                      "assets/profile_user.png",
-                                    ),
+                                    backgroundImage:
+                                        AssetImage("assets/profile_user.png"),
                                   ),
-                                );
-                              },
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.white38,
-                                    highlightColor: Colors.grey,
-                                    child: Container(
-                                      height: 80,
-                                      width: 80,
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }
-                              },
+                                )
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  child: Image.network(
+                                    "${imageUrl}",
+                                    height: 110,
+                                    width: 110,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (BuildContext context,
+                                        Object exception,
+                                        StackTrace? stackTrace) {
+                                      return Container(
+                                        height: 110,
+                                        width: 110,
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          backgroundColor: AppColor.WHITE,
+                                          backgroundImage: AssetImage(
+                                            "assets/profile_user.png",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.white38,
+                                          highlightColor: Colors.grey,
+                                          child: Container(
+                                            height: 80,
+                                            width: 80,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                        ),
+                        Positioned(
+                          bottom: -5,
+                          right: -4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.5),
+                            child: Container(
+                              height: 45,
+                              width: 45,
+                              child: Card(
+                                shape: CircleBorder(),
+                                color: Colors.white,
+                                child: IconButton(
+                                  iconSize: 20,
+                                  onPressed: () {
+                                    _showPicker(context: context);
+                                  },
+                                  icon: Icon(Icons.edit_outlined),
+                                ),
+                              ),
                             ),
                           ),
-                  ),
-                  Positioned(
-                    bottom: -5,
-                    right: -4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.5),
-                      child: Container(
-                        height: 45,
-                        width: 45,
-                        child: Card(
-                          shape: CircleBorder(),
-                          color: Colors.white,
-                          child: IconButton(
-                            iconSize: 20,
-                            onPressed: () {
-                              _showPicker(context: context);
-                            },
-                            icon: Icon(Icons.edit_outlined),
-                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  DetailBox(
+                    heading: Languages.of(context)!.labelName,
+                    subHeading: "${firstName} ${lastName}",
+                    icon: Icons.person,
+                    headingTextSize: 14,
+                    subHeadingTextSize: 13,
+                  ),
+                  DetailBox(
+                    heading: Languages.of(context)!.labelEmail,
+                    subHeading: "${email}",
+                    icon: Icons.mail,
+                    headingTextSize: 14,
+                    subHeadingTextSize: 13,
+                  ),
+                  DetailBox(
+                    heading: Languages.of(context)!.labelDOB,
+                    subHeading: "${dob}",
+                    icon: Icons.calendar_month,
+                    headingTextSize: 14,
+                    subHeadingTextSize: 13,
+                  ),
+                  /*buildProfileSection(Languages.of(context)!.labelLastname, lastName),
+                buildProfileSection(Languages.of(context)!.labelEmail, email),
+               // buildProfileSection(Languages.of(context)!.labelUsername, userName),
+                buildBirthdateSection(),*/
                 ],
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            DetailBox(
-              heading: Languages.of(context)!.labelName,
-              subHeading: "${firstName} ${lastName}",
-              icon: Icons.person,
-              headingTextSize: 14, subHeadingTextSize: 13,
-            ),
-            DetailBox(
-              heading: Languages.of(context)!.labelEmail,
-              subHeading: "${email}",
-              icon: Icons.mail,
-              headingTextSize: 14, subHeadingTextSize: 13,
-            ),
-            DetailBox(
-              heading: Languages.of(context)!.labelDOB,
-              subHeading: "${dob}",
-              icon: Icons.calendar_month,
-              headingTextSize: 14, subHeadingTextSize: 13,
-            ),
-            /*buildProfileSection(Languages.of(context)!.labelLastname, lastName),
-            buildProfileSection(Languages.of(context)!.labelEmail, email),
-           // buildProfileSection(Languages.of(context)!.labelUsername, userName),
-            buildBirthdateSection(),*/
-          ],
+
+            ],
+          ),
         ),
+          isLoading
+              ? Stack(
+            children: [
+              // Block interaction
+              ModalBarrier(
+                dismissible: false,
+              ),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
+              : SizedBox(),
+        ],
       ),
     );
   }
@@ -295,16 +359,16 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Photo Library'),
                 onTap: () {
-                  getImage(ImageSource.gallery);
                   Navigator.of(context).pop();
+                  getImage(ImageSource.gallery);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.photo_camera),
                 title: const Text('Camera'),
                 onTap: () {
-                  getImage(ImageSource.camera);
                   Navigator.of(context).pop();
+                  getImage(ImageSource.camera);
                 },
               ),
             ],
@@ -370,6 +434,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   }
 
   Future<void> _uploadProfilePic(File? file) async {
+    setState(() {
+      isLoading = true;
+    });
     await Future.delayed(Duration(milliseconds: 2));
     await Provider.of<MainViewModel>(context, listen: false)
         .putMultiFormResponse(
@@ -377,21 +444,5 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
     getProfileResponse(context, apiResponse);
-  }
-
-  Future<ProfileResponse?> _fetchData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    ProfileResponse? profileDetails = await Helper.getProfileDetails();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        firstName = profileDetails?.firstName;
-        lastName = profileDetails?.lastName;
-        dob = profileDetails?.dob;
-        email = profileDetails?.email;
-        imageUrl = profileDetails?.imageUrl;
-        isDataLoading = false;
-      });
-    });
-    return profileDetails;
   }
 }

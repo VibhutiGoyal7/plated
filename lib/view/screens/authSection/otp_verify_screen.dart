@@ -140,7 +140,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         // Navigate to the new screen after receiving the response
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        ToastComponent.showToast(context: context, message: apiResponse?.message);
+        ToastComponent.showToast(
+            context: context, message: apiResponse?.message);
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -162,7 +163,6 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,7 +171,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                   width: screenWidth,
                   height: screenHeight * 0.15,
                   margin: EdgeInsets.zero,
-                  child: _buildLabelText(context, "PIN \n VERIFICATION ", 28, true),
+                  child: _buildLabelText(
+                      context, "OTP \n VERIFICATION ", 28, true),
                   alignment: AlignmentDirectional.center,
                 ),
                 Expanded(
@@ -181,8 +182,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                     margin: EdgeInsets.zero,
                     child: Card(
                       margin: EdgeInsets.all(0),
-                      shape:
-                          RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -191,9 +192,16 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
                           SizedBox(height: 4),*/
                           SizedBox(height: 20),
-                          Center(
-                            child: _buildLabelText(context,
-                                Languages.of(context)!.labelEnterCode, 20, true),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Center(
+                              child: _buildLabelText(
+                                  context,
+                                  Languages.of(context)!.labelEnterCode,
+                                  14,
+                                  true),
+                            ),
                           ),
                           SizedBox(height: 4),
                           Center(
@@ -234,17 +242,17 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           ),
           isLoading
               ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false,
+                        color: Colors.black.withOpacity(0.3)),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox(),
         ],
       ),

@@ -83,12 +83,12 @@ class _SettingScreenState extends State<SettingScreen> {
                 onTap: () => {_showLogOutDialog()},
                 child: Icon(
                   Icons.logout,
-                  size: 34,
-                  color: AppColor.WHITE,
+                  size: 28,
+                  color: AppColor.PRIMARY,
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 15,
               )
             ],
           )
@@ -171,6 +171,15 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                     ]),
               ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: screenWidth * 7,
+                  height: 0.5,
+                  margin: EdgeInsets.only(top: 14),
+                  decoration: BoxDecoration(color: Colors.grey),
+                ),
+              ),
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
                   padding: EdgeInsets.all(6.0),
@@ -180,14 +189,6 @@ class _SettingScreenState extends State<SettingScreen> {
                       _buildLabelText(
                           context, Languages.of(context)!.labelSecurity),
                       SizedBox(width: 10,),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          width: screenWidth * 0.7,
-                          height: 0.5,
-                          decoration: BoxDecoration(color: Colors.grey),
-                        ),
-                      ),
                     ],
                   )),
               DetailBox(
@@ -198,6 +199,16 @@ class _SettingScreenState extends State<SettingScreen> {
                 subHeadingTextSize: 13,
               ),
               _buildBiometricCard(context, "Enable App Lock", isDarkMode),
+
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: screenWidth * 7,
+                  height: 0.5,
+                  margin: EdgeInsets.only(top: 14),
+                  decoration: BoxDecoration(color: Colors.grey),
+                ),
+              ),
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
                   padding: EdgeInsets.all(6.0),
@@ -206,14 +217,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     children: [
                       _buildLabelText(context, "Privacy"),
                       SizedBox(width: 10,),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          width: screenWidth * 0.7,
-                          height: 0.5,
-                          decoration: BoxDecoration(color: Colors.grey),
-                        ),
-                      ),
+
                     ],
                   )),
               GestureDetector(

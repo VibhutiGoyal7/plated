@@ -1,6 +1,6 @@
 import 'Languages.dart';
 
-class LanguageEn extends Languages {
+class LanguageEnUk extends Languages {
   @override
   String get appName => "Payorio";
 

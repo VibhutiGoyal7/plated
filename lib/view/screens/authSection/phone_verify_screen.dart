@@ -157,6 +157,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
         countryList = countryListResponse!.countries!;
         selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
+        countryCode = int.parse("${countryListResponse?.countries?[0].id}");
+        phoneCode = "+${countryListResponse?.countries?[0].phoneCode}";
         print("countriess ${countryList}");
 
         //_showPicker(context: context);
@@ -291,7 +293,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
-
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

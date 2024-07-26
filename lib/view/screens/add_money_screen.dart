@@ -3,6 +3,7 @@ import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -198,7 +199,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                     _buildPhoneInput(
-                        context, Languages.of(context)!.labelZero, _amountController),
+                        context, "0", _amountController),
                /*     Padding(
                       padding:
                           const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
@@ -248,6 +249,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               onChanged: (value) {
                 _isValidInput();
               },
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly, // This allows only digits (0-9)
+              ],
               maxLength: 6,
               textAlign: TextAlign.center,
               onSubmitted: (value) {},
