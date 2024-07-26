@@ -42,7 +42,6 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     super.initState();
     docType = "${widget.data?.docType}";
     imageFile = widget.data?.imageFile;
-
   }
 
   Future<Widget> vidKycUploadResponse(
@@ -64,8 +63,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
         Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-
-        if(apiResponse?.message== "Invalid access token")
+        if (apiResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -92,9 +90,10 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return WillPopScope(
-      onWillPop: _onWillPop ,
+      onWillPop: _onWillPop,
       child: Scaffold(
-          appBar: AppBar(toolbarHeight: 65,
+          appBar: AppBar(
+            toolbarHeight: 65,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -113,8 +112,8 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                   child: Column(
                     children: [
                       Container(
-                          margin:
-                              EdgeInsets.only(left: 0, right: 0, bottom: 4, top: 10),
+                          margin: EdgeInsets.only(
+                              left: 0, right: 0, bottom: 4, top: 10),
                           alignment: Alignment.center,
                           height: screenHeight * 0.65,
                           width: double.infinity,
@@ -122,8 +121,8 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                               ? videoPlayerController != null &&
                                       videoPlayerController.value.isInitialized
                                   ? AspectRatio(
-                                      aspectRatio:
-                                          videoPlayerController.value.aspectRatio,
+                                      aspectRatio: videoPlayerController
+                                          .value.aspectRatio,
                                       child: VideoPlayer(videoPlayerController),
                                     )
                                   : Text('No video selected')
@@ -138,17 +137,17 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                   )),
               isLoading
                   ? Stack(
-                children: [
-                  // Block interaction
-                  ModalBarrier(
-                      dismissible: false,
-                      color: Colors.black.withOpacity(0.3)),
-                  // Loader indicator
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
-              )
+                      children: [
+                        // Block interaction
+                        ModalBarrier(
+                            dismissible: false,
+                            color: Colors.black.withOpacity(0.3)),
+                        // Loader indicator
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    )
                   : SizedBox(),
             ],
           )),
@@ -159,14 +158,18 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     print("docType: ${docType}");
     await Provider.of<MainViewModel>(context, listen: false)
-        .postMultiFormResponse("/api/v1/app/kyc_documents",imageFile as File,
-            docType, videoFile, );
+        .postMultiFormResponse(
+      "/api/v1/app/kyc_documents",
+      imageFile as File,
+      docType,
+      videoFile,
+    );
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
     vidKycUploadResponse(context, apiResponse);
   }
 
-  Widget _buildScreen(BuildContext context){
+  Widget _buildScreen(BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -174,22 +177,42 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
           child: Image(
             alignment: Alignment.topLeft,
             //width: 25,
-            height: MediaQuery.of(context).size.height*0.2,
+            height: MediaQuery.of(context).size.height * 0.2,
             image: AssetImage("assets/video-recording.png"),
           ),
         ),
-        SizedBox(height: 25,),
+        SizedBox(
+          height: 25,
+        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("Record a video", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),),
-            SizedBox(height: 10,),
-            Text("This is to verify you are a real person", style: TextStyle(fontWeight: FontWeight.w600,fontSize: 14),),
-            SizedBox(height: 6,),
-            Text("1. First position your face in the frame.", style: TextStyle(fontSize: 14),),
-            SizedBox(height: 6,),
-            Text("2. Then, turn your head slowly to both sides.", style: TextStyle(fontSize: 14),),
+            Text(
+              "Record a video",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "This is to verify you are a real person",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            Text(
+              "1. First position your face in the frame.",
+              style: TextStyle(fontSize: 14),
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            Text(
+              "2. Then, turn your head slowly to both sides.",
+              style: TextStyle(fontSize: 14),
+            ),
           ],
         ),
       ],
@@ -205,6 +228,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
+                /* setState(() {
+                  isVideoRecorded = true;
+                });*/
                 if (isVideoRecorded) {
                   setState(() {
                     isLoading = true;
@@ -222,15 +248,15 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                       );
                     });
                   } else {
-                    if(videoFile!=null || videoFile !="" ) {
-                      isVideoRecorded =true;
+                    if (videoFile != null || videoFile != "") {
+                      setState(() {
+                        isVideoRecorded = true;
+                      });
                       _uploadProfilePic(videoFile);
-                    }
-                    else{
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                          Text("Could not record video."),
+                          content: Text("Could not record video."),
                           duration: maxDuration,
                         ),
                       );
@@ -258,6 +284,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   }
 
   Future _startVideo(ImageSource img) async {
+    if (videoPlayerController != null) {
+      await videoPlayerController.dispose();
+    }
     final pickedFile = await picker.pickVideo(
       source: img,
       maxDuration: const Duration(seconds: 15),
@@ -268,17 +297,17 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
       () {
         if (xfilePick != null) {
           setState(() {
-
             videoFile = File(pickedFile!.path) as File;
             videoPlayerController = VideoPlayerController.file(videoFile)
               ..initialize().then((_) {
-
                 setState(() {
                   final duration = videoPlayerController?.value.duration;
                   if (duration != null && duration < Duration(seconds: 5)) {
                     // Handle the case where the video is too short
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Video is too short. Minimum duration is 5 seconds.')),
+                      SnackBar(
+                          content: Text(
+                              'Video is too short. Minimum duration is 5 seconds.')),
                     );
                     isVideoRecorded = false;
 
@@ -290,7 +319,6 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                     isVideoRecorded = true;
                   }
                 });
-
               });
             setState(() {});
           });
