@@ -1,5 +1,6 @@
 class CompleteP2PRequest {
    String? otp;
+   String? tpin;
    int? paymentTransactionId;
    int? customerOtpId;
    String? amount;
@@ -10,6 +11,7 @@ class CompleteP2PRequest {
 
    CompleteP2PRequest({
     this.otp,
+    this.tpin,
     this.paymentTransactionId,
     this.customerOtpId,
      this.amount,
@@ -22,6 +24,7 @@ class CompleteP2PRequest {
   Map<String, dynamic> toJson() {
     return {
       'otp': otp,
+      'tpin': tpin,
       'payment_transaction_id': paymentTransactionId,
       'customer_otp_id': customerOtpId,
       'amount': amount,

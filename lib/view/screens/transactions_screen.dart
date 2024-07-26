@@ -94,9 +94,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       int pageKey, bool filterApplied, bool isScroll) async {
     print("Fetch Data");
     try {
-      /*setState(() {
-        isLoading = true;
-      });*/
+      setState(() {
+        //_isLoadingMore = true;
+      });
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
         setState(() {
@@ -329,10 +329,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                               (_isLoadingMore ? 1 : 0),
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            /* if (index == dates.length) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }*/
+                                            if (index == dates.length) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
                                             String date = dates[index];
                                             List<TransactionDetails>
                                                 transactionsForDate =
@@ -386,20 +387,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
               ),
             ),
-            /*    isLoading
+            isLoading
                 ? Stack(
               children: [
                 // Block interaction
                 ModalBarrier(
-                    dismissible: false,
-                    color: Colors.black.withOpacity(0.3)),
+                    dismissible: false,),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),
                 ),
               ],
             )
-                : SizedBox(),*/
+                : SizedBox(),
           ],
         ),
       ),
