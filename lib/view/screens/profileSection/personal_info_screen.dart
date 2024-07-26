@@ -108,7 +108,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -195,7 +195,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             DetailBox(
               heading: Languages.of(context)!.labelName,

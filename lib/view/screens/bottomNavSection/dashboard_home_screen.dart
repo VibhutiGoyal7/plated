@@ -27,6 +27,7 @@ class DashboardHomeScreen extends StatefulWidget {
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatus = "";
+  String dashBoardKycStatus = "";
   String kycStatusApi = "";
   String? amount = "0.00";
   String? currencySymbol = "";
@@ -130,6 +131,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         await Helper.saveCurrencySymbol(
             dashboardResponse?.customerData?.countryCurrencySymbol);
         setState(() {
+          dashBoardKycStatus = dashboardResponse?.customerData?.kycStatus == null
+              ? ""
+              : "${dashboardResponse?.customerData?.kycStatus}";
           name = dashboardResponse?.customerData?.firstName == null
               ? "Name"
               : dashboardResponse?.customerData?.firstName;
@@ -285,236 +289,289 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           Column(
             children: [
               AnnotatedRegion<SystemUiOverlayStyle>(
-                value: isDarkMode
-                    ? SystemUiOverlayStyle.light
-                    : SystemUiOverlayStyle.dark,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: screenHeight * 0.27,
-                        child: Image(
+                  value: isDarkMode
+                      ? SystemUiOverlayStyle.light
+                      : SystemUiOverlayStyle.dark,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0.0),
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
                           height: screenHeight * 0.27,
-                          image: AssetImage("assets/header.png"),
-                          fit: BoxFit.fill,
+                          child: Image(
+                            height: screenHeight * 0.27,
+                            image: AssetImage("assets/header.png"),
+                            fit: BoxFit.fill,
+                          ),
+                          alignment: AlignmentDirectional.center,
                         ),
-                        alignment: AlignmentDirectional.center,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 18),
-                        child: Column(
-                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        child: GestureDetector(
-                                          onTap: () => {
-                                            Navigator.pushNamed(
-                                                context, '/ProfileScreen')
-                                          },
-                                          child: imageUrl == null ||
-                                                  imageUrl == ""
-                                              ? Container(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 18),
+                          child: Column(
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                8.0),
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () => {
+                                              Navigator.pushNamed(context,
+                                                  '/ProfileScreen')
+                                            },
+                                            child: imageUrl == null ||
+                                                imageUrl == ""
+                                                ? Container(
+                                              height: 45,
+                                              width: 45,
+                                              child: CircleAvatar(
+                                                radius: 30,
+                                                backgroundColor:
+                                                AppColor.WHITE,
+                                                backgroundImage:
+                                                AssetImage(
+                                                  "assets/profile_user.png",
+                                                ),
+                                              ),
+                                            )
+                                                : ClipRRect(
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(
+                                                    100.0),
+                                                child: Image.network(
+                                                  imageUrl as String,
                                                   height: 45,
                                                   width: 45,
-                                                  child: CircleAvatar(
-                                                    radius: 30,
-                                                    backgroundColor:
-                                                        AppColor.WHITE,
-                                                    backgroundImage: AssetImage(
-                                                      "assets/profile_user.png",
-                                                    ),
-                                                  ),
-                                                )
-                                              : ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100.0),
-                                                  child: Image.network(
-                                                    imageUrl as String,
-                                                    height: 45,
-                                                    width: 45,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder:
-                                                        (BuildContext context,
-                                                            Object exception,
-                                                            StackTrace?
-                                                                stackTrace) {
-                                                      // You can return any widget here to display in case of an error
-                                                      return Container(
-                                                        height: 45,
-                                                        width: 45,
-                                                        child: CircleAvatar(
-                                                          radius: 30,
-                                                          backgroundColor:
-                                                              AppColor.WHITE,
-                                                          backgroundImage:
-                                                              AssetImage(
-                                                            "assets/profile_user.png",
-                                                          ),
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder:
+                                                      (BuildContext
+                                                  context,
+                                                      Object
+                                                      exception,
+                                                      StackTrace?
+                                                      stackTrace) {
+                                                    // You can return any widget here to display in case of an error
+                                                    return Container(
+                                                      height: 45,
+                                                      width: 45,
+                                                      child:
+                                                      CircleAvatar(
+                                                        radius: 30,
+                                                        backgroundColor:
+                                                        AppColor
+                                                            .WHITE,
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/profile_user.png",
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  loadingBuilder:
+                                                      (BuildContext
+                                                  context,
+                                                      Widget
+                                                      child,
+                                                      ImageChunkEvent?
+                                                      loadingProgress) {
+                                                    if (loadingProgress ==
+                                                        null) {
+                                                      return child;
+                                                    } else {
+                                                      return Shimmer
+                                                          .fromColors(
+                                                        baseColor: Colors
+                                                            .black45,
+                                                        highlightColor:
+                                                        Colors
+                                                            .black87,
+                                                        child:
+                                                        Container(
+                                                          height: 40,
+                                                          width: 40,
+                                                          color: Colors
+                                                              .grey,
                                                         ),
                                                       );
-                                                    },
-                                                    loadingBuilder: (BuildContext
-                                                            context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                      if (loadingProgress ==
-                                                          null) {
-                                                        return child;
-                                                      } else {
-                                                        return Shimmer
-                                                            .fromColors(
-                                                          baseColor:
-                                                              Colors.black45,
-                                                          highlightColor:
-                                                              Colors.black87,
-                                                          child: Container(
-                                                            height: 40,
-                                                            width: 40,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        );
-                                                      }
-                                                    },
-                                                  )),
+                                                    }
+                                                  },
+                                                )),
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      // Add space between avatar and text
-                                      Text(
-                                        "${Languages.of(context)!.labelHi}, $name",
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-
-                                      Spacer(),
-                                      IconButton(
-                                        icon: Icon(
-                                          isAmountVisible
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
-                                          size: 24,
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                        onPressed: () {
-                                          setState(
-                                            () {
-                                              isAmountVisible =
-                                                  !isAmountVisible;
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.notifications,
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                        onPressed: () => {
-                                          Navigator.pushNamed(
-                                              context, "/NotificationScreen")
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 35,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 25,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
+                                        SizedBox(width: 8),
+                                        // Add space between avatar and text
                                         Text(
-                                          Languages.of(context)!
-                                              .labelTotalBalance,
+                                          "${Languages.of(context)!.labelHi}, $name",
                                           style: TextStyle(
-                                              fontSize: 15.0,
-                                              letterSpacing: 1.25),
+                                              fontSize: 16.0,
+                                              fontWeight:
+                                              FontWeight.w600),
+                                        ),
+                                        SizedBox(width: 4,),
+                                        dashBoardKycStatus == "verified" ? Icon(Icons.verified, color: Colors.green.shade700,): SizedBox(),
+
+                                        Spacer(),
+                                        IconButton(
+                                          icon: Icon(
+                                            isAmountVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            size: 24,
+                                            color: isDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                          onPressed: () {
+                                            setState(
+                                                  () {
+                                                isAmountVisible =
+                                                !isAmountVisible;
+                                              },
+                                            );
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.notifications,
+                                            color: isDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                          onPressed: () => {
+                                            Navigator.pushNamed(context,
+                                                "/NotificationScreen")
+                                          },
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Text(
-                                    addCurrencySymbol(currencySymbol,
-                                        "${isAmountVisible ? amount : "**"}  "),
-                                    style: TextStyle(
-                                      fontSize: 26.0,
-                                      fontWeight: FontWeight.w600,
+                                  ],
+                                ),
+                              ),
+                              (dashBoardKycStatus != "" && dashBoardKycStatus != "verified" && dashBoardKycStatus!= null)?
+                              Column(
+                                children: [
+                                  SizedBox(height: 15,),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(horizontal: 5, ),
+                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                      decoration: BoxDecoration(
+                                          color: AppColor.WHITE,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border(top: BorderSide(color:  Colors.red,width: 0.8), bottom:  BorderSide(color:  Colors.red,width: 0.8),
+                                              left:  BorderSide(color:  Colors.red,width: 0.8), right:  BorderSide(color:  Colors.red,width: 0.8))
+                                      ),
+                                      child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text("KYC NON-VERIFIED", style: TextStyle(fontSize: 10),),
+                                            SizedBox(width: 4,),
+                                            Icon(Icons.do_not_disturb_on, size: 18,color: Colors.red,)
+                                          ]
+                                      ),
                                     ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
                                   ),
                                 ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Card(
-                              elevation: 2,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 18),
-                              child: Container(
-                                  width: screenWidth,
-                                  height: screenHeight * 0.16,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
+                              ) : SizedBox(height: 36,),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 25,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                    children: List.generate(
-                                      4,
-                                      (index) {
-                                        if (index <= 2) {
-                                          return _buildContainer(
-                                              context,
-                                              _shortcutCardsList[index].title,
-                                              _shortcutCardsList[index].icon);
-                                        } else {
-                                          return _buildContainer(context,
-                                              "More", Icons.more_horiz);
-                                        }
-                                      },
+                                        children: [
+                                          Text(
+                                            Languages.of(context)!
+                                                .labelTotalBalance,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                letterSpacing: 1.25),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  )),
-                            ),
-                            /*Padding(
+                                    Text(
+                                      addCurrencySymbol(currencySymbol,
+                                          "${isAmountVisible ? amount : "**"}  "),
+                                      style: TextStyle(
+                                        fontSize: 26.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Card(
+                                elevation: 2,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 8),
+                                child: Container(
+                                    width: screenWidth,
+                                    height: screenHeight * 0.14,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: List.generate(
+                                        4,
+                                            (index) {
+                                          if (index <= 2) {
+                                            return _buildContainer(
+                                                context,
+                                                _shortcutCardsList[index]
+                                                    .title,
+                                                _shortcutCardsList[index]
+                                                    .icon);
+                                          } else {
+                                            return _buildContainer(
+                                                context,
+                                                "More",
+                                                Icons.more_horiz);
+                                          }
+                                        },
+                                      ),
+                                    )),
+                              ),
+                              /*Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
                           Languages.of(context)!.labelNews,
@@ -584,134 +641,141 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                             ),
 
-                            Container(
-                              margin:
-                                  EdgeInsets.only(top: 6, left: 6, right: 6),
-                              child: isInternetConnected && !isLoading
-                                  ? ListView.builder(
-                                      physics:
-                                          const AlwaysScrollableScrollPhysics(),
-                                      controller: _scrollController,
-                                      itemCount:
-                                          transactionList.length > 0 ? 3 : 0,
-                                      shrinkWrap: true,
-                                      padding: const EdgeInsets.only(bottom: 6),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Card(
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 4),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: 6, left: 6, right: 6),
+                                child: isInternetConnected && !isLoading
+                                    ? ListView.builder(
+                                  physics:
+                                  const AlwaysScrollableScrollPhysics(),
+                                  controller: _scrollController,
+                                  itemCount:
+                                  transactionList.length > 0
+                                      ? 3
+                                      : 0,
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.only(
+                                      bottom: 6),
+                                  itemBuilder:
+                                      (BuildContext context,
+                                      int index) {
+                                    return Card(
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(
+                                            12),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets
+                                            .symmetric(
+                                            vertical: 10),
+                                        child: Container(
+                                          margin:
+                                          EdgeInsets.symmetric(
+                                              vertical: 4),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .center,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        height: 50,
-                                                        width: 50,
-                                                        child: Card(
-                                                            shape: CircleBorder(
-                                                                side: BorderSide(
-                                                                    width: 0,
-                                                                    color: colorStatus(
-                                                                        capitalizeFirstLetter(
-                                                                            "${transactionList[index].status}")))),
-                                                            color: colorStatus(
-                                                                capitalizeFirstLetter(
-                                                                    "${transactionList[index].status}")),
-                                                            child: Icon(
-                                                              Icons.call_made,
-                                                              color:
-                                                                  Colors.white,
-                                                            )),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 8,
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
+                                                  Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: Card(
+                                                        shape: CircleBorder(
+                                                            side: BorderSide(
+                                                                width:
+                                                                0,
+                                                                color: colorStatus(capitalizeFirstLetter(
+                                                                    "${transactionList[index].status}")))),
+                                                        color: colorStatus(
                                                             capitalizeFirstLetter(
-                                                                "${transactionList[index].paymentRequestId}"),
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 13),
-                                                          ),
-                                                          Text(
-                                                              capitalizeFirstLetter(
-                                                                  "${transactionList[index].status}"),
-                                                              style: TextStyle(
-                                                                  fontSize: 11,
-                                                                  color: colorStatus(
-                                                                      capitalizeFirstLetter(
-                                                                          "${transactionList[index].status}")))),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                                "${transactionList[index].status}")),
+                                                        child: Icon(
+                                                          Icons
+                                                              .call_made,
+                                                          color: Colors
+                                                              .white,
+                                                        )),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
                                                   ),
                                                   Column(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .start,
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Text(
-                                                          addCurrencySymbolTransaction(
-                                                              currencySymbol,
-                                                              "${transactionList[index].amount}",
-                                                              capitalizeFirstLetter(
-                                                                  "${transactionList[index].requestType}")),
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 13,
-                                                              color: colorPaymentType(
-                                                                  capitalizeFirstLetter(
-                                                                      "${transactionList[index].requestType}")))),
+                                                        capitalizeFirstLetter(
+                                                            "${transactionList[index].paymentRequestId}"),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .bold,
+                                                            fontSize:
+                                                            14),
+                                                      ),
                                                       Text(
-                                                          convertDateFormat(
-                                                              "${transactionList[index].createdAt}"),
+                                                          capitalizeFirstLetter(
+                                                              "${transactionList[index].status}"),
                                                           style: TextStyle(
-                                                              fontSize: 11)),
+                                                              fontSize:
+                                                              12,
+                                                              color:
+                                                              colorStatus(capitalizeFirstLetter("${transactionList[index].status}")))),
                                                     ],
                                                   ),
                                                 ],
                                               ),
-                                            ),
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    capitalizeFirstLetter(
+                                                        "${transactionList[index].amount}"),
+                                                    style:
+                                                    TextStyle(
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                      convertDateFormat(
+                                                          "${transactionList[index].createdAt}"),
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                          12)),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                        // I omit the part to build card items from the list
-                                      },
-                                    )
-                                  : Container(
-                                      //child: ShimmerCard()
+                                        ),
                                       ),
-                            ),
-                          ],
+                                    );
+                                    // I omit the part to build card items from the list
+                                  },
+                                )
+                                    : Container(
+                                    child: ShimmerList(itemCount: 3,)
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                  ),
             ],
           ),
           isApiLoading
@@ -959,8 +1023,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       children: [
         Container(
             margin: EdgeInsets.only(bottom: 5),
-            width: 62,
-            height: 62,
+            width: 51,
+            height: 51,
             decoration: BoxDecoration(
               color: AppColor.PRIMARY,
               borderRadius: BorderRadius.circular(40.0),
@@ -981,7 +1045,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 icon: Icon(
                   icon,
                   color: AppColor.WHITE,
-                  size: 28,
+                  size: 22,
                 ))),
         Text(text, style: TextStyle(fontSize: 12))
       ],

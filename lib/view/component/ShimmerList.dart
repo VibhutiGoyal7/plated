@@ -8,7 +8,42 @@ class ShimmerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Column(
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Card(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+              height: 46,
+              width: 300,
+            ),
+          ),
+        ),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Card(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+              height: 46,
+              width: 300,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    /*ListView.builder(
       itemCount: itemCount, // Adjust the count based on your needs
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
@@ -27,6 +62,6 @@ class ShimmerList extends StatelessWidget {
           ),
         );
       },
-    );
+    );*/
   }
 }

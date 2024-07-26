@@ -211,153 +211,155 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  DetailBox( heading: Languages.of(context)!.enterPhoneNumber,
-                      subHeading: phoneNumber.toString() ?? '',
-                      icon: Icons.phone_android_outlined,
-                    headingTextSize: 14, subHeadingTextSize: 13,
-                  ),
-
-                  DetailBox( heading: Languages.of(context)!.labelUserId,
-                    subHeading: userId.toString() ?? '',
-                    icon: Icons.perm_identity_outlined,
-                    headingTextSize: 14, subHeadingTextSize: 13,
-                  ),
-                  _buildEmailVerification(
-                      context: context,
-                      isDarkMode: isDarkMode,
-                      isEmailVerified: isEmailVerified,
-                      onTap: () {
-                        if (isEmailVerified == false) {
-                          Navigator.pushNamed(context, '/VerifyEmail');
-                        }
-                      }),
-
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        Languages.of(context)!.labelUploadedDocs,
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+        
+                    DetailBox( heading: Languages.of(context)!.enterPhoneNumber,
+                        subHeading: phoneNumber.toString() ?? '',
+                        icon: Icons.phone_android_outlined,
+                      headingTextSize: 14, subHeadingTextSize: 13,
+                    ),
+        
+                    DetailBox( heading: Languages.of(context)!.labelUserId,
+                      subHeading: userId.toString() ?? '',
+                      icon: Icons.perm_identity_outlined,
+                      headingTextSize: 14, subHeadingTextSize: 13,
+                    ),
+                    _buildEmailVerification(
+                        context: context,
+                        isDarkMode: isDarkMode,
+                        isEmailVerified: isEmailVerified,
+                        onTap: () {
+                          if (isEmailVerified == false) {
+                            Navigator.pushNamed(context, '/VerifyEmail');
+                          }
+                        }),
+        
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          Languages.of(context)!.labelUploadedDocs,
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                        ),
                       ),
                     ),
-                  ),
-                  isInternetConnected && !isLoading
-                      ? Column(
-                    children: [
-                      if (isPassportAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelPassport,
-                            Languages.of(context)!.labelPhotoPage,
-                            '/DocImageScreen',
-                            'passport',
-                            "${passportImg}",
-                            "assets/passport.png",
-                            "${passportStatus}",
-                            "${passportRejectedReason}"),
-                      if (isDrivingLicenceAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelDrivingLicence,
-                            Languages.of(context)!.labelFrontNBack,
-                            '/DocImageScreen',
-                            'driving_licence',
-                            "${drivingLicenseImg}",
-                            "assets/license.png",
-                            "${drivingLicenceStatus}",
-                            "${drivingLicenceRejectedReason}"),
-                      if (isNationalIdAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelNationalId,
-                            Languages.of(context)!.labelFrontNBack,
-                            '/DocImageScreen',
-                            'national_id',
-                            "${nationalIdImg}",
-                            "assets/id_card.png",
-                            "${nationalIdStatus}",
-                            "${nationalIdRejectedReason}"),
-                      if (isAddressLycAvailable)
-                        _buildDocumentOption(
-                            context,
-                            "Address KYC",
-                            'Front ',
-                            '/DocImageScreen',
-                            'address_kyc',
-                            "${addressKycImg}",
-                            "assets/address.png",
-                            "${addressKycStatus}",
-                            "${addressKycRejectedReason}"),
-                      if (isBankStatementAvailable)
-                        _buildDocumentOption(
-                            context,
-                            "Bank Statement",
-                            'Front ',
-                            '/DocImageScreen',
-                            'bank_statement',
-                            "${bankStatementImg}",
-                            "assets/bank_statement.png",
-                            "${bankStatementStatus}",
-                            "${bankStatementRejectedReason}"),
-                      if (isGeoLocAvailable)
-                        _buildDocumentOption(
-                            context,
-                            "Geolocation KYC",
-                            'Front ',
-                            '/DocImageScreen',
-                            'geolocation_kyc',
-                            "${geoLocImg}",
-                            "assets/geo_Location.jpg",
-                            "${geoLocStatus}",
-                            "${geoLocRejectedReason}"),
-                      if (isKycVideoAvailable)
-                        _buildDocumentOption(
-                            context,
-                            Languages.of(context)!.labelVideoVerification,
-                            'Front ',
-                            '/VideoKycScreen',
-                            'video_kyc_clip',
-                            "${kycVideo}",
-                            "assets/video.png",
-                            "${kycVideoStatus}",
-                            "${kycVideoRejectedReason}"),
-
-                    ],
-                  )
-                      :
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ShimmerCard(),
-                  ),
-
-                ],
-              ),
-            ),
-           /* isLoading
-                ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,
-                    color: Colors.black.withOpacity(0.3)),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
+                    isInternetConnected && !isLoading
+                        ? Column(
+                      children: [
+                        if (isPassportAvailable)
+                          _buildDocumentOption(
+                              context,
+                              Languages.of(context)!.labelPassport,
+                              Languages.of(context)!.labelPhotoPage,
+                              '/DocImageScreen',
+                              'passport',
+                              "${passportImg}",
+                              "assets/passport.png",
+                              "${passportStatus}",
+                              "${passportRejectedReason}"),
+                        if (isDrivingLicenceAvailable)
+                          _buildDocumentOption(
+                              context,
+                              Languages.of(context)!.labelDrivingLicence,
+                              Languages.of(context)!.labelFrontNBack,
+                              '/DocImageScreen',
+                              'driving_licence',
+                              "${drivingLicenseImg}",
+                              "assets/license.png",
+                              "${drivingLicenceStatus}",
+                              "${drivingLicenceRejectedReason}"),
+                        if (isNationalIdAvailable)
+                          _buildDocumentOption(
+                              context,
+                              Languages.of(context)!.labelNationalId,
+                              Languages.of(context)!.labelFrontNBack,
+                              '/DocImageScreen',
+                              'national_id',
+                              "${nationalIdImg}",
+                              "assets/id_card.png",
+                              "${nationalIdStatus}",
+                              "${nationalIdRejectedReason}"),
+                        if (isAddressLycAvailable)
+                          _buildDocumentOption(
+                              context,
+                              "Address KYC",
+                              'Front ',
+                              '/DocImageScreen',
+                              'address_kyc',
+                              "${addressKycImg}",
+                              "assets/address.png",
+                              "${addressKycStatus}",
+                              "${addressKycRejectedReason}"),
+                        if (isBankStatementAvailable)
+                          _buildDocumentOption(
+                              context,
+                              "Bank Statement",
+                              'Front ',
+                              '/DocImageScreen',
+                              'bank_statement',
+                              "${bankStatementImg}",
+                              "assets/bank_statement.png",
+                              "${bankStatementStatus}",
+                              "${bankStatementRejectedReason}"),
+                        if (isGeoLocAvailable)
+                          _buildDocumentOption(
+                              context,
+                              "Geolocation KYC",
+                              'Front ',
+                              '/DocImageScreen',
+                              'geolocation_kyc',
+                              "${geoLocImg}",
+                              "assets/geo_Location.jpg",
+                              "${geoLocStatus}",
+                              "${geoLocRejectedReason}"),
+                        if (isKycVideoAvailable)
+                          _buildDocumentOption(
+                              context,
+                              Languages.of(context)!.labelVideoVerification,
+                              'Front ',
+                              '/VideoKycScreen',
+                              'video_kyc_clip',
+                              "${kycVideo}",
+                              "assets/video.png",
+                              "${kycVideoStatus}",
+                              "${kycVideoRejectedReason}"),
+        
+                      ],
+                    )
+                        :
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ShimmerCard(),
+                    ),
+        
+                  ],
                 ),
-              ],
-            )
-                : SizedBox(),*/
-          ],
+              ),
+             /* isLoading
+                  ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(
+                      dismissible: false,
+                      color: Colors.black.withOpacity(0.3)),
+                  // Loader indicator
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              )
+                  : SizedBox(),*/
+            ],
+          ),
         ),
       ),
     );

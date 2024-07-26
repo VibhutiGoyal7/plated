@@ -133,7 +133,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   alignment: Alignment.bottomCenter,
                   children: <Widget>[
                     Container(
-                      height: screenHeight * 0.2,
+                      height:  screenHeight * 0.2,
                       child: Image(
                         alignment: Alignment.topLeft,
                         width: screenWidth * 0.54,

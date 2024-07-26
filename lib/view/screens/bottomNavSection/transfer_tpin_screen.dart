@@ -144,12 +144,9 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(toolbarHeight: 65,leading: GestureDetector(
-        onTap: (){
-          Navigator.pop(context);
-        },
-        child: Icon(Icons.arrow_back),
-      ),),
+      /*appBar: AppBar(toolbarHeight: 65,leading:
+
+       ),*/
       body: Stack(
         children: [
 
@@ -160,21 +157,43 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                 Container(
                   width: screenWidth*0.95,
                   //height: screenHeight * 0.15,
-                  margin: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
+                  margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8),
                   child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
                   Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 2),
+                        child: Row(//mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Icons.arrow_back),
+                            ),
+                            SizedBox(width: 8,),
+                            Text("Paying to:", style: TextStyle(fontSize: 16),),
+                            Spacer(),
+                            Text("${widget.data?.fullName}", style: TextStyle(fontSize: 13 , fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                      ),
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("To:"),
+                          Text("Phone No:"),
+                          SizedBox(width: 10,),
+                          //Text("${widget.data?.fullName}"),
+
                           widget.data?.receiverPhoneNumber != null ?
                           Text("${widget.data?.receiverPhoneNumber}"):
                           Text("${widget.data?.receiverUsername}"),
                         ],
                       ),
+                      SizedBox(height: 2,),
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Sending:"),
+                          SizedBox(width: 10,),
                           Text(addCurrencySymbol(currencySymbol , "${widget.data?.amount}")),
                         ],
                       ),
@@ -209,7 +228,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
                               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                              width: screenWidth*0.55,
+                              width: screenWidth*0.65,
                               child: Text("You are transferring money to ${widget.data?.receiverUsername}",
                                 textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 13),),
                             ),
