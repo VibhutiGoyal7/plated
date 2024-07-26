@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/utils/Util.dart';
-import 'package:Payrio/view/component/ShimmerList.dart';
-import 'package:Payrio/view/component/news_offer_list_widget.dart';
-import 'package:Payrio/view/component/shimmer_card.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -186,7 +183,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         apiResponse.data as KycStatusResponse?;
     var message = apiResponse.message.toString();
     setState(() {
-
       isApiLoading = false;
     });
     print("message ${message}");
@@ -289,257 +285,236 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           Column(
             children: [
               AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: isDarkMode
-                      ? SystemUiOverlayStyle.light
-                      : SystemUiOverlayStyle.dark,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 0.0),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
+                value: isDarkMode
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.0),
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: screenHeight * 0.27,
+                        child: Image(
                           height: screenHeight * 0.27,
-                          child: Image(
-                            height: screenHeight * 0.27,
-                            image: AssetImage("assets/header.png"),
-                            fit: BoxFit.fill,
-                          ),
-                          alignment: AlignmentDirectional.center,
+                          image: AssetImage("assets/header.png"),
+                          fit: BoxFit.fill,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 18),
-                          child: Column(
-                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                height: 40,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 12.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                8.0),
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: () => {
-                                              Navigator.pushNamed(context,
-                                                  '/ProfileScreen')
-                                            },
-                                            child: imageUrl == null ||
-                                                imageUrl == ""
-                                                ? Container(
-                                              height: 45,
-                                              width: 45,
-                                              child: CircleAvatar(
-                                                radius: 30,
-                                                backgroundColor:
-                                                AppColor.WHITE,
-                                                backgroundImage:
-                                                AssetImage(
-                                                  "assets/profile_user.png",
-                                                ),
-                                              ),
-                                            )
-                                                : ClipRRect(
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(
-                                                    100.0),
-                                                child: Image.network(
-                                                  imageUrl as String,
+                        alignment: AlignmentDirectional.center,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 18),
+                        child: Column(
+                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () => {
+                                            Navigator.pushNamed(
+                                                context, '/ProfileScreen')
+                                          },
+                                          child: imageUrl == null ||
+                                                  imageUrl == ""
+                                              ? Container(
                                                   height: 45,
                                                   width: 45,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder:
-                                                      (BuildContext
-                                                  context,
-                                                      Object
-                                                      exception,
-                                                      StackTrace?
-                                                      stackTrace) {
-                                                    // You can return any widget here to display in case of an error
-                                                    return Container(
-                                                      height: 45,
-                                                      width: 45,
-                                                      child:
-                                                      CircleAvatar(
-                                                        radius: 30,
-                                                        backgroundColor:
-                                                        AppColor
-                                                            .WHITE,
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/profile_user.png",
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  loadingBuilder:
-                                                      (BuildContext
-                                                  context,
-                                                      Widget
-                                                      child,
-                                                      ImageChunkEvent?
-                                                      loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    } else {
-                                                      return Shimmer
-                                                          .fromColors(
-                                                        baseColor: Colors
-                                                            .black45,
-                                                        highlightColor:
-                                                        Colors
-                                                            .black87,
-                                                        child:
-                                                        Container(
-                                                          height: 40,
-                                                          width: 40,
-                                                          color: Colors
-                                                              .grey,
+                                                  child: CircleAvatar(
+                                                    radius: 30,
+                                                    backgroundColor:
+                                                        AppColor.WHITE,
+                                                    backgroundImage: AssetImage(
+                                                      "assets/profile_user.png",
+                                                    ),
+                                                  ),
+                                                )
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100.0),
+                                                  child: Image.network(
+                                                    imageUrl as String,
+                                                    height: 45,
+                                                    width: 45,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (BuildContext context,
+                                                            Object exception,
+                                                            StackTrace?
+                                                                stackTrace) {
+                                                      // You can return any widget here to display in case of an error
+                                                      return Container(
+                                                        height: 45,
+                                                        width: 45,
+                                                        child: CircleAvatar(
+                                                          radius: 30,
+                                                          backgroundColor:
+                                                              AppColor.WHITE,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                            "assets/profile_user.png",
+                                                          ),
                                                         ),
                                                       );
-                                                    }
-                                                  },
-                                                )),
-                                          ),
+                                                    },
+                                                    loadingBuilder: (BuildContext
+                                                            context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      } else {
+                                                        return Shimmer
+                                                            .fromColors(
+                                                          baseColor:
+                                                              Colors.black45,
+                                                          highlightColor:
+                                                              Colors.black87,
+                                                          child: Container(
+                                                            height: 40,
+                                                            width: 40,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  )),
                                         ),
-                                        SizedBox(width: 8),
-                                        // Add space between avatar and text
-                                        Text(
-                                          "${Languages.of(context)!.labelHi}, $name",
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight:
-                                              FontWeight.w600),
-                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      // Add space between avatar and text
+                                      Text(
+                                        "${Languages.of(context)!.labelHi}, $name",
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
 
-                                        Spacer(),
-                                        IconButton(
-                                          icon: Icon(
-                                            isAmountVisible
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
-                                            size: 24,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                          onPressed: () {
-                                            setState(
-                                                  () {
-                                                isAmountVisible =
-                                                !isAmountVisible;
-                                              },
-                                            );
-                                          },
+                                      Spacer(),
+                                      IconButton(
+                                        icon: Icon(
+                                          isAmountVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                          size: 24,
+                                          color: isDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.notifications,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                          onPressed: () => {
-                                            Navigator.pushNamed(context,
-                                                "/NotificationScreen")
-                                          },
+                                        onPressed: () {
+                                          setState(
+                                            () {
+                                              isAmountVisible =
+                                                  !isAmountVisible;
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.notifications,
+                                          color: isDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                        onPressed: () => {
+                                          Navigator.pushNamed(
+                                              context, "/NotificationScreen")
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 35,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 25,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          Languages.of(context)!
+                                              .labelTotalBalance,
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              letterSpacing: 1.25),
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Text(
+                                    addCurrencySymbol(currencySymbol,
+                                        "${isAmountVisible ? amount : "**"}  "),
+                                    style: TextStyle(
+                                      fontSize: 26.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(
-                                height: 35,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 25,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        crossAxisAlignment:
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Card(
+                              elevation: 2,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 18),
+                              child: Container(
+                                  width: screenWidth,
+                                  height: screenHeight * 0.16,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            Languages.of(context)!
-                                                .labelTotalBalance,
-                                            style: TextStyle(
-                                                fontSize: 15.0,
-                                                letterSpacing: 1.25),
-                                          ),
-                                        ],
-                                      ),
+                                    children: List.generate(
+                                      4,
+                                      (index) {
+                                        if (index <= 2) {
+                                          return _buildContainer(
+                                              context,
+                                              _shortcutCardsList[index].title,
+                                              _shortcutCardsList[index].icon);
+                                        } else {
+                                          return _buildContainer(context,
+                                              "More", Icons.more_horiz);
+                                        }
+                                      },
                                     ),
-                                    Text(
-                                      addCurrencySymbol(currencySymbol,
-                                          "${isAmountVisible ? amount : "**"}  "),
-                                      style: TextStyle(
-                                        fontSize: 26.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Card(
-                                elevation: 2,
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 18),
-                                child: Container(
-                                    width: screenWidth,
-                                    height: screenHeight * 0.16,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      children: List.generate(
-                                        4,
-                                            (index) {
-                                          if (index <= 2) {
-                                            return _buildContainer(
-                                                context,
-                                                _shortcutCardsList[index]
-                                                    .title,
-                                                _shortcutCardsList[index]
-                                                    .icon);
-                                          } else {
-                                            return _buildContainer(
-                                                context,
-                                                "More",
-                                                Icons.more_horiz);
-                                          }
-                                        },
-                                      ),
-                                    )),
-                              ),
-                              /*Padding(
+                                  )),
+                            ),
+                            /*Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
                           Languages.of(context)!.labelNews,
@@ -549,8 +524,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               letterSpacing: 1.25),
                         ),
                       ),*/
-                              // News and Offer List
-                              /* SizedBox(
+                            // News and Offer List
+                            /* SizedBox(
                         height: 15,
                       ),
                       NewsOfferListWidget(
@@ -558,213 +533,200 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         isInternetConnected: isInternetConnected,
                         isLoading: isLoading,
                       ),*/
-                              SizedBox(
-                                height: 30,
-                              ),
+                            SizedBox(
+                              height: 30,
+                            ),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${Languages.of(context)!.labelTransaction}s",
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${Languages.of(context)!.labelTransaction}s",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(context,
-                                            '/TransactionsScreen');
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "View all",
-                                            style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: AppColor.PRIMARY,
-                                                fontWeight:
-                                                FontWeight.w600),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/TransactionsScreen');
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "View all",
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: AppColor.PRIMARY,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            margin: EdgeInsets.only(bottom: 3),
+                                            width: screenWidth * 0.14,
+                                            height: 0.5,
+                                            decoration: BoxDecoration(
+                                                color: AppColor.PRIMARY),
                                           ),
-                                          Align(
-                                            alignment:
-                                            Alignment.bottomRight,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 6, left: 6, right: 6),
+                              child: isInternetConnected && !isLoading
+                                  ? ListView.builder(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      controller: _scrollController,
+                                      itemCount:
+                                          transactionList.length > 0 ? 3 : 0,
+                                      shrinkWrap: true,
+                                      padding: const EdgeInsets.only(bottom: 6),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Card(
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10),
                                             child: Container(
-                                              margin: EdgeInsets.only(
-                                                  bottom: 3),
-                                              width: screenWidth * 0.14,
-                                              height: 0.5,
-                                              decoration: BoxDecoration(
-                                                  color:
-                                                  AppColor.PRIMARY),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: 6, left: 6, right: 6),
-                                child: isInternetConnected && !isLoading
-                                    ? ListView.builder(
-                                  physics:
-                                  const AlwaysScrollableScrollPhysics(),
-                                  controller: _scrollController,
-                                  itemCount:
-                                  transactionList.length > 0
-                                      ? 3
-                                      : 0,
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.only(
-                                      bottom: 6),
-                                  itemBuilder:
-                                      (BuildContext context,
-                                      int index) {
-                                    return Card(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            12),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets
-                                            .symmetric(
-                                            vertical: 10),
-                                        child: Container(
-                                          margin:
-                                          EdgeInsets.symmetric(
-                                              vertical: 4),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment
-                                                .center,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .spaceBetween,
-                                            children: [
-                                              Row(
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 4),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: Card(
-                                                        shape: CircleBorder(
-                                                            side: BorderSide(
-                                                                width:
-                                                                0,
-                                                                color: colorStatus(capitalizeFirstLetter(
-                                                                    "${transactionList[index].status}")))),
-                                                        color: colorStatus(
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        height: 50,
+                                                        width: 50,
+                                                        child: Card(
+                                                            shape: CircleBorder(
+                                                                side: BorderSide(
+                                                                    width: 0,
+                                                                    color: colorStatus(
+                                                                        capitalizeFirstLetter(
+                                                                            "${transactionList[index].status}")))),
+                                                            color: colorStatus(
+                                                                capitalizeFirstLetter(
+                                                                    "${transactionList[index].status}")),
+                                                            child: Icon(
+                                                              Icons.call_made,
+                                                              color:
+                                                                  Colors.white,
+                                                            )),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
                                                             capitalizeFirstLetter(
-                                                                "${transactionList[index].status}")),
-                                                        child: Icon(
-                                                          Icons
-                                                              .call_made,
-                                                          color: Colors
-                                                              .white,
-                                                        )),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
+                                                                "${transactionList[index].paymentRequestId}"),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 13),
+                                                          ),
+                                                          Text(
+                                                              capitalizeFirstLetter(
+                                                                  "${transactionList[index].status}"),
+                                                              style: TextStyle(
+                                                                  fontSize: 11,
+                                                                  color: colorStatus(
+                                                                      capitalizeFirstLetter(
+                                                                          "${transactionList[index].status}")))),
+                                                        ],
+                                                      ),
+                                                    ],
                                                   ),
                                                   Column(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .start,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
                                                     children: [
                                                       Text(
-                                                        capitalizeFirstLetter(
-                                                            "${transactionList[index].paymentRequestId}"),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            fontSize:
-                                                            14),
-                                                      ),
-                                                      Text(
-                                                          capitalizeFirstLetter(
-                                                              "${transactionList[index].status}"),
+                                                          addCurrencySymbolTransaction(
+                                                              currencySymbol,
+                                                              "${transactionList[index].amount}",
+                                                              capitalizeFirstLetter(
+                                                                  "${transactionList[index].requestType}")),
                                                           style: TextStyle(
-                                                              fontSize:
-                                                              12,
-                                                              color:
-                                                              colorStatus(capitalizeFirstLetter("${transactionList[index].status}")))),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 13,
+                                                              color: colorPaymentType(
+                                                                  capitalizeFirstLetter(
+                                                                      "${transactionList[index].requestType}")))),
+                                                      Text(
+                                                          convertDateFormat(
+                                                              "${transactionList[index].createdAt}"),
+                                                          style: TextStyle(
+                                                              fontSize: 11)),
                                                     ],
                                                   ),
                                                 ],
                                               ),
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].amount}"),
-                                                    style:
-                                                    TextStyle(
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .w600,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                      convertDateFormat(
-                                                          "${transactionList[index].createdAt}"),
-                                                      style: TextStyle(
-                                                          fontSize:
-                                                          12)),
-                                                ],
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                        );
+                                        // I omit the part to build card items from the list
+                                      },
+                                    )
+                                  : Container(
+                                      //child: ShimmerCard()
                                       ),
-                                    );
-                                    // I omit the part to build card items from the list
-                                  },
-                                )
-                                    : Container(
-                                    //child: ShimmerCard()
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  ),
-            ],
-          ),
-          isApiLoading ?
-          Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
+                ),
               ),
             ],
-          )
+          ),
+          isApiLoading
+              ? Stack(
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false,
+                        color: Colors.black.withOpacity(0.3)),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox(),
         ]),
       ),

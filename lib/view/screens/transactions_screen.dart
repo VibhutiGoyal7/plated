@@ -96,7 +96,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       /*setState(() {
         isLoading = true;
       });*/
-
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
         setState(() {
@@ -104,13 +103,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content:
-              Text('No internet connection'),
+              content: Text('No internet connection'),
               duration: maxDuration,
             ),
           );
         });
-      }else {
+      } else {
         TransactionListRequest request = TransactionListRequest(
           pageNo: pageKey,
           pageSize: _numberOfPostsPerRequest,
@@ -121,11 +119,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         );
         await Provider.of<MainViewModel>(context, listen: false)
             .transactionListData(
-            "api/v1/app/payment_transactions/list", request);
+                "api/v1/app/payment_transactions/list", request);
         ApiResponse apiResponse =
-            Provider
-                .of<MainViewModel>(context, listen: false)
-                .response;
+            Provider.of<MainViewModel>(context, listen: false).response;
         await getTransactionData(context, apiResponse, pageKey, isScroll);
       }
     } catch (error) {
@@ -195,7 +191,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(toolbarHeight: 65,
+      appBar: AppBar(
+        toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -223,7 +220,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       body: Stack(
         children: [
-
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -243,15 +239,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             style: TextStyle(
                                 fontSize: 12.0, fontWeight: FontWeight.normal),
                           ),
-
-                          isInternetConnected && !isLoading?
-                          Text(
-                            addCurrencySymbol(countryCurrencySymbol,currentBalance),
-                            style: TextStyle(
-                                fontSize: 32.0,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 2),
-                          ) : ShimmerText(height: 32,width: 100,),
+                          isInternetConnected && !isLoading
+                              ? Text(
+                                  addCurrencySymbol(
+                                      countryCurrencySymbol, currentBalance),
+                                  style: TextStyle(
+                                      fontSize: 32.0,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 2),
+                                )
+                              : ShimmerText(
+                                  height: 32,
+                                  width: 100,
+                                ),
                           SizedBox(
                             height: 20,
                           ),
@@ -269,64 +269,81 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               topRight: Radius.circular(40))),
                       child: Container(
                         margin: EdgeInsets.only(top: 12),
-                        child:isInternetConnected && !isLoading ? FutureBuilder(
-                          future: _fetchDataFuture,
-                          builder:
-                              (BuildContext context, AsyncSnapshot<void> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Center(child: Text('Error loading data'));
-                            } else {
-                              // Group transactions by date
-                              Map<String, List<TransactionDetails>>
-                                  groupedTransactions = groupTransactionsByDate(
-                                      filterApplied
-                                          ? filteredTransactionList
-                                          : transactionList);
-                              List<String> dates =
-                                  groupedTransactions.keys.toList();
-
-                              return ListView.builder(
-                                controller: _scrollController,
-                                itemCount: dates.length + (_isLoadingMore ? 1 : 0),
-                                itemBuilder: (BuildContext context, int index) {
-                                  if (index == dates.length) {
+                        child: isInternetConnected && !isLoading
+                            ? FutureBuilder(
+                                future: _fetchDataFuture,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<void> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Center(
                                         child: CircularProgressIndicator());
-                                  }
-                                  String date = dates[index];
-                                  List<TransactionDetails> transactionsForDate =
-                                      groupedTransactions[date]!;
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                        child: Text('Error loading data'));
+                                  } else {
+                                    // Group transactions by date
+                                    Map<String, List<TransactionDetails>>
+                                        groupedTransactions =
+                                        groupTransactionsByDate(filterApplied
+                                            ? filteredTransactionList
+                                            : transactionList);
+                                    List<String> dates =
+                                        groupedTransactions.keys.toList();
 
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
+                                    return ListView.builder(
+                                      controller: _scrollController,
+                                      itemCount: dates.length +
+                                          (_isLoadingMore ? 1 : 0),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        if (index == dates.length) {
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        }
+                                        String date = dates[index];
+                                        List<TransactionDetails>
+                                            transactionsForDate =
+                                            groupedTransactions[date]!;
+
+                                        return Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            date,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 12),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  date,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 12),
+                                                ),
+                                              ),
+                                              ...transactionsForDate
+                                                  .map((transaction) {
+                                                return TransactionItem(
+                                                  transaction: transaction,
+                                                  symbol: countryCurrencySymbol,
+                                                );
+                                              }).toList(),
+                                            ],
                                           ),
-                                        ),
-                                        ...transactionsForDate.map((transaction) {
-                                          return TransactionItem(
-                                              transaction: transaction, symbol: countryCurrencySymbol,);
-                                        }).toList(),
-                                      ],
-                                    ),
-                                  );
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
-                              );
-                            }
-                          },
-                        ) : Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-                        child: ShimmerList(itemCount: 2),),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 18),
+                                child: ShimmerList(itemCount: 2),
+                              ),
                       ),
                     ),
                   ),
@@ -336,17 +353,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
           isLoading
               ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false,
+                        color: Colors.black.withOpacity(0.3)),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox(),
         ],
       ),
@@ -383,9 +400,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.cancel_outlined),
-                        style: ButtonStyle(
-                          iconSize: WidgetStateProperty.all(30)
-                        ),
+                        style:
+                            ButtonStyle(iconSize: WidgetStateProperty.all(30)),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -431,16 +447,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
       },
       child: Card(
-        color: status == text ? AppColor.PRIMARY : isDarkMode? AppColor.DARK_CARD_COLOR:  AppColor.WHITE,
+        color: status == text
+            ? AppColor.PRIMARY
+            : isDarkMode
+                ? AppColor.DARK_CARD_COLOR
+                : AppColor.WHITE,
         shape: RoundedRectangleBorder(
-            side: BorderSide(width: 0.5, color: status ==  text ? AppColor.PRIMARY : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR),
+            side: BorderSide(
+                width: 0.5,
+                color: status == text
+                    ? AppColor.PRIMARY
+                    : isDarkMode
+                        ? AppColor.WHITE
+                        : AppColor.DARK_CARD_COLOR),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: Text(
             text,
             style: TextStyle(
-              color: status == text ? AppColor.WHITE : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR,
+              color: status == text
+                  ? AppColor.WHITE
+                  : isDarkMode
+                      ? AppColor.WHITE
+                      : AppColor.DARK_CARD_COLOR,
             ),
           ),
         ),
@@ -456,16 +486,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
       },
       child: Card(
-        color: requestType == text ? AppColor.PRIMARY : isDarkMode? AppColor.DARK_CARD_COLOR:  AppColor.WHITE,
+        color: requestType == text
+            ? AppColor.PRIMARY
+            : isDarkMode
+                ? AppColor.DARK_CARD_COLOR
+                : AppColor.WHITE,
         shape: RoundedRectangleBorder(
-            side: BorderSide(width: 0.5, color:  requestType ==  text ? AppColor.PRIMARY : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR),
+            side: BorderSide(
+                width: 0.5,
+                color: requestType == text
+                    ? AppColor.PRIMARY
+                    : isDarkMode
+                        ? AppColor.WHITE
+                        : AppColor.DARK_CARD_COLOR),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: Text(
             text,
             style: TextStyle(
-              color: requestType == text ? AppColor.WHITE : isDarkMode? AppColor.WHITE:  AppColor.DARK_CARD_COLOR,
+              color: requestType == text
+                  ? AppColor.WHITE
+                  : isDarkMode
+                      ? AppColor.WHITE
+                      : AppColor.DARK_CARD_COLOR,
             ),
           ),
         ),
@@ -549,9 +593,7 @@ class TransactionItem extends StatelessWidget {
   final TransactionDetails transaction;
   final String symbol;
 
-  TransactionItem({required this.transaction,required this.symbol});
-
-
+  TransactionItem({required this.transaction, required this.symbol});
 
   @override
   Widget build(BuildContext context) {
@@ -560,12 +602,13 @@ class TransactionItem extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(width: 0.2, color:isDarkMode?AppColor.WHITE: Colors.black)),
+          side: BorderSide(
+              width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
           onTap: () {
-            _showPicker(context: context, transaction: transaction);
+            _showModal(context: context, transaction: transaction);
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 4),
@@ -611,9 +654,10 @@ class TransactionItem extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(addCurrencySymbol(symbol , "${transaction.amount}"),
+                    Text(addCurrencySymbolTransaction(symbol, "${transaction.amount}", capitalizeFirstLetter("${transaction.requestType}")),
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 15)),
+                            fontWeight: FontWeight.w600, fontSize: 14,
+                        color: colorPaymentType(capitalizeFirstLetter("${transaction.requestType}")))),
                     /*Text(convertDateFormat("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 12)),*/
                   ],
@@ -626,98 +670,141 @@ class TransactionItem extends StatelessWidget {
     );
   }
 
-  _showPicker(
+  void _showModal(
       {required BuildContext context,
       required TransactionDetails transaction}) {
-    showModalBottomSheet(
+    showDialog(
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-            margin: EdgeInsets.symmetric(vertical: 20),
-            child: Wrap(
-              children: <Widget>[
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Bank Service"),
-                    Text("${transaction.bankService}")
-                  ],
-                ),
-                transaction.amount != null
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Amount"),
-                          Text("${transaction.amount}")
-                        ],
-                      )
-                    : SizedBox(),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Status"), Text("${transaction.status}")],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Bank Type"),
-                    Text("${transaction.bankType}")
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Currency"), Text("${transaction.currency}")],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Request Type"),
-                    Text("${transaction.requestType}")
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Payment Request Id"),
-                    Text("${transaction.paymentRequestId}")
-                  ],
-                ),
-              ],
-            ),
-          ),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              scrollable: true,
+              insetPadding: EdgeInsets.all(10),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    margin: EdgeInsets.only(bottom: 6),
+                    child: Wrap(
+                      spacing: 20,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            capitalizeFirstLetter("${transaction.requestType}"),
+                            style: TextStyle(fontWeight: FontWeight.w700,
+                            fontSize: 16),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Bank Service :"),
+                                Text(capitalizeFirstLetter("${transaction.bankService}"))
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            transaction.amount != null
+                                ? Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Amount :"),
+                                Text(addCurrencySymbol(symbol, "${transaction.amount}"))
+                              ],
+                            )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Status :"),
+                                Text(capitalizeFirstLetter("${transaction.status}"),
+                                style: TextStyle(
+                                    color: colorStatus(capitalizeFirstLetter(
+                                        "${transaction.status}"))
+                                ),)
+                              ],
+                            ),
+
+                            transaction.bankType != null ? Column(
+                              children: [
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Bank Type :"),
+                                    Text(capitalizeFirstLetter("${transaction.bankType}"))
+                                  ],
+                                ),
+                              ],
+                            ) : SizedBox(),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Currency :"),
+                                Text("${transaction.currency}")
+                              ],
+                            ),
+                            /*SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Request Type"),
+                            Text("${transaction.requestType}")
+                          ],
+                        ),*/
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Payment Request Id :"),
+                                Text("${transaction.paymentRequestId}")
+                              ],
+                            ),
+                          ],
+                        )
+
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  colorStatus(String status) {
-    Color color = Colors.black;
-    if (status == "Pending") {
-      color = Colors.orange;
-    } else if (status == "Success") {
-      color = Colors.green;
-    } else if (status == "Rejected") {
-      color = Colors.red;
-    }
-    return color;
-  }
 }

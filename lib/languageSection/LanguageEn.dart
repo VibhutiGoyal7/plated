@@ -252,13 +252,15 @@ class LanguageEn extends Languages {
   String get labelEnterEmail => "Enter email address";
 
   @override
-  String get labelEnterOtpSentToEmail => "Enter the OTP sent to your email address";
+  String get labelEnterOtpSentToEmail =>
+      "Enter the OTP sent to your email address";
 
   @override
   String get labelVerifyYourEmail => "We need to verify your email";
 
   @override
-  String get verifyEmailSubTitle => "Please provide a valid email address, as you will be prompted for confirmation.";
+  String get verifyEmailSubTitle =>
+      "Please provide a valid email address, as you will be prompted for confirmation.";
 
   @override
   String get labelBalance => "Balance";
@@ -312,7 +314,8 @@ class LanguageEn extends Languages {
   String get labelStatusPending => "Status Pending";
 
   @override
-  String get labelAllowAccessSubtitle => "When prompted, you must enable camera access to continue.";
+  String get labelAllowAccessSubtitle =>
+      "When prompted, you must enable camera access to continue.";
 
   @override
   String get labelAllowCamAccess => "Allow Camera Access";
@@ -345,19 +348,23 @@ class LanguageEn extends Languages {
   String get labelUseDevice => "Use your device to:";
 
   @override
-  String get label2xEarnPayarioPtsWithMin1670 => 'Earn 2x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance';
+  String get label2xEarnPayarioPtsWithMin1670 =>
+      'Earn 2x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance';
 
   @override
   String get labelAccumulated => 'accumulated';
 
   @override
-  String get labelEarnPayarioPts => 'Earn 1x AstroPoints with payments made from your wallet balance';
+  String get labelEarnPayarioPts =>
+      'Earn 1x AstroPoints with payments made from your wallet balance';
 
   @override
-  String get labelEarnPayarioPtsWithMin1670 => 'Earn 1x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance';
+  String get labelEarnPayarioPtsWithMin1670 =>
+      'Earn 1x AstroPoints with payments with a minimum of 1670INR and made from your wallet balance';
 
   @override
-  String get labelExclusiveBenefits => 'Your exclusive level benefits will be displayed here.';
+  String get labelExclusiveBenefits =>
+      'Your exclusive level benefits will be displayed here.';
 
   @override
   String get labelGOld => "Gold";
@@ -399,18 +406,17 @@ class LanguageEn extends Languages {
   String get labelSelectCountryCode => "Select country code";
 
   @override
-  String get labelLogin =>  "Login";
+  String get labelLogin => "Login";
 
   @override
-  String get labelLogout =>   "Logout";
+  String get labelLogout => "Logout";
 
   @override
-  String get labelTransaction =>   "Transaction";
+  String get labelTransaction => "Transaction";
 
   @override
-  String get labelComingSoon =>   "Coming Soon";
+  String get labelComingSoon => "Coming Soon";
 
   @override
-  String get labelWithdraw =>   "Withdraw";
-
+  String get labelWithdraw => "Withdraw";
 }

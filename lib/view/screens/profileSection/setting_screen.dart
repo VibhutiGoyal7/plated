@@ -108,10 +108,15 @@ class _SettingScreenState extends State<SettingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        Languages.of(context)!.labelLanguage,
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.w600),
+                      GestureDetector(
+                       /* onTap: (){
+                          Navigator.of(context).pushNamed("/LanguageSelectionScreen");
+                        },*/
+                        child: Text(
+                          Languages.of(context)!.labelLanguage,
+                          style: TextStyle(
+                              fontSize: 15.0, fontWeight: FontWeight.w600),
+                        ),
                       ),
                       Container(
                         width: 120,
