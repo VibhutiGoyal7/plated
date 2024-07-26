@@ -61,13 +61,13 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     _fetchDocData();
 
   }
-
+/*
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Fetch data every time the screen becomes visible
     _fetchDocData();
-  }
+  }*/
 
   Future<Widget> getDocData(
       BuildContext context, ApiResponse apiResponse) async {
@@ -90,7 +90,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             passportStatus = mediaList?.passportImage?.verificationStatus;
             drivingLicenceStatus =
                 mediaList?.drivingLicenseImage?.verificationStatus;
-            kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
             addressKycStatus = mediaList?.addressKycData?.verificationStatus;
             bankStatementStatus = mediaList?.bankStatement?.verificationStatus;
             geoLocStatus = mediaList?.geolocation?.verificationStatus;
@@ -100,7 +99,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             passportRejectedReason = mediaList?.passportImage?.rejectionReason;
             drivingLicenceRejectedReason =
                 mediaList?.drivingLicenseImage?.rejectionReason;
-            kycVideoRejectedReason = mediaList?.videoClipUrl?.rejectionReason;
             addressKycRejectedReason =
                 mediaList?.addressKycData?.rejectionReason;
             bankStatementRejectedReason =
@@ -111,7 +109,6 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
             isNationalIdAvailable = (mediaList?.nationalIdImage?.availableInCountry !=null ) ? mediaList?.nationalIdImage?.availableInCountry as bool : false;
             isPassportAvailable = mediaList?.passportImage?.availableInCountry!=null ? mediaList?.passportImage?.availableInCountry as bool :false;
             isDrivingLicenceAvailable = mediaList?.drivingLicenseImage?.availableInCountry!=null ? mediaList?.drivingLicenseImage?.availableInCountry as bool :false;
-            isKycVideoAvailable = mediaList?.videoClipUrl?.availableInCountry!=null ? mediaList?.videoClipUrl?.availableInCountry as bool :false;
             isAddressLycAvailable = mediaList?.addressKycData?.availableInCountry!=null ? mediaList?.addressKycData?.availableInCountry as bool:false;
             isBankStatementAvailable = mediaList?.bankStatement?.availableInCountry!=null ? mediaList?.bankStatement?.availableInCountry as bool :false;
             isGeoLocAvailable = mediaList?.geolocation?.availableInCountry!=null ?  mediaList?.geolocation?.availableInCountry as bool:false;

@@ -113,13 +113,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             bankStatementImg = mediaList?.bankStatement?.kycDocsImageUrl;
             addressKycImg = mediaList?.addressKycData?.kycDocsImageUrl;
             geoLocImg = mediaList?.geolocation?.kycDocsImageUrl;
-            kycVideo = mediaList?.videoClipUrl?.kycDocsImageUrl;
 
             nationalIdStatus = mediaList?.nationalIdImage?.verificationStatus;
             passportStatus = mediaList?.passportImage?.verificationStatus;
             drivingLicenceStatus =
                 mediaList?.drivingLicenseImage?.verificationStatus;
-            kycVideoStatus = mediaList?.videoClipUrl?.verificationStatus;
             addressKycStatus = mediaList?.addressKycData?.verificationStatus;
             bankStatementStatus = mediaList?.bankStatement?.verificationStatus;
             geoLocStatus = mediaList?.geolocation?.verificationStatus;
@@ -129,7 +127,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             passportRejectedReason = mediaList?.passportImage?.rejectionReason;
             drivingLicenceRejectedReason =
                 mediaList?.drivingLicenseImage?.rejectionReason;
-            kycVideoRejectedReason = mediaList?.videoClipUrl?.rejectionReason;
             addressKycRejectedReason =
                 mediaList?.addressKycData?.rejectionReason;
             bankStatementRejectedReason =
@@ -147,10 +144,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
             isDrivingLicenceAvailable =
                 mediaList?.drivingLicenseImage?.availableInCountry != null
                     ? mediaList?.drivingLicenseImage?.availableInCountry as bool
-                    : false;
-            isKycVideoAvailable =
-                mediaList?.videoClipUrl?.availableInCountry != null
-                    ? mediaList?.videoClipUrl?.availableInCountry as bool
                     : false;
             isAddressLycAvailable =
                 mediaList?.addressKycData?.availableInCountry != null

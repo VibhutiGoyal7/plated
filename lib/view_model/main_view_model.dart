@@ -236,12 +236,12 @@ class MainViewModel with ChangeNotifier {
   }
 
   Future<void> postMultiFormResponse(
-      String value, File file, String docType, String imageName) async {
+      String value, File imgFile, String docType,  File videoFile) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
       UploadKycDocResponse uploadKycDocResponse = await MainRepository()
-          .postMultiFormResponse(value, file, docType, imageName);
+          .postMultiFormResponse(value, imgFile, docType, videoFile);
       print("Yess" + uploadKycDocResponse.message.toString());
       if (uploadKycDocResponse.userId != null) {
         _apiResponse = ApiResponse.completed(uploadKycDocResponse);
@@ -415,7 +415,7 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + fetchKycDocResponse.message.toString());
 
       // _apiResponse = ApiResponse.completed(fetchKycDocResponse);
-      if (fetchKycDocResponse.videoClipUrl?.userId != null) {
+      if (fetchKycDocResponse.passportImage?.userId != null) {
         _apiResponse = ApiResponse.completed(fetchKycDocResponse);
       } else {
         _apiResponse = ApiResponse.error(fetchKycDocResponse.message);

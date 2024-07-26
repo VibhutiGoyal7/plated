@@ -7,8 +7,10 @@ class UploadKycDocResponse {
   final int? userId;
   final String? verificationStatus;
   final String? rejectionReason;
+  final String? pendingReason;
   final String? idNumber;
   final String? kycDocsImageUrl;
+  final String? kycVidFile;
   final String? message;
 
   UploadKycDocResponse({
@@ -17,8 +19,10 @@ class UploadKycDocResponse {
     this.userId,
     this.verificationStatus,
     this.rejectionReason,
+    this.pendingReason,
     this.idNumber,
     this.kycDocsImageUrl,
+    this.kycVidFile,
     this.message,
   });
 
@@ -30,8 +34,10 @@ class UploadKycDocResponse {
       userId: json['data']?['id'] as int?,
       verificationStatus: json['data']?['verification_status'] as String?,
       rejectionReason: json['data']?['rejection_reason'] as String?,
+      pendingReason: json['data']?['pending_reason'] as String?,
       idNumber: json['data']?['id_number'] as String?,
-      kycDocsImageUrl: json['data']?['kyc_docs_image_url'] as String?,
+      kycDocsImageUrl: json['data']?['kyc_file_url'] as String?,
+      kycVidFile: json['data']?['kyc_video_url'] as String?,
     );
   }
 }

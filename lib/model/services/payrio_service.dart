@@ -174,8 +174,8 @@ class PayrioService extends BaseService {
     return responseJson;
   }
 
-  Future<dynamic> postMultiFormResponse(String url, File file,String docType, String imageName) async {
-    print("::::: File: $file");
+  Future<dynamic> postMultiFormResponse(String url, File imageFile,String docType,File videoFile) async {
+    print("::::: File: $imageFile");
     dynamic responseJson;
 
     try {
@@ -183,13 +183,21 @@ class PayrioService extends BaseService {
       var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
 
       // Add file
-      var stream = http.ByteStream(file.openRead());
-      var length = await file.length();
+      var stream = http.ByteStream(imageFile.openRead());
+      var length = await imageFile.length();
 
       // multipart that takes file
-      var multipartFile = http.MultipartFile(imageName, stream, length, filename: basename(file.path));
+      var multipartFile = http.MultipartFile("kyc_file", stream, length, filename: basename(imageFile.path));
       print("Multipart File: ${multipartFile.filename}");
+
+      var streamVid = http.ByteStream(videoFile.openRead());
+      var lengthVid = await videoFile.length();
+
+      // multipart that takes file
+      var multipartFileVid = http.MultipartFile("kyc_video", streamVid, lengthVid, filename: basename(videoFile.path));
+      print("MultipartVid File: ${multipartFileVid.filename}");
       requestBody.files.add(multipartFile);
+      requestBody.files.add(multipartFileVid);
       requestBody.fields['document_type'] = docType;
       //requestBody.
       // Add headers

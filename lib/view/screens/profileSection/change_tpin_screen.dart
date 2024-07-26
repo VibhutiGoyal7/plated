@@ -118,60 +118,76 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
      screenWidth = MediaQuery.of(context).size.width;
      screenHeight = MediaQuery.of(context).size.height;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return Stack(
+      children: [Scaffold(
+        appBar: AppBar(toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            "Change TPIN",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
         ),
-        title: Text(
-          "Change TPIN",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: screenHeight * 0.9,
-          child: SafeArea(
-            child: Column(
-              children: [
-                /*Image(
-                  alignment: Alignment.topLeft,
-                  width: screenWidth*0.9,
-                  height: screenHeight*0.4,
-                  image: AssetImage("assets/payment_image.png"),
-                ),*/
-                SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    "Please enter the 6-digit otp which has been sent to your phone number",
-                    style: TextStyle(fontSize: 14),
+        body: SingleChildScrollView(
+          child: Container(
+            height: screenHeight * 0.9,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  /*Image(
+                    alignment: Alignment.topLeft,
+                    width: screenWidth*0.9,
+                    height: screenHeight*0.4,
+                    image: AssetImage("assets/payment_image.png"),
+                  ),*/
+                  SizedBox(
+                    height: 8,
                   ),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                _buildOtpInput(context, screenWidth, isDarkMode),
-                SizedBox(height: 38,),
-                Padding(padding: const EdgeInsets.all(12.0),
-                  child: _buildLabelText(
-                      context, "Enter the new 4 digit TPIN", 14, false),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      "Please enter the 6-digit otp which has been sent to your phone number",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  _buildOtpInput(context, screenWidth, isDarkMode),
+                  SizedBox(height: 38,),
+                  Padding(padding: const EdgeInsets.all(12.0),
+                    child: _buildLabelText(
+                        context, "Enter the new 4 digit TPIN", 14, false),
+                  ),
 
-                SizedBox(height: 12),
-                _buildTpinInput(context, screenWidth, isDarkMode),
-                Spacer(),
-                _buildFooter(context),
-              ],
+                  SizedBox(height: 12),
+                  _buildTpinInput(context, screenWidth, isDarkMode),
+                  Spacer(),
+                  _buildFooter(context),
+                ],
+              ),
             ),
           ),
         ),
       ),
+        isLoading
+            ? Stack(
+          children: [
+            ModalBarrier(
+                dismissible: false,
+                color: Colors.black.withOpacity(0.3)),
+            // Loader indicator
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        )
+            : SizedBox(),
+    ]
     );
   }
 
