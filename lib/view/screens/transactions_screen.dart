@@ -757,7 +757,7 @@ class TransactionItem extends StatelessWidget {
                         Column(
                           children: [
                             transaction.bankService != null
-                                ? Row(
+                                ? Column(
                                     children: [
                                       SizedBox(
                                         height: 8,
