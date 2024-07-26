@@ -469,36 +469,41 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 ),
                               ),
                               (dashBoardKycStatus != "" && dashBoardKycStatus != "verified" && dashBoardKycStatus!= null)?
-                              Column(
-                                children: [
-                                  SizedBox(height: 15,),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
+                              GestureDetector(
+                                onTap: (){
+                                  Navigator.pushNamed(context, '/ChooseDocScreen');
+                                },
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 15,),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
 
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(horizontal: 5, ),
-                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                                      decoration: BoxDecoration(
-                                          color: AppColor.WHITE,
-                                          shape: BoxShape.rectangle,
-                                          borderRadius: BorderRadius.circular(20),
-                                          border: Border(top: BorderSide(color:  Colors.red,width: 0.8), bottom:  BorderSide(color:  Colors.red,width: 0.8),
-                                              left:  BorderSide(color:  Colors.red,width: 0.8), right:  BorderSide(color:  Colors.red,width: 0.8))
-                                      ),
-                                      child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text("KYC NON-VERIFIED", style: TextStyle(fontSize: 10),),
-                                            SizedBox(width: 4,),
-                                            Icon(Icons.do_not_disturb_on, size: 18,color: Colors.red,)
-                                          ]
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(horizontal: 5, ),
+                                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                        decoration: BoxDecoration(
+                                            color: AppColor.WHITE,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(20),
+                                            border: Border(top: BorderSide(color:  Colors.red,width: 0.8), bottom:  BorderSide(color:  Colors.red,width: 0.8),
+                                                left:  BorderSide(color:  Colors.red,width: 0.8), right:  BorderSide(color:  Colors.red,width: 0.8))
+                                        ),
+                                        child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text("KYC NON-VERIFIED", style: TextStyle(fontSize: 10),),
+                                              SizedBox(width: 4,),
+                                              Icon(Icons.do_not_disturb_on, size: 18,color: Colors.red,)
+                                            ]
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                  ],
+                                ),
                               ) : SizedBox(height: 36,),
 
                               Padding(

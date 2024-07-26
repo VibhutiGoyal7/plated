@@ -110,37 +110,6 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                   ],
                 ),
               ),
-              /*Icon(
-                Icons.check_circle,
-                color: AppColor.PRIMARY,
-                size: 80,
-              ),
-              SizedBox(
-                height: 110,
-              ),
-              Text(
-                addCurrencySymbol(currencySymbol, amount),
-                style: TextStyle(fontSize: 38 , fontWeight: FontWeight.w600, letterSpacing: 0.8),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text("Paid to ${name}",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100)),
-              Text("User Id ${widget.data?.receiverUsername}",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100)),
-              SizedBox(
-                height: 100,
-              ),
-              Text(
-                "${date} at ${time}",
-                style: TextStyle(fontSize: 13),
-              ),
-              Text(
-                "Transaction Id: ${widget.data?.paymentTransactionId}",
-                style: TextStyle(fontSize: 13),
-              ),
-              SizedBox(height: 70,),*/
               /*GestureDetector(
                 onTap: (){
                   _captureAndSaveScreenshot();

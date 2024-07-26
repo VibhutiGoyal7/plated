@@ -26,9 +26,10 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   late VideoPlayerController videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
   String docType = '';
+  late File? imageFile;
   final picker = ImagePicker();
   bool isVideoRecorded = false;
-  late File frontImg;
+  late File videoFile;
   var videoUrl;
 
   static const maxDuration = Duration(seconds: 2);
@@ -39,7 +40,8 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   @override
   void initState() {
     super.initState();
-    docType = widget.data.toString();
+    docType = "${widget.data?.docType}";
+    imageFile = widget.data?.imageFile;
 
   }
 
@@ -155,9 +157,10 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
 
   Future<void> _uploadProfilePic(File file) async {
     await Future.delayed(Duration(milliseconds: 2));
+    print("docType: ${docType}");
     await Provider.of<MainViewModel>(context, listen: false)
-        .postMultiFormResponse("/api/v1/app/kyc_documents", frontImg!,
-            "video_kyc_clip", "kyc_file");
+        .postMultiFormResponse("/api/v1/app/kyc_documents",imageFile as File,
+            docType, videoFile, );
     ApiResponse apiResponse =
         Provider.of<MainViewModel>(context, listen: false).response;
     vidKycUploadResponse(context, apiResponse);
@@ -219,8 +222,8 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                       );
                     });
                   } else {
-                    if(frontImg!=null || frontImg !="" )
-                    _uploadProfilePic(frontImg);
+                    if(videoFile!=null || videoFile !="" )
+                    _uploadProfilePic(videoFile);
                     else{
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -264,8 +267,8 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
         if (xfilePick != null) {
           setState(() {
 
-            frontImg = File(pickedFile!.path) as File;
-            videoPlayerController = VideoPlayerController.file(frontImg)
+            videoFile = File(pickedFile!.path) as File;
+            videoPlayerController = VideoPlayerController.file(videoFile)
               ..initialize().then((_) {
 
                 setState(() {
@@ -289,7 +292,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
               });
             setState(() {});
           });
-          print("image : ${frontImg}");
+          print("image : ${videoFile}");
         } else {
           ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
               const SnackBar(content: Text('Video not detected.')));

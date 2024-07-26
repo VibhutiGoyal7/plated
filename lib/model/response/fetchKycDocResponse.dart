@@ -1,7 +1,6 @@
 class FetchKycDocResponse {
   DocumentData? drivingLicenseImage;
   DocumentData? nationalIdImage;
-  DocumentData? videoClipUrl;
   DocumentData? passportImage;
   DocumentData? addressKycData;
   DocumentData? bankStatement;
@@ -12,7 +11,6 @@ class FetchKycDocResponse {
      this.drivingLicenseImage,
      this.nationalIdImage,
      this.passportImage,
-     this.videoClipUrl,
      this.addressKycData,
      this.bankStatement,
      this.geolocation,
@@ -31,9 +29,6 @@ class FetchKycDocResponse {
             : null,
       drivingLicenseImage : json["data"]?['driving_licence'] != null
           ? new DocumentData.fromJson(json["data"]?['driving_licence'])
-          : null,
-      videoClipUrl : json["data"]?['video_kyc_clip'] != null
-          ? new DocumentData.fromJson(json["data"]?['video_kyc_clip'])
           : null,
       addressKycData : json["data"]?['address_kyc'] != null
           ? new DocumentData.fromJson(json["data"]?['address_kyc'])
@@ -58,6 +53,7 @@ class DocumentData {
   final String? rejectionReason;
   final String? idNumber;
   final String? kycDocsImageUrl;
+  final String? kycVideoUrl;
   final String? pendingReason;
   final String? displayName;
   final bool? availableInCountry;
@@ -70,6 +66,7 @@ class DocumentData {
     this.rejectionReason,
     this.idNumber,
     this.kycDocsImageUrl,
+    this.kycVideoUrl,
     this.pendingReason,
     this.displayName,
     this.availableInCountry
@@ -85,7 +82,8 @@ class DocumentData {
       idNumber: json['id_number'] as String?,
         pendingReason: json['pending_reason'] as String?,
         availableInCountry: json['available_in_your_country'] as bool?,
-      kycDocsImageUrl: json['kyc_attachment_url'] as String?,
+        kycVideoUrl : json['kyc_video_url'] as String?,
+      kycDocsImageUrl: json['kyc_file_url'] as String?,
       displayName: json['display_name'] as String?
     );
   }

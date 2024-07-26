@@ -131,9 +131,9 @@ class MainRepository {
   }
 
   Future<UploadKycDocResponse> postMultiFormResponse(
-      String value, File file, String docType, String imageName) async {
+      String value, File imageFile, String docType, File videoFile) async {
     dynamic response = await _payrioService.postMultiFormResponse(
-        value, file, docType, imageName);
+        value, imageFile, docType, videoFile);
     print(value);
     final jsonData = response;
     print(jsonData);
