@@ -124,7 +124,6 @@ class Helper {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final List<String>? jsonList =
         sharedPreferences.getStringList(recentP2PPref);
-    print("helper jsonList  ${jsonList}");
 
     if (jsonList == null) {
       return null;

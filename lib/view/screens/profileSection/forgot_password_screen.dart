@@ -109,6 +109,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             context: context, message: mediaList?.mobileOtp);
         ToastComponent.showToast(
             context: context, message: apiResponse?.message);
+        Navigator.pushNamed(context, "/OtpForgotPassScreen");
 
         setState(() {
           isOtpBoxVisible = true;
@@ -239,7 +240,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     _buildPhoneNumberTextField(),
-                    if (isOtpBoxVisible)
+                   /* if (isOtpBoxVisible)
                       _buildOtpInput(context, screenWidth, isDarkMode),
                     if (isOtpBoxVisible) _buildPasswordTextFields(isDarkMode),
                     SizedBox(height: 25),
@@ -253,7 +254,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               ? Colors.green
                               : Colors.red,
                         ),
-                      ),
+                      ),*/
                   ],
                 ),
               ),

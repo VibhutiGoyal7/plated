@@ -42,6 +42,8 @@ import 'package:Payrio/view/screens/profileSection/change_tpin_screen.dart';
 import 'package:Payrio/view/screens/profileSection/forgot_password_screen.dart';
 import 'package:Payrio/view/screens/profileSection/language_selection_screen.dart';
 import 'package:Payrio/view/screens/profileSection/manage_applock_screen.dart';
+import 'package:Payrio/view/screens/profileSection/new_forgot_pass_screen.dart';
+import 'package:Payrio/view/screens/profileSection/otp_forgot_pass_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_data_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
@@ -209,6 +211,16 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return ForgotPasswordScreen();
+            },
+            '/OtpForgotPassScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return OtpForgotPassScreen();
+            },
+            '/NewPassForgotPassScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return NewPassForgotPassScreen(data: args);
             },
             '/PersonalDataScreen': (context) {
               final args =

@@ -2,6 +2,7 @@ import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ import '../../../model/response/otpVerifyResponse.dart';
 import '../../../model/response/phoneVerifyResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/customNumberKeyboard.dart';
 import '../../component/toastMessage.dart';
 
 class OTPVerifyScreen extends StatefulWidget {
@@ -35,6 +37,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   String phoneNo = "";
   late double screenWidth;
   bool isLoading = false;
+  List<String> _inputValues = ['', '', '', '','',''];
   final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
@@ -53,10 +56,37 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     }
   }
 
+
+  void _handleKeyTap(String value) {
+    setState(() {
+      for (int i = 0; i < _inputValues.length; i++) {
+        if (_inputValues[i].isEmpty) {
+          _inputValues[i] = value;
+          break;
+        }
+      }
+    });
+  }
+
+  void _handleBackspace() {
+    setState(() {
+      for (int i = _inputValues.length - 1; i >= 0; i--) {
+        if (_inputValues[i].isNotEmpty) {
+          _inputValues[i] = '';
+          break;
+        }
+      }
+    });
+  }
+
+
   @override
   void dispose() {
     for (var controller in _controllers) {
       controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
     }
     super.dispose();
   }
@@ -213,6 +243,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                           ),
                           SizedBox(height: 22),
                           _buildOtpInput(context, screenWidth, isDarkMode),
+
                           SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -231,7 +262,64 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                             ),
                           ),
                           Spacer(),
-                          _buildFooter(context),
+                          CustomNumberKeyboard(onKeyTap: (value) async {
+                            if (value == "clear") {
+                              _handleBackspace();
+                            } else if (value == "submit") {
+                              String otp = _inputValues
+                                  .map((controller) => controller)
+                                  .join();
+                              if (otp.isNotEmpty && otp.length == 6) {
+                                /*String otp =
+                                _controllers.map((controller) => controller.text).join();*/
+                                const maxDuration = Duration(seconds: 2);
+                                if (otp.isNotEmpty && otp.length == 6) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  bool isConnected = await _connectivityService.isConnected();
+                                  if (!isConnected) {
+                                    setState(() {
+                                      isLoading = false;
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('No internet connection'),
+                                          duration: maxDuration,
+                                        ),
+                                      );
+                                    });
+                                  } else {
+                                    PhoneRequest phoneRequest = PhoneRequest(
+                                        customer: Customer(
+                                            phoneNumber: widget.data.toString(),
+                                            mobileOtp: otp,
+                                            countryId: null));
+                                    await Provider.of<MainViewModel>(context, listen: false)
+                                        .fetchOtpVerifyData(
+                                        "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
+                                        phoneRequest);
+
+                                    ApiResponse apiResponse =
+                                        Provider.of<MainViewModel>(context, listen: false)
+                                            .response;
+                                    getOtpResponseDataWidget(context, apiResponse);
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Please enter valid phone number and select country code.'),
+                                      duration: maxDuration,
+                                    ),
+                                  );
+                                }
+                              }
+                            } else {
+                              _handleKeyTap(value);
+                            }
+                          }),
+                          //_buildFooter(context),
                         ],
                       ),
                     ),
@@ -273,7 +361,6 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       },
     );
   }
-/*
 
   Widget _buildOtpInput(BuildContext context, double screenWidth, bool isDarkMode) {
     return  Center(
@@ -286,35 +373,16 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Colors.black54,
-                width: 0.4,
-              ),
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
               borderRadius: BorderRadius.circular(6),
             ),
-            width: 50.0,
+            width: screenWidth / 8.1,
             height: 62.0,
-            child: TextField(
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              decoration: InputDecoration(
-                counterText: "", // Remove the counter text
-                border: InputBorder.none,
+            child: Center(
+              child: Text(
+                _inputValues[index],
+                style: TextStyle(fontSize: 20),
               ),
-              style: TextStyle(fontSize: 20),
-              onChanged: (value) {
-                _handleOnChange(index, value);
-              },
-              onEditingComplete: () {
-                // Explicitly call requestFocus on the next node
-                Future.delayed(Duration(milliseconds: 50), () {
-                  if (index < _focusNodes.length - 1) {
-                    FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-                  }
-                });
-              },
             ),
           ),
         ),
@@ -345,10 +413,9 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       isValid = false;
     }
   }
-*/
 
 
-   Widget _buildOtpInput(
+  /* Widget _buildOtpInput(
       BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
@@ -382,6 +449,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               autofocus: index == 0,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               maxLength: 1,
               decoration: InputDecoration(
                 counterText: "", // Remove the counter text
@@ -396,6 +464,29 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         ),
       ),
     );
+  }
+*/
+
+  void _handleKeyEvent(RawKeyEvent event, int index) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.backspace) {
+        if (_controllers[index].text.isEmpty && index > 0) {
+          _focusNodes[index].unfocus();
+          _focusNodes[index - 1].requestFocus();
+        }
+      }
+    }
+  }
+
+  void _handleTextChange(String value, int index) {
+    if (value.isNotEmpty) {
+      if (index < 5) {
+        _focusNodes[index].unfocus();
+        _focusNodes[index + 1].requestFocus();
+      } else {
+        _focusNodes[index].unfocus();
+      }
+    }
   }
   Widget _buildFooter(BuildContext context) {
     return Column(
@@ -479,6 +570,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       ],
     );
   }
+/*
 
   void _handleOnChange(int index, String value) {
     setState(() {
@@ -501,8 +593,9 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
       isValid = false;
     }
   }
+*/
 
-  void _handleBackspace() {
+/*  void _handleBackspace() {
     for (int i = _controllers.length - 1; i >= 0; i--) {
       if (_controllers[i].text.isNotEmpty) {
         _controllers[i].text = '';
@@ -512,7 +605,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         break;
       }
     }
-  }
+  }*/
 
   _buildLabelText(BuildContext context, String text, int size, bool isBold) {
     return Text(

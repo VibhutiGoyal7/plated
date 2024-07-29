@@ -1,0 +1,501 @@
+import 'package:Payrio/model/request/verifyOtpChangePass.dart';
+import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:Payrio/view/screens/authSection/signin_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../model/request/createOtpChangePass.dart';
+import '../../../model/response/countryListResponse.dart';
+import '../../../model/response/createOtpChangePassResponse.dart';
+import '../../../utils/Helper.dart';
+import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/customNumberKeyboard.dart';
+import '../../component/session_expired_dialog.dart';
+
+class NewPassForgotPassScreen extends StatefulWidget {
+  final String? data;
+
+  NewPassForgotPassScreen({Key? key, this.data}) : super(key: key);
+  @override
+  _NewPassForgotPassScreenState createState() => _NewPassForgotPassScreenState();
+}
+
+class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
+  late double screenWidth;
+  late double screenHeight;
+  String phoneCode = "+";
+  int countryCode = 0;
+  bool isLoading = false;
+  bool newPasswordVisible = false;
+  bool confirmPasswordVisible = false;
+  bool isValid = false;
+  bool isKeypadVisible = true;
+  String responseMessage = '';
+  bool phoneNumberValid = false;
+  bool isDarkMode = false;
+  List<String> _inputValues = ['', '', '', '', '', ''];
+
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+  TextEditingController();
+  final ConnectivityService _connectivityService = ConnectivityService();
+  static const maxDuration = Duration(seconds: 2);
+  final List<String> _otp = List.generate(6, (_) => '');
+  List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  List<TextEditingController> _controllers =
+  List.generate(6, (index) => TextEditingController());
+  List<CountryData> countryList = [];
+  final TextEditingController _inputController = TextEditingController();
+
+  void _isValidPhoneNumber(String input) {
+    print(input);
+    if (input.isNotEmpty && input.length >= 10) {
+      setState(() {
+        phoneNumberValid = true;
+      });
+    } else {
+      setState(() {
+        phoneNumberValid = false;
+      });
+    }
+  }
+
+
+
+  void _handleKeyTap(String value) {
+    setState(() {
+      for (int i = 0; i < _inputValues.length; i++) {
+        if (_inputValues[i].isEmpty) {
+          _inputValues[i] = value;
+          break;
+        }
+      }
+    });
+  }
+
+  void _handleBackspace() {
+    setState(() {
+      for (int i = _inputValues.length - 1; i >= 0; i--) {
+        if (_inputValues[i].isNotEmpty) {
+          _inputValues[i] = '';
+          break;
+        }
+      }
+    });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    isValid = false;
+    phoneNumberValid = false;
+    newPasswordVisible = true;
+    confirmPasswordVisible = true;
+    //_fetchData();
+    for (var i = 0; i < _focusNodes.length; i++) {
+      _focusNodes[i].addListener(() {
+        if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
+          // Automatically select all text when the field gains focus
+          _controllers[i].selection = TextSelection(
+              baseOffset: 0, extentOffset: _controllers[i].text.length);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<Widget> verifyOtpResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    final mediaList = apiResponse.data;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ");
+        //Navigator.pushNamed(context, '/ProfileScreen');
+        ToastComponent.showToast(
+            context: context, message: apiResponse?.message);
+        Helper.clearAllSharedPreferences();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SigninScreen()),
+              (Route<dynamic> route) => false,
+        );
+
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (apiResponse?.message == "Invalid access token")
+          SessionExpiredDialog.showDialogBox(context: context);
+        return Center(
+          //child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    return Stack(children: [
+      Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            Languages.of(context)!.labelForgotPass,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+          ),
+        ),
+        //backgroundColor: Theme.of(context).backgroundColor,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Center(
+                      child: Image(
+                        alignment: Alignment.topLeft,
+                        //width: screenWidth*0.8,
+                        height: screenHeight * 0.16,
+                        image: AssetImage("assets/forgot_password.png"),
+                        fit: BoxFit.fitWidth   ,
+                      ),
+                    ),
+                    // _buildPhoneNumberTextField(),
+
+                    //_buildOtpInput(context, screenWidth, isDarkMode),
+                    _buildPasswordTextFields(isDarkMode),
+                    SizedBox(height: 15),
+                      _buildSubmitButton(),
+                    //if (isLoading) CircularProgressIndicator(),
+
+                  ],
+                ),
+              ),
+            ),
+            isLoading
+                ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+                : SizedBox(),
+          ],
+        ),
+      ),
+      isLoading
+          ? Stack(
+        children: [
+          // Block interaction
+          ModalBarrier(
+              dismissible: false, color: Colors.black.withOpacity(0.3)),
+          // Loader indicator
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      )
+          : SizedBox(),
+    ]);
+  }
+
+  Widget _buildPasswordTextFields(bool isDarkMode) {
+    return Column(
+      children: [
+        _buildPasswordInput(
+            context,
+            Languages.of(context)!.labelNewPass,
+            _newPasswordController,
+            Icon(
+              Icons.password,
+              size: 18,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            newPasswordVisible,
+            isDarkMode),
+        _buildPasswordInput(
+            context,
+            Languages.of(context)!.labelConfirmPass,
+            _confirmPasswordController,
+            Icon(
+              Icons.password,
+              size: 18,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            confirmPasswordVisible,
+            isDarkMode)
+      ],
+    );
+  }
+
+  Widget _buildPasswordInput(
+      BuildContext context,
+      String text,
+      TextEditingController nameController,
+      Icon icon,
+      bool passwordVisibles,
+      bool isDarkMode,
+      ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
+      child: Card(
+        child: Container(
+          //height: 60,
+          width: screenWidth * 0.92,
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+          decoration: BoxDecoration(
+            //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Row(
+            children: [
+              SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  style: TextStyle(fontSize: 15.0),
+                  obscureText: passwordVisibles,
+                  obscuringCharacter: "*",
+                  controller: nameController,
+                  textAlignVertical: TextAlignVertical.center,
+                  onChanged: (value) {
+                    isInputValid();
+                  },
+                  onSubmitted: (value) {},
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: text,
+                    hintStyle: TextStyle(color: Colors.grey),
+                    icon: icon,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        passwordVisibles
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        setState(
+                              () {
+                            if (text == Languages.of(context)!.labelNewPass) {
+                              newPasswordVisible = !newPasswordVisible;
+                            } else {
+                              confirmPasswordVisible = !confirmPasswordVisible;
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOtpInput(
+      BuildContext context, double screenWidth, bool isDarkMode) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          6,
+              (index) => GestureDetector(
+            onTap: (){
+              setState(() {
+                isKeypadVisible = true;
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              width: screenWidth / 8.1,
+              height: 58.0,
+              child: Center(
+                child: Text(
+                  _inputValues[index],
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void isInputValid() {
+    String otp = "${widget.data}";
+    if (otp.isNotEmpty &&
+        otp.length == 6 &&
+        _newPasswordController.text.isNotEmpty &&
+        _confirmPasswordController.text.isNotEmpty &&
+        _newPasswordController.text == _confirmPasswordController.text &&
+        _newPasswordController.text.length >= 8) {
+      isValid = true;
+    } else {
+      isValid = false;
+    }
+  }
+
+  Widget _buildSubmitButton() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: SizedBox(
+        width: screenWidth * 0.7,
+        child: ElevatedButton(
+          onPressed: () async {
+            String otp =
+            "${widget.data}";
+            isInputValid();
+            if (otp.isNotEmpty &&
+                _newPasswordController.text.isNotEmpty &&
+                _confirmPasswordController.text.isNotEmpty &&
+                _newPasswordController.text ==
+                    _confirmPasswordController.text &&
+                _newPasswordController.text.length >= 8) {
+              setState(() {
+                isLoading = true;
+              });
+
+              bool isConnected = await _connectivityService.isConnected();
+              if (!isConnected) {
+                setState(() {
+                  isLoading = false;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('No internet connection'),
+                      duration: maxDuration,
+                    ),
+                  );
+                });
+              } else {
+                print(_phoneNumberController.text);
+                setState(() {
+                  isLoading = true;
+                });
+                VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
+                    customer: CustomerVerifyOtpPass(
+                        phoneNumber: _phoneNumberController.text,
+                        password: _newPasswordController.text,
+                        mobileOtp: otp,
+                        countryId: countryCode));
+
+                await Provider.of<MainViewModel>(context, listen: false)
+                    .VerifyOtpChangePass(
+                    "/api/v1/app/customers/verify_otp_and_change_password",
+                    request);
+                ApiResponse apiResponse =
+                    Provider.of<MainViewModel>(context, listen: false).response;
+                verifyOtpResponse(context, apiResponse);
+              }
+            } else if (_newPasswordController.text.length < 8) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Password should have 8 or more characters.'),
+                  duration: maxDuration,
+                ),
+              );
+            } else if (_newPasswordController.text !=
+                _confirmPasswordController.text) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Password doesn't match"),
+                  duration: maxDuration,
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Please fill the details"),
+                  duration: maxDuration,
+                ),
+              );
+            }
+          },
+          child: Text(
+            Languages.of(context)!.labelValidate,
+            style: TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
+          ),
+          style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              backgroundColor: isValid ? AppColor.PRIMARY : Colors.white,
+              elevation: 3,
+              shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(2))),
+        ),
+      ),
+    );
+  }
+
+  void _handleOnChange(int index, String value) {
+    setState(() {
+      _otp[index] = value;
+    });
+    if (value.isNotEmpty) {
+      if (index < _focusNodes.length - 1) {
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      }
+    } else {
+      if (index > 0) {
+        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+      }
+    }
+
+    String otpString = _otp.join('');
+    if (otpString.length == 6) {
+      isValid = true;
+    } else {
+      isValid = false;
+    }
+  }
+
+}

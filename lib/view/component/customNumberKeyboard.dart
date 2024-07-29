@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomNumberKeyboard extends StatelessWidget {
   final Function(String) onKeyTap;
 
-  CustomNumberKeyboard({required this.onKeyTap});
+   CustomNumberKeyboard({required this.onKeyTap});
 
   void _onKeyPressed(String value) {
     onKeyTap(value);

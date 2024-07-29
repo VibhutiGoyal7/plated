@@ -88,168 +88,184 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
           body: Stack(
             children: [
               SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 10,
+                child: Stack(
+                  children:<Widget>[
+                    Container(
+                      height: screenHeight * 0.27,
+                      child: Image(
+                        height: screenHeight * 0.27,
+                        image: AssetImage("assets/header.png"),
+                        fit: BoxFit.fill,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            Languages.of(context)!.labelMoneyTransfer,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 24.0),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
+                      alignment: AlignmentDirectional.center,
+                    ),
 
-                      /*Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            Languages.of(context)!.labelTransferTo,
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 40,
                           ),
-                        ),
-                      ),*/
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6.0, horizontal: 10),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Please enter phone number registered with Payorio or username to(such as XXXXX@payorio) to which you want to transfer money.",
-                            style: TextStyle(
-                                fontSize: 13.0, fontWeight: FontWeight.normal),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _buildPhoneInput(context, _usernameController),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Recents",
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      isRecentDataEmpty
-                          ? Expanded(
-                              child: Center(
-                                child: Text("Make some transactions...",
-                                style: TextStyle(color: isDarkMode ? Colors.grey : Colors.white70),),
-                              ),
-                            )
-                          : Expanded(
-                              child: ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                controller: _scrollController,
-                                itemCount: prefResponse?.length,
-                                shrinkWrap: true,
-                                padding: const EdgeInsets.only(bottom: 0),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    /*
-                            tileColor: Colors.white12,*/
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 6),
-                                    onTap: () {
-                                      setState(() {
-                                        _fetchData(
-                                            "${prefResponse?[index].username}");
-                                      });
-                                      //Navigator.of(context).pop();
-                                    },
-                                    leading: prefResponse?[index].imageUrl == ""
-                                        ? Container(
-                                            height: 45,
-                                            width: 45,
-                                            child: CircleAvatar(
-                                              radius: 30,
-                                              backgroundColor: AppColor.WHITE,
-                                              backgroundImage: AssetImage(
-                                                  "assets/profile_user.png"),
-                                            ),
-                                          )
-                                        : ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                            child: Image.network(
-                                              prefResponse?[index].imageUrl
-                                                  as String,
-                                              height: 45,
-                                              width: 45,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (BuildContext context,
-                                                      Object exception,
-                                                      StackTrace? stackTrace) {
-                                                // You can return any widget here to display in case of an error
-                                                return Container(
-                                                  height: 45,
-                                                  width: 45,
-                                                  child: CircleAvatar(
-                                                    radius: 30,
-                                                    backgroundColor:
-                                                        AppColor.WHITE,
-                                                    backgroundImage: AssetImage(
-                                                      "assets/profile_user.png",
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                } else {
-                                                  return Shimmer.fromColors(
-                                                    baseColor: Colors.white38,
-                                                    highlightColor: Colors.grey,
-                                                    child: Container(
-                                                      height: 45,
-                                                      width: 45,
-                                                      color: Colors.white,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                            )),
-                                    title: Text(
-                                      prefResponse?[index].fullName as String,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  );
-                                },
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                Languages.of(context)!.labelMoneyTransfer,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 24.0),
                               ),
                             ),
-                    ],
-                  ),
+                          ),
+                          SizedBox(
+                            height: 18,
+                          ),
+
+                          /*Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                Languages.of(context)!.labelTransferTo,
+                                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),*/
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6.0, horizontal: 10),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Please enter phone number registered with Payorio or username to(such as XXXXX@payorio) to which you want to transfer money.",
+                                style: TextStyle(
+                                    fontSize: 13.0, fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          _buildPhoneInput(context, _usernameController),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Recents",
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          isRecentDataEmpty
+                              ?
+                          Container(
+                            height: screenHeight*0.3,
+                            child: Center(
+                              child: Text("No recent transactions.",
+                                  style: TextStyle(color: isDarkMode ? Colors.grey : Colors.black),),
+                            ),
+                          )
+                              : Expanded(
+                                  child: ListView.builder(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    controller: _scrollController,
+                                    itemCount: prefResponse?.length,
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.only(bottom: 0),
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return ListTile(
+                                        /*
+                                tileColor: Colors.white12,*/
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 6),
+                                        onTap: () {
+                                          setState(() {
+                                            _fetchData(
+                                                "${prefResponse?[index].username}");
+                                          });
+                                          //Navigator.of(context).pop();
+                                        },
+                                        leading: prefResponse?[index].imageUrl == ""
+                                            ? Container(
+                                                height: 45,
+                                                width: 45,
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundColor: AppColor.WHITE,
+                                                  backgroundImage: AssetImage(
+                                                      "assets/profile_user.png"),
+                                                ),
+                                              )
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(100.0),
+                                                child: Image.network(
+                                                  prefResponse?[index].imageUrl
+                                                      as String,
+                                                  height: 45,
+                                                  width: 45,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder:
+                                                      (BuildContext context,
+                                                          Object exception,
+                                                          StackTrace? stackTrace) {
+                                                    // You can return any widget here to display in case of an error
+                                                    return Container(
+                                                      height: 45,
+                                                      width: 45,
+                                                      child: CircleAvatar(
+                                                        radius: 30,
+                                                        backgroundColor:
+                                                            AppColor.WHITE,
+                                                        backgroundImage: AssetImage(
+                                                          "assets/profile_user.png",
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  loadingBuilder:
+                                                      (BuildContext context,
+                                                          Widget child,
+                                                          ImageChunkEvent?
+                                                              loadingProgress) {
+                                                    if (loadingProgress == null) {
+                                                      return child;
+                                                    } else {
+                                                      return Shimmer.fromColors(
+                                                        baseColor: Colors.white38,
+                                                        highlightColor: Colors.grey,
+                                                        child: Container(
+                                                          height: 45,
+                                                          width: 45,
+                                                          color: Colors.white,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                )),
+                                        title: Text(
+                                          prefResponse?[index].fullName as String,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
               isLoading
@@ -303,19 +319,19 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
               borderSide: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black87,
-                  width: 0.7)),
+                  color: AppColor.PRIMARY,
+                  width: 0.8)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
               borderSide: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black87,
+                  color: AppColor.PRIMARY,
                   width: 0.7)),
           hintText: "Username or phone number",
           hintStyle:
               TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
           suffixIcon: Icon(
             Icons.perm_contact_cal,
-            color: isDarkMode ? Colors.white : Colors.black,
+            color:AppColor.PRIMARY,
             size: 25,
           ),
         ),
@@ -397,12 +413,21 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
 
   void _isRecentDataEmpty() {
     if (prefResponse == null ||
+        prefResponse == [] ||
         prefResponse!.isEmpty ||
         prefResponse?[0] == null ||
         prefResponse?[0].username == null) {
-      isRecentDataEmpty = true;
+      print("zz${prefResponse}");
+      setState(() {
+        isRecentDataEmpty = true;
+      });
     } else {
-      isRecentDataEmpty = false;
+      setState(() {
+        isRecentDataEmpty = false;
+
+      });
     }
+
+    print("${isRecentDataEmpty}");
   }
 }

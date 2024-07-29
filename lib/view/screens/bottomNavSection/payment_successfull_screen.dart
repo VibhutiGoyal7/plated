@@ -73,46 +73,52 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
             children: [
               Screenshot(
                 controller: screenshotController,
-                child: Column(
-                  children: [
-                    SizedBox(height: 50,),
-                    Icon(
-                      Icons.check_circle,
-                      color: AppColor.PRIMARY,
-                      size: 80,
-                    ),
-                    SizedBox(
-                      height: 110,
-                    ),
-                    Text(
-                      addCurrencySymbol(currencySymbol, amount),
-                      style: TextStyle(fontSize: 38 , fontWeight: FontWeight.w600, letterSpacing: 0.8),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Text("Paid to ${name}",
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100)),
-                    Text("User Id ${widget.data?.receiverUsername}",
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100)),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    Text(
-                      "${date} at ${time}",
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Text(
-                      "Transaction Id: ${widget.data?.paymentTransactionId}",
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    SizedBox(height: 70,),
-                  ],
+                child: Container(
+                 width: screenWidth,
+                  padding: EdgeInsets.all(8),
+                  color: isDarkMode ? Colors.black : Colors.white,
+                  child: Column(
+
+                    children: [
+                      SizedBox(height: 50,),
+                      Icon(
+                        Icons.check_circle,
+                        color: AppColor.PRIMARY,
+                        size: 80,
+                      ),
+                      SizedBox(
+                        height: 110,
+                      ),
+                      Text(
+                        addCurrencySymbol(currencySymbol, amount),
+                        style: TextStyle(fontSize: 38 , fontWeight: FontWeight.w600, letterSpacing: 0.8),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text("Paid to ${name}",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100,color: isDarkMode ? Colors.white : Colors.black),),
+                      Text("User Id ${widget.data?.receiverUsername}",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100,color: isDarkMode ? Colors.white : Colors.black)),
+                      SizedBox(
+                        height: 100,
+                      ),
+                      Text(
+                        "${date} at ${time}",
+                        style: TextStyle(fontSize: 13,color: isDarkMode ? Colors.white : Colors.black),
+                      ),
+                      Text(
+                        "Transaction Id: ${widget.data?.paymentTransactionId}",
+                        style: TextStyle(fontSize: 13,color: isDarkMode ? Colors.white : Colors.black),
+                      ),
+                      SizedBox(height: 70,),
+                    ],
+                  ),
                 ),
               ),
-              /*GestureDetector(
+              GestureDetector(
                 onTap: (){
-                  _captureAndSaveScreenshot();
+                  _captureAndSharePng(context);
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(
@@ -145,7 +151,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
 
                   ]),
                 ),
-              ),*/
+              ),
               SizedBox(height: 10,),
               _buildFooter(context)
             ],
@@ -154,25 +160,27 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
       ),
     );
   }
-/*
 
   Future<void> _captureAndSharePng(BuildContext context) async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      var image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final image = await screenshotController.capture();
 
-      final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/qr_code.png').create();
-      await file.writeAsBytes(pngBytes);
+      if (image != null) {
+        // Get the temporary directory
+        final directory = (await getApplicationDocumentsDirectory()).path;
+        // Create a file to store the screenshot
+        final imagePath = '$directory/screenshot.png';
+        final imageFile = File(imagePath);
+        // Write the image data to the file
+        await imageFile.writeAsBytes(image);
 
-      await Share.shareFiles([file.path], text: 'Here is my QR code');
-    } catch (e) {
+        // Share the screenshot
+        Share.shareFiles([imagePath], text: 'Check out my screenshot!');
+      }
+      } catch (e) {
       print(e.toString());
     }
   }
-*/
 
   Future<void> _captureAndSaveScreenshot() async {
     try {

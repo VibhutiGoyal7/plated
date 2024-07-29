@@ -8,6 +8,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/request/generateOtpTpinChange.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 import '../../component/toastMessage.dart';
 
@@ -27,11 +28,15 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
   List<TextEditingController> _TPinControllers =
   List.generate(4, (index) => TextEditingController());
   bool isValid = false;
+  bool isOtpEntered = false;
 
   late double screenWidth;
   late double screenHeight;
+  late String otp;
+  late String tpin;
 
-  List<String> _inputValues = ['', '', '', ''];
+  List<String> _inputTpinValues = ['', '', '', ''];
+  List<String> _inputOtpValues = ['', '', '', '','',''];
 
   static const maxDuration = Duration(seconds: 2);
 
@@ -43,6 +48,50 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
     super.initState();
     isLoading = true;
     generateOtp();
+  }
+
+
+  void _handleKeyTap(String value) {
+    setState(() {
+      if(isOtpEntered){
+        for (int i = 0; i < _inputTpinValues.length; i++) {
+          if (_inputTpinValues[i].isEmpty) {
+            _inputTpinValues[i] = value;
+            break;
+          }
+        }
+
+      }else {
+        for (int i = 0; i < _inputOtpValues.length; i++) {
+          if (_inputOtpValues[i].isEmpty) {
+            _inputOtpValues[i] = value;
+            break;
+          }
+        }
+      }
+    });
+
+  }
+
+  void _handleBackspace() {
+    setState(() {
+      if(isOtpEntered){
+        for (int i = _inputTpinValues.length - 1; i >= 0; i--) {
+          if (_inputTpinValues[i].isNotEmpty) {
+            _inputTpinValues[i] = '';
+            break;
+          }
+        }
+
+      }else {
+        for (int i = _inputOtpValues.length - 1; i >= 0; i--) {
+          if (_inputOtpValues[i].isNotEmpty) {
+            _inputOtpValues[i] = '';
+            break;
+          }
+        }
+      }
+    });
   }
 
   Future<Widget> verifyOtpTpinChange(
@@ -81,8 +130,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
 
   Future<Widget> getOtpResponse(
       BuildContext context, ApiResponse apiResponse) async {
-    GenerateOtpTPINChangeResponse response =
-    apiResponse.data ;
+    GenerateOtpTPINChangeResponse? response =
+    apiResponse.data as GenerateOtpTPINChangeResponse? ;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
@@ -91,8 +140,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${response.otp}");
-       ToastComponent.showToast(context: context, message: response.otp);
+        print("rwrwr ${response?.otp}");
+       ToastComponent.showToast(context: context, message: response?.otp);
 
 
        return Container(); // Return an empty container as you'll navigate away
@@ -158,16 +207,105 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                     height: 8,
                   ),
                   _buildOtpInput(context, screenWidth, isDarkMode),
-                  SizedBox(height: 38,),
-                  Padding(padding: const EdgeInsets.all(12.0),
-                    child: _buildLabelText(
-                        context, "Enter the new 4 digit TPIN", 14, false),
+                  SizedBox(height: 8,),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        onPressed: () async {
+                          otp = _inputOtpValues
+                              .map((controller) => controller)
+                              .join();
+                          if (otp.length == 6 && otp.isNotEmpty ) {
+                            setState(() {
+                              isOtpEntered = true;
+                            });
+                          }
+                        },
+                        child: Text(
+                          Languages.of(context)!.labelSubmit,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
+                  isOtpEntered?
 
-                  SizedBox(height: 12),
-                  _buildTpinInput(context, screenWidth, isDarkMode),
-                  Spacer(),
-                  _buildFooter(context),
+                  Column(
+                    children: [
+                      Padding(padding: const EdgeInsets.all(6.0),
+                        child: _buildLabelText(
+                            context, "Enter the new 4 digit TPIN", 14, false),
+                      ),
+
+                      SizedBox(height: 10),
+                      _buildTpinInput(context, screenWidth, isDarkMode),
+                      SizedBox(height: 10),
+                      //Spacer(),
+                    ],
+                  ): SizedBox(height: 80,),
+
+                  CustomNumberKeyboard(onKeyTap: (value) async {
+                    if (value == "clear") {
+                      _handleBackspace();
+                    } else if (value == "submit") {
+                      tpin = _inputTpinValues
+                          .map((controller) => controller)
+                          .join();
+                      otp = _inputOtpValues
+                          .map((controller) => controller)
+                          .join();
+                      if (otp.isNotEmpty && otp.length == 6 && tpin.isNotEmpty && tpin.length == 4) {
+                        if (otp.isNotEmpty && otp.length == 6  && tpin.isNotEmpty && tpin.length == 4) {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          bool isConnected = await _connectivityService.isConnected();
+                          if (!isConnected) {
+                            setState(() {
+                              isLoading = false;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('No internet connection'),
+                                  duration: maxDuration,
+                                ),
+                              );
+                            });
+                          } else {
+                            VerifyOtpTPinChange request = VerifyOtpTPinChange(
+                              tpin: tpin,
+                              otp: otp,);
+                            await Provider.of<MainViewModel>(context, listen: false)
+                                .verifyOtpTPinChange(
+                                "/api/v1/app/customers/change_tpin_using_otp",
+                                request);
+
+                            ApiResponse apiResponse =
+                                Provider.of<MainViewModel>(context, listen: false)
+                                    .response;
+                            verifyOtpTpinChange(context, apiResponse);
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Please enter otp and new TPIN.'),
+                              duration: maxDuration,
+                            ),
+                          );
+                        }
+                      }
+                    } else {
+                      _handleKeyTap(value);
+                    }
+                  })
+
+                  //_buildFooter(context),
                 ],
               ),
             ),
@@ -272,35 +410,28 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => Container(
-            decoration: BoxDecoration(
-                border : Border(
-                    top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
-                borderRadius: BorderRadius.circular(6)
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: screenWidth/8.5,
-            height: 60.0,
-            child: TextField(
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
-              autofocus: index == 0,
-              textAlign: TextAlign.center,
-              textAlignVertical: TextAlignVertical.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              decoration: InputDecoration(
-                  counterText: "", // Remove the counter text
-                  border: InputBorder.none
-
+              (index) => GestureDetector(
+            onTap: (){
+              setState(() {
+                //isKeypadVisible = true;
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                borderRadius: BorderRadius.circular(6),
               ),
-              style: TextStyle(fontSize: 18),
-              onChanged: (value) {
-                _handleOnChange(index, value);
-              },
+              width: screenWidth / 8.1,
+              height: 58.0,
+              child: Center(
+                child: Text(
+                  _inputOtpValues[index],
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
             ),
           ),
         ),
@@ -347,62 +478,33 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           4,
-              (index) => Container(
-            decoration: BoxDecoration(
-                border : Border(
-                    top: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    bottom: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    right: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4),
-                    left: BorderSide(color: isDarkMode? Colors.grey : Colors.black54, width: 0.4)),
-                borderRadius: BorderRadius.circular(6)
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            width: screenWidth/8,
-            height: 60.0,
-            child: TextField(
-              controller: _TPinControllers[index],
-              focusNode: _tPinFocusNodes[index],
-              autofocus: index == 0,
-              textAlign: TextAlign.center,
-              textAlignVertical: TextAlignVertical.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              decoration: InputDecoration(
-                  counterText: "", // Remove the counter text
-                  border: InputBorder.none
-
+              (index) => GestureDetector(
+            onTap: (){
+              setState(() {
+               // isKeypadVisible = true;
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                borderRadius: BorderRadius.circular(6),
               ),
-              style: TextStyle(fontSize: 18),
-              onChanged: (value) {
-                _onHandleTpinChange(index, value);
-              },
+              width: screenWidth / 8.1,
+              height: 58.0,
+              child: Center(
+                child: Text(
+                  _inputTpinValues[index],
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  void _onHandleTpinChange(int index, String value) {
-    setState(() {
-      _inputValues[index] = value;
-    });
-    if (value.isNotEmpty) {
-      if (index < _tPinFocusNodes.length - 1) {
-        FocusScope.of(context).requestFocus(_tPinFocusNodes[index + 1]);
-      }
-    } else {
-      if (index > 0) {
-        FocusScope.of(context).requestFocus(_tPinFocusNodes[index - 1]);
-      }
-    }
-
-    String otpString = _otp.join('');
-    if (otpString.length == 6) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
   }
 
   Future<void> generateOtp() async {

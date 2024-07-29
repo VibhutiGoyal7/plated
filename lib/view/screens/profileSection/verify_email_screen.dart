@@ -13,6 +13,7 @@ import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   bool isValid = false;
   bool isOtpBoxVisible = false;
 
+  List<String> _inputValues = ['', '', '', '', '', ''];
   static const maxDuration = Duration(seconds: 2);
 
   bool isLoading = false;
@@ -59,6 +61,28 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
     }
 
     _fetchData();
+  }
+
+  void _handleKeyTap(String value) {
+    setState(() {
+      for (int i = 0; i < _inputValues.length; i++) {
+        if (_inputValues[i].isEmpty) {
+          _inputValues[i] = value;
+          break;
+        }
+      }
+    });
+  }
+
+  void _handleBackspace() {
+    setState(() {
+      for (int i = _inputValues.length - 1; i >= 0; i--) {
+        if (_inputValues[i].isNotEmpty) {
+          _inputValues[i] = '';
+          break;
+        }
+      }
+    });
   }
 
   @override
@@ -287,38 +311,19 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
           6,
           (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
-            width: screenWidth / 8.5,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
-                border: Border(
-                    top: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4),
-                    bottom: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4),
-                    right: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4),
-                    left: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4)),
-                borderRadius: BorderRadius.circular(6)),
-            height: 60.0,
-            child: TextField(
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
-              autofocus: index == 0,
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              decoration: InputDecoration(
-                counterText: "", // Remove the counter text
-                border: InputBorder.none,
+              border: Border.all(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            width: screenWidth / 8.1,
+            height: 62.0,
+            child: Center(
+              child: Text(
+                _inputValues[index],
+                style: TextStyle(fontSize: 20),
               ),
-              style: TextStyle(fontSize: 18),
-              onChanged: (value) {
-                _handleOnChange(index, value);
-              },
             ),
           ),
         ),
@@ -340,6 +345,59 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         SizedBox(
           height: 10.0,
         ),
+        CustomNumberKeyboard(onKeyTap: (value) async {
+          if (value == "clear") {
+            _handleBackspace();
+          } else if (value == "submit") {
+            String otp = _inputValues.map((controller) => controller).join();
+            if (otp.isNotEmpty && otp.length == 6) {
+              /*String otp =
+                                _controllers.map((controller) => controller.text).join();*/
+              if (otp.isNotEmpty) {
+                setState(() {
+                  isLoading = true;
+                });
+
+                bool isConnected = await _connectivityService.isConnected();
+                if (!isConnected) {
+                  setState(() {
+                    isLoading = false;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('No internet connection'),
+                        duration: maxDuration,
+                      ),
+                    );
+                  });
+                } else {
+                  VerifyOtpEmailVerifyRequest request =
+                      VerifyOtpEmailVerifyRequest(
+                          customer: CustomerVerifyOtpEmail(
+                    phoneNumber: phoneNumber,
+                    email: emailController.text,
+                    emailOtp: otp,
+                  ));
+                  await Provider.of<MainViewModel>(context, listen: false)
+                      .VerifyOtpVerifyEmail(
+                          "/api/v1/app/customers/verify_email_otp", request);
+                  ApiResponse apiResponse =
+                      Provider.of<MainViewModel>(context, listen: false)
+                          .response;
+                  VerifyEmailResponse(context, apiResponse);
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Enter otp sent on your email.'),
+                    duration: maxDuration,
+                  ),
+                );
+              }
+            }
+          } else {
+            _handleKeyTap(value);
+          }
+        }),
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: TextButton(

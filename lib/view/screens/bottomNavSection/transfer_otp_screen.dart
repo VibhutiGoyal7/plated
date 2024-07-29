@@ -165,12 +165,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(toolbarHeight: 65,leading: GestureDetector(
-        onTap: (){
-          Navigator.of(context).pop;
-        },
-        child: Icon(Icons.arrow_back),
-      ),),
+     // appBar:
       body: Stack(
         children: [
           SafeArea(
@@ -178,6 +173,71 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
+                  width: screenWidth * 0.95,
+                  //height: screenHeight * 0.15,
+                  margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8),
+                  child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 2),
+                        child: Row(
+                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Icon(Icons.arrow_back),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              "Paying to:",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Spacer(),
+                            Text("${widget.data?.fullName}",
+                                style: TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Phone No:"),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          //Text("${widget.data?.fullName}"),
+
+                          widget.data?.receiverPhoneNumber != null
+                              ? Text("${widget.data?.receiverPhoneNumber}")
+                              : Text("${widget.data?.receiverUsername}"),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Sending:"),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(addCurrencySymbol(
+                              currencySymbol, "${widget.data?.amount}")),
+                        ],
+                      ),
+                    ],
+                  ),
+                  alignment: AlignmentDirectional.center,
+                ),
+                /*Container(
                   width: screenWidth*0.95,
                   margin: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
                   child:
@@ -200,7 +260,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                     ],
                   ),
                   alignment: AlignmentDirectional.center,
-                ),
+                ),*/
                 Expanded(
                   child: Container(
                     width: screenWidth,
