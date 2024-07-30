@@ -276,10 +276,76 @@ abstract class Languages {
   String get labelSelectCountryCode;
 
   String get labelWithdraw;
-  /*String get labelEnterValidPhone;
 
-  String get labelEnterValidPhone;
+  String get labelNoTransaction;
 
-  String get labelEnterValidPhone;*/
+  String get labelViewAll;
+
+  String get labelMore;
+
+  String get labelStars;
+
+  String get labelKycNonVerified;
+
+  String get labelPressBackToExit;
+
+  String get labelDashboard;
+
+  String get labelNoInternetConnection;
+
+  String get labelSuccess;
+
+  String get labelPay;
+
+  String get labelMostFrequent;
+
+  String get labelQuickAction;
+
+  String get labelRequestQR;
+
+  String get labelInvalidAccessToken;
+
+  String get labelAdd;
+
+  String get statusVerified;
+
+  String get labelHintUserNameOrPhoneNo;
+
+  String get labelRecents;
+
+  String get labelNoRecentTransaction;
+
+  String get labelEnterPhoneNoOrUsernameSub;
+
+  String get labelPleaseEnterValidDetails;
+
+  String get labelPaying;
+
+  String get labelPleaseEnterAmt;
+  /*
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+
+  String get statusVerified;
+  */
+
+
 
 }

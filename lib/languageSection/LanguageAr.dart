@@ -1,6 +1,76 @@
 import 'Languages.dart';
 
 class LanguageAr extends Languages {
+
+  @override
+  String get labelEnterPhoneNoOrUsernameSub => "Please enter phone number registered with Payorio or username to(such as XXXXX@payorio) to which you want to transfer money.";
+
+  @override
+  String get labelHintUserNameOrPhoneNo => "Username or phone number";
+
+  @override
+  String get labelNoRecentTransaction => "No recent Transactions";
+
+  @override
+  String get labelPaying => "Paying:";
+
+  @override
+  String get labelPleaseEnterAmt => "Please enter amount";
+
+  @override
+  String get labelPleaseEnterValidDetails => "Please enter valid details.";
+
+  @override
+  String get labelRecents => "Recents";
+
+  @override
+  String get labelAdd => "Add";
+
+  @override
+  String get labelDashboard => "Dashboard";
+
+  @override
+  String get labelInvalidAccessToken => "Invalid access token";
+
+  @override
+  String get labelKycNonVerified => "KYC NON-VERIFIED";
+
+  @override
+  String get labelMore => "More";
+
+  @override
+  String get labelMostFrequent => "Most frequent";
+
+  @override
+  String get labelNoInternetConnection => "No Internet Connection";
+
+  @override
+  String get labelNoTransaction => "No Transactions";
+
+  @override
+  String get labelPay => "Pay";
+
+  @override
+  String get labelPressBackToExit => "Press back again to exit";
+
+  @override
+  String get labelQuickAction => "Quick action";
+
+  @override
+  String get labelRequestQR => "Request QR";
+
+  @override
+  String get labelStars => "**";
+
+  @override
+  String get labelSuccess => "Success";
+
+  @override
+  String get labelViewAll => "View all";
+
+  @override
+  String get statusVerified => "verified";
+
   @override
   String get appName => "متعدد اللغات";
 

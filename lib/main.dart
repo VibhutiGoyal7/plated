@@ -51,6 +51,7 @@ import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
 import 'package:Payrio/view/screens/profileSection/qr_scanner_screen.dart';
 import 'package:Payrio/view/screens/profileSection/setting_screen.dart';
+import 'package:Payrio/view/screens/profileSection/verify_email_otp_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_screen.dart';
 import 'package:Payrio/view/screens/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeem_screen.dart';
@@ -246,6 +247,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return VerifyEmailScreen();
+            },
+            '/VerifyEmailOtpScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return VerifyEmailOtpScreen();
             },
             '/VerifyIdentityScreen': (context) {
               final args =

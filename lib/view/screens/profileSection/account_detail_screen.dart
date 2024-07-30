@@ -255,13 +255,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                     ),
 
                     TabBar(
+                      dividerColor: Colors.transparent,
                       tabs: [
                         Tab(text: "Identity Proof"),
                         Tab(text: "Address Proof"),
                       ],
-                      /*labelColor: AppColor.WHITE,
-              unselectedLabelColor: AppColor.WHITE,
-              indicatorColor: AppColor.WHITE,*/
                     ),
                     Expanded(
                       child: TabBarView(

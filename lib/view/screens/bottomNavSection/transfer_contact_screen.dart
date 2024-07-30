@@ -140,7 +140,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Please enter phone number registered with Payorio or username to(such as XXXXX@payorio) to which you want to transfer money.",
+                                Languages.of(context)!.labelEnterPhoneNoOrUsernameSub,
                                 style: TextStyle(
                                     fontSize: 13.0, fontWeight: FontWeight.normal),
                               ),
@@ -156,7 +156,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
-                              "Recents",
+                              Languages.of(context)!.labelRecents,
                               style: TextStyle(
                                   fontSize: 18.0, fontWeight: FontWeight.w600),
                             ),
@@ -169,7 +169,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                           Container(
                             height: screenHeight*0.3,
                             child: Center(
-                              child: Text("No recent transactions.",
+                              child: Text(Languages.of(context)!.labelNoRecentTransaction,
                                   style: TextStyle(color: isDarkMode ? Colors.grey : Colors.black),),
                             ),
                           )
@@ -326,7 +326,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
               borderSide: BorderSide(
                   color: AppColor.PRIMARY,
                   width: 0.7)),
-          hintText: "Username or phone number",
+          hintText: Languages.of(context)!.labelHintUserNameOrPhoneNo,
           hintStyle:
               TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
           suffixIcon: Icon(
@@ -356,7 +356,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
           isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('No internet connection'),
+              content: Text(Languages.of(context)!.labelNoInternetConnection),
               duration: maxDuration,
             ),
           );
@@ -381,7 +381,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Please enter valid details.'),
+        content: Text(Languages.of(context)!.labelPleaseEnterValidDetails),
         duration: maxDuration,
       ));
     }

@@ -343,6 +343,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     children: [
                       Text("Save ID", style: TextStyle(fontSize: 10),),
                       Checkbox(
+                        checkColor: Colors.white,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         semanticLabel: "Save ID",
                         side: BorderSide(color: Colors.black),

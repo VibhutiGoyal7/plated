@@ -8,11 +8,12 @@ class ShimmerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
+          baseColor:isDarkMode? Colors.grey[800]! :Colors.grey[300]!,
+          highlightColor:isDarkMode? Colors.grey[700]!: Colors.grey[100]!,
           child: Card(
             child: Container(
               decoration: BoxDecoration(
@@ -26,8 +27,8 @@ class ShimmerList extends StatelessWidget {
           ),
         ),
         Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
+          baseColor:isDarkMode? Colors.grey[800]! :Colors.grey[300]!,
+          highlightColor:isDarkMode? Colors.grey[700]!: Colors.grey[100]!,
           child: Card(
             child: Container(
               decoration: BoxDecoration(
