@@ -142,7 +142,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   ? ""
                   : "${dashboardResponse?.customerData?.kycStatus}";
           name = dashboardResponse?.customerData?.firstName == null
-              ? "Name"
+              ? Languages.of(context)!.labelName
               : dashboardResponse?.customerData?.firstName;
           imageUrl = dashboardResponse?.customerData?.imageUrl == null
               ? ""
@@ -162,7 +162,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == Languages.of(context)!.labelInvalidAccessToken) {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
@@ -170,7 +170,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             setState(() {
               print("userDetails?.imageUrl${userDetails?.imageUrl}");
               name = userDetails?.firstName == null
-                  ? "Name"
+                  ? Languages.of(context)!.labelName
                   : userDetails?.firstName;
               imageUrl =
                   userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
@@ -203,12 +203,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.COMPLETED:
         print("rwrwr ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;
-        if (kycStatusApi != "verified") {
+        if (kycStatusApi != Languages.of(context)!.statusVerified) {
           isApiLoading = false;
           Navigator.pushNamed(context, '/ChooseDocScreen');
-        } else if (kycStatusApi == "verified") {
+        } else if (kycStatusApi == Languages.of(context)!.statusVerified) {
           isApiLoading = false;
-          if (calledShortCut == "Add") {
+          if (calledShortCut == Languages.of(context)!.labelAdd) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/PaymentMethodScreen');
           } else {
@@ -218,7 +218,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         }
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == Languages.of(context)!.labelInvalidAccessToken) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -267,7 +267,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           icon: Icons.call_made,
           selected: true),
       Shortcutitemlist(
-          title: "Request QR",
+          title: Languages.of(context)!.labelRequestQR,
           icon: Icons.send,
           selected: true),
   /*    Shortcutitemlist(
@@ -305,7 +305,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             lastBackPressed = DateTime.now();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Press back again to exit'),
+                content: Text(Languages.of(context)!.labelPressBackToExit),
                 duration: maxDuration,
               ),
             );
@@ -455,7 +455,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                dashBoardKycStatus == "verified"
+                                                dashBoardKycStatus == Languages.of(context)!.statusVerified
                                                     ? Icon(
                                                   Icons.verified,
                                                   color: Colors.green.shade700,
@@ -512,7 +512,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                             ),
                             (dashBoardKycStatus != "" &&
-                                    dashBoardKycStatus != "verified" &&
+                                    dashBoardKycStatus != Languages.of(context)!.statusVerified &&
                                     dashBoardKycStatus != null)
                                 ? GestureDetector(
                                     onTap: () {
@@ -554,7 +554,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Text(
-                                                    "KYC NON-VERIFIED",
+                                                    Languages.of(context)!.labelKycNonVerified,
                                                     style:
                                                         TextStyle(fontSize: 10),
                                                   ),
@@ -606,7 +606,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   ),
                                   Text(
                                     addCurrencySymbol(currencySymbol,
-                                        "${isAmountVisible ? amount : "**"}  "),
+                                        "${isAmountVisible ? amount : Languages.of(context)!.labelStars}  "),
                                     style: TextStyle(
                                       fontSize: 26.0,
                                       fontWeight: FontWeight.w600,
@@ -640,7 +640,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               _shortcutCardsList[index].icon);
                                         } else {
                                           return _buildContainer(context,
-                                              "More", Icons.more_horiz);
+                                              Languages.of(context)!.labelMore
+                                              , Icons.more_horiz);
                                         }
                                       },
                                     ),
@@ -822,7 +823,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           )
                               : Center(
                             child: Text(
-                              "No Transactions",
+                              Languages.of(context)!.labelNoTransaction,
                               style: TextStyle(fontSize: 15, color: Colors.grey),
                             ),
                           )
@@ -875,14 +876,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Quick Actions",
+                  Languages.of(context)!.labelQuickAction,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "Most Frequent",
+                  Languages.of(context)!.labelMostFrequent,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -902,9 +903,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         if (index <= 1) {
                           return GestureDetector(
                             onTap: () {
-                              if (_shortcutCardsList[index].title == "Add") {
+                              if (_shortcutCardsList[index].title == Languages.of(context)!.labelAdd) {
                                 Navigator.pop(context);
-                                calledShortCut = "Add";
+                                calledShortCut = Languages.of(context)!.labelAdd;
                                 _getKycStatus();
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelWithdraw) {
@@ -952,7 +953,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     ),
                   ),
                 ),
-                Text("Send",
+                Text(Languages.of(context)!.labelSend,
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 SizedBox(
@@ -1007,7 +1008,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   ),
                 ),
                 Text(
-                  "Pay",
+                  Languages.of(context)!.labelPay,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -1074,11 +1075,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   colorStatus(String status) {
     Color color = Colors.black;
-    if (status == "Pending") {
+    if (status == Languages.of(context)!.labelPending) {
       color = Colors.orange;
-    } else if (status == "Success") {
+    } else if (status == Languages.of(context)!.labelSuccess) {
       color = Colors.green;
-    } else if (status == "Rejected") {
+    } else if (status == Languages.of(context)!.labelRejected) {
       color = Colors.red;
     }
     return color;
@@ -1112,7 +1113,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           calledShortCut = Languages.of(context)!.labelWithdraw,
                           _getKycStatus()
                         }
-                      else if (text == "More")
+                      else if (text == Languages.of(context)!.labelMore)
                         {_showPicker(context: context)}
                     },
                 icon: Icon(
@@ -1142,7 +1143,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
             duration: maxDuration,
           ),
         );
@@ -1171,7 +1172,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
             duration: maxDuration,
           ),
         );

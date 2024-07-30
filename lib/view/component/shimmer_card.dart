@@ -5,6 +5,7 @@ class ShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: screenWidth,
       height: 80,
@@ -17,8 +18,8 @@ class ShimmerCard extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 5),
         itemBuilder: (BuildContext context, int index) {
           return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
+            baseColor:isDarkMode? Colors.grey[800]! :Colors.grey[300]!,
+            highlightColor:isDarkMode? Colors.grey[700]!: Colors.grey[100]!,
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 4),
               width: screenWidth / 1.1,

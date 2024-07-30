@@ -16,13 +16,13 @@ import '../../component/connectivity_service.dart';
 import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 
-class VerifyEmailScreen extends StatefulWidget {
+class VerifyEmailOtpScreen extends StatefulWidget {
   @override
-  _VerifyEmailScreenContentState createState() =>
-      _VerifyEmailScreenContentState();
+  _VerifyEmailOtpScreenState createState() =>
+      _VerifyEmailOtpScreenState();
 }
 
-class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
+class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
   late TextEditingController emailController;
 
   //late TextEditingController otpController;
@@ -31,7 +31,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
   final List<String> _otp = List.generate(6, (_) => '');
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-      List.generate(6, (index) => TextEditingController());
+  List.generate(6, (index) => TextEditingController());
   String dropdownValue = "";
   bool isValid = false;
   bool isOtpBoxVisible = false;
@@ -95,7 +95,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
 
   Widget getEmailOtp(BuildContext context, ApiResponse apiResponse) {
     CreateOtpVerifyEmailResponse? mediaList =
-        apiResponse.data as CreateOtpVerifyEmailResponse?;
+    apiResponse.data as CreateOtpVerifyEmailResponse?;
     setState(() {
       isLoading = false;
     });
@@ -104,12 +104,12 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("emailOtp: ${mediaList?.emailOtp}");
-       /* setState(() {
+        setState(() {
           isOtpBoxVisible = true;
-        });*/
+        });
         ToastComponent.showToast(context: context, message: mediaList?.emailOtp);
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/VerifyEmailOtpScreen');
+        //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse?.message == "Invalid access token") {
@@ -149,9 +149,9 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         if (apiResponse?.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
         }else
-          {
-            ToastComponent.showToast(context: context, message: message);
-          }
+        {
+          ToastComponent.showToast(context: context, message: message);
+        }
         return Center(
           //child: Text('Please try again later!!!'),
         );
@@ -191,12 +191,8 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20),
-                    Text(
-                      Languages.of(context)!.labelVerifyYourEmail,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 10),
+
+                    /*SizedBox(height: 10),
                     Text(
                       Languages.of(context)!.verifyEmailSubTitle,
                       style: TextStyle(fontSize: 15),
@@ -233,7 +229,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                                 });
 
                                 bool isConnected =
-                                    await _connectivityService.isConnected();
+                                await _connectivityService.isConnected();
                                 if (!isConnected) {
                                   setState(() {
                                     isLoading = false;
@@ -246,19 +242,19 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                                   });
                                 } else {
                                   CreateOtpEmailVerifyRequest request =
-                                      CreateOtpEmailVerifyRequest(
-                                          customer: CustomerGetOtpEmailDetail(
-                                    phoneNumber: phoneNumber,
-                                    email: emailController.text,
-                                  ));
+                                  CreateOtpEmailVerifyRequest(
+                                      customer: CustomerGetOtpEmailDetail(
+                                        phoneNumber: phoneNumber,
+                                        email: emailController.text,
+                                      ));
                                   await Provider.of<MainViewModel>(context,
-                                          listen: false)
+                                      listen: false)
                                       .CreateOtpVerifyEmail(
-                                          "/api/v1/app/customers/generate_otp_for_email",
-                                          request);
+                                      "/api/v1/app/customers/generate_otp_for_email",
+                                      request);
                                   ApiResponse apiResponse =
                                       Provider.of<MainViewModel>(context,
-                                              listen: false)
+                                          listen: false)
                                           .response;
                                   getEmailOtp(context, apiResponse);
                                 }
@@ -277,7 +273,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                     SizedBox(
                       height: 30.0,
                     ),
-                    //if (isOtpBoxVisible) _buildVerifySection(isDarkMode)
+                    if (isOtpBoxVisible)*/ _buildVerifySection(isDarkMode)
                   ],
                 ),
               ),
@@ -309,7 +305,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-          (index) => Container(
+              (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -345,6 +341,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         SizedBox(
           height: 10.0,
         ),
+        SizedBox(height: 100,),
         CustomNumberKeyboard(onKeyTap: (value) async {
           if (value == "clear") {
             _handleBackspace();
@@ -371,15 +368,15 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                   });
                 } else {
                   VerifyOtpEmailVerifyRequest request =
-                      VerifyOtpEmailVerifyRequest(
-                          customer: CustomerVerifyOtpEmail(
-                    phoneNumber: phoneNumber,
-                    email: emailController.text,
-                    emailOtp: otp,
-                  ));
+                  VerifyOtpEmailVerifyRequest(
+                      customer: CustomerVerifyOtpEmail(
+                        phoneNumber: phoneNumber,
+                        email: emailController.text,
+                        emailOtp: otp,
+                      ));
                   await Provider.of<MainViewModel>(context, listen: false)
                       .VerifyOtpVerifyEmail(
-                          "/api/v1/app/customers/verify_email_otp", request);
+                      "/api/v1/app/customers/verify_email_otp", request);
                   ApiResponse apiResponse =
                       Provider.of<MainViewModel>(context, listen: false)
                           .response;
@@ -398,12 +395,12 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
             _handleKeyTap(value);
           }
         }),
-        Padding(
+      /*  Padding(
           padding: const EdgeInsets.all(20.0),
           child: TextButton(
             onPressed: () async {
               String otp =
-                  _controllers.map((controller) => controller.text).join();
+              _controllers.map((controller) => controller.text).join();
               if (otp.isNotEmpty) {
                 setState(() {
                   isLoading = true;
@@ -422,15 +419,15 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                   });
                 } else {
                   VerifyOtpEmailVerifyRequest request =
-                      VerifyOtpEmailVerifyRequest(
-                          customer: CustomerVerifyOtpEmail(
-                    phoneNumber: phoneNumber,
-                    email: emailController.text,
-                    emailOtp: otp,
-                  ));
+                  VerifyOtpEmailVerifyRequest(
+                      customer: CustomerVerifyOtpEmail(
+                        phoneNumber: phoneNumber,
+                        email: emailController.text,
+                        emailOtp: otp,
+                      ));
                   await Provider.of<MainViewModel>(context, listen: false)
                       .VerifyOtpVerifyEmail(
-                          "/api/v1/app/customers/verify_email_otp", request);
+                      "/api/v1/app/customers/verify_email_otp", request);
                   ApiResponse apiResponse =
                       Provider.of<MainViewModel>(context, listen: false)
                           .response;
@@ -450,7 +447,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                 alignment: Alignment.center,
                 child: Text("Validate")),
           ),
-        ),
+        ),*/
       ],
     );
   }

@@ -158,7 +158,7 @@ class _TransferScreenState extends State<TransferScreen> {
                             height: 12,
                           ),
                           Text(
-                            "Paying: ${name}",
+                            "${Languages.of(context)!.labelPaying} ${name}",
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                           ),Text(
                             "${userName}",
@@ -171,7 +171,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                   color: isDarkMode ? Colors.white70 : Colors.black54)),*/
                           SizedBox(height: 10,),
                           Text(
-                            "Please enter amount",
+                            Languages.of(context)!.labelPleaseEnterAmt,
                             style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                           ),
 
@@ -363,7 +363,7 @@ class _TransferScreenState extends State<TransferScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
             duration: maxDuration,
           ),
         );
