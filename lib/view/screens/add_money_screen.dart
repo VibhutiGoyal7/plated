@@ -4,7 +4,6 @@ import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jumio_mobile_sdk_flutter/jumio_mobile_sdk_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../languageSection/Languages.dart';
@@ -36,8 +35,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   String kycStatus = "";
   String amount = "";
   String? countryCurrencySymbol;
+  String? currentBalance;
   bool expanded = false;
   bool inputValid = false;
+  List<String> _allLogList = ["50", "100","200", "300", "500"];
+  final ScrollController _scrollController = ScrollController();
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
@@ -54,6 +56,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         countryCurrencySymbol = symbol;
+      });
+    });
+    Helper.getUserBalance().then((balance) {
+      setState(() {
+        currentBalance = balance!;
       });
     });
   }
@@ -96,7 +103,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token")
+        if (apiResponse.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -108,60 +115,33 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         );
     }
   }
-
-  Future<bool> _onWillPop() async {
-    Navigator.pushNamed(
-      context,
-      "/BottomNav",
-    );
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool didPop) {
-        print("DashBoard $didPop");
-        if (didPop) {
-          return;
-        }
-        if (kDebugMode) {
-          Navigator.pushReplacementNamed(
-            context,
-            "/BottomNav",
-          );
-          // return Future.value(true);
-        }
-        Navigator.pushReplacementNamed(
-          context,
-          "/BottomNav",
-        );
+    return GestureDetector(
+      onTap: (){
+        hideKeyBoard();
       },
-      child: GestureDetector(
-        onTap: (){
-          hideKeyBoard();
-        },
-        child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          appBar: AppBar(toolbarHeight: 65,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () async {
-                hideKeyBoard();
-                await Future.delayed(Duration(milliseconds: 2));
-                Navigator.pushNamed(context, '/PaymentMethodScreen');
-              },
-            ),
-            title: Text(
-              "${widget.data}",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-            ),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+       /* appBar: AppBar(toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () async {
+              hideKeyBoard();
+              await Future.delayed(Duration(milliseconds: 2));
+              Navigator.pushNamed(context, '/PaymentMethodScreen');
+            },
           ),
-          body: Stack(
+          title: Text(
+            "${widget.data}",
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+          ),
+        ),*/
+        body: SingleChildScrollView(
+          child: Stack(
             children: [
               isLoading?
               Container(
@@ -172,62 +152,160 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                 ),
               ): SizedBox(),
               SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    //crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 18,
-                      ),
-                      Container(
-                        height: 70,
-                        width: 70,
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: AppColor.WHITE,
-                          backgroundImage: AssetImage(
-                            "assets/bank_statement.png",
-
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          height: screenHeight * 0.35,
+                          child: Image(
+                            height: screenHeight * 0.35,
+                            image: AssetImage("assets/header.png"),
+                            fit: BoxFit.fill,
                           ),
+                          alignment: AlignmentDirectional.center,
+                        ), Container(
+                          width: screenWidth,
+                          height: screenHeight * 0.35,
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.arrow_back),
+                                onPressed: () async {
+                                  hideKeyBoard();
+                                  await Future.delayed(Duration(milliseconds: 2));
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "${widget.data}",
+                                  style: TextStyle(fontSize: 24.0,),
+                                ),
+                              ),
+                              SizedBox(height: 25,),
+                              Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Container(
+                                    width: screenWidth,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Balance",
+                                          style: TextStyle(fontSize: 14.0,),
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Text(
+                                          "${addCurrencySymbol(countryCurrencySymbol , "${currentBalance}")}",
+                                          style: TextStyle(fontSize: 26.0,),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+
+
+                            ],
+                          ),
+                          //alignment: AlignmentDirectional.center,
+                        ),
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 18,
+                    ),
+                   /* Container(
+                      height: 70,
+                      width: 70,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: AppColor.WHITE,
+                        backgroundImage: AssetImage(
+                          "assets/bank_statement.png",
+
                         ),
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        "Adding via: ${paymentMethod}",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      Text("${username}",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                              color: isDarkMode ? Colors.white70 : Colors.black54)),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "Adding via: ${paymentMethod}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                    Text("${username}",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                            color: isDarkMode ? Colors.white70 : Colors.black54)),
+                */
+                    SizedBox(height: 10,),
+                    _buildPhoneInput(
+                        context, Languages.of(context)!.labelZero, _amountController),
 
-                      SizedBox(height: 20,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
-                          _buildPhoneInput(
-                              context, Languages.of(context)!.labelZero, _amountController),
-                        ],
+                                 /*     Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                      child: Text(
+                        "Limit : ${limitAmt}",
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                       ),
-
-                 /*     Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
-                        child: Text(
-                          "Limit : ${limitAmt}",
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                        ),
-                      ),*/
-                      Spacer(),
-                      _buildFooter(context),
-                    ],
-                  ),
+                    ),*/
+                    Container(
+                      height: screenHeight * 0.065,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      alignment: Alignment.center,// Set the desired height
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: _scrollController,
+                        itemCount: _allLogList.length,
+                        padding: const EdgeInsets.only(bottom: 10),
+                        // Adjust padding if needed
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _amountController.text = _allLogList[index];
+                                _isValidInput();
+                              });
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width *
+                                  0.2, // Adjust width as needed
+                              margin: EdgeInsets.all(4),
+                              child: Card(
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      _allLogList[index],
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    //Spacer(),
+                    SizedBox(height: 40,),
+                    Center(
+                      child:
+                      _buildFooter(context) ,
+                    )
+                  ],
                 ),
               ),
             ],
@@ -250,14 +328,17 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Add Money",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "Add Money",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                ),
               ),
               Card(
                 child: Container(
-                  height: 60,
-                  width: screenWidth * 0.75,
+                  height: 55,
+                  width: screenWidth * 0.88,
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
@@ -370,7 +451,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     );
   }
 
-  Future<void> _start(String authorizationToken) async {
+  /*Future<void> _start(String authorizationToken) async {
     await _logErrors(() async {
       await Jumio.init(authorizationToken, "US");
       final result = await Jumio.start({
@@ -425,7 +506,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       Navigator.pushNamed(context, '/VerifyIdentityScreen');
     }
   }
-
+*/
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();

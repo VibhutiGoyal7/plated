@@ -28,6 +28,7 @@ class _SigninScreenState extends State<SigninScreen> {
   final ConnectivityService _connectivityService = ConnectivityService();
 
   bool inputValid = false;
+  bool isChecked = false;
   late double screenWidth;
   late bool isDarkMode;
 
@@ -36,6 +37,13 @@ class _SigninScreenState extends State<SigninScreen> {
     super.initState();
     passwordVisible = true;
     inputValid = false;
+    Helper.getUserId().then((id) {
+      print("id${id}");
+      setState(() {
+        _phoneNoController.text = "${id}";
+      });
+      _isValidInput();
+    });
   }
 
   void _isValidInput() {
@@ -71,6 +79,11 @@ class _SigninScreenState extends State<SigninScreen> {
         print("rwrwr ${mediaList?.firstName}");
         /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
             username: mediaList?.username,userId: mediaList?.id, email: mediaList?.email,   );*/
+
+        if(isChecked) {
+          print("aaa${_phoneNoController.text}");
+          Helper.saveUserId("${_phoneNoController.text}");
+        }
 
         String token = "${mediaList?.token}";
         bool isSaved = await Helper.saveUserToken(token);
@@ -213,7 +226,35 @@ class _SigninScreenState extends State<SigninScreen> {
                             SizedBox(
                               height: 15,
                             ),
-                            _buildFooter(context, apiResponse),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildFooter(context, apiResponse),
+                                SizedBox(
+                                  width: screenWidth * 0.22,
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      hideKeyBoard();
+                                      _isValidInput();
+                                      const maxDuration = Duration(seconds: 2);
+
+                                    },
+                                    child: Image(
+                                      height: 45,
+                                      //width: 40,
+                                      image: AssetImage("assets/fingerprint.png"),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        //padding: EdgeInsets.symmetric(vertical: 10.0),
+                                        backgroundColor: AppColor.WHITE,
+                                        elevation: 3,
+                                        shape: BeveledRectangleBorder(
+                                            borderRadius: BorderRadius.circular(2))),
+                                  ),
+                                ),
+
+                              ],
+                            )
                           ],
                         ),
                       ),
@@ -287,14 +328,33 @@ class _SigninScreenState extends State<SigninScreen> {
                 onChanged: (value) {
                   _isValidInput();
                 },
+                textAlignVertical: TextAlignVertical.center,
                 onSubmitted: (value) {},
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
+                  alignLabelWithHint: true,
                   hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Save ID", style: TextStyle(fontSize: 10),),
+                      Checkbox(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        semanticLabel: "Save ID",
+                        side: BorderSide(color: Colors.black),
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isChecked = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  )
                 ),
               ),
             ),
@@ -383,9 +443,10 @@ class _SigninScreenState extends State<SigninScreen> {
     return Column(
       children: [
         SizedBox(
-          width: screenWidth * 0.8,
+          width: screenWidth * 0.7,
+          height: 45,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, ),
             child: ElevatedButton(
               onPressed: () async {
                 hideKeyBoard();
@@ -436,7 +497,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     color: inputValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  //padding: EdgeInsets.symmetric(vertical: 10.0),
                   backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(

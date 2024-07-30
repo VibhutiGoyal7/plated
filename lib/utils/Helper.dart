@@ -13,6 +13,7 @@ class Helper {
   static String biometricPref = 'biometricPref';
   static String isAuthenticatedPref = 'isAuthenticatedPref';
   static String userBalancePref = 'UserBalance';
+  static String userId = 'UserId';
   static String currencySymbolPref = 'CurrencySymbol';
   static String userDetailsPref = 'UserDetails';
   static String countryPref = 'Country';
@@ -78,6 +79,18 @@ class Helper {
   static Future<String?> getUserBalance() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(userBalancePref);
+  }
+
+
+  static Future<bool> saveUserId(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(userId, token);
+  }
+
+  // Read Data
+  static Future<String?> getUserId() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(userId);
   }
 
   static Future<bool> saveCurrencySymbol(token) async {
@@ -162,10 +175,10 @@ class Helper {
     return SetUpAccountResponse.fromPref(UserDetailMap);
   }
 
-  static Future<Locale> setLocale(String languageCode) async {
+  static Future<Locale> setLocale(_languageCode) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    await _prefs.setString(prefSelectedLanguageCode, languageCode);
-    return _locale(languageCode);
+    await _prefs.setString(prefSelectedLanguageCode, _languageCode);
+    return _locale(_languageCode);
   }
 
   static Future<Locale> getLocale() async {
@@ -210,7 +223,17 @@ class Helper {
 
   static Future<void> clearAllSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    //await prefs.clear();
+    await saveUserToken("");
+    await saveBiometric(false);
+    await saveUserAuthenticated(false);
+    await saveUserBalance("");
+    await saveCurrencySymbol("");
+    await saveRecentP2PDetails(null);
+    await saveUserDetails(null);
+    await saveCountry("");
+    await saveKycStatus("");
+    await setLocale(null);
     print('All shared preferences cleared');
   }
 }
