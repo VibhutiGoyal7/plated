@@ -276,7 +276,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ],
         ),
       ),
-      isLoading
+      /*isLoading
           ? Stack(
         children: [
           // Block interaction
@@ -289,7 +289,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         ],
       )
-          : SizedBox(),
+          : SizedBox(),*/
     ]);
   }
 
