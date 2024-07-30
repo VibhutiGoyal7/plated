@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   @override
@@ -70,9 +71,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               onTap: () {
                 //_showPicker(context: context);
                 Navigator.pushNamed(context, "/PaymentMethodTypeScreen",
-                    arguments: "Local Methods");
+                    arguments: "Local Distributors");
               },
-              child: _buildCard(context, "Local Methods",
+              child: _buildCard(context, "Local Distributors",
                   "assets/bank_statement.png", isDarkMode),
             )
           ]),
@@ -87,8 +88,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       ),
       child: Container(
         width: double.infinity,
-        child:
-            /*isLoading
+        child: isLoading
             ? Shimmer.fromColors(
                 baseColor: Colors.white38,
                 highlightColor: Colors.grey,
@@ -102,42 +102,44 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   ),
                 ),
               )
-            :*/
-            Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 45,
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              /*child: Image(
-                      alignment: Alignment.topLeft,
-                      width: 25,
-                      image: AssetImage(icon),
-                    ),*/
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                        child: Image(
+                          alignment: Alignment.topLeft,
+                          width: 25,
+                          image: AssetImage(icon),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.call_made_sharp,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      size: 18,
+                    ),
+                  )
+                ],
               ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.call_made_sharp,
-                color: isDarkMode ? Colors.white : Colors.black,
-                size: 18,
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

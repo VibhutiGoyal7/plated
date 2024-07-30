@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../../model/apis/api_response.dart';
-import '../../../model/response/createOtpChangePassResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
@@ -123,14 +122,11 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() async {
-        result = scanData;
-        print(result?.code);
-        // reassemble();
-        controller.pauseCamera();
-        _initiateTransaction("${result?.code}");
-      });
+    controller.scannedDataStream.listen((scanData) async {
+      result = scanData;
+      // reassemble();
+      controller.pauseCamera();
+      _initiateTransaction("${result!.code}");
     });
   }
 
@@ -159,7 +155,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         );
       });
     } else {
-      CheckCustomerRequest request = CheckCustomerRequest(username: userName, phoneNo: null);
+      CheckCustomerRequest request =
+          CheckCustomerRequest(username: userName, phoneNo: null);
       await Provider.of<MainViewModel>(context, listen: false)
           .checkCustomerByUsername(
               "api/v1/app/customers/check_customer_by_username", request);
@@ -171,8 +168,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
   Future<Widget> initiateCheckCustomerResponse(
       BuildContext context, ApiResponse apiResponse, String userName) async {
-    CheckCustomerResponse? checkCustomerResponse =
-        apiResponse.data;
+    CheckCustomerResponse? checkCustomerResponse = apiResponse.data;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;

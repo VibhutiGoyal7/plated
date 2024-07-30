@@ -37,10 +37,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
       // Ensure that setState is called synchronously after the async work is done
       if (mounted) {
         setState(() {
-          isLoading = false;
           selectedLanguageValue = selectedLanguage.languageCode;
           mLanguages.map((Language items) {
             if (selectedLanguageValue == items.code) {
+              isLoading = false;
               selectedLanguageName = items.name;
             }
           }).toList();
@@ -90,7 +90,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () async {
-        
+
                                 await Helper.setLocale(mLanguages[index].code);
                                 setState(() {
                                   isLoading = false;

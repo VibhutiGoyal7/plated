@@ -2,6 +2,7 @@ import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/component/detail_box.dart';
 import 'package:Payrio/view/screens/authSection/money_safe_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -63,188 +64,208 @@ class _SettingScreenState extends State<SettingScreen> {
     bool isPasswordVisible = false;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     var screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(toolbarHeight: 65,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          Languages.of(context)!.labelSettings,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-       /* actions: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => {_showLogOutDialog()},
-                child: Icon(
-                  Icons.logout,
-                  size: 28,
-                  color: AppColor.PRIMARY,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("SettingScreen $didPop");
+        if (didPop) {
+          return;
+        }
+        if (kDebugMode) {
+          Navigator.pushReplacementNamed(
+            context,
+            "/ProfileScreen",
+          );
+          // return Future.value(true);
+        }
+        Navigator.pushReplacementNamed(
+          context,
+          "/ProfileScreen",
+        );
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, "/ProfileScreen");
+            },
+          ),
+          title: Text(
+            Languages.of(context)!.labelSettings,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+         /* actions: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () => {_showLogOutDialog()},
+                  child: Icon(
+                    Icons.logout,
+                    size: 28,
+                    color: AppColor.PRIMARY,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 15,
-              )
-            ],
-          )
-        ],*/
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.symmetric(vertical: 8.0),
-                padding: EdgeInsets.symmetric(horizontal: 6.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            Languages.of(context)!.labelLanguage,
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            "${dropdownValue}",
-                            style: TextStyle(
-                                fontSize: 11.0, fontWeight: FontWeight.normal),
-                          ),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).pushNamed("/LanguageSelectionScreen");
-                        },
-                        child: Container(
-                          child: Text("Edit", style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 14
-                          ),) /*DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              dropdownColor:
-                                  isDarkMode ? Colors.grey : Colors.white,
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.only(left: 10),
-                              value: dropdownValue,
-                              items: mCities.map((Language items) {
-                                return DropdownMenuItem(
-                                  value: items.code,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(items.name,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                      )),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) async {
-                                await Helper.setLocale(newValue!);
-                                if (mounted) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                }
-                                widget.setLocale(Locale(newValue, ''));
-                                print(dropdownValue);
-                              },
+                SizedBox(
+                  width: 15,
+                )
+              ],
+            )
+          ],*/
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 6.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              Languages.of(context)!.labelLanguage,
                               style: TextStyle(
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black),
-                              hint: Text(
-                                "en",
-                              ),
+                                  fontSize: 15.0, fontWeight: FontWeight.w600),
                             ),
-                          )*/,
+                            Text(
+                              "${dropdownValue}",
+                              style: TextStyle(
+                                  fontSize: 11.0, fontWeight: FontWeight.normal),
+                            ),
+                          ],
                         ),
-                      ),
-                    ]),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: screenWidth * 7,
-                  height: 0.5,
-                  margin: EdgeInsets.only(top: 14),
-                  decoration: BoxDecoration(color: Colors.grey),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).pushNamed("/LanguageSelectionScreen");
+                          },
+                          child: Container(
+                            child: Text("Edit", style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 14
+                            ),) /*DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                dropdownColor:
+                                    isDarkMode ? Colors.grey : Colors.white,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.only(left: 10),
+                                value: dropdownValue,
+                                items: mCities.map((Language items) {
+                                  return DropdownMenuItem(
+                                    value: items.code,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(items.name,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                        )),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) async {
+                                  await Helper.setLocale(newValue!);
+                                  if (mounted) {
+                                    setState(() {
+                                      dropdownValue = newValue!;
+                                    });
+                                  }
+                                  widget.setLocale(Locale(newValue, ''));
+                                  print(dropdownValue);
+                                },
+                                style: TextStyle(
+                                    color:
+                                        isDarkMode ? Colors.white : Colors.black),
+                                hint: Text(
+                                  "en",
+                                ),
+                              ),
+                            )*/,
+                          ),
+                        ),
+                      ]),
                 ),
-              ),
-              Container(
-                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                  padding: EdgeInsets.all(6.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _buildLabelText(
-                          context, Languages.of(context)!.labelSecurity),
-                      SizedBox(width: 10,),
-                    ],
-                  )),
-              DetailBox(
-                heading: Languages.of(context)!.labelStepVerification,
-                subHeading: "Secure your account",
-                icon: Icons.verified_user,
-                headingTextSize: 14,
-                subHeadingTextSize: 13,
-              ),
-              _buildBiometricCard(context, "Enable App Lock", isDarkMode),
-
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: screenWidth * 7,
-                  height: 0.5,
-                  margin: EdgeInsets.only(top: 14),
-                  decoration: BoxDecoration(color: Colors.grey),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: screenWidth * 7,
+                    height: 0.5,
+                    margin: EdgeInsets.only(top: 14),
+                    decoration: BoxDecoration(color: Colors.grey),
+                  ),
                 ),
-              ),
-              Container(
-                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                  padding: EdgeInsets.all(6.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _buildLabelText(context, "Privacy"),
-                      SizedBox(width: 10,),
-
-                    ],
-                  )),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/ChangePasswordScreen');
-                },
-                child: DetailBox(
-                  heading: "Change Password",
-                  subHeading: "Update Current Password",
-                  icon: Icons.password,
+                Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    padding: EdgeInsets.all(6.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        _buildLabelText(
+                            context, Languages.of(context)!.labelSecurity),
+                        SizedBox(width: 10,),
+                      ],
+                    )),
+                DetailBox(
+                  heading: Languages.of(context)!.labelStepVerification,
+                  subHeading: "Secure your account",
+                  icon: Icons.verified_user,
                   headingTextSize: 14,
                   subHeadingTextSize: 13,
                 ),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  Navigator.pushNamed(context, '/ChangeTPinScreen');
-                },
-                child: DetailBox(
-                  heading: "Change Transaction Pin(TPIN)",
-                  subHeading: "Update Transaction Pin",
-                  icon: Icons.pin,
-                  headingTextSize: 14,
-                  subHeadingTextSize: 13,
+                _buildBiometricCard(context, "Enable App Lock", isDarkMode),
+
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: screenWidth * 7,
+                    height: 0.5,
+                    margin: EdgeInsets.only(top: 14),
+                    decoration: BoxDecoration(color: Colors.grey),
+                  ),
                 ),
-              ),
-            ],
+                Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    padding: EdgeInsets.all(6.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        _buildLabelText(context, "Privacy"),
+                        SizedBox(width: 10,),
+
+                      ],
+                    )),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/ChangePasswordScreen');
+                  },
+                  child: DetailBox(
+                    heading: "Change Password",
+                    subHeading: "Update Current Password",
+                    icon: Icons.password,
+                    headingTextSize: 14,
+                    subHeadingTextSize: 13,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.pushNamed(context, '/ChangeTPinScreen');
+                  },
+                  child: DetailBox(
+                    heading: "Change Transaction Pin(TPIN)",
+                    subHeading: "Update Transaction Pin",
+                    icon: Icons.pin,
+                    headingTextSize: 14,
+                    subHeadingTextSize: 13,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

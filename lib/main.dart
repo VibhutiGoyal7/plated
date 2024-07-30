@@ -70,14 +70,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
   //await Firebase.initializeApp();
-
   //await PushNotificationService().setupInteractedMessage();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
   });
 
-/*  RemoteMessage? initialMessage =
+  /*  RemoteMessage? initialMessage =
   await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: ${initialMessage}");

@@ -472,7 +472,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   isDarkMode),
                               _buildBiometricCard(context,
                                   "Bio-metric Authentication", isDarkMode),*/
-                                  Container(
+                              /*    Container(
                                       margin:
                                           EdgeInsets.symmetric(vertical: 8.0),
                                       padding: EdgeInsets.all(6.0),
@@ -489,7 +489,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       Icons.account_balance_wallet,
                                       size: 24,
                                     ),
-                                  ),
+                                  ),*/
                                   Container(
                                       margin:
                                           EdgeInsets.symmetric(vertical: 8.0),
