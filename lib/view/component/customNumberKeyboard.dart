@@ -1,6 +1,8 @@
+import 'package:Payrio/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 
 class CustomNumberKeyboard extends StatelessWidget {
+
   final Function(String) onKeyTap;
 
    CustomNumberKeyboard({required this.onKeyTap});
@@ -11,10 +13,12 @@ class CustomNumberKeyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.grey[200],
+        color: Colors.transparent
       ),
       padding: EdgeInsets.all(8.0),
       child: Column(
@@ -23,25 +27,25 @@ class CustomNumberKeyboard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _buildKey('1'),
-              _buildKey('2'),
-              _buildKey('3'),
+              _buildKey('1', isDarkMode),
+              _buildKey('2', isDarkMode),
+              _buildKey('3', isDarkMode),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _buildKey('4'),
-              _buildKey('5'),
-              _buildKey('6'),
+              _buildKey('4', isDarkMode),
+              _buildKey('5', isDarkMode),
+              _buildKey('6', isDarkMode),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _buildKey('7'),
-              _buildKey('8'),
-              _buildKey('9'),
+              _buildKey('7', isDarkMode),
+              _buildKey('8', isDarkMode),
+              _buildKey('9', isDarkMode),
             ],
           ),
           Row(
@@ -55,7 +59,7 @@ class CustomNumberKeyboard extends StatelessWidget {
                     Icons.backspace_outlined,
                     size: 32,
                   )),
-              _buildKey('0'),
+              _buildKey('0', isDarkMode),
               Container(
                 decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF334a97)),
                 child: IconButton(
@@ -75,16 +79,17 @@ class CustomNumberKeyboard extends StatelessWidget {
     );
   }
 
-  Widget _buildKey(String value) {
+  Widget _buildKey(String value, bool isDarkMode) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => _onKeyPressed(value),
       child: Container(
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.all(16.0),
+        width: 100,
+        margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey[200],
+          color:  AppColor.PRIMARY ,
+          borderRadius: BorderRadius.all(Radius.circular(10))
         ),
         child: Padding(
           padding: const EdgeInsets.all(4.0),
@@ -92,7 +97,8 @@ class CustomNumberKeyboard extends StatelessWidget {
             child: Text(
               value,
               style: TextStyle(
-                fontSize: 26.0,
+                fontSize: 18.0,
+                color: AppColor.WHITE ,
                 fontWeight: FontWeight.w600,
               ),
             ),

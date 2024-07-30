@@ -40,7 +40,10 @@ class _SigninScreenState extends State<SigninScreen> {
     Helper.getUserId().then((id) {
       print("id${id}");
       setState(() {
-        _phoneNoController.text = "${id}";
+        if (id != null && id.isNotEmpty) {
+          isChecked =true;
+          _phoneNoController.text = "${id}";
+        }
       });
       _isValidInput();
     });
@@ -80,9 +83,11 @@ class _SigninScreenState extends State<SigninScreen> {
         /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
             username: mediaList?.username,userId: mediaList?.id, email: mediaList?.email,   );*/
 
-        if(isChecked) {
+        if (isChecked) {
           print("aaa${_phoneNoController.text}");
           Helper.saveUserId("${_phoneNoController.text}");
+        }else{
+          Helper.saveUserId("");
         }
 
         String token = "${mediaList?.token}";
@@ -134,7 +139,7 @@ class _SigninScreenState extends State<SigninScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -184,9 +189,10 @@ class _SigninScreenState extends State<SigninScreen> {
                               child: Column(
                                 children: [
                                   SizedBox(height: 20),
-                                  _buildLabelText(context, "Welcome Back!", 26, true),
                                   _buildLabelText(
-                                      context, "Welcome back we missed you", 14, false),
+                                      context, "Welcome Back!", 26, true),
+                                  _buildLabelText(context,
+                                      "Welcome back we missed you", 14, false),
                                   SizedBox(height: 25),
                                   _buildPhoneInput(
                                     context,
@@ -195,7 +201,9 @@ class _SigninScreenState extends State<SigninScreen> {
                                     Icon(
                                       Icons.person,
                                       size: 20,
-                                      color: isDarkMode ? Colors.white : Colors.black,
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                   SizedBox(height: 15),
@@ -206,15 +214,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                       Icon(
                                         Icons.password,
                                         size: 18,
-                                        color:
-                                        isDarkMode ? Colors.white : Colors.black,
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                       passwordVisible,
                                       isDarkMode),
                                   SizedBox(height: 8),
                                   Padding(
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 32.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 32.0),
                                     child: GestureDetector(
                                       onTap: () {
                                         Navigator.pushNamed(
@@ -235,7 +244,87 @@ class _SigninScreenState extends State<SigninScreen> {
                                   SizedBox(
                                     height: 15,
                                   ),
-                                  _buildFooter(context, apiResponse),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          _buildFooter(context, apiResponse),
+                                        /*  Flexible(
+                                            child: ElevatedButton(
+                                              onPressed: () async {
+                                                hideKeyBoard();
+                                                _isValidInput();
+                                                const maxDuration =
+                                                    Duration(seconds: 2);
+                                                Helper.getBiometric().then((enable){
+                                                  if(enable == false) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content:
+                                                            Text('Please Enable Biometric from your profile setting.'),
+                                                        duration: maxDuration,
+                                                      ),
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                              child: Image(
+                                                height: 45,
+                                                //width: 40,
+                                                image: AssetImage(
+                                                    "assets/fingerprint.png"),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  //padding: EdgeInsets.symmetric(vertical: 10.0),
+                                                  backgroundColor:
+                                                      AppColor.WHITE,
+                                                  elevation: 3,
+                                                  shape: BeveledRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              2))),
+                                            ),
+                                          ),*/
+                                        ]),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Need account? ",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/PhoneVerifyScreen');
+                                          },
+                                          child: Text(
+                                            "SignUp here.",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -249,23 +338,22 @@ class _SigninScreenState extends State<SigninScreen> {
             ),
             isLoading
                 ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,
-                    color: Colors.black.withOpacity(0.3)),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            )
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black.withOpacity(0.3)),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
                 : SizedBox()
           ],
         ),
       ),
     );
-
   }
 
   _buildLabelText(BuildContext context, String text, double size, bool isBold) {
@@ -320,29 +408,32 @@ class _SigninScreenState extends State<SigninScreen> {
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  alignLabelWithHint: true,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  icon: icon,
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Save ID", style: TextStyle(fontSize: 10),),
-                      Checkbox(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        semanticLabel: "Save ID",
-                        side: BorderSide(color: Colors.black),
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  )
-                ),
+                    border: InputBorder.none,
+                    hintText: text,
+                    alignLabelWithHint: true,
+                    hintStyle: TextStyle(color: Colors.grey),
+                    icon: icon,
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Save ID",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Checkbox(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          semanticLabel: "Save ID",
+                          side: BorderSide(color: Colors.black),
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    )),
               ),
             ),
           ],
@@ -435,7 +526,9 @@ class _SigninScreenState extends State<SigninScreen> {
           width: screenWidth * 0.7,
           height: 45,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+            ),
             child: ElevatedButton(
               onPressed: () async {
                 hideKeyBoard();
@@ -492,33 +585,6 @@ class _SigninScreenState extends State<SigninScreen> {
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Need account? ",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[400],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/PhoneVerifyScreen');
-                },
-                child: Text(
-                  "SignUp here.",
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
           ),
         ),
       ],

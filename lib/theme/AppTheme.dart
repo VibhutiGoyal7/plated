@@ -16,7 +16,6 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.WHITE4,
       ),
-
       tabBarTheme: TabBarTheme(
         dividerColor: Colors.black,
         labelColor: Colors.black,
@@ -34,7 +33,6 @@ class AppTheme {
         hourMinuteColor: Colors.blue,
         timeSelectorSeparatorColor: WidgetStateProperty.all(Colors.transparent),
         entryModeIconColor: Colors.blue
-
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: AppColor.PRIMARY,
@@ -170,7 +168,7 @@ class AppTheme {
         bodySmall: GoogleFonts.getFont('Poppins',
             fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.WHITE),
       ),
-      iconTheme: IconThemeData(color: AppColor.PRIMARY),
+      iconTheme: IconThemeData(color: AppColor.WHITE),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),

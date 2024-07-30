@@ -1,9 +1,7 @@
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/utils/Util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../languageSection/Languages.dart';
@@ -38,7 +36,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   String? currentBalance;
   bool expanded = false;
   bool inputValid = false;
-  List<String> _allLogList = ["50", "100","200", "300", "500"];
+  List<String> _allLogList = ["50", "100", "200", "300", "500"];
   final ScrollController _scrollController = ScrollController();
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -69,7 +67,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   void dispose() {
     tokenInputController.dispose();
     super.dispose();
-
   }
 
   void _isValidInput() {
@@ -115,18 +112,19 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         hideKeyBoard();
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-       /* appBar: AppBar(toolbarHeight: 65,
+        /* appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () async {
@@ -143,14 +141,15 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         body: SingleChildScrollView(
           child: Stack(
             children: [
-              isLoading?
-              Container(
-                height: screenHeight,
-                width: screenWidth,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ): SizedBox(),
+              isLoading
+                  ? Container(
+                      height: screenHeight,
+                      width: screenWidth,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : SizedBox(),
               SafeArea(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,11 +160,17 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                           height: screenHeight * 0.35,
                           child: Image(
                             height: screenHeight * 0.35,
-                            image: AssetImage("assets/header.png"),
-                            fit: BoxFit.fill,
+                            image: AssetImage(isDarkMode
+                                ? "assets/header_night.png"
+                                : "assets/header.png"),
+                            fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                            opacity: isDarkMode
+                                ? const AlwaysStoppedAnimation(.5)
+                                : const AlwaysStoppedAnimation(.9),
                           ),
                           alignment: AlignmentDirectional.center,
-                        ), Container(
+                        ),
+                        Container(
                           width: screenWidth,
                           height: screenHeight * 0.35,
                           padding: EdgeInsets.all(8),
@@ -173,10 +178,16 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.arrow_back),
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: isDarkMode
+                                      ? AppColor.WHITE
+                                      : AppColor.PRIMARY,
+                                ),
                                 onPressed: () async {
                                   hideKeyBoard();
-                                  await Future.delayed(Duration(milliseconds: 2));
+                                  await Future.delayed(
+                                      Duration(milliseconds: 2));
                                   Navigator.pop(context);
                                 },
                               ),
@@ -184,45 +195,53 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   "${widget.data}",
-                                  style: TextStyle(fontSize: 24.0,),
+                                  style: TextStyle(
+                                    fontSize: 24.0,
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: 25,),
+                              SizedBox(
+                                height: 25,
+                              ),
                               Card(
                                 child: Padding(
                                   padding: const EdgeInsets.all(18.0),
                                   child: Container(
                                     width: screenWidth,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Balance",
-                                          style: TextStyle(fontSize: 14.0,),
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                          ),
                                         ),
-                                        SizedBox(height: 10,),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
                                         Text(
-                                          "${addCurrencySymbol(countryCurrencySymbol , "${currentBalance}")}",
-                                          style: TextStyle(fontSize: 26.0,),
+                                          "${addCurrencySymbol(countryCurrencySymbol, "${currentBalance}")}",
+                                          style: TextStyle(
+                                            fontSize: 26.0,
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
                               )
-
-
                             ],
                           ),
                           //alignment: AlignmentDirectional.center,
                         ),
-
                       ],
                     ),
                     SizedBox(
                       height: 18,
                     ),
-                   /* Container(
+                    /* Container(
                       height: 70,
                       width: 70,
                       child: CircleAvatar(
@@ -247,11 +266,13 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                             fontWeight: FontWeight.normal,
                             color: isDarkMode ? Colors.white70 : Colors.black54)),
                 */
-                    SizedBox(height: 10,),
-                    _buildPhoneInput(
-                        context, Languages.of(context)!.labelZero, _amountController),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _buildPhoneInput(context, Languages.of(context)!.labelZero,
+                        _amountController),
 
-                                 /*     Padding(
+                    /*     Padding(
                       padding:
                           const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
                       child: Text(
@@ -262,7 +283,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     Container(
                       height: screenHeight * 0.065,
                       padding: EdgeInsets.symmetric(horizontal: 12),
-                      alignment: Alignment.center,// Set the desired height
+                      alignment: Alignment.center, // Set the desired height
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -300,10 +321,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       ),
                     ),
                     //Spacer(),
-                    SizedBox(height: 40,),
+                    SizedBox(
+                      height: 40,
+                    ),
                     Center(
-                      child:
-                      _buildFooter(context) ,
+                      child: _buildFooter(context),
                     )
                   ],
                 ),
@@ -341,14 +363,13 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                   width: screenWidth * 0.88,
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border(
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border(
                         right: BorderSide(width: 0.2),
                         top: BorderSide(width: 0.250),
                         bottom: BorderSide(width: 0.2),
                         left: BorderSide(width: 0.2),
-                    )
-                  ),
+                      )),
                   child: TextField(
                     style: TextStyle(
                       fontSize: 24.0,
@@ -360,7 +381,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     onChanged: (value) {
                       _isValidInput();
                     },
-                 /*   inputFormatters: [
+                    /*   inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly, // This allows only digits (0-9)
                     ],*/
                     maxLength: 6,
@@ -407,29 +428,28 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                          Text('No internet connection', style: TextStyle(color: AppColor.WHITE),),
+                          content: Text(
+                            'No internet connection',
+                            style: TextStyle(color: AppColor.WHITE),
+                          ),
                           duration: maxDuration,
                         ),
                       );
                     });
-                  }else {
-
+                  } else {
                     AddMoneyRequest request = AddMoneyRequest(
                         amount: int.parse(_amountController.text));
 
                     await Provider.of<MainViewModel>(context, listen: false)
                         .addMoneyData(
-                        "api/v1/app/payment_transactions/add_money_to_wallet",
-                        request);
+                            "api/v1/app/payment_transactions/add_money_to_wallet",
+                            request);
 
                     ApiResponse apiResponse =
-                        Provider
-                            .of<MainViewModel>(context, listen: false)
+                        Provider.of<MainViewModel>(context, listen: false)
                             .response;
                     getAddMoneyResponse(context, apiResponse);
                   }
-
                 }
               },
               child: Text(
@@ -439,8 +459,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
-                  backgroundColor:
-                      inputValid ? AppColor.PRIMARY : Colors.white,
+                  backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(4))),

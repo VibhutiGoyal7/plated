@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 import '../../utils/Helper.dart';
 
@@ -22,7 +20,7 @@ class SessionExpiredDialog{
               child: Text('Yes'),
               onPressed: () {
                 Helper.clearAllSharedPreferences();
-                Navigator.pushReplacementNamed(context, '/MoneySafeScreen',
+                Navigator.pushReplacementNamed(context, '/SignInScreen',
                     arguments: "");
               },
             ),

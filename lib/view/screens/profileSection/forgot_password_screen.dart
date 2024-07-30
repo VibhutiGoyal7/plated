@@ -35,6 +35,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   String otp = '';
   bool phoneNumberValid = false;
   bool isDarkMode = false;
+  String selectedItem ="";
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -183,7 +184,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 
+
         countryList = countryListResponse!.countries!;
+        selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
+        countryCode = int.parse("${countryListResponse?.countries?[0].id}");
+        phoneCode = "+${countryListResponse?.countries?[0].phoneCode}";
         print("countriess ${countryList}");
 
         //_showPicker(context: context);
@@ -334,23 +339,90 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        _showPicker(context: context);
-                      },
-                      child: SizedBox(
-                        height: 55,
-                        width: 40,
-                        child: Center(
-                          child: Text(
-                            phoneCode,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                            showMenu(
+                              context: context,
+                              position: RelativeRect.fromRect(
+                                Rect.fromLTWH(0, 290, overlay.size.width, overlay.size.height),
+                                Offset.zero & overlay.size,
+                              ),
+                              items: countryList.map((item) {
+                                return PopupMenuItem<CountryData>(
+                                  value: item,
+                                  child: Row(
+                                    children: [
+                                      ClipRRect(
+                                        child: Image.network(
+                                          "${item.flagImageUrl}",
+                                          height: 24,
+                                          width: 40,
+                                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return Shimmer.fromColors(
+                                                baseColor: Colors.white30,
+                                                highlightColor: Colors.grey,
+                                                child: Container(
+                                                  height: 24,
+                                                  width: 40,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "+${item.phoneCode}",
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ).then((value) {
+                              if (value != null) {
+                                _changeItem(value);
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              selectedItem.isEmpty
+                                  ? Container(width: 40)
+                                  : Image.network(
+                                "${Uri.parse(selectedItem)}",
+                                height: 24,
+                                width: 40,
+                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.white30,
+                                      highlightColor: Colors.grey,
+                                      child: Container(
+                                        height: 24,
+                                        width: 40,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                              SizedBox(width: 5),
+                              Icon(Icons.keyboard_arrow_down_sharp),
+                            ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
                     SizedBox(width: 16),
                     Expanded(
@@ -386,6 +458,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all( AppColor.PRIMARY),
+                ),
                 onPressed: () async {
                   if (phoneNumberValid && countryCode > 0 && phoneCode != "+") {
                     print(_phoneNumberController.text);
@@ -595,7 +670,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
-  Widget _buildSubmitButton() {
+  /*Widget _buildSubmitButton() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: SizedBox(
@@ -629,7 +704,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               } else {
                 print(_phoneNumberController.text);
                 setState(() {
-                  isLoading = true;
+                  //isLoading = true;
                 });
                 VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
                     customer: CustomerVerifyOtpPass(
@@ -683,7 +758,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
     );
-  }
+  }*/
 
   void _handleOnChange(int index, String value) {
     setState(() {
@@ -830,5 +905,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           Provider.of<MainViewModel>(context, listen: false).response;
       getCountryList(context, apiResponse);
     }
+  }
+
+  void _changeItem(CountryData newValue) {
+    setState(() {
+      print("${newValue?.id}");
+      countryCode =  int.parse("${newValue?.id}");
+      phoneCode =  "${newValue?.code}";
+      selectedItem = "${newValue?.flagImageUrl}";
+    });
   }
 }

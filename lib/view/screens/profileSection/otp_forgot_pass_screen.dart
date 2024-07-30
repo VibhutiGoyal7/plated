@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
+
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/countryListResponse.dart';
-import '../../component/connectivity_service.dart';
 import '../../component/customNumberKeyboard.dart';
 
 class OtpForgotPassScreen extends StatefulWidget {
@@ -54,7 +53,6 @@ class _OtpForgotPassScreenState extends State<OtpForgotPassScreen> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -104,48 +102,40 @@ class _OtpForgotPassScreenState extends State<OtpForgotPassScreen> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
-        //backgroundColor: Theme.of(context).backgroundColor,
         body: Stack(
           children: [
-            SingleChildScrollView(
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Center(
-                      child: Image(
-                        alignment: Alignment.topLeft,
-                        //width: screenWidth*0.8,
-                        height: screenHeight * 0.16,
-                        image: AssetImage("assets/forgot_password.png"),
-                        fit: BoxFit.fitWidth   ,
-                      ),
+            SafeArea(
+              child: Column(
+                children: [
+                  Center(
+                    child: Image(
+                      alignment: Alignment.topLeft,
+                      height: screenHeight * 0.25,
+                      image: AssetImage("assets/forgot_password.png"),
+                      fit: BoxFit.fitWidth,
                     ),
-                    // _buildPhoneNumberTextField(),
-
-                    _buildOtpInput(context, screenWidth, isDarkMode),
-                    //_buildPasswordTextFields(isDarkMode),
-                    SizedBox(height: 125),
-                      //Spacer(),
-
-                      CustomNumberKeyboard(onKeyTap: (value) async {
-                        if (value == "clear") {
-                          _handleBackspace();
-                        } else if (value == "submit") {
-                          String otp = _inputValues
-                              .map((controller) => controller)
-                              .join();
-                          if (otp.isNotEmpty && otp.length == 6) {
-                           Navigator.pushNamed(context, "/NewPassForgotPassScreen", arguments: otp);
-                          }
-                        } else {
-                          _handleKeyTap(value);
-                        }
-                      })
-
-                    //if (isLoading) CircularProgressIndicator(),
-
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 15),
+                  _buildOtpInput(context, screenWidth, isDarkMode),
+                  Spacer(),
+                  CustomNumberKeyboard(onKeyTap: (value) async {
+                    if (value == "clear") {
+                      _handleBackspace();
+                    } else if (value == "submit") {
+                      String otp = _inputValues
+                          .map((controller) => controller)
+                          .join();
+                      if (otp.isNotEmpty && otp.length == 6) {
+                        Navigator.pushNamed(
+                            context, "/NewPassForgotPassScreen",
+                            arguments: otp);
+                      }
+                    } else {
+                      _handleKeyTap(value);
+                    }
+                  })
+                  //if (isLoading) CircularProgressIndicator(),
+                ],
               ),
             ),
             isLoading
@@ -188,30 +178,31 @@ class _OtpForgotPassScreenState extends State<OtpForgotPassScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => GestureDetector(
-                onTap: (){
-                  setState(() {
-                    isKeypadVisible = true;
-                  });
-                },
-                child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
+          (index) => GestureDetector(
+            onTap: () {
+              setState(() {
+                isKeypadVisible = true;
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
                 border: Border.all(
-                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                    color: isDarkMode ? Colors.grey : Colors.black54,
+                    width: 0.4),
                 borderRadius: BorderRadius.circular(6),
-                            ),
-                            width: screenWidth / 8.1,
-                            height: 58.0,
-                            child: Center(
+              ),
+              width: screenWidth / 7.68,
+              height: 68.0,
+              child: Center(
                 child: Text(
                   _inputValues[index],
                   style: TextStyle(fontSize: 20),
                 ),
-                            ),
-                          ),
               ),
+            ),
+          ),
         ),
       ),
     );

@@ -230,7 +230,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Search for the song by Artist'),
+          child: Text('Loading...'),
         );
     }
   }
@@ -330,11 +330,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        height: screenHeight * 0.27,
+                        height: screenHeight * 0.28,
                         child: Image(
-                          height: screenHeight * 0.27,
-                          image: AssetImage("assets/header.png"),
-                          fit: BoxFit.fill,
+                          height: screenHeight * 0.28,
+                          image: AssetImage(isDarkMode ? "assets/header_night.png" :"assets/header.png"),
+                          fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                          opacity: isDarkMode ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(.9),
                         ),
                         alignment: AlignmentDirectional.center,
                       ),
@@ -345,10 +346,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              height: 40,
+                              height: 45,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
+                              padding: const EdgeInsets.only(top: 12.0,left: 5.0),
                               child: Column(
                                 children: [
                                   Row(
@@ -436,7 +437,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   )),
                                             ),
                                           ),
-                                          SizedBox(width: 3),
+                                          SizedBox(width: 8),
                                           // Add space between avatar and text
                                           Container(
                                             width: screenWidth * 0.5,
@@ -692,10 +693,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "View all",
+                                          "view all",
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              color: AppColor.PRIMARY,
+                                              color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,
                                               fontWeight: FontWeight.w600),
                                         ),
                                         Align(
@@ -705,7 +706,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             width: screenWidth * 0.14,
                                             height: 0.5,
                                             decoration: BoxDecoration(
-                                                color: AppColor.PRIMARY),
+                                                color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,),
                                           ),
                                         ),
                                       ],

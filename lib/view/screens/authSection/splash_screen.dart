@@ -45,10 +45,12 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     token = await Helper.getUserToken();
     print(token);
+
   }
 
   void _navigation() {
-    if (token == null && token?.isEmpty == true) {
+    print("token:::${token} ${token?.isEmpty}");
+    if (token == null || token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/MoneySafeScreen");
     } else {
       Navigator.pushReplacementNamed(context, "/BottomNav");

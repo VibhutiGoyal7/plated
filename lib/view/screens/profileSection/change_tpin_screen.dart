@@ -1,6 +1,6 @@
 import 'package:Payrio/model/response/GenerateOtpTPINChangeResponse.dart';
-import 'package:flutter/material.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -24,9 +24,9 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<FocusNode> _tPinFocusNodes = List.generate(4, (index) => FocusNode());
   List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
   List<TextEditingController> _TPinControllers =
-  List.generate(4, (index) => TextEditingController());
+      List.generate(4, (index) => TextEditingController());
   bool isValid = false;
   bool isOtpEntered = false;
 
@@ -36,7 +36,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
   late String tpin;
 
   List<String> _inputTpinValues = ['', '', '', ''];
-  List<String> _inputOtpValues = ['', '', '', '','',''];
+  List<String> _inputOtpValues = ['', '', '', '', '', ''];
 
   static const maxDuration = Duration(seconds: 2);
 
@@ -50,18 +50,16 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
     generateOtp();
   }
 
-
   void _handleKeyTap(String value) {
     setState(() {
-      if(isOtpEntered){
+      if (isOtpEntered) {
         for (int i = 0; i < _inputTpinValues.length; i++) {
           if (_inputTpinValues[i].isEmpty) {
             _inputTpinValues[i] = value;
             break;
           }
         }
-
-      }else {
+      } else {
         for (int i = 0; i < _inputOtpValues.length; i++) {
           if (_inputOtpValues[i].isEmpty) {
             _inputOtpValues[i] = value;
@@ -70,20 +68,18 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         }
       }
     });
-
   }
 
   void _handleBackspace() {
     setState(() {
-      if(isOtpEntered){
+      if (isOtpEntered) {
         for (int i = _inputTpinValues.length - 1; i >= 0; i--) {
           if (_inputTpinValues[i].isNotEmpty) {
             _inputTpinValues[i] = '';
             break;
           }
         }
-
-      }else {
+      } else {
         for (int i = _inputOtpValues.length - 1; i >= 0; i--) {
           if (_inputOtpValues[i].isNotEmpty) {
             _inputOtpValues[i] = '';
@@ -96,8 +92,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
 
   Future<Widget> verifyOtpTpinChange(
       BuildContext context, ApiResponse apiResponse) async {
-    final response =
-    apiResponse.data ;
+    final response = apiResponse.data;
     var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
@@ -106,20 +101,20 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-
-       ToastComponent.showToast(context: context, message: "TPIN changed successfully.");
+        ToastComponent.showToast(
+            context: context, message: "TPIN changed successfully.");
 
         Navigator.pushReplacementNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
-        }else {
+        } else {
           ToastComponent.showToast(context: context, message: message);
         }
         return Center(
-         // child: Text('Please try again later!!!'),
-        );
+            // child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
@@ -131,7 +126,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
   Future<Widget> getOtpResponse(
       BuildContext context, ApiResponse apiResponse) async {
     GenerateOtpTPINChangeResponse? response =
-    apiResponse.data as GenerateOtpTPINChangeResponse? ;
+        apiResponse.data as GenerateOtpTPINChangeResponse?;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
@@ -141,19 +136,18 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${response?.otp}");
-       ToastComponent.showToast(context: context, message: response?.otp);
+        ToastComponent.showToast(context: context, message: response?.otp);
 
-
-       return Container(); // Return an empty container as you'll navigate away
+        return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
-        }else {
+        } else {
           ToastComponent.showToast(context: context, message: message);
         }
         return Center(
-         // child: Text('Please try again later!!!'),
-        );
+            // child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
@@ -164,12 +158,13 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
 
   @override
   Widget build(BuildContext context) {
-     screenWidth = MediaQuery.of(context).size.width;
-     screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Stack(
-      children: [Scaffold(
-        appBar: AppBar(toolbarHeight: 65,
+    return Stack(children: [
+      Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -181,152 +176,168 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: screenHeight * 0.9,
-            child: SafeArea(
-              child: Column(
-                children: [
-                  /*Image(
+        body: Container(
+          height: screenHeight * 0.9,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Center(
+                  child: Image(
                     alignment: Alignment.topLeft,
-                    width: screenWidth*0.9,
-                    height: screenHeight*0.4,
-                    image: AssetImage("assets/payment_image.png"),
-                  ),*/
-                  SizedBox(
-                    height: 8,
+                    //width: screenWidth*0.8,
+                    height: screenHeight * 0.16,
+                    image: AssetImage("assets/forgot_password.png"),
+                    fit: BoxFit.fitWidth,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      "Please enter the 6-digit otp which has been sent to your phone number",
-                      style: TextStyle(fontSize: 14),
-                    ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    "Please enter the 6-digit otp which has been sent to your phone number",
+                    style: TextStyle(fontSize: 14),
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  _buildOtpInput(context, screenWidth, isDarkMode),
-                  SizedBox(height: 8,),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextButton(
-                        onPressed: () async {
-                          otp = _inputOtpValues
-                              .map((controller) => controller)
-                              .join();
-                          if (otp.length == 6 && otp.isNotEmpty ) {
-                            setState(() {
-                              isOtpEntered = true;
-                            });
-                          }
-                        },
-                        child: Text(
-                          Languages.of(context)!.labelSubmit,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                _buildOtpInput(context, screenWidth, isDarkMode),
+                SizedBox(
+                  height: 8,
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 18.0),
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStateProperty.all(AppColor.PRIMARY),
+                      ),
+                      onPressed: () async {
+                        otp = _inputOtpValues
+                            .map((controller) => controller)
+                            .join();
+                        if (otp.length == 6 && otp.isNotEmpty) {
+                          setState(() {
+                            isOtpEntered = true;
+                          });
+                        }
+                      },
+                      child: Text(
+                        Languages.of(context)!.labelSubmit,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ),
-                  isOtpEntered?
+                ),
+                isOtpEntered
+                    ? Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: _buildLabelText(context,
+                                "Enter the new 4 digit TPIN", 14, false),
+                          ),
 
-                  Column(
-                    children: [
-                      Padding(padding: const EdgeInsets.all(6.0),
-                        child: _buildLabelText(
-                            context, "Enter the new 4 digit TPIN", 14, false),
+                          SizedBox(height: 10),
+                          _buildTpinInput(context, screenWidth, isDarkMode),
+                          SizedBox(height: 10),
+                          //Spacer(),
+                        ],
+                      )
+                    : SizedBox(
+                        height: 80,
                       ),
 
-                      SizedBox(height: 10),
-                      _buildTpinInput(context, screenWidth, isDarkMode),
-                      SizedBox(height: 10),
-                      //Spacer(),
-                    ],
-                  ): SizedBox(height: 80,),
+                Spacer(),
+                CustomNumberKeyboard(onKeyTap: (value) async {
+                  if (value == "clear") {
+                    _handleBackspace();
+                  } else if (value == "submit") {
+                    tpin =
+                        _inputTpinValues.map((controller) => controller).join();
+                    otp =
+                        _inputOtpValues.map((controller) => controller).join();
+                    if (otp.isNotEmpty &&
+                        otp.length == 6 &&
+                        tpin.isNotEmpty &&
+                        tpin.length == 4) {
+                      if (otp.isNotEmpty &&
+                          otp.length == 6 &&
+                          tpin.isNotEmpty &&
+                          tpin.length == 4) {
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                  CustomNumberKeyboard(onKeyTap: (value) async {
-                    if (value == "clear") {
-                      _handleBackspace();
-                    } else if (value == "submit") {
-                      tpin = _inputTpinValues
-                          .map((controller) => controller)
-                          .join();
-                      otp = _inputOtpValues
-                          .map((controller) => controller)
-                          .join();
-                      if (otp.isNotEmpty && otp.length == 6 && tpin.isNotEmpty && tpin.length == 4) {
-                        if (otp.isNotEmpty && otp.length == 6  && tpin.isNotEmpty && tpin.length == 4) {
+                        bool isConnected =
+                            await _connectivityService.isConnected();
+                        if (!isConnected) {
                           setState(() {
-                            isLoading = true;
+                            isLoading = false;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('No internet connection'),
+                                duration: maxDuration,
+                              ),
+                            );
                           });
-
-                          bool isConnected = await _connectivityService.isConnected();
-                          if (!isConnected) {
-                            setState(() {
-                              isLoading = false;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('No internet connection'),
-                                  duration: maxDuration,
-                                ),
-                              );
-                            });
-                          } else {
-                            VerifyOtpTPinChange request = VerifyOtpTPinChange(
-                              tpin: tpin,
-                              otp: otp,);
-                            await Provider.of<MainViewModel>(context, listen: false)
-                                .verifyOtpTPinChange(
-                                "/api/v1/app/customers/change_tpin_using_otp",
-                                request);
-
-                            ApiResponse apiResponse =
-                                Provider.of<MainViewModel>(context, listen: false)
-                                    .response;
-                            verifyOtpTpinChange(context, apiResponse);
-                          }
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Please enter otp and new TPIN.'),
-                              duration: maxDuration,
-                            ),
+                          VerifyOtpTPinChange request = VerifyOtpTPinChange(
+                            tpin: tpin,
+                            otp: otp,
                           );
-                        }
-                      }
-                    } else {
-                      _handleKeyTap(value);
-                    }
-                  })
+                          await Provider.of<MainViewModel>(context,
+                                  listen: false)
+                              .verifyOtpTPinChange(
+                                  "/api/v1/app/customers/change_tpin_using_otp",
+                                  request);
 
-                  //_buildFooter(context),
-                ],
-              ),
+                          ApiResponse apiResponse =
+                              Provider.of<MainViewModel>(context, listen: false)
+                                  .response;
+                          verifyOtpTpinChange(context, apiResponse);
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please enter otp and new TPIN.'),
+                            duration: maxDuration,
+                          ),
+                        );
+                      }
+                    }
+                  } else {
+                    _handleKeyTap(value);
+                  }
+                })
+
+                //_buildFooter(context),
+              ],
             ),
           ),
         ),
       ),
-        isLoading
-            ? Stack(
-          children: [
-            ModalBarrier(
-                dismissible: false,
-                color: Colors.black.withOpacity(0.3)),
-            // Loader indicator
-            Center(
-              child: CircularProgressIndicator(),
-            ),
-          ],
-        )
-            : SizedBox(),
-    ]
-    );
+      isLoading
+          ? Stack(
+              children: [
+                ModalBarrier(
+                    dismissible: false, color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+          : SizedBox(),
+    ]);
   }
 
   Widget _buildFooter(BuildContext context) {
@@ -339,11 +350,12 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 String otp =
-                _controllers.map((controller) => controller.text).join();
+                    _controllers.map((controller) => controller.text).join();
                 String tpin =
-                _TPinControllers.map((controller) => controller.text).join();
+                    _TPinControllers.map((controller) => controller.text)
+                        .join();
                 const maxDuration = Duration(seconds: 2);
-                if (otp.isNotEmpty && otp.length == 6 ) {
+                if (otp.isNotEmpty && otp.length == 6) {
                   setState(() {
                     isLoading = true;
                   });
@@ -361,12 +373,13 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                     });
                   } else {
                     VerifyOtpTPinChange request = VerifyOtpTPinChange(
-                            tpin: tpin,
-                            otp: otp,);
+                      tpin: tpin,
+                      otp: otp,
+                    );
                     await Provider.of<MainViewModel>(context, listen: false)
                         .verifyOtpTPinChange(
-                        "/api/v1/app/customers/change_tpin_using_otp",
-                        request);
+                            "/api/v1/app/customers/change_tpin_using_otp",
+                            request);
 
                     ApiResponse apiResponse =
                         Provider.of<MainViewModel>(context, listen: false)
@@ -376,8 +389,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
-                          'Please enter otp and new TPIN.'),
+                      content: Text('Please enter otp and new TPIN.'),
                       duration: maxDuration,
                     ),
                   );
@@ -386,7 +398,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
               child: Text(
                 Languages.of(context)!.labelValidate,
                 style:
-                TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
+                    TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -404,14 +416,15 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
     );
   }
 
-  Widget _buildOtpInput(BuildContext context, double screenWidth, bool isDarkMode) {
+  Widget _buildOtpInput(
+      BuildContext context, double screenWidth, bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => GestureDetector(
-            onTap: (){
+          (index) => GestureDetector(
+            onTap: () {
               setState(() {
                 //isKeypadVisible = true;
               });
@@ -421,7 +434,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                    color: isDarkMode ? Colors.grey : Colors.black54,
+                    width: 0.4),
                 borderRadius: BorderRadius.circular(6),
               ),
               width: screenWidth / 8.1,
@@ -438,6 +452,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       ),
     );
   }
+
   void _handleOnChange(int index, String value) {
     setState(() {
       _otp[index] = value;
@@ -478,10 +493,10 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           4,
-              (index) => GestureDetector(
-            onTap: (){
+          (index) => GestureDetector(
+            onTap: () {
               setState(() {
-               // isKeypadVisible = true;
+                // isKeypadVisible = true;
               });
             },
             child: Container(
@@ -489,7 +504,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                    color: isDarkMode ? Colors.grey : Colors.black54,
+                    width: 0.4),
                 borderRadius: BorderRadius.circular(6),
               ),
               width: screenWidth / 8.1,
@@ -528,15 +544,11 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
     } else {
       await Future.delayed(Duration(milliseconds: 2));
       await Provider.of<MainViewModel>(context, listen: false)
-          .getOtpTPINChange(
-          "/api/v1/app/customers/initiate_change_tpin");
+          .getOtpTPINChange("/api/v1/app/customers/initiate_change_tpin");
 
       ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false)
-              .response;
+          Provider.of<MainViewModel>(context, listen: false).response;
       getOtpResponse(context, apiResponse);
     }
   }
-
-
 }

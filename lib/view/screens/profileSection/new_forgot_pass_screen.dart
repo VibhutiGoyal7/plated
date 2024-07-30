@@ -4,25 +4,23 @@ import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
-import '../../../model/request/createOtpChangePass.dart';
 import '../../../model/response/countryListResponse.dart';
-import '../../../model/response/createOtpChangePassResponse.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 
 class NewPassForgotPassScreen extends StatefulWidget {
   final String? data;
 
   NewPassForgotPassScreen({Key? key, this.data}) : super(key: key);
+
   @override
-  _NewPassForgotPassScreenState createState() => _NewPassForgotPassScreenState();
+  _NewPassForgotPassScreenState createState() =>
+      _NewPassForgotPassScreenState();
 }
 
 class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
@@ -44,53 +42,14 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
   final List<String> _otp = List.generate(6, (_) => '');
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
   List<CountryData> countryList = [];
-  final TextEditingController _inputController = TextEditingController();
-
-  void _isValidPhoneNumber(String input) {
-    print(input);
-    if (input.isNotEmpty && input.length >= 10) {
-      setState(() {
-        phoneNumberValid = true;
-      });
-    } else {
-      setState(() {
-        phoneNumberValid = false;
-      });
-    }
-  }
-
-
-
-  void _handleKeyTap(String value) {
-    setState(() {
-      for (int i = 0; i < _inputValues.length; i++) {
-        if (_inputValues[i].isEmpty) {
-          _inputValues[i] = value;
-          break;
-        }
-      }
-    });
-  }
-
-  void _handleBackspace() {
-    setState(() {
-      for (int i = _inputValues.length - 1; i >= 0; i--) {
-        if (_inputValues[i].isNotEmpty) {
-          _inputValues[i] = '';
-          break;
-        }
-      }
-    });
-  }
-
 
   @override
   void initState() {
@@ -136,7 +95,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         Helper.clearAllSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => SigninScreen()),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
 
         return Container(); // Return an empty container as you'll navigate away
@@ -144,8 +103,8 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         if (apiResponse?.message == "Invalid access token")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
-          //child: Text('Please try again later!!!'),
-        );
+            //child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
@@ -189,7 +148,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                         //width: screenWidth*0.8,
                         height: screenHeight * 0.16,
                         image: AssetImage("assets/forgot_password.png"),
-                        fit: BoxFit.fitWidth   ,
+                        fit: BoxFit.fitWidth,
                       ),
                     ),
                     // _buildPhoneNumberTextField(),
@@ -197,42 +156,27 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                     //_buildOtpInput(context, screenWidth, isDarkMode),
                     _buildPasswordTextFields(isDarkMode),
                     SizedBox(height: 15),
-                      _buildSubmitButton(),
+                    _buildSubmitButton(),
                     //if (isLoading) CircularProgressIndicator(),
-
                   ],
                 ),
               ),
             ),
-            isLoading
-                ? Stack(
+          ],
+        ),
+      ),
+      isLoading
+          ? Stack(
               children: [
                 // Block interaction
                 ModalBarrier(
-                    dismissible: false,
-                    color: Colors.black.withOpacity(0.3)),
+                    dismissible: false, color: Colors.black.withOpacity(0.3)),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),
                 ),
               ],
             )
-                : SizedBox(),
-          ],
-        ),
-      ),
-      isLoading
-          ? Stack(
-        children: [
-          // Block interaction
-          ModalBarrier(
-              dismissible: false, color: Colors.black.withOpacity(0.3)),
-          // Loader indicator
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      )
           : SizedBox(),
     ]);
   }
@@ -267,13 +211,13 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
   }
 
   Widget _buildPasswordInput(
-      BuildContext context,
-      String text,
-      TextEditingController nameController,
-      Icon icon,
-      bool passwordVisibles,
-      bool isDarkMode,
-      ) {
+    BuildContext context,
+    String text,
+    TextEditingController nameController,
+    Icon icon,
+    bool passwordVisibles,
+    bool isDarkMode,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
       child: Card(
@@ -316,7 +260,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                       ),
                       onPressed: () {
                         setState(
-                              () {
+                          () {
                             if (text == Languages.of(context)!.labelNewPass) {
                               newPasswordVisible = !newPasswordVisible;
                             } else {
@@ -343,8 +287,8 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => GestureDetector(
-            onTap: (){
+          (index) => GestureDetector(
+            onTap: () {
               setState(() {
                 isKeypadVisible = true;
               });
@@ -354,7 +298,8 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+                    color: isDarkMode ? Colors.grey : Colors.black54,
+                    width: 0.4),
                 borderRadius: BorderRadius.circular(6),
               ),
               width: screenWidth / 8.1,
@@ -393,8 +338,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         width: screenWidth * 0.7,
         child: ElevatedButton(
           onPressed: () async {
-            String otp =
-            "${widget.data}";
+            String otp = "${widget.data}";
             isInputValid();
             if (otp.isNotEmpty &&
                 _newPasswordController.text.isNotEmpty &&
@@ -431,8 +375,8 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
 
                 await Provider.of<MainViewModel>(context, listen: false)
                     .VerifyOtpChangePass(
-                    "/api/v1/app/customers/verify_otp_and_change_password",
-                    request);
+                        "/api/v1/app/customers/verify_otp_and_change_password",
+                        request);
                 ApiResponse apiResponse =
                     Provider.of<MainViewModel>(context, listen: false).response;
                 verifyOtpResponse(context, apiResponse);
@@ -497,5 +441,4 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
       isValid = false;
     }
   }
-
 }

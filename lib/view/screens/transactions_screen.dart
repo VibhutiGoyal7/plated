@@ -239,7 +239,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 },
                 icon: Icon(
                   Icons.filter_list,
-                  color: Colors.black,
+                  color: isDarkMode ? AppColor.WHITE : AppColor.BLACK,
                   size: 28,
                 )),
             SizedBox(

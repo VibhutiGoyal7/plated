@@ -92,11 +92,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       //backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         children: [
-
           SingleChildScrollView(
             child: SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 //mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
@@ -105,7 +105,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Image(
                     alignment: Alignment.topLeft,
                     width: screenWidth * 0.6,
-                    // height: screenHeight*0.45,
+                    //height: screenHeight*0.45,
                     image: AssetImage("assets/change_password.png"),
                   ),
                   SizedBox(
@@ -306,63 +306,66 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     bool passwordVisibles,
     bool isDarkMode,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
-      child: Card(
-        child: Container(
-          //height: 60,
-          width: screenWidth*0.92,
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-          decoration: BoxDecoration(
-            //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Row(
-            children: [
-              SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  style: TextStyle(fontSize: 15.0),
-                  obscureText: passwordVisibles,
-                  obscuringCharacter: "*",
-                  controller: nameController,
-                  textAlignVertical: TextAlignVertical.center,
-                  onChanged: (value) {},
-                  onSubmitted: (value) {},
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: text,
-                    hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
-                    icon: icon,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        passwordVisibles
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: isDarkMode ? Colors.white : Colors.black,
-                        size: 20,
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
+        child: Card(
+          child: Container(
+            //height: 60,
+            width: screenWidth*0.92,
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+            decoration: BoxDecoration(
+              //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Row(
+              children: [
+                SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(fontSize: 15.0),
+                    obscureText: passwordVisibles,
+                    obscuringCharacter: "*",
+                    controller: nameController,
+                    textAlignVertical: TextAlignVertical.center,
+                    onChanged: (value) {},
+                    onSubmitted: (value) {},
+                    keyboardType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: text,
+                      hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
+                      icon: icon,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          passwordVisibles
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(
+                            () {
+                              if (text == Languages.of(context)!.labelOldPass) {
+                                oldPasswordVisible = !oldPasswordVisible;
+                              } else if (text ==
+                                  Languages.of(context)!.labelNewPass) {
+                                newPasswordVisible = !newPasswordVisible;
+                              } else {
+                                confirmPasswordVisible = !confirmPasswordVisible;
+                              }
+                            },
+                          );
+                        },
                       ),
-                      onPressed: () {
-                        setState(
-                          () {
-                            if (text == Languages.of(context)!.labelOldPass) {
-                              oldPasswordVisible = !oldPasswordVisible;
-                            } else if (text ==
-                                Languages.of(context)!.labelNewPass) {
-                              newPasswordVisible = !newPasswordVisible;
-                            } else {
-                              confirmPasswordVisible = !confirmPasswordVisible;
-                            }
-                          },
-                        );
-                      },
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
