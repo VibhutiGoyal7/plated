@@ -17,6 +17,10 @@ import '../component/connectivity_service.dart';
 import '../component/session_expired_dialog.dart';
 
 class AddMoneyScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
+
+  AddMoneyScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _AddMoneyScreenState createState() => _AddMoneyScreenState();
 }
@@ -137,84 +141,97 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           "/BottomNav",
         );
       },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(toolbarHeight: 65,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushNamed(context, '/BottomNav');
-            },
+      child: GestureDetector(
+        onTap: (){
+          hideKeyBoard();
+        },
+        child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: AppBar(toolbarHeight: 65,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () async {
+                hideKeyBoard();
+                await Future.delayed(Duration(milliseconds: 2));
+                Navigator.pushNamed(context, '/PaymentMethodScreen');
+              },
+            ),
+            title: Text(
+              "${widget.data}",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+            ),
           ),
-          title: Text(
-            Languages.of(context)!.labelAddMoney,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-          ),
-        ),
-        body: Stack(
-          children: [
-            isLoading?
-            Container(
-              height: screenHeight,
-              width: screenWidth,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ): SizedBox(),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 18,
-                    ),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColor.WHITE,
-                        backgroundImage: AssetImage(
-                          "assets/bank_statement.png",
+          body: Stack(
+            children: [
+              isLoading?
+              Container(
+                height: screenHeight,
+                width: screenWidth,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ): SizedBox(),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 18,
+                      ),
+                      Container(
+                        height: 70,
+                        width: 70,
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: AppColor.WHITE,
+                          backgroundImage: AssetImage(
+                            "assets/bank_statement.png",
 
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      "Adding via: ${paymentMethod}",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    Text("${username}",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: isDarkMode ? Colors.white70 : Colors.black54)),
-                    Text(
-                      "Please enter amount to proceed",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                    ),
-                    _buildPhoneInput(
-                        context, "0", _amountController),
-               /*     Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
-                      child: Text(
-                        "Limit : ${limitAmt}",
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      SizedBox(
+                        height: 15,
                       ),
-                    ),*/
-                    Spacer(),
-                    _buildFooter(context),
-                  ],
+                      Text(
+                        "Adding via: ${paymentMethod}",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      ),
+                      Text("${username}",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                              color: isDarkMode ? Colors.white70 : Colors.black54)),
+
+                      SizedBox(height: 20,),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          _buildPhoneInput(
+                              context, Languages.of(context)!.labelZero, _amountController),
+                        ],
+                      ),
+
+                 /*     Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                        child: Text(
+                          "Limit : ${limitAmt}",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                      ),*/
+                      Spacer(),
+                      _buildFooter(context),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -228,42 +245,58 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   ) {
     return Center(
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-         /* Text("${countryCurrencySymbol}", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal,
-              color: Colors.grey),),*/
-          Container(
-            // height: 60,
-            width: screenWidth * 0.85,
-            padding: EdgeInsets.symmetric(horizontal: 2.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: TextField(
-              style: TextStyle(
-                fontSize: 40.0,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Add Money",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
               ),
-              obscureText: false,
-              obscuringCharacter: "*",
-              controller: amountController,
-              onChanged: (value) {
-                _isValidInput();
-              },
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly, // This allows only digits (0-9)
-              ],
-              maxLength: 6,
-              textAlign: TextAlign.center,
-              onSubmitted: (value) {},
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                  counterText: "",
-                  border: InputBorder.none,
-                  hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  alignLabelWithHint: true),
-            ),
+              Card(
+                child: Container(
+                  height: 60,
+                  width: screenWidth * 0.75,
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border(
+                        right: BorderSide(width: 0.2),
+                        top: BorderSide(width: 0.250),
+                        bottom: BorderSide(width: 0.2),
+                        left: BorderSide(width: 0.2),
+                    )
+                  ),
+                  child: TextField(
+                    style: TextStyle(
+                      fontSize: 24.0,
+                    ),
+                    obscureText: false,
+                    autofocus: true,
+                    obscuringCharacter: "*",
+                    controller: amountController,
+                    onChanged: (value) {
+                      _isValidInput();
+                    },
+                 /*   inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly, // This allows only digits (0-9)
+                    ],*/
+                    maxLength: 6,
+                    textAlign: TextAlign.left,
+                    onSubmitted: (value) {},
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                        counterText: "",
+                        border: InputBorder.none,
+                        hintText: text,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        alignLabelWithHint: true),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

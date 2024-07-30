@@ -431,7 +431,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 }
               },
               child: Text(
-                Languages.of(context)!.labelConfirm,
+                Languages.of(context)!.labelLogin,
                 style: TextStyle(
                     color: inputValid ? Colors.white : AppColor.PRIMARY),
               ),

@@ -16,6 +16,7 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.WHITE4,
       ),
+
       tabBarTheme: TabBarTheme(
         dividerColor: Colors.black,
         labelColor: Colors.black,
@@ -23,6 +24,17 @@ class AppTheme {
         indicatorColor: Colors.black,
         unselectedLabelStyle: TextStyle(
             fontSize: 12), /*indicatorSize: TabBarIndicatorSize.label*/
+      ),
+      timePickerTheme: TimePickerThemeData(
+        backgroundColor: AppColor.WHITE,
+        dialBackgroundColor: Colors.blue, 
+        dialHandColor: AppColor.WHITE,
+        confirmButtonStyle: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
+        cancelButtonStyle: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.redAccent)),
+        hourMinuteColor: Colors.blue,
+        timeSelectorSeparatorColor: WidgetStateProperty.all(Colors.transparent),
+        entryModeIconColor: Colors.blue
+
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: AppColor.PRIMARY,

@@ -31,7 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
   bool isLoading = false;
   bool isApiLoading = false;
   var isEmailVerified;
-  var mCities = [
+  var mLanguages = [
     Language("English", "en"),
     Language("Arabic", "ar"),
     Language("Hindi", "hi")
@@ -47,7 +47,7 @@ class _SettingScreenState extends State<SettingScreen> {
     phoneNumber = "";
     userId = "";
     isEmailVerified = false;
-    dropdownValue = mCities.first.code;
+    dropdownValue = mLanguages.first.code;
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
         isBiometricEnable = retrievedBiometric ?? false; // Handle null case
@@ -76,7 +76,7 @@ class _SettingScreenState extends State<SettingScreen> {
           Languages.of(context)!.labelSettings,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        actions: [
+       /* actions: [
           Row(
             children: [
               GestureDetector(
@@ -92,7 +92,7 @@ class _SettingScreenState extends State<SettingScreen> {
               )
             ],
           )
-        ],
+        ],*/
       ),
       body: SafeArea(
         child: Padding(
@@ -118,7 +118,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 fontSize: 15.0, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            "Selected Language",
+                            "${dropdownValue}",
                             style: TextStyle(
                                 fontSize: 11.0, fontWeight: FontWeight.normal),
                           ),
@@ -260,6 +260,11 @@ class _SettingScreenState extends State<SettingScreen> {
     if (mounted) {
       setState(() {
         dropdownValue = selectedLanguage.languageCode;
+        mLanguages.map((Language items) {
+          if (dropdownValue == items.code) {
+            dropdownValue = items.name;
+          }
+        }).toList();
       });
     }
   }
@@ -368,7 +373,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     inactiveTrackColor: Colors.red,
                     trackOutlineColor: WidgetStateColor.transparent,
                     onChanged: (bool value) {
-                      // This is called when the user toggles the switch.
+                      // This is called when the user toggles the switch
                       setState(() {
                         isBiometricEnable = value;
                         enableDisableBioMetric(value);
@@ -377,11 +382,11 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ],
           ),
-          Padding(
+         /* Padding(
             padding: const EdgeInsets.only(left: 30.0, bottom: 5.0),
             child: GestureDetector(
               onTap: (){
-                //Navigator.pushNamed(context, "/ManageAppLockScreen");
+                Navigator.pushNamed(context, "/ManageAppLockScreen");
               },
               child: Text("Manage App Lock",
                   style: TextStyle(
@@ -389,7 +394,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       color: AppColor.PRIMARY,
                       fontWeight: FontWeight.w500)),
             ),
-          ),
+          ),*/
         ],
       ),
     );

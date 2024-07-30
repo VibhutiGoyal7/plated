@@ -153,7 +153,7 @@ class _BottomNavState extends State<BottomNav>
                     size: 26,
                   ),
                   Text(
-                    "Payment",
+                    "Pay Bill",
                     style: TextStyle(color: AppColor.WHITE, fontSize: 12),
                   )
                 ],

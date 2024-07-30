@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Util.dart';
+import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -20,6 +21,7 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
+import '../authSection/money_safe_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -233,32 +235,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                             ),
                                           )
-                                        :
-                                    Container(
-                                      width: screenWidth * 0.65,
-                                      child: Row(
-                                        children: [
-                                          Flexible(
-                                            child: Container(
-                                              child: Text(
-                                                "${capitalizeFirstLetter("${customerName}")}",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.w600,
+                                        : Container(
+                                            width: screenWidth * 0.65,
+                                            child: Row(
+                                              children: [
+                                                Flexible(
+                                                  child: Container(
+                                                    child: Text(
+                                                      "${capitalizeFirstLetter("${customerName}")}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                dashBoardKycStatus == "verified"
+                                                    ? Icon(
+                                                        Icons.verified,
+                                                        color: Colors
+                                                            .green.shade700,
+                                                      )
+                                                    : SizedBox(),
+                                              ],
                                             ),
                                           ),
-                                          dashBoardKycStatus == "verified"
-                                              ? Icon(
-                                            Icons.verified,
-                                            color: Colors.green.shade700,
-                                          )
-                                              : SizedBox(),
-                                        ],
-                                      ),
-                                    ),
                                     Row(
                                       children: [
                                         isLoading
@@ -507,6 +511,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isDarkMode,
                                       Icon(
                                         Icons.settings,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/SupportScreen',
+                                          arguments: "");
+                                    },
+                                    child: _buildCard(
+                                      context,
+                                      "Support",
+                                      isDarkMode,
+                                      Icon(
+                                        Icons.help,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _showLogOutDialog();
+                                    },
+                                    child: _buildCard(
+                                      context,
+                                      "Logout",
+                                      isDarkMode,
+                                      Icon(
+                                        Icons.logout,
                                         size: 24,
                                       ),
                                     ),
@@ -898,6 +932,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  Future<void> _showLogOutDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: Border.all(),
+          title: Text("Logout"),
+          content: SingleChildScrollView(
+              child: Text("Are you sure you want to logout?")),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Helper.clearAllSharedPreferences();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SigninScreen()),
+                      (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          ],
         );
       },
     );

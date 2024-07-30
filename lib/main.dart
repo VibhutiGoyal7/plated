@@ -35,10 +35,12 @@ import 'package:Payrio/view/screens/level_benefit_screen.dart';
 import 'package:Payrio/view/screens/notification_detail_s%20reen.dart';
 import 'package:Payrio/view/screens/notification_screen.dart';
 import 'package:Payrio/view/screens/payment_method_screen.dart';
+import 'package:Payrio/view/screens/payment_method_type_screen.dart';
 import 'package:Payrio/view/screens/profileSection/account_detail_screen.dart';
 import 'package:Payrio/view/screens/profileSection/address_screen.dart';
 import 'package:Payrio/view/screens/profileSection/change_password_screen.dart';
 import 'package:Payrio/view/screens/profileSection/change_tpin_screen.dart';
+import 'package:Payrio/view/screens/profileSection/create_support_ticket_screen.dart';
 import 'package:Payrio/view/screens/profileSection/forgot_password_screen.dart';
 import 'package:Payrio/view/screens/profileSection/language_selection_screen.dart';
 import 'package:Payrio/view/screens/profileSection/manage_applock_screen.dart';
@@ -50,6 +52,7 @@ import 'package:Payrio/view/screens/profileSection/setting_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_screen.dart';
 import 'package:Payrio/view/screens/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeem_screen.dart';
+import 'package:Payrio/view/screens/support_screen.dart';
 import 'package:Payrio/view/screens/transactions_screen.dart';
 import 'package:Payrio/view/screens/web_view_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
@@ -188,7 +191,7 @@ class _MyAppState extends State<MyApp> {
             '/AddMoneyScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return AddMoneyScreen();
+              return AddMoneyScreen(data: args);
             },
             '/WebViewScreen': (context) {
               final args =
@@ -366,6 +369,17 @@ class _MyAppState extends State<MyApp> {
               return LanguageSelectionScreen(
                 setLocale: setLocale,
               );
+            },
+            '/SupportScreen': (context) {
+              return SupportScreen();
+            },
+            '/CreateSupportTicketScreen': (context) {
+              return CreateSupportTicketScreen();
+            },
+            '/PaymentMethodTypeScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PaymentMethodTypeScreen(data: args);
             }
           }),
     );

@@ -13,6 +13,7 @@ import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
+import 'package:Payrio/model/request/supportListRequest.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
@@ -24,6 +25,7 @@ import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/createOtpChangePassResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:Payrio/model/response/createSupportTicketResponse.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/existingUserResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
@@ -33,7 +35,6 @@ import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
-import 'package:Payrio/model/response/signInResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/response/withdrawResponse.dart';
@@ -138,6 +139,37 @@ class MainRepository {
     final jsonData = response;
     print(jsonData);
     UploadKycDocResponse mediaList = UploadKycDocResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<CreateSupportTicketResponse> postMultiFormResponseToCreateSupport(
+      String url,
+      String amount,
+      String paymentTime,
+      String customerNumber,
+      String trxId,
+      String serviceType,
+      String bankType,
+      String comment,
+      String issueType,
+      File supportTicketDocument) async {
+    dynamic response =
+        await _payrioService.postMultiFormResponseToCreateSupport(
+            url,
+            amount,
+            paymentTime,
+            customerNumber,
+            trxId,
+            serviceType,
+            bankType,
+            comment,
+            issueType,
+            supportTicketDocument);
+    print(paymentTime);
+    final jsonData = response;
+    print(jsonData);
+    CreateSupportTicketResponse mediaList =
+        CreateSupportTicketResponse.fromJson(jsonData);
     return mediaList;
   }
 
@@ -268,12 +300,25 @@ class MainRepository {
     return mediaList;
   }
 
+  Future<CreateSupportTicketResponse> supportListData(
+      String value, SupportListRequest supportListRequest) async {
+    print(supportListRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, supportListRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    CreateSupportTicketResponse mediaList =
+    CreateSupportTicketResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
   Future<dynamic> getOtpTPINChange(String value) async {
     dynamic response = await _payrioService.getResponse(value);
     print(value);
     final jsonData = response;
     GenerateOtpTPINChangeResponse mediaList =
-    GenerateOtpTPINChangeResponse.fromJson(jsonData);
+        GenerateOtpTPINChangeResponse.fromJson(jsonData);
     return mediaList;
   }
 
@@ -287,6 +332,7 @@ class MainRepository {
     print(jsonData);
     return response;
   }
+
   Future<dynamic> initiateP2PTransaction(
       String value, InitiateP2PRequest initiateP2PRequest) async {
     print(initiateP2PRequest);
@@ -294,8 +340,7 @@ class MainRepository {
         await _payrioService.postResponse(value, initiateP2PRequest);
     print(value);
     final jsonData = response;
-    InitiateP2PResponse mediaList =
-    InitiateP2PResponse.fromJson(jsonData);
+    InitiateP2PResponse mediaList = InitiateP2PResponse.fromJson(jsonData);
     print(jsonData);
     return mediaList;
   }
@@ -320,8 +365,7 @@ class MainRepository {
         await _payrioService.postResponse(value, completeP2PRequest);
     print(value);
     final jsonData = response;
-    CompleteP2PResponse mediaList =
-    CompleteP2PResponse.fromJson(jsonData);
+    CompleteP2PResponse mediaList = CompleteP2PResponse.fromJson(jsonData);
     print(jsonData);
     return mediaList;
   }

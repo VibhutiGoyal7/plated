@@ -12,6 +12,7 @@ import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/createOtpForEmailVerifyResponse.dart';
+import 'package:Payrio/model/response/createSupportTicketResponse.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
@@ -33,6 +34,7 @@ import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateOtpTpinChange.dart';
 import '../model/request/generateTpinRequest.dart';
 import '../model/request/signInRequest.dart';
+import '../model/request/supportListRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/request/verifyOtpEmailVerifyRequest.dart';
 import '../model/response/GenerateOtpTPINChangeResponse.dart';
@@ -41,7 +43,6 @@ import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
-import '../model/response/signInResponse.dart';
 
 class MainViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
@@ -137,7 +138,7 @@ class MainViewModel with ChangeNotifier {
     try {
       GenerateTpinResponse generateTpinResponse = await MainRepository()
           .generateTpinrequestData(value, generateTpinrequest);
-      print("Yess"+ generateTpinResponse.message.toString());
+      print("Yess" + generateTpinResponse.message.toString());
       //_apiResponse = ApiResponse.completed(otpVerifyResponse);
       if (generateTpinResponse?.tpin != null) {
         _apiResponse = ApiResponse.completed(generateTpinResponse);
@@ -236,7 +237,7 @@ class MainViewModel with ChangeNotifier {
   }
 
   Future<void> postMultiFormResponse(
-      String value, File imgFile, String docType,  File videoFile) async {
+      String value, File imgFile, String docType, File videoFile) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
@@ -247,6 +248,45 @@ class MainViewModel with ChangeNotifier {
         _apiResponse = ApiResponse.completed(uploadKycDocResponse);
       } else {
         _apiResponse = ApiResponse.error(uploadKycDocResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> postMultiFormResponseToCreateSupport(
+      {required String url,
+        required String amount,
+        required String paymentTime,
+        required String customerNumber,
+        required String trxId,
+        required String serviceType,
+        required String bankType,
+        required String comment,
+        required String issueType,
+        required File supportTicketDocument}) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      CreateSupportTicketResponse createSupportTicketResponse =
+          await MainRepository().postMultiFormResponseToCreateSupport(
+              url,
+              amount,
+              paymentTime,
+              customerNumber,
+              trxId,
+              serviceType,
+              bankType,
+              comment,
+              issueType,
+              supportTicketDocument);
+      print("Yess" + createSupportTicketResponse.message.toString());
+      if (createSupportTicketResponse.trxId != null) {
+        _apiResponse = ApiResponse.completed(createSupportTicketResponse);
+      } else {
+        _apiResponse = ApiResponse.error(createSupportTicketResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -266,8 +306,7 @@ class MainViewModel with ChangeNotifier {
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
       //print("Yess"+ setUpAccountResponse.email.toString());
       //if (response != null) {
-        _apiResponse = ApiResponse.completed(response);
-
+      _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -331,12 +370,13 @@ class MainViewModel with ChangeNotifier {
       CreateOtpVerifyEmailResponse createOtpVerifyEmailResponse =
           await MainRepository()
               .CreateOtpVerifyEmail(value, createOtpEmailVerifyRequest);
-      print("Yess  ${createOtpVerifyEmailResponse.mobileOtp}" );
+      print("Yess  ${createOtpVerifyEmailResponse.mobileOtp}");
 
       if (createOtpVerifyEmailResponse.userId != null) {
         _apiResponse = ApiResponse.completed(createOtpVerifyEmailResponse);
       } else {
-        _apiResponse = ApiResponse.error("${createOtpVerifyEmailResponse.message}");
+        _apiResponse =
+            ApiResponse.error("${createOtpVerifyEmailResponse.message}");
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -350,11 +390,11 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      final response = await MainRepository().VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
+      final response = await MainRepository()
+          .VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
       print("generateTpinResponse ::: ${response.message}");
 
-        _apiResponse = ApiResponse.completed(response);
-
+      _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -469,7 +509,6 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> transactionListData(
       String value, TransactionListRequest transactionListRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
@@ -491,12 +530,33 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> supportListData(
+      String value, SupportListRequest supportListRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${supportListRequest.agentNumber}");
+    notifyListeners();
+    try {
+      CreateSupportTicketResponse transactionListResponse = await MainRepository()
+          .supportListData(value, supportListRequest);
+      if (transactionListResponse != null &&
+          transactionListResponse.trxId != null) {
+        _apiResponse = ApiResponse.completed(transactionListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(transactionListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
   Future<void> getOtpTPINChange(String value) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
       GenerateOtpTPINChangeResponse generateOtpTPINChangeResponse =
-      await MainRepository().getOtpTPINChange(value);
+          await MainRepository().getOtpTPINChange(value);
       print("Yess" + response.message.toString());
       if (generateOtpTPINChangeResponse.otp != null) {
         _apiResponse = ApiResponse.completed(generateOtpTPINChangeResponse);
@@ -519,8 +579,7 @@ class MainViewModel with ChangeNotifier {
       final response = await MainRepository()
           .verifyOtpTPinChange(value, verifyOtpTPinChange);
 
-        _apiResponse = ApiResponse.completed(response);
-
+      _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("TPIN change : $e");
@@ -536,8 +595,7 @@ class MainViewModel with ChangeNotifier {
     try {
       InitiateP2PResponse initiateP2PResponse = await MainRepository()
           .initiateP2PTransaction(value, initiateP2PRequest);
-      if (initiateP2PResponse != null &&
-          initiateP2PResponse.otp != null) {
+      if (initiateP2PResponse != null && initiateP2PResponse.otp != null) {
         _apiResponse = ApiResponse.completed(initiateP2PResponse);
       } else {
         _apiResponse = ApiResponse.error(initiateP2PResponse.message);
@@ -555,17 +613,16 @@ class MainViewModel with ChangeNotifier {
     print("Yess  ${checkCustomerRequest.username}");
     notifyListeners();
     try {
-      CheckCustomerResponse checkCustomerResponse =
-      await MainRepository()
+      CheckCustomerResponse checkCustomerResponse = await MainRepository()
           .checkCustomerByUsername(value, checkCustomerRequest);
       print("Yess" + "${checkCustomerResponse.message}");
 
       if (checkCustomerResponse.username != null) {
         _apiResponse = ApiResponse.completed(checkCustomerResponse);
-      } else if("${checkCustomerResponse.message}" == "Customer found successfully"){
+      } else if ("${checkCustomerResponse.message}" ==
+          "Customer found successfully") {
         _apiResponse = ApiResponse.completed(checkCustomerResponse);
-      }
-      else{
+      } else {
         _apiResponse = ApiResponse.error(checkCustomerResponse.message);
       }
     } catch (e) {
