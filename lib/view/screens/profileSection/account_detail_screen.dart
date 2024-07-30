@@ -164,7 +164,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token") {
+        if (apiResponse.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -190,22 +190,26 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   Widget build(BuildContext context) {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            Languages.of(context)!.labelAccountDetails,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+          ),
         ),
-        title: Text(
-          Languages.of(context)!.labelAccountDetails,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-        ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: SafeArea(
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .background,
+        body: SafeArea(
           child: Stack(
             children: [
               Padding(
@@ -213,17 +217,20 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                 child: Column(
                   //crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-        
-                    DetailBox( heading: Languages.of(context)!.enterPhoneNumber,
-                        subHeading: phoneNumber.toString() ?? '',
-                        icon: Icons.phone_android_outlined,
-                      headingTextSize: 14, subHeadingTextSize: 13,
+
+                    DetailBox(
+                      heading: Languages.of(context)!.enterPhoneNumber,
+                      subHeading: phoneNumber.toString() ?? '',
+                      icon: Icons.phone_android_outlined,
+                      headingTextSize: 14,
+                      subHeadingTextSize: 13,
                     ),
-        
-                    DetailBox( heading: Languages.of(context)!.labelUserId,
+
+                    DetailBox(heading: Languages.of(context)!.labelUserId,
                       subHeading: userId.toString() ?? '',
                       icon: Icons.perm_identity_outlined,
-                      headingTextSize: 14, subHeadingTextSize: 13,
+                      headingTextSize: 14,
+                      subHeadingTextSize: 13,
                     ),
                     _buildEmailVerification(
                         context: context,
@@ -234,18 +241,37 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                             Navigator.pushNamed(context, '/VerifyEmail');
                           }
                         }),
-        
+
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           Languages.of(context)!.labelUploadedDocs,
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                       ),
                     ),
-                    isInternetConnected && !isLoading
+
+                    TabBar(
+                      tabs: [
+                        Tab(text: "Identity Proof"),
+                        Tab(text: "Address Proof"),
+                      ],
+                      /*labelColor: AppColor.WHITE,
+              unselectedLabelColor: AppColor.WHITE,
+              indicatorColor: AppColor.WHITE,*/
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          IdentityProof(),
+                          AddressProof()
+                        ],
+                      ),
+                    ),
+                    /*isInternetConnected && !isLoading
                         ? Column(
                       children: [
                         if (isPassportAvailable)
@@ -325,19 +351,19 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                               "assets/video.png",
                               "${kycVideoStatus}",
                               "${kycVideoRejectedReason}"),
-        
+
                       ],
                     )
                         :
                     Padding(
                       padding: EdgeInsets.all(8),
                       child: ShimmerCard(),
-                    ),
-        
+                    ),*/
+
                   ],
                 ),
               ),
-             /* isLoading
+              /* isLoading
                   ? Stack(
                 children: [
                   // Block interaction
@@ -357,6 +383,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       ),
     );
   }
+
 
   Widget _buildEmailVerification({
     required BuildContext context,
@@ -837,5 +864,205 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   Future<void> _fetchPasswordData() async {
     await Future.delayed(Duration(milliseconds: 2));
     password = await Helper.getPassword();
+  }
+
+  Widget IdentityProof() {
+    return isInternetConnected && !isLoading
+        ? Column(
+      children: [
+        if (isPassportAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelPassport,
+              Languages.of(context)!.labelPhotoPage,
+              '/DocImageScreen',
+              'passport',
+              "${passportImg}",
+              "assets/passport.png",
+              "${passportStatus}",
+              "${passportRejectedReason}"),
+        if (isDrivingLicenceAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelDrivingLicence,
+              Languages.of(context)!.labelFrontNBack,
+              '/DocImageScreen',
+              'driving_licence',
+              "${drivingLicenseImg}",
+              "assets/license.png",
+              "${drivingLicenceStatus}",
+              "${drivingLicenceRejectedReason}"),
+        if (isNationalIdAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelNationalId,
+              Languages.of(context)!.labelFrontNBack,
+              '/DocImageScreen',
+              'national_id',
+              "${nationalIdImg}",
+              "assets/id_card.png",
+              "${nationalIdStatus}",
+              "${nationalIdRejectedReason}"),
+        if (isAddressLycAvailable)
+          _buildDocumentOption(
+              context,
+              "Address KYC",
+              'Front ',
+              '/DocImageScreen',
+              'address_kyc',
+              "${addressKycImg}",
+              "assets/address.png",
+              "${addressKycStatus}",
+              "${addressKycRejectedReason}"),
+        if (isBankStatementAvailable)
+          _buildDocumentOption(
+              context,
+              "Bank Statement",
+              'Front ',
+              '/DocImageScreen',
+              'bank_statement',
+              "${bankStatementImg}",
+              "assets/bank_statement.png",
+              "${bankStatementStatus}",
+              "${bankStatementRejectedReason}"),
+        if (isGeoLocAvailable)
+          _buildDocumentOption(
+              context,
+              "Geolocation KYC",
+              'Front ',
+              '/DocImageScreen',
+              'geolocation_kyc',
+              "${geoLocImg}",
+              "assets/geo_Location.jpg",
+              "${geoLocStatus}",
+              "${geoLocRejectedReason}"),
+        if (isKycVideoAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelVideoVerification,
+              'Front ',
+              '/VideoKycScreen',
+              'video_kyc_clip',
+              "${kycVideo}",
+              "assets/video.png",
+              "${kycVideoStatus}",
+              "${kycVideoRejectedReason}"),
+
+      ],
+    )
+        :
+    Padding(
+      padding: EdgeInsets.all(8),
+      child: ShimmerCard(),
+    );
+
+  }
+
+  Widget AddressProof() {
+    return isInternetConnected && !isLoading
+        ? Column(
+      children: [
+        if (isPassportAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelPassport,
+              Languages.of(context)!.labelPhotoPage,
+              '/DocImageScreen',
+              'passport',
+              "${passportImg}",
+              "assets/passport.png",
+              "${passportStatus}",
+              "${passportRejectedReason}"),
+        if (isDrivingLicenceAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelDrivingLicence,
+              Languages.of(context)!.labelFrontNBack,
+              '/DocImageScreen',
+              'driving_licence',
+              "${drivingLicenseImg}",
+              "assets/license.png",
+              "${drivingLicenceStatus}",
+              "${drivingLicenceRejectedReason}"),
+        if (isNationalIdAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelNationalId,
+              Languages.of(context)!.labelFrontNBack,
+              '/DocImageScreen',
+              'national_id',
+              "${nationalIdImg}",
+              "assets/id_card.png",
+              "${nationalIdStatus}",
+              "${nationalIdRejectedReason}"),
+        if (isAddressLycAvailable)
+          _buildDocumentOption(
+              context,
+              "Address KYC",
+              'Front ',
+              '/DocImageScreen',
+              'address_kyc',
+              "${addressKycImg}",
+              "assets/address.png",
+              "${addressKycStatus}",
+              "${addressKycRejectedReason}"),
+        if (isBankStatementAvailable)
+          _buildDocumentOption(
+              context,
+              "Bank Statement",
+              'Front ',
+              '/DocImageScreen',
+              'bank_statement',
+              "${bankStatementImg}",
+              "assets/bank_statement.png",
+              "${bankStatementStatus}",
+              "${bankStatementRejectedReason}"),
+        if (isGeoLocAvailable)
+          _buildDocumentOption(
+              context,
+              "Geolocation KYC",
+              'Front ',
+              '/DocImageScreen',
+              'geolocation_kyc',
+              "${geoLocImg}",
+              "assets/geo_Location.jpg",
+              "${geoLocStatus}",
+              "${geoLocRejectedReason}"),
+        if (isKycVideoAvailable)
+          _buildDocumentOption(
+              context,
+              Languages.of(context)!.labelVideoVerification,
+              'Front ',
+              '/VideoKycScreen',
+              'video_kyc_clip',
+              "${kycVideo}",
+              "assets/video.png",
+              "${kycVideoStatus}",
+              "${kycVideoRejectedReason}"),
+
+      ],
+    )
+        :
+    Padding(
+      padding: EdgeInsets.all(8),
+      child: ShimmerCard(),
+    );
+  }
+}
+
+class IdentityProof extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+
+    );
+  }
+}
+
+class AddressProof extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+    );
   }
 }

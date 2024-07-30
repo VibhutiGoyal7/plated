@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
+import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,7 @@ import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
+import '../../component/transaction_dialog.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
@@ -50,7 +52,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
 
-  List<DashboardTransaction> transactionList = [];
+  List<TransactionDetails> transactionList = [];
 
   final List<OfferResponse> imgList = [
     OfferResponse(
@@ -154,7 +156,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   : dashboardResponse?.customerData?.countryCurrencySymbol;
           //   flagImg = dashboardResponse?.customerData?. == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
           transactionList = dashboardResponse?.customerRecentTxn
-              as List<DashboardTransaction>;
+              as List<TransactionDetails>;
           isLoading = false;
         });
 
@@ -725,86 +727,92 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             shrinkWrap: true,
                             padding: const EdgeInsets.only(bottom: 6),
                             itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 4),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: Card(
-                                                shape: CircleBorder(
-                                                    side: BorderSide(
-                                                        width: 0,
-                                                        color: colorStatus(capitalizeFirstLetter(
-                                                            "${transactionList[index].status}")))),
-                                                color: colorStatus(capitalizeFirstLetter(
-                                                    "${transactionList[index].status}")),
-                                                child: Icon(
-                                                  Icons.call_made,
-                                                  color: Colors.white,
+                              return GestureDetector(
+                                onTap: (){
+
+                                  TransactionDialog.showDialogBox(context: context,transaction : transactionList[index], symbol: "${currencySymbol}");
+                                },
+                                child: Card(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(vertical: 4),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: Card(
+                                                  shape: CircleBorder(
+                                                      side: BorderSide(
+                                                          width: 0,
+                                                          color: colorStatus(capitalizeFirstLetter(
+                                                              "${transactionList[index].status}")))),
+                                                  color: colorStatus(capitalizeFirstLetter(
+                                                      "${transactionList[index].status}")),
+                                                  child: Icon(
+                                                    Icons.call_made,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  capitalizeFirstLetter(
-                                                      "${transactionList[index].paymentRequestId}"),
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 13),
-                                                ),
-                                                Text(
-                                                  capitalizeFirstLetter(
-                                                      "${transactionList[index].status}"),
-                                                  style: TextStyle(
-                                                      fontSize: 11,
-                                                      color: colorStatus(capitalizeFirstLetter(
-                                                          "${transactionList[index].status}"))),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              addCurrencySymbolTransaction(
-                                                  currencySymbol,
-                                                  "${transactionList[index].amount}",
-                                                  capitalizeFirstLetter(
-                                                      "${transactionList[index].requestType}")),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 13,
-                                                  color: colorPaymentType(capitalizeFirstLetter(
-                                                      "${transactionList[index].requestType}"))),
-                                            ),
-                                            Text(
-                                              convertDateFormat(
-                                                  "${transactionList[index].createdAt}"),
-                                              style: TextStyle(fontSize: 11),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    capitalizeFirstLetter(
+                                                        "${transactionList[index].paymentRequestId}"),
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 13),
+                                                  ),
+                                                  Text(
+                                                    capitalizeFirstLetter(
+                                                        "${transactionList[index].status}"),
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        color: colorStatus(capitalizeFirstLetter(
+                                                            "${transactionList[index].status}"))),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                addCurrencySymbolTransaction(
+                                                    currencySymbol,
+                                                    "${transactionList[index].amount}",
+                                                    capitalizeFirstLetter(
+                                                        "${transactionList[index].requestType}")),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 13,
+                                                    color: colorPaymentType(capitalizeFirstLetter(
+                                                        "${transactionList[index].requestType}"))),
+                                              ),
+                                              Text(
+                                                convertDateFormat(
+                                                    "${transactionList[index].createdAt}"),
+                                                style: TextStyle(fontSize: 11),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

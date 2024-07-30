@@ -2,6 +2,7 @@ import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/component/shimmer_text.dart';
+import 'package:Payrio/view/component/transaction_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -674,7 +675,8 @@ class TransactionItem extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
           onTap: () {
-            _showModal(context: context, transaction: transaction);
+            TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
+            //_showModal(context: context, transaction: transaction);
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 4),

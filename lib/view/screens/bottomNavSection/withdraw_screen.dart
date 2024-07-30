@@ -181,6 +181,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                             onTap: () {
                               setState(() {
                                 _inputController.text = _allLogList[index];
+                                _isValidInput();
                               });
                             },
                             child: Container(

@@ -10,7 +10,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  String token = "";
+  String? token = "";
 
   @override
   void initState() {
@@ -43,11 +43,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _fetchToken() async {
     await Helper.saveUserAuthenticated(false);
     await Future.delayed(Duration(milliseconds: 2));
-    token = await Helper.getUserToken() as String;
+    token = await Helper.getUserToken();
+    print(token);
   }
 
   void _navigation() {
-    if (token.isEmpty) {
+    if (token == null && token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/MoneySafeScreen");
     } else {
       Navigator.pushReplacementNamed(context, "/BottomNav");

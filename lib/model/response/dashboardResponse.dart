@@ -1,6 +1,8 @@
+import 'package:Payrio/model/response/transactionListReponse.dart';
+
 class DashboardResponse {
   String? message;
-  List<DashboardTransaction>? customerRecentTxn;
+  List<TransactionDetails>? customerRecentTxn;
   CustomerData? customerData;
 
   DashboardResponse({
@@ -12,7 +14,7 @@ class DashboardResponse {
   factory DashboardResponse.fromJson(Map<String, dynamic> json) {
 
     var list = json['data']?['customer_recent_transactions'] as List?;
-    List<DashboardTransaction>? transactionList = list?.map((i) => DashboardTransaction.fromJson(i)).toList();
+    List<TransactionDetails>? transactionList = list?.map((i) => TransactionDetails.fromJson(i)).toList();
 
     return DashboardResponse(
       message: json['message'] as String?,
