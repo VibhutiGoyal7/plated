@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
-class PaymentMethodScreen extends StatefulWidget {
+class PaymentMethodTypeScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
+
+  PaymentMethodTypeScreen({Key? key, this.data}) : super(key: key);
   @override
-  _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
+  _PaymentMethodTypeScreenState createState() => _PaymentMethodTypeScreenState();
 }
 
-class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
+class _PaymentMethodTypeScreenState extends State<PaymentMethodTypeScreen> {
   bool isLoading = false;
   String kycStatus = "";
   String amount = "";
@@ -50,11 +54,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamed(context, '/BottomNav');
+              Navigator.pushNamed(context, '/PaymentMethodScreen');
             },
           ),
           title: Text(
-            "Payment Methods",
+            "${widget.data}",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
@@ -69,10 +73,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             GestureDetector(
               onTap: () {
                 //_showPicker(context: context);
-                Navigator.pushNamed(context, "/PaymentMethodTypeScreen",
-                    arguments: "Local Methods");
+                Navigator.pushNamed(context, "/AddMoneyScreen",
+                    arguments: "Pay2Local");
               },
-              child: _buildCard(context, "Local Methods",
+              child: _buildCard(context, "Pay2Local",
                   "assets/bank_statement.png", isDarkMode),
             )
           ]),
@@ -87,8 +91,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       ),
       child: Container(
         width: double.infinity,
-        child:
-            /*isLoading
+        child: isLoading
             ? Shimmer.fromColors(
                 baseColor: Colors.white38,
                 highlightColor: Colors.grey,
@@ -102,42 +105,40 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   ),
                 ),
               )
-            :*/
-            Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 45,
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              /*child: Image(
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                    child: Image(
                       alignment: Alignment.topLeft,
                       width: 25,
                       image: AssetImage(icon),
-                    ),*/
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.call_made_sharp,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      size: 18,
+                    ),
+                  )
+                ],
               ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.call_made_sharp,
-                color: isDarkMode ? Colors.white : Colors.black,
-                size: 18,
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

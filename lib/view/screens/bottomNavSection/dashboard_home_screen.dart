@@ -36,7 +36,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String? name = "";
   var imageUrl;
   var flagImg;
-  bool isAmountVisible = false;
+  bool isAmountVisible = true;
   bool isUSDVisible = false;
   late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist> _shortcutCardsList;
@@ -265,7 +265,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           icon: Icons.call_made,
           selected: true),
       Shortcutitemlist(
-          title: Languages.of(context)!.labelSend,
+          title: "Request QR",
           icon: Icons.send,
           selected: true),
   /*    Shortcutitemlist(

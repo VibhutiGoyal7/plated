@@ -20,7 +20,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   late bool isDarkMode;
   String selectedLanguageValue = "";
   String selectedLanguageName = "";
-  var mCities = [
+  var mLanguages = [
     Language("English", "en"),
     Language("Arabic", "ar"),
     Language("Hindi", "hi")
@@ -32,15 +32,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   @override
   void initState() {
     super.initState();
-
     Helper.getLocale().then((selectedLanguage) {
       print(selectedLanguage.languageCode);
-
       // Ensure that setState is called synchronously after the async work is done
       if (mounted) {
         setState(() {
+          isLoading = false;
           selectedLanguageValue = selectedLanguage.languageCode;
-          mCities.map((Language items) {
+          mLanguages.map((Language items) {
             if (selectedLanguageValue == items.code) {
               selectedLanguageName = items.name;
             }
@@ -57,56 +56,78 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
         toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => {
+            Navigator.pushReplacementNamed(context, "/SettingScreen")
+          },
+
         ),
         title: Text(Languages.of(context)!.labelLanguage),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: Stack(
           children: [
-          /*  Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              width: screenWidth,
-              child: Text(
-                selectedLanguageName,
-              ),
-            ),*/
-            Expanded(
-              child: Card(
-                elevation: 4,
-                child: Container(
-                  child: ListView.builder(
-                    itemCount: mCities.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() async {
-                            selectedLanguageName = mCities[index].name;
-                            await Helper.setLocale(mCities[index].code);
-                            if (mounted) {
-                              setState(() {
-                                selectedLanguageValue = mCities[index].code!;
-                              });
-                            }
-                            widget.setLocale(Locale(mCities[index].code, ''));
-                            print(selectedLanguageValue);
-                          });
-                        },
-                        child: LanguageItem(data: mCities[index], selectedLanguageCode: selectedLanguageValue,),
-                      );
-                    },
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /*  Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
+                width: screenWidth,
+                child: Text(
+                  selectedLanguageName,
+                ),
+              ),*/
+                  Expanded(
+                    child: Card(
+                      elevation: 4,
+                      child: Container(
+                        child: ListView.builder(
+                          itemCount: mLanguages.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () async {
+        
+                                await Helper.setLocale(mLanguages[index].code);
+                                setState(() {
+                                  isLoading = false;
+                                  selectedLanguageName = mLanguages[index].name;
+                                  if (mounted) {
+                                    selectedLanguageValue = mLanguages[index].code!;
+                                  }
+                                  widget.setLocale(Locale(mLanguages[index].code, ''));
+                                  print(selectedLanguageValue);
+                                });
+                              },
+                              child: LanguageItem(data: mLanguages[index], selectedLanguageCode: selectedLanguageValue,),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            isLoading ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            ): SizedBox()
           ],
         ),
-      ),
+      )
+
     );
   }
 }

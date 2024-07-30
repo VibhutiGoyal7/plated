@@ -14,5 +14,16 @@ abstract class BaseService {
   Future<dynamic> getResponse(String url);
   Future<dynamic> putMultiFormResponse(String url, File file);
   Future<dynamic> postMultiFormResponse(String url, File imageFile, String docType,File videoFile);
+  Future<dynamic> postMultiFormResponseToCreateSupport(
+      String url,
+      String amount,
+      String paymentTime,
+      String customerNumber,
+      String trxId,
+      String serviceType,
+      String bankType,
+      String comment,
+      String issueType,
+      File supportTicketDocument);
 
 }
