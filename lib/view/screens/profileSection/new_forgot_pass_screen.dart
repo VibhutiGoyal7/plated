@@ -244,6 +244,9 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                   controller: nameController,
                   textAlignVertical: TextAlignVertical.center,
                   onChanged: (value) {
+                    setState(() {
+                      nameController.text = value;
+                    });
                     isInputValid();
                   },
                   onSubmitted: (value) {},

@@ -14,6 +14,7 @@ import '../../../model/request/signInWithPhoneNumber.dart';
 import '../../../model/response/phoneVerifyResponse.dart';
 import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 import '../../component/toastMessage.dart';
 
@@ -31,6 +32,8 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   List<TextEditingController> _controllers =
   List.generate(6, (index) => TextEditingController());
   final List<String> _otp = List.generate(6, (_) => '');
+
+  List<String> _inputValues = ['', '', '', '', '', ''];
 
   String dropdownValue = "";
   bool isValid = false;
@@ -82,6 +85,30 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       });
     }
   }
+
+
+  void _handleKeyTap(String value) {
+    setState(() {
+      for (int i = 0; i < _inputValues.length; i++) {
+        if (_inputValues[i].isEmpty) {
+          _inputValues[i] = value;
+          break;
+        }
+      }
+    });
+  }
+
+  void _handleBackspace() {
+    setState(() {
+      for (int i = _inputValues.length - 1; i >= 0; i--) {
+        if (_inputValues[i].isNotEmpty) {
+          _inputValues[i] = '';
+          break;
+        }
+      }
+    });
+  }
+
 
   Future<Widget> completeTransactionResponse(
       BuildContext context, ApiResponse apiResponse) async {
@@ -299,7 +326,57 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                             ),
                           ),*/
                           Spacer(),
-                          _buildFooter(context),
+                        CustomNumberKeyboard(onKeyTap: (value) async {
+                          if (value == "clear") {
+                            _handleBackspace();
+                          } else if (value == "submit") {
+                            String otp = _inputValues.map((
+                                controller) => controller).join();
+                            if (otp.isNotEmpty && otp.length == 6) {
+                              /*String otp =
+                              _controllers.map((controller) => controller.text)
+                                  .join();*/
+                              const maxDuration = Duration(seconds: 2);
+                              if (otp.isNotEmpty && otp.length == 6) {
+                                setState(() {
+                                  //isLoading = true;
+                                });
+                                bool isConnected = await _connectivityService
+                                    .isConnected();
+
+                                CompleteP2PRequest data = CompleteP2PRequest(
+                                  otp: otp,
+                                  customerOtpId: widget.data.customerOtpId,
+                                  paymentTransactionId: widget.data
+                                      .paymentTransactionId,
+                                  amount: widget.data.amount,
+                                  imageUrl: widget.data.imageUrl,
+                                  fullName: widget.data.fullName,
+                                  receiverUsername: widget.data
+                                      .receiverUsername,
+                                  receiverPhoneNumber: widget.data
+                                      .receiverPhoneNumber,
+                                );
+
+                                Navigator.pushReplacementNamed(
+                                    context, '/TransferTPINScreen',
+                                    arguments: data);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Please enter valid amount'),
+                                    duration: maxDuration,
+                                  ),
+                                );
+                              }
+                            }
+                            } else {
+                              _handleKeyTap(value);
+                            }
+                          }
+                          ),
+                         // _buildFooter(context),
                         ],
                       ),
                     ),
@@ -353,38 +430,17 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                border: Border(
-                    top: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4),
-                    bottom: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4),
-                    right: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4),
-                    left: BorderSide(
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                        width: 0.4)),
-                borderRadius: BorderRadius.circular(6)),
+              border: Border.all(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              borderRadius: BorderRadius.circular(6),
+            ),
             width: screenWidth / 8.1,
             height: 62.0,
-            child: TextField(
-              textAlignVertical: TextAlignVertical.center,
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
-              autofocus: index == 0,
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              decoration: InputDecoration(
-                counterText: "", // Remove the counter text
-                border: InputBorder.none,
+            child: Center(
+              child: Text(
+                _inputValues[index],
+                style: TextStyle(fontSize: 20),
               ),
-              style: TextStyle(fontSize: 20),
-              onChanged: (value) {
-                _handleOnChange(index, value);
-              },
             ),
           ),
         ),
@@ -463,7 +519,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          'Please enter valid phone number and select country code.'),
+                          'Please enter valid details'),
                       duration: maxDuration,
                     ),
                   );
