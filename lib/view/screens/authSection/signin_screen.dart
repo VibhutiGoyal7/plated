@@ -406,6 +406,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 onChanged: (value) {
                   _isValidInput();
                 },
+                maxLength: 12,
                 textAlignVertical: TextAlignVertical.center,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),

@@ -1,13 +1,13 @@
 import 'dart:io';
 
 class RequestQRData {
-  String? docType;
-  String? imageName;
+  String? amount;
+  String? username;
 
 
   RequestQRData({
-    required this.docType,
-    required this.imageName,
+    required this.amount,
+    required this.username,
 
   });
 }

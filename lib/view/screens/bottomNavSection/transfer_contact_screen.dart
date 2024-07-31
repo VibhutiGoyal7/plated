@@ -143,7 +143,26 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                           ),
                           _buildPhoneInput(context, _usernameController),
                           SizedBox(
-                            height: 25,
+                            height: 15,
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all( AppColor.PRIMARY),
+                              ),
+                              onPressed: () async {
+                                _fetchData(_usernameController.text);
+
+                              },
+                              child: Text(
+                                Languages.of(context)!.labelSubmit,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
@@ -321,7 +340,8 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
             _checkInputValidation();
           },
           onSubmitted: (value) {
-            _fetchData(_usernameController.text);
+            _checkInputValidation();
+            //_fetchData(_usernameController.text);
           },
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,

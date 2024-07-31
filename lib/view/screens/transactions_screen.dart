@@ -665,19 +665,19 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-              width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GestureDetector(
-          onTap: () {
-            TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
-            //_showModal(context: context, transaction: transaction);
-          },
+    return GestureDetector(
+      onTap: () {
+        TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
+        //_showModal(context: context, transaction: transaction);
+      },
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+                width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 4),
             child: Row(
