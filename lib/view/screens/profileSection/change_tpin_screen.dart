@@ -329,7 +329,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
           ? Stack(
               children: [
                 ModalBarrier(
-                    dismissible: false, color: Colors.black.withOpacity(0.3)),
+                    dismissible: false, color: Colors.transparent),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),

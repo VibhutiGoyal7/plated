@@ -287,7 +287,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                         // Block interaction
                         ModalBarrier(
                             dismissible: false,
-                            color: Colors.black.withOpacity(0.3)),
+                            color: Colors.transparent),
                         // Loader indicator
                         Center(
                           child: CircularProgressIndicator(),
@@ -353,6 +353,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
   Future<void> _fetchData(String userSelected) async {
     //_isValidInput();
     const maxDuration = Duration(seconds: 2);
+    hideKeyBoard();
 
     if (userSelected.isNotEmpty &&
         userSelected.length > 8 &&

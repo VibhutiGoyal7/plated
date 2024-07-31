@@ -252,7 +252,7 @@ class _MyAppState extends State<MyApp> {
             '/VerifyEmailOtpScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return VerifyEmailOtpScreen();
+              return VerifyEmailOtpScreen(data: args,);
             },
             '/VerifyIdentityScreen': (context) {
               final args =

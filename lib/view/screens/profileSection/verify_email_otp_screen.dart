@@ -17,6 +17,10 @@ import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VerifyEmailOtpScreen extends StatefulWidget {
+
+  final String? data;
+
+  VerifyEmailOtpScreen({Key? key, this.data}) : super(key: key);
   @override
   _VerifyEmailOtpScreenState createState() =>
       _VerifyEmailOtpScreenState();
@@ -285,7 +289,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
               // Block interaction
               ModalBarrier(
                   dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
+                  color: Colors.transparent),
               // Loader indicator
               Center(
                 child: CircularProgressIndicator(),
@@ -341,7 +345,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
         SizedBox(
           height: 10.0,
         ),
-        SizedBox(height: 100,),
+        Spacer(),
         CustomNumberKeyboard(onKeyTap: (value) async {
           if (value == "clear") {
             _handleBackspace();
@@ -371,7 +375,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
                   VerifyOtpEmailVerifyRequest(
                       customer: CustomerVerifyOtpEmail(
                         phoneNumber: phoneNumber,
-                        email: emailController.text,
+                        email: "${widget.data}",
                         emailOtp: otp,
                       ));
                   await Provider.of<MainViewModel>(context, listen: false)
@@ -395,59 +399,6 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
             _handleKeyTap(value);
           }
         }),
-      /*  Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: TextButton(
-            onPressed: () async {
-              String otp =
-              _controllers.map((controller) => controller.text).join();
-              if (otp.isNotEmpty) {
-                setState(() {
-                  isLoading = true;
-                });
-
-                bool isConnected = await _connectivityService.isConnected();
-                if (!isConnected) {
-                  setState(() {
-                    isLoading = false;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('No internet connection'),
-                        duration: maxDuration,
-                      ),
-                    );
-                  });
-                } else {
-                  VerifyOtpEmailVerifyRequest request =
-                  VerifyOtpEmailVerifyRequest(
-                      customer: CustomerVerifyOtpEmail(
-                        phoneNumber: phoneNumber,
-                        email: emailController.text,
-                        emailOtp: otp,
-                      ));
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .VerifyOtpVerifyEmail(
-                      "/api/v1/app/customers/verify_email_otp", request);
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  VerifyEmailResponse(context, apiResponse);
-                }
-              }else{
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Enter otp sent on your email.'),
-                    duration: maxDuration,
-                  ),
-                );
-              }
-            },
-            child: Container(
-                width: double.infinity,
-                alignment: Alignment.center,
-                child: Text("Validate")),
-          ),
-        ),*/
       ],
     );
   }

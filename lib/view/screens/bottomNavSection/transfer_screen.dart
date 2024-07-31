@@ -292,7 +292,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 // Block interaction
                 ModalBarrier(
                     dismissible: false,
-                    color: Colors.black.withOpacity(0.3)),
+                    color: Colors.transparent),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),
@@ -319,6 +319,7 @@ class _TransferScreenState extends State<TransferScreen> {
               onPressed: () async {
                 //print(_amountController.text);
                 //String user = userName;
+                hideKeyBoard();
                 _checkInputValidation();
                 if (inputValid) {
                   InitiateP2PRequest request = InitiateP2PRequest(

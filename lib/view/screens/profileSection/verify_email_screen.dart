@@ -1,6 +1,7 @@
 import 'package:Payrio/model/request/createOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/response/generateTpinResponse.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../../component/customNumberKeyboard.dart';
 import '../../component/session_expired_dialog.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
+
   @override
   _VerifyEmailScreenContentState createState() =>
       _VerifyEmailScreenContentState();
@@ -109,7 +111,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         });*/
         ToastComponent.showToast(context: context, message: mediaList?.emailOtp);
         // Navigate to the new screen after receiving the response
-        Navigator.pushNamed(context, '/VerifyEmailOtpScreen');
+        Navigator.pushNamed(context, '/VerifyEmailOtpScreen', arguments: emailController.text);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse?.message == "Invalid access token") {
@@ -225,6 +227,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextButton(
                             onPressed: () async {
+                              hideKeyBoard();
                               if (emailController.text.isNotEmpty &&
                                   EmailValidator.validate(
                                       emailController.text)) {
@@ -262,6 +265,17 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                                           .response;
                                   getEmailOtp(context, apiResponse);
                                 }
+                              }else {
+                                ScaffoldMessenger.of(
+                                    context)
+                                    .showSnackBar(
+                                  SnackBar(
+                                    content:
+                                    Text('Enter valid email.'),
+                                    duration: maxDuration,
+                                  ),
+                                );
+
                               }
                             },
                             child: Container(
@@ -289,7 +303,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
               // Block interaction
               ModalBarrier(
                   dismissible: false,
-                  color: Colors.black.withOpacity(0.3)),
+                  color: Colors.transparent),
               // Loader indicator
               Center(
                 child: CircularProgressIndicator(),

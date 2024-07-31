@@ -151,7 +151,7 @@ class _OtpForgotPassScreenState extends State<OtpForgotPassScreen> {
                       // Block interaction
                       ModalBarrier(
                           dismissible: false,
-                          color: Colors.black.withOpacity(0.3)),
+                          color: Colors.transparent),
                       // Loader indicator
                       Center(
                         child: CircularProgressIndicator(),
@@ -167,7 +167,7 @@ class _OtpForgotPassScreenState extends State<OtpForgotPassScreen> {
               children: [
                 // Block interaction
                 ModalBarrier(
-                    dismissible: false, color: Colors.black.withOpacity(0.3)),
+                    dismissible: false, color: Colors.transparent),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),

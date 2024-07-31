@@ -852,7 +852,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     // Block interaction
                     ModalBarrier(
                         dismissible: false,
-                        color: Colors.black.withOpacity(0.3)),
+                        color: Colors.transparent),
                     // Loader indicator
                     Center(
                       child: CircularProgressIndicator(),

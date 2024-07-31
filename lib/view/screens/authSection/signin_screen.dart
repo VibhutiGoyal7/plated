@@ -140,217 +140,222 @@ class _SigninScreenState extends State<SigninScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       //resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              height: screenHeight,
-              child: SingleChildScrollView(
-                child: Container(
-                  height: screenHeight,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.center,
-                            child: Container(
-                              height: screenHeight * 0.25,
-                              child: Image(
-                                alignment: Alignment.topLeft,
-                                width: screenWidth * 0.54,
-                                height: screenHeight * 0.3,
-                                image: AssetImage("assets/sign-in.png"),
-                                fit: BoxFit.fitWidth,
+      body: GestureDetector(
+        onTap: (){
+          hideKeyBoard();
+        },
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                height: screenHeight,
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: screenHeight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                height: screenHeight * 0.25,
+                                child: Image(
+                                  alignment: Alignment.topLeft,
+                                  width: screenWidth * 0.54,
+                                  height: screenHeight * 0.3,
+                                  image: AssetImage("assets/sign-in.png"),
+                                  fit: BoxFit.fitWidth,
+                                ),
+                                alignment: AlignmentDirectional.center,
                               ),
-                              alignment: AlignmentDirectional.center,
                             ),
-                          ),
-                        ],
-                      ),
-                      Flexible(
-                        child: Container(
-                          width: screenWidth,
-                          height: screenHeight,
-                          padding: EdgeInsets.zero,
-                          child: Card(
-                            elevation: 20,
-                            margin: EdgeInsets.zero,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(40),
-                                    topRight: Radius.circular(40))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 20),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  _buildLabelText(
-                                      context, "Welcome Back!", 26, true),
-                                  _buildLabelText(context,
-                                      "Welcome back we missed you", 14, false),
-                                  SizedBox(height: 25),
-                                  _buildPhoneInput(
-                                    context,
-                                    "Phone Number",
-                                    _phoneNoController,
-                                    Icon(
-                                      Icons.person,
-                                      size: 20,
-                                      color: isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  _buildPasswordInput(
+                          ],
+                        ),
+                        Flexible(
+                          child: Container(
+                            width: screenWidth,
+                            height: screenHeight,
+                            padding: EdgeInsets.zero,
+                            child: Card(
+                              elevation: 20,
+                              margin: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(40),
+                                      topRight: Radius.circular(40))),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 20),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 20),
+                                    _buildLabelText(
+                                        context, "Welcome Back!", 26, true),
+                                    _buildLabelText(context,
+                                        "Welcome back we missed you", 14, false),
+                                    SizedBox(height: 25),
+                                    _buildPhoneInput(
                                       context,
-                                      Languages.of(context)!.labelPassword,
-                                      _passwordController,
+                                      "Phone Number",
+                                      _phoneNoController,
                                       Icon(
-                                        Icons.password,
-                                        size: 18,
+                                        Icons.person,
+                                        size: 20,
                                         color: isDarkMode
                                             ? Colors.white
                                             : Colors.black,
                                       ),
-                                      passwordVisible,
-                                      isDarkMode),
-                                  SizedBox(height: 8),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 32.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/ForgotPasswordScreen');
-                                      },
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: Text(
-                                          "${Languages.of(context)?.labelForgotPass}",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          _buildFooter(context, apiResponse),
-                                        /*  Flexible(
-                                            child: ElevatedButton(
-                                              onPressed: () async {
-                                                hideKeyBoard();
-                                                _isValidInput();
-                                                const maxDuration =
-                                                    Duration(seconds: 2);
-                                                Helper.getBiometric().then((enable){
-                                                  if(enable == false) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content:
-                                                            Text('Please Enable Biometric from your profile setting.'),
-                                                        duration: maxDuration,
-                                                      ),
-                                                    );
-                                                  }
-                                                });
-                                              },
-                                              child: Image(
-                                                height: 45,
-                                                //width: 40,
-                                                image: AssetImage(
-                                                    "assets/fingerprint.png"),
-                                              ),
-                                              style: ElevatedButton.styleFrom(
-                                                  //padding: EdgeInsets.symmetric(vertical: 10.0),
-                                                  backgroundColor:
-                                                      AppColor.WHITE,
-                                                  elevation: 3,
-                                                  shape: BeveledRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              2))),
-                                            ),
-                                          ),*/
-                                        ]),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Need account? ",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[400],
-                                          ),
+                                    SizedBox(height: 15),
+                                    _buildPasswordInput(
+                                        context,
+                                        Languages.of(context)!.labelPassword,
+                                        _passwordController,
+                                        Icon(
+                                          Icons.password,
+                                          size: 18,
+                                          color: isDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                                context, '/PhoneVerifyScreen');
-                                          },
+                                        passwordVisible,
+                                        isDarkMode),
+                                    SizedBox(height: 8),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 32.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, '/ForgotPasswordScreen');
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.topRight,
                                           child: Text(
-                                            "SignUp here.",
+                                            "${Languages.of(context)?.labelForgotPass}",
                                             style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 color: Colors.blue,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            _buildFooter(context, apiResponse),
+                                          /*  Flexible(
+                                              child: ElevatedButton(
+                                                onPressed: () async {
+                                                  hideKeyBoard();
+                                                  _isValidInput();
+                                                  const maxDuration =
+                                                      Duration(seconds: 2);
+                                                  Helper.getBiometric().then((enable){
+                                                    if(enable == false) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content:
+                                                              Text('Please Enable Biometric from your profile setting.'),
+                                                          duration: maxDuration,
+                                                        ),
+                                                      );
+                                                    }
+                                                  });
+                                                },
+                                                child: Image(
+                                                  height: 45,
+                                                  //width: 40,
+                                                  image: AssetImage(
+                                                      "assets/fingerprint.png"),
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                    //padding: EdgeInsets.symmetric(vertical: 10.0),
+                                                    backgroundColor:
+                                                        AppColor.WHITE,
+                                                    elevation: 3,
+                                                    shape: BeveledRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                2))),
+                                              ),
+                                            ),*/
+                                          ]),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Need account? ",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context, '/PhoneVerifyScreen');
+                                            },
+                                            child: Text(
+                                              "SignUp here.",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.blue,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            isLoading
-                ? Stack(
-                    children: [
-                      // Block interaction
-                      ModalBarrier(
-                          dismissible: false,
-                          color: Colors.black.withOpacity(0.3)),
-                      // Loader indicator
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  )
-                : SizedBox()
-          ],
+              isLoading
+                  ? Stack(
+                      children: [
+                        // Block interaction
+                        ModalBarrier(
+                            dismissible: false,
+                            color: Colors.transparent),
+                        // Loader indicator
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    )
+                  : SizedBox()
+            ],
+          ),
         ),
       ),
     );
