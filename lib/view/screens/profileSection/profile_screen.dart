@@ -21,7 +21,6 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
-import '../authSection/money_safe_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -178,9 +177,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: screenHeight * 0.3,
                     child: Image(
                       height: screenHeight * 0.3,
-                      image: AssetImage(isDarkMode ? "assets/header_night.png" :"assets/header.png"),
+                      image: AssetImage(isDarkMode
+                          ? "assets/header_night.png"
+                          : "assets/header.png"),
                       fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                      opacity: isDarkMode ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(.9),
+                      opacity: isDarkMode
+                          ? const AlwaysStoppedAnimation(.5)
+                          : const AlwaysStoppedAnimation(.9),
                     ),
                     alignment: AlignmentDirectional.center,
                   ),
@@ -473,7 +476,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   isDarkMode),
                               _buildBiometricCard(context,
                                   "Bio-metric Authentication", isDarkMode),*/
-                              /*    Container(
+                                  /*    Container(
                                       margin:
                                           EdgeInsets.symmetric(vertical: 8.0),
                                       padding: EdgeInsets.all(6.0),
@@ -569,26 +572,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _buildCard(BuildContext context, String text, bool isDarkMode, Icon icon) {
-    return Container(
-      width: screenWidth,
-      padding: EdgeInsets.all(14.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              icon,
-              SizedBox(
-                width: 15,
-              ),
-              Text(text, style: TextStyle(fontSize: 16.0)),
-            ],
-          ),
-          /* Icon(
-            Icons.arrow_forward_ios_outlined,
-            size: 16,
-          )*/
-        ],
+    return Card(
+      color: Colors.transparent,
+      elevation: 0,
+      child: Container(
+        width: screenWidth * 0.7,
+        padding: EdgeInsets.all(14.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                icon,
+                SizedBox(
+                  width: 15,
+                ),
+                Text(text, style: TextStyle(fontSize: 16.0)),
+              ],
+            ),
+            /* Icon(
+              Icons.arrow_forward_ios_outlined,
+              size: 16,
+            )*/
+          ],
+        ),
       ),
     );
   }
@@ -961,7 +968,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Helper.clearAllSharedPreferences();
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => SigninScreen()),
-                      (Route<dynamic> route) => false,
+                  (Route<dynamic> route) => false,
                 );
               },
             ),
