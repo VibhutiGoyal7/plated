@@ -983,12 +983,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 15,
                     ),
                     Text("Are you sure you want to logout?"),
-
-
                   ],
-
                 ),
-
                 Column(
                   children: [
                     Container(
@@ -1007,15 +1003,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () {
                           Helper.clearAllSharedPreferences();
                           Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => SigninScreen()),
-                                (Route<dynamic> route) => false,
+                            MaterialPageRoute(
+                                builder: (context) => SigninScreen()),
+                            (Route<dynamic> route) => false,
                           );
                         },
                       ),
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
