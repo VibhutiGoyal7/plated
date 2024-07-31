@@ -24,6 +24,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
      screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return PopScope(
@@ -42,12 +43,12 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 50,),
-              Text(
-                "Payorio",
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.PRIMARY),
+              Image(
+                //height: screenHeight * 0.35,
+                image: AssetImage(isDarkMode
+                    ? "assets/app_logo_dark.png"
+                    : "assets/app_logo.png"),
+                fit: BoxFit.cover,
               ),
 
               Expanded(

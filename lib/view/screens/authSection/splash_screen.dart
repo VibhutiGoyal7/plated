@@ -24,16 +24,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: GestureDetector(
         onTap: () {},
         child: Padding(
           padding: EdgeInsets.all(8),
           child: Center(
-            child: Text(
+            child:
+            Image(
+              //height: screenHeight * 0.35,
+              image: AssetImage(
+                  isDarkMode ? "assets/app_logo_dark.png" :"assets/app_logo.png"),
+              fit: BoxFit.cover ,
+            )/* Text(
               "${Languages.of(context)!.appName}",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-            ),
+            ),*/
           ),
         ),
       ),

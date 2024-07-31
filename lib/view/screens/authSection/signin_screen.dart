@@ -41,7 +41,7 @@ class _SigninScreenState extends State<SigninScreen> {
       print("id${id}");
       setState(() {
         if (id != null && id.isNotEmpty) {
-          isChecked =true;
+          isChecked = true;
           _phoneNoController.text = "${id}";
         }
       });
@@ -86,7 +86,7 @@ class _SigninScreenState extends State<SigninScreen> {
         if (isChecked) {
           print("aaa${_phoneNoController.text}");
           Helper.saveUserId("${_phoneNoController.text}");
-        }else{
+        } else {
           Helper.saveUserId("");
         }
 
@@ -141,7 +141,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           hideKeyBoard();
         },
         child: SafeArea(
@@ -195,8 +195,11 @@ class _SigninScreenState extends State<SigninScreen> {
                                     SizedBox(height: 20),
                                     _buildLabelText(
                                         context, "Welcome Back!", 26, true),
-                                    _buildLabelText(context,
-                                        "Welcome back we missed you", 14, false),
+                                    _buildLabelText(
+                                        context,
+                                        "Welcome back we missed you",
+                                        14,
+                                        false),
                                     SizedBox(height: 25),
                                     _buildPhoneInput(
                                       context,
@@ -254,10 +257,11 @@ class _SigninScreenState extends State<SigninScreen> {
                                       child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             _buildFooter(context, apiResponse),
-                                          /*  Flexible(
+                                            /*  Flexible(
                                               child: ElevatedButton(
                                                 onPressed: () async {
                                                   hideKeyBoard();
@@ -315,8 +319,8 @@ class _SigninScreenState extends State<SigninScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/PhoneVerifyScreen');
+                                              Navigator.pushNamed(context,
+                                                  '/PhoneVerifyScreen');
                                             },
                                             child: Text(
                                               "SignUp here.",
@@ -345,8 +349,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       children: [
                         // Block interaction
                         ModalBarrier(
-                            dismissible: false,
-                            color: Colors.transparent),
+                            dismissible: false, color: Colors.transparent),
                         // Loader indicator
                         Center(
                           child: CircularProgressIndicator(),
@@ -417,6 +420,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     border: InputBorder.none,
                     hintText: text,
                     alignLabelWithHint: true,
+                    counterText: "",
                     hintStyle: TextStyle(color: Colors.grey),
                     icon: icon,
                     suffixIcon: Row(
@@ -431,7 +435,8 @@ class _SigninScreenState extends State<SigninScreen> {
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           semanticLabel: "Save ID",
-                          side: BorderSide(color: Colors.black),
+                          side: BorderSide(
+                              color: isDarkMode ? Colors.white : Colors.black),
                           value: isChecked,
                           onChanged: (bool? value) {
                             setState(() {

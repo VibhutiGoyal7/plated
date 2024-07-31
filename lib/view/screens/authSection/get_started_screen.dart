@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
 
@@ -18,22 +18,30 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          Image(
+            //height: screenHeight * 0.35,
+            image: AssetImage(isDarkMode
+                ? "assets/app_logo_dark.png"
+                : "assets/app_logo.png"),
+            fit: BoxFit.cover,
+          ),
+          /*   Text(
             "Payrio",
             style: TextStyle(fontSize: 28,
                 fontWeight: FontWeight.w600,
             color: AppColor.PRIMARY),
-          ),
+          ),*/
           Image(
             alignment: Alignment.topLeft,
-            width: screenWidth*0.9,
-            height: screenHeight*0.4,
+            width: screenWidth * 0.9,
+            height: screenHeight * 0.4,
             image: AssetImage("assets/payment_image.png"),
           ),
           SizedBox(

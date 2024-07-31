@@ -198,7 +198,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.arrow_back),
+                              icon: Icon(Icons.arrow_back,
+                              color:  isDarkMode ? Colors.white: AppColor.PRIMARY),
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
                                     context, "/BottomNav");
