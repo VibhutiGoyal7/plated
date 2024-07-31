@@ -36,7 +36,7 @@ String addCurrencySymbol(String? currencySymbol, String input) {
     return input;
   }
   String amount = "";
-  currencySymbol != null ? amount = "${currencySymbol}${input}" : "${input}";
+  currencySymbol != null ? amount = "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}" : "${double.parse("${input}").toStringAsFixed(2)}";
 
   return amount;
 }
@@ -69,7 +69,7 @@ String addCurrencySymbolTransaction(
     return input;
   }
   String amount = "";
-  currencySymbol != null ? amount = "${currencySymbol}${input}" : "${input}";
+  currencySymbol != null ? amount = "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}" :  "${double.parse("${input}").toStringAsFixed(2)}";
   if (requestType == "Deposit") {
     amount = "+$amount";
   } else if (requestType == "Withdraw") {
