@@ -96,8 +96,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${addMoneyResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-        Navigator.pushNamed(context, "/WebViewScreen",
-            arguments: "${redirectUrl}");
+        //Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token")
@@ -138,192 +137,201 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),*/
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              isLoading
-                  ? Container(
-                      height: screenHeight,
-                      width: screenWidth,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : SizedBox(),
-              SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: SafeArea(
+                child: Stack(
                   children: [
-                    Stack(
+                    Column(
                       children: [
-                        Container(
-                          height: screenHeight * 0.35,
-                          child: Image(
-                            height: screenHeight * 0.35,
-                            image: AssetImage(isDarkMode
-                                ? "assets/header_night.png"
-                                : "assets/header.png"),
-                            fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                            opacity: isDarkMode
-                                ? const AlwaysStoppedAnimation(.5)
-                                : const AlwaysStoppedAnimation(.9),
-                          ),
-                          alignment: AlignmentDirectional.center,
-                        ),
-                        Container(
-                          width: screenWidth,
-                          height: screenHeight * 0.35,
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.arrow_back,
-                                  color: isDarkMode
-                                      ? AppColor.WHITE
-                                      : AppColor.PRIMARY,
-                                ),
-                                onPressed: () async {
-                                  hideKeyBoard();
-                                  await Future.delayed(
-                                      Duration(milliseconds: 2));
-                                  Navigator.pop(context);
-                                },
+                        Stack(
+                          children: [
+                            Container(
+                              height: screenHeight * 0.35,
+                              child: Image(
+                                height: screenHeight * 0.35,
+                                image: AssetImage(isDarkMode
+                                    ? "assets/header_night.png"
+                                    : "assets/header.png"),
+                                fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                                opacity: isDarkMode
+                                    ? const AlwaysStoppedAnimation(.5)
+                                    : const AlwaysStoppedAnimation(.9),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "${widget.data}",
-                                  style: TextStyle(
-                                    fontSize: 24.0,
+                              alignment: AlignmentDirectional.center,
+                            ),
+                            Container(
+                              width: screenWidth,
+                              height: screenHeight * 0.35,
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: isDarkMode
+                                          ? AppColor.WHITE
+                                          : AppColor.PRIMARY,
+                                    ),
+                                    onPressed: () async {
+                                      hideKeyBoard();
+                                      await Future.delayed(
+                                          Duration(milliseconds: 2));
+                                      Navigator.pop(context);
+                                    },
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 25,
-                              ),
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Container(
-                                    width: screenWidth,
-                                    child: Column(
-                                      crossAxisAlignment:
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "${widget.data}",
+                                      style: TextStyle(
+                                        fontSize: 24.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 25,
+                                  ),
+                                  Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(18.0),
+                                      child: Container(
+                                        width: screenWidth,
+                                        child: Column(
+                                          crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Balance",
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                          ),
+                                          children: [
+                                            Text(
+                                              "Balance",
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              "${addCurrencySymbol(countryCurrencySymbol, "${currentBalance}")}",
+                                              style: TextStyle(
+                                                fontSize: 26.0,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          height: 10,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              //alignment: AlignmentDirectional.center,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 18,
+                        ),
+                        /* Container(
+                        height: 70,
+                        width: 70,
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: AppColor.WHITE,
+                          backgroundImage: AssetImage(
+                            "assets/bank_statement.png",
+
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "Adding via: ${paymentMethod}",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      ),
+                      Text("${username}",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                              color: isDarkMode ? Colors.white70 : Colors.black54)),
+                  */
+                        SizedBox(
+                          height: 10,
+                        ),
+                        _buildPhoneInput(context, Languages.of(context)!.labelZero,
+                            _amountController),
+
+                        Container(
+                          height: screenHeight * 0.065,
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          alignment: Alignment.center, // Set the desired height
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            controller: _scrollController,
+                            itemCount: _allLogList.length,
+                            padding: const EdgeInsets.only(bottom: 10),
+                            // Adjust padding if needed
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _amountController.text = _allLogList[index];
+                                    _isValidInput();
+                                  });
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width *
+                                      0.2, // Adjust width as needed
+                                  margin: EdgeInsets.all(4),
+                                  child: Card(
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          _allLogList[index],
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 12),
                                         ),
-                                        Text(
-                                          "${addCurrencySymbol(countryCurrencySymbol, "${currentBalance}")}",
-                                          style: TextStyle(
-                                            fontSize: 26.0,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
+                              );
+                            },
                           ),
-                          //alignment: AlignmentDirectional.center,
                         ),
+                        //Spacer(),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Center(
+                          child: _buildFooter(context),
+                        )
                       ],
                     ),
-                    SizedBox(
-                      height: 18,
-                    ),
-                    /* Container(
-                      height: 70,
-                      width: 70,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColor.WHITE,
-                        backgroundImage: AssetImage(
-                          "assets/bank_statement.png",
 
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      "Adding via: ${paymentMethod}",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    Text("${username}",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: isDarkMode ? Colors.white70 : Colors.black54)),
-                */
-                    SizedBox(
-                      height: 10,
-                    ),
-                    _buildPhoneInput(context, Languages.of(context)!.labelZero,
-                        _amountController),
-
-                    Container(
-                      height: screenHeight * 0.065,
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      alignment: Alignment.center, // Set the desired height
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        controller: _scrollController,
-                        itemCount: _allLogList.length,
-                        padding: const EdgeInsets.only(bottom: 10),
-                        // Adjust padding if needed
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _amountController.text = _allLogList[index];
-                                _isValidInput();
-                              });
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width *
-                                  0.2, // Adjust width as needed
-                              margin: EdgeInsets.all(4),
-                              child: Card(
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      _allLogList[index],
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    //Spacer(),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Center(
-                      child: _buildFooter(context),
-                    )
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            isLoading
+                ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.black.withOpacity(0.3)),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+                : SizedBox(),
+          ],
         ),
       ),
     );

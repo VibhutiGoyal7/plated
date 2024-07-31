@@ -19,6 +19,7 @@ class QrScannerScreen extends StatefulWidget {
 }
 
 class _QrScannerScreenState extends State<QrScannerScreen> {
+
   var imageUrl;
   var customerName;
   var userName;

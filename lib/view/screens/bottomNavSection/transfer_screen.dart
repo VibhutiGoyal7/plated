@@ -180,35 +180,52 @@ class _TransferScreenState extends State<TransferScreen> {
                             children: [
                               /*Text("${countryCurrencySymbol}", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal,
                                   color: Colors.grey),),*/
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: TextField(
-                                    style: TextStyle(
-                                      fontSize: 38.0,
-                                    ),
-                                    controller: _inputController,
-                                    onChanged: (value) {
-                                  /*    int balance = extractNumber(countryBalance) - extractNumber(amount);
-                                      print(balance);*/
-                                      setState(() {
-                                        amount = value;
-                                       // countryBalance = balance as String ;
-                                      });
-                                      _checkInputValidation();
-                                    },
-                                    maxLength: 12,
-                                    textAlign: TextAlign.center,
-                                    keyboardType: TextInputType.number,
-                                    onSubmitted: (value) {
-
-                                    },
-                                    decoration: InputDecoration(
-                                      counterText: "",
-                                      border: InputBorder.none,
-                                      hintText: Languages.of(context)?.labelZero,
+                              Card(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.44,
+                                  //margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      border: Border(
+                                        right: BorderSide(width: 0.2),
+                                        top: BorderSide(width: 0.250),
+                                        bottom: BorderSide(width: 0.2),
+                                        left: BorderSide(width: 0.2),
+                                      )),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: TextField(
+                                      style: TextStyle(
+                                        fontSize: 24.0,
+                                      ),
+                                      controller: _inputController,
+                                      autofocus: true,
+                                      onChanged: (value) {
+                                    /*    int balance = extractNumber(countryBalance) - extractNumber(amount);
+                                        print(balance);*/
+                                        setState(() {
+                                          amount = value;
+                                         // countryBalance = balance as String ;
+                                        });
+                                        //_checkInputValidation();
+                                      },
+                                      maxLength: 6,
+                                      textAlign: TextAlign.center,
+                                      keyboardType: TextInputType.number,
+                                      onSubmitted: (value) {
+                                        setState(() {
+                                          amount = value;
+                                          // countryBalance = balance as String ;
+                                        });
+                                        _checkInputValidation();
+                                      },
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        border: InputBorder.none,
+                                        hintText: Languages.of(context)?.labelZero,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -292,7 +309,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 // Block interaction
                 ModalBarrier(
                     dismissible: false,
-                    color: Colors.transparent),
+                    color : Colors.black.withOpacity(0.3)),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),

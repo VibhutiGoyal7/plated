@@ -1,7 +1,15 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:Payrio/model/requestQRData.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../../../languageSection/Languages.dart';
+import 'package:image/image.dart' as img;
+import '../../utils/Helper.dart';
 import '../../utils/Util.dart';
 
 class RequestQrScreen extends StatefulWidget {
@@ -12,18 +20,22 @@ class RequestQrScreen extends StatefulWidget {
 class _RequestQrScreenState extends State<RequestQrScreen> {
   late double screenWidth;
   late double screenHeight;
+  Uint8List? qrCodeImage;
+  bool isQrCodeGenerated = false;
   String phoneCode = "+";
   int countryCode = 0;
   bool isLoading = false;
-  bool newPasswordVisible = false;
-  bool confirmPasswordVisible = false;
   bool isValid = false;
   bool isOtpBoxVisible = false;
-  String responseMessage = '';
+  String username = '';
+  late RequestQRData data;
+
+  bool isUsernameRetrieved = false;
   String otp = '';
   bool phoneNumberValid = false;
   bool isDarkMode = false;
   String selectedItem = "";
+  final _repaintBoundaryKey = GlobalKey();
 
   final TextEditingController _amountController = TextEditingController();
   List<TextEditingController> _controllers =
@@ -34,6 +46,12 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
     super.initState();
     isValid = false;
     phoneNumberValid = false;
+    Helper.getProfileDetails().then((profileDetails) {
+      setState(() {
+        username = "${profileDetails?.username}";
+        isUsernameRetrieved = true;
+      });
+    });
   }
 
   @override
@@ -199,8 +217,11 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                 hideKeyBoard();
                 isInputValid();
                 print(_amountController.text);
-                /*if (isValid) {
-                  setState(() {
+                if (isValid) {
+                  data = RequestQRData(amount: '${_amountController.text}', username: '$username');
+                  generateQrCode(username);
+
+                /*  setState(() {
                     isLoading = true;
                   });
 
@@ -231,8 +252,8 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                         Provider.of<MainViewModel>(context, listen: false)
                             .response;
                     getAddMoneyResponse(context, apiResponse);
-                  }
-                }*/
+                  }*/
+                }
               },
               child: Text(
                 "Generate QR",
@@ -249,6 +270,208 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
           ),
         ],
       ),
+    );
+  }
+
+
+  Future<void> generateQrCode(String data) async {
+    final qrValidationResult = QrValidator.validate(
+      data: data,
+      version: QrVersions.auto,
+      errorCorrectionLevel: QrErrorCorrectLevel.L,
+    );
+
+    if (qrValidationResult.status == QrValidationStatus.valid) {
+      final qrCode = qrValidationResult.qrCode;
+      final painter = QrPainter.withQr(
+        qr: qrCode!,
+        color: Colors.black,
+        emptyColor: Colors.white,
+        gapless: true,
+      );
+
+      final directory = await getTemporaryDirectory();
+      final imagePath = '${directory.path}/qr_code.png';
+      final imageFile = File(imagePath);
+
+      final picData = await painter.toImageData(190);
+      final bytes = picData!.buffer.asUint8List();
+
+      final image = img.decodeImage(bytes);
+      final png = img.encodePng(image!);
+      await imageFile.writeAsBytes(png);
+
+      setState(() {
+        qrCodeImage = bytes as Uint8List?;
+        print(qrCodeImage);
+        isQrCodeGenerated = true;
+      });
+      _showModal(context,);
+    }
+  }
+
+  void _showModal(BuildContext context) {
+
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              scrollable: true,
+              insetPadding: EdgeInsets.all(8),
+              contentPadding:
+              EdgeInsets.symmetric(horizontal: 8, vertical: 35),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  /*GestureDetector(
+                    onTap: () => {},
+                    child: imageUrl == ""
+                        ? Container(
+                      height: 60,
+                      width: 60,
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: AppColor.WHITE,
+                        backgroundImage:
+                        AssetImage("assets/profile_user.png"),
+                      ),
+                    )
+                        : ClipRRect(
+                        borderRadius: BorderRadius.circular(100.0),
+                        child: Image.network(
+                          imageUrl,
+                          height: 60,
+                          width: 60,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context,
+                              Object exception, StackTrace? stackTrace) {
+                            // You can return any widget here to display in case of an error
+                            return Container(
+                              height: 60,
+                              width: 60,
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: AppColor.WHITE,
+                                backgroundImage: AssetImage(
+                                  "assets/profile_user.png",
+                                ),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (BuildContext context,
+                              Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.black54,
+                                highlightColor: Colors.black45,
+                                child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          },
+                        )),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  isLoading
+                      ? Shimmer.fromColors(
+                    baseColor: Colors.white38,
+                    highlightColor: Colors.grey,
+                    child: Container(
+                      width: 100,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: Colors.white38,
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Adjust the radius as needed
+                      ),
+                    ),
+                  )
+                      : _buildLabelText(context, customerName.toString(), 14.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      isLoading
+                          ? Shimmer.fromColors(
+                        baseColor: Colors.white38,
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          width: 100,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.white38,
+                            borderRadius: BorderRadius.circular(
+                                8.0), // Adjust the radius as needed
+                          ),
+                        ),
+                      )
+                          : Text(
+                        userName,
+                        style: TextStyle(fontSize: 14.0),
+                        textAlign: TextAlign.left,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      isLoading
+                          ? SizedBox()
+                          : GestureDetector(
+                        onTap: () => {
+                          copyTextToClipboard(userName.toString()),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                Text("Text copied to clipboard")),
+                          )
+                        },
+                        child: Icon(
+                          Icons.copy,
+                          size: 16,
+                        ),
+                      )
+                    ],
+                  ),*/
+                  SizedBox(
+                    height: 15,
+                  ),
+              isUsernameRetrieved && isQrCodeGenerated
+                  ? //Text("data")
+              qrCodeImage != null
+                  ? Image.memory(qrCodeImage!,
+              )
+                  : Text("Error loading QR code")
+                  : Shimmer.fromColors(
+                baseColor: Colors.white38,
+                highlightColor: Colors.grey,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white38,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/detail_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -255,7 +256,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                   ),
                   DetailBox(
                     heading: Languages.of(context)!.labelDOB,
-                    subHeading: "${dob}",
+                    subHeading: convertDateFormat("${dob}"),
                     icon: Icons.calendar_month,
                     headingTextSize: 14,
                     subHeadingTextSize: 13,

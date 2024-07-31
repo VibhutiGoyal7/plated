@@ -175,7 +175,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
               children: [
                 // Block interaction
                 ModalBarrier(
-                    dismissible: false, color: Colors.transparent),
+                    dismissible: false, color : Colors.black.withOpacity(0.3)),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),

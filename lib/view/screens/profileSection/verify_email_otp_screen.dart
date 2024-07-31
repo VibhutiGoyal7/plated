@@ -224,7 +224,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
                 // Block interaction
                 ModalBarrier(
                     dismissible: false,
-                    color: Colors.transparent),
+                    color : Colors.black.withOpacity(0.3)),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),
