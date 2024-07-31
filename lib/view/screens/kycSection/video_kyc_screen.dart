@@ -44,6 +44,12 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
     imageFile = widget.data?.imageFile;
   }
 
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    super.dispose();
+  }
+
   Future<Widget> vidKycUploadResponse(
       BuildContext context, ApiResponse apiResponse) async {
     UploadKycDocResponse? mediaList = apiResponse.data as UploadKycDocResponse?;
@@ -284,9 +290,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   }
 
   Future _startVideo(ImageSource img) async {
-    if (videoPlayerController != null) {
+    /* if (videoPlayerController != null) {
       await videoPlayerController.dispose();
-    }
+    }*/
     final pickedFile = await picker.pickVideo(
       source: img,
       maxDuration: const Duration(seconds: 15),
@@ -297,7 +303,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
       () {
         if (xfilePick != null) {
           setState(() {
-            videoFile = File(pickedFile!.path) as File;
+            videoFile = File(pickedFile!.path);
             videoPlayerController = VideoPlayerController.file(videoFile)
               ..initialize().then((_) {
                 setState(() {
