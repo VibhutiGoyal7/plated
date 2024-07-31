@@ -199,7 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             IconButton(
                               icon: Icon(Icons.arrow_back,
-                              color:  isDarkMode ? Colors.white: AppColor.PRIMARY),
+                                  color: isDarkMode
+                                      ? Colors.white
+                                      : AppColor.PRIMARY),
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
                                     context, "/BottomNav");
@@ -953,49 +955,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape: Border.all(),
-          title: Center(child: Text("Logout")),
-          content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  /*Image(
-                    height: screenHeight * 0.3,
-                    image: AssetImage(isDarkMode
-                        ? "assets/header_night.png"
-                        : "assets/header.png"),
-                    fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                    opacity: isDarkMode
-                        ? const AlwaysStoppedAnimation(.5)
-                        : const AlwaysStoppedAnimation(.9),
-                  ),*/
-                  Icon(Icons.logout_outlined, size: 35,),
-                  Text("Are you sure you want to logout?"),
-                  Container(
-                    width: 80,
-                    child: TextButton(
-                      child: Text('Naah, Just kidding'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+          title: Center(
+              child: Text(
+            "Logout",
+            style: TextStyle(fontSize: 20),
+          )),
+          content: Container(
+            height: screenHeight * 0.3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  Container(
-                    width: 80,
-                    child: TextButton(
-                      child: Text('Yes'),
-                      onPressed: () {
-                        Helper.clearAllSharedPreferences();
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => SigninScreen()),
-                              (Route<dynamic> route) => false,
-                        );
-                      },
+                    Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: AppColor.PRIMARY),
+                        child: Icon(
+                          Icons.logout_outlined,
+                          size: 60,
+                        )),
+                    SizedBox(
+                      height: 15,
                     ),
-                  ),
-                ],
-              )),
-          actions: <Widget>[
+                    Text("Are you sure you want to logout?"),
 
-          ],
+
+                  ],
+
+                ),
+
+                Column(
+                  children: [
+                    Container(
+                      width: screenWidth * 0.6,
+                      child: TextButton(
+                        child: Text('Naah, Just kidding'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: screenWidth * 0.6,
+                      child: TextButton(
+                        child: Text('Yes'),
+                        onPressed: () {
+                          Helper.clearAllSharedPreferences();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => SigninScreen()),
+                                (Route<dynamic> route) => false,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+          ),
+          actions: <Widget>[],
         );
       },
     );
