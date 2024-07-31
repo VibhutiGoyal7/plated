@@ -14,7 +14,7 @@ import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
 class NewPassForgotPassScreen extends StatefulWidget {
-  final String? data;
+  final CustomerVerifyOtpPass? data;
 
   NewPassForgotPassScreen({Key? key, this.data}) : super(key: key);
 
@@ -100,8 +100,12 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token")
-          SessionExpiredDialog.showDialogBox(context: context);
+        if (apiResponse?.message == "Invalid access token"){
+          SessionExpiredDialog.showDialogBox(context: context);}
+        else{
+          ToastComponent.showToast(
+              context: context, message: apiResponse?.message);
+        }
         return Center(
             //child: Text('Please try again later!!!'),
             );
@@ -280,47 +284,10 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
     );
   }
 
-  Widget _buildOtpInput(
-      BuildContext context, double screenWidth, bool isDarkMode) {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          6,
-          (index) => GestureDetector(
-            onTap: () {
-              setState(() {
-                isKeypadVisible = true;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: isDarkMode ? Colors.grey : Colors.black54,
-                    width: 0.4),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              width: screenWidth / 8.1,
-              height: 58.0,
-              child: Center(
-                child: Text(
-                  _inputValues[index],
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   void isInputValid() {
     String otp = "${widget.data}";
-    if (otp.isNotEmpty &&
-        otp.length == 6 &&
+    if (
         _newPasswordController.text.isNotEmpty &&
         _confirmPasswordController.text.isNotEmpty &&
         _newPasswordController.text == _confirmPasswordController.text &&
@@ -368,10 +335,10 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                 });
                 VerifyOtChangePassRequest request = VerifyOtChangePassRequest(
                     customer: CustomerVerifyOtpPass(
-                        phoneNumber: _phoneNumberController.text,
+                        phoneNumber: "${widget.data?.phoneNumber}",
                         password: _newPasswordController.text,
-                        mobileOtp: otp,
-                        countryId: countryCode));
+                        mobileOtp: "${widget.data?.mobileOtp}",
+                        countryId: widget.data?.countryId));
 
                 await Provider.of<MainViewModel>(context, listen: false)
                     .VerifyOtpChangePass(

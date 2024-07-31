@@ -181,7 +181,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
           child: SafeArea(
             child: Column(
               children: [
-                Center(
+               /* Center(
                   child: Image(
                     alignment: Alignment.topLeft,
                     //width: screenWidth*0.8,
@@ -189,7 +189,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                     image: AssetImage("assets/forgot_password.png"),
                     fit: BoxFit.fitWidth,
                   ),
-                ),
+                ),*/
                 SizedBox(
                   height: 8,
                 ),

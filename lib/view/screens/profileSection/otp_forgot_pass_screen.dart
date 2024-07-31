@@ -1,3 +1,4 @@
+import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -5,6 +6,10 @@ import '../../../model/response/countryListResponse.dart';
 import '../../component/customNumberKeyboard.dart';
 
 class OtpForgotPassScreen extends StatefulWidget {
+  final CustomerVerifyOtpPass? data;
+
+  OtpForgotPassScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _OtpForgotPassScreenState createState() => _OtpForgotPassScreenState();
 }
@@ -125,10 +130,12 @@ class _OtpForgotPassScreenState extends State<OtpForgotPassScreen> {
                       String otp = _inputValues
                           .map((controller) => controller)
                           .join();
+                      CustomerVerifyOtpPass data =
+                      CustomerVerifyOtpPass(phoneNumber: "${widget.data?.phoneNumber}", mobileOtp: otp , countryId:widget.data?.countryId );
                       if (otp.isNotEmpty && otp.length == 6) {
                         Navigator.pushNamed(
                             context, "/NewPassForgotPassScreen",
-                            arguments: otp);
+                            arguments: data);
                       }
                     } else {
                       _handleKeyTap(value);

@@ -211,9 +211,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           if (calledShortCut == Languages.of(context)!.labelAdd) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/PaymentMethodScreen');
-          } else {
+          } else if(calledShortCut == Languages.of(context)!.labelWithdraw) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/WithdrawScreen');
+          }else if(calledShortCut == Languages.of(context)!.labelRequestQR) {
+            calledShortCut = "";
+            Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -1106,6 +1109,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {
                           calledShortCut = Languages.of(context)!.labelAddMoney,
+                          _getKycStatus()
+                        }
+                      else if (text == Languages.of(context)!.labelRequestQR)
+                        {
+                          calledShortCut = Languages.of(context)!.labelRequestQR,
                           _getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelWithdraw)

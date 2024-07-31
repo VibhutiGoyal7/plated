@@ -84,9 +84,9 @@ class CustomNumberKeyboard extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () => _onKeyPressed(value),
       child: Container(
-        width: 100,
+        width: 90,
         margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         decoration: BoxDecoration(
           color:  AppColor.PRIMARY ,
           borderRadius: BorderRadius.all(Radius.circular(10))
