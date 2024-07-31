@@ -11,17 +11,17 @@ class VerifyOtChangePassRequest {
 }
 
 class CustomerVerifyOtpPass {
-  String password;
-  String phoneNumber;
-  String mobileOtp;
-  int countryId;
+  String? password;
+  String? phoneNumber;
+  String? mobileOtp;
+  int? countryId;
 
 
   CustomerVerifyOtpPass({
-    required this.password,
-    required this.phoneNumber,
-    required this.mobileOtp,
-    required this.countryId
+     this.password,
+     this.phoneNumber,
+     this.mobileOtp,
+     this.countryId
   });
   Map<String, dynamic> toJson() {
     return {

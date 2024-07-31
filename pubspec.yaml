@@ -103,6 +103,7 @@ flutter:
       - assets/header.png
       - assets/header_night.png
       - assets/fingerprint.png
+      - assets/requestQR.png
 
   fonts:
     - family: CustomFont

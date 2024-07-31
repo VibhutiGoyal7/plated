@@ -105,12 +105,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         print("response: ${apiResponse.message}");
         print("data: ${apiResponse?.data}");
         print("otp ${mediaList?.mobileOtp}");
+        CustomerVerifyOtpPass data =
+        CustomerVerifyOtpPass(phoneNumber: "${_phoneNumberController.text}", countryId:countryCode );
 
         ToastComponent.showToast(
             context: context, message: mediaList?.mobileOtp);
         ToastComponent.showToast(
             context: context, message: apiResponse?.message);
-        Navigator.pushNamed(context, "/OtpForgotPassScreen");
+        Navigator.pushNamed(context, "/OtpForgotPassScreen", arguments: data );
 
         setState(() {
           isOtpBoxVisible = true;

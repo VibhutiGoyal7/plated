@@ -1,6 +1,7 @@
 import 'package:Payrio/model/documentData.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/theme/AppTheme.dart';
@@ -55,6 +56,7 @@ import 'package:Payrio/view/screens/profileSection/verify_email_otp_screen.dart'
 import 'package:Payrio/view/screens/profileSection/verify_email_screen.dart';
 import 'package:Payrio/view/screens/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeem_screen.dart';
+import 'package:Payrio/view/screens/request_qr_screen.dart';
 import 'package:Payrio/view/screens/support_screen.dart';
 import 'package:Payrio/view/screens/transactions_screen.dart';
 import 'package:Payrio/view/screens/web_view_screen.dart';
@@ -217,12 +219,12 @@ class _MyAppState extends State<MyApp> {
             },
             '/OtpForgotPassScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
-              return OtpForgotPassScreen();
+                  ModalRoute.of(context)!.settings.arguments as CustomerVerifyOtpPass?;
+              return OtpForgotPassScreen(data :args);
             },
             '/NewPassForgotPassScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as CustomerVerifyOtpPass?;
               return NewPassForgotPassScreen(data: args);
             },
             '/PersonalDataScreen': (context) {
@@ -397,6 +399,11 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return PaymentMethodTypeScreen(data: args);
+            },
+            '/RequestQrScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return RequestQrScreen();
             }
           }),
     );
