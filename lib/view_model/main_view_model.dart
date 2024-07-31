@@ -390,11 +390,16 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      final response = await MainRepository()
+      final GenerateTpinResponse generateTpinResponse = await MainRepository()
           .VerifyOtpVerifyEmail(value, verifyOtpEmailVerifyRequest);
-      print("generateTpinResponse ::: ${response.message}");
+      print("generateTpinResponse ::: ${response}");
+      if (generateTpinResponse.status == 200 || generateTpinResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(generateTpinResponse);
+      } else {
+        _apiResponse =
+            ApiResponse.error("${generateTpinResponse.message}");
+      }
 
-      _apiResponse = ApiResponse.completed(response);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);

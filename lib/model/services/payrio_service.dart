@@ -305,7 +305,7 @@ class PayrioService extends BaseService {
         throw BadRequestException(response.body.toString());
       case 422:
         var responseBody = jsonDecode(response.body);
-        print("Message >>::${responseBody['message']}");
+        print("Message >>::${responseBody['statusCode']}");
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
       case 401:

@@ -290,12 +290,9 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
   }
 
   Future _startVideo(ImageSource img) async {
-    /* if (videoPlayerController != null) {
-      await videoPlayerController.dispose();
-    }*/
     final pickedFile = await picker.pickVideo(
       source: img,
-      maxDuration: const Duration(seconds: 15),
+      maxDuration: const Duration(seconds: 10),
       preferredCameraDevice: CameraDevice.front,
     );
     XFile? xfilePick = pickedFile;

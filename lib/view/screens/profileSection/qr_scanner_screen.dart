@@ -91,7 +91,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
               onTap: () => {
                 /*_showPicker(context: context)*/
               },
-              child: imageUrl == ""
+              child: imageUrl == null || imageUrl == ""
                   ? Container(
                       height: 65,
                       width: 65,

@@ -11,6 +11,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/createOtpForEmailVerifyResponse.dart';
 import '../../../model/response/profileResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
@@ -52,6 +53,9 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
 
     emailController = TextEditingController();
     //otpController = TextEditingController();
+    Helper.getProfileDetails().then((profile){
+      emailController.text = "${profile?.email}";
+    });
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -211,8 +215,12 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                               horizontal: 8.0, vertical: 4),
                           child: TextField(
                             controller: emailController,
+                            enabled: false,
+                            style: TextStyle(
+                              color: isDarkMode? AppColor.WHITE : AppColor.BLACK
+                            ),
                             decoration: InputDecoration(
-                              labelText: Languages.of(context)!.labelEnterEmail,
+                              hintText: Languages.of(context)!.labelEnterEmail,
                               border: InputBorder.none,
                             ),
                           ),
@@ -226,6 +234,9 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(AppColor.PRIMARY),
+                            ),
                             onPressed: () async {
                               hideKeyBoard();
                               if (emailController.text.isNotEmpty &&

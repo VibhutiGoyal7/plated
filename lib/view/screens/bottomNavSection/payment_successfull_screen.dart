@@ -120,36 +120,34 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                 onTap: (){
                   _captureAndSharePng(context);
                 },
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 5,
+                child: Card(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border(
+                            top: BorderSide(color: AppColor.PRIMARY, width: 0.8),
+                            bottom: BorderSide(color: AppColor.PRIMARY, width: 0.8),
+                            left: BorderSide(color: AppColor.PRIMARY, width: 0.8),
+                            right: BorderSide(color: AppColor.PRIMARY, width: 0.8))),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(
+                        Icons.share,
+                        size: 18,
+                        color: AppColor.PRIMARY,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        "Share screenshot",
+                        style: TextStyle(fontSize: 14),
+                      ),
+
+
+                    ]),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                      color: AppColor.WHITE,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border(
-                          top: BorderSide(color: AppColor.PRIMARY, width: 0.8),
-                          bottom: BorderSide(color: AppColor.PRIMARY, width: 0.8),
-                          left: BorderSide(color: AppColor.PRIMARY, width: 0.8),
-                          right: BorderSide(color: AppColor.PRIMARY, width: 0.8))),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(
-                      Icons.share,
-                      size: 18,
-                      color: AppColor.PRIMARY,
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      "Share screenshot",
-                      style: TextStyle(fontSize: 14),
-                    ),
-
-
-                  ]),
                 ),
               ),
               SizedBox(height: 10,),

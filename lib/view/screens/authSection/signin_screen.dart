@@ -4,6 +4,7 @@ import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -415,6 +416,8 @@ class _SigninScreenState extends State<SigninScreen> {
                     bottom: MediaQuery.of(context).viewInsets.bottom),
                 onSubmitted: (value) {},
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,],
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                     border: InputBorder.none,

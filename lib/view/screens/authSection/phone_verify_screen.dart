@@ -376,6 +376,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                                     SizedBox(width: 5),
                                     Text(
                                       "+${item.phoneCode}",
+                                      style: TextStyle(
+                                        color: AppColor.WHITE
+                                      ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],

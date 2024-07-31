@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 
 import '../view/component/toastMessage.dart';
-import 'Helper.dart';
 
 String capitalizeFirstLetter(String input) {
   if (input.isEmpty) {
@@ -36,8 +33,21 @@ String addCurrencySymbol(String? currencySymbol, String input) {
   if (input.isEmpty) {
     return input;
   }
+
+  if (input == "**") {
+    print("object");
+    return "${currencySymbol}${input}";
+  }
   String amount = "";
-  currencySymbol != null ? amount = "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}" : "${double.parse("${input}").toStringAsFixed(2)}";
+   try{
+     currencySymbol != null ? amount = "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}" : "${double.parse("${input}").toStringAsFixed(2)}";
+
+   }catch(e)
+  {
+    return "${currencySymbol}${input}";
+  }
+  print("${input == "**"}");
+  print("${input}");
 
   return amount;
 }
