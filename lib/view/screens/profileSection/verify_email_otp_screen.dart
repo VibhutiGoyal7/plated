@@ -170,7 +170,8 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar ( toolbarHeight: 65,
         leading: IconButton(
@@ -184,120 +185,55 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),
-      body: Stack(
-        children: [
-
-          SafeArea(
-            child: SingleChildScrollView(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Container(
+              height: screenHeight,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(height: 20),
-
-                    /*SizedBox(height: 10),
-                    Text(
-                      Languages.of(context)!.verifyEmailSubTitle,
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4),
-                          child: TextField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              labelText: Languages.of(context)!.labelEnterEmail,
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    Column(
                       children: [
+                        SizedBox(height: 20),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: TextButton(
-                            onPressed: () async {
-                              if (emailController.text.isNotEmpty &&
-                                  EmailValidator.validate(
-                                      emailController.text)) {
-                                setState(() {
-                                  isLoading = true;
-                                });
-
-                                bool isConnected =
-                                await _connectivityService.isConnected();
-                                if (!isConnected) {
-                                  setState(() {
-                                    isLoading = false;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('No internet connection'),
-                                        duration: maxDuration,
-                                      ),
-                                    );
-                                  });
-                                } else {
-                                  CreateOtpEmailVerifyRequest request =
-                                  CreateOtpEmailVerifyRequest(
-                                      customer: CustomerGetOtpEmailDetail(
-                                        phoneNumber: phoneNumber,
-                                        email: emailController.text,
-                                      ));
-                                  await Provider.of<MainViewModel>(context,
-                                      listen: false)
-                                      .CreateOtpVerifyEmail(
-                                      "/api/v1/app/customers/generate_otp_for_email",
-                                      request);
-                                  ApiResponse apiResponse =
-                                      Provider.of<MainViewModel>(context,
-                                          listen: false)
-                                          .response;
-                                  getEmailOtp(context, apiResponse);
-                                }
-                              }
-                            },
-                            child: Container(
-                              child: Text(
-                                Languages.of(context)!.labelSubmit,
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(Languages.of(context)!.labelEnterOtpSentToEmail),
+                        ),
+                        SizedBox(height: 20),
+                        _buildPhoneInput(context, screenWidth, isDarkMode),
+                        SizedBox(
+                          height: 10.0,
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    if (isOtpBoxVisible)*/ _buildVerifySection(isDarkMode)
+
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                        child: _buildVerifySection(isDarkMode))
                   ],
                 ),
               ),
             ),
-          ),
-          isLoading
-              ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.transparent),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
-              : SizedBox(),
-        ],
+            isLoading
+                ? Stack(
+              children: [
+                // Block interaction
+                ModalBarrier(
+                    dismissible: false,
+                    color: Colors.transparent),
+                // Loader indicator
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ],
+            )
+                : SizedBox(),
+          ],
+        ),
       ),
     );
   }
@@ -332,20 +268,13 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
   }
 
   Widget _buildVerifySection(bool isDarkMode) {
-    double screenWidth = MediaQuery.of(context).size.width;
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(Languages.of(context)!.labelEnterOtpSentToEmail),
-        ),
-        _buildPhoneInput(context, screenWidth, isDarkMode),
-        SizedBox(
-          height: 10.0,
-        ),
-        Spacer(),
+
         CustomNumberKeyboard(onKeyTap: (value) async {
           if (value == "clear") {
             _handleBackspace();

@@ -1,5 +1,6 @@
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
@@ -308,6 +309,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         width: screenWidth * 0.7,
         child: ElevatedButton(
           onPressed: () async {
+            hideKeyBoard();
             String otp = "${widget.data}";
             isInputValid();
             if (otp.isNotEmpty &&
