@@ -12,10 +12,10 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../theme/AppColor.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/toastMessage.dart';
+import '../../../../../languageSection/Languages.dart';
+import '../../../../../theme/AppColor.dart';
+import '../../../../component/connectivity_service.dart';
+import '../../../../component/toastMessage.dart';
 
 class CreateSupportTicketScreen extends StatefulWidget {
   @override

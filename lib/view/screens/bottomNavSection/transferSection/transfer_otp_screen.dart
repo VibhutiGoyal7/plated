@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/request/signInWithPhoneNumber.dart';
-import '../../../model/response/phoneVerifyResponse.dart';
-import '../../../utils/Util.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/customNumberKeyboard.dart';
-import '../../component/session_expired_dialog.dart';
-import '../../component/toastMessage.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../model/request/signInWithPhoneNumber.dart';
+import '../../../../model/response/phoneVerifyResponse.dart';
+import '../../../../utils/Util.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/customNumberKeyboard.dart';
+import '../../../component/session_expired_dialog.dart';
+import '../../../component/toastMessage.dart';
 
 class TransferOtpScreen extends StatefulWidget {
   final CompleteP2PRequest data;// Define the 'data' parameter here

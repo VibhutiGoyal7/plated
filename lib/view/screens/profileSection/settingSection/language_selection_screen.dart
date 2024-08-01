@@ -1,9 +1,9 @@
 import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/screens/profileSection/setting_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../utils/Helper.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../utils/Helper.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   final Function(Locale) setLocale;

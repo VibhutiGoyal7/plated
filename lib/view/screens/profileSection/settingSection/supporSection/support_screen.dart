@@ -1,27 +1,24 @@
-import 'package:Payrio/model/request/transactionListRequest.dart';
+import 'package:Payrio/model/request/supportListRequest.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/component/shimmer_text.dart';
-import 'package:Payrio/view/component/transaction_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../languageSection/Languages.dart';
-import '../../model/apis/api_response.dart';
-import '../../utils/Helper.dart';
-import '../../utils/Util.dart';
-import '../../view_model/main_view_model.dart';
-import '../component/ShimmerList.dart';
-import '../component/connectivity_service.dart';
-import '../component/session_expired_dialog.dart';
+import '../../../../../model/apis/api_response.dart';
+import '../../../../../utils/Helper.dart';
+import '../../../../../utils/Util.dart';
+import '../../../../../view_model/main_view_model.dart';
+import '../../../../component/ShimmerList.dart';
+import '../../../../component/connectivity_service.dart';
+import '../../../../component/session_expired_dialog.dart';
 
-class TransactionsScreen extends StatefulWidget {
+class SupportScreen extends StatefulWidget {
   @override
-  _TransactionsScreenState createState() => _TransactionsScreenState();
+  _SupportScreenState createState() => _SupportScreenState();
 }
 
-class _TransactionsScreenState extends State<TransactionsScreen> {
+class _SupportScreenState extends State<SupportScreen> {
   String kycStatus = "";
   String amount = "";
   String status = "";
@@ -111,17 +108,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           );
         });
       } else {
-        TransactionListRequest request = TransactionListRequest(
+        SupportListRequest request = SupportListRequest(
           pageNo: pageKey,
           pageSize: _numberOfPostsPerRequest,
-          paymentRequestId: "",
+          customerNumber: "",
           trxId: "",
-          requestType: nonCapitalizeString(requestType),
-          status: nonCapitalizeString(status),
+          agentNumber: "",
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .transactionListData(
-                "api/v1/app/payment_transactions/list", request);
+            .supportListData("/api/v1/app/support_tickets/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getTransactionData(context, apiResponse, pageKey, isScroll);
@@ -178,14 +173,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return groupedTransactions;
   }
 
-  Future<bool> _onWillPop() async {
-    Navigator.pushReplacementNamed(
-      context,
-      "/BottomNav",
-    );
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -209,13 +196,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         if (kDebugMode) {
           Navigator.pushReplacementNamed(
             context,
-            "/BottomNav",
+            "/ProfileScreen",
           );
           // return Future.value(true);
         }
         Navigator.pushReplacementNamed(
           context,
-          "/BottomNav",
+          "/ProfileScreen",
         );
       },
       child: Scaffold(
@@ -225,11 +212,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                "/ProfileScreen",
+              );
             },
           ),
           title: Text(
-            "${Languages.of(context)!.labelTransaction}s",
+            "Support List",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           actions: [
@@ -239,7 +229,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 },
                 icon: Icon(
                   Icons.filter_list,
-                  color: isDarkMode ? AppColor.WHITE : AppColor.BLACK,
+                  color: Colors.black,
                   size: 28,
                 )),
             SizedBox(
@@ -255,148 +245,101 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        Column(
-                          children: [
-                            Text(
-                              "Total Balance",
-                              style: TextStyle(
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                            isInternetConnected && !isLoading
-                                ? Text(
-                                    addCurrencySymbol(
-                                        countryCurrencySymbol, currentBalance),
-                                    style: TextStyle(
-                                        fontSize: 32.0,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 2),
-                                  )
-                                : ShimmerText(
-                                    height: 32,
-                                    width: 100,
-                                  ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
                     Expanded(
                       child: Container(
                         width: screenWidth,
-                        child: Card(
-                          elevation: 20,
-                          margin: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(40),
-                                  topRight: Radius.circular(40))),
-                          child: Container(
-                            margin: EdgeInsets.only(top: 12),
-                            child: isInternetConnected && !isLoading
-                                ? checkListEmpty()
-                                    ? FutureBuilder(
-                                        future: _fetchDataFuture,
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<void> snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          } else if (snapshot.hasError) {
-                                            return Center(
-                                                child:
-                                                    Text('Error loading data'));
-                                          } else {
-                                            // Group transactions by date
-                                            Map<String,
-                                                    List<TransactionDetails>>
-                                                groupedTransactions =
-                                                groupTransactionsByDate(
-                                                    filterApplied
-                                                        ? filteredTransactionList
-                                                        : transactionList);
-                                            List<String> dates =
-                                                groupedTransactions.keys
-                                                    .toList();
+                        child: Container(
+                          margin: EdgeInsets.only(top: 12),
+                          child: isInternetConnected && !isLoading
+                              ? checkListEmpty()
+                                  ? FutureBuilder(
+                                      future: _fetchDataFuture,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<void> snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else if (snapshot.hasError) {
+                                          return Center(
+                                              child:
+                                                  Text('Error loading data'));
+                                        } else {
+                                          // Group transactions by date
+                                          Map<String, List<TransactionDetails>>
+                                              groupedTransactions =
+                                              groupTransactionsByDate(
+                                                  filterApplied
+                                                      ? filteredTransactionList
+                                                      : transactionList);
+                                          List<String> dates =
+                                              groupedTransactions.keys.toList();
 
-                                            return ListView.builder(
-                                              controller: _scrollController,
-                                              itemCount: dates.length +
-                                                  (_isLoadingMore ? 1 : 0),
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                if (index == dates.length) {
-                                                  return Center(
-                                                      child:
-                                                          CircularProgressIndicator());
-                                                }
-                                                String date = dates[index];
-                                                List<TransactionDetails>
-                                                    transactionsForDate =
-                                                    groupedTransactions[date]!;
+                                          return ListView.builder(
+                                            controller: _scrollController,
+                                            itemCount: dates.length +
+                                                (_isLoadingMore ? 1 : 0),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              if (index == dates.length) {
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+                                              String date = dates[index];
+                                              List<TransactionDetails>
+                                                  transactionsForDate =
+                                                  groupedTransactions[date]!;
 
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Text(
-                                                          date,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 12),
-                                                        ),
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        date,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 12),
                                                       ),
-                                                      ...transactionsForDate
-                                                          .map((transaction) {
-                                                        return TransactionItem(
-                                                          transaction:
-                                                              transaction,
-                                                          symbol:
-                                                              countryCurrencySymbol,
-                                                        );
-                                                      }).toList(),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          }
-                                        },
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          "No Transactions",
-                                          style: TextStyle(
-                                              fontSize: 15, color: Colors.grey),
-                                        ),
-                                      )
-                                : Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 18),
-                                    child: ShimmerList(itemCount: 2),
-                                  ),
-                          ),
+                                                    ),
+                                                    ...transactionsForDate
+                                                        .map((transaction) {
+                                                      return TransactionItem(
+                                                        transaction:
+                                                            transaction,
+                                                        symbol:
+                                                            countryCurrencySymbol,
+                                                      );
+                                                    }).toList(),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      },
+                                    )
+                                  : Center(
+                                      child: Text(
+                                        "No Data Found",
+                                        style: TextStyle(
+                                            fontSize: 15, color: Colors.grey),
+                                      ),
+                                    )
+                              : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 18),
+                                  child: ShimmerList(itemCount: 2),
+                                ),
                         ),
                       ),
                     ),
@@ -418,6 +361,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ],
                   )
                 : SizedBox(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: FloatingActionButton(
+                    child: Icon(Icons.add), onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    "/CreateSupportTicketScreen",
+                  );
+                }),
+              ),
+            ),
           ],
         ),
       ),
@@ -646,13 +602,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   bool checkListEmpty() {
     bool isListEmpty = false;
-    if(!filterApplied)
-      {
-        isListEmpty= transactionList.isNotEmpty;
-      }else{
+    if (!filterApplied) {
+      isListEmpty = transactionList.isNotEmpty;
+    } else {
       isListEmpty = filteredTransactionList.isNotEmpty;
     }
-    return  isListEmpty;
+    return isListEmpty;
   }
 }
 
@@ -665,19 +620,18 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: () {
-        TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
-        //_showModal(context: context, transaction: transaction);
-      },
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-                width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+              width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            _showModal(context: context, transaction: transaction);
+          },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 4),
             child: Row(

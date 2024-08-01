@@ -2,12 +2,12 @@ import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
-import '../../../theme/AppColor.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/session_expired_dialog.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../theme/AppColor.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/session_expired_dialog.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override

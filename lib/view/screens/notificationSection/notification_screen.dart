@@ -9,8 +9,8 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final List<NotificationData> data = [
     NotificationData(
-      notificationHeading: "Cheers! You won 100 AstroPoints",
-      notificationContent: "Because you created your account in AstroPay",
+      notificationHeading: "Cheers! You won 100",
+      notificationContent: "Because you created your account",
     ),
   ];
 

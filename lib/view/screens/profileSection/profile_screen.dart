@@ -525,7 +525,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, '/SupportScreen',
+                                          context, '/SupportSelectionScreen',
                                           arguments: "");
                                     },
                                     child: _buildCard(
@@ -967,6 +967,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: 10,
@@ -977,12 +979,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             shape: BoxShape.circle, color: AppColor.PRIMARY),
                         child: Icon(
                           Icons.logout_outlined,
-                          size: 60,
+                          size: 55,
+                          color: Colors.white,
                         )),
                     SizedBox(
                       height: 15,
                     ),
-                    Text("Are you sure you want to logout?"),
+                    Center(
+                        child: Text(
+                      "Are you sure you want to logout?",
+                      textAlign: TextAlign.center,
+                    )),
                   ],
                 ),
                 Column(
