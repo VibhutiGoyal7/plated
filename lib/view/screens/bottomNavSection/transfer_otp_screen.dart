@@ -40,6 +40,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   bool resendOtp = false;
   String phoneNo = "";
   String? currencySymbol = "";
+  String? country = "";
   late double screenWidth;
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -61,6 +62,11 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         currencySymbol = symbol;
+      });
+    });
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
   }
@@ -256,8 +262,8 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(addCurrencySymbol(
-                              currencySymbol, "${widget.data?.amount}")),
+                          Text(currencyFormat(
+                              "${currencySymbol}", "${widget.data?.amount}", "${country}")),
                         ],
                       ),
                     ],

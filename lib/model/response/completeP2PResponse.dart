@@ -1,7 +1,8 @@
 class CompleteP2PResponse {
-  final String? status;
+  final String? dataStatus;
   final String? amount;
   final String? message;
+  final int? status;
   final int? id;
   final int? customerId;
   final String? bankType;
@@ -19,6 +20,7 @@ class CompleteP2PResponse {
     this.status,
     this.amount,
     this.message,
+    this.dataStatus,
     this.id,
     this.customerId,
     this.bankType,
@@ -36,7 +38,8 @@ class CompleteP2PResponse {
   factory CompleteP2PResponse.fromJson(Map<String, dynamic> json) {
     return CompleteP2PResponse(
       message: json['message'] as String?,
-      status: json['data']?['status'] as String?,
+      status: json['status'] as int?,
+      dataStatus: json['data']?['status'] as String?,
       amount: json['data']?['amount'] as String?,
       id: json['data']?['id'] as int?,
       customerId: json['data']?['customer_id'] as int?,

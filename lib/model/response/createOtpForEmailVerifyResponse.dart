@@ -8,6 +8,7 @@ class CreateOtpVerifyEmailResponse {
   String? updatedAt;
   String? mobileOtp;
   String? message;
+  int? status;
   int? mobileOtpExpireAt;
 
 
@@ -23,12 +24,14 @@ class CreateOtpVerifyEmailResponse {
     required this.mobileOtp,
     required this.mobileOtpExpireAt,
     required this.message,
+    required this.status,
 
   });
 
   factory CreateOtpVerifyEmailResponse.fromJson(Map<String, dynamic> json){
     return CreateOtpVerifyEmailResponse (
       message : json["message"] as String?,
+      status : json["status"] as int?,
       email : json['data']?['email'] as String?,
       emailOtp : json['data']?['email_otp'] as String?,
       emailOtpExpireAt : json['data']?['email_otp_expire_at'] as int?,

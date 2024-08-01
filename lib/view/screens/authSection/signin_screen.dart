@@ -152,10 +152,10 @@ class _SigninScreenState extends State<SigninScreen> {
                 height: screenHeight,
                 child: SingleChildScrollView(
                   child: Container(
-                    height: screenHeight,
+                       height: screenHeight,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      //mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Stack(
                           alignment: Alignment.bottomCenter,

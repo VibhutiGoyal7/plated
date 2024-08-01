@@ -34,6 +34,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatusApi = "";
   String? amount = "0.00";
   String? currencySymbol = "";
+  String? country = "";
   String calledShortCut = "";
   String? name = "";
   var imageUrl;
@@ -99,6 +100,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         name = profile?.firstName;
         imageUrl = profile?.imageUrl;
         currencySymbol = profile?.countryCurrencySymbol;
+        country = profile?.countryName;
       });
     });
 /*
@@ -230,7 +232,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             Navigator.pushNamed(context, '/PaymentMethodScreen');
           } else if(calledShortCut == Languages.of(context)!.labelWithdraw) {
             calledShortCut = "";
-            Navigator.pushNamed(context, '/WithdrawScreen');
+            Navigator.pushNamed(context, '/WithdrawMethodScreen');
           }else if(calledShortCut == Languages.of(context)!.labelRequestQR) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/RequestQrScreen');
@@ -626,8 +628,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     ),
                                   ),
                                   Text(
-                                    addCurrencySymbol(currencySymbol,
-                                        "${isAmountVisible ? amount : "**"}  "),
+                                    currencyFormat(
+                                        "${currencySymbol}","${isAmountVisible ? amount : "**"} ","${country}" ),
                                     style: TextStyle(
                                       fontSize: 26.0,
                                       fontWeight: FontWeight.w600,
@@ -715,7 +717,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "view all",
+                                          "View all",
                                           style: TextStyle(
                                               fontSize: 14.0,
                                               color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,
@@ -739,16 +741,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             ),
 
                         Container(
-                          height: screenHeight * 0.3,
-                          margin: EdgeInsets.only(top: 6, left: 6, right: 6),
+                          //height: screenHeight * 0.32,
+                          margin: EdgeInsets.only(top: 5, left: 2, right: 6),
                           child: isInternetConnected && !isLoading
                               ? transactionList.isNotEmpty
                               ? ListView.builder(
                             physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
-                            itemCount: transactionList.length > 0 ? transactionList.length : 0,
+                            itemCount: transactionList.length > 0 && transactionList.length<=3 ? transactionList.length : transactionList.length>3 ? 3 : 0,
                             shrinkWrap: true,
-                            padding: const EdgeInsets.only(bottom: 6),
+                            padding: const EdgeInsets.only(bottom: 5),
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: (){
@@ -761,7 +763,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 6),
                                     child: Container(
                                       margin: EdgeInsets.symmetric(vertical: 4),
                                       child: Row(
@@ -770,7 +772,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         children: [
                                           Row(
                                             children: [
-                                              Container(
+                                              Card(
+                                                margin: EdgeInsets.all(0),
+                                                child: Container(
+                                                  height: 31,
+                                                  width: 31,
+                                                  margin: EdgeInsets.all(8),
+                                                  child: Text("${convertDateMonthFormat("${transactionList[index].createdAt}")}",
+                                                    style: TextStyle(fontSize: 11),textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                              /*Container(
                                                 height: 50,
                                                 width: 50,
                                                 child: Card(
@@ -786,7 +799,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                     color: Colors.white,
                                                   ),
                                                 ),
-                                              ),
+                                              ),*/
                                               SizedBox(
                                                 width: 8,
                                               ),
@@ -794,12 +807,23 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].paymentRequestId}"),
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 13),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        transactionList[index].requestType == "withdraw" || transactionList[index].requestType == "transfer"?
+                                                        Icons.call_made : Icons.call_received,
+                                                        size: 15,
+                                                        color: colorStatus(capitalizeFirstLetter(
+                                                            "${transactionList[index].status}"))
+                                                      ),
+                                                      Text(
+                                                        capitalizeFirstLetter(
+                                                            "${transactionList[index].paymentRequestId}"),
+                                                        style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 13),
+                                                      ),
+                                                    ],
                                                   ),
                                                   Text(
                                                     capitalizeFirstLetter(
@@ -828,8 +852,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                         "${transactionList[index].requestType}"))),
                                               ),
                                               Text(
-                                                convertDateFormat(
-                                                    "${transactionList[index].createdAt}"),
+                                                "${convertTime(
+                                                    "${transactionList[index].createdAt}")}",
                                                 style: TextStyle(fontSize: 11),
                                               ),
                                             ],

@@ -24,6 +24,8 @@ import 'package:Payrio/view/screens/bottomNavSection/transfer_contact_screen.dar
 import 'package:Payrio/view/screens/bottomNavSection/transfer_otp_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transfer_tpin_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdraw_method_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdraw_method_type_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_access_screen.dart';
@@ -347,7 +349,7 @@ class _MyAppState extends State<MyApp> {
             '/WithdrawScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return WithdrawScreen();
+              return WithdrawScreen(data: args);
             },
             '/TpinCreateScreen': (context) {
               final args =
@@ -404,7 +406,17 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return RequestQrScreen();
-            }
+            },
+            '/WithdrawMethodScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return WithdrawMethodScreen();
+            },
+            '/WithdrawMethodTypeScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return WithdrawMethodTypeScreen(data: args);
+            },
           }),
     );
   }

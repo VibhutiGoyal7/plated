@@ -112,9 +112,9 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
           isOtpBoxVisible = true;
         });
         ToastComponent.showToast(context: context, message: mediaList?.emailOtp);
-        // Navigate to the new screen after receiving the response
+
         //Navigator.pushNamed(context, '/BottomNav');
-        return Container(); // Return an empty container as you'll navigate away
+        return Container();
       case Status.ERROR:
         if (apiResponse?.message == "Invalid access token") {
           SessionExpiredDialog.showDialogBox(context: context);

@@ -8,6 +8,7 @@ class CheckCustomerResponse {
   String? phoneNumber;
   String? imageUrl;
   String? message;
+  int? status;
 
   CheckCustomerResponse({
      this.username,
@@ -15,11 +16,13 @@ class CheckCustomerResponse {
      this.phoneNumber,
      this.imageUrl,
     this.message,
+    this.status,
   });
 
   factory CheckCustomerResponse.fromJson(Map<String, dynamic> json) {
     return CheckCustomerResponse(
       message: json["message"] as String?,
+      status: json["status"] as int?,
       username: json['data']?["username"] as String?,
       fullName: json['data']?["full_name"] as String?,
       phoneNumber: json['data']?["phone_number"] as String?,

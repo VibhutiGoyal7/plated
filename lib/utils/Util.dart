@@ -28,6 +28,56 @@ String convertDateFormat(String input) {
 
   return formattedDate;
 }
+String convertTime(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+
+  DateTime date = DateTime.parse(input); // Example date and time
+  String formattedTime = DateFormat('hh:mm a').format(date);// This will output "02:30 PM"
+  return formattedTime;
+}
+
+String currencyFormat(String symbol,String input,String country ) {
+  if (input.isEmpty) {
+    return input;
+  }
+  double value = 0 ;
+
+  String locale="";
+
+  if(country == "India"){
+    locale = 'en_IN';
+  }else if(country == "Bangladesh"){
+    locale = 'bn_BD';
+  }else if(country == "Saudi Arabi"){
+    locale = 'ar_SA';
+  }
+  try {
+    value = double.parse(input);
+
+  }catch(e)
+  {
+    return "${symbol}${input}";
+  }
+  final formatter = NumberFormat.currency(
+    locale: locale,
+    symbol: "${symbol}",
+    decimalDigits: 2,
+  );
+  return "${formatter.format(value)}";
+}
+
+String convertDateMonthFormat(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+  DateTime date = DateTime.parse(input);
+  String day = DateFormat('d').format(date);
+  String month = DateFormat('MMM').format(date);
+  return '$day\n$month';
+ // return formattedDate;
+}
 
 String addCurrencySymbol(String? currencySymbol, String input) {
   if (input.isEmpty) {
@@ -63,6 +113,7 @@ bool isBalanceMoreThanAmount(String balance, String amt, BuildContext context){
   }
 
 }
+
 double extractFloat(String str) {
   // Regular expression to match floating-point numbers, including those with decimals and negative sign
   final regex = RegExp(r'-?\d+(\.\d+)?');
@@ -103,6 +154,7 @@ colorStatus(String status) {
   }
   return color;
 }
+
 colorPaymentType(String status) {
   Color color = Colors.black;
   if (status == "Deposit") {

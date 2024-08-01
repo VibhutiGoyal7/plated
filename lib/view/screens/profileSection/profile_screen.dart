@@ -960,59 +960,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
             "Logout",
             style: TextStyle(fontSize: 20),
           )),
-          content: Container(
-            height: screenHeight * 0.3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: AppColor.PRIMARY),
-                        child: Icon(
-                          Icons.logout_outlined,
-                          size: 60,
-                        )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text("Are you sure you want to logout?"),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      width: screenWidth * 0.6,
-                      child: TextButton(
-                        child: Text('Naah, Just kidding'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+          content: IntrinsicHeight(
+            child: Container(
+              //height: screenHeight * 0.3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    Container(
-                      width: screenWidth * 0.6,
-                      child: TextButton(
-                        child: Text('Yes'),
-                        onPressed: () {
-                          Helper.clearAllSharedPreferences();
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => SigninScreen()),
-                            (Route<dynamic> route) => false,
-                          );
-                        },
+                      Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: AppColor.PRIMARY),
+                          child: Icon(
+                            Icons.logout_outlined,
+                            size: 60,
+                          )),
+                      SizedBox(
+                        height: 15,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Text("Are you sure you want to logout?"),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        width: screenWidth * 0.6,
+                        child: TextButton(
+                          child: Text('Naah, Just kidding'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth * 0.6,
+                        child: TextButton(
+                          child: Text('Yes'),
+                          onPressed: () {
+                            Helper.clearAllSharedPreferences();
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => SigninScreen()),
+                              (Route<dynamic> route) => false,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[],

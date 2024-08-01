@@ -33,6 +33,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
   String phoneNo = "";
   late double screenWidth;
   String? currencySymbol = "";
+  String? country = "";
   List<String> _inputValues = ['', '', '', ''];
   static const maxDuration = Duration(seconds: 2);
 
@@ -78,6 +79,12 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         currencySymbol = symbol;
+      });
+    });
+
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
   }
@@ -242,8 +249,8 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(addCurrencySymbol(
-                              currencySymbol, "${widget.data?.amount}")),
+                          Text(currencyFormat(
+                              "${currencySymbol}", "${widget.data?.amount}","${country}")),
                         ],
                       ),
                     ],

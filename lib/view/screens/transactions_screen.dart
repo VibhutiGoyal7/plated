@@ -38,6 +38,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   var screenHeight;
   var screenWidth;
   var countryCurrencySymbol;
+  var country;
   var currentBalance;
   late bool isDarkMode;
 
@@ -63,6 +64,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         countryCurrencySymbol = symbol;
+      });
+    });
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
     _scrollController.addListener(_loadMore);
@@ -271,8 +277,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             ),
                             isInternetConnected && !isLoading
                                 ? Text(
-                                    addCurrencySymbol(
-                                        countryCurrencySymbol, currentBalance),
+                                    currencyFormat(
+                                        countryCurrencySymbol, currentBalance, country),
                                     style: TextStyle(
                                         fontSize: 32.0,
                                         fontWeight: FontWeight.w600,
@@ -686,36 +692,67 @@ class TransactionItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      child: Card(
-                        shape: CircleBorder(
-                            side: BorderSide(
-                                width: 0,
-                                color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
-                        color: colorStatus(
-                            capitalizeFirstLetter("${transaction.status}")),
-                        child: Icon(Icons.call_made, color: Colors.white),
+                    Card(
+                      margin: EdgeInsets.all(0),
+                      child: Container(
+                        height: 31,
+                        width: 31,
+                        margin: EdgeInsets.all(8),
+                        child: Text("${convertDateMonthFormat("${transaction.createdAt}")}",
+                          style: TextStyle(fontSize: 11),textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    /*Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: Card(
+                                                  shape: CircleBorder(
+                                                      side: BorderSide(
+                                                          width: 0,
+                                                          color: colorStatus(capitalizeFirstLetter(
+                                                              "${transaction.status}")))),
+                                                  color: colorStatus(capitalizeFirstLetter(
+                                                      "${transaction.status}")),
+                                                  child: Icon(
+                                                    Icons.call_made,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),*/
+                    SizedBox(
+                      width: 8,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            Icon(
+                                transaction.requestType == "withdraw" || transaction.requestType == "transfer"?
+                                Icons.call_made : Icons.call_received,
+                                size: 15,
+                                color: colorStatus(capitalizeFirstLetter(
+                                    "${transaction.status}"))
+                            ),
+                            Text(
+                              capitalizeFirstLetter(
+                                  "${transaction.paymentRequestId}"),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13),
+                            ),
+                          ],
+                        ),
                         Text(
                           capitalizeFirstLetter(
-                              "${transaction.paymentRequestId}"),
+                              "${transaction.status}"),
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14),
+                              fontSize: 11,
+                              color: colorStatus(capitalizeFirstLetter(
+                                  "${transaction.status}"))),
                         ),
-                        Text(capitalizeFirstLetter("${transaction.status}"),
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
                       ],
                     ),
                   ],
@@ -723,18 +760,22 @@ class TransactionItem extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                        addCurrencySymbolTransaction(
-                            symbol,
-                            "${transaction.amount}",
-                            capitalizeFirstLetter(
-                                "${transaction.requestType}")),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: colorPaymentType(capitalizeFirstLetter(
-                                "${transaction.requestType}")))),
-                    /*Text(convertDateFormat("${transaction.createdAt}"),
-                        style: TextStyle(fontSize: 12)),*/
+                      addCurrencySymbolTransaction(
+                          symbol,
+                          "${transaction.amount}",
+                          capitalizeFirstLetter(
+                              "${transaction.requestType}")),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          color: colorPaymentType(capitalizeFirstLetter(
+                              "${transaction.requestType}"))),
+                    ),
+                    Text(
+                      "${convertTime(
+                          "${transaction.createdAt}")}",
+                      style: TextStyle(fontSize: 11),
+                    ),
                   ],
                 ),
               ],

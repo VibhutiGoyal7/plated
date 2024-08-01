@@ -2,11 +2,13 @@ import 'package:Payrio/model/response/transactionListReponse.dart';
 
 class DashboardResponse {
   String? message;
+  int? status;
   List<TransactionDetails>? customerRecentTxn;
   CustomerData? customerData;
 
   DashboardResponse({
     required this.message,
+    required this.status,
     required this.customerRecentTxn,
     required this.customerData,
   });
@@ -18,6 +20,7 @@ class DashboardResponse {
 
     return DashboardResponse(
       message: json['message'] as String?,
+      status: json['status'] as int?,
       customerRecentTxn: json['data']?['customer_recent_transactions'] != null
           ?transactionList : null,
       customerData: json['data']?['customer_data'] != null

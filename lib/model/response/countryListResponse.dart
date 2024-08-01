@@ -2,10 +2,12 @@
 class CountryListResponse {
   List<CountryData>? countries;
   String message;
+  int status;
 
   CountryListResponse({
     required this.countries,
     required this.message,
+    required this.status,
   });
 
   factory CountryListResponse.fromJson(Map<String, dynamic> json) {
@@ -15,7 +17,9 @@ class CountryListResponse {
 
     return CountryListResponse(
       countries: countriesList,
-      message: json["message"] as String,);
+      message: json["message"] as String,
+      status: json["status"] as int,
+    );
 
   }
 }

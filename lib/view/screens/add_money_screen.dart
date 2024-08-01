@@ -33,6 +33,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
   String kycStatus = "";
   String amount = "";
   String? countryCurrencySymbol;
+  String? country;
   String? currentBalance;
   bool expanded = false;
   bool inputValid = false;
@@ -54,6 +55,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         countryCurrencySymbol = symbol;
+      });
+    });
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
     Helper.getUserBalance().then((balance) {
@@ -96,7 +102,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${addMoneyResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-        //Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
+        Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (apiResponse.message == "Invalid access token")
@@ -213,7 +219,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                               height: 10,
                                             ),
                                             Text(
-                                              "${addCurrencySymbol(countryCurrencySymbol, "${currentBalance}")}",
+                                              "${currencyFormat("${countryCurrencySymbol}", "${currentBalance}", "${country}")}",
                                               style: TextStyle(
                                                 fontSize: 26.0,
                                               ),

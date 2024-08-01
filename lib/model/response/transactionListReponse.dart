@@ -1,10 +1,12 @@
 class TransactionListResponse {
   String? message;
+  int? status;
   List<TransactionDetails>? data;
   PagyDetails? pagy;
 
   TransactionListResponse({
     required this.message,
+    required this.status,
     required this.data,
     required this.pagy,
   });
@@ -16,6 +18,7 @@ class TransactionListResponse {
 
     return TransactionListResponse(
       message: json['message'] as String?,
+      status: json['status'] as int?,
       data: transactionList,
       pagy:
           json['pagy'] != null ? new PagyDetails.fromJson(json['pagy']) : null,
