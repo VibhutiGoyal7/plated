@@ -979,11 +979,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Icon(
                             Icons.logout_outlined,
                             size: 60,
+                            color: Colors.white,
                           )),
                       SizedBox(
                         height: 15,
                       ),
-                      Text("Are you sure you want to logout?"),
+                      Text("Are you sure you want to logout?", textAlign: TextAlign.center,),
+                      SizedBox(
+                        height: 15,
+                      ),
                     ],
                   ),
                   Column(

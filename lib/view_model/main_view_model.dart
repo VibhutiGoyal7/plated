@@ -517,7 +517,7 @@ class MainViewModel with ChangeNotifier {
   Future<void> transactionListData(
       String value, TransactionListRequest transactionListRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
-    print("Yess ${transactionListRequest.paymentRequestId}");
+    print("Yess ${transactionListRequest.uniqueId}");
     notifyListeners();
     try {
       TransactionListResponse transactionListResponse = await MainRepository()

@@ -56,14 +56,14 @@ class TransactionDialog {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            capitalizeFirstLetter("${transaction.requestType}"),
+                            capitalizeFirstLetter("${transaction.transactionType}"),
                             style: TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 16),
                           ),
                         ),
                         Column(
                           children: [
-                            transaction.bankService != null
+                            /*transaction.bankService != null
                                 ? Column(
                               children: [
                                 SizedBox(
@@ -80,7 +80,7 @@ class TransactionDialog {
                                 ),
                               ],
                             )
-                                : SizedBox(),
+                                : SizedBox(),*/
                             SizedBox(
                               height: 8,
                             ),
@@ -95,13 +95,13 @@ class TransactionDialog {
                                         symbol,
                                         "${transaction.amount}",
                                         capitalizeFirstLetter(
-                                            "${transaction.requestType}")),
+                                            "${transaction.transactionType}")),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                         color: colorPaymentType(
                                             capitalizeFirstLetter(
-                                                "${transaction.requestType}"))))
+                                                "${transaction.transactionType}"))))
                               ],
                             )
                                 : SizedBox(),
@@ -121,7 +121,7 @@ class TransactionDialog {
                                 )
                               ],
                             ),
-                            transaction.bankType != null
+                            /*transaction.bankType != null
                                 ? Column(
                               children: [
                                 SizedBox(
@@ -138,17 +138,17 @@ class TransactionDialog {
                                 ),
                               ],
                             )
-                                : SizedBox(),
+                                : SizedBox(),*/
                             SizedBox(
                               height: 8,
                             ),
-                            Row(
+                           /* Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Currency :"),
                                 Text("${transaction.currency}")
                               ],
-                            ),
+                            ),*/
                             /*SizedBox(
                           height: 8,
                         ),
@@ -166,7 +166,7 @@ class TransactionDialog {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Payment Request Id :"),
-                                Text("${transaction.paymentRequestId}")
+                                Text("${transaction.uniqueId}")
                               ],
                             ),
                           ],

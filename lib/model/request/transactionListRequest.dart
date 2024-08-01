@@ -1,17 +1,15 @@
 class TransactionListRequest {
   int? pageNo;
   int? pageSize;
-  String? paymentRequestId;
-  String? trxId;
-  String? requestType;
+  String? uniqueId;
+  String? transactionType;
   String? status;
 
   TransactionListRequest({
     required this.pageNo,
     required this.pageSize,
-    required this.paymentRequestId,
-    required this.trxId,
-    required this.requestType,
+    required this.uniqueId,
+    required this.transactionType,
     required this.status,
   });
 
@@ -19,9 +17,8 @@ class TransactionListRequest {
     return {
       'page_number': pageNo,
       'page_size': pageSize,
-      'payment_request_id': paymentRequestId,
-      'trx_id': trxId,
-      'request_type': requestType,
+      'unique_id': uniqueId,
+      'transaction_type': transactionType,
       'status': status,
     };
   }

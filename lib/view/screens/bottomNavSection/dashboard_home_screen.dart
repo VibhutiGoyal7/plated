@@ -810,7 +810,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   Row(
                                                     children: [
                                                       Icon(
-                                                        transactionList[index].requestType == "withdraw" || transactionList[index].requestType == "transfer"?
+                                                        transactionList[index].transactionType == "withdraw" || transactionList[index].transactionType == "transfer"?
                                                         Icons.call_made : Icons.call_received,
                                                         size: 15,
                                                         color: colorStatus(capitalizeFirstLetter(
@@ -818,7 +818,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                       ),
                                                       Text(
                                                         capitalizeFirstLetter(
-                                                            "${transactionList[index].paymentRequestId}"),
+                                                            "${transactionList[index].uniqueId}"),
                                                         style: TextStyle(
                                                             fontWeight: FontWeight.bold,
                                                             fontSize: 13),
@@ -844,12 +844,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                     currencySymbol,
                                                     "${transactionList[index].amount}",
                                                     capitalizeFirstLetter(
-                                                        "${transactionList[index].requestType}")),
+                                                        "${transactionList[index].transactionType}")),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 13,
                                                     color: colorPaymentType(capitalizeFirstLetter(
-                                                        "${transactionList[index].requestType}"))),
+                                                        "${transactionList[index].transactionType}"))),
                                               ),
                                               Text(
                                                 "${convertTime(

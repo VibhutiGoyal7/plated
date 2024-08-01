@@ -666,7 +666,7 @@ class TransactionItem extends StatelessWidget {
                       children: [
                         Text(
                           capitalizeFirstLetter(
-                              "${transaction.paymentRequestId}"),
+                              "${transaction.uniqueId}"),
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14),
                         ),
@@ -686,12 +686,12 @@ class TransactionItem extends StatelessWidget {
                             symbol,
                             "${transaction.amount}",
                             capitalizeFirstLetter(
-                                "${transaction.requestType}")),
+                                "${transaction.transactionType}")),
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                             color: colorPaymentType(capitalizeFirstLetter(
-                                "${transaction.requestType}")))),
+                                "${transaction.transactionType}")))),
                     /*Text(convertDateFormat("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 12)),*/
                   ],
@@ -737,14 +737,14 @@ class TransactionItem extends StatelessWidget {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            capitalizeFirstLetter("${transaction.requestType}"),
+                            capitalizeFirstLetter("${transaction.transactionType}"),
                             style: TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 16),
                           ),
                         ),
                         Column(
                           children: [
-                            transaction.bankService != null
+                            /*transaction.bankService != null
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -761,7 +761,7 @@ class TransactionItem extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : SizedBox(),
+                                : SizedBox(),*/
                             SizedBox(
                               height: 8,
                             ),
@@ -776,13 +776,13 @@ class TransactionItem extends StatelessWidget {
                                               symbol,
                                               "${transaction.amount}",
                                               capitalizeFirstLetter(
-                                                  "${transaction.requestType}")),
+                                                  "${transaction.transactionType}")),
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 14,
                                               color: colorPaymentType(
                                                   capitalizeFirstLetter(
-                                                      "${transaction.requestType}"))))
+                                                      "${transaction.transactionType}"))))
                                     ],
                                   )
                                 : SizedBox(),
@@ -802,7 +802,7 @@ class TransactionItem extends StatelessWidget {
                                 )
                               ],
                             ),
-                            transaction.bankType != null
+                           /* transaction.bankType != null
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -819,17 +819,17 @@ class TransactionItem extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : SizedBox(),
+                                : SizedBox(),*/
                             SizedBox(
                               height: 8,
                             ),
-                            Row(
+                          /*  Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Currency :"),
                                 Text("${transaction.currency}")
                               ],
-                            ),
+                            ),*/
                             /*SizedBox(
                           height: 8,
                         ),
@@ -847,7 +847,7 @@ class TransactionItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Payment Request Id :"),
-                                Text("${transaction.paymentRequestId}")
+                                Text("${transaction.uniqueId}")
                               ],
                             ),
                           ],

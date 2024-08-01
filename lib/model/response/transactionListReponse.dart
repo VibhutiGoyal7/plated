@@ -29,12 +29,12 @@ class TransactionListResponse {
 class TransactionDetails {
   int? id;
   String? amount;
-  String? bankType;
-  String? bankService;
-  String? requestType;
-  String? paymentRequestId;
-  String? trxId;
-  String? currency;
+  String? email;
+  String? fullName;
+  String? transactionType;
+  String? uniqueId;
+  String? username;
+  String? phoneNumber;
   String? status;
   String? createdAt;
   int? customerId;
@@ -42,12 +42,12 @@ class TransactionDetails {
   TransactionDetails({
     required this.id,
     required this.amount,
-    required this.bankType,
-    required this.bankService,
-    required this.requestType,
-    required this.paymentRequestId,
-    required this.trxId,
-    required this.currency,
+    required this.email,
+    required this.fullName,
+    required this.transactionType,
+    required this.uniqueId,
+    required this.username,
+    required this.phoneNumber,
     required this.status,
     required this.createdAt,
     required this.customerId,
@@ -57,12 +57,12 @@ class TransactionDetails {
     return TransactionDetails(
       id: json["id"] as int?,
       amount: json["amount"] as String?,
-      bankType: json["bank_type"] as String?,
-      bankService: json["bank_service"] as String?,
-      requestType: json["request_type"] as String?,
-      paymentRequestId: json["payment_request_id"] as String?,
-      trxId: json["trx_id"] as String?,
-      currency: json["currency"] as String?,
+      transactionType: json["transaction_type"] as String?,
+      fullName: json["full_name"] as String?,
+      uniqueId: json["unique_id"] as String?,
+      username: json["username"] as String?,
+      phoneNumber: json["phone_number"] as String?,
+      email: json["email"] as String?,
       status: json["status"] as String?,
       createdAt: json["created_at"] as String?,
       customerId: json["customer_id"] as int?,
