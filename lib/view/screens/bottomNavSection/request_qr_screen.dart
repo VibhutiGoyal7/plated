@@ -9,8 +9,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:image/image.dart' as img;
-import '../../utils/Helper.dart';
-import '../../utils/Util.dart';
+import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 
 class RequestQrScreen extends StatefulWidget {
   @override

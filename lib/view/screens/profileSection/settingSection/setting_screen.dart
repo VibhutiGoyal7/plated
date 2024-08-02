@@ -5,8 +5,8 @@ import 'package:Payrio/view/screens/authSection/money_safe_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../component/connectivity_service.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../component/connectivity_service.dart';
 
 class SettingScreen extends StatefulWidget {
   final Function(Locale) setLocale;

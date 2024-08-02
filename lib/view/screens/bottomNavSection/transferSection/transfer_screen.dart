@@ -7,16 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
-import '../../../model/request/completeP2PRequest.dart';
-import '../../../model/response/createOtpChangePassResponse.dart';
-import '../../../model/response/initiateP2PResponse.dart';
-import '../../../theme/AppColor.dart';
-import '../../../utils/Helper.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/toastMessage.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../model/request/completeP2PRequest.dart';
+import '../../../../model/response/createOtpChangePassResponse.dart';
+import '../../../../model/response/initiateP2PResponse.dart';
+import '../../../../theme/AppColor.dart';
+import '../../../../utils/Helper.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/toastMessage.dart';
 
 class TransferScreen extends StatefulWidget {
   final CheckCustomerResponse? data;

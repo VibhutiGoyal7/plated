@@ -7,14 +7,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../languageSection/Languages.dart';
-import '../../model/apis/api_response.dart';
-import '../../utils/Helper.dart';
-import '../../utils/Util.dart';
-import '../../view_model/main_view_model.dart';
-import '../component/ShimmerList.dart';
-import '../component/connectivity_service.dart';
-import '../component/session_expired_dialog.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
+import '../../../view_model/main_view_model.dart';
+import '../../component/ShimmerList.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/session_expired_dialog.dart';
 
 class TransactionsScreen extends StatefulWidget {
   @override

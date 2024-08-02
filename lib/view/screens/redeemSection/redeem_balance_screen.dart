@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../languageSection/Languages.dart';
+import '../../../languageSection/Languages.dart';
 
 class RedeemBalanceScreen extends StatefulWidget {
   @override

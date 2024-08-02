@@ -4,14 +4,14 @@ import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/response/checkCustomerReponse.dart';
-import '../../../model/response/completeP2PResponse.dart';
-import '../../../utils/Helper.dart';
-import '../../../utils/Util.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/customNumberKeyboard.dart';
-import '../../component/session_expired_dialog.dart';
-import '../../component/toastMessage.dart';
+import '../../../../model/response/checkCustomerReponse.dart';
+import '../../../../model/response/completeP2PResponse.dart';
+import '../../../../utils/Helper.dart';
+import '../../../../utils/Util.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/customNumberKeyboard.dart';
+import '../../../component/session_expired_dialog.dart';
+import '../../../component/toastMessage.dart';
 
 class TransferTpinScreen extends StatefulWidget {
   final CompleteP2PRequest? data; // Define the 'data' parameter here

@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/apis/api_response.dart';
-import '../../utils/Helper.dart';
-import '../../utils/Util.dart';
-import '../../view_model/main_view_model.dart';
-import '../component/ShimmerList.dart';
-import '../component/connectivity_service.dart';
-import '../component/session_expired_dialog.dart';
+import '../../../../../model/apis/api_response.dart';
+import '../../../../../utils/Helper.dart';
+import '../../../../../utils/Util.dart';
+import '../../../../../view_model/main_view_model.dart';
+import '../../../../component/ShimmerList.dart';
+import '../../../../component/connectivity_service.dart';
+import '../../../../component/session_expired_dialog.dart';
 
 class SupportScreen extends StatefulWidget {
   @override
@@ -173,14 +173,6 @@ class _SupportScreenState extends State<SupportScreen> {
     return groupedTransactions;
   }
 
-  Future<bool> _onWillPop() async {
-    Navigator.pushReplacementNamed(
-      context,
-      "/BottomNav",
-    );
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -204,13 +196,13 @@ class _SupportScreenState extends State<SupportScreen> {
         if (kDebugMode) {
           Navigator.pushReplacementNamed(
             context,
-            "/BottomNav",
+            "/ProfileScreen",
           );
           // return Future.value(true);
         }
         Navigator.pushReplacementNamed(
           context,
-          "/BottomNav",
+          "/ProfileScreen",
         );
       },
       child: Scaffold(
@@ -220,7 +212,10 @@ class _SupportScreenState extends State<SupportScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                "/ProfileScreen",
+              );
             },
           ),
           title: Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Payrio/theme/AppColor.dart';
 
-import '../../../languageSection/Languages.dart';
+import '../../../../languageSection/Languages.dart';
 
 class ManageAppLockScreen extends StatefulWidget {
   @override

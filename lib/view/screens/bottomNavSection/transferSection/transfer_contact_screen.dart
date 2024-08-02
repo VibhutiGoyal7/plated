@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
-import '../../../model/request/checkCustomerRequest.dart';
-import '../../../utils/Helper.dart';
-import '../../../utils/Util.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/toastMessage.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../model/request/checkCustomerRequest.dart';
+import '../../../../utils/Helper.dart';
+import '../../../../utils/Util.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/toastMessage.dart';
 
 class TransferContactScreen extends StatefulWidget {
   @override

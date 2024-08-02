@@ -18,15 +18,15 @@ import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_successfull_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/tpin_create_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/tpin_verify_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transfer_contact_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transfer_otp_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transfer_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transfer_tpin_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_otp_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_tpin_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdraw_method_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdraw_method_type_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_access_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_screen.dart';
@@ -349,7 +349,7 @@ class _MyAppState extends State<MyApp> {
             '/WithdrawScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return WithdrawScreen(data: args);
+              return WithdrawScreen();
             },
             '/TpinCreateScreen': (context) {
               final args =
@@ -406,17 +406,7 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return RequestQrScreen();
-            },
-            '/WithdrawMethodScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
-              return WithdrawMethodScreen();
-            },
-            '/WithdrawMethodTypeScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
-              return WithdrawMethodTypeScreen(data: args);
-            },
+            }
           }),
     );
   }
