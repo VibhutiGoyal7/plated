@@ -71,7 +71,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     phoneNumberValid = false;
     newPasswordVisible = true;
     confirmPasswordVisible = true;
-    _fetchData();
+    Helper.getCountryList().then((countries){
+      List<CountryData> list = [];
+      print(countries);
+      countryList = countries!;
+      print(countryList);
+      if(countryList == null || countryList == [] || countryList.isEmpty || countryList == list){
+        _fetchData();
+      }else {
+        setState(() {
+          countryList = countries!;
+          selectedItem = "${countries[0].flagImageUrl}";
+          countryCode = int.parse("${countries[0].id}");
+          phoneCode = "+${countries[0].phoneCode}";
+        });
+
+      }
+    });
+    //_fetchData();
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -120,7 +137,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token") {
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -159,7 +176,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token")
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
             //child: Text('Please try again later!!!'),
@@ -185,6 +202,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
+        Helper.saveCountryList(countryListResponse?.countries);
 
 
         countryList = countryListResponse!.countries!;
@@ -311,7 +329,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
-                child: _buildLabelText(context, "Phone Number", 12, false),
+                child: _buildLabelText(context, "${Languages.of(context)?.labelPhoneNumber}", 12, false),
               ),
             ),
             Card(
@@ -698,7 +716,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   isLoading = false;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('No internet connection'),
+                      content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                       duration: maxDuration,
                     ),
                   );
@@ -894,7 +912,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 class CountryListResponse {
   List<CountryData>? countries;
   String message;
@@ -32,11 +34,11 @@ class CountryData {
   String? flagImageUrl;
 
   CountryData({
-    required this.id,
-    required this.name,
-    required this.code,
-    required this.phoneCode,
-    required this.flagImageUrl,
+     this.id,
+     this.name,
+     this.code,
+     this.phoneCode,
+     this.flagImageUrl,
   });
 
   factory CountryData.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,31 @@ class CountryData {
       code: json["code"] as String?,
       phoneCode: json["phone_code"] as String?,
       flagImageUrl: json["flag_image_url"] as String?,
+    );
+  }
+
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['code'] = this.code;
+    data['phone_code'] = this.phoneCode;
+    data['flag_image_url'] = this.flagImageUrl;
+    return data;
+  }
+
+  String toJsonString() => json.encode(toJson());
+
+  factory CountryData.fromJsonString(String source) {
+    final Map<String, dynamic> jsonMap = json.decode(source);
+    return CountryData(
+      id: jsonMap["id"] as int?,
+      name: jsonMap["name"] as String?,
+      code: jsonMap["code"] as String?,
+      phoneCode: jsonMap["phone_code"] as String?,
+      flagImageUrl: jsonMap["flag_image_url"] as String?,
     );
   }
 }

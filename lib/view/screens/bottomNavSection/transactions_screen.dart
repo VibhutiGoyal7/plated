@@ -111,7 +111,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('No internet connection'),
+              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
@@ -159,7 +159,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -269,7 +269,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         Column(
                           children: [
                             Text(
-                              "Total Balance",
+                              "${Languages.of(context)?.labelTotalBalance}",
                               style: TextStyle(
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.normal),
@@ -391,7 +391,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                       )
                                     : Center(
                                         child: Text(
-                                          "No Transactions",
+                                          "${Languages.of(context)?.labelNoTransaction}",
                                           style: TextStyle(
                                               fontSize: 15, color: Colors.grey),
                                         ),
@@ -454,7 +454,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Filter Payments",
+                        "${Languages.of(context)?.labelFilterPayment}",
                         style: TextStyle(fontSize: 22),
                       ),
                       IconButton(
@@ -468,24 +468,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ],
                   ),
                   Text(
-                    "Status",
+                    "${Languages.of(context)?.labelStatus}",
                     style: TextStyle(fontSize: 16),
                   ),
                   Row(
                     children: [
-                      filterStatusCard("Success", setState),
-                      filterStatusCard("Pending", setState),
-                      filterStatusCard("Rejected", setState),
+                      filterStatusCard("${Languages.of(context)?.labelSuccess}", setState),
+                      filterStatusCard("${Languages.of(context)?.labelPending}", setState),
+                      filterStatusCard("${Languages.of(context)?.labelRejected}", setState),
                     ],
                   ),
                   Text(
-                    "Request Type",
+                    "${Languages.of(context)?.labelRequestType}",
                     style: TextStyle(fontSize: 16),
                   ),
                   Row(
                     children: [
-                      filterRequestTypeCard("Deposit", setState),
-                      filterRequestTypeCard("Withdraw", setState),
+                      filterRequestTypeCard("${Languages.of(context)?.labelDeposit}", setState),
+                      filterRequestTypeCard("${Languages.of(context)?.labelWithdraw}", setState),
                     ],
                   ),
                   _buildFooter(context, apiResponse),
@@ -603,7 +603,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "Clear All",
+                    "${Languages.of(context)?.labelClearAll}",
                     style: TextStyle(color: AppColor.PRIMARY),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -631,7 +631,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "Apply",
+                    "${Languages.of(context)?.labelApply}",
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -729,7 +729,7 @@ class TransactionItem extends StatelessWidget {
                         Row(
                           children: [
                             Icon(
-                                transaction.transactionType == "withdraw" || transaction.transactionType == "transfer"?
+                                transaction.transactionType == "${Languages.of(context)?.statusWithdraw}" || transaction.transactionType == "${Languages.of(context)?.statusTransfer}"?
                                 Icons.call_made : Icons.call_received,
                                 size: 15,
                                 color: colorStatus(capitalizeFirstLetter(

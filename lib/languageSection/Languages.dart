@@ -322,30 +322,139 @@ abstract class Languages {
   String get labelPaying;
 
   String get labelPleaseEnterAmt;
-  /*
-  String get statusVerified;
 
-  String get statusVerified;
+  String get labelLocalDistributors;
 
-  String get statusVerified;
+  String get labelPay2Local;
 
-  String get statusVerified;
+  String get labelPhoneNumber;
 
-  String get statusVerified;
+  String get labelSignup;
 
-  String get statusVerified;
+  String get labelSignin;
 
-  String get statusVerified;
+  String get labelAddMoneyAndManage;
 
-  String get statusVerified;
+  String get subHeadingApplicationForReachingGoal;
 
-  String get statusVerified;
+  String get labelMoneyStaysSafe;
 
-  String get statusVerified;
+  String get labelMoneyStaysSafeSubHeading;
 
-  String get statusVerified;
-  */
+  String get labelPasswordAlert;
 
+  String get labelPasswordDoesntMatch;
+
+  String get labelPleaseEnterAllDetails;
+
+  String get labelOtpVerification;
+
+  String get labelPleaseEnterValidPhoneNo;
+
+  String get labelResendOtp;
+
+  String get labelPhoneVerification;
+
+  String get labelEnterPhoneNo;
+
+  String get labelSendConfirmationCode;
+
+  String get labelAlreadyHaveAnAcc;
+
+  String get labelSelectDob;
+
+  String get labelEnterValidDate;
+
+  String get labelEnterDateInValidRange;
+
+  String get labelWelcomeBack;
+
+  String get labelWeMissedYou;
+
+  String get labelNeedAcc;
+
+  String get labelSignupHere;
+
+  String get labelSaveId;
+
+  String get labelTransactionPin;
+
+  String get labelEnterPin;
+
+  String get labelTPINUpdatedSuccessfully;
+
+  String get labelVerifyPin;
+
+  String get labelTransactionPinDoesntMatch;
+
+  String get labelEnterOtpToCompleteTransaction;
+
+  String get labelSending;
+
+  String get labelPhoneNo;
+
+  String get labelPayingTo;
+
+  String get labelEnter4DigitPin;
+
+  String get labelYouAreTransferringMoneyTo;
+
+  String get labelYouCanOnlyWithdraw;
+
+  String get labelMoveMoney;
+
+  String get labelAwesome;
+
+  String get labelYouWithdraw;
+
+  String get labelHappySpending;
+
+  String get labelPayBill;
+
+  String get statusWithdraw;
+
+  String get statusTransfer;
+
+  String get labelPaidTo;
+
+  String get labelAt;
+
+  String get labelTransactionId ;
+
+  String get labelShareScreenshot;
+
+  String get labelDone;
+
+  String get labelGenerateQR;
+
+  String get labelErrorLoadingQR;
+
+  String get labelFilterPayment;
+
+  String get labelStatus;
+
+  String get labelRequestType;
+
+  String get labelDeposit;
+
+  String get labelClearAll;
+
+  String get labelApply;
+
+  String get labelWithdrawMethods;
+
+ /* String get labelPasswordAlert;
+
+  String get labelPasswordAlert;
+
+  String get labelPasswordAlert;
+
+  String get labelPasswordAlert;
+
+  String get labelPasswordAlert;
+
+  String get labelPasswordAlert;
+*/
 
 
 }

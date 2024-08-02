@@ -39,7 +39,7 @@ class _SigninScreenState extends State<SigninScreen> {
     passwordVisible = true;
     inputValid = false;
     Helper.getUserId().then((id) {
-      print("id${id}");
+     // print("id${id}");
       setState(() {
         if (id != null && id.isNotEmpty) {
           isChecked = true;
@@ -195,16 +195,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                   children: [
                                     SizedBox(height: 20),
                                     _buildLabelText(
-                                        context, "Welcome Back!", 26, true),
+                                        context, "${Languages.of(context)?.labelWelcomeBack}", 26, true),
                                     _buildLabelText(
                                         context,
-                                        "Welcome back we missed you",
+                                        "${Languages.of(context)?.labelWeMissedYou}",
                                         14,
                                         false),
                                     SizedBox(height: 25),
                                     _buildPhoneInput(
                                       context,
-                                      "Phone Number",
+                                      "${Languages.of(context)?.labelPhoneNumber}",
                                       _phoneNoController,
                                       Icon(
                                         Icons.person,
@@ -312,7 +312,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Need account? ",
+                                            "${Languages.of(context)?.labelNeedAcc}",
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Colors.grey[400],
@@ -324,7 +324,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                                   '/PhoneVerifyScreen');
                                             },
                                             child: Text(
-                                              "SignUp here.",
+                                              "${Languages.of(context)?.labelSignupHere}",
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.blue,
@@ -430,14 +430,14 @@ class _SigninScreenState extends State<SigninScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Save ID",
+                          "${Languages.of(context)?.labelSaveId}",
                           style: TextStyle(fontSize: 10),
                         ),
                         Checkbox(
                           checkColor: Colors.white,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
-                          semanticLabel: "Save ID",
+                          semanticLabel: "${Languages.of(context)?.labelSaveId}",
                           side: BorderSide(
                               color: isDarkMode ? Colors.white : Colors.black),
                           value: isChecked,
@@ -565,7 +565,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('No internet connection'),
+                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );
@@ -583,7 +583,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Please enter valid details.'),
+                    content: Text('${Languages.of(context)?.labelPleaseEnterAllDetails}'),
                     duration: maxDuration,
                   ));
                 }

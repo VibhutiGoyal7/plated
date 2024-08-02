@@ -484,4 +484,186 @@ class LanguageAr extends Languages {
 
   @override
   String get labelWithdraw =>   "Withdraw";
+
+
+  @override
+  String get labelLocalDistributors => "Local Distributors";
+
+  @override
+  String get labelPay2Local => "Pay2Local";
+
+  @override
+  String get labelPhoneNumber => "Phone Number";
+
+  @override
+  String get labelSignup => "Sign Up";
+
+  @override
+  String get labelSignin => "Sign In";
+
+  @override
+  String get labelAddMoneyAndManage => "Add your money and manage";
+
+  @override
+  String get subHeadingApplicationForReachingGoal => "The application for reaching your saving goal , send and receive money. Use QR codes and payment links to accept cards";
+
+  @override
+  String get labelMoneyStaysSafe => "Your Money Stays Safe";
+
+  @override
+  String get labelMoneyStaysSafeSubHeading => "Your money stays safe.We have all security measures put in place, so that you really feel that your money is in safe hands.";
+
+  @override
+  String get labelPasswordAlert => "Password should have 8 or more characters.";
+
+  @override
+  String get labelPasswordDoesntMatch => "Password doesn't match";
+
+  @override
+  String get labelPleaseEnterAllDetails => "Please fill the details";
+
+  @override
+  String get labelOtpVerification => "OTP \n VERIFICATION ";
+
+  @override
+  String get labelPleaseEnterValidPhoneNo => "Please enter valid phone number and select country code.";
+
+  @override
+  String get labelResendOtp => "Resend otp";
+
+  @override
+  String get labelPhoneVerification => "Phone\n Verification";
+
+  @override
+  String get labelEnterPhoneNo => "Enter your mobile number";
+
+  @override
+  String get labelSendConfirmationCode => "We will send you a confirmation code";
+
+  @override
+  String get labelAlreadyHaveAnAcc => "Already have an account? ";
+
+  @override
+  String get labelSelectDob => "Select Date Of Birth";
+
+  @override
+  String get labelEnterValidDate => "Enter valid date";
+
+  @override
+  String get labelEnterDateInValidRange => "Enter date in valid range";
+
+  @override
+  String get labelWelcomeBack => "Welcome Back!";
+
+  @override
+  String get labelWeMissedYou => "We missed you";
+
+  @override
+  String get labelNeedAcc => "Need account? ";
+
+  @override
+  String get labelSignupHere => "SignUp here.";
+
+  @override
+  String get labelSaveId => "Save Id";
+
+  @override
+  String get labelTransactionPin => "Transaction \nPIN ";
+
+  @override
+  String get labelEnterPin => "Enter 4 digit TPIN";
+
+  @override
+  String get labelTPINUpdatedSuccessfully => "Your TPIN is updated successfully";
+
+  @override
+  String get labelVerifyPin => "Verify 4 digit TPIN";
+
+  @override
+  String get labelTransactionPinDoesntMatch => "Transaction Pin doesn't match";
+
+  @override
+  String get labelEnterOtpToCompleteTransaction => "Please enter the 6-digit otp sent to your phone number to complete the transaction.";
+
+  @override
+  String get labelSending => "Sending: ";
+
+  @override
+  String get labelPhoneNo => "Phone No:";
+
+  @override
+  String get labelPayingTo => "Paying to:";
+
+  @override
+  String get labelEnter4DigitPin => "Enter 4 digit TPIN";
+
+  @override
+  String get labelYouAreTransferringMoneyTo => "You are transferring money to ";
+
+  @override
+  String get labelYouCanOnlyWithdraw => "Minimum amount you can withdraw is ";
+
+  @override
+  String get labelMoveMoney => "Move Money";
+
+  @override
+  String get labelAwesome => "Awesome!";
+
+  @override
+  String get labelYouWithdraw => "You withdraw";
+
+  @override
+  String get labelHappySpending => "Happy Spending!";
+
+  @override
+  String get labelPayBill => "Pay Bill";
+
+  @override
+  String get statusWithdraw => "withdraw";
+
+  @override
+  String get statusTransfer => "transfer";
+
+  @override
+  String get labelPaidTo => "Paid to ";
+
+  @override
+  String get labelAt => "at";
+
+  @override
+  String get labelTransactionId => "Transaction id: ";
+
+  @override
+  String get labelShareScreenshot => "Share Screenshot";
+
+  @override
+  String get labelDone => "Done";
+
+
+  @override
+  String get labelGenerateQR => "Generate QR";
+
+  @override
+  String get labelErrorLoadingQR => "Error loading QR code";
+
+  @override
+  String get labelFilterPayment => "Filter Payments";
+
+  @override
+  String get labelStatus => "Status";
+
+  @override
+  String get labelRequestType => "Request Type";
+
+  @override
+  String get labelDeposit => "Deposit";
+
+  @override
+  String get labelClearAll => "Clear All";
+
+  @override
+  String get labelApply => "Apply";
+
+  @override
+  String get labelWithdrawMethods => "Withdraw Methods";
 }

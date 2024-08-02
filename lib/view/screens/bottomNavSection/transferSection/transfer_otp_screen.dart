@@ -173,7 +173,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
 
         return Container();
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
@@ -228,7 +228,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                               width: 8,
                             ),
                             Text(
-                              "Paying to:",
+                              "${Languages.of(context)?.labelPayingTo}",
                               style: TextStyle(fontSize: 16),
                             ),
                             Spacer(),
@@ -241,7 +241,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Phone No:"),
+                          Text("${Languages.of(context)?.labelPhoneNumber}"),
                           SizedBox(
                             width: 10,
                           ),
@@ -258,7 +258,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Sending:"),
+                          Text("${Languages.of(context)?.labelSending}"),
                           SizedBox(
                             width: 10,
                           ),
@@ -309,7 +309,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                           SizedBox(height: 20),
                           Center(
                             child: _buildLabelText(context,
-                                "Please enter the 6-digit otp sent to your phone number to complete the transaction.", 14, false),
+                                "${Languages.of(context)?.labelEnterOtpToCompleteTransaction}", 14, false),
                           ),
                           SizedBox(height: 4),
                           SizedBox(height: 22),
@@ -487,7 +487,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('No internet connection'),
+                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );

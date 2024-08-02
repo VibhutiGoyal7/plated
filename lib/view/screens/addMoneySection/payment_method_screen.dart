@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../languageSection/Languages.dart';
+
 class PaymentMethodScreen extends StatefulWidget {
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -55,7 +57,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             },
           ),
           title: Text(
-            "Payment Methods",
+            "${Languages.of(context)?.labelPaymentMethod}",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
@@ -71,9 +73,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               onTap: () {
                 //_showPicker(context: context);
                 Navigator.pushNamed(context, "/PaymentMethodTypeScreen",
-                    arguments: "Local Distributors");
+                    arguments: "${Languages.of(context)?.labelLocalDistributors}");
               },
-              child: _buildCard(context, "Local Distributors",
+              child: _buildCard(context, "${Languages.of(context)?.labelLocalDistributors}",
                   "assets/bank_statement.png", isDarkMode),
             )
           ]),

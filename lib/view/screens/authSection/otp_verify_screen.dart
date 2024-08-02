@@ -284,7 +284,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                                       isLoading = false;
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text('No internet connection'),
+                                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                                           duration: maxDuration,
                                         ),
                                       );
@@ -520,7 +520,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                     isLoading = false;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('No internet connection'),
+                        content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                         duration: maxDuration,
                       ),
                     );
@@ -545,7 +545,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                        'Please enter valid phone number and select country code.'),
+                        '${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
                     duration: maxDuration,
                   ),
                 );
@@ -634,7 +634,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
           getResendOtpResponse(context, apiResponse);
         },
         child: Text(
-          "Resend Otp",
+          "${Languages.of(context)?.labelResendOtp}",
           style: TextStyle(
             fontWeight: FontWeight.w600,
             decoration: TextDecoration.underline,

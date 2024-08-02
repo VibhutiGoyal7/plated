@@ -120,7 +120,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("object");
-        if (apiResponse?.message == "Invalid access token"){
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}"){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(context: context, message: apiResponse?.message);
@@ -436,7 +436,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-            Text('No internet connection'),
+            Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

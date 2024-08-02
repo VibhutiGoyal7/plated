@@ -116,7 +116,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container();
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token") {
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -150,7 +150,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token") {
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }else
         {
@@ -294,7 +294,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
                     isLoading = false;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('No internet connection'),
+                        content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                         duration: maxDuration,
                       ),
                     );

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../languageSection/Languages.dart';
 import '../../../../../model/apis/api_response.dart';
 import '../../../../../utils/Helper.dart';
 import '../../../../../utils/Util.dart';
@@ -102,7 +103,7 @@ class _SupportScreenState extends State<SupportScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('No internet connection'),
+              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
@@ -149,7 +150,7 @@ class _SupportScreenState extends State<SupportScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;

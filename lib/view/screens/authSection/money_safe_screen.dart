@@ -1,10 +1,17 @@
+import 'package:Payrio/languageSection/Languages.dart';
+import 'package:Payrio/utils/Helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../model/apis/api_response.dart';
+import '../../../model/response/countryListResponse.dart';
 import '../../../theme/AppColor.dart';
+import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
 
 class MoneySafeScreen extends StatefulWidget {
   @override
@@ -16,11 +23,53 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
   late double screenWidth;
   late double screenHeight;
   PageController _pageController = PageController();
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
+  static const maxDuration = Duration(seconds: 2);
+  List<CountryData> countryList = [];
 
   @override
   void initState() {
     super.initState();
+    _fetchData();
   }
+
+  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
+    CountryListResponse? countryListResponse =
+    apiResponse.data as CountryListResponse?;
+    var message = apiResponse?.message.toString();
+    print("message ${message}");
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${countryListResponse?.countries?[1].name}");
+
+        countryList = countryListResponse!.countries!;
+        Helper.saveCountryList(countryList);
+        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
+
+        print("countriess ${countryList}");
+
+        //_showPicker(context: context);
+
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        print("countriess ${countryList}");
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,14 +126,14 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
 
               _buildFooter(
                   context: context,
-                  text: "SignUp",
+                  text: "${Languages.of(context)?.labelSignup}",
                   onTap: () {
                     Navigator.pushNamed(context, '/PhoneVerifyScreen');
                   }),
 
               _buildFooter(
                   context: context,
-                  text: "SignIn",
+                  text: "${Languages.of(context)?.labelSignin}",
                   onTap: () {
                     Navigator.pushNamed(context, '/SignInScreen', arguments: "");
                   }),
@@ -109,14 +158,14 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           height: 6,
         ),
         Text(
-          "Add your money and manage",
+          "${Languages.of(context)?.labelAddMoneyAndManage}",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
           height: 8,
         ),
         Text(
-          "The application for reaching your saving goal , send and receive money. Use QR codes and payment links to accept cards",
+          "${Languages.of(context)?.subHeadingApplicationForReachingGoal}",
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
         ),
@@ -140,7 +189,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           height: 2,
         ),
         Text(
-          "Your Money Stays Safe",
+          "${Languages.of(context)?.labelMoneyStaysSafe}",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -150,7 +199,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "Your money stays safeWe have all security measures put in place, so that you really feel that your money is in safe hands.",
+            "${Languages.of(context)?.labelMoneyStaysSafeSubHeading}",
             style: TextStyle(fontSize: 14),
             textAlign: TextAlign.center,
           ),
@@ -190,5 +239,31 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
         ],
       ),
     );
+  }
+
+  void _fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      await Future.delayed(Duration(milliseconds: 2));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .fetchCountryList("api/v1/app/customers/country_list");
+      ApiResponse apiResponse =
+          Provider.of<MainViewModel>(context, listen: false).response;
+      getCountryList(context, apiResponse);
+    }
   }
 }

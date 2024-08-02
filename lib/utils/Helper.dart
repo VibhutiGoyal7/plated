@@ -4,6 +4,7 @@ import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/response/countryListResponse.dart';
 import '../model/response/profileResponse.dart';
 import '../model/response/setUpAccountResponse.dart';
 
@@ -20,6 +21,7 @@ class Helper {
   static String kycStatusPref = 'KycStatus';
   static String passwordPref = 'Password';
   static String recentP2PPref = 'RecentP2P';
+  static String countryList = 'CountryList';
   static String profileDetailPref = 'ProfileDetail';
   static const String prefSelectedLanguageCode = "SelectedLanguageCode";
 
@@ -157,6 +159,39 @@ class Helper {
     }).toList();
   }
 
+  static Future<bool> saveCountryList(_RecentP2P) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    List<String> RecentP2PJson = _RecentP2P.map<String>(
+        (CountryData user) => user.toJsonString()).toList();
+    print("helper save ${RecentP2PJson}");
+    return await sharedPreferences.setStringList(countryList, RecentP2PJson);
+  }
+
+// Read Data
+  static Future<List<CountryData>?> getCountryList() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final List<String>? jsonList =
+        sharedPreferences.getStringList(countryList);
+
+    if (jsonList == null) {
+      return null;
+    }
+    // final Map<String, dynamic> ProfileDetailMap = jsonDecode(jso);
+    return jsonList.map<CountryData>((String jsonItem) {
+      CountryData response;
+      try {
+        response = CountryData.fromJsonString(jsonItem);
+        // Debugging: Print each CheckCustomerResponse object
+        print('JSON to Response: ${response.flagImageUrl}');
+      } catch (e) {
+        print('Error parsing JSON item: $jsonItem');
+        print('Error: $e');
+        response = CountryData(name: 'Error');
+      }
+      return response;
+    }).toList();
+  }
+
   static Future<bool> saveUserDetails(_UserDetail) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final String UserDetailJson = jsonEncode(_UserDetail.toJson());
@@ -223,17 +258,20 @@ class Helper {
 
   static Future<void> clearAllSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
+    List<CheckCustomerResponse>? list = [];
+    List<CountryData>? countryList = [];
     //await prefs.clear();
     await saveUserToken("");
     await saveBiometric(false);
     await saveUserAuthenticated(false);
     await saveUserBalance("");
     await saveCurrencySymbol("");
-    await saveRecentP2PDetails(null);
-    await saveUserDetails(null);
+    await saveRecentP2PDetails(list);
+    await saveCountryList(countryList);
+    //await saveUserDetails(null);
     await saveCountry("");
     await saveKycStatus("");
-    await setLocale(null);
+    await setLocale("");
     print('All shared preferences cleared');
   }
 }

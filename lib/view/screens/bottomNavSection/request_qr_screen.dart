@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/requestQRData.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -80,7 +82,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
             },
           ),
           title: Text(
-            "Request QR",
+            "${Languages.of(context)?.labelRequestQR}",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
@@ -150,7 +152,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  "Add Money",
+                  "${Languages.of(context)?.labelAddMoney}",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                 ),
               ),
@@ -232,7 +234,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'No internet connection',
+                            '${Languages.of(context)?.labelNoInternetConnection}',
                             style: TextStyle(color: AppColor.WHITE),
                           ),
                           duration: maxDuration,
@@ -256,7 +258,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                 }
               },
               child: Text(
-                "Generate QR",
+                "${Languages.of(context)?.labelGenerateQR}",
                 style:
                     TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
               ),
@@ -453,7 +455,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
               qrCodeImage != null
                   ? Image.memory(qrCodeImage!,
               )
-                  : Text("Error loading QR code")
+                  : Text("${Languages.of(context)?.labelErrorLoadingQR}")
                   : Shimmer.fromColors(
                 baseColor: Colors.white38,
                 highlightColor: Colors.grey,

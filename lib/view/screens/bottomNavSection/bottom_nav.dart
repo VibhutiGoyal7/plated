@@ -1,3 +1,4 @@
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
@@ -114,7 +115,7 @@ class _BottomNavState extends State<BottomNav>
                         size: 26,
                       ),
                       Text(
-                        "Home",
+                        "${Languages.of(context)?.labelHome}",
                         style: TextStyle(color: AppColor.WHITE, fontSize: 12),
                       )
                     ],
@@ -133,7 +134,7 @@ class _BottomNavState extends State<BottomNav>
                     size: 24,
                   ),
                   Text(
-                    "Transfer",
+                    "${Languages.of(context)?.labelTransfer}",
                     style: TextStyle(color: AppColor.WHITE, fontSize: 12),
                   )
                 ],
@@ -153,7 +154,7 @@ class _BottomNavState extends State<BottomNav>
                     size: 26,
                   ),
                   Text(
-                    "Pay Bill",
+                    "${Languages.of(context)?.labelPayBill}",
                     style: TextStyle(color: AppColor.WHITE, fontSize: 12),
                   )
                 ],
@@ -170,7 +171,7 @@ class _BottomNavState extends State<BottomNav>
                     size: 26,
                   ),
                   Text(
-                    "Rewards",
+                    "${Languages.of(context)?.labelRewards}",
                     style: TextStyle(color: AppColor.WHITE, fontSize: 12),
                   )
                 ],

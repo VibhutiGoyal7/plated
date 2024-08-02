@@ -105,7 +105,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token")
+        if (apiResponse.message == Languages.of(context)?.labelInvalidAccessToken)
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -210,7 +210,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                           CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Balance",
+                                              "${Languages.of(context)?.labelBalance}",
                                               style: TextStyle(
                                                 fontSize: 14.0,
                                               ),
@@ -238,31 +238,6 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         SizedBox(
                           height: 18,
                         ),
-                        /* Container(
-                        height: 70,
-                        width: 70,
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: AppColor.WHITE,
-                          backgroundImage: AssetImage(
-                            "assets/bank_statement.png",
-
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        "Adding via: ${paymentMethod}",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      Text("${username}",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                              color: isDarkMode ? Colors.white70 : Colors.black54)),
-                  */
                         SizedBox(
                           height: 10,
                         ),
@@ -360,7 +335,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  "Add Money",
+                  "${Languages.of(context)?.labelAddMoney}",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                 ),
               ),
@@ -436,7 +411,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'No internet connection',
+                            "${Languages.of(context)?.labelNoInternetConnection}",
                             style: TextStyle(color: AppColor.WHITE),
                           ),
                           duration: maxDuration,

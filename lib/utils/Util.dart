@@ -43,8 +43,9 @@ String currencyFormat(String symbol,String input,String country ) {
     return input;
   }
   double value = 0 ;
+  print(country);
 
-  String locale="";
+  var locale;
 
   if(country == "India"){
     locale = 'en_IN';
@@ -53,18 +54,24 @@ String currencyFormat(String symbol,String input,String country ) {
   }else if(country == "Saudi Arabi"){
     locale = 'ar_SA';
   }
+  final formatter;
   try {
     value = double.parse(input);
 
   }catch(e)
   {
     return "${symbol}${input}";
-  }
-  final formatter = NumberFormat.currency(
+  }if(country == ""){
+    formatter = NumberFormat.currency(
+      symbol: "${symbol}",
+      decimalDigits: 2,
+    );
+  }else{
+  formatter = NumberFormat.currency(
     locale: locale,
     symbol: "${symbol}",
     decimalDigits: 2,
-  );
+  );}
   return "${formatter.format(value)}";
 }
 

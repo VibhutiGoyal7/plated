@@ -34,7 +34,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatusApi = "";
   String? amount = "0.00";
   String? currencySymbol = "";
-  String? country = "";
+  String? country ;
   String calledShortCut = "";
   String? name = "";
   var imageUrl;
@@ -513,11 +513,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             ),
                                           ),
                                           SizedBox(width: 8,),
-                                          GestureDetector(
+                                          /*GestureDetector(
                                             onTap: ()
                                             {
                                               Navigator.pushNamed(
-                                                  context, "/NotificationScreen");
+                                                  c ontext, "/NotificationScreen");
                                             },
                                             child: Icon(
                                               Icons.notifications,
@@ -525,7 +525,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   ? Colors.white
                                                   : Colors.black,
                                             ),
-                                          ),
+                                          ),*/
                                         ],
                                       ),
                                     ],
@@ -717,7 +717,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          "View all",
+                                          "${Languages.of(context)?.labelViewAll}",
                                           style: TextStyle(
                                               fontSize: 14.0,
                                               color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,
@@ -810,7 +810,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   Row(
                                                     children: [
                                                       Icon(
-                                                        transactionList[index].transactionType == "withdraw" || transactionList[index].transactionType == "transfer"?
+                                                        transactionList[index].transactionType == "${Languages.of(context)?.statusWithdraw}" || transactionList[index].transactionType == "${Languages.of(context)?.statusTransfer}"?
                                                         Icons.call_made : Icons.call_received,
                                                         size: 15,
                                                         color: colorStatus(capitalizeFirstLetter(

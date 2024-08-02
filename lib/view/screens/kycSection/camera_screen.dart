@@ -12,6 +12,7 @@ import 'package:Payrio/view/component/session_expired_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
+import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
@@ -86,7 +87,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
        // });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(apiResponse?.message== "Invalid access token"){
+        if(apiResponse?.message== "${Languages.of(context)?.labelInvalidAccessToken}"){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(context: context, message: apiResponse?.message);
@@ -370,7 +371,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content:
-                          Text('No internet connection'),
+                          Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );

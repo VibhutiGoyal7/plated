@@ -196,7 +196,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                       width: screenWidth*0.58,
-                      child: Text("Minimum amount you can withdraw is ${addCurrencySymbol(countryCurrencySymbol, "50")}",
+                      child: Text("${Languages.of(context)?.labelYouCanOnlyWithdraw}${addCurrencySymbol(countryCurrencySymbol, "50")}",
                         textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 12),),
                     ),
                   ),
@@ -351,7 +351,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token")
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}")
           SessionExpiredDialog.showDialogBox(context: context);
         else {
           _inputController.text = "";
@@ -389,7 +389,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   isLoading = false;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('No internet connection'),
+                      content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                       duration: maxDuration,
                     ),
                   );
@@ -420,7 +420,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             }
           },
           child: Text(
-            "Move Money",
+            "${Languages.of(context)?.labelMoveMoney}",
             style:
                 TextStyle(color: inputValid ? Colors.white : AppColor.PRIMARY),
           ),
@@ -478,7 +478,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 10,
                         ),
                         Text(
-                          "Awesome!",
+                          "${Languages.of(context)?.labelAwesome}",
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 18,
@@ -488,7 +488,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 10,
                         ),
                         Text(
-                          "You withdraw ${currencyFormat(countryCurrencySymbol , amount, country)}",
+                          "${Languages.of(context)?.labelYouWithdraw} ${currencyFormat(countryCurrencySymbol , amount, country)}",
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14),
                         ),
@@ -504,7 +504,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 40,
                         ),
                         Text(
-                          "Happy Spending!",
+                          "${Languages.of(context)?.labelYouWithdraw}",
                           style: TextStyle(),
                         ),
                       ],

@@ -107,7 +107,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         Navigator.pushReplacementNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(context: context, message: message);
@@ -140,7 +140,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(context: context, message: message);
@@ -284,7 +284,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                             isLoading = false;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('No internet connection'),
+                                content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                                 duration: maxDuration,
                               ),
                             );
@@ -366,7 +366,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('No internet connection'),
+                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );
@@ -536,7 +536,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

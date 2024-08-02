@@ -3,6 +3,7 @@ import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,24 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   void initState() {
     super.initState();
     phoneNumberValid = false;
-    _fetchData();
+    Helper.getCountryList().then((countries){
+      List<CountryData> list = [];
+      print(countries);
+      countryList = countries!;
+      print(countryList);
+      if(countryList == null || countryList == [] || countryList.isEmpty || countryList == list){
+        _fetchData();
+      }else {
+        setState(() {
+          countryList = countries!;
+          selectedItem = "${countries[0].flagImageUrl}";
+          countryCode = int.parse("${countries[0].id}");
+          phoneCode = "+${countries[0].phoneCode}";
+        });
+
+      }
+    });
+    //_fetchData();
   }
 
   final TextEditingController _inputController = TextEditingController();
@@ -155,6 +173,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
+        Helper.saveCountryList(countryListResponse?.countries);
 
         countryList = countryListResponse!.countries!;
         selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
@@ -202,7 +221,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                       Container(
                         height: screenHeight * 0.15,
                         child: Text(
-                          "Phone\n Verification",
+                          "${Languages.of(context)?.labelPhoneVerification}",
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w600,
@@ -227,10 +246,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                             children: [
                               SizedBox(height: 20),
                               _buildLabelText(
-                                  context, "Enter your mobile number", 16, true),
+                                  context, "${Languages.of(context)?.labelEnterPhoneNo}", 16, true),
                               _buildLabelText(
                                   context,
-                                  "We will send you a confirmation code",
+                                  "${Languages.of(context)?.labelSendConfirmationCode}",
                                   12,
                                   false),
                               Column(
@@ -305,7 +324,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8),
-            child: _buildLabelText(context, "Phone Number", 12, false),
+            child: _buildLabelText(context, "${Languages.of(context)?.labelPhoneNumber}", 12, false),
           ),
           Card(
             elevation: 2,
@@ -480,7 +499,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('No internet connection'),
+                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );
@@ -534,14 +553,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Already have an account? ",
+                  "${Languages.of(context)?.labelAlreadyHaveAnAcc}",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[400],
                   ),
                 ),
                 Text(
-                  "Login",
+                  "${Languages.of(context)?.labelLogin}",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -657,7 +676,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('No internet connection'),
+              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
@@ -679,12 +698,13 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-              Text('Please enter valid phone number and select country code.'),
+              Text('${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
           duration: maxDuration,
         ),
       );
     }
   }
+
 
   void _fetchData() async {
     setState(() {
@@ -697,7 +717,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

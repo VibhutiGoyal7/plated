@@ -1,15 +1,17 @@
+
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class WithdrawMethodTypeScreen extends StatefulWidget {
-  final String? data; // Define the 'data' parameter here
+import '../../../../languageSection/Languages.dart';
 
-  WithdrawMethodTypeScreen({Key? key, this.data}) : super(key: key);
+class WithdrawMethodScreen extends StatefulWidget {
   @override
-  _WithdrawMethodTypeScreenState createState() => _WithdrawMethodTypeScreenState();
+  _WithdrawMethodScreenState createState() => _WithdrawMethodScreenState();
 }
 
-class _WithdrawMethodTypeScreenState extends State<WithdrawMethodTypeScreen> {
+class _WithdrawMethodScreenState extends State<WithdrawMethodScreen> {
   bool isLoading = false;
   String kycStatus = "";
   String amount = "";
@@ -44,43 +46,65 @@ class _WithdrawMethodTypeScreenState extends State<WithdrawMethodTypeScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.pushReplacementNamed(
+      context,
+      "/BottomNav",
+    );
+    return false;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
-          toolbarHeight: 65,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushNamed(context, '/WithdrawMethodScreen');
-            },
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("DashBoard $didPop");
+        if (didPop) {
+          return;
+        }
+        if (kDebugMode) {
+          _onWillPop();
+          // return Future.value(true);
+        }
+      },
+      child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          appBar: AppBar(
+            toolbarHeight: 65,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pushNamed(context, '/BottomNav');
+              },
+            ),
+            title: Text(
+              "${Languages.of(context)?.labelWithdrawMethods}",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+            ),
           ),
-          title: Text(
-            "${widget.data}",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-          ),
-        ),
-        body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-              child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(
-                  height: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    //_showPicker(context: context);
-                    Navigator.pushNamed(context, "/WithdrawScreen",
-                        arguments: "Pay2Local");
-                  },
-                  child: _buildCard(context, "Pay2Local",
-                      "assets/bank_statement.png", isDarkMode),
-                )
-              ]),
-            )));
+          body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      //_showPicker(context: context);
+                      Navigator.pushNamed(context, "/WithdrawMethodTypeScreen",
+                          arguments: "${Languages.of(context)?.labelLocalDistributors}");
+                    },
+                    child: _buildCard(context, "${Languages.of(context)?.labelLocalDistributors}",
+                        "assets/bank_statement.png", isDarkMode),
+                  )
+                ]),
+              ))),
+    );
   }
 
   _buildCard(BuildContext context, String title, String icon, bool isDarkMode) {
@@ -109,26 +133,30 @@ class _WithdrawMethodTypeScreenState extends State<WithdrawMethodTypeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              child: Image(
-                alignment: Alignment.topLeft,
-                width: 25,
-                image: AssetImage(icon),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                  child: Image(
+                    alignment: Alignment.topLeft,
+                    width: 25,
+                    image: AssetImage(icon),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(

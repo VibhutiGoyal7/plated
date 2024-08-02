@@ -1,3 +1,4 @@
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/response/generateTpinResponse.dart';
@@ -91,7 +92,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
         //Navigate to the new screen after receiving the response
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(message == "Your TPIN is updated successfully"){
+        if(message == "${Languages.of(context)?.labelTPINUpdatedSuccessfully}"){
           Navigator.pushReplacementNamed(context, "/BottomNav");
         }
         ToastComponent.showToast(context: context, message: message);
@@ -148,7 +149,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
               width: screenWidth,
               height: screenHeight * 0.15,
               margin: EdgeInsets.zero,
-              child: _buildLabelText(context, "Transaction \nPIN ", 28, true),
+              child: _buildLabelText(context, "${Languages.of(context)?.labelTransactionPin}", 28, true),
               alignment: AlignmentDirectional.center,
             ),
             Expanded(
@@ -166,7 +167,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
                       SizedBox(height: 20),
                       Center(
                         child: _buildLabelText(
-                            context, "Verify 4 digit TPIN", 20, true),
+                            context, "${Languages.of(context)?.labelVerifyPin}", 20, true),
                       ),
                       SizedBox(height: 22),
                       _buildPhoneInput(context, screenWidth, isDarkMode),
@@ -197,7 +198,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
                             getTpinResponseDataWidget(context, apiResponse);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("Transaction Pin doesn't match"),
+                              content: Text("${Languages.of(context)?.labelTransactionPinDoesntMatch}"),
                             ));
                           }
                         } else {

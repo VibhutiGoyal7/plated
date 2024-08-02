@@ -92,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -658,7 +658,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

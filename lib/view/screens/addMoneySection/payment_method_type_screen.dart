@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../languageSection/Languages.dart';
+
 class PaymentMethodTypeScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
 
@@ -74,9 +76,9 @@ class _PaymentMethodTypeScreenState extends State<PaymentMethodTypeScreen> {
               onTap: () {
                 //_showPicker(context: context);
                 Navigator.pushNamed(context, "/AddMoneyScreen",
-                    arguments: "Pay2Local");
+                    arguments: "${Languages.of(context)?.labelPay2Local}");
               },
-              child: _buildCard(context, "Pay2Local",
+              child: _buildCard(context, "${Languages.of(context)?.labelPay2Local}",
                   "assets/bank_statement.png", isDarkMode),
             )
           ]),

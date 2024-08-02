@@ -101,7 +101,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token"){
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}"){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(
@@ -328,7 +328,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                   isLoading = false;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('No internet connection'),
+                      content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                       duration: maxDuration,
                     ),
                   );
@@ -356,7 +356,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
             } else if (_newPasswordController.text.length < 8) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Password should have 8 or more characters.'),
+                  content: Text('${Languages.of(context)?.labelPasswordAlert}'),
                   duration: maxDuration,
                 ),
               );
@@ -364,14 +364,14 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                 _confirmPasswordController.text) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Password doesn't match"),
+                  content: Text("${Languages.of(context)?.labelPasswordDoesntMatch}"),
                   duration: maxDuration,
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Please fill the details"),
+                  content: Text("${Languages.of(context)?.labelPleaseEnterAllDetails}"),
                   duration: maxDuration,
                 ),
               );
