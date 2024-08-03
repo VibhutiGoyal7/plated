@@ -1,4 +1,5 @@
 import 'package:Payrio/model/response/transactionListReponse.dart';
+import 'package:floor/floor.dart';
 
 class DashboardResponse {
   String? message;
@@ -12,18 +13,24 @@ class DashboardResponse {
   });
 
   factory DashboardResponse.fromJson(Map<String, dynamic> json) {
-
     var list = json['data']?['customer_recent_transactions'] as List?;
     List<TransactionDetails>? transactionList = list?.map((i) => TransactionDetails.fromJson(i)).toList();
 
     return DashboardResponse(
       message: json['message'] as String?,
-      customerRecentTxn: json['data']?['customer_recent_transactions'] != null
-          ?transactionList : null,
-      customerData: json['data']?['customer_data'] != null
-          ? new CustomerData.fromJson(json['data']?['customer_data'])
-          : null,
+      customerRecentTxn: json['data']?['customer_recent_transactions'] != null ? transactionList : null,
+      customerData: json['data']?['customer_data'] != null ? CustomerData.fromJson(json['data']?['customer_data']) : null,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'data': {
+        'customer_recent_transactions': customerRecentTxn?.map((e) => e.toJson()).toList(),
+        'customer_data': customerData?.toJson(),
+      },
+    };
   }
 }
 
@@ -72,19 +79,38 @@ class DashboardTransaction {
       customerId: json["customer_id"] as int?,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "amount": amount,
+      "bank_type": bankType,
+      "bank_service": bankService,
+      "request_type": requestType,
+      "payment_request_id": paymentRequestId,
+      "trx_id": trxId,
+      "currency": currency,
+      "status": status,
+      "created_at": createdAt,
+      "updated_at": updatedAt,
+      "customer_id": customerId,
+    };
+  }
 }
 
+@entity
 class CustomerData {
-  String? firstName;
-  String? email;
-  String? username;
-  String? balance;
-  String? countryName;
-  String? countryPhoneCode;
-  String? countryCurrencySymbol;
-  String? imageUrl;
-  String? kycStatus;
-  String? tpin;
+  @primaryKey
+  final String? email;
+  final String? firstName;
+  final String? username;
+  final String? balance;
+  final String? countryName;
+  final String? countryPhoneCode;
+  final String? countryCurrencySymbol;
+  final String? imageUrl;
+  final String? kycStatus;
+  final String? tpin;
 
   CustomerData({
     this.firstName,
@@ -112,5 +138,20 @@ class CustomerData {
       kycStatus: json["kyc_status"] as String?,
       tpin: json["tpin"] as String?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "first_name": firstName,
+      "email": email,
+      "username": username,
+      "balance": balance,
+      "country_name": countryName,
+      "country_phone_code": countryPhoneCode,
+      "country_currency_symbol": countryCurrencySymbol,
+      "image_url": imageUrl,
+      "kyc_status": kycStatus,
+      "tpin": tpin,
+    };
   }
 }

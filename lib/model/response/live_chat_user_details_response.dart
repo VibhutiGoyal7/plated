@@ -30,7 +30,7 @@ class LiveChatUserDetailsResponse {
 
   Map<String, dynamic> toJson() {
     return {
-      'createdAt': date ?? FieldValue.serverTimestamp(),
+      'date': date ?? FieldValue.serverTimestamp(),
       'first_name': first_name,
       'last_name': first_name,
       'lastMessage': lastMessage,

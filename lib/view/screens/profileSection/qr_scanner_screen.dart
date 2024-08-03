@@ -19,7 +19,6 @@ class QrScannerScreen extends StatefulWidget {
 }
 
 class _QrScannerScreenState extends State<QrScannerScreen> {
-
   var imageUrl;
   var customerName;
   var userName;
@@ -45,7 +44,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-        appBar: AppBar(toolbarHeight: 65,
+        appBar: AppBar(
+          toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -60,9 +60,9 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: GestureDetector(
-                onTap: (){
-                  _captureAndSharePng(context);
-                },
+                  onTap: () {
+                    _captureAndSharePng(context);
+                  },
                   child: Icon(Icons.share)),
             )
           ],
@@ -74,7 +74,9 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 //mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
-                children: [_build(context), ],
+                children: [
+                  _build(context),
+                ],
               )),
         ));
   }
@@ -95,6 +97,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                   ? Container(
                       height: 65,
                       width: 65,
+                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
                       child: CircleAvatar(
                         radius: 30,
                         backgroundColor: AppColor.WHITE,
@@ -103,6 +106,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                     )
                   : ClipRRect(
                       borderRadius: BorderRadius.circular(100.0),
+                      clipBehavior: Clip.antiAlias,
                       child: Image.network(
                         imageUrl,
                         height: 75,
@@ -150,23 +154,23 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
               children: [
                 isLoading
                     ? Shimmer.fromColors(
-                  baseColor: Colors.white38,
-                  highlightColor: Colors.grey,
-                  child: Container(
-                    width: 100,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.white38,
-                      borderRadius: BorderRadius.circular(
-                          8.0), // Adjust the radius as needed
-                    ),
-                  ),
-                )
+                        baseColor: Colors.white38,
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          width: 100,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: Colors.white38,
+                            borderRadius: BorderRadius.circular(
+                                8.0), // Adjust the radius as needed
+                          ),
+                        ),
+                      )
                     : Text(
-                  userName,
-                  style: TextStyle(fontSize: 14.0),
-                  textAlign: TextAlign.left,
-                ),
+                        userName,
+                        style: TextStyle(fontSize: 14.0),
+                        textAlign: TextAlign.left,
+                      ),
                 SizedBox(
                   width: 4,
                 ),
@@ -174,8 +178,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                   onTap: () => {
                     copyTextToClipboard(userName.toString()),
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("Text copied to clipboard")),
+                      SnackBar(content: Text("Text copied to clipboard")),
                     )
                   },
                   child: Icon(
@@ -196,10 +199,10 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                   child: isUsernameRetrieved /*&& isQrCodeGenerated*/
                       ? //Text("data")
                       RepaintBoundary(
-                        key: _repaintBoundaryKey,
-                        child: QrImageView(
+                          key: _repaintBoundaryKey,
+                          child: QrImageView(
                             data: userName,
-                            size: screenWidth * 0.82,
+                            size: screenWidth * 0.65,
                             backgroundColor:
                                 isDarkMode ? AppColor.WHITE : AppColor.BG_COLOR,
                             //foregroundColor: isDarkMode ? AppColor.WHITE : AppColor.BLACK,
@@ -210,10 +213,11 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                                   100,
                                   100,
                                 ),
-                                color:
-                                    isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                color: isDarkMode
+                                    ? AppColor.WHITE
+                                    : AppColor.BLACK),
                           ),
-                      )
+                        )
                       : Shimmer.fromColors(
                           baseColor: Colors.white38,
                           highlightColor: Colors.grey,
@@ -234,9 +238,11 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       ),
     );
   }
+
   Future<void> _captureAndSharePng(BuildContext context) async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       var image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();

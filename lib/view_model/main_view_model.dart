@@ -4,6 +4,7 @@ import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/serviceTypeListRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
@@ -543,6 +544,27 @@ class MainViewModel with ChangeNotifier {
     try {
       CreateSupportTicketResponse transactionListResponse = await MainRepository()
           .supportListData(value, supportListRequest);
+      if (transactionListResponse != null &&
+          transactionListResponse.trxId != null) {
+        _apiResponse = ApiResponse.completed(transactionListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(transactionListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> serviceTypeListData(
+      String value, ServiceTypeListRequest serviceTypeListRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${serviceTypeListRequest.countryId}");
+    notifyListeners();
+    try {
+      CreateSupportTicketResponse transactionListResponse = await MainRepository()
+          .serviceTypeListData(value, serviceTypeListRequest);
       if (transactionListResponse != null &&
           transactionListResponse.trxId != null) {
         _apiResponse = ApiResponse.completed(transactionListResponse);

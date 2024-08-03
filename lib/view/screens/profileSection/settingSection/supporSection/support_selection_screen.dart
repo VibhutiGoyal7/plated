@@ -72,7 +72,7 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
             GestureDetector(
               onTap: () {
                 //_showPicker(context: context);
-                Navigator.pushNamed(context, "/PaymentMethodTypeScreen",
+                Navigator.pushNamed(context, "/SupportScreen",
                     arguments: "Ticket");
               },
               child: _buildCard(

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/response/createSupportTicketResponse.dart';
+import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
@@ -13,8 +14,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../languageSection/Languages.dart';
+import '../../../../../model/request/serviceTypeListRequest.dart';
+import '../../../../../model/response/payorioMethodListReponse.dart';
+import '../../../../../model/response/transactionListReponse.dart';
 import '../../../../../theme/AppColor.dart';
 import '../../../../component/connectivity_service.dart';
+import '../../../../component/session_expired_dialog.dart';
 import '../../../../component/toastMessage.dart';
 
 class CreateSupportTicketScreen extends StatefulWidget {
@@ -27,36 +32,43 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
   bool isLoading = false;
+  bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
   String? imageUrl = "";
   File? galleryFile;
   final picker = ImagePicker();
   bool inputValid = false;
   bool isDarkMode = false;
-  String serviceTypeValue = "";
-  String bankTypeValue = "";
-  String issueTypeValue = "";
-  String methodTypeValue = "";
-  var serviceTypeList = ["Select", "Service1", "Service2", "Service3"];
+  int? countryId = 0;
+  late ServiceTypeListDetails serviceTypeValue;
+  late ServiceTypeListDetails bankTypeValue;
+  late ServiceTypeListDetails issueTypeValue;
+  late ServiceTypeListDetails methodTypeValue;
+  List<ServiceTypeListDetails> serviceTypeList = [];
   var bankTypeList = ["Select", "Bank1", "Bank2", "Bank3"];
   var issueTypeList = ["Select", "Issue1", "Issue2", "Issue3"];
   var methodTypeList = ["Select", "Method1", "Method2", "Method3"];
   late double screenWidth;
-
+  static const maxDuration = Duration(seconds: 2);
   ///Time
   TimeOfDay timeOfDay = TimeOfDay.now();
   String selectedTime = "Payment Time";
+
   @override
   void initState() {
     super.initState();
+    _fetchData();
     passwordVisible = true;
     confirmPasswordVisible = true;
     inputValid = false;
     isDarkMode = false;
-    serviceTypeValue = serviceTypeList.first;
-    bankTypeValue = bankTypeList.first;
-    methodTypeValue = methodTypeList.first;
-    issueTypeValue = issueTypeList.first;
+    Helper.getProfileDetails().then((profile){
+      countryId = profile?.countryId;
+    });
+    serviceTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");
+    bankTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");;
+    methodTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");;
+    issueTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");;
   }
 
   void _isValidInput() {
@@ -81,7 +93,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   }
 
   final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _paymentTimeController = TextEditingController(text: "00:00");
+  final TextEditingController _paymentTimeController =
+      TextEditingController(text: "00:00");
   final TextEditingController _customerNumberController =
       TextEditingController();
   final TextEditingController _transactionIdController =
@@ -149,6 +162,63 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                 context, "Create Support Ticket", 20, true),
                             SizedBox(height: 10),
                             SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildDropDownWidget(
+                                    context,
+                                    "",
+                                    _serviceTypeController,
+                                    Icon(Icons.merge),
+                                    serviceTypeList,
+                                    serviceTypeValue,
+                                    "Service Type"),
+                                _buildDropDownWidget(
+                                    context,
+                                    "",
+                                    _methodTypeController,
+                                    Icon(Icons.merge),
+                                    serviceTypeList,
+                                    methodTypeValue,
+                                    "Payorio Method"),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildDropDownWidget(
+                                    context,
+                                    "",
+                                    _issueTypeController,
+                                    Icon(Icons.merge),
+                                    serviceTypeList,
+                                    issueTypeValue,
+                                    "Payment Methods"),
+
+                                /*  _buildDropDownWidget(
+                                    context,
+                                    "",
+                                    _bankTypeController,
+                                    Icon(Icons.merge),
+                                    bankTypeList,
+                                    bankTypeValue,
+                                    ""),*/
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            _buildPasswordInput(
+                                context,
+                                "Comment",
+                                _commentController,
+                                Icon(
+                                  Icons.merge_type,
+                                  size: 18,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                isDarkMode),
+                            SizedBox(height: 10),
                             _buildPhoneInput(
                                 context,
                                 "Amount",
@@ -194,70 +264,15 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                 ),
                                 isDarkMode),
                             SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildDropDownWidget(
-                                    context,
-                                    "",
-                                    _serviceTypeController,
-                                    Icon(Icons.merge),
-                                    serviceTypeList,
-                                    serviceTypeValue,
-                                  ""
-                                ),
-                                _buildDropDownWidget(
-                                    context,
-                                    "",
-                                    _bankTypeController,
-                                    Icon(Icons.merge),
-                                    bankTypeList,
-                                    bankTypeValue,
-                                ""),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            _buildPasswordInput(
-                                context,
-                                "Comment",
-                                _commentController,
-                                Icon(
-                                  Icons.merge_type,
-                                  size: 18,
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black,
-                                ),
-                                isDarkMode),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildDropDownWidget(
-                                    context,
-                                    "",
-                                    _issueTypeController,
-                                    Icon(Icons.merge),
-                                    issueTypeList,
-                                    issueTypeValue,""),
-                                _buildDropDownWidget(
-                                    context,
-                                    "",
-                                    _methodTypeController,
-                                    Icon(Icons.merge),
-                                    methodTypeList,
-                                    methodTypeValue,""),
-                              ],
-                            ),
-                            SizedBox(height: 10),
                             Align(
                               alignment: Alignment.center,
                               child: Card(
                                 child: Container(
-                                  width: screenWidth*0.6,
+                                  width: screenWidth * 0.6,
                                   decoration: BoxDecoration(
-                                    color: AppColor.PRIMARY,
-                                    borderRadius: BorderRadius.all(Radius.circular(10))
-                                  ),
+                                      color: AppColor.PRIMARY,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
@@ -308,7 +323,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                               ),
                                             ),
                                       GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           _showPicker(context: context);
                                         },
                                         child: Icon(
@@ -317,7 +332,9 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                           size: 54,
                                         ),
                                       ),
-                                      SizedBox(width: 2,)
+                                      SizedBox(
+                                        width: 2,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -336,8 +353,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                     children: [
                       // Block interaction
                       ModalBarrier(
-                          dismissible: false,
-                          color: Colors.transparent),
+                          dismissible: false, color: Colors.transparent),
                       // Loader indicator
                       Center(
                         child: CircularProgressIndicator(),
@@ -493,61 +509,73 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       String text,
       TextEditingController nameController,
       Icon icon,
-      List<String> typeList,
-      String selectedValue,
+      List<ServiceTypeListDetails> typeList,
+      ServiceTypeListDetails selectedValue,
       String labelText) {
-    return Card(
-      child: Container(
-        height: 80,
-        width: screenWidth * 0.42,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("data"),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      dropdownColor: isDarkMode ? Colors.grey : Colors.white,
-                      alignment: Alignment.center,
-                      value: selectedValue,
-                      items: typeList.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          alignment: Alignment.centerLeft,
-                          child: Text(item,
-                              style: TextStyle(
-                                fontSize: 14,
-                              )),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) async {
-                        if (mounted) {
-                          setState(() {
-                            selectedValue = newValue!;
-                          });
-                        }
-                        print(selectedValue);
-                      },
-                      style: TextStyle(
-                          color: isDarkMode ? Colors.white : Colors.black),
-                      hint: Text(
-                        "en",
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(labelText),
+        Container(
+          width: labelText == "Payment Methods"
+              ? screenWidth * 0.9
+              : screenWidth * 0.42,
+          child: Card(
+            child: Container(
+              height: 55,
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<ServiceTypeListDetails>(
+                            dropdownColor:
+                                isDarkMode ? Colors.grey : Colors.white,
+                            alignment: Alignment.center,
+                            value: selectedValue,
+                            items: typeList.map((ServiceTypeListDetails item) {
+                              return DropdownMenuItem(
+                                value: item,
+                                alignment: Alignment.centerLeft,
+                                child: Text("${item.serviceName}",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    )),
+                              );
+                            }).toList(),
+                            onChanged: (ServiceTypeListDetails? newValue) async {
+                              if (mounted) {
+                                setState(() {
+                                  selectedValue = newValue!;
+                                });
+                              }
+                              print(selectedValue);
+                            },
+                            style: TextStyle(
+                                color:
+                                    isDarkMode ? Colors.white : Colors.black),
+                            hint: Text(
+                              "en",
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -565,7 +593,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
 
     if (time != null) {
       setState(() {
-        _paymentTimeController.text = "${time.hour}:${time.minute} ${time.period.name}";
+        _paymentTimeController.text =
+            "${time.hour}:${time.minute} ${time.period.name}";
         selectedTime = "${time.hour}:${time.minute} ${time.period.name}";
       });
     }
@@ -589,15 +618,19 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                   SizedBox(
                     width: 15,
                   ),
-                  Icon(Icons.access_time,
-                  color: isDarkMode? AppColor.WHITE: AppColor.TEXT_COLOR,),
+                  Icon(
+                    Icons.access_time,
+                    color: isDarkMode ? AppColor.WHITE : AppColor.TEXT_COLOR,
+                  ),
                   SizedBox(
                     width: 15,
                   ),
                   Text(
                     selectedTime,
                     style: TextStyle(
-                      color: selectedTime == "Payment Time" ? Colors.grey : AppColor.TEXT_COLOR,
+                      color: selectedTime == "Payment Time"
+                          ? Colors.grey
+                          : AppColor.TEXT_COLOR,
                       fontSize: 16.0,
                     ),
                   ),
@@ -689,7 +722,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 } else {
                   await Provider.of<MainViewModel>(context, listen: false)
                       .postMultiFormResponseToCreateSupport(
-                          url: "/api/v1/app/support_tickets",
+                          url: "/api/v1/app/payorio_support_tickets",
                           amount: _amountController.text,
                           bankType: _bankTypeController.text,
                           comment: _commentController.text,
@@ -739,19 +772,135 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
         ),
-        /*   Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Do you need any help?",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[400],
-            ),
-          ),
-        ),*/
       ],
     );
   }
+
+
+  Future<void> _fetchData() async {
+    print("Fetch Data");
+    try {
+      setState(() {
+        //_isLoadingMore = true;
+      });
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          isInternetConnected = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('No internet connection'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        ServiceTypeListRequest request = ServiceTypeListRequest(
+          countryId: countryId,
+        );
+        await Provider.of<MainViewModel>(context, listen: false)
+            .serviceTypeListData("api/v1/app/payorio_support_tickets/service_types", request);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        await getServiceTypeData(context, apiResponse);
+      }
+    } catch (error) {
+      print("Error fetching data: $error");
+    }
+  }
+  Future<void> _fetchPayorioMethodData() async {
+    print("Fetch Data");
+    try {
+      setState(() {
+        //_isLoadingMore = true;
+      });
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          isInternetConnected = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('No internet connection'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        ServiceTypeListRequest request = ServiceTypeListRequest(
+          countryId: countryId,
+        );
+        await Provider.of<MainViewModel>(context, listen: false)
+            .serviceTypeListData("api/v1/app/payorio_support_tickets/payorio_methods", request);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        await getServiceTypeData(context, apiResponse);
+      }
+    } catch (error) {
+      print("Error fetching data: $error");
+    }
+  }
+  Future<void> _fetchPaymentMethodData() async {
+    print("Fetch Data");
+    try {
+      setState(() {
+        //_isLoadingMore = true;
+      });
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          isInternetConnected = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('No internet connection'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        ServiceTypeListRequest request = ServiceTypeListRequest(
+          countryId: countryId,
+        );
+        await Provider.of<MainViewModel>(context, listen: false)
+            .serviceTypeListData("api/v1/app/payorio_support_tickets/payment_methods", request);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        await getServiceTypeData(context, apiResponse);
+      }
+    } catch (error) {
+      print("Error fetching data: $error");
+    }
+  }
+
+  Future<void> getServiceTypeData(BuildContext context, ApiResponse apiResponse) async {
+    ServiceTypeListResponse? serviceTypeListResponse   =
+    apiResponse.data as ServiceTypeListResponse?;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return;
+      case Status.COMPLETED:
+        final newItems = serviceTypeListResponse?.data ?? [];
+        setState(() {
+          print("isScroll:: ${newItems}");
+          serviceTypeList.addAll(newItems);
+        });
+        return;
+      case Status.ERROR:
+        if (apiResponse.message == "Invalid access token") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        }
+        return;
+      case Status.INITIAL:
+      default:
+        return;
+    }
+  }
+
 
   void Validate(String email) {
     bool isValid = EmailValidator.validate(email);

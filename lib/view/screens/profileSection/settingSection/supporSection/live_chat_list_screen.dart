@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:Payrio/model/response/live_chat_user_details_response.dart';
 import 'package:Payrio/model/services/cloud_firestore_service.dart';
 import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -31,19 +30,23 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
 
   late CloudFirestoreService service;
   final TextEditingController _controller = TextEditingController();
+  late Stream<QuerySnapshot<Map<String, dynamic>>> _commentStream;
 
   @override
   void initState() {
     super.initState();
+    service = CloudFirestoreService(FirebaseFirestore.instance);
+
     _scrollToBottom();
     Helper.getProfileDetails().then((profile) {
       setState(() {
         userId = "${profile?.userId}";
         fistName = "${profile?.firstName}";
         lastName = "${profile?.lastName}";
+        _commentStream = service.getUsers(userId);
       });
     });
-    service = CloudFirestoreService(FirebaseFirestore.instance);
+
     inputValid = false;
   }
 
@@ -68,7 +71,6 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
       }
     });
   }
-
 
   void _addMessage(String message) {
     LiveChatResponse liveChatResponse = LiveChatResponse(
@@ -122,104 +124,113 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  userId != "" ?
-                  Expanded(
-                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream:  service.getUsers(userId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                                ConnectionState.waiting ||
-                            snapshot.connectionState == ConnectionState.none) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Text('Error fetching data: ${snapshot.error}');
-                        } else if (snapshot.hasData &&
-                            snapshot.data?.docs.isEmpty == true) {
-                          return const Center(child: Text('No Messages'));
-                        }
+                  userId != ""
+                      ? Expanded(
+                          child: StreamBuilder<
+                              QuerySnapshot<Map<String, dynamic>>>(
+                            stream: _commentStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.waiting ||
+                                  snapshot.connectionState ==
+                                      ConnectionState.none) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Text(
+                                    'Error fetching data: ${snapshot.error}');
+                              } else if (snapshot.hasData &&
+                                  snapshot.data?.docs.isEmpty == true) {
+                                return const Center(child: Text('No Messages'));
+                              }
 
-                        final documents = snapshot.data?.docs ?? [];
-                        final liveChatResponses = documents.map((doc) {
-                          return LiveChatResponse.fromJson(doc.data());
-                        }).toList();
+                              final documents = snapshot.data?.docs ?? [];
+                              final liveChatResponses = documents.map((doc) {
+                                return LiveChatResponse.fromJson(doc.data());
+                              }).toList();
 
-                        // Scroll to the bottom whenever new data arrives
-                        //WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _scrollToBottom();
-                        //});
+                              // Scroll to the bottom whenever new data arrives
+                              //WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _scrollToBottom();
+                              //});
 
-                        return ListView.builder(
-                          //shrinkWrap: true,
-                          //scrollDirection: Axis.vertical,
-                          controller: _scrollController,
-                          //physics: const BouncingScrollPhysics(),
-                          itemCount: liveChatResponses.length,
-                          itemBuilder: (context, index) {
-                            final response = liveChatResponses[index];
-                            final isUserMessage = response.user == 2;
-                            final messageAlignment = isUserMessage
-                                ? Alignment.topRight
-                                : Alignment.topLeft;
-                            final messageColor = isUserMessage
-                                ? AppColor.PRIMARY
-                                : isDarkMode
-                                    ? AppColor.WHITE
-                                    : AppColor.BLACK;
-                            final textColor = isUserMessage
-                                ? AppColor.WHITE
-                                : isDarkMode
-                                    ? AppColor.BLACK
-                                    : AppColor.WHITE;
-                            final timeTextColor =
-                                isDarkMode ? AppColor.WHITE : AppColor.BLACK;
+                              return ListView.builder(
+                                //shrinkWrap: true,
+                                //scrollDirection: Axis.vertical,
+                                controller: _scrollController,
+                                //physics: const BouncingScrollPhysics(),
+                                itemCount: liveChatResponses.length,
+                                itemBuilder: (context, index) {
+                                  final response = liveChatResponses[index];
+                                  final isUserMessage = response.user == 2;
+                                  final messageAlignment = isUserMessage
+                                      ? Alignment.topRight
+                                      : Alignment.topLeft;
+                                  final messageColor = isUserMessage
+                                      ? AppColor.PRIMARY
+                                      : isDarkMode
+                                          ? AppColor.WHITE
+                                          : AppColor.BLACK;
+                                  final textColor = isUserMessage
+                                      ? AppColor.WHITE
+                                      : isDarkMode
+                                          ? AppColor.BLACK
+                                          : AppColor.WHITE;
+                                  final timeTextColor = isDarkMode
+                                      ? AppColor.WHITE
+                                      : AppColor.BLACK;
 
-                            return Align(
-                              alignment: messageAlignment,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                        maxWidth: screenWidth * 0.6,
-                                        minWidth: screenWidth * 0.3),
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                      ),
-                                      color: messageColor,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10.0,
-                                            left: 10.0,
-                                            right: 6.0,
-                                            bottom: 10.0),
-                                        child: Text(
-                                          response.text ?? 'No Last Name',
-                                          overflow: TextOverflow.visible,
-                                          style: TextStyle(color: textColor),
-                                          textAlign: TextAlign.left,
+                                  return Align(
+                                    alignment: messageAlignment,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              maxWidth: screenWidth * 0.6,
+                                              minWidth: screenWidth * 0.3),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            color: messageColor,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 6.0,
+                                                  bottom: 10.0),
+                                              child: Text(
+                                                response.text ?? 'No Last Name',
+                                                overflow: TextOverflow.visible,
+                                                style:
+                                                    TextStyle(color: textColor),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 6.0),
+                                          child: Text(
+                                            "${response.createdAt?.toDate().hour.toString() ?? '00'} : ${response.createdAt?.toDate().minute.toString() ?? '00'}",
+                                            style: TextStyle(
+                                                color: timeTextColor,
+                                                fontSize: 10),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 6.0),
-                                    child: Text(
-                                      "${response.createdAt?.toDate().hour.toString() ?? '00'} : ${response.createdAt?.toDate().minute.toString() ?? '00'}",
-                                      style: TextStyle(
-                                          color: timeTextColor, fontSize: 10),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ) : Center(child: Text('No Messages')),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        )
+                      : Center(child: Text('No Messages')),
                   Card(
                     elevation: 5,
                     child: Container(

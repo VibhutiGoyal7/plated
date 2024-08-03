@@ -1,3 +1,5 @@
+import 'package:floor/floor.dart';
+
 class TransactionListResponse {
   String? message;
   List<TransactionDetails>? data;
@@ -23,18 +25,20 @@ class TransactionListResponse {
   }
 }
 
+@entity
 class TransactionDetails {
-  int? id;
-  String? amount;
-  String? bankType;
-  String? bankService;
-  String? requestType;
-  String? paymentRequestId;
-  String? trxId;
-  String? currency;
-  String? status;
-  String? createdAt;
-  int? customerId;
+  @primaryKey
+  final int? id;
+  final String? amount;
+  final String? bankType;
+  final String? bankService;
+  final String? requestType;
+  final String? paymentRequestId;
+  final String? trxId;
+  final String? currency;
+  final String? status;
+  final String? createdAt;
+  final int? customerId;
 
   TransactionDetails({
     required this.id,
@@ -64,6 +68,22 @@ class TransactionDetails {
       createdAt: json["created_at"] as String?,
       customerId: json["customer_id"] as int?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "amount": amount,
+      "bank_type": bankType,
+      "bank_service": bankService,
+      "request_type": requestType,
+      "payment_request_id": paymentRequestId,
+      "trx_id": trxId,
+      "currency": currency,
+      "status": status,
+      "created_at": createdAt,
+      "customer_id": customerId,
+    };
   }
 }
 

@@ -41,7 +41,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
 
   static const maxDuration = Duration(seconds: 2);
   bool isDataLoading = false;
-  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -261,10 +260,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     headingTextSize: 14,
                     subHeadingTextSize: 13,
                   ),
-                  /*buildProfileSection(Languages.of(context)!.labelLastname, lastName),
-                buildProfileSection(Languages.of(context)!.labelEmail, email),
-               // buildProfileSection(Languages.of(context)!.labelUsername, userName),
-                buildBirthdateSection(),*/
                 ],
               ),
 

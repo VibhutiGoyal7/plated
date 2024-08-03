@@ -10,6 +10,7 @@ import 'package:Payrio/model/request/exustingUserRequest.dart';
 import 'package:Payrio/model/request/generateOtpTpinChange.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/serviceTypeListRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
@@ -305,6 +306,19 @@ class MainRepository {
     print(supportListRequest);
     dynamic response =
         await _payrioService.postResponse(value, supportListRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    CreateSupportTicketResponse mediaList =
+    CreateSupportTicketResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<CreateSupportTicketResponse> serviceTypeListData(
+      String value, ServiceTypeListRequest serviceTypeListRequest) async {
+    print(serviceTypeListRequest);
+    dynamic response =
+    await _payrioService.postResponse(value, serviceTypeListRequest);
     print(value);
     final jsonData = response;
     print(jsonData);

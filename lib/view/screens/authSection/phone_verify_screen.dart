@@ -36,7 +36,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   String dropdownValue = "";
 
   late double screenWidth;
-  String selectedItem ="";
+  String selectedItem = "";
 
   void setLocale(Locale locale) {
     setState(() {
@@ -185,98 +185,107 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-        onTap: (){
-          hideKeyBoard();
-        },
-        child: Stack(
-          children: [
-            SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      Container(
-                        height: screenHeight * 0.15,
-                        child: Text(
-                          "Phone\n Verification",
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w600,
+        //resizeToAvoidBottomInset: false,
+        body: GestureDetector(
+      onTap: () {
+        hideKeyBoard();
+      },
+      child: SafeArea(
+        child: Stack(children: [
+          Container(
+            height: screenHeight,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight:
+                      screenHeight - MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          Container(
+                            height: screenHeight * 0.15,
+                            child: Text(
+                              "Phone\n Verification",
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            alignment: AlignmentDirectional.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        alignment: AlignmentDirectional.center,
+                        ],
                       ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Container(
-                      width: screenWidth,
-                      child: Card(
-                        margin: EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 20),
-                              _buildLabelText(
-                                  context, "Enter your mobile number", 16, true),
-                              _buildLabelText(
-                                  context,
-                                  "We will send you a confirmation code",
-                                  12,
-                                  false),
-                              Column(
+                      Expanded(
+                        child: Container(
+                          width: screenWidth,
+                          child: Card(
+                            margin: EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 40),
-                                  _buildPhoneInput(context, isDarkMode),
-                                  SizedBox(
-                                    height: screenHeight * 0.2,
+                                  SizedBox(height: 20),
+                                  _buildLabelText(context,
+                                      "Enter your mobile number", 16, true),
+                                  _buildLabelText(
+                                      context,
+                                      "We will send you a confirmation code",
+                                      12,
+                                      false),
+                                  Column(
+                                    children: [
+                                      SizedBox(height: 40),
+                                      _buildPhoneInput(context, isDarkMode),
+                                      SizedBox(
+                                        height: screenHeight * 0.2,
+                                      ),
+                                    ],
                                   ),
+                                  Spacer(),
+                                  Center(
+                                    child: _buildFooter(context, apiResponse),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  )
                                 ],
                               ),
-                              Spacer(),
-                              Center(
-                                child: _buildFooter(context, apiResponse),
-                              ),
-                              SizedBox(
-                                height: 30,
-                              )
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      /*_buildLabelText(
+                          context, Languages.of(context)!.appName, 16, false),*/
+                    ],
                   ),
-                  /*_buildLabelText(
-                      context, Languages.of(context)!.appName, 16, false),*/
-                ],
+                ),
               ),
             ),
-            isLoading
-                ? Stack(
-                    children: [
-                      ModalBarrier(
-                          dismissible: false,
-                          color: Colors.transparent),
-                      // Loader indicator
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  )
-                : SizedBox(),
-          ],
-        ),
+          ),
+          isLoading
+              ? Stack(
+                  children: [
+                    ModalBarrier(dismissible: false, color: Colors.transparent),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
+              : SizedBox(),
+        ]),
       ),
-    );
+    ));
   }
 
   _buildLabelText(BuildContext context, String text, int size, bool isBold) {
@@ -292,8 +301,8 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   void _changeItem(CountryData? newValue) {
     setState(() {
       print("${newValue?.id}");
-      countryCode =  int.parse("${newValue?.id}");
-      phoneCode =  "${newValue?.code}";
+      countryCode = int.parse("${newValue?.id}");
+      phoneCode = "${newValue?.code}";
       selectedItem = "${newValue?.flagImageUrl}";
     });
   }
@@ -339,11 +348,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                          final RenderBox overlay = Overlay.of(context)
+                              .context
+                              .findRenderObject() as RenderBox;
                           showMenu(
                             context: context,
                             position: RelativeRect.fromRect(
-                              Rect.fromLTWH(0, 290, overlay.size.width, overlay.size.height),
+                              Rect.fromLTWH(0, 290, overlay.size.width,
+                                  overlay.size.height),
                               Offset.zero & overlay.size,
                             ),
                             items: countryList.map((item) {
@@ -356,7 +368,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                                         "${item.flagImageUrl}",
                                         height: 24,
                                         width: 40,
-                                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
                                           if (loadingProgress == null) {
                                             return child;
                                           } else {
@@ -376,9 +390,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                                     SizedBox(width: 5),
                                     Text(
                                       "+${item.phoneCode}",
-                                      style: TextStyle(
-                                        color: AppColor.WHITE
-                                      ),
+                                      style: TextStyle(color: AppColor.WHITE),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
@@ -396,25 +408,27 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                             selectedItem.isEmpty
                                 ? Container(width: 40)
                                 : Image.network(
-                              "${Uri.parse(selectedItem)}",
-                              height: 24,
-                              width: 40,
-                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.white30,
-                                    highlightColor: Colors.grey,
-                                    child: Container(
-                                      height: 24,
-                                      width: 40,
-                                      color: Colors.grey,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
+                                    "${Uri.parse(selectedItem)}",
+                                    height: 24,
+                                    width: 40,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.white30,
+                                          highlightColor: Colors.grey,
+                                          child: Container(
+                                            height: 24,
+                                            width: 40,
+                                            color: Colors.grey,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
                             SizedBox(width: 5),
                             Icon(Icons.keyboard_arrow_down_sharp),
                           ],
@@ -525,7 +539,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           ),
         ),
         GestureDetector(
-          onTap: (){
+          onTap: () {
             Navigator.pushReplacementNamed(context, "/SignInScreen");
           },
           child: Padding(

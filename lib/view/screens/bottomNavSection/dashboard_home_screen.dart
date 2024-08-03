@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Payrio/model/db/PayorioDatabase.dart';
 import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
@@ -44,6 +45,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   late List<Shortcutitemlist> _shortcutCardsList;
   bool _isRefreshing = false;
   double _dragOffset = 0.0;
+  late PayorioDatabase database;
 
   static const maxDuration = Duration(seconds: 2);
 
@@ -93,7 +95,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     super.initState();
     imageUrl = "";
     flagImg = "";
-
+    $FloorPayorioDatabase
+        .databaseBuilder('payorio_database.db')
+        .build()
+        .then((value) async {
+      this.database = value;
+    });
     Helper.getProfileDetails().then((profile) {
       setState(() {
         name = profile?.firstName;
@@ -101,24 +108,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         currencySymbol = profile?.countryCurrencySymbol;
       });
     });
-/*
-    @override
-    void didChangeAppLifecycleState(AppLifecycleState state) {
-      switch (state) {
-        case AppLifecycleState.resumed:
-          onResumed();
-          break;
-        case AppLifecycleState.inactive:
-          //onPaused();
-          break;
-        case AppLifecycleState.paused:
-          //onInactive();
-          break;
-        case AppLifecycleState.detached:
-          onDetached();
-          break;
-      }
-    }*/
     _isChecked = List<bool>.generate(
         5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
@@ -153,6 +142,27 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         await Helper.saveUserBalance(dashboardResponse?.customerData?.balance);
         await Helper.saveCurrencySymbol(
             dashboardResponse?.customerData?.countryCurrencySymbol);
+        CustomerData? customerData = dashboardResponse?.customerData;
+
+        CustomerData? customer = await database.personDao
+            .findCustomerByEmail("${customerData?.email}");
+        if (mounted) {
+          ToastComponent.showToast(
+              context: context, message: "${customer?.imageUrl}");
+          if (customer?.email?.isNotEmpty == true) {
+            await database.personDao.updateCustomer(customerData!);
+          } else {
+            await database.personDao.insertCustomer(customerData!);
+          }
+        }
+
+        dashboardResponse?.customerRecentTxn
+            ?.map((transactionData) async => {
+                  await database.dashboardTransactionDao
+                      .insertTransaction(transactionData!)
+                })
+            .toList();
+
         setState(() {
           dashBoardKycStatus =
               dashboardResponse?.customerData?.kycStatus == null
@@ -172,14 +182,15 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   ? ""
                   : dashboardResponse?.customerData?.countryCurrencySymbol;
           //   flagImg = dashboardResponse?.customerData?. == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
-          transactionList = dashboardResponse?.customerRecentTxn
-              as List<TransactionDetails>;
+          transactionList =
+              dashboardResponse?.customerRecentTxn as List<TransactionDetails>;
           isLoading = false;
         });
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == Languages.of(context)!.labelInvalidAccessToken) {
+        if (apiResponse.message ==
+            Languages.of(context)!.labelInvalidAccessToken) {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
@@ -228,17 +239,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           if (calledShortCut == Languages.of(context)!.labelAdd) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/PaymentMethodScreen');
-          } else if(calledShortCut == Languages.of(context)!.labelWithdraw) {
+          } else if (calledShortCut == Languages.of(context)!.labelWithdraw) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/WithdrawScreen');
-          }else if(calledShortCut == Languages.of(context)!.labelRequestQR) {
+          } else if (calledShortCut == Languages.of(context)!.labelRequestQR) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == Languages.of(context)!.labelInvalidAccessToken) {
+        if (apiResponse.message ==
+            Languages.of(context)!.labelInvalidAccessToken) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -270,14 +282,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     setState(() {
       _isRefreshing = false;
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     _shortcutCardsList = [
-
       Shortcutitemlist(
           title: Languages.of(context)!.labelAddMoney,
           icon: Icons.add_rounded,
@@ -290,7 +300,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           title: Languages.of(context)!.labelRequestQR,
           icon: Icons.send,
           selected: true),
-  /*    Shortcutitemlist(
+      /*    Shortcutitemlist(
           title: Languages.of(context)!.labelTransfer,
           icon: Icons.transfer_within_a_station_sharp,
           selected: true),*/
@@ -353,9 +363,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         height: screenHeight * 0.28,
                         child: Image(
                           height: screenHeight * 0.28,
-                          image: AssetImage(isDarkMode ? "assets/header_night.png" :"assets/header.png"),
+                          image: AssetImage(isDarkMode
+                              ? "assets/header_night.png"
+                              : "assets/header.png"),
                           fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                          opacity: isDarkMode ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(.9),
+                          opacity: isDarkMode
+                              ? const AlwaysStoppedAnimation(.5)
+                              : const AlwaysStoppedAnimation(.9),
                         ),
                         alignment: AlignmentDirectional.center,
                       ),
@@ -369,19 +383,22 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               height: 45,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0,left: 5.0),
+                              padding:
+                                  const EdgeInsets.only(top: 12.0, left: 5.0),
                               child: Column(
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                              BorderRadius.circular(8.0),
+                                                  BorderRadius.circular(8.0),
                                             ),
                                             child: GestureDetector(
                                               onTap: () => {
@@ -389,72 +406,79 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                     context, '/ProfileScreen')
                                               },
                                               child: imageUrl == null ||
-                                                  imageUrl == ""
+                                                      imageUrl == ""
                                                   ? Container(
-                                                height: 40,
-                                                width: 40,
-                                                child: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundColor:
-                                                  AppColor.WHITE,
-                                                  backgroundImage: AssetImage(
-                                                    "assets/profile_user.png",
-                                                  ),
-                                                ),
-                                              )
+                                                      height: 40,
+                                                      width: 40,
+                                                      child: CircleAvatar(
+                                                        radius: 30,
+                                                        backgroundColor:
+                                                            AppColor.WHITE,
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                          "assets/profile_user.png",
+                                                        ),
+                                                      ),
+                                                    )
                                                   : ClipRRect(
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      100.0),
-                                                  child: Image.network(
-                                                    imageUrl as String,
-                                                    height: 40,
-                                                    width: 40,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder:
-                                                        (BuildContext context,
-                                                        Object exception,
-                                                        StackTrace?
-                                                        stackTrace) {
-                                                      // You can return any widget here to display in case of an error
-                                                      return Container(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100.0),
+                                                      child: Image.network(
+                                                        imageUrl as String,
                                                         height: 40,
                                                         width: 40,
-                                                        child: CircleAvatar(
-                                                          radius: 30,
-                                                          backgroundColor:
-                                                          AppColor.WHITE,
-                                                          backgroundImage:
-                                                          AssetImage(
-                                                            "assets/profile_user.png",
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    loadingBuilder: (BuildContext
-                                                    context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                        loadingProgress) {
-                                                      if (loadingProgress ==
-                                                          null) {
-                                                        return child;
-                                                      } else {
-                                                        return Shimmer
-                                                            .fromColors(
-                                                          baseColor:
-                                                          Colors.black45,
-                                                          highlightColor:
-                                                          Colors.black87,
-                                                          child: Container(
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                Object
+                                                                    exception,
+                                                                StackTrace?
+                                                                    stackTrace) {
+                                                          // You can return any widget here to display in case of an error
+                                                          return Container(
                                                             height: 40,
                                                             width: 40,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        );
-                                                      }
-                                                    },
-                                                  )),
+                                                            child: CircleAvatar(
+                                                              radius: 30,
+                                                              backgroundColor:
+                                                                  AppColor
+                                                                      .WHITE,
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                "assets/profile_user.png",
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        loadingBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                Widget child,
+                                                                ImageChunkEvent?
+                                                                    loadingProgress) {
+                                                          if (loadingProgress ==
+                                                              null) {
+                                                            return child;
+                                                          } else {
+                                                            return Shimmer
+                                                                .fromColors(
+                                                              baseColor: Colors
+                                                                  .black45,
+                                                              highlightColor:
+                                                                  Colors
+                                                                      .black87,
+                                                              child: Container(
+                                                                height: 40,
+                                                                width: 40,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                      )),
                                             ),
                                           ),
                                           SizedBox(width: 8),
@@ -466,41 +490,43 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                 Flexible(
                                                   child: Container(
                                                     child: Text(
-                                                     "${Languages.of(context)!.labelHi}, ${capitalizeFirstLetter("${name}")}",
-                                                      overflow: TextOverflow.ellipsis,
+                                                      "${Languages.of(context)!.labelHi}, ${capitalizeFirstLetter("${name}")}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                                dashBoardKycStatus == Languages.of(context)!.statusVerified
+                                                dashBoardKycStatus ==
+                                                        Languages.of(context)!
+                                                            .statusVerified
                                                     ? Icon(
-                                                  Icons.verified,
-                                                  color: Colors.green.shade700,
-                                                )
+                                                        Icons.verified,
+                                                        color: Colors
+                                                            .green.shade700,
+                                                      )
                                                     : SizedBox(),
                                               ],
                                             ),
                                           ),
-
                                         ],
                                       ),
-
                                       Row(
                                         children: [
                                           GestureDetector(
-                                            onTap: ()
-                                            {
+                                            onTap: () {
                                               setState(
-                                                    () {
+                                                () {
                                                   isAmountVisible =
-                                                  !isAmountVisible;
+                                                      !isAmountVisible;
                                                 },
                                               );
                                             },
-                                            child:Icon(
+                                            child: Icon(
                                               isAmountVisible
                                                   ? Icons.visibility
                                                   : Icons.visibility_off,
@@ -510,12 +536,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   : Colors.black,
                                             ),
                                           ),
-                                          SizedBox(width: 8,),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
                                           GestureDetector(
-                                            onTap: ()
-                                            {
-                                              Navigator.pushNamed(
-                                                  context, "/NotificationScreen");
+                                            onTap: () {
+                                              Navigator.pushNamed(context,
+                                                  "/NotificationScreen");
                                             },
                                             child: Icon(
                                               Icons.notifications,
@@ -532,7 +559,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                             ),
                             (dashBoardKycStatus != "" &&
-                                    dashBoardKycStatus != Languages.of(context)!.statusVerified &&
+                                    dashBoardKycStatus !=
+                                        Languages.of(context)!.statusVerified &&
                                     dashBoardKycStatus != null)
                                 ? GestureDetector(
                                     onTap: () {
@@ -547,9 +575,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Card(
-
                                             child: Container(
-
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 6, vertical: 3),
                                               decoration: BoxDecoration(
@@ -571,12 +597,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                           color: Colors.red,
                                                           width: 0.8))),
                                               child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     Text(
-                                                      Languages.of(context)!.labelKycNonVerified,
-                                                      style:
-                                                          TextStyle(fontSize: 10),
+                                                      Languages.of(context)!
+                                                          .labelKycNonVerified,
+                                                      style: TextStyle(
+                                                          fontSize: 10),
                                                     ),
                                                     SizedBox(
                                                       width: 4,
@@ -660,9 +688,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               _shortcutCardsList[index].title,
                                               _shortcutCardsList[index].icon);
                                         } else {
-                                          return _buildContainer(context,
-                                              Languages.of(context)!.labelMore
-                                              , Icons.more_horiz);
+                                          return _buildContainer(
+                                              context,
+                                              Languages.of(context)!.labelMore,
+                                              Icons.more_horiz);
                                         }
                                       },
                                     ),
@@ -718,7 +747,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                           "view all",
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,
+                                              color: isDarkMode
+                                                  ? AppColor.WHITE
+                                                  : AppColor.PRIMARY,
                                               fontWeight: FontWeight.w600),
                                         ),
                                         Align(
@@ -728,7 +759,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             width: screenWidth * 0.14,
                                             height: 0.5,
                                             decoration: BoxDecoration(
-                                                color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,),
+                                              color: isDarkMode
+                                                  ? AppColor.WHITE
+                                                  : AppColor.PRIMARY,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -738,124 +772,161 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                             ),
 
-                        Container(
-                          height: screenHeight * 0.3,
-                          margin: EdgeInsets.only(top: 6, left: 6, right: 6),
-                          child: isInternetConnected && !isLoading
-                              ? transactionList.isNotEmpty
-                              ? ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            controller: _scrollController,
-                            itemCount: transactionList.length > 0 ? transactionList.length : 0,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(bottom: 6),
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: (){
-
-                                  TransactionDialog.showDialogBox(context: context,transaction : transactionList[index], symbol: "${currencySymbol}");
-                                },
-                                child: Card(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(vertical: 4),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 50,
-                                                width: 50,
-                                                child: Card(
-                                                  shape: CircleBorder(
-                                                      side: BorderSide(
-                                                          width: 0,
-                                                          color: colorStatus(capitalizeFirstLetter(
-                                                              "${transactionList[index].status}")))),
-                                                  color: colorStatus(capitalizeFirstLetter(
-                                                      "${transactionList[index].status}")),
-                                                  child: Icon(
-                                                    Icons.call_made,
-                                                    color: Colors.white,
+                            Container(
+                              height: screenHeight * 0.3,
+                              margin:
+                                  EdgeInsets.only(top: 6, left: 6, right: 6),
+                              child: isInternetConnected && !isLoading
+                                  ? transactionList.isNotEmpty
+                                      ? ListView.builder(
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          controller: _scrollController,
+                                          itemCount: transactionList.length > 0
+                                              ? transactionList.length
+                                              : 0,
+                                          shrinkWrap: true,
+                                          padding:
+                                              const EdgeInsets.only(bottom: 6),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                TransactionDialog.showDialogBox(
+                                                    context: context,
+                                                    transaction:
+                                                        transactionList[index],
+                                                    symbol:
+                                                        "${currencySymbol}");
+                                              },
+                                              child: Card(
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 10),
+                                                  child: Container(
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 4),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 50,
+                                                              width: 50,
+                                                              child: Card(
+                                                                shape: CircleBorder(
+                                                                    side: BorderSide(
+                                                                        width:
+                                                                            0,
+                                                                        color: colorStatus(
+                                                                            capitalizeFirstLetter("${transactionList[index].status}")))),
+                                                                color: colorStatus(
+                                                                    capitalizeFirstLetter(
+                                                                        "${transactionList[index].status}")),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .call_made,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  capitalizeFirstLetter(
+                                                                      "${transactionList[index].paymentRequestId}"),
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          13),
+                                                                ),
+                                                                Text(
+                                                                  capitalizeFirstLetter(
+                                                                      "${transactionList[index].status}"),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          11,
+                                                                      color: colorStatus(
+                                                                          capitalizeFirstLetter(
+                                                                              "${transactionList[index].status}"))),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Column(
+                                                          children: [
+                                                            Text(
+                                                              addCurrencySymbolTransaction(
+                                                                  currencySymbol,
+                                                                  "${transactionList[index].amount}",
+                                                                  capitalizeFirstLetter(
+                                                                      "${transactionList[index].requestType}")),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 13,
+                                                                  color: colorPaymentType(
+                                                                      capitalizeFirstLetter(
+                                                                          "${transactionList[index].requestType}"))),
+                                                            ),
+                                                            Text(
+                                                              convertDateFormat(
+                                                                  "${transactionList[index].createdAt}"),
+                                                              style: TextStyle(
+                                                                  fontSize: 11),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 8,
-                                              ),
-                                              Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].paymentRequestId}"),
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 13),
-                                                  ),
-                                                  Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].status}"),
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        color: colorStatus(capitalizeFirstLetter(
-                                                            "${transactionList[index].status}"))),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                            );
+                                          },
+                                        )
+                                      : Center(
+                                          child: Text(
+                                            Languages.of(context)!
+                                                .labelNoTransaction,
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                addCurrencySymbolTransaction(
-                                                    currencySymbol,
-                                                    "${transactionList[index].amount}",
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].requestType}")),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 13,
-                                                    color: colorPaymentType(capitalizeFirstLetter(
-                                                        "${transactionList[index].requestType}"))),
-                                              ),
-                                              Text(
-                                                convertDateFormat(
-                                                    "${transactionList[index].createdAt}"),
-                                                style: TextStyle(fontSize: 11),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                        )
+                                  : Container(
+                                      child: ShimmerList(
+                                        itemCount: 3,
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                              : Center(
-                            child: Text(
-                              Languages.of(context)!.labelNoTransaction,
-                              style: TextStyle(fontSize: 15, color: Colors.grey),
                             ),
-                          )
-                              : Container(
-                            child: ShimmerList(
-                              itemCount: 3,
-                            ),
-                          ),
-                        ),
-
-                        ],
+                          ],
                         ),
                       ),
                     ],
@@ -868,9 +939,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               ? Stack(
                   children: [
                     // Block interaction
-                    ModalBarrier(
-                        dismissible: false,
-                        color: Colors.transparent),
+                    ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
                       child: CircularProgressIndicator(),
@@ -924,9 +993,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         if (index <= 1) {
                           return GestureDetector(
                             onTap: () {
-                              if (_shortcutCardsList[index].title == Languages.of(context)!.labelAdd) {
+                              if (_shortcutCardsList[index].title ==
+                                  Languages.of(context)!.labelAdd) {
                                 Navigator.pop(context);
-                                calledShortCut = Languages.of(context)!.labelAdd;
+                                calledShortCut =
+                                    Languages.of(context)!.labelAdd;
                                 _getKycStatus();
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelWithdraw) {
@@ -1131,7 +1202,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         }
                       else if (text == Languages.of(context)!.labelRequestQR)
                         {
-                          calledShortCut = Languages.of(context)!.labelRequestQR,
+                          calledShortCut =
+                              Languages.of(context)!.labelRequestQR,
                           _getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelWithdraw)
@@ -1183,7 +1255,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       getKycStatus(context, apiResponse);
     }
   }
-
 
   void _fetchDashboardData() async {
     setState(() {

@@ -188,7 +188,7 @@ class LanguageEn extends Languages {
 
   @override
   String get labelEmailVerifiedContent =>
-      "Your Email has been successfully verified via OTP which was sent on your email address";
+      "Your Email has been successfully verified.";
 
   @override
   String get labelForgotPass => "Forgot Password";

@@ -77,7 +77,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
 
               _buildFooter(
                   context: context,
-                  text: "SignUp",
+                  text: "Register",
                   onTap: () {
                     Navigator.pushNamed(context, '/PhoneVerifyScreen');
                   }),
