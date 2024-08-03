@@ -38,6 +38,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   var screenHeight;
   var screenWidth;
   var countryCurrencySymbol;
+  var country;
   var currentBalance;
   late bool isDarkMode;
 
@@ -63,6 +64,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         countryCurrencySymbol = symbol;
+      });
+    });
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
     _scrollController.addListener(_loadMore);
@@ -105,7 +111,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('No internet connection'),
+              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
@@ -114,14 +120,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         TransactionListRequest request = TransactionListRequest(
           pageNo: pageKey,
           pageSize: _numberOfPostsPerRequest,
-          paymentRequestId: "",
-          trxId: "",
-          requestType: nonCapitalizeString(requestType),
           status: nonCapitalizeString(status),
+          uniqueId: '',
+          transactionType: nonCapitalizeString(requestType),
         );
         await Provider.of<MainViewModel>(context, listen: false)
             .transactionListData(
-                "api/v1/app/payment_transactions/list", request);
+                "/api/v1/app/wallet_transactions/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getTransactionData(context, apiResponse, pageKey, isScroll);
@@ -154,7 +159,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -264,15 +269,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         Column(
                           children: [
                             Text(
-                              "Total Balance",
+                              "${Languages.of(context)?.labelTotalBalance}",
                               style: TextStyle(
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.normal),
                             ),
                             isInternetConnected && !isLoading
                                 ? Text(
-                                    addCurrencySymbol(
-                                        countryCurrencySymbol, currentBalance),
+                                    currencyFormat(
+                                        countryCurrencySymbol, currentBalance, country),
                                     style: TextStyle(
                                         fontSize: 32.0,
                                         fontWeight: FontWeight.w600,
@@ -386,7 +391,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                       )
                                     : Center(
                                         child: Text(
-                                          "No Transactions",
+                                          "${Languages.of(context)?.labelNoTransaction}",
                                           style: TextStyle(
                                               fontSize: 15, color: Colors.grey),
                                         ),
@@ -449,7 +454,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Filter Payments",
+                        "${Languages.of(context)?.labelFilterPayment}",
                         style: TextStyle(fontSize: 22),
                       ),
                       IconButton(
@@ -463,24 +468,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ],
                   ),
                   Text(
-                    "Status",
+                    "${Languages.of(context)?.labelStatus}",
                     style: TextStyle(fontSize: 16),
                   ),
                   Row(
                     children: [
-                      filterStatusCard("Success", setState),
-                      filterStatusCard("Pending", setState),
-                      filterStatusCard("Rejected", setState),
+                      filterStatusCard("${Languages.of(context)?.labelSuccess}", setState),
+                      filterStatusCard("${Languages.of(context)?.labelPending}", setState),
+                      filterStatusCard("${Languages.of(context)?.labelRejected}", setState),
                     ],
                   ),
                   Text(
-                    "Request Type",
+                    "${Languages.of(context)?.labelRequestType}",
                     style: TextStyle(fontSize: 16),
                   ),
                   Row(
                     children: [
-                      filterRequestTypeCard("Deposit", setState),
-                      filterRequestTypeCard("Withdraw", setState),
+                      filterRequestTypeCard("${Languages.of(context)?.labelDeposit}", setState),
+                      filterRequestTypeCard("${Languages.of(context)?.labelWithdraw}", setState),
                     ],
                   ),
                   _buildFooter(context, apiResponse),
@@ -598,7 +603,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "Clear All",
+                    "${Languages.of(context)?.labelClearAll}",
                     style: TextStyle(color: AppColor.PRIMARY),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -626,7 +631,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    "Apply",
+                    "${Languages.of(context)?.labelApply}",
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -686,36 +691,67 @@ class TransactionItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      child: Card(
-                        shape: CircleBorder(
-                            side: BorderSide(
-                                width: 0,
-                                color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
-                        color: colorStatus(
-                            capitalizeFirstLetter("${transaction.status}")),
-                        child: Icon(Icons.call_made, color: Colors.white),
+                    Card(
+                      margin: EdgeInsets.all(0),
+                      child: Container(
+                        height: 31,
+                        width: 31,
+                        margin: EdgeInsets.all(8),
+                        child: Text("${convertDateMonthFormat("${transaction.createdAt}")}",
+                          style: TextStyle(fontSize: 11),textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    /*Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: Card(
+                                                  shape: CircleBorder(
+                                                      side: BorderSide(
+                                                          width: 0,
+                                                          color: colorStatus(capitalizeFirstLetter(
+                                                              "${transaction.status}")))),
+                                                  color: colorStatus(capitalizeFirstLetter(
+                                                      "${transaction.status}")),
+                                                  child: Icon(
+                                                    Icons.call_made,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),*/
+                    SizedBox(
+                      width: 8,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            Icon(
+                                transaction.transactionType == "${Languages.of(context)?.statusWithdraw}" || transaction.transactionType == "${Languages.of(context)?.statusTransfer}"?
+                                Icons.call_made : Icons.call_received,
+                                size: 15,
+                                color: colorStatus(capitalizeFirstLetter(
+                                    "${transaction.status}"))
+                            ),
+                            Text(
+                              capitalizeFirstLetter(
+                                  "${transaction.uniqueId}"),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13),
+                            ),
+                          ],
+                        ),
                         Text(
                           capitalizeFirstLetter(
-                              "${transaction.paymentRequestId}"),
+                              "${transaction.status}"),
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14),
+                              fontSize: 11,
+                              color: colorStatus(capitalizeFirstLetter(
+                                  "${transaction.status}"))),
                         ),
-                        Text(capitalizeFirstLetter("${transaction.status}"),
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
                       ],
                     ),
                   ],
@@ -723,18 +759,22 @@ class TransactionItem extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                        addCurrencySymbolTransaction(
-                            symbol,
-                            "${transaction.amount}",
-                            capitalizeFirstLetter(
-                                "${transaction.requestType}")),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: colorPaymentType(capitalizeFirstLetter(
-                                "${transaction.requestType}")))),
-                    /*Text(convertDateFormat("${transaction.createdAt}"),
-                        style: TextStyle(fontSize: 12)),*/
+                      addCurrencySymbolTransaction(
+                          symbol,
+                          "${transaction.amount}",
+                          capitalizeFirstLetter(
+                              "${transaction.transactionType}")),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          color: colorPaymentType(capitalizeFirstLetter(
+                              "${transaction.transactionType}"))),
+                    ),
+                    Text(
+                      "${convertTime(
+                          "${transaction.createdAt}")}",
+                      style: TextStyle(fontSize: 11),
+                    ),
                   ],
                 ),
               ],
@@ -745,163 +785,4 @@ class TransactionItem extends StatelessWidget {
     );
   }
 
-  void _showModal(
-      {required BuildContext context,
-      required TransactionDetails transaction}) {
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
-              scrollable: true,
-              insetPadding: EdgeInsets.all(10),
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    margin: EdgeInsets.only(bottom: 6),
-                    child: Wrap(
-                      spacing: 20,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            capitalizeFirstLetter("${transaction.requestType}"),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 16),
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            transaction.bankService != null
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Bank Service :"),
-                                          Text(capitalizeFirstLetter(
-                                              "${transaction.bankService}"))
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            transaction.amount != null
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Amount :"),
-                                      Text(
-                                          addCurrencySymbolTransaction(
-                                              symbol,
-                                              "${transaction.amount}",
-                                              capitalizeFirstLetter(
-                                                  "${transaction.requestType}")),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: colorPaymentType(
-                                                  capitalizeFirstLetter(
-                                                      "${transaction.requestType}"))))
-                                    ],
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Status :"),
-                                Text(
-                                  capitalizeFirstLetter(
-                                      "${transaction.status}"),
-                                  style: TextStyle(
-                                      color: colorStatus(capitalizeFirstLetter(
-                                          "${transaction.status}"))),
-                                )
-                              ],
-                            ),
-                            transaction.bankType != null
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Bank Type :"),
-                                          Text(capitalizeFirstLetter(
-                                              "${transaction.bankType}"))
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Currency :"),
-                                Text("${transaction.currency}")
-                              ],
-                            ),
-                            /*SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Request Type"),
-                            Text("${transaction.requestType}")
-                          ],
-                        ),*/
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Payment Request Id :"),
-                                Text("${transaction.paymentRequestId}")
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 }

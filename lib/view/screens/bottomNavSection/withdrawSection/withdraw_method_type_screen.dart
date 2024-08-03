@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../languageSection/Languages.dart';
+import '../../../../languageSection/Languages.dart';
 
-class PaymentMethodScreen extends StatefulWidget {
+
+class WithdrawMethodTypeScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
+
+  WithdrawMethodTypeScreen({Key? key, this.data}) : super(key: key);
   @override
-  _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
+  _WithdrawMethodTypeScreenState createState() => _WithdrawMethodTypeScreenState();
 }
 
-class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
+class _WithdrawMethodTypeScreenState extends State<WithdrawMethodTypeScreen> {
   bool isLoading = false;
   String kycStatus = "";
   String amount = "";
@@ -53,33 +57,33 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamed(context, '/BottomNav');
+              Navigator.pushNamed(context, '/WithdrawMethodScreen');
             },
           ),
           title: Text(
-            "${Languages.of(context)?.labelPaymentMethod}",
+            "${widget.data}",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
         body: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-          child:
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+              child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SizedBox(
-              height: 8,
-            ),
-            GestureDetector(
-              onTap: () {
-                //_showPicker(context: context);
-                Navigator.pushNamed(context, "/PaymentMethodTypeScreen",
-                    arguments: "${Languages.of(context)?.labelLocalDistributors}");
-              },
-              child: _buildCard(context, "${Languages.of(context)?.labelLocalDistributors}",
-                  "assets/bank_statement.png", isDarkMode),
-            )
-          ]),
-        )));
+                SizedBox(
+                  height: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    //_showPicker(context: context);
+                    Navigator.pushNamed(context, "/WithdrawScreen",
+                        arguments: "${Languages.of(context)?.labelPay2Local}");
+                  },
+                  child: _buildCard(context, "${Languages.of(context)?.labelPay2Local}",
+                      "assets/bank_statement.png", isDarkMode),
+                )
+              ]),
+            )));
   }
 
   _buildCard(BuildContext context, String title, String icon, bool isDarkMode) {
@@ -92,56 +96,52 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         width: double.infinity,
         child: isLoading
             ? Shimmer.fromColors(
-                baseColor: Colors.white38,
-                highlightColor: Colors.grey,
-                child: Container(
-                  width: double.infinity,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.white38,
-                    borderRadius: BorderRadius.circular(
-                        8.0), // Adjust the radius as needed
+          baseColor: Colors.white38,
+          highlightColor: Colors.grey,
+          child: Container(
+            width: double.infinity,
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.white38,
+              borderRadius: BorderRadius.circular(
+                  8.0), // Adjust the radius as needed
+            ),
+          ),
+        )
+            : Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Image(
+                alignment: Alignment.topLeft,
+                width: 25,
+                image: AssetImage(icon),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
                   ),
                 ),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                        child: Image(
-                          alignment: Alignment.topLeft,
-                          width: 25,
-                          image: AssetImage(icon),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.call_made_sharp,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      size: 18,
-                    ),
-                  )
-                ],
               ),
+            ),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.call_made_sharp,
+                color: isDarkMode ? Colors.white : Colors.black,
+                size: 18,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

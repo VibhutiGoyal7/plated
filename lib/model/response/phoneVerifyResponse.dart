@@ -10,6 +10,7 @@ class PhoneVerifyResponse {
   final String? message;
   final String? isProfileSetupDone;
   final int? emailOtpExpireAt;
+  final int? status;
 
   PhoneVerifyResponse({
     this.mobileOtp,
@@ -23,6 +24,7 @@ class PhoneVerifyResponse {
     this.emailOtpExpireAt,
     this.isProfileSetupDone,
     this.message,
+    this.status,
   });
 
   factory PhoneVerifyResponse.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class PhoneVerifyResponse {
       isProfileSetupDone: json['data']?['is_profile_setup_done'] as String?,
       emailOtpExpireAt: json['data']?['email_otp_expire_at'] as int?,
       message: json['message'] as String?,
+      status: json['status'] as int?,
     );
   }
 }

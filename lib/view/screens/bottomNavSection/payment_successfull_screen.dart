@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -37,6 +38,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
   String phoneNo="";
   String amount="";
   String? currencySymbol="";
+  String? country="";
   late double screenWidth;
   late double screenHeight;
   late bool isDarkMode;
@@ -57,6 +59,11 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
         currencySymbol = symbol;
       });
     });
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
+      });
+    });
   }
 
   @override
@@ -71,6 +78,16 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                      onTap: (){
+                        captureAndDownloadScreenshot();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:12.0, vertical: 4),
+                        child: Icon(Icons.file_download),
+                      ))),
               Screenshot(
                 controller: screenshotController,
                 child: Container(
@@ -90,25 +107,25 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                         height: 110,
                       ),
                       Text(
-                        addCurrencySymbol(currencySymbol, amount),
+                        currencyFormat("${currencySymbol}", amount , "${country}"),
                         style: TextStyle(fontSize: 38 , fontWeight: FontWeight.w600, letterSpacing: 0.8),
                       ),
                       SizedBox(
                         height: 8,
                       ),
-                      Text("Paid to ${name}",
+                      Text("${Languages.of(context)?.labelPaidTo} ${name}",
                           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100,color: isDarkMode ? Colors.white : Colors.black),),
-                      Text("User Id ${widget.data?.receiverUsername}",
+                      Text("${Languages.of(context)?.labelUserId} ${widget.data?.receiverUsername}",
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100,color: isDarkMode ? Colors.white : Colors.black)),
                       SizedBox(
                         height: 100,
                       ),
                       Text(
-                        "${date} at ${time}",
+                        "${date} ${Languages.of(context)?.labelAt} ${time}",
                         style: TextStyle(fontSize: 13,color: isDarkMode ? Colors.white : Colors.black),
                       ),
                       Text(
-                        "Transaction Id: ${widget.data?.paymentTransactionId}",
+                        "${Languages.of(context)?.labelTransactionId} ${widget.data?.paymentTransactionId}",
                         style: TextStyle(fontSize: 13,color: isDarkMode ? Colors.white : Colors.black),
                       ),
                       SizedBox(height: 70,),
@@ -141,7 +158,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                         width: 4,
                       ),
                       Text(
-                        "Share screenshot",
+                        "${Languages.of(context)?.labelShareScreenshot}",
                         style: TextStyle(fontSize: 14),
                       ),
 
@@ -228,6 +245,19 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
       print(onError);
     }
   }
+  void captureAndDownloadScreenshot() async {
+    // Capture the screenshot
+    Uint8List? screenshot = await screenshotController.capture();
+    print(screenshot);
+
+    if (screenshot != null) {
+      // Save the screenshot to the gallery
+      final result = await ImageGallerySaver.saveImage(screenshot);
+      print(result); // Print or handle the result
+    }
+  }
+
+
 
   Widget _buildFooter(BuildContext context) {
     return Container(
@@ -242,7 +272,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                 Navigator.pushReplacementNamed(context, '/BottomNav');
               },
               child: Text(
-                "Done",
+                "${Languages.of(context)?.labelDone}",
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(

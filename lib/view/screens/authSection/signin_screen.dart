@@ -39,7 +39,7 @@ class _SigninScreenState extends State<SigninScreen> {
     passwordVisible = true;
     inputValid = false;
     Helper.getUserId().then((id) {
-      print("id${id}");
+     // print("id${id}");
       setState(() {
         if (id != null && id.isNotEmpty) {
           isChecked = true;
@@ -372,14 +372,14 @@ class _SigninScreenState extends State<SigninScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Save ID",
+                          "${Languages.of(context)?.labelSaveId}",
                           style: TextStyle(fontSize: 10),
                         ),
                         Checkbox(
                           checkColor: Colors.white,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
-                          semanticLabel: "Save ID",
+                          semanticLabel: "${Languages.of(context)?.labelSaveId}",
                           side: BorderSide(
                               color: isDarkMode ? Colors.white : Colors.black),
                           value: isChecked,
@@ -507,7 +507,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('No internet connection'),
+                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );
@@ -525,7 +525,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Please enter valid details.'),
+                    content: Text('${Languages.of(context)?.labelPleaseEnterAllDetails}'),
                     duration: maxDuration,
                   ));
                 }

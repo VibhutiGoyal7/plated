@@ -9,11 +9,13 @@ import 'package:video_player/video_player.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
+import '../../../model/response/kycStatusResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 import '../../component/shimmer_card.dart';
+import '../../component/toastMessage.dart';
 
 class AccountDetailScreen extends StatefulWidget {
   @override
@@ -29,6 +31,8 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   var isEmailVerified;
   var isPasswordVisible = false;
   bool isDarkMode = false;
+
+  String? kycStatus;
 
   String? nationalIdImg;
   String? passportImg;
@@ -76,6 +80,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     password = "";
     phoneNumber = "";
     email = "";
+    kycStatus = "";
     userId = "";
     isEmailVerified = false;
     isPasswordVisible = false;
@@ -83,10 +88,50 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       isLoading = true;
     });
 
+    _fetchKycStatus();
     _fetchData();
     _fetchPasswordData();
     _fetchDocData();
   }
+
+
+  Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
+    KycStatusResponse? kycStatusResponse =
+    apiResponse.data as KycStatusResponse?;
+    var message = apiResponse.message.toString();
+    setState(() {
+      isLoading = false;
+    });
+    print("message ${message}");
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("rwrwr ${kycStatusResponse?.kycStatus}");
+        setState(() {
+          kycStatus = kycStatusResponse?.kycStatus;
+        });
+
+
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (apiResponse.message == Languages.of(context)!.labelInvalidAccessToken) {
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {
+          ToastComponent.showToast(
+              context: context, message: apiResponse.message);
+        }
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Loading...'),
+        );
+    }
+  }
+
 
   Future<Widget> getDocData(
       BuildContext context, ApiResponse apiResponse) async {
@@ -158,7 +203,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -249,6 +294,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                         ),
                       ),
                     ),
+/*
                     TabBar(
                       dividerColor: Colors.transparent,
                       tabs: [
@@ -260,33 +306,21 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                       child: TabBarView(
                         children: [IdentityProof(), AddressProof()],
                       ),
-                    ),
-                    /*isInternetConnected && !isLoading
+                    ),*/
+                    isInternetConnected && !isLoading
                         ? Column(
                       children: [
                         if (isPassportAvailable)
                           _buildDocumentOption(
                               context,
-                              Languages.of(context)!.labelPassport,
-                              Languages.of(context)!.labelPhotoPage,
-                              '/DocImageScreen',
-                              'passport',
-                              "${passportImg}",
-                              "assets/passport.png",
-                              "${passportStatus}",
-                              "${passportRejectedReason}"),
+                              "Identity Proof",
+                              "${kycStatus}"),
                         if (isDrivingLicenceAvailable)
                           _buildDocumentOption(
                               context,
-                              Languages.of(context)!.labelDrivingLicence,
-                              Languages.of(context)!.labelFrontNBack,
-                              '/DocImageScreen',
-                              'driving_licence',
-                              "${drivingLicenseImg}",
-                              "assets/license.png",
-                              "${drivingLicenceStatus}",
-                              "${drivingLicenceRejectedReason}"),
-                        if (isNationalIdAvailable)
+                              "Address Proof",
+                              "${kycStatus}",),
+                        /*if (isNationalIdAvailable)
                           _buildDocumentOption(
                               context,
                               Languages.of(context)!.labelNationalId,
@@ -341,14 +375,15 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                               "assets/video.png",
                               "${kycVideoStatus}",
                               "${kycVideoRejectedReason}"),
-
+*/
                       ],
                     )
                         :
                     Padding(
                       padding: EdgeInsets.all(8),
                       child: ShimmerCard(),
-                    ),*/
+                    ),
+
                   ],
                 ),
               ),
@@ -507,13 +542,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   Widget _buildDocumentOption(
       BuildContext context,
       String title,
-      String subtitle,
-      String route,
-      String data,
-      String image,
-      String icon,
-      String status,
-      String rejectionReason) {
+      String status,) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
@@ -522,121 +551,84 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       verificationStatus = Languages.of(context)!.labelVerified;
       textColor = Colors.green;
     } else if (status == "rejected") {
-      verificationStatus = "Rejected";
+      verificationStatus = "Click to verify";
       textColor = Colors.red;
     } else if (status == "in_progress") {
-      verificationStatus = Languages.of(context)!.labelInProgress;
+      verificationStatus = "Click to verify"/*"Verification under process"*/;
       textColor = Colors.deepOrange;
     } else {
-      verificationStatus = Languages.of(context)!.labelPending;
+      verificationStatus = "Click to verify";
       textColor = Colors.orange;
     }
     return GestureDetector(
       onTap: () async {
-        if (verificationStatus == "Pending") {
+        if (verificationStatus == "Verification under process" || verificationStatus == "Click to verify" ) {
           if (await checkPermissionStatus()) {
-            Navigator.pushReplacementNamed(context, route,
-                arguments: "${data}");
-          } else {
-            Navigator.pushNamed(context, "/CameraAccessScreen",
-                arguments: "${data}");
-          }
-        } else {
-          if (title != Languages.of(context)!.labelVideoVerification) {
-            _showModal(context, image, false, verificationStatus, route, data,
-                rejectionReason);
+            Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
           }
         }
 
-        /*if (verificationStatus == "Pending" ||
-            verificationStatus == "Rejected") {
-          if (await checkPermissionStatus()) {
-            Navigator.pushReplacementNamed(context, route,
-                arguments: "${data}");
-          } else {
-            Navigator.pushNamed(context, "/CameraAccessScreen",
-                arguments: "${data}");
-          }
-        }*/
       },
       child: Card(
         child: isLoading
             ? Shimmer.fromColors(
-                baseColor: Colors.white38,
-                highlightColor: Colors.grey,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
-                  child: Container(
-                    width: double.infinity,
-                    //height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white38,
-                      borderRadius: BorderRadius.circular(
-                          8.0), // Adjust the radius as needed
-                    ),
-                  ),
-                ),
-              )
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Image(
-                          alignment: Alignment.topLeft,
-                          width: 25,
-                          image: AssetImage(icon),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                title,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                (status == "rejected")
-                                    ? rejectionReason
-                                    : subtitle,
-                                style: TextStyle(
-                                  color: (status == "rejected")
-                                      ? textColor
-                                      : isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: 6),
-                        child: Text(
-                          verificationStatus,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: textColor,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          baseColor: Colors.white38,
+          highlightColor: Colors.grey,
+          child: Padding(
+            padding:
+            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+            child: Container(
+              width: double.infinity,
+              //height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white38,
+                borderRadius: BorderRadius.circular(
+                    8.0), // Adjust the radius as needed
               ),
+            ),
+          ),
+        )
+            : Padding(
+          padding:
+          const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18),
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                /*Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Image(
+                    alignment: Alignment.topLeft,
+                    width: 25,
+                    image: AssetImage(icon),
+                  ),
+                ),*/
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  alignment: Alignment.centerRight,
+                  margin: EdgeInsets.only(right: 6),
+                  child: verificationStatus == Languages.of(context)!.labelVerified ?
+                      Icon(Icons.verified, color: Colors.green.shade700,)
+                  :Text(
+                    verificationStatus,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: textColor,
+                        fontWeight: FontWeight.w300),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -647,6 +639,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     return await isCameraGranted;
   }
 
+/*
   void _showModal(BuildContext context, String? image, bool isVideo,
       String status, String route, String data, String rejectionReason) {
     if (isVideo) {
@@ -809,6 +802,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       },
     );
   }
+*/
 
   void _fetchData() async {
     Helper.getProfileDetails().then((profileDetails) {
@@ -832,7 +826,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );
@@ -851,196 +845,33 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     password = await Helper.getPassword();
   }
+  void _fetchKycStatus() async {
+    setState(() {
+      isLoading = true;
+    });
 
-  Widget IdentityProof() {
-    return isInternetConnected && !isLoading
-        ? Column(
-            children: [
-              if (isPassportAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelPassport,
-                    Languages.of(context)!.labelPhotoPage,
-                    '/DocImageScreen',
-                    'passport',
-                    "${passportImg}",
-                    "assets/passport.png",
-                    "${passportStatus}",
-                    "${passportRejectedReason}"),
-              if (isDrivingLicenceAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelDrivingLicence,
-                    Languages.of(context)!.labelFrontNBack,
-                    '/DocImageScreen',
-                    'driving_licence',
-                    "${drivingLicenseImg}",
-                    "assets/license.png",
-                    "${drivingLicenceStatus}",
-                    "${drivingLicenceRejectedReason}"),
-              if (isNationalIdAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelNationalId,
-                    Languages.of(context)!.labelFrontNBack,
-                    '/DocImageScreen',
-                    'national_id',
-                    "${nationalIdImg}",
-                    "assets/id_card.png",
-                    "${nationalIdStatus}",
-                    "${nationalIdRejectedReason}"),
-              if (isAddressLycAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Address KYC",
-                    'Front ',
-                    '/DocImageScreen',
-                    'address_kyc',
-                    "${addressKycImg}",
-                    "assets/address.png",
-                    "${addressKycStatus}",
-                    "${addressKycRejectedReason}"),
-              if (isBankStatementAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Bank Statement",
-                    'Front ',
-                    '/DocImageScreen',
-                    'bank_statement',
-                    "${bankStatementImg}",
-                    "assets/bank_statement.png",
-                    "${bankStatementStatus}",
-                    "${bankStatementRejectedReason}"),
-              if (isGeoLocAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Geolocation KYC",
-                    'Front ',
-                    '/DocImageScreen',
-                    'geolocation_kyc',
-                    "${geoLocImg}",
-                    "assets/geo_Location.jpg",
-                    "${geoLocStatus}",
-                    "${geoLocRejectedReason}"),
-              if (isKycVideoAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelVideoVerification,
-                    'Front ',
-                    '/VideoKycScreen',
-                    'video_kyc_clip',
-                    "${kycVideo}",
-                    "assets/video.png",
-                    "${kycVideoStatus}",
-                    "${kycVideoRejectedReason}"),
-            ],
-          )
-        : Padding(
-            padding: EdgeInsets.all(8),
-            child: ShimmerCard(),
-          );
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        isInternetConnected = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      //await Future.delayed(Duration(milliseconds: 1));
+      await Provider.of<MainViewModel>(context, listen: false)
+          .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
+      ApiResponse apiResponse =
+          Provider.of<MainViewModel>(context, listen: false).response;
+      getKycStatus(context, apiResponse);
+    }
   }
 
-  Widget AddressProof() {
-    return isInternetConnected && !isLoading
-        ? Column(
-            children: [
-              if (isPassportAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelPassport,
-                    Languages.of(context)!.labelPhotoPage,
-                    '/DocImageScreen',
-                    'passport',
-                    "${passportImg}",
-                    "assets/passport.png",
-                    "${passportStatus}",
-                    "${passportRejectedReason}"),
-              if (isDrivingLicenceAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelDrivingLicence,
-                    Languages.of(context)!.labelFrontNBack,
-                    '/DocImageScreen',
-                    'driving_licence',
-                    "${drivingLicenseImg}",
-                    "assets/license.png",
-                    "${drivingLicenceStatus}",
-                    "${drivingLicenceRejectedReason}"),
-              if (isNationalIdAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelNationalId,
-                    Languages.of(context)!.labelFrontNBack,
-                    '/DocImageScreen',
-                    'national_id',
-                    "${nationalIdImg}",
-                    "assets/id_card.png",
-                    "${nationalIdStatus}",
-                    "${nationalIdRejectedReason}"),
-              if (isAddressLycAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Address KYC",
-                    'Front ',
-                    '/DocImageScreen',
-                    'address_kyc',
-                    "${addressKycImg}",
-                    "assets/address.png",
-                    "${addressKycStatus}",
-                    "${addressKycRejectedReason}"),
-              if (isBankStatementAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Bank Statement",
-                    'Front ',
-                    '/DocImageScreen',
-                    'bank_statement',
-                    "${bankStatementImg}",
-                    "assets/bank_statement.png",
-                    "${bankStatementStatus}",
-                    "${bankStatementRejectedReason}"),
-              if (isGeoLocAvailable)
-                _buildDocumentOption(
-                    context,
-                    "Geolocation KYC",
-                    'Front ',
-                    '/DocImageScreen',
-                    'geolocation_kyc',
-                    "${geoLocImg}",
-                    "assets/geo_Location.jpg",
-                    "${geoLocStatus}",
-                    "${geoLocRejectedReason}"),
-              if (isKycVideoAvailable)
-                _buildDocumentOption(
-                    context,
-                    Languages.of(context)!.labelVideoVerification,
-                    'Front ',
-                    '/VideoKycScreen',
-                    'video_kyc_clip',
-                    "${kycVideo}",
-                    "assets/video.png",
-                    "${kycVideoStatus}",
-                    "${kycVideoRejectedReason}"),
-            ],
-          )
-        : Padding(
-            padding: EdgeInsets.all(8),
-            child: ShimmerCard(),
-          );
-  }
-}
 
-class IdentityProof extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView();
-  }
-}
 
-class AddressProof extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView();
-  }
 }

@@ -340,10 +340,10 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                           firstDate: DateTime(1950),
                           //DateTime.now() - not to allow to choose before today.
                           lastDate: DateTime.now().subtract(Duration(days: 365*18)),
-                          helpText: "Select Date Of Birth",
-                          confirmText: "Confirm",
-                          errorFormatText: 'Enter valid date',
-                          errorInvalidText: 'Enter date in valid range',
+                          helpText: "${Languages.of(context)?.labelSelectDob}",
+                          confirmText: "${Languages.of(context)?.labelConfirm}",
+                          errorFormatText: '${Languages.of(context)?.labelEnterValidDate}',
+                          errorInvalidText: '${Languages.of(context)?.labelEnterDateInValidRange}',
                           builder: (context, child) {
                             return Theme(
                               data: isDarkMode
@@ -460,7 +460,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     onPressed: () {
                       setState(
                         () {
-                          if (text == "Password") {
+                          if (text == "${Languages.of(context)?.labelPassword}") {
                             passwordVisible = !passwordVisible;
                           } else {
                             confirmPasswordVisible = !confirmPasswordVisible;
@@ -501,7 +501,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content:
-                        Text('No internet connection'),
+                        Text('${Languages.of(context)?.labelNoInternetConnection}'),
                         duration: maxDuration,
                       ),
                     );
@@ -550,7 +550,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 }else if(_passwordController.text.length < 8){
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Password should have 8 or more characters.'),
+                      content: Text('${Languages.of(context)?.labelPasswordAlert}'),
                       duration: maxDuration,
                     ),
                   );
@@ -558,7 +558,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 }else if(_passwordController.text != _confirmPasswordController.text){
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("Password doesn't match"),
+                      content: Text("${Languages.of(context)?.labelPasswordDoesntMatch}"),
                       duration: maxDuration,
                     ),
                   );

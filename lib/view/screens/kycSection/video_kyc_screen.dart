@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/uploadKycResponse.dart';
 import '../../../theme/AppColor.dart';
@@ -69,7 +70,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
         Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "Invalid access token")
+        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}")
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),
@@ -248,7 +249,7 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('No internet connection'),
+                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );

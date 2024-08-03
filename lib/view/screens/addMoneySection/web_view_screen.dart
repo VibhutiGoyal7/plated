@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
   import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -166,7 +167,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return Scaffold(
       appBar: AppBar(toolbarHeight: 65,
         title: Text(
-          "Add Money",
+          "${Languages.of(context)?.labelAddMoney}",
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),

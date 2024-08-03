@@ -9,7 +9,7 @@ class ProfileResponse {
   final String? email;
   final String? address;
   final String? dob;
-  final String? status;
+  final int? status;
   final String? phoneNumber;
   final String? message;
   final String? username;
@@ -27,6 +27,7 @@ class ProfileResponse {
   final String? countryCurrencySymbol;
   final String? tpin;
   final String? token;
+  final String? dataStatus;
 
   ProfileResponse({
     this.firstName,
@@ -53,12 +54,14 @@ class ProfileResponse {
     this.tpin,
     this.activityPoints,
     this.isProfileSetupDone,
+    this.dataStatus,
     this.token
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
     return ProfileResponse(
       message: json['message'] as String?,
+      status: json['status'] as int?,
       firstName: json['data']?['first_name'] as String?,
       lastName: json['data']?['last_name'] as String?,
       userId: json['data']?['id'] as int?,
@@ -87,6 +90,7 @@ class ProfileResponse {
   factory ProfileResponse.fromSignIn(Map<String, dynamic> json) {
     return ProfileResponse(
       message: json['message'] as String?,
+      status: json['status'] as int?,
       firstName: json['data']?['customer']?['first_name'] as String?,
       lastName: json['data']?['customer']?['last_name'] as String?,
       userId: json['data']?['customer']?['id'] as int?,

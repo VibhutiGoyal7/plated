@@ -4,6 +4,7 @@ import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../languageSection/Languages.dart';
 import '../../../../model/response/checkCustomerReponse.dart';
 import '../../../../model/response/completeP2PResponse.dart';
 import '../../../../utils/Helper.dart';
@@ -33,6 +34,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
   String phoneNo = "";
   late double screenWidth;
   String? currencySymbol = "";
+  String? country = "";
   List<String> _inputValues = ['', '', '', ''];
   static const maxDuration = Duration(seconds: 2);
 
@@ -78,6 +80,12 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         currencySymbol = symbol;
+      });
+    });
+
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
   }
@@ -151,7 +159,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
 
         return Container();
       case Status.ERROR:
-        if (apiResponse.message == "Invalid access token") {
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
@@ -208,7 +216,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                               width: 8,
                             ),
                             Text(
-                              "Paying to:",
+                              "${Languages.of(context)?.labelPayingTo}",
                               style: TextStyle(fontSize: 16),
                             ),
                             Spacer(),
@@ -221,7 +229,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Phone No:"),
+                          Text("${Languages.of(context)?.labelPhoneNo}"),
                           SizedBox(
                             width: 10,
                           ),
@@ -238,12 +246,12 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Sending:"),
+                          Text("${Languages.of(context)?.labelSending}"),
                           SizedBox(
                             width: 10,
                           ),
-                          Text(addCurrencySymbol(
-                              currencySymbol, "${widget.data?.amount}")),
+                          Text(currencyFormat(
+                              "${currencySymbol}", "${widget.data?.amount}","${country}")),
                         ],
                       ),
                     ],
@@ -265,7 +273,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                           SizedBox(height: 20),
                           Center(
                             child: _buildLabelText(
-                                context, "Enter 4 digit TPIN", 20, true),
+                                context, "${Languages.of(context)?.labelEnter4DigitPin}", 20, true),
                           ),
                           SizedBox(height: 22),
                           _buildPhoneInput(context, screenWidth, isDarkMode),
@@ -284,7 +292,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                                   horizontal: 10, vertical: 6),
                               width: screenWidth * 0.65,
                               child: Text(
-                                "You are transferring money to ${widget.data?.receiverUsername}",
+                                "${Languages.of(context)?.labelYouAreTransferringMoneyTo}${widget.data?.receiverUsername}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 13),
@@ -343,7 +351,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No internet connection'),
+            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

@@ -7,7 +7,8 @@ class SetUpAccountResponse {
   final String? email;
   final String? address;
   final String? dob;
-  final String? status;
+  final int? status;
+  final String? dataStatus;
   final String? kycStatus;
   final String? message;
   final String? username;
@@ -29,6 +30,7 @@ class SetUpAccountResponse {
     this.address,
     this.dob,
     this.status,
+    this.dataStatus,
     this.isEmailVerified,
     this.kycStatus,
     this.message,
@@ -56,6 +58,7 @@ class SetUpAccountResponse {
       dob: json['data']?['dob'] as String?,
       kycStatus: json['data']?['kyc_status'] as String?,
       message: json['message'] as String?,
+      status: json['status'] as int?,
       username: json['data']?['username'] as String?,
       balance: json['data']?['balance'] as String?,
       activityPts: json['data']?['activity_points'] as int?,

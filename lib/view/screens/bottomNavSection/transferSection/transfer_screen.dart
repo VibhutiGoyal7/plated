@@ -37,6 +37,7 @@ class _TransferScreenState extends State<TransferScreen> {
   var phoneNo;
   var imageUrl;
   var countryCurrencySymbol;
+  var country;
   String countryBalance = "";
   final TextEditingController _inputController = TextEditingController();
   bool isLoading = false;
@@ -64,6 +65,11 @@ class _TransferScreenState extends State<TransferScreen> {
     Helper.getCurrencySymbol().then((symbol) {
       setState(() {
         countryCurrencySymbol = symbol;
+      });
+    });
+    Helper.getCountry().then((countryName) {
+      setState(() {
+        country = countryName;
       });
     });
   }
@@ -243,7 +249,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           countryCurrencySymbol != null
                               ? Text(
 
-                                  "${Languages.of(context)!.labelBalance}: ${addCurrencySymbol(countryCurrencySymbol , countryBalance)}",
+                                  "${Languages.of(context)!.labelBalance}: ${currencyFormat(countryCurrencySymbol , countryBalance, country)}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.normal,
                                       fontSize: 12.0),

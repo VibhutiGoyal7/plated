@@ -1,3 +1,4 @@
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _TpinCreateScreenState extends State<TpinCreateScreen> {
               width: screenWidth,
               height: screenHeight * 0.15,
               margin: EdgeInsets.zero,
-              child: _buildLabelText(context, "Transaction \nPIN ", 28, true),
+              child: _buildLabelText(context, "${Languages.of(context)?.labelTransactionPin}", 28, true),
               alignment: AlignmentDirectional.center,
             ),
             Expanded(
@@ -106,7 +107,7 @@ class _TpinCreateScreenState extends State<TpinCreateScreen> {
                       SizedBox(height: 20),
                       Center(
                         child: _buildLabelText(
-                            context, "Enter 4 digit TPIN", 20, true),
+                            context, "${Languages.of(context)?.labelEnterPin}", 20, true),
                       ),
                       SizedBox(height: 22),
                       _buildPhoneInput(context, screenWidth, isDarkMode),

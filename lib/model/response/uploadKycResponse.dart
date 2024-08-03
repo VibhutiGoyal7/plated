@@ -12,6 +12,7 @@ class UploadKycDocResponse {
   final String? kycDocsImageUrl;
   final String? kycVidFile;
   final String? message;
+  final int? status;
 
   UploadKycDocResponse({
     this.customerId,
@@ -24,11 +25,13 @@ class UploadKycDocResponse {
     this.kycDocsImageUrl,
     this.kycVidFile,
     this.message,
+    this.status,
   });
 
   factory UploadKycDocResponse.fromJson(Map<String, dynamic> json) {
     return UploadKycDocResponse(
       message: json['message'] as String?,
+      status: json['status'] as int?,
       customerId: json['data']?['customer_id'] as int?,
       documentType: json['data']?['document_type'] as String?,
       userId: json['data']?['id'] as int?,

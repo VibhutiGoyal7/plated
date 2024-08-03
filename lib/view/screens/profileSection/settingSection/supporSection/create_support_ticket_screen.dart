@@ -714,7 +714,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                     isLoading = false;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('No internet connection'),
+                        content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
                         duration: maxDuration,
                       ),
                     );

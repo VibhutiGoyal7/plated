@@ -9,8 +9,8 @@ class NotificationDetailScreen extends StatefulWidget {
 
 class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   final NotificationData data = NotificationData(
-    notificationHeading: "Cheers! You won 100 Payario points",
-    notificationContent: "Because you created your account in Payario",
+    notificationHeading: "Cheers! You won 100 Payorio points",
+    notificationContent: "Because you created new account in Payorio",
   );
 
   @override
@@ -27,36 +27,38 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(18.0),
               child: Row(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (data.notificationHeading != null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            data.notificationHeading!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        Text(
+                          data.notificationHeading!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      if (data.notificationContent != null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            data.notificationContent!,
-                            style: TextStyle(
-                              fontSize: 14,
+                      SizedBox(height: 10,),
+                       (data.notificationContent != null)?
+                        Container(
+                          //height: MediaQuery.of(context).size.height *0.2,
+                          width: MediaQuery.of(context).size.width *0.9,
+                          child: Expanded(
+                            child: Text(
+                              data.notificationContent!,
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                              overflow: TextOverflow.visible,maxLines: null,
                             ),
                           ),
-                        ),
+                        ): SizedBox(),
                     ],
                   ),
-                  Spacer(),
+                  //Spacer(),
                   /*Icon(
                     Icons.arrow_forward,
                     ),*/

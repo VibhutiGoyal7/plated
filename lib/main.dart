@@ -7,8 +7,14 @@ import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/screens/addMoneySection/add_money_screen.dart';
+import 'package:Payrio/view/screens/addMoneySection/payment_method_screen.dart';
+import 'package:Payrio/view/screens/addMoneySection/payment_method_type_screen.dart';
+import 'package:Payrio/view/screens/addMoneySection/web_view_screen.dart';
+import 'package:Payrio/view/screens/authSection/forgot_password_screen.dart';
 import 'package:Payrio/view/screens/authSection/get_started_screen.dart';
 import 'package:Payrio/view/screens/authSection/money_safe_screen.dart';
+import 'package:Payrio/view/screens/authSection/new_forgot_pass_screen.dart';
+import 'package:Payrio/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:Payrio/view/screens/authSection/otp_verify_screen.dart';
 import 'package:Payrio/view/screens/authSection/phone_verify_screen.dart';
 import 'package:Payrio/view/screens/authSection/setup_account_screen.dart';
@@ -17,14 +23,18 @@ import 'package:Payrio/view/screens/authSection/splash_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_successfull_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/request_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_otp_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_tpin_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_method_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_method_type_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_access_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_screen.dart';
@@ -32,38 +42,27 @@ import 'package:Payrio/view/screens/kycSection/chooose_doc_screen.dart';
 import 'package:Payrio/view/screens/kycSection/select_country_screen.dart';
 import 'package:Payrio/view/screens/kycSection/verify_identity_screen.dart';
 import 'package:Payrio/view/screens/kycSection/video_kyc_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/live_chat_list_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_selection_screen.dart';
-import 'package:Payrio/view/screens/redeemSection/level_benefit_screen.dart';
 import 'package:Payrio/view/screens/notificationSection/notification_detail_s%20reen.dart';
 import 'package:Payrio/view/screens/notificationSection/notification_screen.dart';
-import 'package:Payrio/view/screens/addMoneySection/payment_method_screen.dart';
-import 'package:Payrio/view/screens/addMoneySection/payment_method_type_screen.dart';
 import 'package:Payrio/view/screens/profileSection/account_detail_screen.dart';
 import 'package:Payrio/view/screens/profileSection/address_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/change_password_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/change_tpin_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/create_support_ticket_screen.dart';
-import 'package:Payrio/view/screens/authSection/forgot_password_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/language_selection_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/manage_applock_screen.dart';
-import 'package:Payrio/view/screens/authSection/new_forgot_pass_screen.dart';
-import 'package:Payrio/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_data_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
 import 'package:Payrio/view/screens/profileSection/qr_scanner_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/change_password_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/change_tpin_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/language_selection_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/manage_applock_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/create_support_ticket_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_otp_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_screen.dart';
+import 'package:Payrio/view/screens/redeemSection/level_benefit_screen.dart';
 import 'package:Payrio/view/screens/redeemSection/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeemSection/redeem_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/request_qr_screen.dart';
-import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
-import 'package:Payrio/view/screens/addMoneySection/web_view_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -75,7 +74,7 @@ import 'languageSection/L10n.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   //await PushNotificationService().setupInteractedMessage();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
@@ -350,7 +349,7 @@ class _MyAppState extends State<MyApp> {
             '/WithdrawScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return WithdrawScreen();
+              return WithdrawScreen(data: args);
             },
             '/TpinCreateScreen': (context) {
               final args =
@@ -398,12 +397,6 @@ class _MyAppState extends State<MyApp> {
             '/CreateSupportTicketScreen': (context) {
               return CreateSupportTicketScreen();
             },
-            '/SupportSelectionScreen': (context) {
-              return SupportSelectionScreen();
-            },
-            '/LiveChatListScreen': (context) {
-              return LiveChatListScreen();
-            },
             '/PaymentMethodTypeScreen': (context) {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
@@ -413,7 +406,17 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return RequestQrScreen();
-            }
+            },
+            '/WithdrawMethodScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return WithdrawMethodScreen();
+            },
+            '/WithdrawMethodTypeScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return WithdrawMethodTypeScreen(data: args);
+            },
           }),
     );
   }
