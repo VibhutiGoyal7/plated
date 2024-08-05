@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../languageSection/Languages.dart';
+import '../../../../model/request/initiateP2PRequest.dart';
 import '../../../../model/response/checkCustomerReponse.dart';
 import '../../../../model/response/completeP2PResponse.dart';
+import '../../../../model/response/initiateP2PResponse.dart';
 import '../../../../utils/Helper.dart';
 import '../../../../utils/Util.dart';
 import '../../../component/connectivity_service.dart';
@@ -15,7 +17,7 @@ import '../../../component/session_expired_dialog.dart';
 import '../../../component/toastMessage.dart';
 
 class TransferTpinScreen extends StatefulWidget {
-  final CompleteP2PRequest? data; // Define the 'data' parameter here
+  final InitiateP2PRequest? data; // Define the 'data' parameter here
 
   TransferTpinScreen({Key? key, this.data}) : super(key: key);
 
@@ -27,7 +29,14 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
-
+  String amount = "0.00";
+  String paymentValidateBy = "";
+  String notes = "";
+  String imageUrl = "";
+  var receiverUsername;
+  var senderUsername;
+  var name;
+  var receiverPhoneNumber;
   String dropdownValue = "";
   bool isValid = false;
   bool resendOtp = false;
@@ -68,6 +77,13 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     super.initState();
     isValid = false;
     resendOtp = false;
+    receiverUsername = "${widget.data?.receiverUsername}";
+    paymentValidateBy = "${widget.data?.paymentValidateBy}";
+    name = "${widget.data?.fullName}";
+    receiverPhoneNumber = "${widget.data?.receiverPhoneNumber}";
+    notes = "${widget.data?.notes}";
+    amount = "${widget.data?.amount}";
+    imageUrl = "${widget.data?.imageUrl}";
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -98,10 +114,8 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     super.dispose();
   }
 
-  Future<Widget> completeTransactionResponse(
+  Future<Widget> initiateTransactionResponse(
       BuildContext context, ApiResponse apiResponse) async {
-    CompleteP2PResponse? completeP2PResponse =
-        apiResponse.data as CompleteP2PResponse?;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
@@ -110,64 +124,25 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("Complete Transaction ${completeP2PResponse?.amount}");
-        CheckCustomerResponse prefData = CheckCustomerResponse(
-            username: widget.data?.receiverUsername,
-            fullName: widget.data?.fullName,
-            phoneNumber: widget.data?.receiverPhoneNumber,
-            imageUrl: widget.data?.imageUrl);
-        print("PrefData ${prefData.username}");
-        List<CheckCustomerResponse>? prefResponse =
-            await Helper.getRecentP2PDetails();
-        // print("prefResponse ${prefResponse?[0].username}");
-        bool dataExist = false;
-        if (prefResponse?.length != null) {
-          for (int i = 0; i < prefResponse!.length; i++) {
-            if (prefData.username == prefResponse[i].username) {
-              dataExist = true;
-            }
-          }
-        } else {
-          dataExist = false;
-        }
-        if (!dataExist) {
-          if (prefResponse != null) {
-            prefResponse.add(prefData);
-            print("prefResponse ${prefResponse[0].username}");
-            Helper.saveRecentP2PDetails(prefResponse);
-          } else {
-            List<CheckCustomerResponse>? dataList = [];
-            Helper.saveRecentP2PDetails(dataList);
-          }
-        }
-
-        ToastComponent.showToast(context: context, message: message);
-
         CompleteP2PRequest data = CompleteP2PRequest(
-          otp: widget.data?.otp,
-          customerOtpId: widget.data?.customerOtpId,
-          paymentTransactionId: widget.data?.paymentTransactionId,
-          amount: widget.data?.amount,
-          imageUrl: widget.data?.imageUrl,
-          fullName: widget.data?.fullName,
-          receiverUsername: widget.data?.receiverUsername,
-          receiverPhoneNumber: widget.data?.receiverPhoneNumber,
+          otp: "",
+          fullName: name,
+          imageUrl: "",
+          amount: amount,
+          paymentTransactionId: "",
+          receiverPhoneNumber: receiverPhoneNumber,
+          receiverUsername: receiverUsername,
+          uniqueId: "",
         );
 
-        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen',
-            arguments: data);
-
-        return Container();
+        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen', arguments: data);
+        //Navigator.pushNamed(context, '/BottomNav');
+        return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
-          print(apiResponse.message);
-          SessionExpiredDialog.showDialogBox(context: context);
-        } else {
-          ToastComponent.showToast(context: context, message: message);
-        }
+        ToastComponent.showToast(context: context, message: message);
         return Center(
-            //child: Text('Please try again later!!!'),
-            );
+          child: Text('Please try again later!!!'),
+        );
       case Status.INITIAL:
       default:
         return Center(
@@ -341,6 +316,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     );
   }
 
+
   Future<void> _initiateTransaction(String tpin) async {
     setState(() {
       isLoading = true;
@@ -351,25 +327,31 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
             duration: maxDuration,
           ),
         );
       });
     } else {
-      CompleteP2PRequest completeP2PRequest = CompleteP2PRequest(
-          otp: widget.data?.otp,
-          tpin: tpin,
-          customerOtpId: widget.data?.customerOtpId,
-          paymentTransactionId: widget.data?.paymentTransactionId);
+      InitiateP2PRequest request = InitiateP2PRequest(
+        paymentValidateBy: paymentValidateBy,
+        notes: notes,
+        fullName: name,
+        imageUrl: imageUrl,
+        tpin: tpin,
+        amount: amount,
+        receiverUsername: receiverUsername,
+        receiverPhoneNumber: receiverPhoneNumber,
+      );
+      print("phno ${request.receiverPhoneNumber}");
+      print("username ${request.receiverUsername}");
       await Provider.of<MainViewModel>(context, listen: false)
-          .completeP2PTransaction(
-              "/api/v1/app/payment_transactions/complete_p2p_transaction",
-              completeP2PRequest);
-
+          .initiateP2PTransaction(
+          "api/v1/app/transfer_transactions/initiate_p2p_transaction",
+          request);
       ApiResponse apiResponse =
           Provider.of<MainViewModel>(context, listen: false).response;
-      completeTransactionResponse(context, apiResponse);
+      initiateTransactionResponse(context, apiResponse);
     }
   }
 

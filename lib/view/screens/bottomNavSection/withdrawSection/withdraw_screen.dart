@@ -344,10 +344,10 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("response: ${apiResponse}");
-        String redirectUrl = "${withDrawResponse?.callbackUrl}";
+        String redirectUrl = "${withDrawResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
 
-        _showModal(context, "${withDrawResponse?.requestedAmount}");
+        _showModal(context, "${_inputController.text}");
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -402,7 +402,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
                 await Provider.of<MainViewModel>(context, listen: false)
                     .withDrawData(
-                        "api/v1/app/payment_transactions/withdraw_money_from_wallet",
+                        "api/v1/app/wallet_transactions/withdraw_money_from_wallet",
                         request);
 
                 ApiResponse apiResponse =

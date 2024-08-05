@@ -649,9 +649,9 @@ class TransactionItem extends StatelessWidget {
                             side: BorderSide(
                                 width: 0,
                                 color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
+                                    "${transaction.status}"), context))),
                         color: colorStatus(
-                            capitalizeFirstLetter("${transaction.status}")),
+                            capitalizeFirstLetter("${transaction.status}"), context),
                         child: Icon(Icons.call_made, color: Colors.white),
                       ),
                     ),
@@ -670,7 +670,7 @@ class TransactionItem extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 12,
                                 color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
+                                    "${transaction.status}"), context))),
                       ],
                     ),
                   ],
@@ -794,7 +794,7 @@ class TransactionItem extends StatelessWidget {
                                       "${transaction.status}"),
                                   style: TextStyle(
                                       color: colorStatus(capitalizeFirstLetter(
-                                          "${transaction.status}"))),
+                                          "${transaction.status}"), context)),
                                 )
                               ],
                             ),

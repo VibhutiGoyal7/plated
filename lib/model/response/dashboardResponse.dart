@@ -16,13 +16,15 @@ class DashboardResponse {
 
   factory DashboardResponse.fromJson(Map<String, dynamic> json) {
     var list = json['data']?['customer_recent_transactions'] as List?;
-    List<TransactionDetails>? transactionList = list?.map((i) => TransactionDetails.fromJson(i)).toList();
+    List<TransactionDetails>? transactionList =
+        list?.map((i) => TransactionDetails.fromJson(i)).toList();
 
     return DashboardResponse(
       message: json['message'] as String?,
       status: json['status'] as int?,
       customerRecentTxn: json['data']?['customer_recent_transactions'] != null
-          ?transactionList : null,
+          ? transactionList
+          : null,
       customerData: json['data']?['customer_data'] != null
           ? new CustomerData.fromJson(json['data']?['customer_data'])
           : null,
@@ -33,7 +35,8 @@ class DashboardResponse {
     return {
       'message': message,
       'data': {
-        'customer_recent_transactions': customerRecentTxn?.map((e) => e.toJson()).toList(),
+        'customer_recent_transactions':
+            customerRecentTxn?.map((e) => e.toJson()).toList(),
         'customer_data': customerData?.toJson(),
       },
     };
@@ -43,45 +46,42 @@ class DashboardResponse {
 class DashboardTransaction {
   int? id;
   String? amount;
-  String? bankType;
-  String? bankService;
-  String? requestType;
-  String? paymentRequestId;
-  String? trxId;
-  String? currency;
+  String? transactionType;
+  String? uniqueId;
   String? status;
-  String? createdAt;
-  String? updatedAt;
   int? customerId;
+  String? username;
+  String? phoneNumber;
+  String? email;
+  String? fullName;
+  String? createdAt;
 
   DashboardTransaction({
     required this.id,
     required this.amount,
-    required this.bankType,
-    required this.bankService,
-    required this.requestType,
-    required this.paymentRequestId,
-    required this.trxId,
-    required this.currency,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.transactionType,
+    required this.uniqueId,
     required this.customerId,
+    required this.status,
+    required this.username,
+    required this.phoneNumber,
+    required this.email,
+    required this.fullName,
+    required this.createdAt,
   });
 
   factory DashboardTransaction.fromJson(Map<String, dynamic> json) {
     return DashboardTransaction(
       id: json["id"] as int?,
       amount: json["amount"] as String?,
-      bankType: json["bank_type"] as String?,
-      bankService: json["bank_service"] as String?,
-      requestType: json["request_type"] as String?,
-      paymentRequestId: json["payment_request_id"] as String?,
-      trxId: json["trx_id"] as String?,
-      currency: json["currency"] as String?,
+      transactionType: json["transaction_type"] as String?,
+      uniqueId: json["unique_id"] as String?,
+      username: json["username"] as String?,
+      email: json["email"] as String?,
+      phoneNumber: json["phone_number"] as String?,
       status: json["status"] as String?,
       createdAt: json["created_at"] as String?,
-      updatedAt: json["updated_at"] as String?,
+      fullName: json["full_name"] as String?,
       customerId: json["customer_id"] as int?,
     );
   }
@@ -90,15 +90,15 @@ class DashboardTransaction {
     return {
       "id": id,
       "amount": amount,
-      "bank_type": bankType,
-      "bank_service": bankService,
-      "request_type": requestType,
-      "payment_request_id": paymentRequestId,
-      "trx_id": trxId,
-      "currency": currency,
+      "transaction_type": transactionType,
+      "unique_id": uniqueId,
+      "username": username,
+      "email": email,
+      "phone_number": phoneNumber,
+      "currency": status,
       "status": status,
       "created_at": createdAt,
-      "updated_at": updatedAt,
+      "full_name": fullName,
       "customer_id": customerId,
     };
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../languageSection/Languages.dart';
+import '../model/request/shortcutItemList.dart';
 import '../view/component/toastMessage.dart';
 
 String capitalizeFirstLetter(String input) {
@@ -150,13 +152,13 @@ String addCurrencySymbolTransaction(
 }
 
 
-colorStatus(String status) {
+colorStatus(String status, BuildContext context) {
   Color color = Colors.black;
-  if (status == "Pending") {
+  if (status == Languages.of(context)!.labelPending) {
     color = Colors.orange;
-  } else if (status == "Success") {
+  } else if (status == Languages.of(context)!.labelSuccess) {
     color = Colors.green;
-  } else if (status == "Rejected") {
+  } else if (status == Languages.of(context)!.labelRejected) {
     color = Colors.red;
   }
   return color;
@@ -177,3 +179,61 @@ colorPaymentType(String status) {
 void hideKeyBoard() {
   FocusManager.instance.primaryFocus?.unfocus();
 }
+
+getShortCutList(BuildContext context)
+{
+  List<Shortcutitemlist> _shortcutCardsList = [
+    Shortcutitemlist(
+        title: Languages.of(context)!.labelAddMoney,
+        icon: Icons.add_rounded,
+        selected: true),
+    Shortcutitemlist(
+        title: Languages.of(context)!.labelWithdraw,
+        icon: Icons.call_made,
+        selected: true),
+    Shortcutitemlist(
+        title: Languages.of(context)!.labelRequestQR,
+        icon: Icons.send,
+        selected: true),
+    Shortcutitemlist(
+        title: Languages.of(context)!.labelExchange,
+        icon: Icons.currency_exchange,
+        selected: true),
+    Shortcutitemlist(
+        title: Languages.of(context)!.labelRewards,
+        icon: Icons.gif_box,
+        selected: false)
+  ];
+
+  return _shortcutCardsList;
+}
+
+
+/*
+
+void _fetchKycStatus() async {
+  setState(() {
+    isApiLoading = true;
+  });
+
+  bool isConnected = await _connectivityService.isConnected();
+  if (!isConnected) {
+    setState(() {
+      isApiLoading = false;
+      isInternetConnected = false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Languages.of(context)!.labelNoInternetConnection),
+          duration: maxDuration,
+        ),
+      );
+    });
+  } else {
+    //await Future.delayed(Duration(milliseconds: 1));
+    await Provider.of<MainViewModel>(context, listen: false)
+        .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
+    ApiResponse apiResponse =
+        Provider.of<MainViewModel>(context, listen: false).response;
+    getKycStatus(context, apiResponse);
+  }
+}*/

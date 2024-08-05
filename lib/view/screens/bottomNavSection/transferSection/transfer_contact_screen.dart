@@ -227,61 +227,17 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                                                       "assets/profile_user.png"),
                                                 ),
                                               )
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        100.0),
-                                                child: Image.network(
-                                                  prefResponse?[index]
-                                                      .imageUrl as String,
-                                                  height: 45,
-                                                  width: 45,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder:
-                                                      (BuildContext context,
-                                                          Object exception,
-                                                          StackTrace?
-                                                              stackTrace) {
-                                                    // You can return any widget here to display in case of an error
-                                                    return Container(
-                                                      height: 45,
-                                                      width: 45,
-                                                      child: CircleAvatar(
-                                                        radius: 30,
-                                                        backgroundColor:
-                                                            AppColor.WHITE,
-                                                        backgroundImage:
-                                                            AssetImage(
-                                                          "assets/profile_user.png",
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  loadingBuilder: (BuildContext
-                                                          context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                    if (loadingProgress ==
-                                                        null) {
-                                                      return child;
-                                                    } else {
-                                                      return Shimmer
-                                                          .fromColors(
-                                                        baseColor:
-                                                            Colors.white38,
-                                                        highlightColor:
-                                                            Colors.grey,
-                                                        child: Container(
-                                                          height: 45,
-                                                          width: 45,
-                                                          color:
-                                                              Colors.white,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                )),
+                                            : Container(
+                                          height: 45,
+                                          width: 45,
+                                          child: CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor:
+                                            AppColor.WHITE,
+                                            backgroundImage: AssetImage(
+                                                "assets/profile_user.png"),
+                                          ),
+                                        ),
                                         title: Text(
                                           prefResponse?[index].fullName
                                               as String,

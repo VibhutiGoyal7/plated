@@ -1,22 +1,13 @@
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/utils/Util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../languageSection/Languages.dart';
-import '../../../../model/apis/api_response.dart';
-import '../../../../model/request/completeP2PRequest.dart';
-import '../../../../model/response/createOtpChangePassResponse.dart';
-import '../../../../model/response/initiateP2PResponse.dart';
 import '../../../../theme/AppColor.dart';
 import '../../../../utils/Helper.dart';
-import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
-import '../../../component/toastMessage.dart';
 
 class TransferScreen extends StatefulWidget {
   final CheckCustomerResponse? data;
@@ -46,8 +37,6 @@ class _TransferScreenState extends State<TransferScreen> {
   late double screenWidth;
   late double screenHeight;
 
-  final ScrollController _scrollController = ScrollController();
-  List<String> _allLogList = ["100", "200", "300", "400", "550"];
   @override
   void initState() {
     super.initState();
@@ -79,108 +68,115 @@ class _TransferScreenState extends State<TransferScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    DateTime? lastBackPressed;
     return GestureDetector(
       onTap: () => hideKeyBoard(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(toolbarHeight: 65,
-        leading: GestureDetector(
-          onTap:(){
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back, size: 24,),
-        ),
-          title:  Text(
+        appBar: AppBar(
+          toolbarHeight: 65,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              size: 24,
+            ),
+          ),
+          title: Text(
             Languages.of(context)!.labelMoneyTransfer,
-            style: TextStyle(
-                fontWeight: FontWeight.w600, fontSize: 18.0),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
           ),
         ),
         body: Stack(
           children: [
-
             SafeArea(
               child: isComingSoon
                   ? Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             height: 8,
                           ),
                           imageUrl == null
                               ? Container(
-                            height: 55,
-                            width: 55,
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundColor: AppColor.WHITE,
-                              backgroundImage:
-                              AssetImage("assets/profile_user.png"),
-                            ),
-                          )
+                                  height: 55,
+                                  width: 55,
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: AppColor.WHITE,
+                                    backgroundImage:
+                                        AssetImage("assets/profile_user.png"),
+                                  ),
+                                )
                               : ClipRRect(
-                              borderRadius: BorderRadius.circular(100.0),
-                              child: Image.network(
-                                imageUrl,
-                                height: 55,
-                                width: 55,
-                                fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                  // You can return any widget here to display in case of an error
-                                  return Container(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  child: Image.network(
+                                    imageUrl,
                                     height: 55,
                                     width: 55,
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: AppColor.WHITE,
-                                      backgroundImage: AssetImage(
-                                        "assets/profile_user.png",
-                                      ),
-                                    ),
-                                  );
-                                },
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Shimmer.fromColors(
-                                      baseColor: Colors.white38,
-                                      highlightColor: Colors.grey,
-                                      child: Container(
-                                        height:55,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (BuildContext context,
+                                        Object exception,
+                                        StackTrace? stackTrace) {
+                                      // You can return any widget here to display in case of an error
+                                      return Container(
+                                        height: 55,
                                         width: 55,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                                  }
-                                },
-                              )),
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          backgroundColor: AppColor.WHITE,
+                                          backgroundImage: AssetImage(
+                                            "assets/profile_user.png",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.white38,
+                                          highlightColor: Colors.grey,
+                                          child: Container(
+                                            height: 55,
+                                            width: 55,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  )),
                           SizedBox(
                             height: 12,
                           ),
                           Text(
                             "${Languages.of(context)!.labelPaying} ${name}",
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                          ),Text(
-                            "${userName}",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w600),
                           ),
-                         /* Text("${phoneNo}",
+                          Text(
+                            "${userName}",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.normal),
+                          ),
+                          /* Text("${phoneNo}",
                               style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.normal,
                                   color: isDarkMode ? Colors.white70 : Colors.black54)),*/
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Text(
                             Languages.of(context)!.labelPleaseEnterAmt,
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.normal),
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -188,9 +184,11 @@ class _TransferScreenState extends State<TransferScreen> {
                                   color: Colors.grey),),*/
                               Card(
                                 child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.44,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.44,
                                   //margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
                                       border: Border(
@@ -200,8 +198,8 @@ class _TransferScreenState extends State<TransferScreen> {
                                         left: BorderSide(width: 0.2),
                                       )),
                                   child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
                                     child: TextField(
                                       style: TextStyle(
                                         fontSize: 24.0,
@@ -209,11 +207,11 @@ class _TransferScreenState extends State<TransferScreen> {
                                       controller: _inputController,
                                       autofocus: true,
                                       onChanged: (value) {
-                                    /*    int balance = extractNumber(countryBalance) - extractNumber(amount);
+                                        /*    int balance = extractNumber(countryBalance) - extractNumber(amount);
                                         print(balance);*/
                                         setState(() {
                                           amount = value;
-                                         // countryBalance = balance as String ;
+                                          // countryBalance = balance as String ;
                                         });
                                         //_checkInputValidation();
                                       },
@@ -230,7 +228,8 @@ class _TransferScreenState extends State<TransferScreen> {
                                       decoration: InputDecoration(
                                         counterText: "",
                                         border: InputBorder.none,
-                                        hintText: Languages.of(context)?.labelZero,
+                                        hintText:
+                                            Languages.of(context)?.labelZero,
                                       ),
                                     ),
                                   ),
@@ -248,8 +247,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           ),
                           countryCurrencySymbol != null
                               ? Text(
-
-                                  "${Languages.of(context)!.labelBalance}: ${currencyFormat(countryCurrencySymbol , countryBalance, country)}",
+                                  "${Languages.of(context)!.labelBalance}: ${currencyFormat(countryCurrencySymbol, countryBalance, country)}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.normal,
                                       fontSize: 12.0),
@@ -258,44 +256,6 @@ class _TransferScreenState extends State<TransferScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          /*Container(
-                            height:
-                                screenHeight * 0.065, // Set the desired height
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              controller: _scrollController,
-                              itemCount: _allLogList.length,
-                              padding: const EdgeInsets.only(bottom: 10),
-                              // Adjust padding if needed
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _inputController.text = _allLogList[index];
-                                    });
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.16, // Adjust width as needed
-                                    margin: EdgeInsets.all(4),
-                                    child: Card(
-                                      child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Text(
-                                            _allLogList[index],
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),*/
                           Spacer(),
                           _buildFooter(context),
                         ],
@@ -304,32 +264,30 @@ class _TransferScreenState extends State<TransferScreen> {
                   : Center(
                       child: Text(
                         Languages.of(context)!.labelComingSoon,
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
             ),
             isLoading
                 ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,
-                    color : Colors.black.withOpacity(0.3)),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            )
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black.withOpacity(0.3)),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
           ],
         ),
       ),
     );
   }
-
-
 
   Widget _buildFooter(BuildContext context) {
     return Container(
@@ -340,22 +298,23 @@ class _TransferScreenState extends State<TransferScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
-                //print(_amountController.text);
-                //String user = userName;
                 hideKeyBoard();
                 _checkInputValidation();
                 if (inputValid) {
                   InitiateP2PRequest request = InitiateP2PRequest(
+                      paymentValidateBy: "",
                       tpin: "",
                       amount: amount,
                       receiverUsername: userName,
                       receiverPhoneNumber: phoneNo,
-                      fullName:widget.data?.fullName, imageUrl: widget.data?.imageUrl);
-                  _initiateTransaction();
+                      fullName: widget.data?.fullName,
+                      imageUrl: widget.data?.imageUrl,
+                      notes: "");
 
-                   /* print("request ${request.receiverPhoneNumber} ${request.receiverUsername}");
-                    Navigator.pushNamed(context, '/TransferTPINScreen',
-                        arguments: request);*/
+                  print(
+                      "request ${request.receiverPhoneNumber} ${request.receiverUsername}");
+                  Navigator.pushNamed(context, '/TransferOverviewScreen',
+                      arguments: request);
                 }
               },
               child: Text(
@@ -365,8 +324,7 @@ class _TransferScreenState extends State<TransferScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor:
-                      inputValid ? AppColor.PRIMARY : Colors.white,
+                  backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.circular(2))),
@@ -377,97 +335,17 @@ class _TransferScreenState extends State<TransferScreen> {
     );
   }
 
-  Future<void> _initiateTransaction() async {
-    setState(() {
-      isLoading = true;
-    });
-    bool isConnected = await _connectivityService.isConnected();
-    if (!isConnected) {
-      setState(() {
-        isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(Languages.of(context)!.labelNoInternetConnection),
-            duration: maxDuration,
-          ),
-        );
-      });
-    } else {
-      InitiateP2PRequest request = InitiateP2PRequest(tpin: "", amount: amount,
-        receiverUsername: null, receiverPhoneNumber: phoneNo,  );
-      print("phno ${request.receiverPhoneNumber}");
-      print("username ${request.receiverUsername}");
-      await Provider.of<MainViewModel>(context, listen: false)
-          .initiateP2PTransaction(
-          "/api/v1/app/payment_transactions/initiate_p2p_transaction",
-          request);
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false)
-              .response;
-      initiateTransactionResponse(context, apiResponse);
-    }
-  }
-
-  Future<Widget> initiateTransactionResponse(
-      BuildContext context, ApiResponse apiResponse) async {
-    InitiateP2PResponse? initiateP2PResponse =
-    apiResponse.data as InitiateP2PResponse?;
-    var message = apiResponse?.message.toString();
-    setState(() {
-      isLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
-      case Status.COMPLETED:
-        print("TPIN ${initiateP2PResponse?.otp}");
-        if(initiateP2PResponse?.otp!=null){
-          ToastComponent.showToast(
-              context: context, message: initiateP2PResponse?.otp);
-        }else {
-          ToastComponent.showToast(
-              context: context, message: message);
-        }
-        CompleteP2PRequest data = CompleteP2PRequest(
-            paymentTransactionId: initiateP2PResponse?.paymentTransactionId,
-            customerOtpId: initiateP2PResponse?.customerOtpId,
-            amount: amount,
-            receiverUsername: userName,
-            receiverPhoneNumber: phoneNo,
-            fullName:name,
-            imageUrl: ""
-        );
-
-        /*InitiateP2PRequest data1 = InitiateP2PRequest(tpin: '', amount: widget.data?.amount,
-          receiverUsername: widget.data?.receiverUsername, receiverPhoneNumber: widget.data?.receiverPhoneNumber,);*/
-
-        Navigator.pushNamed(context, '/TransferOtpScreen', arguments: data);
-        // Navigate to the new screen after receiving the response
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        ToastComponent.showToast(context: context, message: message);
-        return Center(
-          child: Text('Please try again later!!!'),
-        );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
-    }
-  }
-
   void _checkInputValidation() {
-    if (_inputController.text.length >=1 && amount.isNotEmpty && isBalanceMoreThanAmount(countryBalance, amount, context)) {
+    if (_inputController.text.length >= 1 &&
+        amount.isNotEmpty &&
+        isBalanceMoreThanAmount(countryBalance, amount, context)) {
       setState(() {
         inputValid = true;
-
       });
-    }else {
+    } else {
       setState(() {
         inputValid = false;
       });
-
     }
   }
 
@@ -485,6 +363,4 @@ class _TransferScreenState extends State<TransferScreen> {
     final numericRegex = RegExp(r'^[0-9]+$');
     return numericRegex.hasMatch(s);
   }
-
-
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import '../../model/response/transactionListReponse.dart';
 import '../../utils/Util.dart';
@@ -117,7 +118,7 @@ class TransactionDialog {
                                       "${transaction?.status}"),
                                   style: TextStyle(
                                       color: colorStatus(capitalizeFirstLetter(
-                                          "${transaction?.status}"))),
+                                          "${transaction?.status}"), context)),
                                 )
                               ],
                             ),

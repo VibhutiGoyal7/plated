@@ -30,34 +30,27 @@ class DashboardHomeScreen extends StatefulWidget {
 }
 
 class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
-  String kycStatus = "";
-  String dashBoardKycStatus = "";
+  String? dashBoardKycStatus = "";
   String kycStatusApi = "";
   String? amount = "0.00";
   String? currencySymbol = "";
   String? country;
-
   String calledShortCut = "";
   String? name = "";
   var imageUrl;
   var flagImg;
   bool isAmountVisible = true;
   bool isUSDVisible = false;
-  late List<bool> _isChecked; // Initialize as late to delay initialization
   late List<Shortcutitemlist> _shortcutCardsList;
-  bool _isRefreshing = false;
-  double _dragOffset = 0.0;
   late PayorioDatabase database;
-
   static const maxDuration = Duration(seconds: 2);
-
   bool isLoading = false;
   bool isApiLoading = false;
   bool isInternetConnected = true;
+  late double screenHeight;
+  late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
-
   List<TransactionDetails?> transactionList = [];
-
   final List<OfferResponse> imgList = [
     OfferResponse(
         image:
@@ -97,6 +90,20 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     super.initState();
     imageUrl = "";
     flagImg = "";
+    Helper.getProfileDetails().then((profile) {
+      setState(() {
+        name = profile?.firstName;
+        imageUrl = profile?.imageUrl;
+        currencySymbol = profile?.countryCurrencySymbol;
+        country = profile?.countryName;
+        amount = profile?.balance;
+      });
+    });
+
+    Helper.getKycStatus().then((status) {
+      dashBoardKycStatus = status;
+    });
+
     $FloorPayorioDatabase
         .databaseBuilder('payorio_database.db')
         .build()
@@ -104,31 +111,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       this.database = value;
       _fetchDashboardData();
     });
-    Helper.getProfileDetails().then((profile) {
-      setState(() {
-        name = profile?.firstName;
-        imageUrl = profile?.imageUrl;
-        currencySymbol = profile?.countryCurrencySymbol;
-        country = profile?.countryName;
-      });
-    });
-    _isChecked = List<bool>.generate(
-        5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
-
-
 
     print("isoCountryCode:: $isoCountryCode");
     // Initial setup for 5 checkboxes
   }
 
-/*  FutureOr onGoBack(dynamic value) {
-    _fetchDashboardData();
-  }*/
-
   Future<Widget> getDashboardData(
-      BuildContext context, ApiResponse apiResponse) async {
+      BuildContext context, ApiResponse apiResponse) async
+  {
     DashboardResponse? dashboardResponse =
         apiResponse.data as DashboardResponse?;
     var message = apiResponse?.message.toString();
@@ -138,58 +130,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("rwrwr ${dashboardResponse?.customerData?.email}");
-        print(
-            "currency ${dashboardResponse?.customerData?.countryCurrencySymbol}");
-        if (dashboardResponse?.customerData?.tpin == null ||
-            dashboardResponse?.customerData?.tpin == "") {
-          Navigator.pushNamed(context, '/TpinCreateScreen');
-        }
-        await Helper.saveUserBalance(dashboardResponse?.customerData?.balance);
-        await Helper.saveCurrencySymbol(
-            dashboardResponse?.customerData?.countryCurrencySymbol);
-        CustomerData? customerData = dashboardResponse?.customerData;
 
-        CustomerData? customer = await database.personDao
-            .findCustomerByEmail("${customerData?.email}");
-        if (mounted) {
-          if (customer?.email?.isNotEmpty == true) {
-            await database.personDao.updateCustomer(customerData!);
-          } else {
-            await database.personDao.insertCustomer(customerData!);
-          }
-        }
-
-        dashboardResponse?.customerRecentTxn
-            ?.map((transactionData) async => {
-                  print("${transactionData.fullName}"),
-                  await database.dashboardTransactionDao
-                      .insertTransaction(transactionData)
-                })
-            .toList();
-
-        setState(() {
-          dashBoardKycStatus =
-              dashboardResponse?.customerData?.kycStatus == null
-                  ? ""
-                  : "${dashboardResponse?.customerData?.kycStatus}";
-          name = dashboardResponse?.customerData?.firstName == null
-              ? Languages.of(context)!.labelName
-              : dashboardResponse?.customerData?.firstName;
-          imageUrl = dashboardResponse?.customerData?.imageUrl == null
-              ? ""
-              : dashboardResponse?.customerData?.imageUrl;
-          amount = dashboardResponse?.customerData?.balance == null
-              ? "0.00"
-              : dashboardResponse?.customerData?.balance;
-          currencySymbol =
-              dashboardResponse?.customerData?.countryCurrencySymbol == null
-                  ? ""
-                  : dashboardResponse?.customerData?.countryCurrencySymbol;
-          //   flagImg = dashboardResponse?.customerData?. == null ? "" : dashboardResponse?.customerData?.countryCurrencySymbol;
-          transactionList =
-              dashboardResponse?.customerRecentTxn as List<TransactionDetails>;
-          isLoading = false;
-        });
+        updateCustomerDashBoardDetails(dashboardResponse);
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -206,6 +148,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   : userDetails?.firstName;
               imageUrl =
                   userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
+              amount = userDetails?.balance;
+              dashBoardKycStatus = userDetails?.kycStatus;
               print("imageUrl${imageUrl}");
             });
           });
@@ -271,54 +215,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     }
   }
 
-  Future<void> _refresh() async {
-    // Simulate a network request or some other async operation
-    //await Future.delayed(Duration(seconds: 2));
-
-    setState(() {
-      _isRefreshing = true;
-    });
-
-    // Simulate a network request
-    _fetchDashboardData();
-
-    setState(() {
-      _isRefreshing = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    _shortcutCardsList = [
-      Shortcutitemlist(
-          title: Languages.of(context)!.labelAddMoney,
-          icon: Icons.add_rounded,
-          selected: true),
-      Shortcutitemlist(
-          title: Languages.of(context)!.labelWithdraw,
-          icon: Icons.call_made,
-          selected: true),
-      Shortcutitemlist(
-          title: Languages.of(context)!.labelRequestQR,
-          icon: Icons.send,
-          selected: true),
-      /*    Shortcutitemlist(
-          title: Languages.of(context)!.labelTransfer,
-          icon: Icons.transfer_within_a_station_sharp,
-          selected: true),*/
-
-      Shortcutitemlist(
-          title: Languages.of(context)!.labelExchange,
-          icon: Icons.currency_exchange,
-          selected: true),
-      Shortcutitemlist(
-          title: Languages.of(context)!.labelRewards,
-          icon: Icons.gif_box,
-          selected: false)
-    ];
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    _shortcutCardsList = getShortCutList(context);
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
     DateTime? lastBackPressed;
     return PopScope(
       canPop: false,
@@ -336,12 +238,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
           if (isWarning) {
             lastBackPressed = DateTime.now();
-            ScaffoldMessenger.of(context).showSnackBar(
+            _showExitDialog();
+           /* ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(Languages.of(context)!.labelPressBackToExit),
                 duration: maxDuration,
               ),
-            );
+            );*/
             //SystemNavigator.pop();
             // return Future.value(false);
           } else {
@@ -891,7 +794,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                         size:
                                                                             15,
                                                                         color: colorStatus(
-                                                                            capitalizeFirstLetter("${transactionList[index]?.status}"))),
+                                                                            capitalizeFirstLetter("${transactionList[index]?.status}"),
+                                                                            context)),
                                                                     Text(
                                                                       capitalizeFirstLetter(
                                                                           "${transactionList[index]?.uniqueId}"),
@@ -911,7 +815,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                           11,
                                                                       color: colorStatus(
                                                                           capitalizeFirstLetter(
-                                                                              "${transactionList[index]?.status}"))),
+                                                                              "${transactionList[index]?.status}"),
+                                                                          context)),
                                                                 ),
                                                               ],
                                                             ),
@@ -1036,13 +941,26 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 Navigator.pop(context);
                                 calledShortCut =
                                     Languages.of(context)!.labelAdd;
-                                _getKycStatus();
+                                if (checkKYCStatus()) {
+                                  Navigator.pushNamed(
+                                      context, '/PaymentMethodScreen');
+                                } else {
+                                  Navigator.pushNamed(
+                                      context, '/ChooseDocScreen');
+                                }
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelWithdraw) {
                                 Navigator.pop(context);
                                 calledShortCut =
                                     Languages.of(context)!.labelWithdraw;
-                                _getKycStatus();
+                                if (checkKYCStatus()) {
+                                  Navigator.pushNamed(
+                                      context, '/WithdrawMethodScreen');
+                                } else {
+                                  Navigator.pushNamed(
+                                      context, '/ChooseDocScreen');
+                                }
+                                //_getKycStatus();
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelTransfer) {
                                 Navigator.pop(context);
@@ -1199,22 +1117,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  int _countSelectedItems() {
-    return _isChecked.where((item) => item).length;
-  }
-
-  colorStatus(String status) {
-    Color color = Colors.black;
-    if (status == Languages.of(context)!.labelPending) {
-      color = Colors.orange;
-    } else if (status == Languages.of(context)!.labelSuccess) {
-      color = Colors.green;
-    } else if (status == Languages.of(context)!.labelRejected) {
-      color = Colors.red;
-    }
-    return color;
-  }
-
   _buildContainer(BuildContext context, String text, IconData icon) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -1236,18 +1138,39 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {
                           calledShortCut = Languages.of(context)!.labelAddMoney,
-                          _getKycStatus()
+                          if (checkKYCStatus())
+                            {
+                              Navigator.pushNamed(
+                                  context, '/PaymentMethodScreen')
+                            }
+                          else
+                            {Navigator.pushNamed(context, '/ChooseDocScreen')}
+
+                          //_getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelRequestQR)
                         {
                           calledShortCut =
                               Languages.of(context)!.labelRequestQR,
-                          _getKycStatus()
+                          if (checkKYCStatus())
+                            {Navigator.pushNamed(context, '/RequestQrScreen')}
+                          else
+                            {Navigator.pushNamed(context, '/ChooseDocScreen')}
+
+                          //_getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelWithdraw)
                         {
                           calledShortCut = Languages.of(context)!.labelWithdraw,
-                          _getKycStatus()
+                          if (checkKYCStatus())
+                            {
+                              Navigator.pushNamed(
+                                  context, '/WithdrawMethodScreen')
+                            }
+                          else
+                            {Navigator.pushNamed(context, '/ChooseDocScreen')}
+
+                          //_getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelMore)
                         {_showPicker(context: context)}
@@ -1262,20 +1185,47 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Future<void> _getKycStatus() async {
-    kycStatus = (await Helper.getKycStatus())!;
-    _fetchKycStatus();
-  }
-
-  void _fetchKycStatus() async {
-    setState(() {
-      isApiLoading = true;
+  void _fetchDashboardData() async {
+    Helper.getProfileDetails().then((profile) async {
+      CustomerData? customer =
+          await database.personDao.findCustomerByEmail("${profile?.email}");
+      if (mounted) {
+        if (customer?.email?.isNotEmpty == true) {
+          name = customer?.firstName == null
+              ? Languages.of(context)!.labelName
+              : customer?.firstName;
+          imageUrl = customer?.imageUrl == null ? "" : customer?.imageUrl;
+          amount = customer?.balance == null ? "0.00" : customer?.balance;
+          currencySymbol = customer?.countryCurrencySymbol == null
+              ? ""
+              : customer?.countryCurrencySymbol;
+          dashBoardKycStatus = customer?.kycStatus;
+        }
+      }
     });
 
+    List<TransactionDetails?> localTransactionList =
+        await database.dashboardTransactionDao.findAllTransactions();
+    if (localTransactionList.isNotEmpty) {
+      print("localTransactionList.length::${localTransactionList.length}");
+      setState(() {
+        transactionList.addAll(localTransactionList.reversed);
+      });
+      getDashBoardDataFromApi();
+    } else {
+      setState(() {
+        isLoading = true;
+      });
+      getDashBoardDataFromApi();
+    }
+  }
+
+  void getDashBoardDataFromApi() async {
     bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
     if (!isConnected) {
       setState(() {
-        isApiLoading = false;
+        isLoading = false;
         isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1285,50 +1235,152 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         );
       });
     } else {
-      //await Future.delayed(Duration(milliseconds: 1));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .kycStatusData("/api/v1/app/customers/check_customer_kyc_status");
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getKycStatus(context, apiResponse);
-    }
-  }
-
-  void _fetchDashboardData() async {
-    List<TransactionDetails?> localTransactionList =
-        await database.dashboardTransactionDao.findAllTransactions();
-    if (localTransactionList.isNotEmpty) {
-      print("localTransactionList.length::${localTransactionList.length}");
-      transactionList.addAll(localTransactionList);
-    } else {
-      print("ELSE localTransactionList.length::${localTransactionList.isEmpty}");
-      setState(() {
-        isLoading = true;
-      });
-
-      bool isConnected = await _connectivityService.isConnected();
-      print(("isConnected - ${isConnected}"));
-      if (!isConnected) {
-        setState(() {
-          isLoading = false;
-          isInternetConnected = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(Languages.of(context)!.labelNoInternetConnection),
-              duration: maxDuration,
-            ),
-          );
-        });
-      } else {
-        if (mounted) {
-          //await Future.delayed(Duration(milliseconds: 1));
-          await Provider.of<MainViewModel>(context, listen: false)
-              .dashboardData("/api/v1/app/customers/dashboard_data");
-          ApiResponse apiResponse =
-              Provider.of<MainViewModel>(context, listen: false).response;
-          getDashboardData(context, apiResponse);
-        }
+      if (mounted) {
+        //await Future.delayed(Duration(milliseconds: 1));
+        await Provider.of<MainViewModel>(context, listen: false)
+            .dashboardData("/api/v1/app/customers/dashboard_data");
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        getDashboardData(context, apiResponse);
       }
     }
   }
+
+  Future<void> updateCustomerDashBoardDetails(
+      DashboardResponse? dashboardResponse) async
+  {
+    if (dashboardResponse?.customerData?.tpin == null ||
+        dashboardResponse?.customerData?.tpin == "") {
+      Navigator.pushNamed(context, '/TpinCreateScreen');
+    }
+
+    CustomerData? customerData = dashboardResponse?.customerData;
+    await Helper.saveUserBalance(customerData?.balance);
+    await Helper.saveCurrencySymbol(customerData?.countryCurrencySymbol);
+    await Helper.saveKycStatus(customerData?.kycStatus);
+
+    CustomerData? customer =
+        await database.personDao.findCustomerByEmail("${customerData?.email}");
+    if (mounted) {
+      if (customer?.email?.isNotEmpty == true) {
+        await database.personDao.updateCustomer(customerData!);
+      } else {
+        await database.personDao.insertCustomer(customerData!);
+      }
+    }
+
+    List<TransactionDetails?> localTransactionList =
+        await database.dashboardTransactionDao.findAllTransactions();
+    if (mounted) {
+      // Iterate through customerRecentTxn
+      for (var transactionData in dashboardResponse?.customerRecentTxn ?? []) {
+        // Check if the transaction already exists in localTransactionList
+        bool transactionExists = localTransactionList
+            .any((localData) => localData?.id == transactionData.id);
+        // If it doesn't exist, insert the transaction
+        if (!transactionExists) {
+          await database.dashboardTransactionDao
+              .insertTransaction(transactionData);
+        }
+      }
+    }
+
+    setState(() {
+      dashBoardKycStatus =
+          customerData?.kycStatus == null ? "" : "${customerData?.kycStatus}";
+      name = customerData?.firstName == null
+          ? Languages.of(context)!.labelName
+          : customerData?.firstName;
+      imageUrl = customerData?.imageUrl == null ? "" : customerData?.imageUrl;
+      amount = customerData?.balance == null ? "0.00" : customerData?.balance;
+      currencySymbol = customerData?.countryCurrencySymbol == null
+          ? ""
+          : customerData?.countryCurrencySymbol;
+      transactionList =
+          dashboardResponse?.customerRecentTxn as List<TransactionDetails>;
+      isLoading = false;
+    });
+  }
+
+  bool checkKYCStatus() {
+    return dashBoardKycStatus == "verified";
+  }
+
+  Future<void> _showExitDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: Border.all(),
+          title: Center(
+              child: Text(
+                "Exit",
+                style: TextStyle(fontSize: 20),
+              )),
+          content: Container(
+            height: screenHeight * 0.3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: AppColor.PRIMARY),
+                        child: Icon(
+                          Icons.logout_outlined,
+                          size: 55,
+                          color: Colors.white,
+                        )),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Center(
+                        child: Text(
+                          Languages.of(context)!.labelPressBackToExit,
+                          textAlign: TextAlign.center,
+                        )),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Container(
+                      width: screenWidth * 0.6,
+                      child: TextButton(
+                        child: Text('Naah, Just kidding'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: screenWidth * 0.6,
+                      child: TextButton(
+                        child: Text('Yes'),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await Future.delayed(Duration(milliseconds: 6));
+                          SystemNavigator.pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[],
+        );
+      },
+    );
+  }
+
 }

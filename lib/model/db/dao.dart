@@ -5,9 +5,8 @@ import '../response/dashboardResponse.dart';
 
 @dao
 abstract class DashboardTransactionDao {
-  @Query('SELECT * FROM TransactionDetails')
+  @Query('SELECT * FROM TransactionDetails ORDER BY created DESC')
   Future<List<TransactionDetails?>> findAllTransactions();
-
   @insert
   Future<void> insertTransaction(TransactionDetails transaction);
 
@@ -20,7 +19,6 @@ abstract class DashboardTransactionDao {
 
 @dao
 abstract class CustomerDataDao {
-
   @Query('SELECT * FROM CustomerData WHERE email = :email')
   Future<CustomerData?> findCustomerByEmail(String email);
 

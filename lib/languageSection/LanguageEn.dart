@@ -272,6 +272,9 @@ class LanguageEn extends Languages {
   String get labelMoneyTransfer => "Money Transfer";
 
   @override
+  String get labelMoneyTransferOverview => "Transfer Overview";
+
+  @override
   String get labelTransferTo => "Transfer to";
 
   @override

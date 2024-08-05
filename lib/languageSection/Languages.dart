@@ -185,6 +185,8 @@ abstract class Languages {
 
   String get labelMoneyTransfer;
 
+  String get labelMoneyTransferOverview;
+
   String get labelBalance;
 
   String get labelTransferTo;

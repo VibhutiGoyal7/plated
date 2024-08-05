@@ -10,8 +10,7 @@ import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../languageSection/Languages.dart';
-import '../../../../model/request/signInWithPhoneNumber.dart';
-import '../../../../model/response/phoneVerifyResponse.dart';
+import '../../../../model/request/initiateP2PRequest.dart';
 import '../../../../utils/Util.dart';
 import '../../../component/connectivity_service.dart';
 import '../../../component/customNumberKeyboard.dart';
@@ -19,7 +18,7 @@ import '../../../component/session_expired_dialog.dart';
 import '../../../component/toastMessage.dart';
 
 class TransferOtpScreen extends StatefulWidget {
-  final CompleteP2PRequest data;// Define the 'data' parameter here
+  final CompleteP2PRequest data;
 
   TransferOtpScreen({Key? key, required this.data}) : super(key: key);
 
@@ -38,8 +37,13 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   String dropdownValue = "";
   bool isValid = false;
   bool resendOtp = false;
-  String phoneNo = "";
+  String receiverPhoneNumber = "";
   String? currencySymbol = "";
+  String? amount = "";
+  String? name = "";
+  String? uniqueId = "";
+  String? receiverUsername = "";
+  String? paymentTransactionId = "";
   String? country = "";
   late double screenWidth;
   bool isLoading = false;
@@ -50,6 +54,12 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     super.initState();
     isValid = false;
     resendOtp = false;
+    receiverUsername = widget.data?.receiverUsername;
+    paymentTransactionId = widget.data?.paymentTransactionId;
+    name = "${widget.data?.fullName}";
+    receiverPhoneNumber = "${widget.data?.receiverPhoneNumber}";
+    amount = "${widget.data?.amount}";
+    uniqueId = "${widget.data?.uniqueId}";
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -117,7 +127,8 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
 
 
   Future<Widget> completeTransactionResponse(
-      BuildContext context, ApiResponse apiResponse) async {
+      BuildContext context, ApiResponse apiResponse) async
+  {
     CompleteP2PResponse? completeP2PResponse =
     apiResponse.data as CompleteP2PResponse?;
     var message = apiResponse?.message.toString();
@@ -133,7 +144,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         phoneNumber: widget.data.receiverPhoneNumber, imageUrl: widget.data.imageUrl );
         print("PrefData ${prefData.username}");
         List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
-       // print("prefResponse ${prefResponse?[0].username}");
         bool dataExist = false;
         if(prefResponse?.length != null) {
           for (int i = 0; i < prefResponse!.length; i++) {
@@ -152,7 +162,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
           }else{
             List<CheckCustomerResponse>? dataList = [] ;
             Helper.saveRecentP2PDetails(dataList);
-
           }
         }
 
@@ -160,13 +169,13 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
 
         CompleteP2PRequest data = CompleteP2PRequest(
             otp: "",
-            customerOtpId: widget.data.customerOtpId,
-            paymentTransactionId: widget.data.paymentTransactionId,
-          amount: widget.data.amount,
-          imageUrl: widget.data.imageUrl,
-          fullName: widget.data.fullName,
-          receiverUsername: widget.data.receiverUsername,
-          receiverPhoneNumber: widget.data.receiverPhoneNumber,
+            fullName: name,
+            imageUrl: "",
+            amount: amount,
+            paymentTransactionId: paymentTransactionId,
+            receiverPhoneNumber: receiverPhoneNumber,
+            receiverUsername: receiverUsername,
+            uniqueId: widget.data.uniqueId,
         );
 
         Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen', arguments: data);
@@ -270,30 +279,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                   ),
                   alignment: AlignmentDirectional.center,
                 ),
-                /*Container(
-                  width: screenWidth*0.95,
-                  margin: EdgeInsets.only(top: 10, left: 8, right: 8, bottom: 8),
-                  child:
-                  Column(
-                    children: [
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("To:"),
-                          widget.data.receiverPhoneNumber != null ?
-                          Text("${widget.data.receiverPhoneNumber}")
-                          :Text("${widget.data.receiverUsername}"),
-                        ],
-                      ),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Sending:"),
-                          Text(addCurrencySymbol(currencySymbol , "${widget.data.amount}")),
-                        ],
-                      ),
-                    ],
-                  ),
-                  alignment: AlignmentDirectional.center,
-                ),*/
                 Expanded(
                   child: Container(
                     width: screenWidth,
@@ -314,23 +299,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                           SizedBox(height: 4),
                           SizedBox(height: 22),
                           _buildOtpInput(context, screenWidth, isDarkMode),
-                          SizedBox(height: 10),
-                          /*Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 24),
-                            child: Row(
-                              children: [
-                                _buildLabelText(
-                                    context,
-                                    "${Languages.of(context)!.labelResendCode} ",
-                                    14,
-                                    true),
-                                _countdownTimer(),
-                                Spacer(),
-                                if (resendOtp) _resendOtpButton(context)
-                              ],
-                            ),
-                          ),*/
                           Spacer(),
                         CustomNumberKeyboard(onKeyTap: (value) async {
                           if (value == "clear") {
@@ -339,34 +307,28 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                             String otp = _inputValues.map((
                                 controller) => controller).join();
                             if (otp.isNotEmpty && otp.length == 6) {
-                              /*String otp =
-                              _controllers.map((controller) => controller.text)
-                                  .join();*/
                               const maxDuration = Duration(seconds: 2);
                               if (otp.isNotEmpty && otp.length == 6) {
                                 setState(() {
                                   //isLoading = true;
                                 });
-                                bool isConnected = await _connectivityService
-                                    .isConnected();
-
-                                CompleteP2PRequest data = CompleteP2PRequest(
+                                CompleteP2PRequest request = CompleteP2PRequest(
                                   otp: otp,
-                                  customerOtpId: widget.data.customerOtpId,
-                                  paymentTransactionId: widget.data
-                                      .paymentTransactionId,
-                                  amount: widget.data.amount,
-                                  imageUrl: widget.data.imageUrl,
-                                  fullName: widget.data.fullName,
-                                  receiverUsername: widget.data
-                                      .receiverUsername,
-                                  receiverPhoneNumber: widget.data
-                                      .receiverPhoneNumber,
+                                  uniqueId: uniqueId,
+                                  receiverUsername: receiverUsername,
+                                  receiverPhoneNumber: receiverPhoneNumber,
+                                  paymentTransactionId: paymentTransactionId,
+                                  amount: amount,
+                                  fullName: name,
+                                  imageUrl: ""
                                 );
-
-                                Navigator.pushReplacementNamed(
-                                    context, '/TransferTPINScreen',
-                                    arguments: data);
+                                await Provider.of<MainViewModel>(context, listen: false)
+                                    .completeP2PTransaction(
+                                    "api/v1/app/transfer_transactions/complete_p2p_transaction",
+                                    request);
+                                ApiResponse apiResponse =
+                                    Provider.of<MainViewModel>(context, listen: false).response;
+                                completeTransactionResponse(context, apiResponse);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -391,37 +353,8 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
               ],
             ),
           ),
-         /* isLoading
-              ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false,
-                  color: Colors.transparent),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
-              : SizedBox(),*/
         ],
       ),
-    );
-  }
-
-  Widget _countdownTimer() {
-    return TimerCountdown(
-      endTime: DateTime.now().add(const Duration(minutes: 1, seconds: 0)),
-      format: CountDownTimerFormat.minutesSeconds,
-      enableDescriptions: false,
-      spacerWidth: 2,
-      timeTextStyle: TextStyle(fontWeight: FontWeight.w600),
-      onEnd: () {
-        setState(() {
-          resendOtp = true;
-        });
-      },
     );
   }
 
@@ -452,126 +385,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         ),
       ),
     );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        /*Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-          child: Text(
-            Languages.of(context)!.labelTandC,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[400],
-            ),
-          ),
-        ),*/
-        Center(
-          child: SizedBox(
-            width: screenWidth * 0.7,
-            child: ElevatedButton(
-              onPressed: () async {
-                String otp =
-                _controllers.map((controller) => controller.text).join();
-                const maxDuration = Duration(seconds: 2);
-                if (otp.isNotEmpty && otp.length == 6) {
-                  setState(() {
-                    //isLoading = true;
-                  });
-                  bool isConnected = await _connectivityService.isConnected();
-                 /* if (!isConnected) {
-                    setState(() {
-                      isLoading = false;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
-                          duration: maxDuration,
-                        ),
-                      );
-                    });
-                  } else {
-                    CompleteP2PRequest completeP2PRequest = CompleteP2PRequest(
-                      otp: otp,
-                      customerOtpId: widget.data.customerOtpId,
-                      paymentTransactionId: widget.data.paymentTransactionId
-                    );
-                    await Provider.of<MainViewModel>(context, listen: false)
-                        .completeP2PTransaction(
-                        "/api/v1/app/payment_transactions/complete_p2p_transaction",
-                        completeP2PRequest);
-
-                    ApiResponse apiResponse =
-                        Provider.of<MainViewModel>(context, listen: false)
-                            .response;
-                    completeTransactionResponse(context, apiResponse);
-                  }*/
-
-                  CompleteP2PRequest data = CompleteP2PRequest(
-                    otp: otp,
-                    customerOtpId: widget.data.customerOtpId,
-                    paymentTransactionId: widget.data.paymentTransactionId,
-                    amount: widget.data.amount,
-                    imageUrl: widget.data.imageUrl,
-                    fullName: widget.data.fullName,
-                    receiverUsername: widget.data.receiverUsername,
-                    receiverPhoneNumber: widget.data.receiverPhoneNumber,
-                  );
-
-                  Navigator.pushReplacementNamed(context, '/TransferTPINScreen', arguments: data);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                          'Please enter valid details'),
-                      duration: maxDuration,
-                    ),
-                  );
-                }
-              },
-              child: Text(
-                Languages.of(context)!.labelValidate,
-                style:
-                TextStyle(color: isValid ? Colors.white : AppColor.PRIMARY),
-              ),
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  backgroundColor: isValid ? AppColor.PRIMARY : Colors.white,
-                  elevation: 3,
-                  shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.circular(2))),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 24,
-        )
-      ],
-    );
-  }
-
-  void _handleOnChange(int index, String value) {
-    setState(() {
-      _otp[index] = value;
-    });
-    if (value.isNotEmpty) {
-      if (index < _focusNodes.length - 1) {
-        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-      }
-    } else {
-      if (index > 0) {
-        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
-      }
-    }
-
-    String otpString = _otp.join('');
-    if (otpString.length == 6) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
   }
 
   _buildLabelText(BuildContext context, String text, int size, bool isBold) {

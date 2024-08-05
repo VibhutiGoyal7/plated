@@ -30,6 +30,7 @@ import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_scr
 import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_otp_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_overview_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_tpin_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_screen.dart';
@@ -369,7 +370,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/TransferTPINScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest?;
+                  ModalRoute.of(context)!.settings.arguments as InitiateP2PRequest?;
               return TransferTpinScreen(data: args );
             },
             '/TransferOtpScreen': (context) {
@@ -422,6 +423,11 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return WithdrawMethodTypeScreen(data: args);
+            },
+            '/TransferOverviewScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as InitiateP2PRequest?;
+              return TransferOverviewScreen(data: args);
             },
           }),
     );

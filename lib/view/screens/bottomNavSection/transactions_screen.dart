@@ -126,7 +126,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         );
         await Provider.of<MainViewModel>(context, listen: false)
             .transactionListData(
-                "/api/v1/app/wallet_transactions/list", request);
+                "api/v1/app/wallet_transactions/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getTransactionData(context, apiResponse, pageKey, isScroll);
@@ -733,7 +733,7 @@ class TransactionItem extends StatelessWidget {
                                 Icons.call_made : Icons.call_received,
                                 size: 15,
                                 color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}"))
+                                    "${transaction.status}"), context)
                             ),
                             Text(
                               capitalizeFirstLetter(
@@ -750,7 +750,7 @@ class TransactionItem extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 11,
                               color: colorStatus(capitalizeFirstLetter(
-                                  "${transaction.status}"))),
+                                  "${transaction.status}"), context)),
                         ),
                       ],
                     ),
