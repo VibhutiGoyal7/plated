@@ -449,7 +449,6 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
         prefResponse!.isEmpty ||
         prefResponse?[0] == null ||
         prefResponse?[0].username == null) {
-      print("zz${prefResponse}");
       setState(() {
         isRecentDataEmpty = true;
       });

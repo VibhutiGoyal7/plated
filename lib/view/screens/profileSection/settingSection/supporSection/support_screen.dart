@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../languageSection/Languages.dart';
 import '../../../../../model/apis/api_response.dart';
+import '../../../../../model/response/allSupportTicketResponse.dart';
 import '../../../../../utils/Helper.dart';
 import '../../../../../utils/Util.dart';
 import '../../../../../view_model/main_view_model.dart';
@@ -28,8 +29,8 @@ class _SupportScreenState extends State<SupportScreen> {
   bool inputValid = false;
   bool filterApplied = false;
   final int _pageSize = 10;
-  List<TransactionDetails> transactionList = [];
-  List<TransactionDetails> filteredTransactionList = [];
+  List<AllSupportTicketsDetails> supportDataList = [];
+  List<AllSupportTicketsDetails> filteredSupportDataList = [];
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final _numberOfPostsPerRequest = 20;
@@ -120,17 +121,17 @@ class _SupportScreenState extends State<SupportScreen> {
             .supportListData("api/v1/app/payorio_support_tickets/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
-        await getTransactionData(context, apiResponse, pageKey, isScroll);
+        await getSupportData(context, apiResponse, pageKey, isScroll);
       }
     } catch (error) {
       print("Error fetching data: $error");
     }
   }
 
-  Future<void> getTransactionData(BuildContext context, ApiResponse apiResponse,
+  Future<void> getSupportData(BuildContext context, ApiResponse apiResponse,
       int pageKey, bool isScroll) async {
-    TransactionListResponse? transactionListResponse =
-        apiResponse.data as TransactionListResponse?;
+    AllSupportTicketsResponse? supportDataListResponse =
+        apiResponse.data as AllSupportTicketsResponse?;
     setState(() {
       isLoading = false;
     });
@@ -138,15 +139,15 @@ class _SupportScreenState extends State<SupportScreen> {
       case Status.LOADING:
         return;
       case Status.COMPLETED:
-        final newItems = transactionListResponse?.data ?? [];
+        final newItems = supportDataListResponse?.data ?? [];
         setState(() {
           print("isScroll:: ${isScroll}  ${filterApplied}");
           if (!isScroll) {
-            filteredTransactionList.clear();
+            filteredSupportDataList.clear();
           }
           filterApplied
-              ? filteredTransactionList.addAll(newItems)
-              : transactionList.addAll(newItems);
+              ? filteredSupportDataList.addAll(newItems)
+              : supportDataList.addAll(newItems);
         });
         return;
       case Status.ERROR:
@@ -160,18 +161,18 @@ class _SupportScreenState extends State<SupportScreen> {
     }
   }
 
-  Map<String, List<TransactionDetails>> groupTransactionsByDate(
-      List<TransactionDetails> transactions) {
-    Map<String, List<TransactionDetails>> groupedTransactions = {};
+  Map<String, List<AllSupportTicketsDetails>> groupSupportDataByDate(
+      List<AllSupportTicketsDetails> supportData) {
+    Map<String, List<AllSupportTicketsDetails>> groupedSupportData = {};
 
-    for (var transaction in transactions) {
+    for (var transaction in supportData) {
       String date = convertDateFormat("${transaction.createdAt}");
-      if (!groupedTransactions.containsKey(date)) {
-        groupedTransactions[date] = [];
+      if (!groupedSupportData.containsKey(date)) {
+        groupedSupportData[date] = [];
       }
-      groupedTransactions[date]!.add(transaction);
+      groupedSupportData[date]!.add(transaction);
     }
-    return groupedTransactions;
+    return groupedSupportData;
   }
 
   @override
@@ -182,10 +183,10 @@ class _SupportScreenState extends State<SupportScreen> {
     screenWidth = MediaQuery.of(context).size.width;
 
     // Group transactions by date
-    Map<String, List<TransactionDetails>> groupedTransactions =
-        groupTransactionsByDate(
-            filterApplied ? filteredTransactionList : transactionList);
-    List<String> dates = groupedTransactions.keys.toList();
+    Map<String, List<AllSupportTicketsDetails>> groupedSupportData =
+        groupSupportDataByDate(
+            filterApplied ? filteredSupportDataList : supportDataList);
+    List<String> dates = groupedSupportData.keys.toList();
 
     return PopScope(
       canPop: false,
@@ -268,14 +269,14 @@ class _SupportScreenState extends State<SupportScreen> {
                                                   Text('Error loading data'));
                                         } else {
                                           // Group transactions by date
-                                          Map<String, List<TransactionDetails>>
-                                              groupedTransactions =
-                                              groupTransactionsByDate(
+                                          Map<String, List<AllSupportTicketsDetails>>
+                                              groupedSupportData =
+                                              groupSupportDataByDate(
                                                   filterApplied
-                                                      ? filteredTransactionList
-                                                      : transactionList);
+                                                      ? filteredSupportDataList
+                                                      : supportDataList);
                                           List<String> dates =
-                                              groupedTransactions.keys.toList();
+                                              groupedSupportData.keys.toList();
 
                                           return ListView.builder(
                                             controller: _scrollController,
@@ -289,9 +290,9 @@ class _SupportScreenState extends State<SupportScreen> {
                                                         CircularProgressIndicator());
                                               }
                                               String date = dates[index];
-                                              List<TransactionDetails>
-                                                  transactionsForDate =
-                                                  groupedTransactions[date]!;
+                                              List<AllSupportTicketsDetails>
+                                                  supportDataForDate =
+                                                  groupedSupportData[date]!;
 
                                               return Padding(
                                                 padding:
@@ -312,7 +313,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                                             fontSize: 12),
                                                       ),
                                                     ),
-                                                    ...transactionsForDate
+                                                    ...supportDataForDate
                                                         .map((transaction) {
                                                       return TransactionItem(
                                                         transaction:
@@ -547,8 +548,8 @@ class _SupportScreenState extends State<SupportScreen> {
                       filterApplied = false;
                       //Navigator.pop(context);
                       isLoading = true;
-                      filteredTransactionList.clear();
-                      transactionList.clear();
+                      filteredSupportDataList.clear();
+                      supportDataList.clear();
                     });
                     _fetchDataFuture =
                         _fetchData(_currentPage, filterApplied, false);
@@ -604,16 +605,16 @@ class _SupportScreenState extends State<SupportScreen> {
   bool checkListEmpty() {
     bool isListEmpty = false;
     if (!filterApplied) {
-      isListEmpty = transactionList.isNotEmpty;
+      isListEmpty = supportDataList.isNotEmpty;
     } else {
-      isListEmpty = filteredTransactionList.isNotEmpty;
+      isListEmpty = filteredSupportDataList.isNotEmpty;
     }
     return isListEmpty;
   }
 }
 
 class TransactionItem extends StatelessWidget {
-  final TransactionDetails transaction;
+  final AllSupportTicketsDetails transaction;
   final String symbol;
 
   TransactionItem({required this.transaction, required this.symbol});
@@ -628,10 +629,10 @@ class TransactionItem extends StatelessWidget {
           side: BorderSide(
               width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(6.0),
         child: GestureDetector(
           onTap: () {
-            _showModal(context: context, transaction: transaction);
+            Navigator.pushNamed(context, "/SupportListDetails", arguments: transaction);
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 4),
@@ -642,17 +643,17 @@ class TransactionItem extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      height: 50,
-                      width: 50,
+                      height: 48,
+                      width: 48,
                       child: Card(
                         shape: CircleBorder(
                             side: BorderSide(
                                 width: 0,
-                                color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
-                        color: colorStatus(
-                            capitalizeFirstLetter("${transaction.status}")),
-                        child: Icon(Icons.call_made, color: Colors.white),
+                                /*color: colorStatus(capitalizeFirstLetter(
+                                    "${transaction.}"))*/)),
+                        /*color: colorStatus(
+                            capitalizeFirstLetter("${transaction.status}")),*/
+                        child: Icon(Icons.call_made, color: Colors.black),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -662,15 +663,23 @@ class TransactionItem extends StatelessWidget {
                       children: [
                         Text(
                           capitalizeFirstLetter(
-                              "${transaction.uniqueId}"),
+                              "${transaction.trxId}"),
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14),
+                              fontWeight: FontWeight.w600, fontSize: 13),
                         ),
-                        Text(capitalizeFirstLetter("${transaction.status}"),
+                        Text(capitalizeFirstLetter("${transaction.transactionType}"),
                             style: TextStyle(
-                                fontSize: 12,
-                                color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}")))),
+                                fontSize: 11,
+                               /* color: colorStatus(capitalizeFirstLetter(
+                                    "${transaction.status}"))*/)),
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.38,
+                          child: Text(capitalizeFirstLetter("${transaction.comment}"),
+                              style: TextStyle(
+                                  fontSize: 10,
+                                 /* color: colorStatus(capitalizeFirstLetter(
+                                      "${transaction.status}"))*/), overflow: TextOverflow.ellipsis,),
+                        ),
                       ],
                     ),
                   ],
@@ -682,14 +691,14 @@ class TransactionItem extends StatelessWidget {
                             symbol,
                             "${transaction.amount}",
                             capitalizeFirstLetter(
-                                "${transaction.transactionType}")),
+                                "${transaction.transactionTypeId}")),
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: colorPaymentType(capitalizeFirstLetter(
-                                "${transaction.transactionType}")))),
-                    /*Text(convertDateFormat("${transaction.createdAt}"),
-                        style: TextStyle(fontSize: 12)),*/
+                          /*color: colorPaymentType(capitalizeFirstLetter(
+                                "${transaction.transactionType}"))*/)),
+                    Text(convertDateFormat("${transaction.createdAt}"),
+                        style: TextStyle(fontSize: 11)),
                   ],
                 ),
               ],
@@ -700,9 +709,9 @@ class TransactionItem extends StatelessWidget {
     );
   }
 
-  void _showModal(
+ /* void _showModal(
       {required BuildContext context,
-      required TransactionDetails transaction}) {
+      required AllSupportTicketsDetails transaction}) {
     showDialog(
       barrierDismissible: true,
       context: context,
@@ -740,7 +749,7 @@ class TransactionItem extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            /*transaction.bankService != null
+                            *//*transaction.bankService != null
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -757,7 +766,7 @@ class TransactionItem extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : SizedBox(),*/
+                                : SizedBox(),*//*
                             SizedBox(
                               height: 8,
                             ),
@@ -798,7 +807,7 @@ class TransactionItem extends StatelessWidget {
                                 )
                               ],
                             ),
-                           /* transaction.bankType != null
+                           *//* transaction.bankType != null
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -815,18 +824,18 @@ class TransactionItem extends StatelessWidget {
                                       ),
                                     ],
                                   )
-                                : SizedBox(),*/
+                                : SizedBox(),*//*
                             SizedBox(
                               height: 8,
                             ),
-                          /*  Row(
+                          *//*  Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Currency :"),
                                 Text("${transaction.currency}")
                               ],
-                            ),*/
-                            /*SizedBox(
+                            ),*//*
+                            *//*SizedBox(
                           height: 8,
                         ),
                         Row(
@@ -835,7 +844,7 @@ class TransactionItem extends StatelessWidget {
                             Text("Request Type"),
                             Text("${transaction.requestType}")
                           ],
-                        ),*/
+                        ),*//*
                             SizedBox(
                               height: 8,
                             ),
@@ -858,5 +867,5 @@ class TransactionItem extends StatelessWidget {
         );
       },
     );
-  }
+  }*/
 }

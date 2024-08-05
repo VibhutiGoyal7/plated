@@ -2,6 +2,7 @@ import 'package:Payrio/model/documentData.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
+import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/theme/AppTheme.dart';
@@ -56,6 +57,8 @@ import 'package:Payrio/view/screens/profileSection/settingSection/language_selec
 import 'package:Payrio/view/screens/profileSection/settingSection/manage_applock_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/create_support_ticket_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_chat_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_list_details.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_selection_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_otp_screen.dart';
@@ -394,6 +397,16 @@ class _MyAppState extends State<MyApp> {
             },
             '/SupportScreen': (context) {
               return SupportScreen();
+            },
+            '/SupportListDetails': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as AllSupportTicketsDetails?;
+              return SupportListDetailScreen(data: args,);
+            },
+            '/SupportChatScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as int;
+              return SupportChatScreen(userId : args);
             },
             '/CreateSupportTicketScreen': (context) {
               return CreateSupportTicketScreen();

@@ -4,10 +4,12 @@ import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/request/serviceTypeListRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
+import 'package:Payrio/model/request/transactionMethodRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
@@ -18,6 +20,9 @@ import 'package:Payrio/model/response/dashboardResponse.dart';
 import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
+import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
+import 'package:Payrio/model/response/transactionProviderListReponse.dart';
+import 'package:Payrio/model/response/payorioMethodListReponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
@@ -25,6 +30,7 @@ import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/checkCustomerRequest.dart';
@@ -39,11 +45,14 @@ import '../model/request/supportListRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/request/verifyOtpEmailVerifyRequest.dart';
 import '../model/response/GenerateOtpTPINChangeResponse.dart';
+import '../model/response/allSupportTicketResponse.dart';
 import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
+import '../model/response/sendMessageResponse.dart';
+import '../model/response/transactionMethodListReponse.dart';
 
 class MainViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
@@ -261,27 +270,29 @@ class MainViewModel with ChangeNotifier {
       {required String url,
         required String amount,
         required String paymentTime,
-        required String customerNumber,
+        required String customerId,
         required String trxId,
-        required String serviceType,
-        required String bankType,
+        required String customerMerchantNumber,
+        required String transactionProviderId,
         required String comment,
-        required String issueType,
-        required File supportTicketDocument}) async {
+        required String transactionMethodId,
+        required String transactionTypeId,
+        required File? supportTicketDocument}) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
       CreateSupportTicketResponse createSupportTicketResponse =
           await MainRepository().postMultiFormResponseToCreateSupport(
               url,
-              amount,
-              paymentTime,
-              customerNumber,
-              trxId,
-              serviceType,
-              bankType,
-              comment,
-              issueType,
+               customerId,
+               amount,
+               paymentTime,
+               customerMerchantNumber,
+               trxId,
+               transactionProviderId,
+               transactionMethodId,
+               comment,
+               transactionTypeId,
               supportTicketDocument);
       print("Yess" + createSupportTicketResponse.message.toString());
       if (createSupportTicketResponse.trxId != null) {
@@ -541,13 +552,13 @@ class MainViewModel with ChangeNotifier {
     print("Yess ${supportListRequest.agentNumber}");
     notifyListeners();
     try {
-      CreateSupportTicketResponse transactionListResponse = await MainRepository()
+      AllSupportTicketsResponse allSupportTicketsResponse = await MainRepository()
           .supportListData(value, supportListRequest);
-      if (transactionListResponse != null &&
-          transactionListResponse.trxId != null) {
-        _apiResponse = ApiResponse.completed(transactionListResponse);
+      if (allSupportTicketsResponse.status == 200 ||
+          allSupportTicketsResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(allSupportTicketsResponse);
       } else {
-        _apiResponse = ApiResponse.error(transactionListResponse.message);
+        _apiResponse = ApiResponse.error(allSupportTicketsResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -562,13 +573,13 @@ class MainViewModel with ChangeNotifier {
     print("Yess ${serviceTypeListRequest.countryId}");
     notifyListeners();
     try {
-      CreateSupportTicketResponse transactionListResponse = await MainRepository()
+      ServiceTypeListResponse serviceTypeListResponse = await MainRepository()
           .serviceTypeListData(value, serviceTypeListRequest);
-      if (transactionListResponse != null &&
-          transactionListResponse.trxId != null) {
-        _apiResponse = ApiResponse.completed(transactionListResponse);
+      if (serviceTypeListResponse.status == 201 ||
+          serviceTypeListResponse.status == 200) {
+        _apiResponse = ApiResponse.completed(serviceTypeListResponse);
       } else {
-        _apiResponse = ApiResponse.error(transactionListResponse.message);
+        _apiResponse = ApiResponse.error(serviceTypeListResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
@@ -576,6 +587,91 @@ class MainViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  Future<void> transactionMethodList(
+      String value, TransactionMethodRequest transactionMethodRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${transactionMethodRequest.transactionTypeId}");
+    notifyListeners();
+    try {
+      TransactionMethodListResponse transactionMethodListResponse = await MainRepository()
+          .transactionMethodList(value, transactionMethodRequest);
+      if (transactionMethodListResponse.status == 201 ||
+          transactionMethodListResponse.status == 200) {
+        _apiResponse = ApiResponse.completed(transactionMethodListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(transactionMethodListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction Method : $e");
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> paymentMethodList(
+      String value, TransactionProviderListRequest paymentMethodListRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${paymentMethodListRequest.transactionMethodId}");
+    notifyListeners();
+    try {
+      TransactionProviderListResponse paymentMethodListResponse = await MainRepository()
+          .paymentMethodList(value, paymentMethodListRequest);
+      if (paymentMethodListResponse.status == 201 ||
+          paymentMethodListResponse.status == 200) {
+        _apiResponse = ApiResponse.completed(paymentMethodListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(paymentMethodListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Payment Method : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> getSupportChatData(String value) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      MessagesSupportChatResponse messagesSupportChatResponse =
+          await MainRepository().getSupportChatData(value);
+      print("Yess" + response.message.toString());
+      if (messagesSupportChatResponse.status == 200 || messagesSupportChatResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(messagesSupportChatResponse);
+      } else {
+        _apiResponse = ApiResponse.error(messagesSupportChatResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> postMultiFormMessageResponse(
+      String value, File imgFile, String content) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      SendMessageResponse sendMessageResponse = await MainRepository()
+          .postMultiFormMessageResponse(value, imgFile, content);
+      print("Yess" + sendMessageResponse.message.toString());
+      if (sendMessageResponse.status == 200 || sendMessageResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(sendMessageResponse);
+      } else {
+        _apiResponse = ApiResponse.error(sendMessageResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
 
   Future<void> getOtpTPINChange(String value) async {
     _apiResponse = ApiResponse.loading('Loading');

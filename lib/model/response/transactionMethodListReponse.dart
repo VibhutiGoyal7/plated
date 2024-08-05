@@ -1,20 +1,20 @@
-class ServiceTypeListResponse {
+class TransactionMethodListResponse {
   String? message;
   int? status;
-  List<ServiceTypeListDetails>? data;
+  List<TransactionMethodListDetails>? data;
 
-  ServiceTypeListResponse({
+  TransactionMethodListResponse({
     required this.message,
     required this.status,
     required this.data,
   });
 
-  factory ServiceTypeListResponse.fromJson(Map<String, dynamic> json) {
+  factory TransactionMethodListResponse.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
-    List<ServiceTypeListDetails>? serviceTypeListDetails =
-        list?.map((i) => ServiceTypeListDetails.fromJson(i)).toList();
+    List<TransactionMethodListDetails>? serviceTypeListDetails =
+    list?.map((i) => TransactionMethodListDetails.fromJson(i)).toList();
 
-    return ServiceTypeListResponse(
+    return TransactionMethodListResponse(
       message: json['message'] as String?,
       status: json['status'] as int?,
       data: serviceTypeListDetails,
@@ -22,28 +22,28 @@ class ServiceTypeListResponse {
   }
 }
 
-class ServiceTypeListDetails {
+class TransactionMethodListDetails {
   int? id;
   String? serviceName;
-  int? countryId;
+  int? transactionTypeId;
   String? status;
   String? createdAt;
   String? updatedAt;
 
-  ServiceTypeListDetails({
+  TransactionMethodListDetails({
     required this.id,
     required this.serviceName,
-    required this.countryId,
+    required this.transactionTypeId,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  factory ServiceTypeListDetails.fromJson(Map<String, dynamic> json) {
-    return ServiceTypeListDetails(
+  factory TransactionMethodListDetails.fromJson(Map<String, dynamic> json) {
+    return TransactionMethodListDetails(
       id: json["id"] as int?,
       serviceName: json["name"] as String?,
-      countryId: json["country_id"] as int?,
+      transactionTypeId: json["transaction_type_id"] as int?,
       status: json["status"] as String?,
       createdAt: json["created_at"] as String?,
       updatedAt: json["updated_at"] as String?,

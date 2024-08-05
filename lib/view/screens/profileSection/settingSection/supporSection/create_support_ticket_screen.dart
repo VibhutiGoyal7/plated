@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:Payrio/model/apis/api_response.dart';
+import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/response/createSupportTicketResponse.dart';
+import 'package:Payrio/model/response/transactionMethodListReponse.dart';
+import 'package:Payrio/model/response/transactionProviderListReponse.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
@@ -15,8 +18,8 @@ import 'package:provider/provider.dart';
 
 import '../../../../../languageSection/Languages.dart';
 import '../../../../../model/request/serviceTypeListRequest.dart';
+import '../../../../../model/request/transactionMethodRequest.dart';
 import '../../../../../model/response/payorioMethodListReponse.dart';
-import '../../../../../model/response/transactionListReponse.dart';
 import '../../../../../theme/AppColor.dart';
 import '../../../../component/connectivity_service.dart';
 import '../../../../component/session_expired_dialog.dart';
@@ -35,19 +38,22 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
   String? imageUrl = "";
+  String? customerId = "";
+  String? customerPhoneNo = "";
+  late int transactionTypeId;
+  late int transactionMethodId;
+  late int transactionProviderId;
   File? galleryFile;
   final picker = ImagePicker();
   bool inputValid = false;
   bool isDarkMode = false;
   int? countryId = 0;
   late ServiceTypeListDetails serviceTypeValue;
-  late ServiceTypeListDetails bankTypeValue;
-  late ServiceTypeListDetails issueTypeValue;
-  late ServiceTypeListDetails methodTypeValue;
+  late TransactionMethodListDetails methodTypeValue;
+  late TransactionProvidersListDetails providerTypeValue;
   List<ServiceTypeListDetails> serviceTypeList = [];
-  var bankTypeList = ["Select", "Bank1", "Bank2", "Bank3"];
-  var issueTypeList = ["Select", "Issue1", "Issue2", "Issue3"];
-  var methodTypeList = ["Select", "Method1", "Method2", "Method3"];
+  List<TransactionMethodListDetails> transactionTypeList = [];
+  List<TransactionProvidersListDetails> providerTypeList = [];
   late double screenWidth;
   static const maxDuration = Duration(seconds: 2);
   ///Time
@@ -64,24 +70,35 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     isDarkMode = false;
     Helper.getProfileDetails().then((profile){
       countryId = profile?.countryId;
+      customerId = "${profile?.userId}";
+      customerPhoneNo = "${profile?.phoneNumber}";
     });
     serviceTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");
-    bankTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");;
-    methodTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");;
-    issueTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");;
+    methodTypeValue = TransactionMethodListDetails(
+        id: 0,
+        serviceName: "Select",
+        status: "inactive",
+        createdAt: "createdAt",
+        updatedAt: "updatedAt",
+        transactionTypeId: 1);
+    ;
+    providerTypeValue = TransactionProvidersListDetails(
+        id: 0,
+        serviceName: "Select",
+        status: "inactive",
+        createdAt: "createdAt",
+        updatedAt: "updatedAt",
+        transactionMethodId: 1);
+    ;
+
   }
 
   void _isValidInput() {
     //print(input);
     if (_amountController.text.isNotEmpty &&
         _paymentTimeController.text.isNotEmpty &&
-        _customerNumberController.text.isNotEmpty &&
         _transactionIdController.text.isNotEmpty &&
-        _serviceTypeController.text.isNotEmpty &&
-        _bankTypeController.text.isNotEmpty &&
-        _commentController.text.isNotEmpty &&
-        _issueTypeController.text.isNotEmpty &&
-        _methodTypeController.text.isNotEmpty) {
+        _commentController.text.isNotEmpty ) {
       setState(() {
         inputValid = true;
       });
@@ -141,6 +158,23 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
+      appBar : AppBar(
+        toolbarHeight: 65,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+              context,
+              "/SupportScreen",
+            );
+          },
+        ),
+        title: Text(
+          "Create Support Ticket",
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+        ),
+
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -158,43 +192,39 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 10),
-                            _buildLabelText(
-                                context, "Create Support Ticket", 20, true),
-                            SizedBox(height: 10),
-                            SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildDropDownWidget(
+                                _buildTransactionTypeWidget(
                                     context,
                                     "",
                                     _serviceTypeController,
                                     Icon(Icons.merge),
                                     serviceTypeList,
                                     serviceTypeValue,
-                                    "Service Type"),
-                                _buildDropDownWidget(
+                                    "Transaction Type"),
+                                _buildTransactionMethodWidget(
                                     context,
                                     "",
                                     _methodTypeController,
                                     Icon(Icons.merge),
-                                    serviceTypeList,
+                                    transactionTypeList,
                                     methodTypeValue,
-                                    "Payorio Method"),
+                                    "Transaction Method"),
                               ],
                             ),
                             SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildDropDownWidget(
+                                _buildPaymentMethods(
                                     context,
                                     "",
                                     _issueTypeController,
                                     Icon(Icons.merge),
-                                    serviceTypeList,
-                                    issueTypeValue,
-                                    "Payment Methods"),
+                                    providerTypeList,
+                                    providerTypeValue,
+                                    "Transaction Provider"),
 
                                 /*  _buildDropDownWidget(
                                     context,
@@ -206,18 +236,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                     ""),*/
                               ],
                             ),
-                            SizedBox(height: 10),
-                            _buildPasswordInput(
-                                context,
-                                "Comment",
-                                _commentController,
-                                Icon(
-                                  Icons.merge_type,
-                                  size: 18,
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black,
-                                ),
-                                isDarkMode),
+
                             SizedBox(height: 10),
                             _buildPhoneInput(
                                 context,
@@ -241,7 +260,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                       isDarkMode ? Colors.white : Colors.black,
                                 )),
                             SizedBox(height: 10),
-                            _buildPhoneInput(
+                          /*  _buildPhoneInput(
                                 context,
                                 "Customer Number",
                                 _customerNumberController,
@@ -251,7 +270,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   color:
                                       isDarkMode ? Colors.white : Colors.black,
                                 )),
-                            SizedBox(height: 10),
+                            SizedBox(height: 10),*/
                             _buildPasswordInput(
                                 context,
                                 "Transaction Id",
@@ -261,6 +280,18 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   size: 18,
                                   color:
                                       isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                isDarkMode),
+                            SizedBox(height: 10),
+                            _buildPasswordInput(
+                                context,
+                                "Comment",
+                                _commentController,
+                                Icon(
+                                  Icons.merge_type,
+                                  size: 18,
+                                  color:
+                                  isDarkMode ? Colors.white : Colors.black,
                                 ),
                                 isDarkMode),
                             SizedBox(height: 10),
@@ -342,7 +373,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        //SizedBox(height: 10),
                         _buildFooter(context, apiResponse),
                       ],
                     )),
@@ -504,7 +535,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     );
   }
 
-  Widget _buildDropDownWidget(
+  Widget _buildTransactionTypeWidget(
       BuildContext context,
       String text,
       TextEditingController nameController,
@@ -523,60 +554,328 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
               : screenWidth * 0.42,
           child: Card(
             child: Container(
-              height: 55,
+              height: 45,
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<ServiceTypeListDetails>(
-                            dropdownColor:
-                                isDarkMode ? Colors.grey : Colors.white,
-                            alignment: Alignment.center,
-                            value: selectedValue,
-                            items: typeList.map((ServiceTypeListDetails item) {
-                              return DropdownMenuItem(
-                                value: item,
-                                alignment: Alignment.centerLeft,
-                                child: Text("${item.serviceName}",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    )),
-                              );
-                            }).toList(),
-                            onChanged: (ServiceTypeListDetails? newValue) async {
-                              if (mounted) {
-                                setState(() {
-                                  selectedValue = newValue!;
-                                });
-                              }
-                              print(selectedValue);
-                            },
-                            style: TextStyle(
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
-                            hint: Text(
-                              "en",
-                            ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  showMenu(
+                                    context: context,
+                                    position: RelativeRect.fromRect(
+                                      Rect.fromLTWH(
+                                          -20,
+                                          120,
+                                          overlay.size.width,
+                                          overlay.size.height),
+                                      Offset.zero & overlay.size,
+                                    ),
+                                    items: typeList.map((item) {
+                                      return PopupMenuItem<
+                                          ServiceTypeListDetails>(
+                                        value: item,
+                                        child: Text(
+                                          "${item.serviceName}",
+                                          style:
+                                              TextStyle(color: AppColor.WHITE),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ).then((value) {
+                                    if (value != null) {
+                                      _changeTransactionTypeItem(value);
+                                    }
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    selectedValue.serviceName!.isEmpty
+                                        ? Container(width: 40)
+                                        : Text("${selectedValue.serviceName}"),
+                                    SizedBox(width: 5),
+                                    Icon(Icons.keyboard_arrow_down_sharp),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                          /*Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                dropdownColor:
+                                    isDarkMode ? Colors.grey : Colors.white,
+                                alignment: Alignment.center,
+                                value: selectedValue,
+                                items: typeList.map((ServiceTypeListDetails item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.serviceName,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text("${item.serviceName}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        )),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) async {
+                                  if (mounted) {
+                                    setState(() {
+                                      selectedValue = newValue!;
+                                    });
+                                  }
+                                  print(selectedValue);
+                                },
+                                style: TextStyle(
+                                    color:
+                                        isDarkMode ? Colors.white : Colors.black),
+                                hint: Text(
+                                  "",
+                                ),
+                              ),
+                            ),
+                          ),*/
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildTransactionMethodWidget(
+      BuildContext context,
+      String text,
+      TextEditingController nameController,
+      Icon icon,
+      List<TransactionMethodListDetails> typeList,
+      TransactionMethodListDetails selectedValue,
+      String labelText) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(labelText),
+        Container(
+          width: labelText == "Payment Methods"
+              ? screenWidth * 0.9
+              : screenWidth * 0.42,
+          child: Card(
+            child: Container(
+              height: 45,
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  showMenu(
+                                    context: context,
+                                    position: RelativeRect.fromRect(
+                                      Rect.fromLTWH(
+                                          -20,
+                                          120,
+                                          overlay.size.width,
+                                          overlay.size.height),
+                                      Offset.zero & overlay.size,
+                                    ),
+                                    items: typeList.map((item) {
+                                      return PopupMenuItem<
+                                          TransactionMethodListDetails>(
+                                        value: item,
+                                        child: Text(
+                                          "${item.serviceName}",
+                                          style:
+                                              TextStyle(color: AppColor.WHITE),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ).then((value) {
+                                    if (value != null) {
+                                      _changeTransactionMethodItem(value);
+                                    }
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    selectedValue.serviceName!.isEmpty
+                                        ? Container(width: 40)
+                                        : Text("${selectedValue.serviceName}"),
+                                    SizedBox(width: 5),
+                                    Icon(Icons.keyboard_arrow_down_sharp),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentMethods(
+      BuildContext context,
+      String text,
+      TextEditingController nameController,
+      Icon icon,
+      List<TransactionProvidersListDetails> typeList,
+      TransactionProvidersListDetails selectedValue,
+      String labelText) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(labelText),
+        Container(
+          width: labelText == "Transaction Provider"
+              ? screenWidth * 0.9
+              : screenWidth * 0.42,
+          child: Card(
+            child: Container(
+              height: 45,
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  showMenu(
+                                    context: context,
+                                    position: RelativeRect.fromRect(
+                                      Rect.fromLTWH(0, 120, overlay.size.width,
+                                          overlay.size.height),
+                                      Offset.zero & overlay.size,
+                                    ),
+                                    items: typeList.map((item) {
+                                      return PopupMenuItem<
+                                          TransactionProvidersListDetails>(
+                                        value: item,
+                                        child: Text(
+                                          "${item.serviceName}",
+                                          style:
+                                              TextStyle(color: AppColor.WHITE),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ).then((value) {
+                                    if (value != null) {
+                                      _changePaymentMethodItem(value);
+                                    }
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    selectedValue.serviceName!.isEmpty
+                                        ? Container(width: 40)
+                                        : Text("${selectedValue.serviceName}"),
+                                    SizedBox(width: 5),
+                                    Icon(Icons.keyboard_arrow_down_sharp),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _changeTransactionTypeItem(ServiceTypeListDetails? newValue) {
+    setState(() {
+      print("${newValue?.id}");
+      serviceTypeValue = newValue!;
+      transactionTypeId = newValue.id as int;
+    });
+    _fetchTransactionMethodData(newValue?.id);
+  }
+
+  void _changeTransactionMethodItem(TransactionMethodListDetails? newValue) {
+    setState(() {
+      print("${newValue?.id}");
+      methodTypeValue = newValue!;
+      transactionMethodId = newValue.id as int;
+    });
+    _fetchTransactionProviderData(newValue?.id);
+  }
+
+  void _changePaymentMethodItem(TransactionProvidersListDetails? newValue) {
+    setState(() {
+      print("${newValue?.id}");
+      providerTypeValue = newValue!;
+      transactionProviderId = newValue.id as int;
+    });
+    //_fetchTransactionMethodData(newValue?.id);
   }
 
   Future displayTimePicker(BuildContext context) async {
@@ -720,18 +1019,21 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                     );
                   });
                 } else {
+                  File? compressedFile =
+                  await _resizeAndCompressImage(galleryFile as File, 800);
                   await Provider.of<MainViewModel>(context, listen: false)
                       .postMultiFormResponseToCreateSupport(
-                          url: "/api/v1/app/payorio_support_tickets",
+                          url: "api/v1/app/payorio_support_tickets",
                           amount: _amountController.text,
-                          bankType: _bankTypeController.text,
-                          comment: _commentController.text,
-                          customerNumber: _customerNumberController.text,
-                          issueType: _issueTypeController.text,
-                          paymentTime: _paymentTimeController.text,
-                          serviceType: _serviceTypeController.text,
-                          supportTicketDocument: File(imageUrl!),
-                          trxId: _transactionIdController.text);
+                      paymentTime: _paymentTimeController.text,
+                      comment: _commentController.text,
+                          supportTicketDocument: compressedFile,
+                          trxId: _transactionIdController.text,
+                      customerId: '$customerId',
+                      customerMerchantNumber: "$customerPhoneNo",
+                      transactionProviderId: '$transactionProviderId',
+                      transactionMethodId: '$transactionMethodId',
+                      transactionTypeId: '$transactionTypeId');
                   //Navigator.pushNamed(context, '/BottomNav');
 
                   ApiResponse apiResponse =
@@ -764,7 +1066,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                   color: inputValid ? Colors.white : AppColor.PRIMARY),
             ),
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 14.0),
+                padding: EdgeInsets.symmetric(vertical: 8.0),
                 backgroundColor: inputValid
                     ? AppColor.PRIMARY
                     : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
@@ -781,7 +1083,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     print("Fetch Data");
     try {
       setState(() {
-        //_isLoadingMore = true;
+        isLoading = true;
       });
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
@@ -809,11 +1111,12 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       print("Error fetching data: $error");
     }
   }
-  Future<void> _fetchPayorioMethodData() async {
+
+  Future<void> _fetchTransactionMethodData(int? transactionTypeId) async {
     print("Fetch Data");
     try {
       setState(() {
-        //_isLoadingMore = true;
+        isLoading = true;
       });
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
@@ -828,24 +1131,27 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           );
         });
       } else {
-        ServiceTypeListRequest request = ServiceTypeListRequest(
-          countryId: countryId,
+        TransactionMethodRequest request = TransactionMethodRequest(
+          transactionTypeId: transactionTypeId,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .serviceTypeListData("api/v1/app/payorio_support_tickets/transaction_methods", request);
+            .transactionMethodList(
+                "api/v1/app/payorio_support_tickets/transaction_methods",
+                request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
-        await getServiceTypeData(context, apiResponse);
+        await getTransactionMethodData(context, apiResponse);
       }
     } catch (error) {
       print("Error fetching data: $error");
     }
   }
-  Future<void> _fetchPaymentMethodData() async {
+
+  Future<void> _fetchTransactionProviderData(int? transactionMethodId) async {
     print("Fetch Data");
     try {
       setState(() {
-        //_isLoadingMore = true;
+        isLoading = true;
       });
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
@@ -860,14 +1166,16 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           );
         });
       } else {
-        ServiceTypeListRequest request = ServiceTypeListRequest(
-          countryId: countryId,
+        TransactionProviderListRequest request = TransactionProviderListRequest(
+          transactionMethodId: transactionMethodId,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .serviceTypeListData("api/v1/app/payorio_support_tickets/transaction_providers", request);
+            .paymentMethodList(
+                "api/v1/app/payorio_support_tickets/transaction_providers",
+                request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
-        await getServiceTypeData(context, apiResponse);
+        await getTransactionProviderData(context, apiResponse);
       }
     } catch (error) {
       print("Error fetching data: $error");
@@ -901,6 +1209,61 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     }
   }
 
+  Future<void> getTransactionMethodData(
+      BuildContext context, ApiResponse apiResponse) async {
+    TransactionMethodListResponse? transactionMethodListResponse =
+        apiResponse.data as TransactionMethodListResponse?;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return;
+      case Status.COMPLETED:
+        final newItems = transactionMethodListResponse?.data ?? [];
+        setState(() {
+          print("isScroll:: ${newItems}");
+          transactionTypeList.addAll(newItems);
+        });
+        return;
+      case Status.ERROR:
+        if (apiResponse.message == "Invalid access token") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        }
+        return;
+      case Status.INITIAL:
+      default:
+        return;
+    }
+  }
+
+  Future<void> getTransactionProviderData(
+      BuildContext context, ApiResponse apiResponse) async {
+    TransactionProviderListResponse? transactionProviderListResponse =
+        apiResponse.data as TransactionProviderListResponse?;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return;
+      case Status.COMPLETED:
+        final newItems = transactionProviderListResponse?.data ?? [];
+        setState(() {
+          print("isScroll:: ${newItems}");
+          providerTypeList.addAll(newItems);
+        });
+        return;
+      case Status.ERROR:
+        if (apiResponse.message == "Invalid access token") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        }
+        return;
+      case Status.INITIAL:
+      default:
+        return;
+    }
+  }
 
   void Validate(String email) {
     bool isValid = EmailValidator.validate(email);

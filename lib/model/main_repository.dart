@@ -10,17 +10,20 @@ import 'package:Payrio/model/request/exustingUserRequest.dart';
 import 'package:Payrio/model/request/generateOtpTpinChange.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/request/serviceTypeListRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/supportListRequest.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
+import 'package:Payrio/model/request/transactionMethodRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/GenerateOtpTPINChangeResponse.dart';
+import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/completeP2PResponse.dart';
 import 'package:Payrio/model/response/countryListResponse.dart';
@@ -33,10 +36,15 @@ import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/generateTpinResponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
+import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
+import 'package:Payrio/model/response/sendMessageResponse.dart';
+import 'package:Payrio/model/response/transactionProviderListReponse.dart';
+import 'package:Payrio/model/response/payorioMethodListReponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
+import 'package:Payrio/model/response/transactionMethodListReponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:Payrio/model/services/base_service.dart';
@@ -145,26 +153,28 @@ class MainRepository {
 
   Future<CreateSupportTicketResponse> postMultiFormResponseToCreateSupport(
       String url,
+      String customerId,
       String amount,
       String paymentTime,
-      String customerNumber,
+      String customerMerchantNumber,
       String trxId,
-      String serviceType,
-      String bankType,
+      String transactionProviderId,
+      String transactionMethodId,
       String comment,
-      String issueType,
-      File supportTicketDocument) async {
+      String transactionTypeId,
+      File? supportTicketDocument) async {
     dynamic response =
         await _payrioService.postMultiFormResponseToCreateSupport(
             url,
-            amount,
-            paymentTime,
-            customerNumber,
-            trxId,
-            serviceType,
-            bankType,
-            comment,
-            issueType,
+             customerId,
+             amount,
+             paymentTime,
+             customerMerchantNumber,
+             trxId,
+             transactionProviderId,
+             transactionMethodId,
+             comment,
+             transactionTypeId,
             supportTicketDocument);
     print(paymentTime);
     final jsonData = response;
@@ -301,7 +311,7 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<CreateSupportTicketResponse> supportListData(
+  Future<AllSupportTicketsResponse> supportListData(
       String value, SupportListRequest supportListRequest) async {
     print(supportListRequest);
     dynamic response =
@@ -309,12 +319,12 @@ class MainRepository {
     print(value);
     final jsonData = response;
     print(jsonData);
-    CreateSupportTicketResponse mediaList =
-    CreateSupportTicketResponse.fromJson(jsonData);
+    AllSupportTicketsResponse mediaList =
+    AllSupportTicketsResponse.fromJson(jsonData);
     return mediaList;
   }
 
-  Future<CreateSupportTicketResponse> serviceTypeListData(
+  Future<ServiceTypeListResponse> serviceTypeListData(
       String value, ServiceTypeListRequest serviceTypeListRequest) async {
     print(serviceTypeListRequest);
     dynamic response =
@@ -322,10 +332,62 @@ class MainRepository {
     print(value);
     final jsonData = response;
     print(jsonData);
-    CreateSupportTicketResponse mediaList =
-    CreateSupportTicketResponse.fromJson(jsonData);
+    ServiceTypeListResponse mediaList =
+    ServiceTypeListResponse.fromJson(jsonData);
     return mediaList;
   }
+
+
+  Future<TransactionMethodListResponse> transactionMethodList(
+      String value, TransactionMethodRequest transactionMethodRequest) async {
+    print(transactionMethodRequest);
+    dynamic response =
+    await _payrioService.postResponse(value, transactionMethodRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    TransactionMethodListResponse mediaList =
+    TransactionMethodListResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+
+  Future<TransactionProviderListResponse> paymentMethodList(
+      String value, TransactionProviderListRequest paymentMethodListRequest) async {
+    print(paymentMethodListRequest);
+    dynamic response =
+    await _payrioService.postResponse(value, paymentMethodListRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    TransactionProviderListResponse mediaList =
+    TransactionProviderListResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+
+  Future<dynamic> getSupportChatData(String value) async {
+    dynamic response = await _payrioService.getResponse(value);
+    print(value);
+    final jsonData = response;
+    MessagesSupportChatResponse mediaList =
+    MessagesSupportChatResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+
+  Future<SendMessageResponse> postMultiFormMessageResponse(
+      String value, File imageFile, String content) async {
+    dynamic response = await _payrioService.postMultiFormMessageResponse(
+        value, imageFile, content);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    SendMessageResponse mediaList = SendMessageResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+
 
   Future<dynamic> getOtpTPINChange(String value) async {
     dynamic response = await _payrioService.getResponse(value);

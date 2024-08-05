@@ -443,17 +443,31 @@ abstract class Languages {
 
   String get labelWithdrawMethods;
 
- /* String get labelPasswordAlert;
+ /* String get docTypePassport;
 
-  String get labelPasswordAlert;
+  String get docTypeNationalId;
 
-  String get labelPasswordAlert;
+  String get docTypeDrivingLicence;
 
-  String get labelPasswordAlert;
+  String get docTypeVideoKycClip;
 
-  String get labelPasswordAlert;
+  String get docTypeAddressKyc;
 
-  String get labelPasswordAlert;
+  String get imageNameKycFile;
+
+  String get labelFrontSide;
+
+  String get labelBackSide;
+
+  String get docTypePBankStatement;
+
+  String get docTypePBankStatement;
+
+  String get docTypePBankStatement;
+
+  String get docTypePBankStatement;
+
+  String get docTypePBankStatement;
 */
 
 
