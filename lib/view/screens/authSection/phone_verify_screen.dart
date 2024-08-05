@@ -424,7 +424,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                             }).toList(),
                           ).then((value) {
                             if (value != null) {
-                              _changeItem(value);
+                               _changeItem(value);
                             }
                           });
                         },

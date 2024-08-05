@@ -224,18 +224,70 @@ class PayrioService extends BaseService {
     }
     return responseJson;
   }
+
+  Future<dynamic> postMultiFormMessageResponse(String url, File imageFile,String content) async {
+    print("::::: File: $imageFile");
+    dynamic responseJson;
+
+    try {
+      // Create a multipart request
+      var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
+      print(imageFile);
+
+      if(imageFile.path.isNotEmpty) {
+        // Add file
+        var stream = http.ByteStream(imageFile.openRead());
+        var length = await imageFile.length();
+
+        // multipart that takes file
+        var multipartFile = http.MultipartFile(
+            "attachment", stream, length, filename: basename(imageFile.path));
+        print("Multipart File: ${multipartFile.filename}");
+
+        requestBody.files.add(multipartFile);
+        requestBody.fields['message'] = content;
+      }else{
+        requestBody.fields['message'] = content;
+
+      }
+      //requestBody.
+      // Add headers
+      var headers = await getHeaders();
+      requestBody.headers.addAll(headers);
+
+      // Debugging the request
+      print("Request URL: ${getFullUrl(url)}");
+      print("Request Headers: $headers");/*
+      print("Request Files: ${requestBody.files.map((file) => file.filename).join(', ')}");*/
+
+      // Send the request and get the response
+      var response = await requestBody.send();
+      final responses = await http.Response.fromStream(response);
+      print("Response Status Code: ${responses.statusCode}");
+      print("Response Body: ${responses.body}");
+
+      responseJson = returnResponse(responses);
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      print('Error: $e');
+      throw FetchDataException('Error occurred while sending the request');
+    }
+    return responseJson;
+  }
   //Support Ticket
   Future<dynamic> postMultiFormResponseToCreateSupport(
       String url,
+      String customerId,
       String amount,
       String paymentTime,
-      String customerNumber,
+      String customerMerchantNumber,
       String trxId,
-      String serviceType,
-      String bankType,
+      String transactionProviderId,
+      String transactionMethodId,
       String comment,
-      String issueType,
-      File supportTicketDocument) async {
+      String transactionTypeId,
+      File? supportTicketDocument) async {
     print("::::: File: $supportTicketDocument");
     dynamic responseJson;
 
@@ -244,28 +296,29 @@ class PayrioService extends BaseService {
       var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
 
       // Add file
-      var stream = http.ByteStream(supportTicketDocument.openRead());
+      var stream = http.ByteStream(supportTicketDocument!.openRead());
       var length = await supportTicketDocument.length();
-
+      print("length:::${length}");
       // multipart that takes file
       var multipartFile = http.MultipartFile("support_ticket_document", stream, length, filename: basename(supportTicketDocument.path));
       print("Multipart File: ${multipartFile.filename}");
       //RequestBody.
       requestBody.files.add(multipartFile);
+      requestBody.fields['customer_id'] = customerId;
+      requestBody.fields['transaction_type_id'] = transactionTypeId;
+      requestBody.fields['transaction_method_id'] = transactionMethodId;
+      requestBody.fields['transaction_provider_id'] = transactionProviderId;
       requestBody.fields['amount'] = amount;
+      requestBody.fields['customer_merchant_number'] = customerMerchantNumber;
       requestBody.fields['payment_time'] = paymentTime;
-      requestBody.fields['customer_number'] = customerNumber;
-      requestBody.fields['service_type'] = serviceType;
-      requestBody.fields['bank_type'] = bankType;
-      requestBody.fields['comment'] = comment;
-      requestBody.fields['issue_type'] = issueType;
+      requestBody.fields['trx_id'] = trxId;
       requestBody.fields['comment'] = comment;
       // Add headers
       var headers = await getHeaders();
       requestBody.headers.addAll(headers);
 
       // Debugging the request
-      print("Request URL: ${getFullUrl(url)}");
+      //print("Request URL: ${getFullUrl(url)}");
       print("Request Headers: $headers");
       print("Request Files: ${requestBody.files.map((file) => file.filename).join(', ')}");
 

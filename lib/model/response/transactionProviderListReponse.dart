@@ -1,20 +1,20 @@
-class ServiceTypeListResponse {
+class TransactionProviderListResponse {
   String? message;
   int? status;
-  List<ServiceTypeListDetails>? data;
+  List<TransactionProvidersListDetails>? data;
 
-  ServiceTypeListResponse({
+  TransactionProviderListResponse({
     required this.message,
     required this.status,
     required this.data,
   });
 
-  factory ServiceTypeListResponse.fromJson(Map<String, dynamic> json) {
+  factory TransactionProviderListResponse.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
-    List<ServiceTypeListDetails>? serviceTypeListDetails =
-        list?.map((i) => ServiceTypeListDetails.fromJson(i)).toList();
+    List<TransactionProvidersListDetails>? serviceTypeListDetails =
+    list.map((i) => TransactionProvidersListDetails.fromJson(i)).toList();
 
-    return ServiceTypeListResponse(
+    return TransactionProviderListResponse(
       message: json['message'] as String?,
       status: json['status'] as int?,
       data: serviceTypeListDetails,
@@ -22,28 +22,28 @@ class ServiceTypeListResponse {
   }
 }
 
-class ServiceTypeListDetails {
+class TransactionProvidersListDetails {
   int? id;
   String? serviceName;
-  int? countryId;
+  int? transactionMethodId;
   String? status;
   String? createdAt;
   String? updatedAt;
 
-  ServiceTypeListDetails({
+  TransactionProvidersListDetails({
     required this.id,
     required this.serviceName,
-    required this.countryId,
+    required this.transactionMethodId,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  factory ServiceTypeListDetails.fromJson(Map<String, dynamic> json) {
-    return ServiceTypeListDetails(
+  factory TransactionProvidersListDetails.fromJson(Map<String, dynamic> json) {
+    return TransactionProvidersListDetails(
       id: json["id"] as int?,
       serviceName: json["name"] as String?,
-      countryId: json["country_id"] as int?,
+      transactionMethodId: json["transaction_method_id"] as int?,
       status: json["status"] as String?,
       createdAt: json["created_at"] as String?,
       updatedAt: json["updated_at"] as String?,

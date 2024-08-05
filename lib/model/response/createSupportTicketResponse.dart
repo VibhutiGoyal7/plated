@@ -6,17 +6,17 @@ class CreateSupportTicketResponse {
   final String? amount;
   final int? merchantId;
   final String? paymentTime;
-  final String? customerNumber;
-  final String? agentNumber;
+  final String? customerMerchantNumber;
   final String? trxId;
-  final String? serviceType;
-  final String? bankType;
   final String? comment;
   final String? screenshot;
-  final String? issueType;
+  final String? queryType;
+  final int? transactionTypeId;
+  final int? transactionMethodId;
+  final int? transactionProviderId ;
   final String? createdAt;
   final String? updatedAt;
-  final String? customerId;
+  final int? customerId;
   final String? message;
 
   CreateSupportTicketResponse({
@@ -24,14 +24,14 @@ class CreateSupportTicketResponse {
     this.amount,
     this.merchantId,
     this.paymentTime,
-    this.customerNumber,
-    this.agentNumber,
+    this.transactionTypeId,
+    this.transactionProviderId,
     this.trxId,
-    this.serviceType,
-    this.bankType,
+    this.transactionMethodId,
+    this.customerMerchantNumber,
     this.comment,
     this.screenshot,
-    this.issueType,
+    this.queryType,
     this.createdAt,
     this.updatedAt,
     this.customerId,
@@ -45,17 +45,17 @@ class CreateSupportTicketResponse {
       amount: json['data']?['amount'] as String?,
       merchantId: json['data']?['merchant_id'] as int?,
       paymentTime: json['data']?['payment_time'] as String?,
-      customerNumber: json['data']?['customer_number'] as String?,
-      agentNumber: json['data']?['agent_number'] as String?,
+      transactionTypeId: json['data']?['transaction_type_id'] as int?,
+      transactionProviderId: json['data']?['transaction_provider_id'] as int?,
       trxId: json['data']?['trx_id'] as String?,
-      serviceType: json['data']?['service_type'] as String?,
-      bankType: json['data']?['bank_type'] as String?,
+      customerMerchantNumber: json['data']?['customer_merchant_number'] as String?,
+      queryType: json['data']?['query_type'] as String?,
       comment: json['data']?['comment'] as String?,
       screenshot: json['data']?['screenshot'] as String?,
-      issueType: json['data']?['issue_type'] as String?,
+      transactionMethodId: json['data']?['transaction_method_id'] as int?,
       createdAt: json['data']?['created_at'] as String?,
       updatedAt: json['data']?['updated_at'] as String?,
-      customerId: json['data']?['customer_id'] as String?,
+      customerId: json['data']?['customer_id'] as int?,
     );
   }
 }
