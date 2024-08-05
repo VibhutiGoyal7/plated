@@ -57,6 +57,7 @@ import 'package:Payrio/view/screens/profileSection/settingSection/manage_applock
 import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/create_support_ticket_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_selection_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_otp_screen.dart';
 import 'package:Payrio/view/screens/profileSection/verify_email_screen.dart';
 import 'package:Payrio/view/screens/redeemSection/level_benefit_screen.dart';
@@ -411,6 +412,11 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as String?;
               return WithdrawMethodScreen();
+            },
+            '/SupportSelectionScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return SupportSelectionScreen();
             },
             '/WithdrawMethodTypeScreen': (context) {
               final args =

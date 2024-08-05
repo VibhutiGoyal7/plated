@@ -152,7 +152,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             child: Text("Edit", style: TextStyle(
                               color: Colors.blue,
                               fontSize: 14
-                            ),) /*DropdownButtonHideUnderline(
+                            ),)
+                            /*DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 dropdownColor:
                                     isDarkMode ? Colors.grey : Colors.white,

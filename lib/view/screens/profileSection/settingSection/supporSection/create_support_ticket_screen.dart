@@ -57,7 +57,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    _fetchTransactionTypesData();
     passwordVisible = true;
     confirmPasswordVisible = true;
     inputValid = false;
@@ -777,7 +777,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   }
 
 
-  Future<void> _fetchData() async {
+  Future<void> _fetchTransactionTypesData() async {
     print("Fetch Data");
     try {
       setState(() {
@@ -800,7 +800,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           countryId: countryId,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .serviceTypeListData("api/v1/app/payorio_support_tickets/service_types", request);
+            .serviceTypeListData("api/v1/app/payorio_support_tickets/transaction_types", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getServiceTypeData(context, apiResponse);
@@ -832,7 +832,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           countryId: countryId,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .serviceTypeListData("api/v1/app/payorio_support_tickets/payorio_methods", request);
+            .serviceTypeListData("api/v1/app/payorio_support_tickets/transaction_methods", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getServiceTypeData(context, apiResponse);
@@ -864,7 +864,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           countryId: countryId,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .serviceTypeListData("api/v1/app/payorio_support_tickets/payment_methods", request);
+            .serviceTypeListData("api/v1/app/payorio_support_tickets/transaction_providers", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getServiceTypeData(context, apiResponse);

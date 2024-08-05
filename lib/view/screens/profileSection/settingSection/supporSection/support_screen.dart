@@ -117,7 +117,7 @@ class _SupportScreenState extends State<SupportScreen> {
           agentNumber: "",
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .supportListData("/api/v1/app/support_tickets/list", request);
+            .supportListData("api/v1/app/payorio_support_tickets/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getTransactionData(context, apiResponse, pageKey, isScroll);

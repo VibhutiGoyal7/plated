@@ -96,7 +96,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                                   isLoading = false;
                                   selectedLanguageName = mLanguages[index].name;
                                   if (mounted) {
-                                    selectedLanguageValue = mLanguages[index].code!;
+                                    selectedLanguageValue = mLanguages[index].code;
                                   }
                                   widget.setLocale(Locale(mLanguages[index].code, ''));
                                   print(selectedLanguageValue);
