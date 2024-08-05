@@ -23,7 +23,7 @@ class TransactionDialog {
 
   static Future<void> showDialogBox({
     required BuildContext context,
-    required TransactionDetails transaction,
+    required TransactionDetails? transaction,
     required String symbol,
   }) {
     return showDialog<void>(
@@ -56,7 +56,7 @@ class TransactionDialog {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            capitalizeFirstLetter("${transaction.transactionType}"),
+                            capitalizeFirstLetter("${transaction?.transactionType}"),
                             style: TextStyle(
                                 fontWeight: FontWeight.w700, fontSize: 16),
                           ),
@@ -84,7 +84,7 @@ class TransactionDialog {
                             SizedBox(
                               height: 8,
                             ),
-                            transaction.amount != null
+                            transaction?.amount != null
                                 ? Row(
                               mainAxisAlignment:
                               MainAxisAlignment.spaceBetween,
@@ -93,15 +93,15 @@ class TransactionDialog {
                                 Text(
                                     addCurrencySymbolTransaction(
                                         symbol,
-                                        "${transaction.amount}",
+                                        "${transaction?.amount}",
                                         capitalizeFirstLetter(
-                                            "${transaction.transactionType}")),
+                                            "${transaction?.transactionType}")),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                         color: colorPaymentType(
                                             capitalizeFirstLetter(
-                                                "${transaction.transactionType}"))))
+                                                "${transaction?.transactionType}"))))
                               ],
                             )
                                 : SizedBox(),
@@ -114,10 +114,10 @@ class TransactionDialog {
                                 Text("Status :"),
                                 Text(
                                   capitalizeFirstLetter(
-                                      "${transaction.status}"),
+                                      "${transaction?.status}"),
                                   style: TextStyle(
                                       color: colorStatus(capitalizeFirstLetter(
-                                          "${transaction.status}"))),
+                                          "${transaction?.status}"))),
                                 )
                               ],
                             ),
@@ -166,7 +166,7 @@ class TransactionDialog {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Payment Request Id :"),
-                                Text("${transaction.uniqueId}")
+                                Text("${transaction?.uniqueId}")
                               ],
                             ),
                           ],

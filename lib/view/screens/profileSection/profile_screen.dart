@@ -666,11 +666,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       String? retrievedToken = await Helper.getUserToken();
       print("Token $retrievedToken");
-      await Provider.of<MainViewModel>(context, listen: false)
-          .profileScreenData("/api/v1/app/customers/show_customer_details");
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getProfileResponse(context, apiResponse);
+      if(mounted) {
+        await Provider.of<MainViewModel>(context, listen: false)
+            .profileScreenData("/api/v1/app/customers/show_customer_details");
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        getProfileResponse(context, apiResponse);
+      }
     }
   }
 

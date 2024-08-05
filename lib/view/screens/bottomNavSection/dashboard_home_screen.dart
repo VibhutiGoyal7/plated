@@ -35,7 +35,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String kycStatusApi = "";
   String? amount = "0.00";
   String? currencySymbol = "";
-  String? country ;
+  String? country;
+
   String calledShortCut = "";
   String? name = "";
   var imageUrl;
@@ -55,7 +56,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
 
-  List<TransactionDetails> transactionList = [];
+  List<TransactionDetails?> transactionList = [];
 
   final List<OfferResponse> imgList = [
     OfferResponse(
@@ -101,6 +102,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         .build()
         .then((value) async {
       this.database = value;
+      _fetchDashboardData();
     });
     Helper.getProfileDetails().then((profile) {
       setState(() {
@@ -114,15 +116,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         5, (index) => false); // Initial setup for 5 checkboxes
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
-    _fetchDashboardData();
+
+
 
     print("isoCountryCode:: $isoCountryCode");
     // Initial setup for 5 checkboxes
   }
 
-  FutureOr onGoBack(dynamic value) {
+/*  FutureOr onGoBack(dynamic value) {
     _fetchDashboardData();
-  }
+  }*/
 
   Future<Widget> getDashboardData(
       BuildContext context, ApiResponse apiResponse) async {
@@ -149,8 +152,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         CustomerData? customer = await database.personDao
             .findCustomerByEmail("${customerData?.email}");
         if (mounted) {
-          ToastComponent.showToast(
-              context: context, message: "${customer?.imageUrl}");
           if (customer?.email?.isNotEmpty == true) {
             await database.personDao.updateCustomer(customerData!);
           } else {
@@ -160,8 +161,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         dashboardResponse?.customerRecentTxn
             ?.map((transactionData) async => {
+                  print("${transactionData.fullName}"),
                   await database.dashboardTransactionDao
-                      .insertTransaction(transactionData!)
+                      .insertTransaction(transactionData)
                 })
             .toList();
 
@@ -244,7 +246,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           } else if (calledShortCut == Languages.of(context)!.labelWithdraw) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/WithdrawMethodScreen');
-          }else if(calledShortCut == Languages.of(context)!.labelRequestQR) {
+          } else if (calledShortCut == Languages.of(context)!.labelRequestQR) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/RequestQrScreen');
           }
@@ -278,7 +280,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     });
 
     // Simulate a network request
-    await Future.delayed(Duration(seconds: 2));
     _fetchDashboardData();
 
     setState(() {
@@ -538,7 +539,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   : Colors.black,
                                             ),
                                           ),
-                                          SizedBox(width: 8,),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
                                           /*GestureDetector(
                                             onTap: ()
                                             {
@@ -656,7 +659,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   ),
                                   Text(
                                     currencyFormat(
-                                        "${currencySymbol}","${isAmountVisible ? amount : "**"} ","${country}" ),
+                                        "${currencySymbol}",
+                                        "${isAmountVisible ? amount : "**"} ",
+                                        "${country}"),
                                     style: TextStyle(
                                       fontSize: 26.0,
                                       fontWeight: FontWeight.w600,
@@ -773,50 +778,81 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               ),
                             ),
 
-                        Container(
-                          //height: screenHeight * 0.32,
-                          margin: EdgeInsets.only(top: 5, left: 2, right: 6),
-                          child: isInternetConnected && !isLoading
-                              ? transactionList.isNotEmpty
-                              ? ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            controller: _scrollController,
-                            itemCount: transactionList.length > 0 && transactionList.length<=3 ? transactionList.length : transactionList.length>3 ? 3 : 0,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(bottom: 5),
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: (){
-
-                                  TransactionDialog.showDialogBox(context: context,transaction : transactionList[index], symbol: "${currencySymbol}");
-                                },
-                                child: Card(
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 6),
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(vertical: 4),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Card(
-                                                margin: EdgeInsets.all(0),
-                                                child: Container(
-                                                  height: 31,
-                                                  width: 31,
-                                                  margin: EdgeInsets.all(8),
-                                                  child: Text("${convertDateMonthFormat("${transactionList[index].createdAt}")}",
-                                                    style: TextStyle(fontSize: 11),textAlign: TextAlign.center,
-                                                  ),
+                            Container(
+                              height: screenHeight * 0.32,
+                              margin:
+                                  EdgeInsets.only(top: 5, left: 2, right: 6),
+                              child: isInternetConnected && !isLoading
+                                  ? transactionList.isNotEmpty
+                                      ? ListView.builder(
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          controller: _scrollController,
+                                          itemCount: transactionList.length >
+                                                      0 &&
+                                                  transactionList.length <= 3
+                                              ? transactionList.length
+                                              : transactionList.length > 3
+                                                  ? 3
+                                                  : 0,
+                                          shrinkWrap: true,
+                                          padding:
+                                              const EdgeInsets.only(bottom: 5),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                TransactionDialog.showDialogBox(
+                                                    context: context,
+                                                    transaction:
+                                                        transactionList[index],
+                                                    symbol:
+                                                        "${currencySymbol}");
+                                              },
+                                              child: Card(
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
-                                              ),
-                                              /*Container(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 6),
+                                                  child: Container(
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 4),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Card(
+                                                              margin: EdgeInsets
+                                                                  .all(0),
+                                                              child: Container(
+                                                                height: 31,
+                                                                width: 31,
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(8),
+                                                                child: Text(
+                                                                  "${convertDateMonthFormat("${transactionList[index]?.createdAt}")}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          11),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            /*Container(
                                                 height: 50,
                                                 width: 50,
                                                 child: Card(
@@ -833,86 +869,102 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   ),
                                                 ),
                                               ),*/
-                                              SizedBox(
-                                                width: 8,
-                                              ),
-                                              Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        transactionList[index].transactionType == "${Languages.of(context)?.statusWithdraw}" || transactionList[index].transactionType == "${Languages.of(context)?.statusTransfer}"?
-                                                        Icons.call_made : Icons.call_received,
-                                                        size: 15,
-                                                        color: colorStatus(capitalizeFirstLetter(
-                                                            "${transactionList[index].status}"))
-                                                      ),
-                                                      Text(
-                                                        capitalizeFirstLetter(
-                                                            "${transactionList[index].uniqueId}"),
-                                                        style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: 13),
-                                                      ),
-                                                    ],
+                                                            SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Icon(
+                                                                        transactionList[index]?.transactionType == "${Languages.of(context)?.statusWithdraw}" || transactionList[index]?.transactionType == "${Languages.of(context)?.statusTransfer}"
+                                                                            ? Icons
+                                                                                .call_made
+                                                                            : Icons
+                                                                                .call_received,
+                                                                        size:
+                                                                            15,
+                                                                        color: colorStatus(
+                                                                            capitalizeFirstLetter("${transactionList[index]?.status}"))),
+                                                                    Text(
+                                                                      capitalizeFirstLetter(
+                                                                          "${transactionList[index]?.uniqueId}"),
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          fontSize:
+                                                                              13),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  capitalizeFirstLetter(
+                                                                      "${transactionList[index]?.status}"),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          11,
+                                                                      color: colorStatus(
+                                                                          capitalizeFirstLetter(
+                                                                              "${transactionList[index]?.status}"))),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Column(
+                                                          children: [
+                                                            Text(
+                                                              addCurrencySymbolTransaction(
+                                                                  currencySymbol,
+                                                                  "${transactionList[index]?.amount}",
+                                                                  capitalizeFirstLetter(
+                                                                      "${transactionList[index]?.transactionType}")),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 13,
+                                                                  color: colorPaymentType(
+                                                                      capitalizeFirstLetter(
+                                                                          "${transactionList[index]?.transactionType}"))),
+                                                            ),
+                                                            Text(
+                                                              "${convertTime("${transactionList[index]?.createdAt}")}",
+                                                              style: TextStyle(
+                                                                  fontSize: 11),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  Text(
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].status}"),
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        color: colorStatus(capitalizeFirstLetter(
-                                                            "${transactionList[index].status}"))),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
-                                            ],
+                                            );
+                                          },
+                                        )
+                                      : Center(
+                                          child: Text(
+                                            Languages.of(context)!
+                                                .labelNoTransaction,
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.grey),
                                           ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                addCurrencySymbolTransaction(
-                                                    currencySymbol,
-                                                    "${transactionList[index].amount}",
-                                                    capitalizeFirstLetter(
-                                                        "${transactionList[index].transactionType}")),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 13,
-                                                    color: colorPaymentType(capitalizeFirstLetter(
-                                                        "${transactionList[index].transactionType}"))),
-                                              ),
-                                              Text(
-                                                "${convertTime(
-                                                    "${transactionList[index].createdAt}")}",
-                                                style: TextStyle(fontSize: 11),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                        )
+                                  : Container(
+                                      child: ShimmerList(
+                                        itemCount: 3,
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                              : Center(
-                            child: Text(
-                              Languages.of(context)!.labelNoTransaction,
-                              style: TextStyle(fontSize: 15, color: Colors.grey),
                             ),
-                          )
-                              : Container(
-                            child: ShimmerList(
-                              itemCount: 3,
-                            ),
-                          ),
-                        ),
-
-                        ],
+                          ],
                         ),
                       ),
                     ],
@@ -1243,31 +1295,39 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   void _fetchDashboardData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    bool isConnected = await _connectivityService.isConnected();
-    print(("isConnected - ${isConnected}"));
-    if (!isConnected) {
-      setState(() {
-        isLoading = false;
-        isInternetConnected = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(Languages.of(context)!.labelNoInternetConnection),
-            duration: maxDuration,
-          ),
-        );
-      });
+    List<TransactionDetails?> localTransactionList =
+        await database.dashboardTransactionDao.findAllTransactions();
+    if (localTransactionList.isNotEmpty) {
+      print("localTransactionList.length::${localTransactionList.length}");
+      transactionList.addAll(localTransactionList);
     } else {
-      if (mounted) {
-        //await Future.delayed(Duration(milliseconds: 1));
-        await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
-        ApiResponse apiResponse =
-            Provider.of<MainViewModel>(context, listen: false).response;
-        getDashboardData(context, apiResponse);
+      print("ELSE localTransactionList.length::${localTransactionList.isEmpty}");
+      setState(() {
+        isLoading = true;
+      });
+
+      bool isConnected = await _connectivityService.isConnected();
+      print(("isConnected - ${isConnected}"));
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          isInternetConnected = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(Languages.of(context)!.labelNoInternetConnection),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        if (mounted) {
+          //await Future.delayed(Duration(milliseconds: 1));
+          await Provider.of<MainViewModel>(context, listen: false)
+              .dashboardData("/api/v1/app/customers/dashboard_data");
+          ApiResponse apiResponse =
+              Provider.of<MainViewModel>(context, listen: false).response;
+          getDashboardData(context, apiResponse);
+        }
       }
     }
   }

@@ -246,13 +246,13 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     headingTextSize: 14,
                     subHeadingTextSize: 13,
                   ),
-                  DetailBox(
+                /*  DetailBox(
                     heading: Languages.of(context)!.labelEmail,
                     subHeading: "${email}",
                     icon: Icons.mail,
                     headingTextSize: 14,
                     subHeadingTextSize: 13,
-                  ),
+                  ),*/
                   DetailBox(
                     heading: Languages.of(context)!.labelDOB,
                     subHeading: convertDateFormat("${dob}"),

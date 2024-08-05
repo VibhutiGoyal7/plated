@@ -1,6 +1,5 @@
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/utils/Helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +35,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
 
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
-    apiResponse.data as CountryListResponse?;
+        apiResponse.data as CountryListResponse?;
     var message = apiResponse?.message.toString();
     print("message ${message}");
     setState(() {
@@ -70,15 +69,14 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-     screenWidth = MediaQuery.of(context).size.width;
+    screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return PopScope(
       canPop: true,
-      onPopInvoked: (bool didPop){
+      onPopInvoked: (bool didPop) {
         Future.value(false);
         if (kDebugMode) {
           print("$didPop");
@@ -91,7 +89,9 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               Image(
                 //height: screenHeight * 0.35,
                 image: AssetImage(isDarkMode
@@ -99,7 +99,6 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                     : "assets/app_logo.png"),
                 fit: BoxFit.cover,
               ),
-
               Expanded(
                 child: PageView(
                   controller: _pageController,
@@ -123,21 +122,22 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                   ),
                 ),
               ),
-
               _buildFooter(
                   context: context,
                   text: "Register",
                   onTap: () {
                     Navigator.pushNamed(context, '/PhoneVerifyScreen');
                   }),
-
               _buildFooter(
                   context: context,
                   text: "${Languages.of(context)?.labelSignin}",
                   onTap: () {
-                    Navigator.pushNamed(context, '/SignInScreen', arguments: "");
+                    Navigator.pushNamed(context, '/SignInScreen',
+                        arguments: "");
                   }),
-              SizedBox(height: 52,)
+              SizedBox(
+                height: 52,
+              )
             ],
           ),
         ),
@@ -145,13 +145,13 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
     );
   }
 
-  Widget getStartedScreen(){
+  Widget getStartedScreen() {
     return Column(
       children: [
         Image(
           //alignment: Alignment.topLeft,
-          width: screenWidth*0.9,
-          height: screenHeight*0.38,
+          width: screenWidth * 0.9,
+          height: screenHeight * 0.38,
           image: AssetImage("assets/payment_image.png"),
         ),
         SizedBox(
@@ -164,10 +164,14 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
         SizedBox(
           height: 8,
         ),
-        Text(
-          "${Languages.of(context)?.subHeadingApplicationForReachingGoal}",
-          style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
+        Container(
+          width: screenWidth * 0.9,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "${Languages.of(context)?.subHeadingApplicationForReachingGoal}",
+            style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
         ),
         SizedBox(
           height: 20,
@@ -176,13 +180,13 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
     );
   }
 
-  Widget moneyScreen(){
+  Widget moneyScreen() {
     return Column(
       children: [
         Image(
           //alignment: Alignment.topLeft,
-          width: screenWidth*0.9,
-          height: screenHeight*0.4,
+          width: screenWidth * 0.9,
+          height: screenHeight * 0.4,
           image: AssetImage("assets/money_safe.png"),
         ),
         SizedBox(
@@ -207,7 +211,6 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
         SizedBox(
           height: 10,
         ),
-
       ],
     );
   }
@@ -252,7 +255,8 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            content:
+                Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );

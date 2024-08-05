@@ -510,7 +510,7 @@ class LanguageEnUS extends Languages {
   String get labelAddMoneyAndManage => "Add your money and manage";
 
   @override
-  String get subHeadingApplicationForReachingGoal => "The application for reaching your saving goal , send and receive money. Use QR codes and payment links to accept cards";
+  String get subHeadingApplicationForReachingGoal => "The application for reaching your saving goal , send and receive money. Use QR codes and payment links to accept cards.";
 
   @override
   String get labelMoneyStaysSafe => "Your Money Stays Safe";
