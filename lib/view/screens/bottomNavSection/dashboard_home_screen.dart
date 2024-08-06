@@ -250,6 +250,27 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             SystemNavigator.pop();
           }
           // return Future.value(true);
+        }else{
+          print("$didPop");
+          final now = DateTime.now();
+          const maxDuration = Duration(seconds: 2);
+          final isWarning = lastBackPressed == null ||
+              now.difference(lastBackPressed!) > maxDuration;
+
+          if (isWarning) {
+            lastBackPressed = DateTime.now();
+            _showExitDialog();
+            /* ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(Languages.of(context)!.labelPressBackToExit),
+                duration: maxDuration,
+              ),
+            );*/
+            //SystemNavigator.pop();
+            // return Future.value(false);
+          } else {
+            SystemNavigator.pop();
+          }
         }
       },
       child: Scaffold(
