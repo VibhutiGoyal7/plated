@@ -337,68 +337,86 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                           ),
                                                         ),
                                                       )
-                                                    : ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    100.0),
-                                                        child: Image.network(
-                                                          imageUrl as String,
-                                                          height: 40,
-                                                          width: 40,
-                                                          fit: BoxFit.cover,
-                                                          errorBuilder:
-                                                              (BuildContext
+                                                    : Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                          border: Border.all(
+                                                              color: AppColor
+                                                                  .PRIMARY,
+                                                              width: 0.3),
+                                                          color: Colors.white,
+                                                        ),
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100.0),
+                                                            child:
+                                                                Image.network(
+                                                              imageUrl
+                                                                  as String,
+                                                              height: 40,
+                                                              width: 40,
+                                                              fit: BoxFit.cover,
+                                                              errorBuilder: (BuildContext
                                                                       context,
                                                                   Object
                                                                       exception,
                                                                   StackTrace?
                                                                       stackTrace) {
-                                                            // You can return any widget here to display in case of an error
-                                                            return Container(
-                                                              height: 40,
-                                                              width: 40,
-                                                              child:
-                                                                  CircleAvatar(
-                                                                radius: 30,
-                                                                backgroundColor:
-                                                                    AppColor
-                                                                        .WHITE,
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                  "assets/profile_user.png",
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          loadingBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  Widget child,
-                                                                  ImageChunkEvent?
-                                                                      loadingProgress) {
-                                                            if (loadingProgress ==
-                                                                null) {
-                                                              return child;
-                                                            } else {
-                                                              return Shimmer
-                                                                  .fromColors(
-                                                                baseColor: Colors
-                                                                    .black45,
-                                                                highlightColor:
-                                                                    Colors
-                                                                        .black87,
-                                                                child:
-                                                                    Container(
+                                                                // You can return any widget here to display in case of an error
+                                                                return Container(
                                                                   height: 40,
                                                                   width: 40,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                              );
-                                                            }
-                                                          },
-                                                        )),
+                                                                  child:
+                                                                      CircleAvatar(
+                                                                    radius: 30,
+                                                                    backgroundColor:
+                                                                        AppColor
+                                                                            .WHITE,
+                                                                    backgroundImage:
+                                                                        AssetImage(
+                                                                      "assets/profile_user.png",
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              loadingBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      Widget
+                                                                          child,
+                                                                      ImageChunkEvent?
+                                                                          loadingProgress) {
+                                                                if (loadingProgress ==
+                                                                    null) {
+                                                                  return child;
+                                                                } else {
+                                                                  return Shimmer
+                                                                      .fromColors(
+                                                                    baseColor:
+                                                                        Colors
+                                                                            .black45,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .black87,
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          40,
+                                                                      width: 40,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
+                                                            )),
+                                                      ),
                                               ),
                                             ),
                                             SizedBox(width: 8),

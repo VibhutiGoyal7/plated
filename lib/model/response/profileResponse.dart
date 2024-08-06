@@ -28,6 +28,7 @@ class ProfileResponse {
   final String? tpin;
   final String? token;
   final String? dataStatus;
+  final DocumentDetail? documentDetail;
 
   ProfileResponse({
     this.firstName,
@@ -55,7 +56,8 @@ class ProfileResponse {
     this.activityPoints,
     this.isProfileSetupDone,
     this.dataStatus,
-    this.token
+    this.token,
+    this.documentDetail,
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -81,9 +83,12 @@ class ProfileResponse {
       countryPhoneCode: json['data']?['country_phone_code'] as String?,
       createdAt: json['data']?['created_at'] as String?,
       tpin: json['data']?['customer']?['tpin'] as String?,
-      countryCurrencySymbol: json['data']?['country_currency_symbol'] as String?,
+      countryCurrencySymbol:
+      json['data']?['country_currency_symbol'] as String?,
       token: json['data']?['token'] as String?,
-
+      documentDetail: json['data']?['recent_kyc_documents_id_number'] != null
+          ? DocumentDetail.fromJson(json['data']?['recent_kyc_documents_id_number'])
+          : null,
     );
   }
 
@@ -105,13 +110,19 @@ class ProfileResponse {
       vipLevel: json['data']?['customer']?['vip_level'] as String?,
       balance: json['data']?['customer']?['balance'] as String?,
       username: json['data']?['customer']?['username'] as String?,
-      countryCurrencySymbol: json['data']?['customer']?['country_currency_symbol'] as String?,
-      countryPhoneCode: json['data']?['customer']?['country_phone_code'] as String?,
+      countryCurrencySymbol:
+      json['data']?['customer']?['country_currency_symbol'] as String?,
+      countryPhoneCode:
+      json['data']?['country_phone_code'] as String?,
       tpin: json['data']?['customer']?['tpin'] as String?,
       countryId: json['data']?['customer']?['country_id'] as int?,
-      isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as bool?,
+      isProfileSetupDone:
+      json['data']?['customer']?['is_profile_setup_done'] as bool?,
       activityPoints: json['data']?['customer']?['activity_points'] as int?,
       token: json['data']?['token'] as String?,
+      documentDetail: json['data']?['recent_kyc_documents_id_number'] != null
+          ? DocumentDetail.fromJson(json['data']?['recent_kyc_documents_id_number'])
+          : null,
     );
   }
 
@@ -139,8 +150,10 @@ class ProfileResponse {
     data['activity_points'] = this.activityPts;
     data['tpin'] = this.tpin;
     data['country_currency_symbol'] = this.countryCurrencySymbol;
+    data['recent_kyc_documents_id_number'] = this.documentDetail?.toJson();
     return data;
   }
+
   factory ProfileResponse.fromPref(Map<String, dynamic> json) {
     return ProfileResponse(
       firstName: json['first_name'] as String?,
@@ -163,6 +176,33 @@ class ProfileResponse {
       isEmailVerified: json['is_email_verified'] as bool?,
       tpin: json['tpin'] as String?,
       countryCurrencySymbol: json['country_currency_symbol'] as String?,
+      documentDetail: json['recent_kyc_documents_id_number'] != null
+          ? DocumentDetail.fromJson(json['recent_kyc_documents_id_number'])
+          : null,
+    );
+  }
+}
+
+class DocumentDetail {
+  String? recentKycDocumentsName;
+  String? recentKycDocumentsIdNumber;
+
+  DocumentDetail({
+    this.recentKycDocumentsName,
+    this.recentKycDocumentsIdNumber,
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['name'] = this.recentKycDocumentsName;
+    data['id_number'] = this.recentKycDocumentsIdNumber;
+    return data;
+  }
+
+  factory DocumentDetail.fromJson(Map<String, dynamic> json) {
+    return DocumentDetail(
+      recentKycDocumentsName: json["name"] as String?,
+      recentKycDocumentsIdNumber: json["id_number"] as String?,
     );
   }
 }

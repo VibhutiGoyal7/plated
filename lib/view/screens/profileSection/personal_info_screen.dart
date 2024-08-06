@@ -16,7 +16,6 @@ import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,17 +29,23 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   bool isLoading = false;
   bool isInternetConnected = true;
   bool isDarkMode = false;
-
+  String documentNumber = "";
   String? firstName = "";
   String? lastName = "";
   String? email = "";
   String? dob = "";
   String? imageUrl = "";
+  String? recentDocumentName = "";
+  String? recentDocumentNumber = "";
   File? galleryFile;
   final picker = ImagePicker();
-
+  bool mExpanded = false;
+  String mSelectedText = "";
+  final List<String> docType = ["National Id", "Passport"];
   static const maxDuration = Duration(seconds: 2);
   bool isDataLoading = false;
+  final TextEditingController documentNumberController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -58,6 +63,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         email = profileDetails?.email;
         imageUrl = profileDetails?.imageUrl;
         isDataLoading = false;
+        recentDocumentName =
+            profileDetails?.documentDetail?.recentKycDocumentsName;
+        recentDocumentNumber =
+            profileDetails?.documentDetail?.recentKycDocumentsIdNumber;
       });
     });
   }
@@ -85,7 +94,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -106,7 +116,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         );
     }
   }
-
 
   void _fetchDataFromPref() async {
     await Future.delayed(Duration(milliseconds: 2));
@@ -147,151 +156,159 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: () => {_showPicker(context: context)},
-                          child: imageUrl == ""
-                              ? Container(
-                                  height: 110,
-                                  width: 110,
-                                  child: CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: AppColor.WHITE,
-                                    backgroundImage:
-                                        AssetImage("assets/profile_user.png"),
-                                  ),
-                                )
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(100.0),
-                                  child: Image.network(
-                                    "${imageUrl}",
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 30),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () => {_showPicker(context: context)},
+                            child: imageUrl == ""
+                                ? Container(
                                     height: 110,
                                     width: 110,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (BuildContext context,
-                                        Object exception,
-                                        StackTrace? stackTrace) {
-                                      return Container(
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: AppColor.WHITE,
+                                      backgroundImage:
+                                          AssetImage("assets/profile_user.png"),
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(color: AppColor.PRIMARY, width: 0.3),
+                                      color: Colors.white,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      child: Image.network(
+                                        "${imageUrl}",
                                         height: 110,
                                         width: 110,
-                                        child: CircleAvatar(
-                                          radius: 30,
-                                          backgroundColor: AppColor.WHITE,
-                                          backgroundImage: AssetImage(
-                                            "assets/profile_user.png",
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return Shimmer.fromColors(
-                                          baseColor: Colors.white38,
-                                          highlightColor: Colors.grey,
-                                          child: Container(
-                                            height: 80,
-                                            width: 80,
-                                            color: Colors.white,
-                                          ),
-                                        );
-                                      }
-                                    },
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (BuildContext context,
+                                            Object exception,
+                                            StackTrace? stackTrace) {
+                                          return Container(
+                                            height: 110,
+                                            width: 110,
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: AppColor.WHITE,
+                                              backgroundImage: AssetImage(
+                                                "assets/profile_user.png",
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.white38,
+                                              highlightColor: Colors.grey,
+                                              child: Container(
+                                                height: 80,
+                                                width: 80,
+                                                color: Colors.white,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                ),
-                        ),
-                        Positioned(
-                          bottom: -5,
-                          right: -4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.5),
-                            child: Container(
-                              height: 45,
-                              width: 45,
-                              child: Card(
-                                shape: CircleBorder(),
-                                color: Colors.white,
-                                child: IconButton(
-                                  iconSize: 20,
-                                  onPressed: () {
-                                    _showPicker(context: context);
-                                  },
-                                  icon: Icon(Icons.edit_outlined),
+                          ),
+                          Positioned(
+                            bottom: -5,
+                            right: -4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(1.5),
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                child: Card(
+                                  shape: CircleBorder(),
+                                  color: Colors.white,
+                                  child: IconButton(
+                                    iconSize: 20,
+                                    onPressed: () {
+                                      _showPicker(context: context);
+                                    },
+                                    icon: Icon(Icons.edit_outlined),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  DetailBox(
-                    heading: Languages.of(context)!.labelName,
-                    subHeading: "${firstName} ${lastName}",
-                    icon: Icons.person,
-                    headingTextSize: 14,
-                    subHeadingTextSize: 13,
-                  ),
-                /*  DetailBox(
+                    SizedBox(
+                      height: 20,
+                    ),
+                    DetailBox(
+                      heading: Languages.of(context)!.labelName,
+                      subHeading: "${firstName} ${lastName}",
+                      icon: Icons.person,
+                      headingTextSize: 14,
+                      subHeadingTextSize: 13,
+                    ),
+                    /*  DetailBox(
                     heading: Languages.of(context)!.labelEmail,
                     subHeading: "${email}",
                     icon: Icons.mail,
                     headingTextSize: 14,
                     subHeadingTextSize: 13,
                   ),*/
-                  DetailBox(
-                    heading: Languages.of(context)!.labelDOB,
-                    subHeading: convertDateFormat("${dob}"),
-                    icon: Icons.calendar_month,
-                    headingTextSize: 14,
-                    subHeadingTextSize: 13,
-                  ),
-                /*  GestureDetector(
-                    onTap: (){
-                      Navigator.pushNamed(context, "/AddressScreen");
-                    },
-                    child:  DetailBox(
-                      heading: Languages.of(context)!.labelAddress,
-                      subHeading: "",
-                      icon: Icons.details,
+                    DetailBox(
+                      heading: Languages.of(context)!.labelDOB,
+                      subHeading: convertDateFormat("${dob}"),
+                      icon: Icons.calendar_month,
                       headingTextSize: 14,
                       subHeadingTextSize: 13,
-                    ) ,
-                  )*/
-
-                ],
-              ),
-
-            ],
+                    ),
+                    DetailBox(
+                      heading: 'Document Name',
+                      subHeading: "${recentDocumentName}",
+                      icon: Icons.file_open,
+                      headingTextSize: 14,
+                      subHeadingTextSize: 13,
+                    ),
+                    DetailBox(
+                      heading: 'Document Number',
+                      subHeading: "${recentDocumentNumber}",
+                      icon: Icons.numbers,
+                      headingTextSize: 14,
+                      subHeadingTextSize: 13,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
           isLoading
               ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                dismissible: false,
-              ),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                      dismissible: false,
+                    ),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox(),
         ],
       ),
@@ -325,6 +342,62 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     );
   }
 
+  Widget buildDocumentDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Choose Document",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          TextField(
+            readOnly: true,
+            controller: TextEditingController(text: mSelectedText),
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.8)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.7)),
+              //labelText: 'Choose Document',
+              suffixIcon: IconButton(
+                icon: Icon(
+                    mExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                onPressed: () {
+                  setState(() {
+                    mExpanded = !mExpanded;
+                  });
+                },
+              ),
+            ),
+          ),
+          if (mExpanded)
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: docType.map((city) {
+                  return ListTile(
+                    title: Text(city),
+                    onTap: () {
+                      setState(() {
+                        mSelectedText = city;
+                        mExpanded = false;
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget buildBirthdateSection() {
     return Card(
       shape: RoundedRectangleBorder(
@@ -353,6 +426,24 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildDocumentNumberSection(String heading, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            heading,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          Text("${value}",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+        ],
       ),
     );
   }

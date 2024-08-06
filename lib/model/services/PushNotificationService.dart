@@ -5,15 +5,22 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PushNotificationService {
-  //FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
   Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
-        print("PushNotificationService:: ${message}");
+        print("PushNotificationService:: ${message.toString()}");
         //notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
       },
+    );
+
+    FirebaseMessaging.onMessage.listen(
+        (RemoteMessage message) {
+      print("PushNotificationServiceOnMessage:: ${message.toString()}");
+      //notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
+    },
     );
     enableIOSNotifications();
     // Get FCM token
