@@ -56,7 +56,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
     Helper.getCountryList().then((countries) {
       List<CountryData> list = [];
       print(countries);
-      countryList = countries!;
+      setState(() {
+        countryList = countries as List<CountryData>;
+      });
+
       print(countryList);
       if (countryList == null ||
           countryList == [] ||
@@ -177,10 +180,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         print("rwrwr ${countryListResponse?.countries?[1].name}");
         Helper.saveCountryList(countryListResponse?.countries);
 
-        countryList = countryListResponse!.countries!;
-        selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-        countryCode = int.parse("${countryListResponse?.countries?[0].id}");
-        phoneCode = "+${countryListResponse?.countries?[0].phoneCode}";
+        setState(() {
+
+          countryList = countryListResponse?.countries as List<CountryData>;
+          selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
+          countryCode = int.parse("${countryListResponse?.countries?[0].id}");
+          phoneCode = "+${countryListResponse?.countries?[0].phoneCode}";
+        });
+
         print("countriess ${countryList}");
 
         //_showPicker(context: context);
