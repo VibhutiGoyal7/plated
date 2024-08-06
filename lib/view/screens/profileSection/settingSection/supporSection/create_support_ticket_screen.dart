@@ -98,7 +98,11 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     if (_amountController.text.isNotEmpty &&
         _paymentTimeController.text.isNotEmpty &&
         _transactionIdController.text.isNotEmpty &&
-        _commentController.text.isNotEmpty ) {
+        _commentController.text.isNotEmpty &&
+        "$transactionTypeId".isNotEmpty &&
+        "$transactionMethodId".isNotEmpty &&
+        "$transactionProviderId".isNotEmpty &&
+    imageUrl!.isNotEmpty) {
       setState(() {
         inputValid = true;
       });
@@ -136,7 +140,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       case Status.COMPLETED:
         print("rwrwr ${createSupportTicketResponse?.trxId}");
 
-        Navigator.pushReplacementNamed(context, '/BottomNav');
+        Navigator.pushReplacementNamed(context, '/SupportScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);
@@ -180,10 +184,10 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           children: [
             SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: screenHeight * 0.95),
+                constraints: BoxConstraints(minHeight: screenHeight * 0.87),
                 child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 16.0, right: 16, top: 12),
+                        const EdgeInsets.only(left: 16.0, right: 16, top: 8),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,9 +316,10 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                           ? Container(
                                               height: 130,
                                               width: 130,
-                                              child: Image.asset(
+                                              color: Colors.transparent,
+                                              /*child: Image.asset(
                                                 "assets/india_flag_icon.png",
-                                              ),
+                                              ),*/
                                             )
                                           : Container(
                                               decoration: BoxDecoration(
@@ -358,9 +363,9 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                           _showPicker(context: context);
                                         },
                                         child: Icon(
-                                          Icons.add,
+                                          Icons.attach_file_rounded,
                                           color: AppColor.WHITE,
-                                          size: 54,
+                                          size: 45,
                                         ),
                                       ),
                                       SizedBox(
@@ -592,7 +597,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                           ServiceTypeListDetails>(
                                         value: item,
                                         child: Text(
-                                          "${item.serviceName}",
+                                          capitalizeFirstLetter("${item.serviceName}"),
                                           style:
                                               TextStyle(color: AppColor.WHITE),
                                           overflow: TextOverflow.ellipsis,
@@ -609,7 +614,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
-                                        : Text("${selectedValue.serviceName}"),
+                                        : Text(capitalizeFirstLetter("${selectedValue.serviceName}")),
                                     SizedBox(width: 5),
                                     Icon(Icons.keyboard_arrow_down_sharp),
                                   ],
@@ -721,7 +726,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                           TransactionMethodListDetails>(
                                         value: item,
                                         child: Text(
-                                          "${item.serviceName}",
+                                          capitalizeFirstLetter("${item.serviceName}"),
                                           style:
                                               TextStyle(color: AppColor.WHITE),
                                           overflow: TextOverflow.ellipsis,
@@ -738,7 +743,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
-                                        : Text("${selectedValue.serviceName}"),
+                                        : Text(capitalizeFirstLetter("${selectedValue.serviceName}")),
                                     SizedBox(width: 5),
                                     Icon(Icons.keyboard_arrow_down_sharp),
                                   ],
@@ -813,7 +818,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                           TransactionProvidersListDetails>(
                                         value: item,
                                         child: Text(
-                                          "${item.serviceName}",
+                                          capitalizeFirstLetter("${item.serviceName}"),
                                           style:
                                               TextStyle(color: AppColor.WHITE),
                                           overflow: TextOverflow.ellipsis,
@@ -830,7 +835,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
-                                        : Text("${selectedValue.serviceName}"),
+                                        : Text(capitalizeFirstLetter("${selectedValue.serviceName}")),
                                     SizedBox(width: 5),
                                     Icon(Icons.keyboard_arrow_down_sharp),
                                   ],
@@ -1195,6 +1200,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         final newItems = serviceTypeListResponse?.data ?? [];
         setState(() {
           print("isScroll:: ${newItems}");
+          serviceTypeList.clear();
           serviceTypeList.addAll(newItems);
         });
         return;
@@ -1223,6 +1229,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         final newItems = transactionMethodListResponse?.data ?? [];
         setState(() {
           print("isScroll:: ${newItems}");
+          transactionTypeList.clear();
           transactionTypeList.addAll(newItems);
         });
         return;
@@ -1251,6 +1258,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         final newItems = transactionProviderListResponse?.data ?? [];
         setState(() {
           print("isScroll:: ${newItems}");
+          providerTypeList.clear();
           providerTypeList.addAll(newItems);
         });
         return;

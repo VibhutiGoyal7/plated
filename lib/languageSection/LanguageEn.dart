@@ -333,7 +333,7 @@ class LanguageEn extends Languages {
   String get labelIssuingCountry => "ISSUING COUNTRY";
 
   @override
-  String get labelSearch => "Search...";
+  String get labelSearch => "Search using ticket id..";
 
   @override
   String get labelSuggestedCountry => "Suggested Country";

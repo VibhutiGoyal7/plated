@@ -32,6 +32,8 @@ class AllSupportTicketsResponse {
 class AllSupportTicketsDetails {
   @primaryKey
   final int? id;
+  final int? status;
+  final String? message;
   final String? amount;
   final int? merchantId;
   final String? paymentTime;
@@ -52,7 +54,9 @@ class AllSupportTicketsDetails {
 
   AllSupportTicketsDetails({
     this.id,
+    this.status,
     this.amount,
+    this.message,
     this.merchantId,
     this.paymentTime,
     this.transactionTypeId,
@@ -91,6 +95,31 @@ class AllSupportTicketsDetails {
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       customerId: json['customer_id'] as int?,
+    );
+  }
+
+  factory AllSupportTicketsDetails.fromFilteredJson(Map<String, dynamic> json) {
+    return AllSupportTicketsDetails(
+      status: json['status'] as int?,
+      message: json['message'] as String?,
+      id: json['data']?['id'] as int?,
+      amount: json['data']?['amount'] as String?,
+      merchantId: json['data']?['merchant_id'] as int?,
+      paymentTime: json['data']?['payment_time'] as String?,
+      transactionTypeId: json['data']?['transaction_type_id'] as int?,
+      transactionType: json['data']?['transaction_type'] as String?,
+      transactionProviderId: json['data']?['transaction_provider_id'] as int?,
+      transactionProvider: json['data']?['transaction_provider'] as String?,
+      trxId: json['data']?['trx_id'] as String?,
+      customerMerchantNumber: json['data']?['customer_merchant_number'] as String?,
+      queryType: json['data']?['query_type'] as String?,
+      comment: json['data']?['comment'] as String?,
+      screenshot: json['data']?['screenshot'] as String?,
+      transactionMethodId: json['data']?['transaction_method_id'] as int?,
+      transactionMethod: json['data']?['transaction_method'] as String?,
+      createdAt: json['data']?['created_at'] as String?,
+      updatedAt: json['data']?['updated_at'] as String?,
+      customerId: json['data']?['customer_id'] as int?,
     );
   }
 /*
