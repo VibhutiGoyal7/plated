@@ -672,28 +672,34 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text(
-                                          "${Languages.of(context)?.labelViewAll}",
-                                          style: TextStyle(
-                                              fontSize: 14.0,
-                                              color: isDarkMode
-                                                  ? AppColor.WHITE
-                                                  : AppColor.PRIMARY,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: Container(
-                                            margin: EdgeInsets.only(bottom: 3),
-                                            width: screenWidth * 0.14,
-                                            height: 0.5,
-                                            decoration: BoxDecoration(
-                                              color: isDarkMode
-                                                  ? AppColor.WHITE
-                                                  : AppColor.PRIMARY,
+                                        transactionList.length >0 ?
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "${Languages.of(context)?.labelViewAll}",
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: isDarkMode
+                                                      ? AppColor.WHITE
+                                                      : AppColor.PRIMARY,
+                                                  fontWeight: FontWeight.w600),
                                             ),
-                                          ),
-                                        ),
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Container(
+                                                margin: EdgeInsets.only(bottom: 3),
+                                                width: screenWidth * 0.14,
+                                                height: 0.5,
+                                                decoration: BoxDecoration(
+                                                  color: isDarkMode
+                                                      ? AppColor.WHITE
+                                                      : AppColor.PRIMARY,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ):  SizedBox(),
+                                       
                                       ],
                                     ),
                                   ),
