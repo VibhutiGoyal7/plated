@@ -186,7 +186,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                   ),
                   IntrinsicHeight(
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
                         border: Border.all(width: 0.1, color: Colors.grey),
                       ),
@@ -216,7 +216,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
+                                horizontal: 10, vertical: 20),
                             height: 40,
                             color: Colors.grey,
                             width: 1,
@@ -259,7 +259,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                 fontSize: 13, fontWeight: FontWeight.w700),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -272,12 +272,14 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                     controller: _notesController,
                                     onChanged: (value) {},
                                     enabled: true,
-                                    maxLength: 12,
+                                    maxLength: 100,
+                                    maxLines: 2,
                                     keyboardType: TextInputType.text,
                                     onSubmitted: (value) {},
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
-                                      counterText: "",
+                                      //counterText: "",
+                                      counterStyle: TextStyle(fontSize: 11),
                                       border: InputBorder.none,
                                       hintText: 'Write Something..',
                                       hintStyle: TextStyle(color: Colors.grey),

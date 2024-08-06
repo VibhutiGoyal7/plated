@@ -124,6 +124,31 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
+        CheckCustomerResponse prefData = CheckCustomerResponse(username: widget.data?.receiverUsername,fullName:widget.data?.fullName,
+          phoneNumber: widget.data?.receiverPhoneNumber, imageUrl: widget.data?.imageUrl );
+      print("PrefData ${prefData.username}");
+
+      List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
+        bool dataExist = false;
+        if(prefResponse?.length != null) {
+          for (int i = 0; i < prefResponse!.length; i++) {
+            if (prefData.username == prefResponse[i].username) {
+              dataExist = true;
+            }
+          }
+        }else{
+          dataExist = false;
+        }
+        if(!dataExist) {
+          if(prefResponse!=null) {
+            prefResponse.add(prefData);
+            print("prefResponse ${prefResponse[0].username}");
+            Helper.saveRecentP2PDetails(prefResponse);
+          }else{
+            List<CheckCustomerResponse>? dataList = [] ;
+            Helper.saveRecentP2PDetails(dataList);
+          }
+        }
         CompleteP2PRequest data = CompleteP2PRequest(
           otp: "",
           fullName: name,

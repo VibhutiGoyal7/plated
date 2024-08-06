@@ -777,7 +777,7 @@ class TransactionItem extends StatelessWidget {
                             fontSize: 14,
                           /*color: colorPaymentType(capitalizeFirstLetter(
                                 "${transaction.transactionType}"))*/)),
-                    Text(convertDateFormat("${transaction.createdAt}"),
+                    Text(convertTime("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 11)),
                   ],
                 ),

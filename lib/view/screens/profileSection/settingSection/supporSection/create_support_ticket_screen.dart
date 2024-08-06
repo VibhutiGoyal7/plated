@@ -548,6 +548,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       List<ServiceTypeListDetails> typeList,
       ServiceTypeListDetails selectedValue,
       String labelText) {
+    final GlobalKey _buttonKey = GlobalKey();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -579,19 +580,28 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  final RenderBox overlay = Overlay.of(context)
+                                 /* final RenderBox overlay = Overlay.of(context)
                                       .context
-                                      .findRenderObject() as RenderBox;
+                                      .findRenderObject() as RenderBox;*/
+                                  final RenderBox button = _buttonKey.currentContext?.findRenderObject() as RenderBox;
+                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                                  final RelativeRect position = RelativeRect.fromRect(
+                                    Rect.fromPoints(
+                                      button.localToGlobal(Offset.zero, ancestor: overlay),
+                                      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                                    ),
+                                    Offset.zero & overlay.size,
+                                  );
                                   showMenu(
                                     context: context,
-                                    position: RelativeRect.fromRect(
+                                    position: position /*RelativeRect.fromRect(
                                       Rect.fromLTWH(
                                           -20,
                                           120,
                                           overlay.size.width,
                                           overlay.size.height),
                                       Offset.zero & overlay.size,
-                                    ),
+                                    ),*/,
                                     items: typeList.map((item) {
                                       return PopupMenuItem<
                                           ServiceTypeListDetails>(
@@ -611,6 +621,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   });
                                 },
                                 child: Row(
+                                  key: _buttonKey,
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
@@ -677,6 +688,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       List<TransactionMethodListDetails> typeList,
       TransactionMethodListDetails selectedValue,
       String labelText) {
+    final GlobalKey _buttonKey = GlobalKey();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -708,19 +720,25 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  final RenderBox overlay = Overlay.of(context)
+                                /*  final RenderBox overlay = Overlay.of(context)
                                       .context
-                                      .findRenderObject() as RenderBox;
+                                      .findRenderObject() as RenderBox;*/
+                                  final RenderBox button = _buttonKey.currentContext?.findRenderObject() as RenderBox;
+                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                                  final RelativeRect position = RelativeRect.fromRect(
+                                    Rect.fromPoints(
+                                      button.localToGlobal(Offset.zero, ancestor: overlay),
+                                      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                                    ),
+                                    Offset.zero & overlay.size,
+                                  );
                                   showMenu(
                                     context: context,
-                                    position: RelativeRect.fromRect(
-                                      Rect.fromLTWH(
-                                          -20,
-                                          120,
-                                          overlay.size.width,
-                                          overlay.size.height),
+                                    position: position /*RelativeRect.fromRect(
+                                      Rect.fromLTRB(
+                                          100,100,100,100),
                                       Offset.zero & overlay.size,
-                                    ),
+                                    )*/,
                                     items: typeList.map((item) {
                                       return PopupMenuItem<
                                           TransactionMethodListDetails>(
@@ -740,6 +758,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   });
                                 },
                                 child: Row(
+                                  key: _buttonKey,
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
@@ -772,6 +791,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       List<TransactionProvidersListDetails> typeList,
       TransactionProvidersListDetails selectedValue,
       String labelText) {
+    final GlobalKey _buttonKey = GlobalKey();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -803,16 +823,25 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  final RenderBox overlay = Overlay.of(context)
+                                 /* final RenderBox overlay = Overlay.of(context)
                                       .context
-                                      .findRenderObject() as RenderBox;
+                                      .findRenderObject() as RenderBox;*/
+                                  final RenderBox button = _buttonKey.currentContext?.findRenderObject() as RenderBox;
+                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+                                  final RelativeRect position = RelativeRect.fromRect(
+                                    Rect.fromPoints(
+                                      button.localToGlobal(Offset.zero, ancestor: overlay),
+                                      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                                    ),
+                                    Offset.zero & overlay.size,
+                                  );
                                   showMenu(
                                     context: context,
-                                    position: RelativeRect.fromRect(
+                                    position: position /*RelativeRect.fromRect(
                                       Rect.fromLTWH(0, 120, overlay.size.width,
                                           overlay.size.height),
                                       Offset.zero & overlay.size,
-                                    ),
+                                    )*/,
                                     items: typeList.map((item) {
                                       return PopupMenuItem<
                                           TransactionProvidersListDetails>(
@@ -832,6 +861,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   });
                                 },
                                 child: Row(
+                                  key: _buttonKey,
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)

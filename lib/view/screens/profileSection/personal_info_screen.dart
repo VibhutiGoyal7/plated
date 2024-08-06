@@ -260,7 +260,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     headingTextSize: 14,
                     subHeadingTextSize: 13,
                   ),
-                  GestureDetector(
+                /*  GestureDetector(
                     onTap: (){
                       Navigator.pushNamed(context, "/AddressScreen");
                     },
@@ -271,7 +271,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       headingTextSize: 14,
                       subHeadingTextSize: 13,
                     ) ,
-                  )
+                  )*/
 
                 ],
               ),
