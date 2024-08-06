@@ -389,7 +389,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
           onPressed: () async {
             hideKeyBoard();
             print(_inputController.text);
-            if (true) {
+            _isValidInput();
+            if (inputValid) {
               setState(() {
                 isLoading = true;
               });

@@ -84,11 +84,21 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     userId = "";
     isEmailVerified = false;
     isPasswordVisible = false;
-    setState(() {
-      isLoading = true;
+
+    Helper.getKycStatus().then((status)
+    {
+      kycStatus = status;
+      if(kycStatus?.isEmpty == true){
+        setState(() {
+          isLoading = true;
+        });
+        _fetchKycStatus();
+      }else{
+        _fetchKycStatus();
+      }
     });
 
-    _fetchKycStatus();
+    //_fetchKycStatus();
     _fetchData();
     _fetchPasswordData();
     _fetchDocData();
@@ -310,16 +320,16 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                     isInternetConnected && !isLoading
                         ? Column(
                       children: [
-                        if (isPassportAvailable)
+                        //if (isPassportAvailable)
                           _buildDocumentOption(
                               context,
                               "Identity Proof",
                               "${kycStatus}"),
-                        if (isDrivingLicenceAvailable)
+                      /*  if (isDrivingLicenceAvailable)
                           _buildDocumentOption(
                               context,
                               "Address Proof",
-                              "${kycStatus}",),
+                              "${kycStatus}",),*/
                         /*if (isNationalIdAvailable)
                           _buildDocumentOption(
                               context,
@@ -816,9 +826,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   }
 
   Future<void> _fetchDocData() async {
-    setState(() {
+ /*   setState(() {
       isLoading = true;
-    });
+    });*/
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
@@ -846,9 +856,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     password = await Helper.getPassword();
   }
   void _fetchKycStatus() async {
-    setState(() {
-      isLoading = true;
-    });
 
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {

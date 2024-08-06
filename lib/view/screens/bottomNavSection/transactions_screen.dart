@@ -1,8 +1,6 @@
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/component/shimmer_text.dart';
-import 'package:Payrio/view/component/transaction_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -274,18 +272,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.normal),
                             ),
-                            isInternetConnected && !isLoading
-                                ? Text(
-                                    currencyFormat(
+                            Text(
+                              currencyFormat(
                                         countryCurrencySymbol, currentBalance, country),
                                     style: TextStyle(
                                         fontSize: 32.0,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 2),
-                                  )
-                                : ShimmerText(
-                                    height: 32,
-                                    width: 100,
                                   ),
                             SizedBox(
                               height: 20,
