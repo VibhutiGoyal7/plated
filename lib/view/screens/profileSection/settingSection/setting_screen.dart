@@ -144,7 +144,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                           ],
                         ),
-                        GestureDetector(
+                        /*GestureDetector(
                           onTap: (){
                             Navigator.of(context).pushNamed("/LanguageSelectionScreen");
                           },
@@ -153,43 +153,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               color: Colors.blue,
                               fontSize: 14
                             ),)
-                            /*DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                dropdownColor:
-                                    isDarkMode ? Colors.grey : Colors.white,
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.only(left: 10),
-                                value: dropdownValue,
-                                items: mCities.map((Language items) {
-                                  return DropdownMenuItem(
-                                    value: items.code,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(items.name,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        )),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) async {
-                                  await Helper.setLocale(newValue!);
-                                  if (mounted) {
-                                    setState(() {
-                                      dropdownValue = newValue!;
-                                    });
-                                  }
-                                  widget.setLocale(Locale(newValue, ''));
-                                  print(dropdownValue);
-                                },
-                                style: TextStyle(
-                                    color:
-                                        isDarkMode ? Colors.white : Colors.black),
-                                hint: Text(
-                                  "en",
-                                ),
-                              ),
-                            )*/,
+                            ,
                           ),
-                        ),
+                        ),*/
                       ]),
                 ),
                 Align(
