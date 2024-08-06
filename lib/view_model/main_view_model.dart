@@ -652,6 +652,26 @@ class MainViewModel with ChangeNotifier {
   }
 
 
+  Future<void> getFilteredSupportTicket(String value) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      AllSupportTicketsDetails allSupportTicketsDetails =
+          await MainRepository().getFilteredSupportTicket(value);
+      print("Yess" + response.message.toString());
+      if (allSupportTicketsDetails.status == 200 || allSupportTicketsDetails.status == 201) {
+        _apiResponse = ApiResponse.completed(allSupportTicketsDetails);
+      } else {
+        _apiResponse = ApiResponse.error(allSupportTicketsDetails.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+
   Future<void> postMultiFormMessageResponse(
       String value, File imgFile, String content) async {
     _apiResponse = ApiResponse.loading('Loading');

@@ -53,11 +53,11 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamed(context, '/SupportScreen');
+              Navigator.pushNamed(context, '/ProfileScreen');
             },
           ),
           title: Text(
-            "Payment Methods",
+            "Support Methods",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
@@ -95,7 +95,7 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
             GestureDetector(
               onTap: () {
                 //_showPicker(context: context);
-                Navigator.pushNamed(context, "/LiveChatListScreen", arguments: "Live Chat");
+                Navigator.pushNamed(context, "/LiveChatListScreen");
               },
               child: _buildCard(
                   context, "Live Chat", Icon(Icons.mark_chat_unread_outlined), isDarkMode),

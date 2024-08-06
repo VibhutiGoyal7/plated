@@ -376,6 +376,16 @@ class MainRepository {
   }
 
 
+  Future<dynamic> getFilteredSupportTicket(String value) async {
+    dynamic response = await _payrioService.getResponse(value);
+    print(value);
+    final jsonData = response;
+    AllSupportTicketsDetails mediaList =
+    AllSupportTicketsDetails.fromFilteredJson(jsonData);
+    return mediaList;
+  }
+
+
   Future<SendMessageResponse> postMultiFormMessageResponse(
       String value, File imageFile, String content) async {
     dynamic response = await _payrioService.postMultiFormMessageResponse(

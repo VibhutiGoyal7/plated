@@ -6,6 +6,7 @@ import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
 import 'package:Payrio/model/response/sendMessageResponse.dart';
 import 'package:Payrio/model/services/cloud_firestore_service.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   String userId = "";
   bool expanded = false;
   bool inputValid = false;
-  late final  liveChatResponses;
+  late List<dynamic>  liveChatResponses;
   final tokenInputController = TextEditingController();
   ScrollController _scrollController = ScrollController();
 /*
@@ -89,6 +90,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         final newItems = supportDataListResponse?.messages ?? [];
         print("Livechat response");
         setState(() {
+          liveChatResponses.clear();
 
          liveChatResponses.addAll(newItems);
         });
@@ -117,7 +119,10 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
       case Status.COMPLETED:
         final newItems = sendMessageResponse?.message ?? "";
         print("Livechat response");
+        _fetchData();
         setState(() {
+          _controller.text="";
+          hideKeyBoard();
 
          //liveChatResponses.addAll(newItems);
         });
@@ -211,7 +216,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           itemCount: liveChatResponses.length,
                           itemBuilder: (context, index) {
                             final response = liveChatResponses[index];
-                            final isUserMessage = response.id == 2;
+                            final isUserMessage = response.userId == 1;
                             final messageAlignment = isUserMessage
                                 ? Alignment.topRight
                                 : Alignment.topLeft;
@@ -261,16 +266,16 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                       ),
                                     ),
                                   ),
-                                 /* Padding(
+                                  Padding(
                                     padding:
                                     const EdgeInsets.only(right: 6.0),
-                                    child: *//*Text(
-                                      "${response.createdAt?.toDate().hour.toString() ?? '00'} : ${response.createdAt?.toDate().minute.toString() ?? '00'}",
+                                    child: Text(
+                                      "${convertTime(response.createdAt)} ",
                                       style: TextStyle(
                                           color: timeTextColor,
                                           fontSize: 10),
-                                    ),*//*
-                                  ),*/
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -312,6 +317,18 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   ),
                 ],
               ),
+              isLoading ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(
+                      dismissible: false,
+                      color: Colors.transparent),
+                  // Loader indicator
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              ): SizedBox()
             ],
           ),
         ),

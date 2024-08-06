@@ -32,7 +32,7 @@ class _SupportScreenState extends State<SupportScreen> {
   List<AllSupportTicketsDetails> supportDataList = [];
   List<AllSupportTicketsDetails> filteredSupportDataList = [];
   final tokenInputController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _filterController = TextEditingController();
   final _numberOfPostsPerRequest = 20;
   var screenHeight;
   var screenWidth;
@@ -145,9 +145,36 @@ class _SupportScreenState extends State<SupportScreen> {
           if (!isScroll) {
             filteredSupportDataList.clear();
           }
-          filterApplied
-              ? filteredSupportDataList.addAll(newItems)
-              : supportDataList.addAll(newItems);
+          supportDataList.addAll(newItems);
+        });
+        return;
+      case Status.ERROR:
+        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+          SessionExpiredDialog.showDialogBox(context: context);
+        }
+        return;
+      case Status.INITIAL:
+      default:
+        return;
+    }
+  }
+
+  Future<void> getFilteredSupportTicketData(BuildContext context, ApiResponse apiResponse) async {
+    AllSupportTicketsDetails? supportDataListResponse =
+        apiResponse.data as AllSupportTicketsDetails?;
+    setState(() {
+      isLoading = false;
+      filteredSupportDataList.clear();
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return;
+      case Status.COMPLETED:
+        AllSupportTicketsDetails? newItems = supportDataListResponse ;
+        setState(() {
+          //filteredSupportDataList.clear();
+          filteredSupportDataList.add(newItems!);
+             // : supportDataList.addAll(newItems);
         });
         return;
       case Status.ERROR:
@@ -224,20 +251,6 @@ class _SupportScreenState extends State<SupportScreen> {
             "Support List",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  _showModal(context, apiResponse);
-                },
-                icon: Icon(
-                  Icons.filter_list,
-                  color: Colors.black,
-                  size: 28,
-                )),
-            SizedBox(
-              width: 5,
-            )
-          ],
         ),
         body: Stack(
           children: [
@@ -247,6 +260,41 @@ class _SupportScreenState extends State<SupportScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Container(
+                      //height: 40,
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffF5F5F5),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: TextField(
+                        controller: _filterController,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          prefixIcon: IconButton(
+                            icon: Icon(
+                              Icons.search_rounded,
+                            ),
+                            onPressed: () => FocusScope.of(context).unfocus(),
+                          ),
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.clear_rounded,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _filterController.text = "";
+                                  filterApplied = false;
+                                });
+                                _filterController.text = "";
+
+                               // filterAccToTicketId("");
+                              }),
+                          hintText: Languages.of(context)!.labelSearch,
+                          border: InputBorder.none,
+                        ),
+                        onSubmitted: (value) => filterAccToTicketId(_filterController.text),
+                      ),
+                    ),
                     Expanded(
                       child: Container(
                         width: screenWidth,
@@ -380,6 +428,38 @@ class _SupportScreenState extends State<SupportScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> filterAccToTicketId(String ticketId) async {
+    try {
+      setState(() {
+        isLoading = true;
+        filterApplied = true;
+      });
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          isInternetConnected = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+
+        await Provider.of<MainViewModel>(context, listen: false)
+            .getFilteredSupportTicket("api/v1/app/payorio_support_tickets/$ticketId");
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        await getFilteredSupportTicketData(context, apiResponse);
+      }
+    } catch (error) {
+      print("Error fetching data: $error");
+    }
+
   }
 
   void _showModal(BuildContext context, ApiResponse apiResponse) {
@@ -653,7 +733,7 @@ class TransactionItem extends StatelessWidget {
                                     "${transaction.}"))*/)),
                         /*color: colorStatus(
                             capitalizeFirstLetter("${transaction.status}")),*/
-                        child: Icon(Icons.call_made, color: Colors.black),
+                        child: Icon(Icons.airplane_ticket, color: Colors.black),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -674,7 +754,7 @@ class TransactionItem extends StatelessWidget {
                                     "${transaction.status}"))*/)),
                         Container(
                           width: MediaQuery.of(context).size.width*0.38,
-                          child: Text(capitalizeFirstLetter("${transaction.comment}"),
+                          child: Text("Ticket id :${transaction.id}",
                               style: TextStyle(
                                   fontSize: 10,
                                  /* color: colorStatus(capitalizeFirstLetter(
@@ -708,164 +788,4 @@ class TransactionItem extends StatelessWidget {
       ),
     );
   }
-
- /* void _showModal(
-      {required BuildContext context,
-      required AllSupportTicketsDetails transaction}) {
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
-              scrollable: true,
-              insetPadding: EdgeInsets.all(10),
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    margin: EdgeInsets.only(bottom: 6),
-                    child: Wrap(
-                      spacing: 20,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            capitalizeFirstLetter("${transaction.transactionType}"),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 16),
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            *//*transaction.bankService != null
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Bank Service :"),
-                                          Text(capitalizeFirstLetter(
-                                              "${transaction.bankService}"))
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),*//*
-                            SizedBox(
-                              height: 8,
-                            ),
-                            transaction.amount != null
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Amount :"),
-                                      Text(
-                                          addCurrencySymbolTransaction(
-                                              symbol,
-                                              "${transaction.amount}",
-                                              capitalizeFirstLetter(
-                                                  "${transaction.transactionType}")),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: colorPaymentType(
-                                                  capitalizeFirstLetter(
-                                                      "${transaction.transactionType}"))))
-                                    ],
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Status :"),
-                                Text(
-                                  capitalizeFirstLetter(
-                                      "${transaction.status}"),
-                                  style: TextStyle(
-                                      color: colorStatus(capitalizeFirstLetter(
-                                          "${transaction.status}"))),
-                                )
-                              ],
-                            ),
-                           *//* transaction.bankType != null
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text("Bank Type :"),
-                                          Text(capitalizeFirstLetter(
-                                              "${transaction.bankType}"))
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),*//*
-                            SizedBox(
-                              height: 8,
-                            ),
-                          *//*  Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Currency :"),
-                                Text("${transaction.currency}")
-                              ],
-                            ),*//*
-                            *//*SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Request Type"),
-                            Text("${transaction.requestType}")
-                          ],
-                        ),*//*
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Payment Request Id :"),
-                                Text("${transaction.uniqueId}")
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }*/
 }

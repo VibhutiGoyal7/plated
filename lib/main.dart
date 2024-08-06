@@ -60,6 +60,7 @@ import 'package:Payrio/view/screens/profileSection/settingSection/language_selec
 import 'package:Payrio/view/screens/profileSection/settingSection/manage_applock_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/create_support_ticket_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/live_chat_list_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_chat_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_list_details.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/supporSection/support_screen.dart';
@@ -416,6 +417,9 @@ class _MyAppState extends State<MyApp> {
               final args =
               ModalRoute.of(context)!.settings.arguments as int;
               return SupportChatScreen(userId : args);
+            },
+            '/LiveChatListScreen': (context) {
+              return LiveChatListScreen( );
             },
             '/CreateSupportTicketScreen': (context) {
               return CreateSupportTicketScreen();
