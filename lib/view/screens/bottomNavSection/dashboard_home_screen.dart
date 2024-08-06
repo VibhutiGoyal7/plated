@@ -191,7 +191,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             Navigator.pushNamed(context, '/WithdrawMethodScreen');
           } else if (calledShortCut == Languages.of(context)!.labelRequestQR) {
             calledShortCut = "";
-           // Navigator.pushNamed(context, '/RequestQrScreen');
+            // Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -238,19 +238,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           if (isWarning) {
             lastBackPressed = DateTime.now();
             _showExitDialog();
-            /* ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(Languages.of(context)!.labelPressBackToExit),
-                duration: maxDuration,
-              ),
-            );*/
-            //SystemNavigator.pop();
-            // return Future.value(false);
           } else {
             SystemNavigator.pop();
           }
           // return Future.value(true);
-        }else{
+        } else {
           print("$didPop");
           final now = DateTime.now();
           const maxDuration = Duration(seconds: 2);
@@ -260,650 +252,669 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           if (isWarning) {
             lastBackPressed = DateTime.now();
             _showExitDialog();
-            /* ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(Languages.of(context)!.labelPressBackToExit),
-                duration: maxDuration,
-              ),
-            );*/
-            //SystemNavigator.pop();
-            // return Future.value(false);
           } else {
             SystemNavigator.pop();
           }
         }
       },
       child: Scaffold(
-        body: Stack(children: [
-          Column(
-            children: [
-              AnnotatedRegion<SystemUiOverlayStyle>(
-                value: isDarkMode
-                    ? SystemUiOverlayStyle.light
-                    : SystemUiOverlayStyle.dark,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: screenHeight * 0.28,
-                        child: Image(
+        body: RefreshIndicator(
+          onRefresh: () {
+            print("Refreshh");
+            return Future.delayed(Duration(seconds: 2), () {
+              _fetchDashboardData();
+            });
+          },
+          child: Stack(children: [
+            Column(
+              children: [
+                AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: isDarkMode
+                      ? SystemUiOverlayStyle.light
+                      : SystemUiOverlayStyle.dark,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0.0),
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
                           height: screenHeight * 0.28,
-                          image: AssetImage(isDarkMode
-                              ? "assets/header_night.png"
-                              : "assets/header.png"),
-                          fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                          opacity: isDarkMode
-                              ? const AlwaysStoppedAnimation(.5)
-                              : const AlwaysStoppedAnimation(.9),
+                          child: Image(
+                            height: screenHeight * 0.28,
+                            image: AssetImage(isDarkMode
+                                ? "assets/header_night.png"
+                                : "assets/header.png"),
+                            fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                            opacity: isDarkMode
+                                ? const AlwaysStoppedAnimation(.5)
+                                : const AlwaysStoppedAnimation(.9),
+                          ),
+                          alignment: AlignmentDirectional.center,
                         ),
-                        alignment: AlignmentDirectional.center,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 18),
-                        child: Column(
-                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              height: 45,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 12.0, left: 5.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                            ),
-                                            child: GestureDetector(
-                                              onTap: () => {
-                                                Navigator.pushNamed(
-                                                    context, '/ProfileScreen')
-                                              },
-                                              child: imageUrl == null ||
-                                                      imageUrl == ""
-                                                  ? Container(
-                                                      height: 40,
-                                                      width: 40,
-                                                      child: CircleAvatar(
-                                                        radius: 30,
-                                                        backgroundColor:
-                                                            AppColor.WHITE,
-                                                        backgroundImage:
-                                                            AssetImage(
-                                                          "assets/profile_user.png",
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100.0),
-                                                      child: Image.network(
-                                                        imageUrl as String,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 18),
+                          child: Column(
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: 45,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 12.0, left: 5.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: GestureDetector(
+                                                onTap: () => {
+                                                  Navigator.pushNamed(
+                                                      context, '/ProfileScreen')
+                                                },
+                                                child: imageUrl == null ||
+                                                        imageUrl == ""
+                                                    ? Container(
                                                         height: 40,
                                                         width: 40,
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                Object
-                                                                    exception,
-                                                                StackTrace?
-                                                                    stackTrace) {
-                                                          // You can return any widget here to display in case of an error
-                                                          return Container(
-                                                            height: 40,
-                                                            width: 40,
-                                                            child: CircleAvatar(
-                                                              radius: 30,
-                                                              backgroundColor:
-                                                                  AppColor
-                                                                      .WHITE,
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                "assets/profile_user.png",
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        loadingBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                Widget child,
-                                                                ImageChunkEvent?
-                                                                    loadingProgress) {
-                                                          if (loadingProgress ==
-                                                              null) {
-                                                            return child;
-                                                          } else {
-                                                            return Shimmer
-                                                                .fromColors(
-                                                              baseColor: Colors
-                                                                  .black45,
-                                                              highlightColor:
-                                                                  Colors
-                                                                      .black87,
-                                                              child: Container(
-                                                                height: 40,
-                                                                width: 40,
-                                                                color:
-                                                                    Colors.grey,
+                                                        child: CircleAvatar(
+                                                          radius: 30,
+                                                          backgroundColor:
+                                                              AppColor.WHITE,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                            "assets/profile_user.png",
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    100.0),
+                                                        child: Image.network(
+                                                          imageUrl as String,
+                                                          height: 40,
+                                                          width: 40,
+                                                          fit: BoxFit.cover,
+                                                          errorBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  Object
+                                                                      exception,
+                                                                  StackTrace?
+                                                                      stackTrace) {
+                                                            // You can return any widget here to display in case of an error
+                                                            return Container(
+                                                              height: 40,
+                                                              width: 40,
+                                                              child:
+                                                                  CircleAvatar(
+                                                                radius: 30,
+                                                                backgroundColor:
+                                                                    AppColor
+                                                                        .WHITE,
+                                                                backgroundImage:
+                                                                    AssetImage(
+                                                                  "assets/profile_user.png",
+                                                                ),
                                                               ),
                                                             );
-                                                          }
-                                                        },
-                                                      )),
+                                                          },
+                                                          loadingBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  Widget child,
+                                                                  ImageChunkEvent?
+                                                                      loadingProgress) {
+                                                            if (loadingProgress ==
+                                                                null) {
+                                                              return child;
+                                                            } else {
+                                                              return Shimmer
+                                                                  .fromColors(
+                                                                baseColor: Colors
+                                                                    .black45,
+                                                                highlightColor:
+                                                                    Colors
+                                                                        .black87,
+                                                                child:
+                                                                    Container(
+                                                                  height: 40,
+                                                                  width: 40,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              );
+                                                            }
+                                                          },
+                                                        )),
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 8),
-                                          // Add space between avatar and text
-                                          Container(
-                                            width: screenWidth * 0.5,
-                                            child: Row(
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    child: Text(
-                                                      "${Languages.of(context)!.labelHi}, ${capitalizeFirstLetter("${name}")}",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                            SizedBox(width: 8),
+                                            // Add space between avatar and text
+                                            Container(
+                                              width: screenWidth * 0.5,
+                                              child: Row(
+                                                children: [
+                                                  Flexible(
+                                                    child: Container(
+                                                      child: Text(
+                                                        "${Languages.of(context)!.labelHi}, ${capitalizeFirstLetter("${name}")}",
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                dashBoardKycStatus ==
-                                                        Languages.of(context)!
-                                                            .statusVerified
-                                                    ? Icon(
-                                                        Icons.verified,
-                                                        color: Colors
-                                                            .green.shade700,
-                                                      )
-                                                    : SizedBox(),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(
-                                                () {
-                                                  isAmountVisible =
-                                                      !isAmountVisible;
-                                                },
-                                              );
-                                            },
-                                            child: Icon(
-                                              isAmountVisible
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off,
-                                              size: 24,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          /*GestureDetector(
-                                            onTap: ()
-                                            {
-                                              Navigator.pushNamed(
-                                                  c ontext, "/NotificationScreen");
-                                            },
-                                            child: Icon(
-                                              Icons.notifications,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                            ),
-                                          ),*/
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            (dashBoardKycStatus != "" &&
-                                    dashBoardKycStatus !=
-                                        Languages.of(context)!.statusVerified &&
-                                    dashBoardKycStatus != null)
-                                ? GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, '/ChooseDocScreen');
-                                    },
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Card(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 6, vertical: 3),
-                                              decoration: BoxDecoration(
-                                                  //color: AppColor.WHITE,
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  border: Border(
-                                                      top: BorderSide(
-                                                          color: Colors.red,
-                                                          width: 0.8),
-                                                      bottom: BorderSide(
-                                                          color: Colors.red,
-                                                          width: 0.8),
-                                                      left: BorderSide(
-                                                          color: Colors.red,
-                                                          width: 0.8),
-                                                      right: BorderSide(
-                                                          color: Colors.red,
-                                                          width: 0.8))),
-                                              child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      Languages.of(context)!
-                                                          .labelKycNonVerified,
-                                                      style: TextStyle(
-                                                          fontSize: 10),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 4,
-                                                    ),
-                                                    Icon(
-                                                      Icons.do_not_disturb_on,
-                                                      size: 18,
-                                                      color: Colors.red,
-                                                    )
-                                                  ]),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 2,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(
-                                    height: 36,
-                                  ),
-
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 25,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          Languages.of(context)!
-                                              .labelTotalBalance,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              letterSpacing: 1.25),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(
-                                    currencyFormat(
-                                        "${currencySymbol}",
-                                        "${isAmountVisible ? amount : "**"} ",
-                                        "${country}"),
-                                    style: TextStyle(
-                                      fontSize: 26.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Card(
-                              elevation: 2,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 8),
-                              child: Container(
-                                  width: screenWidth,
-                                  height: screenHeight * 0.14,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: List.generate(
-                                      4,
-                                      (index) {
-                                        if (index <= 2) {
-                                          return _buildContainer(
-                                              context,
-                                              _shortcutCardsList[index].title,
-                                              _shortcutCardsList[index].icon);
-                                        } else {
-                                          return _buildContainer(
-                                              context,
-                                              Languages.of(context)!.labelMore,
-                                              Icons.more_horiz);
-                                        }
-                                      },
-                                    ),
-                                  )),
-                            ),
-                            /*Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          Languages.of(context)!.labelNews,
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.25),
-                        ),
-                      ),*/
-                            // News and Offer List
-                            /* SizedBox(
-                        height: 15,
-                      ),
-                      NewsOfferListWidget(
-                        data: imgList,
-                        isInternetConnected: isInternetConnected,
-                        isLoading: isLoading,
-                      ),*/
-                            SizedBox(
-                              height: 30,
-                            ),
-
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${Languages.of(context)!.labelTransaction}s",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, '/TransactionsScreen');
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        transactionList.length >0 ?
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "${Languages.of(context)?.labelViewAll}",
-                                              style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  color: isDarkMode
-                                                      ? AppColor.WHITE
-                                                      : AppColor.PRIMARY,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomRight,
-                                              child: Container(
-                                                margin: EdgeInsets.only(bottom: 3),
-                                                width: screenWidth * 0.14,
-                                                height: 0.5,
-                                                decoration: BoxDecoration(
-                                                  color: isDarkMode
-                                                      ? AppColor.WHITE
-                                                      : AppColor.PRIMARY,
-                                                ),
+                                                  dashBoardKycStatus ==
+                                                          Languages.of(context)!
+                                                              .statusVerified
+                                                      ? Icon(
+                                                          Icons.verified,
+                                                          color: Colors
+                                                              .green.shade700,
+                                                        )
+                                                      : SizedBox(),
+                                                ],
                                               ),
                                             ),
                                           ],
-                                        ):  SizedBox(),
-                                       
+                                        ),
+                                        Row(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(
+                                                  () {
+                                                    isAmountVisible =
+                                                        !isAmountVisible;
+                                                  },
+                                                );
+                                              },
+                                              child: Icon(
+                                                isAmountVisible
+                                                    ? Icons.visibility
+                                                    : Icons.visibility_off,
+                                                size: 24,
+                                                color: isDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            /*GestureDetector(
+                                              onTap: ()
+                                              {
+                                                Navigator.pushNamed(
+                                                    c ontext, "/NotificationScreen");
+                                              },
+                                              child: Icon(
+                                                Icons.notifications,
+                                                color: isDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                            ),*/
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
+                              (dashBoardKycStatus != "" &&
+                                      dashBoardKycStatus !=
+                                          Languages.of(context)!
+                                              .statusVerified &&
+                                      dashBoardKycStatus != null)
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, '/ChooseDocScreen');
+                                      },
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Card(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 6, vertical: 3),
+                                                decoration: BoxDecoration(
+                                                    //color: AppColor.WHITE,
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    border: Border(
+                                                        top: BorderSide(
+                                                            color: Colors.red,
+                                                            width: 0.8),
+                                                        bottom: BorderSide(
+                                                            color: Colors.red,
+                                                            width: 0.8),
+                                                        left: BorderSide(
+                                                            color: Colors.red,
+                                                            width: 0.8),
+                                                        right: BorderSide(
+                                                            color: Colors.red,
+                                                            width: 0.8))),
+                                                child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        Languages.of(context)!
+                                                            .labelKycNonVerified,
+                                                        style: TextStyle(
+                                                            fontSize: 10),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 4,
+                                                      ),
+                                                      Icon(
+                                                        Icons.do_not_disturb_on,
+                                                        size: 18,
+                                                        color: Colors.red,
+                                                      )
+                                                    ]),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      height: 36,
+                                    ),
 
-                            Container(
-                              height: screenHeight * 0.32,
-                              margin:
-                                  EdgeInsets.only(top: 5, left: 2, right: 6),
-                              child: isInternetConnected && !isLoading
-                                  ? transactionList.isNotEmpty
-                                      ? ListView.builder(
-                                          physics:
-                                              const AlwaysScrollableScrollPhysics(),
-                                          controller: _scrollController,
-                                          itemCount: transactionList.length >
-                                                      0 &&
-                                                  transactionList.length <= 3
-                                              ? transactionList.length
-                                              : transactionList.length > 3
-                                                  ? 3
-                                                  : 0,
-                                          shrinkWrap: true,
-                                          padding:
-                                              const EdgeInsets.only(bottom: 5),
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                TransactionDialog.showDialogBox(
-                                                    context: context,
-                                                    transaction:
-                                                        transactionList[index],
-                                                    symbol:
-                                                        "${currencySymbol}");
-                                              },
-                                              child: Card(
-                                                elevation: 0,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 6),
-                                                  child: Container(
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 4),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Card(
-                                                              margin: EdgeInsets
-                                                                  .all(0),
-                                                              child: Container(
-                                                                height: 31,
-                                                                width: 31,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 25,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            Languages.of(context)!
+                                                .labelTotalBalance,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                letterSpacing: 1.25),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      currencyFormat(
+                                          "${currencySymbol}",
+                                          "${isAmountVisible ? amount : "**"} ",
+                                          "${country}"),
+                                      style: TextStyle(
+                                        fontSize: 26.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Card(
+                                elevation: 2,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 8),
+                                child: Container(
+                                    width: screenWidth,
+                                    height: screenHeight * 0.14,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: List.generate(
+                                        4,
+                                        (index) {
+                                          if (index <= 2) {
+                                            return _buildContainer(
+                                                context,
+                                                _shortcutCardsList[index].title,
+                                                _shortcutCardsList[index].icon);
+                                          } else {
+                                            return _buildContainer(
+                                                context,
+                                                Languages.of(context)!
+                                                    .labelMore,
+                                                Icons.more_horiz);
+                                          }
+                                        },
+                                      ),
+                                    )),
+                              ),
+                              /*Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            Languages.of(context)!.labelNews,
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.25),
+                          ),
+                        ),*/
+                              // News and Offer List
+                              /* SizedBox(
+                          height: 15,
+                        ),
+                        NewsOfferListWidget(
+                          data: imgList,
+                          isInternetConnected: isInternetConnected,
+                          isLoading: isLoading,
+                        ),*/
+                              SizedBox(
+                                height: 30,
+                              ),
+
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${Languages.of(context)!.labelTransaction}s",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, '/TransactionsScreen');
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          transactionList.length > 0
+                                              ? Column(
+                                                  children: [
+                                                    Text(
+                                                      "${Languages.of(context)?.labelViewAll}",
+                                                      style: TextStyle(
+                                                          fontSize: 14.0,
+                                                          color: isDarkMode
+                                                              ? AppColor.WHITE
+                                                              : AppColor
+                                                                  .PRIMARY,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.bottomRight,
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(
+                                                            bottom: 3),
+                                                        width:
+                                                            screenWidth * 0.14,
+                                                        height: 0.5,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: isDarkMode
+                                                              ? AppColor.WHITE
+                                                              : AppColor
+                                                                  .PRIMARY,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : SizedBox(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Container(
+                                height: screenHeight * 0.32,
+                                margin:
+                                    EdgeInsets.only(top: 5, left: 2, right: 6),
+                                child: isInternetConnected && !isLoading
+                                    ? transactionList.isNotEmpty
+                                        ? ListView.builder(
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+                                            controller: _scrollController,
+                                            itemCount: transactionList.length >
+                                                        0 &&
+                                                    transactionList.length <= 3
+                                                ? transactionList.length
+                                                : transactionList.length > 3
+                                                    ? 3
+                                                    : 0,
+                                            shrinkWrap: true,
+                                            padding: const EdgeInsets.only(
+                                                bottom: 5),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  TransactionDialog.showDialogBox(
+                                                      context: context,
+                                                      transaction:
+                                                          transactionList[
+                                                              index],
+                                                      symbol:
+                                                          "${currencySymbol}");
+                                                },
+                                                child: Card(
+                                                  elevation: 0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(vertical: 6),
+                                                    child: Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 4),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Card(
                                                                 margin:
                                                                     EdgeInsets
-                                                                        .all(6),
-                                                                child: Text(
-                                                                  "${convertDateMonthFormat("${transactionList[index]?.createdAt}")}",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          10),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
+                                                                        .all(0),
+                                                                child:
+                                                                    Container(
+                                                                  height: 31,
+                                                                  width: 31,
+                                                                  margin:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              6),
+                                                                  child: Text(
+                                                                    "${convertDateMonthFormat("${transactionList[index]?.createdAt}")}",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            10),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 8,
-                                                            ),
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Icon(
-                                                                        transactionList[index]?.transactionType == "${Languages.of(context)?.statusWithdraw}" || transactionList[index]?.transactionType == "${Languages.of(context)?.statusTransfer}"
-                                                                            ? Icons
-                                                                                .call_made
-                                                                            : Icons
-                                                                                .call_received,
-                                                                        size:
-                                                                            15,
+                                                              SizedBox(
+                                                                width: 8,
+                                                              ),
+                                                              Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                          transactionList[index]?.transactionType == "${Languages.of(context)?.statusWithdraw}" || transactionList[index]?.transactionType == "${Languages.of(context)?.statusTransfer}"
+                                                                              ? Icons
+                                                                                  .call_made
+                                                                              : Icons
+                                                                                  .call_received,
+                                                                          size:
+                                                                              15,
+                                                                          color: colorStatus(
+                                                                              capitalizeFirstLetter("${transactionList[index]?.status}"),
+                                                                              context)),
+                                                                      Text(
+                                                                        capitalizeFirstLetter(
+                                                                            "${transactionList[index]?.uniqueId}"),
+                                                                        style: TextStyle(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize: 13),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Text(
+                                                                    capitalizeFirstLetter(
+                                                                        "${transactionList[index]?.status}"),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            11,
                                                                         color: colorStatus(
                                                                             capitalizeFirstLetter("${transactionList[index]?.status}"),
                                                                             context)),
-                                                                    Text(
-                                                                      capitalizeFirstLetter(
-                                                                          "${transactionList[index]?.uniqueId}"),
-                                                                      style: TextStyle(
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          fontSize:
-                                                                              13),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Text(
-                                                                  capitalizeFirstLetter(
-                                                                      "${transactionList[index]?.status}"),
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          11,
-                                                                      color: colorStatus(
-                                                                          capitalizeFirstLetter(
-                                                                              "${transactionList[index]?.status}"),
-                                                                          context)),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Column(
-                                                          children: [
-                                                            Text(
-                                                              addCurrencySymbolTransaction(
-                                                                  currencySymbol,
-                                                                  "${transactionList[index]?.amount}",
-                                                                  capitalizeFirstLetter(
-                                                                      "${transactionList[index]?.transactionType}")),
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontSize: 13,
-                                                                  color: "${transactionList[index]?.status}" ==
-                                                                          "in_complete"
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : colorPaymentType(
-                                                                          capitalizeFirstLetter(
-                                                                              "${transactionList[index]?.transactionType}"))),
-                                                            ),
-                                                            Text(
-                                                              "${convertTime("${transactionList[index]?.createdAt}")}",
-                                                              style: TextStyle(
-                                                                  fontSize: 11),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Column(
+                                                            children: [
+                                                              Text(
+                                                                addCurrencySymbolTransaction(
+                                                                    currencySymbol,
+                                                                    "${transactionList[index]?.amount}",
+                                                                    capitalizeFirstLetter(
+                                                                        "${transactionList[index]?.transactionType}")),
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        13,
+                                                                    color: "${transactionList[index]?.status}" ==
+                                                                            "in_complete"
+                                                                        ? Colors
+                                                                            .grey
+                                                                        : colorPaymentType(
+                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"))),
+                                                              ),
+                                                              Text(
+                                                                "${convertTime("${transactionList[index]?.createdAt}")}",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        11),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      : Center(
-                                          child: Text(
-                                            Languages.of(context)!
-                                                .labelNoTransaction,
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.grey),
-                                          ),
-                                        )
-                                  : Container(
-                                      child: ShimmerList(
-                                        itemCount: 3,
+                                              );
+                                            },
+                                          )
+                                        : Center(
+                                            child: Text(
+                                              Languages.of(context)!
+                                                  .labelNoTransaction,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.grey),
+                                            ),
+                                          )
+                                    : Container(
+                                        child: ShimmerList(
+                                          itemCount: 3,
+                                        ),
                                       ),
-                                    ),
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          isApiLoading
-              ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(dismissible: false, color: Colors.transparent),
-                    // Loader indicator
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
-              : SizedBox(),
-        ]),
+              ],
+            ),
+            isApiLoading
+                ? Stack(
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false, color: Colors.transparent),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+          ]),
+        ),
       ),
     );
   }
@@ -1165,7 +1176,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         {
                           calledShortCut =
                               Languages.of(context)!.labelRequestQR,
-                         /* if (checkKYCStatus())
+                          /* if (checkKYCStatus())
                             {Navigator.pushNamed(context, '/RequestQrScreen')}
                           else
                             {Navigator.pushNamed(context, '/ChooseDocScreen')}*/

@@ -4,10 +4,8 @@ import 'dart:io';
 import 'package:Payrio/model/response/live_chat_user_details_response.dart';
 import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
 import 'package:Payrio/model/response/sendMessageResponse.dart';
-import 'package:Payrio/model/services/cloud_firestore_service.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Util.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,12 +38,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   late List<dynamic>  liveChatResponses;
   final tokenInputController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-/*
-  late CloudFirestoreService service;*/
   final TextEditingController _controller = TextEditingController();
-  //late Stream<QuerySnapshot<Map<String, dynamic>>> _commentStream;
-
-
   bool isLoading = true;
   bool isInternetConnected = true;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -54,7 +47,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   @override
   void initState() {
     super.initState();
-    //service = CloudFirestoreService(FirebaseFirestore.instance);
     liveChatResponses = [];
     _scrollToBottom();
     Helper.getProfileDetails().then((profile) {
@@ -62,7 +54,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         userId = "${profile?.userId}";
         fistName = "${profile?.firstName}";
         lastName = "${profile?.lastName}";
-       // _commentStream = service.getUsers(userId);
       });
     });
     _fetchData();
@@ -154,29 +145,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     });
   }
 
-  void _addMessage(String message) {
-    LiveChatResponse liveChatResponse = LiveChatResponse(
-      text: message,
-      isRead: false,
-      user: 2,
-    );
-
-    LiveChatUserDetailsResponse liveChatUserDetailsResponse =
-    LiveChatUserDetailsResponse(
-        first_name: fistName,
-        last_name: lastName,
-        lastMessage: message,
-        unReadByAdmin: 1,
-        unReadByMerchant: 1);
-
-   /* service.add(liveChatResponse, userId).then((_) {
-      service.addUserDetails(liveChatUserDetailsResponse, userId).then((_) {
-        _controller.clear();
-        _scrollToBottom(); // Scroll to bottom after adding a message
-      });
-    });*/
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -208,79 +176,87 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                 children: [
                   userId != ""
                       ? Expanded(
-                    child: ListView.builder(
-                          //shrinkWrap: true,
-                          //scrollDirection: Axis.vertical,
-                          controller: _scrollController,
-                          //physics: const BouncingScrollPhysics(),
-                          itemCount: liveChatResponses.length,
-                          itemBuilder: (context, index) {
-                            final response = liveChatResponses[index];
-                            final isUserMessage = response.userId == 1;
-                            final messageAlignment = isUserMessage
-                                ? Alignment.topRight
-                                : Alignment.topLeft;
-                            final messageColor = isUserMessage
-                                ? AppColor.PRIMARY
-                                : isDarkMode
-                                ? AppColor.WHITE
-                                : AppColor.BLACK;
-                            final textColor = isUserMessage
-                                ? AppColor.WHITE
-                                : isDarkMode
-                                ? AppColor.BLACK
-                                : AppColor.WHITE;
-                            final timeTextColor = isDarkMode
-                                ? AppColor.WHITE
-                                : AppColor.BLACK;
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        print("Refreshh");
+                        return Future.delayed(Duration(seconds: 2), () {
+                          _fetchData();
+                        });
+                      },
+                      child: ListView.builder(
+                            //shrinkWrap: true,
+                            //scrollDirection: Axis.vertical,
+                            controller: _scrollController,
+                            //physics: const BouncingScrollPhysics(),
+                            itemCount: liveChatResponses.length,
+                            itemBuilder: (context, index) {
+                              final response = liveChatResponses[index];
+                              final isUserMessage = response.userId == 1;
+                              final messageAlignment = isUserMessage
+                                  ? Alignment.topRight
+                                  : Alignment.topLeft;
+                              final messageColor = isUserMessage
+                                  ? AppColor.PRIMARY
+                                  : isDarkMode
+                                  ? AppColor.WHITE
+                                  : AppColor.BLACK;
+                              final textColor = isUserMessage
+                                  ? AppColor.WHITE
+                                  : isDarkMode
+                                  ? AppColor.BLACK
+                                  : AppColor.WHITE;
+                              final timeTextColor = isDarkMode
+                                  ? AppColor.WHITE
+                                  : AppColor.BLACK;
 
-                            return Align(
-                              alignment: messageAlignment,
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.end,
-                                children: [
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                        maxWidth: screenWidth * 0.6,
-                                        minWidth: screenWidth * 0.3),
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                      ),
-                                      color: messageColor,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10.0,
-                                            left: 10.0,
-                                            right: 6.0,
-                                            bottom: 10.0),
-                                        child: Text(
-                                          response.content ?? 'No Last Name',
-                                          overflow: TextOverflow.visible,
-                                          style:
-                                          TextStyle(color: textColor),
-                                          textAlign: TextAlign.left,
+                              return Align(
+                                alignment: messageAlignment,
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.end,
+                                  children: [
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxWidth: screenWidth * 0.6,
+                                          minWidth: screenWidth * 0.3),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                        ),
+                                        color: messageColor,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10.0,
+                                              left: 10.0,
+                                              right: 6.0,
+                                              bottom: 10.0),
+                                          child: Text(
+                                            response.content ?? 'No Last Name',
+                                            overflow: TextOverflow.visible,
+                                            style:
+                                            TextStyle(color: textColor),
+                                            textAlign: TextAlign.left,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(right: 6.0),
-                                    child: Text(
-                                      "${convertTime(response.createdAt)} ",
-                                      style: TextStyle(
-                                          color: timeTextColor,
-                                          fontSize: 10),
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(right: 6.0),
+                                      child: Text(
+                                        "${convertTime(response.createdAt)} ",
+                                        style: TextStyle(
+                                            color: timeTextColor,
+                                            fontSize: 10),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                    )
 
                   )
                       : Center(child: Text('No Messages')),
