@@ -1,4 +1,5 @@
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     final mediaList = apiResponse.data;
     setState(() {
-      isLoading = true;
+      isLoading = false;
     });
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -53,12 +54,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       case Status.COMPLETED:
         print("response: ${apiResponse}");
 
+        ToastComponent.showToast(context: context, message: "${apiResponse.message}");
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
 
         if(apiResponse?.message== "${Languages.of(context)?.labelInvalidAccessToken}")
           SessionExpiredDialog.showDialogBox(context: context);
+        else
+          ToastComponent.showToast(context: context, message: "${apiResponse.message}");
         return Center(
           child: Text('Please try again later!!!'),
         );

@@ -191,7 +191,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             Navigator.pushNamed(context, '/WithdrawMethodScreen');
           } else if (calledShortCut == Languages.of(context)!.labelRequestQR) {
             calledShortCut = "";
-            Navigator.pushNamed(context, '/RequestQrScreen');
+           // Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -1159,10 +1159,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         {
                           calledShortCut =
                               Languages.of(context)!.labelRequestQR,
-                          if (checkKYCStatus())
+                         /* if (checkKYCStatus())
                             {Navigator.pushNamed(context, '/RequestQrScreen')}
                           else
-                            {Navigator.pushNamed(context, '/ChooseDocScreen')}
+                            {Navigator.pushNamed(context, '/ChooseDocScreen')}*/
 
                           //_getKycStatus()
                         }

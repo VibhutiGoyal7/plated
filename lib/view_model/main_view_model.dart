@@ -313,12 +313,18 @@ class MainViewModel with ChangeNotifier {
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
     try {
-      //print(changeOldPassRequest.customer.email);
-      final response = await MainRepository()
+
+
+      ProfileResponse profileResponse =
+      await MainRepository()
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
-      //print("Yess"+ setUpAccountResponse.email.toString());
-      //if (response != null) {
-      _apiResponse = ApiResponse.completed(response);
+
+      if (profileResponse.status == 200 || profileResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(profileResponse.message);
+      } else {
+        _apiResponse = ApiResponse.error(profileResponse.message);
+      }
+
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -329,7 +335,7 @@ class MainViewModel with ChangeNotifier {
   Future<void> CreateOtpChangePass(String value,
       CreateOtpChangePassRequest createOtpChangePassRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
-    //print("Yess"+ changeOldPassRequest.customer.email);
+
     notifyListeners();
     try {
       print(createOtpChangePassRequest.customer.phoneNumber);

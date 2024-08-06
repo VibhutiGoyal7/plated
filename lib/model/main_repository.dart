@@ -184,15 +184,16 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<dynamic> ChangeWithOldPasswordData(
+  Future<ProfileResponse> ChangeWithOldPasswordData(
       String value, ChangeOldPassRequest changeOldPassRequest) async {
     print(changeOldPassRequest);
     dynamic response =
         await _payrioService.putResponse(value, changeOldPassRequest);
     print(value);
     final jsonData = response;
+    ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
     print(jsonData);
-    return response;
+    return mediaList;
   }
 
   Future<CreateOtpChangePassResponse> CreateOtpChangePass(String value,
