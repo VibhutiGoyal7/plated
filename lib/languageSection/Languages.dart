@@ -215,6 +215,8 @@ abstract class Languages {
 
   String get labelRejected;
 
+  String get labelInComplete;
+
   String get labelVideoVerification;
 
   String get labelStatusPending;

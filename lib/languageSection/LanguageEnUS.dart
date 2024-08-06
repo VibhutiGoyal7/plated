@@ -51,7 +51,7 @@ class LanguageEnUS extends Languages {
   String get labelPay => "Pay";
 
   @override
-  String get labelPressBackToExit => "Press back again to exit";
+  String get labelPressBackToExit => "Are you sure you want to exit?";
 
   @override
   String get labelQuickAction => "Quick action";
@@ -370,6 +370,9 @@ class LanguageEnUS extends Languages {
 
   @override
   String get labelRejected => "Rejected";
+
+  @override
+  String get labelInComplete => "In complete";
 
   @override
   String get labelSelectOptions => "Select Options";

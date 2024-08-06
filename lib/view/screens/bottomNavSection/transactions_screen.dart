@@ -672,7 +672,9 @@ class TransactionItem extends StatelessWidget {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
-        TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
+        Navigator.pushNamed(context, '/TransactionOverviewScreen',
+            arguments: transaction);
+        //TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
         //_showModal(context: context, transaction: transaction);
       },
       child: Card(
@@ -696,9 +698,9 @@ class TransactionItem extends StatelessWidget {
                       child: Container(
                         height: 31,
                         width: 31,
-                        margin: EdgeInsets.all(8),
+                        margin: EdgeInsets.all(6),
                         child: Text("${convertDateMonthFormat("${transaction.createdAt}")}",
-                          style: TextStyle(fontSize: 11),textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 10),textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -762,12 +764,11 @@ class TransactionItem extends StatelessWidget {
                       addCurrencySymbolTransaction(
                           symbol,
                           "${transaction.amount}",
-                          capitalizeFirstLetter(
-                              "${transaction.transactionType}")),
+                          capitalizeFirstLetter("${transaction.transactionType}")),
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
-                          color: colorPaymentType(capitalizeFirstLetter(
+                          color: transaction.status == "in_complete"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
                               "${transaction.transactionType}"))),
                     ),
                     Text(

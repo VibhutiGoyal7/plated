@@ -1,6 +1,5 @@
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +17,7 @@ class WithdrawScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
 
   WithdrawScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _WithdrawScreenState createState() => _WithdrawScreenState();
 }
@@ -34,7 +34,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   late double screenHeight;
   final TextEditingController _inputController = TextEditingController();
 
-
   static const maxDuration = Duration(seconds: 2);
 
   bool isLoading = false;
@@ -45,7 +44,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
   @override
   void initState() {
-    Helper.getProfileDetails().then((profile){
+    Helper.getProfileDetails().then((profile) {
       customerNumber = profile?.phoneNumber;
       country = profile?.countryName;
     });
@@ -68,12 +67,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     DateTime? lastBackPressed;
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         hideKeyBoard();
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(toolbarHeight: 65,
+        appBar: AppBar(
+          toolbarHeight: 65,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () async {
@@ -89,7 +89,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         ),
         body: Stack(
           children: [
-
             SafeArea(
                 child: Padding(
               padding: EdgeInsets.all(16.0),
@@ -102,10 +101,11 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   Text(
                     Languages.of(context)!.labelEnterAmount,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
                   ),
-                  _buildPhoneInput(
-                      context, Languages.of(context)!.labelZero, _inputController),
+                  _buildPhoneInput(context, Languages.of(context)!.labelZero,
+                      _inputController),
 
                   /*   Row(
                     children: [
@@ -150,7 +150,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   ),
                   Text(
                     "${Languages.of(context)!.labelBalance}: ${currencyFormat(countryCurrencySymbol, currentBalance, country)}",
-                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0),
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal, fontSize: 14.0),
                   ),
                   Container(
                     height: screenHeight * 0.065, // Set the desired height
@@ -193,11 +194,17 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   Center(
                     child: Container(
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),color: Colors.yellow.shade700,),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.yellow.shade700,
+                      ),
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                      width: screenWidth*0.58,
-                      child: Text("${Languages.of(context)?.labelYouCanOnlyWithdraw}${addCurrencySymbol(countryCurrencySymbol, "50")}",
-                        textAlign: TextAlign.center,style: TextStyle(color: Colors.white, fontSize: 12),),
+                      width: screenWidth * 0.58,
+                      child: Text(
+                        "${Languages.of(context)?.labelYouCanOnlyWithdraw}${addCurrencySymbol(countryCurrencySymbol, "50")}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
                     ),
                   ),
 
@@ -250,17 +257,16 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
             )),
             isLoading
                 ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,
-                    color: Colors.transparent),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            )
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false, color: Colors.transparent),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
           ],
         ),
@@ -321,7 +327,11 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   }
 
   void _isValidInput() {
-    if (_inputController.text.isNotEmpty && _inputController.text.length >= 1 &&isBalanceMoreThanAmount(currentBalance, _inputController.text, context) && extractFloat(_inputController.text)>=50) {
+    if (_inputController.text.isNotEmpty &&
+        _inputController.text.length >= 1 &&
+        isBalanceMoreThanAmount(
+            currentBalance, _inputController.text, context) &&
+        extractFloat(_inputController.text) >= 50) {
       setState(() {
         inputValid = true;
       });
@@ -346,12 +356,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${withDrawResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-
-        _showModal(context, "${_inputController.text}");
+        Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
+        //_showModal(context, "${_inputController.text}");
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}")
+        if (apiResponse?.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}")
           SessionExpiredDialog.showDialogBox(context: context);
         else {
           _inputController.text = "";
@@ -389,7 +400,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   isLoading = false;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                      content: Text(
+                          '${Languages.of(context)?.labelNoInternetConnection}'),
                       duration: maxDuration,
                     ),
                   );
@@ -409,14 +421,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                     Provider.of<MainViewModel>(context, listen: false).response;
                 getWithDrawResponse(context, apiResponse);
               }
-            }else{
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content:
-                  Text('Enter amount.'),
-                  duration: maxDuration,
-                ),
-              );
             }
           },
           child: Text(
@@ -488,7 +492,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           height: 10,
                         ),
                         Text(
-                          "${Languages.of(context)?.labelYouWithdraw} ${currencyFormat(countryCurrencySymbol , amount, country)}",
+                          "${Languages.of(context)?.labelYouWithdraw} ${currencyFormat(countryCurrencySymbol, amount, country)}",
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 14),
                         ),

@@ -100,9 +100,8 @@ class TransactionDialog {
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
-                                        color: colorPaymentType(
-                                            capitalizeFirstLetter(
-                                                "${transaction?.transactionType}"))))
+                                        color: "${transaction?.status}" == "in_complete"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
+                                    "${transaction?.transactionType}"))))
                               ],
                             )
                                 : SizedBox(),

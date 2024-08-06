@@ -5,6 +5,7 @@ import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
+import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/screens/addMoneySection/add_money_screen.dart';
@@ -28,6 +29,7 @@ import 'package:Payrio/view/screens/bottomNavSection/request_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transaction_overview_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_otp_screen.dart';
@@ -68,6 +70,7 @@ import 'package:Payrio/view/screens/redeemSection/level_benefit_screen.dart';
 import 'package:Payrio/view/screens/redeemSection/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeemSection/redeem_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -79,7 +82,7 @@ import 'languageSection/L10n.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
   //await PushNotificationService().setupInteractedMessage();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
@@ -350,6 +353,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as CheckCustomerResponse?;
               return TransferScreen(data: args,);
+            },
+            '/TransactionOverviewScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as TransactionDetails?;
+              return TransactionOverviewScreen(data: args,);
             },
             '/WithdrawScreen': (context) {
               final args =

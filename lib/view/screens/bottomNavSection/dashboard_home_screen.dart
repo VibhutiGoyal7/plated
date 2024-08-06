@@ -119,8 +119,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   Future<Widget> getDashboardData(
-      BuildContext context, ApiResponse apiResponse) async
-  {
+      BuildContext context, ApiResponse apiResponse) async {
     DashboardResponse? dashboardResponse =
         apiResponse.data as DashboardResponse?;
     var message = apiResponse?.message.toString();
@@ -239,7 +238,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           if (isWarning) {
             lastBackPressed = DateTime.now();
             _showExitDialog();
-           /* ScaffoldMessenger.of(context).showSnackBar(
+            /* ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(Languages.of(context)!.labelPressBackToExit),
                 duration: maxDuration,
@@ -743,35 +742,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                 width: 31,
                                                                 margin:
                                                                     EdgeInsets
-                                                                        .all(8),
+                                                                        .all(6),
                                                                 child: Text(
                                                                   "${convertDateMonthFormat("${transactionList[index]?.createdAt}")}",
                                                                   style: TextStyle(
                                                                       fontSize:
-                                                                          11),
+                                                                          10),
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
                                                                 ),
                                                               ),
                                                             ),
-                                                            /*Container(
-                                                height: 50,
-                                                width: 50,
-                                                child: Card(
-                                                  shape: CircleBorder(
-                                                      side: BorderSide(
-                                                          width: 0,
-                                                          color: colorStatus(capitalizeFirstLetter(
-                                                              "${transactionList[index].status}")))),
-                                                  color: colorStatus(capitalizeFirstLetter(
-                                                      "${transactionList[index].status}")),
-                                                  child: Icon(
-                                                    Icons.call_made,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),*/
                                                             SizedBox(
                                                               width: 8,
                                                             ),
@@ -835,9 +817,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                       FontWeight
                                                                           .w600,
                                                                   fontSize: 13,
-                                                                  color: colorPaymentType(
-                                                                      capitalizeFirstLetter(
-                                                                          "${transactionList[index]?.transactionType}"))),
+                                                                  color: "${transactionList[index]?.status}" ==
+                                                                          "in_complete"
+                                                                      ? Colors
+                                                                          .grey
+                                                                      : colorPaymentType(
+                                                                          capitalizeFirstLetter(
+                                                                              "${transactionList[index]?.transactionType}"))),
                                                             ),
                                                             Text(
                                                               "${convertTime("${transactionList[index]?.createdAt}")}",
@@ -1247,8 +1233,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   Future<void> updateCustomerDashBoardDetails(
-      DashboardResponse? dashboardResponse) async
-  {
+      DashboardResponse? dashboardResponse) async {
     if (dashboardResponse?.customerData?.tpin == null ||
         dashboardResponse?.customerData?.tpin == "") {
       Navigator.pushNamed(context, '/TpinCreateScreen');
@@ -1315,9 +1300,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           shape: Border.all(),
           title: Center(
               child: Text(
-                "Exit",
-                style: TextStyle(fontSize: 20),
-              )),
+            "Exit",
+            style: TextStyle(fontSize: 20),
+          )),
           content: Container(
             height: screenHeight * 0.3,
             child: Column(
@@ -1345,9 +1330,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     ),
                     Center(
                         child: Text(
-                          Languages.of(context)!.labelPressBackToExit,
-                          textAlign: TextAlign.center,
-                        )),
+                      Languages.of(context)!.labelPressBackToExit,
+                      textAlign: TextAlign.center,
+                    )),
                   ],
                 ),
                 Column(
@@ -1382,5 +1367,4 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       },
     );
   }
-
 }

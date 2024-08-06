@@ -70,18 +70,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
           fetchData();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(warningText)),
-          );
         },
       ))
       ..addJavaScriptChannel(
         'Toaster',
         onMessageReceived: (JavaScriptMessage message) {
           print("ToasterService $message");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
         },
       )
       ..loadRequest(
@@ -130,6 +124,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         if (trimmedResult.contains("Requested AmountPayment Method")) {
           print('Match found: $trimmedResult');
           Navigator.pushReplacementNamed(context, "/BottomNav");
+        } else if(trimmedResult.contains("Requested Amount")){
+          print('Match found: $trimmedResult');
+          Navigator.pushReplacementNamed(context, "/BottomNav");
         } else {
           fetchData();
           print('No match found: $trimmedResult');
@@ -138,27 +135,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }).catchError((error) {
       print('Error executing JavaScript: $error');
     });
-    /*var script = '''
-      var requestIdElement = document.querySelector('.rounded mb-3');
-      var requestId = document.querySelector('.form-title');
-      requestId ? requestId.textContent.trim() : '';
-    ''';
-    //binding.webView!!.loadUrl("javascript:(function(){var element = document.getElementsByName('username');element[0].focus();document.execCommand('insertText', false, '$userLogin');})()")
-
-    var result = await controller.runJavaScriptReturningResult(script).then((value) {
-      // Handle extracted data
-      print('Request ID: $value');
-      // Update your UI or save the value as needed
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Request ID: $value')),
-      );
-    });*/
-    /* if(mounted) {
-      print("warningText $result");
-    }
-    setState(() {
-      warningText = result.toString(); // Remove quotes from extracted text
-    });*/
   }
 
   @override

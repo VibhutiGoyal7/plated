@@ -9,9 +9,12 @@ String capitalizeFirstLetter(String input) {
   if (input.isEmpty) {
     return input;
   }
+  if (input.contains("_")) {
+    var replacedInput = input.replaceAll("_", " ");
+    input = replacedInput;
+  }
   return input[0].toUpperCase() + input.substring(1);
 }
-
 
 String nonCapitalizeString(String input) {
   if (input.isEmpty) {
@@ -30,50 +33,62 @@ String convertDateFormat(String input) {
 
   return formattedDate;
 }
+String convertDateTimeFormat(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+
+  DateTime parsedDate = DateTime.parse(input);
+  String formattedDate = DateFormat('yyyy-MM-dd hh:mm a').format(parsedDate);
+
+  return formattedDate;
+}
+
 String convertTime(String input) {
   if (input.isEmpty) {
     return input;
   }
 
   DateTime date = DateTime.parse(input); // Example date and time
-  String formattedTime = DateFormat('hh:mm a').format(date);// This will output "02:30 PM"
+  String formattedTime =
+      DateFormat('hh:mm a').format(date); // This will output "02:30 PM"
   return formattedTime;
 }
 
-String currencyFormat(String symbol,String input,String country ) {
+String currencyFormat(String symbol, String input, String country) {
   if (input.isEmpty) {
     return input;
   }
-  double value = 0 ;
+  double value = 0;
   print(country);
 
   var locale;
 
-  if(country == "India"){
+  if (country == "India") {
     locale = 'en_IN';
-  }else if(country == "Bangladesh"){
+  } else if (country == "Bangladesh") {
     locale = 'bn_BD';
-  }else if(country == "Saudi Arabi"){
+  } else if (country == "Saudi Arabi") {
     locale = 'ar_SA';
   }
   final formatter;
   try {
     value = double.parse(input);
-
-  }catch(e)
-  {
+  } catch (e) {
     return "${symbol}${input}";
-  }if(country == ""){
+  }
+  if (country == "") {
     formatter = NumberFormat.currency(
       symbol: "${symbol}",
       decimalDigits: 2,
     );
-  }else{
-  formatter = NumberFormat.currency(
-    locale: locale,
-    symbol: "${symbol}",
-    decimalDigits: 2,
-  );}
+  } else {
+    formatter = NumberFormat.currency(
+      locale: locale,
+      symbol: "${symbol}",
+      decimalDigits: 2,
+    );
+  }
   return "${formatter.format(value)}";
 }
 
@@ -85,7 +100,7 @@ String convertDateMonthFormat(String input) {
   String day = DateFormat('d').format(date);
   String month = DateFormat('MMM').format(date);
   return '$day\n$month';
- // return formattedDate;
+  // return formattedDate;
 }
 
 String addCurrencySymbol(String? currencySymbol, String input) {
@@ -98,11 +113,12 @@ String addCurrencySymbol(String? currencySymbol, String input) {
     return "${currencySymbol}${input}";
   }
   String amount = "";
-   try{
-     currencySymbol != null ? amount = "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}" : "${double.parse("${input}").toStringAsFixed(2)}";
-
-   }catch(e)
-  {
+  try {
+    currencySymbol != null
+        ? amount =
+            "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
+        : "${double.parse("${input}").toStringAsFixed(2)}";
+  } catch (e) {
     return "${currencySymbol}${input}";
   }
   print("${input == "**"}");
@@ -111,16 +127,16 @@ String addCurrencySymbol(String? currencySymbol, String input) {
   return amount;
 }
 
-bool isBalanceMoreThanAmount(String balance, String amt, BuildContext context){
-  double intBalance =  extractFloat(balance);
-  double inrAmt =  amt != null|| amt!="" ?extractFloat(amt) : 0;
-  if(intBalance<=inrAmt){
-    ToastComponent.showToast(context: context, message: 'You do not have enough balance.');
+bool isBalanceMoreThanAmount(String balance, String amt, BuildContext context) {
+  double intBalance = extractFloat(balance);
+  double inrAmt = amt != null || amt != "" ? extractFloat(amt) : 0;
+  if (intBalance <= inrAmt) {
+    ToastComponent.showToast(
+        context: context, message: 'You do not have enough balance.');
     return false;
-  }else{
+  } else {
     return true;
   }
-
 }
 
 double extractFloat(String str) {
@@ -140,17 +156,21 @@ String addCurrencySymbolTransaction(
     return input;
   }
   String amount = "";
-  currencySymbol != null ? amount = "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}" :  "${double.parse("${input}").toStringAsFixed(2)}";
+  currencySymbol != null
+      ? amount =
+          "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
+      : "${double.parse("${input}").toStringAsFixed(2)}";
   if (requestType == "Deposit") {
     amount = "+$amount";
   } else if (requestType == "Withdraw") {
     amount = "-$amount";
   } else if (requestType == "Transfer") {
     amount = "-$amount";
+  } else if (requestType == "In complete") {
+    amount = "-$amount";
   }
   return amount;
 }
-
 
 colorStatus(String status, BuildContext context) {
   Color color = Colors.black;
@@ -159,6 +179,8 @@ colorStatus(String status, BuildContext context) {
   } else if (status == Languages.of(context)!.labelSuccess) {
     color = Colors.green;
   } else if (status == Languages.of(context)!.labelRejected) {
+    color = Colors.red;
+  } else if (status == Languages.of(context)!.labelInComplete) {
     color = Colors.red;
   }
   return color;
@@ -172,6 +194,8 @@ colorPaymentType(String status) {
     color = Colors.red;
   } else if (status == "Transfer") {
     color = Colors.red;
+  } else if (status == "In complete") {
+    color = Colors.grey;
   }
   return color;
 }
@@ -180,8 +204,7 @@ void hideKeyBoard() {
   FocusManager.instance.primaryFocus?.unfocus();
 }
 
-getShortCutList(BuildContext context)
-{
+getShortCutList(BuildContext context) {
   List<Shortcutitemlist> _shortcutCardsList = [
     Shortcutitemlist(
         title: Languages.of(context)!.labelAddMoney,
@@ -207,7 +230,6 @@ getShortCutList(BuildContext context)
 
   return _shortcutCardsList;
 }
-
 
 /*
 

@@ -110,7 +110,6 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
     }
     final permission = Permission.camera;
     PermissionStatus status = await permission.status;
-    print(status);
     if (status.isDenied) {
       // Handle the case when permission is permanently denied
       openAppSettings();
