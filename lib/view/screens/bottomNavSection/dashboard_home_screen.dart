@@ -459,11 +459,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             SizedBox(
                                               width: 8,
                                             ),
-                                            /*GestureDetector(
+                                            GestureDetector(
                                               onTap: ()
                                               {
                                                 Navigator.pushNamed(
-                                                    c ontext, "/NotificationScreen");
+                                                    context, "/NotificationScreen");
                                               },
                                               child: Icon(
                                                 Icons.notifications,
@@ -471,7 +471,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                     ? Colors.white
                                                     : Colors.black,
                                               ),
-                                            ),*/
+                                            ),
                                           ],
                                         ),
                                       ],

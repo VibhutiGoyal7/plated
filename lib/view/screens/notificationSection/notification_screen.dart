@@ -16,25 +16,63 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(toolbarHeight: 65,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(Languages.of(context)!.labelNotification),
         ),
-        title: Text(Languages.of(context)!.labelNotification),
-      ),
-      body: ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
+        body:
+        Column(
+          children: [
+            TabBar(
+              dividerColor: Colors.transparent,
+              tabs: [
+                Tab(text: "General"),
+                Tab(text: "Transactional"),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [generalNotification(), transactionalNotification()],
+              ),
+            ),
+          ],
+        )
 
-            },
-            child: NotificationItem(data: data[index]),
-          );
-        },
+
       ),
+    );
+  }
+  Widget generalNotification(){
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+
+          },
+          child: NotificationItem(data: data[index]),
+        );
+      },
+    );
+  }
+
+  Widget transactionalNotification(){
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+
+          },
+          child: NotificationItem(data: data[index]),
+        );
+      },
     );
   }
 }
