@@ -189,7 +189,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
           ToastComponent.showToast(context: context, message: message);
         }
         return Center(
-          //child: Text('Please try again later!!!'), 6283252695
+          //child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:

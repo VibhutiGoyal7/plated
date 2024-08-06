@@ -24,7 +24,7 @@ import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:Payrio/view/screens/authSection/splash_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/payment_successfull_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_successfull_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/request_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
