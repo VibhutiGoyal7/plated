@@ -164,6 +164,7 @@ class _SupportScreenState extends State<SupportScreen> {
         apiResponse.data as AllSupportTicketsDetails?;
     setState(() {
       isLoading = false;
+      filteredSupportDataList.clear();
     });
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -171,7 +172,7 @@ class _SupportScreenState extends State<SupportScreen> {
       case Status.COMPLETED:
         AllSupportTicketsDetails? newItems = supportDataListResponse ;
         setState(() {
-          filteredSupportDataList.clear();
+          //filteredSupportDataList.clear();
           filteredSupportDataList.add(newItems!);
              // : supportDataList.addAll(newItems);
         });
