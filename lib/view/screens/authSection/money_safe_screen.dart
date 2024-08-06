@@ -22,7 +22,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
   late double screenWidth;
   late double screenHeight;
   PageController _pageController = PageController();
-  bool isLoading = false;
+  bool isLoading = true;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
   List<CountryData> countryList = [];
@@ -86,60 +86,75 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
       },
       child: Scaffold(
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-              ),
-              Image(
-                //height: screenHeight * 0.35,
-                image: AssetImage(isDarkMode
-                    ? "assets/app_logo_dark.png"
-                    : "assets/app_logo.png"),
-                fit: BoxFit.cover,
-              ),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  children: [
-                    getStartedScreen(),
-                    moneyScreen(),
-                  ],
+          child: Stack(children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SmoothPageIndicator(
-                  controller: _pageController,
-                  count: 2,
-                  effect: WormEffect(
-                    dotHeight: 8.0,
-                    dotWidth: 8.0,
-                    spacing: 16.0,
-                    dotColor: Colors.grey,
-                    activeDotColor: Colors.black,
+                Image(
+                  //height: screenHeight * 0.35,
+                  image: AssetImage(isDarkMode
+                      ? "assets/app_logo_dark.png"
+                      : "assets/app_logo.png"),
+                  fit: BoxFit.cover,
+                ),
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    children: [
+                      getStartedScreen(),
+                      moneyScreen(),
+                    ],
                   ),
                 ),
-              ),
-              _buildFooter(
-                  context: context,
-                  text: "Register",
-                  onTap: () {
-                    Navigator.pushNamed(context, '/PhoneVerifyScreen');
-                  }),
-              _buildFooter(
-                  context: context,
-                  text: "${Languages.of(context)?.labelSignin}",
-                  onTap: () {
-                    Navigator.pushNamed(context, '/SignInScreen',
-                        arguments: "");
-                  }),
-              SizedBox(
-                height: 52,
-              )
-            ],
-          ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 2,
+                    effect: WormEffect(
+                      dotHeight: 8.0,
+                      dotWidth: 8.0,
+                      spacing: 16.0,
+                      dotColor: Colors.grey,
+                      activeDotColor: Colors.black,
+                    ),
+                  ),
+                ),
+                _buildFooter(
+                    context: context,
+                    text: "Register",
+                    onTap: () {
+                      Navigator.pushNamed(context, '/PhoneVerifyScreen');
+                    }),
+                _buildFooter(
+                    context: context,
+                    text: "${Languages.of(context)?.labelSignin}",
+                    onTap: () {
+                      Navigator.pushNamed(context, '/SignInScreen',
+                          arguments: "");
+                    }),
+                SizedBox(
+                  height: 52,
+                )
+              ],
+            ),
+            isLoading
+                ? Stack(
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false, color: Colors.transparent),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
+                : SizedBox()
+          ]),
         ),
       ),
     );

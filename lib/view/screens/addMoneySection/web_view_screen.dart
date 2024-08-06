@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-  import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class WebViewScreen extends StatefulWidget {
-  //const WebViewStack({super.key});
-  final String? data; // Define the 'data' parameter here
+  final String? data;
 
   WebViewScreen({Key? key, this.data}) : super(key: key);
 
@@ -21,7 +20,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String span1 = '';
   String span2 = '';
   String warningText = '';
-   WebViewController? controller;
+  WebViewController? controller;
 
   late Timer _timer;
   bool _isActive = true;
@@ -59,17 +58,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
             loadingPercentage = progress;
           });
         },
-        onPageFinished: (url) {
+        onPageFinished: (url) async {
           print("uRL:::{url}");
-          if(url.contains("https://shopkeeper-kappa.vercel.app/shopkeeper")){
+          if (url.contains("https://admin.payorio.com/")) {
+            await Future.delayed(Duration(seconds: 10));
             Navigator.pushReplacementNamed(context, "/BottomNav");
           }
           setState(() {
             loadingPercentage = 100;
           });
 
-          fetchData();
-
+         // fetchData();
         },
       ))
       ..addJavaScriptChannel(
@@ -120,11 +119,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
       print('JavaScript executed: $trimmedResult');
 
       // Compare trimmed result
-      if(_isActive) {
+      if (_isActive) {
         if (trimmedResult.contains("Requested AmountPayment Method")) {
           print('Match found: $trimmedResult');
           Navigator.pushReplacementNamed(context, "/BottomNav");
-        } else if(trimmedResult.contains("Requested Amount")){
+        } else if (trimmedResult.contains("Requested Amount")) {
           print('Match found: $trimmedResult');
           Navigator.pushReplacementNamed(context, "/BottomNav");
         } else {
@@ -141,7 +140,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     print("redirectUrl: ${widget.data}");
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
+      appBar: AppBar(
+        toolbarHeight: 65,
         title: Text(
           "${Languages.of(context)?.labelAddMoney}",
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
