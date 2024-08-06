@@ -9,10 +9,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/request/completeP2PRequest.dart';
-import '../../../utils/Helper.dart';
-import '../../../utils/Util.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../model/request/completeP2PRequest.dart';
+import '../../../../utils/Helper.dart';
+import '../../../../utils/Util.dart';
+import '../../../component/toastMessage.dart';
 
 class PaymentSuccessfulScreen extends StatefulWidget {
   final CompleteP2PRequest? data; // Define the 'data' parameter here
@@ -246,6 +247,8 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
     if (screenshot != null) {
       // Save the screenshot to the gallery
       final result = await ImageGallerySaver.saveImage(screenshot);
+      ToastComponent.showToast(
+          context: context, message: "Downloaded Successfully");
       print(result); // Print or handle the result
     }
   }

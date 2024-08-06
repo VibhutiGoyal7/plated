@@ -178,13 +178,13 @@ class _SettingScreenState extends State<SettingScreen> {
                         SizedBox(width: 10,),
                       ],
                     )),
-                DetailBox(
+               /* DetailBox(
                   heading: Languages.of(context)!.labelStepVerification,
                   subHeading: "Secure your account",
                   icon: Icons.verified_user,
                   headingTextSize: 14,
                   subHeadingTextSize: 13,
-                ),
+                ),*/
                 _buildBiometricCard(context, "Enable App Lock", isDarkMode),
 
                 Align(
