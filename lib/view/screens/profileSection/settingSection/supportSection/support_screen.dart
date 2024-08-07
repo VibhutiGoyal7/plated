@@ -745,7 +745,7 @@ class TransactionItem extends StatelessWidget {
                                     : AppColor.PRIMARY)),
                         child: Icon(Icons.airplane_ticket,
                             color:
-                                isDarkMode ? AppColor.WHITE : AppColor.PRIMARY),
+                                isDarkMode ? transaction.ticketStatus == "resolved" ? Colors.green : Colors.white : transaction.ticketStatus == "resolved" ? Colors.green : AppColor.PRIMARY),
                       ),
                     ),
                     SizedBox(width: 8),

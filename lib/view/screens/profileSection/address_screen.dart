@@ -31,6 +31,12 @@ class _AddressScreenState extends State<AddressScreen> {
   static const maxDuration = Duration(seconds: 2);
   final ConnectivityService _connectivityService = ConnectivityService();
 
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _streetNumberController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _postalCodeController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -38,12 +44,6 @@ class _AddressScreenState extends State<AddressScreen> {
     isLoading = true;
     _fetchData();
   }
-
-  final TextEditingController _streetController = TextEditingController();
-  final TextEditingController _streetNumberController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _postalCodeController = TextEditingController();
 
   void _isValidInput() {
     //print(input);
@@ -53,11 +53,10 @@ class _AddressScreenState extends State<AddressScreen> {
         _cityController.text.isNotEmpty &&
         _postalCodeController.text.isNotEmpty &&
         (streetName != _streetController.text ||
-        streetNumber != _streetNumberController.text ||
-        city != _cityController.text ||
-        state != _stateController.text ||
-        postCode != _postalCodeController.text)
-    ) {
+            streetNumber != _streetNumberController.text ||
+            city != _cityController.text ||
+            state != _stateController.text ||
+            postCode != _postalCodeController.text)) {
       setState(() {
         inputValid = true;
       });
@@ -109,7 +108,8 @@ class _AddressScreenState extends State<AddressScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
+      appBar: AppBar(
+        toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -127,7 +127,7 @@ class _AddressScreenState extends State<AddressScreen> {
             SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: screenHeight*0.88 -
+                  minHeight: screenHeight * 0.88 -
                       MediaQuery.of(context).viewInsets.bottom,
                 ),
                 child: IntrinsicHeight(
@@ -136,18 +136,20 @@ class _AddressScreenState extends State<AddressScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildTextField(Languages.of(context)!.labelStreetName, streetName,
+                        buildTextField(
+                            Languages.of(context)!.labelStreetName, streetName,
                             (value) {
                           setState(() {
                             streetName = value;
                           });
-                        }, _streetController),
-                        buildTextField(Languages.of(context)!.labelStreetNo, streetNumber,
+                        }, _streetController, 20),
+                        buildTextField(
+                            Languages.of(context)!.labelStreetNo, streetNumber,
                             (value) {
                           setState(() {
                             streetNumber = value;
                           });
-                        }, _streetNumberController),
+                        }, _streetNumberController, 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -161,11 +163,12 @@ class _AddressScreenState extends State<AddressScreen> {
                             Expanded(
                               flex: 1,
                               child: buildTextField(
-                                  Languages.of(context)!.labelState, state, (value) {
+                                  Languages.of(context)!.labelState, state,
+                                  (value) {
                                 setState(() {
                                   state = value;
                                 });
-                              }, _stateController),
+                              }, _stateController, 15),
                             ),
                           ],
                         ),
@@ -175,21 +178,22 @@ class _AddressScreenState extends State<AddressScreen> {
                             Expanded(
                               flex: 1,
                               child: buildTextField(
-                                  Languages.of(context)!.labelCity, city, (value) {
+                                  Languages.of(context)!.labelCity, city,
+                                  (value) {
                                 setState(() {
                                   city = value;
-                                });}
-                              , _cityController),
+                                });
+                              }, _cityController, 15),
                             ),
                             Expanded(
                               flex: 1,
                               child: buildTextField(
-                                  Languages.of(context)!.labelPostalCode, postCode,
-                                  (value) {
+                                  Languages.of(context)!.labelPostalCode,
+                                  postCode, (value) {
                                 setState(() {
                                   postCode = value;
                                 });
-                              }, _postalCodeController),
+                              }, _postalCodeController, 15),
                             ),
                           ],
                         ),
@@ -203,17 +207,17 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
             isLoading
                 ? Stack(
-              children: [
-                // Block interaction
-                ModalBarrier(
-                    dismissible: false,
-                    color : Colors.black.withOpacity(0.3)),
-                // Loader indicator
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            )
+                    children: [
+                      // Block interaction
+                      ModalBarrier(
+                          dismissible: false,
+                          color: Colors.black.withOpacity(0.3)),
+                      // Loader indicator
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  )
                 : SizedBox(),
           ],
         ),
@@ -222,12 +226,13 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   Widget buildTextField(String label, String text, Function(String) onChanged,
-      TextEditingController nameController) {
+      TextEditingController nameController, int limit) {
     return Container(
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.symmetric(horizontal: 2.0),
       decoration: BoxDecoration(
-        border: Border.all(color:isDarkMode ?Colors.grey: Colors.black, width: 0.2),
+        border: Border.all(
+            color: isDarkMode ? Colors.grey : Colors.black, width: 0.2),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
@@ -235,7 +240,10 @@ class _AddressScreenState extends State<AddressScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 5),
-            child: Text("$label", style: TextStyle(fontSize: 13),),
+            child: Text(
+              "$label",
+              style: TextStyle(fontSize: 13),
+            ),
           ),
           Row(
             children: [
@@ -249,12 +257,14 @@ class _AddressScreenState extends State<AddressScreen> {
                   onChanged: (value) {
                     _isValidInput();
                   },
+                  maxLength: limit,
                   onSubmitted: (value) {},
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: label,
+                    counterText: "",
                     contentPadding: EdgeInsets.symmetric(vertical: 0),
                     hintStyle: TextStyle(color: Colors.grey),
                   ),
@@ -316,6 +326,7 @@ class _AddressScreenState extends State<AddressScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async {
+                hideKeyBoard();
                 _isValidInput();
                 print(_streetController.text);
                 if (inputValid) {
@@ -330,8 +341,7 @@ class _AddressScreenState extends State<AddressScreen> {
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor:
-                      inputValid ? AppColor.PRIMARY : Colors.white,
+                  backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
                   elevation: 3,
                   shape:
                       BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
@@ -353,7 +363,8 @@ class _AddressScreenState extends State<AddressScreen> {
           isLoading = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
@@ -372,8 +383,7 @@ class _AddressScreenState extends State<AddressScreen> {
         await Provider.of<MainViewModel>(context, listen: false)
             .saveAddressData("api/v1/app/customers/update_address", request);
         ApiResponse apiResponse =
-            Provider.of<MainViewModel>(context, listen: false)
-                .response;
+            Provider.of<MainViewModel>(context, listen: false).response;
 
         hideKeyBoard();
         getChangeAddressResponse(context, apiResponse);
@@ -384,19 +394,17 @@ class _AddressScreenState extends State<AddressScreen> {
   Future<void> _fetchData() async {
     Helper.getProfileDetails().then((profile) {
       setState(() {
-        streetName =   "${profile?.address?.line1}";
-         streetNumber = "${profile?.address?.line2}";
-         city =
-            capitalizeFirstLetter("${profile?.address?.city}");
-         state =
-            capitalizeFirstLetter("${profile?.address?.state}");
-        postCode= "${profile?.address?.postal_code}";
+        streetName = "${profile?.address?.line1}";
+        streetNumber = "${profile?.address?.line2}";
+        city = "${profile?.address?.city}";
+        state = "${profile?.address?.state}";
+        postCode = "${profile?.address?.postal_code}";
         isLoading = false;
-        _streetController.text =streetName;
-        _streetNumberController.text = streetNumber;
-        _cityController.text = city;
-        _stateController.text = state;
-        _postalCodeController.text = postCode;
+        streetName != "null" ? _streetController.text = streetName : "";
+        streetNumber != "null" ? _streetNumberController.text = streetNumber : "";
+        city != "null" ? _cityController.text = city:"";
+        state != "null" ? _stateController.text = state:"";
+        postCode != "null" ? _postalCodeController.text = postCode:"";
       });
     });
   }

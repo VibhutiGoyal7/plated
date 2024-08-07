@@ -92,7 +92,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
 
       body: SafeArea(
         child: Container(
-          color: Colors.grey,
+          color: isDarkMode ? Colors.black45: Colors.grey,
           height: screenHeight,
           width: screenWidth,
           child: Column(
@@ -110,7 +110,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                       margin:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                       //height: screenHeight,
-                      color: Colors.white,
+                      color: isDarkMode ? Colors.grey.shade900: Colors.grey.shade50,
                       child: Column(
                         //mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -168,10 +168,10 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         shape: BoxShape.rectangle,
-                                        color: Colors.black54,
+                                        color: isDarkMode ? Colors.grey: Colors.black45,
                                       ),
                                       width: screenWidth * 0.85,
-                                      height: 1,
+                                      height: 0.2,
                                     ),
                                   ),
                                   SizedBox(
@@ -314,7 +314,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                 horizontal: 10, vertical: 20),
                                             height: 40,
                                             color: Colors.grey,
-                                            width: 1,
+                                            width: 0.3,
                                           ),
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
@@ -444,7 +444,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                     vertical: 20),
                                                 height: 40,
                                                 color: Colors.grey,
-                                                width: 1,
+                                                width: 0.3,
                                               ),
                                               ConstrainedBox(
                                                 constraints: BoxConstraints(
@@ -538,7 +538,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                 horizontal: 10, vertical: 20),
                                             height: 40,
                                             color: Colors.grey,
-                                            width: 1,
+                                            width: 0.3,
                                           ),
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
@@ -590,7 +590,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 height: 80,
                 width: screenWidth,
-                color: Colors.white,
+                color: isDarkMode ? Colors.grey.shade900: Colors.grey.shade50,
                 child: IntrinsicHeight(
                   child: Container(
                     decoration: BoxDecoration(
@@ -617,7 +617,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                 children: [
                                   Icon(
                                     Icons.file_download,
-                                    color: AppColor.PRIMARY,
+                                    color: isDarkMode ? AppColor.WHITE :AppColor.PRIMARY,
                                     size: 18,
                                   ),
                                   SizedBox(
@@ -637,7 +637,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                               horizontal: 10, vertical: 20),
                           height: 40,
                           color: Colors.grey,
-                          width: 1,
+                          width: 0.3,
                         ),
                         ConstrainedBox(
                           constraints: BoxConstraints(
@@ -655,7 +655,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                     Icon(
                                       Icons.share,
                                       size: 18,
-                                      color: AppColor.PRIMARY,
+                                      color: isDarkMode ? AppColor.WHITE :AppColor.PRIMARY,
                                     ),
                                     SizedBox(
                                       width: 4,

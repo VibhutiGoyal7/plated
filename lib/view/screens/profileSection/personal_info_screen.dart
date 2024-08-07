@@ -37,6 +37,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   String? imageUrl = "";
   String? recentDocumentName = "";
   String? recentDocumentNumber = "";
+  String? address = "";
   File? galleryFile;
   final picker = ImagePicker();
   bool mExpanded = false;
@@ -67,6 +68,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             profileDetails?.documentDetail?.recentKycDocumentsName;
         recentDocumentNumber =
             profileDetails?.documentDetail?.recentKycDocumentsIdNumber;
+        address ="${profileDetails?.address?.city != null ? "${profileDetails?.address?.city}, ": ''}"
+            "${profileDetails?.address?.state != null ? "${profileDetails?.address?.state}, " : ''}"
+            "${profileDetails?.countryName}"
+            "${profileDetails?.address?.postal_code != null ? ", ${profileDetails?.address?.postal_code}" : ''}";
       });
     });
   }
@@ -275,29 +280,12 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       onTap: (){
                         Navigator.pushNamed(context, "/AddressScreen");
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric( vertical: 2.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 18.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.home),
-                              SizedBox(width: 8,),
-                              Text(
-                                "Address",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  //color: isDarkMode ? Colors.white : Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      child:  DetailBox(
+                        heading: Languages.of(context)!.labelAddress,
+                        subHeading: "${address}",
+                        icon: Icons.calendar_month,
+                        headingTextSize: 14,
+                        subHeadingTextSize: 13,
                       ),
                     ),
                     DetailBox(

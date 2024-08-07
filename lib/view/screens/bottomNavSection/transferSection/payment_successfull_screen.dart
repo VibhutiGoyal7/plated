@@ -121,9 +121,9 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 20),
                           decoration: BoxDecoration(
-                              color: Colors.grey.shade50,
+                              color: isDarkMode ? Colors.grey.shade900: Colors.grey.shade50,
                               border: Border.all(
-                                  width: 0.1, color: Colors.grey)),
+                                  width: 0.1, color: isDarkMode ? Colors.grey.shade900: Colors.grey.shade50)),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment:

@@ -25,10 +25,10 @@ class SupportChatScreen extends StatefulWidget {
   final AllSupportTicketsDetails details;
 
   SupportChatScreen({Key? key, required this.details}) : super(key: key);
+
   @override
   _SupportChatScreenState createState() => _SupportChatScreenState();
 }
-
 
 class _SupportChatScreenState extends State<SupportChatScreen> {
   File image = File("");
@@ -39,7 +39,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   File? galleryFile;
   File imageFile = File("");
   final picker = ImagePicker();
-  late List<dynamic>  liveChatResponses;
+  late List<dynamic> liveChatResponses;
   final tokenInputController = TextEditingController();
   ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
@@ -76,9 +76,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     super.dispose();
   }
 
-  Future<void> getSupportData(BuildContext context, ApiResponse apiResponse,) async {
+  Future<void> getSupportData(
+    BuildContext context,
+    ApiResponse apiResponse,
+  ) async {
     MessagesSupportChatResponse? supportDataListResponse =
-    apiResponse.data as MessagesSupportChatResponse?;
+        apiResponse.data as MessagesSupportChatResponse?;
     setState(() {
       isLoading = false;
     });
@@ -91,12 +94,13 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         setState(() {
           liveChatResponses.clear();
 
-         liveChatResponses.addAll(newItems);
+          liveChatResponses.addAll(newItems);
           _scrollToBottom();
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -106,10 +110,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     }
   }
 
-
-  Future<void> sendMessageSupport(BuildContext context, ApiResponse apiResponse,) async {
+  Future<void> sendMessageSupport(
+    BuildContext context,
+    ApiResponse apiResponse,
+  ) async {
     SendMessageResponse? sendMessageResponse =
-    apiResponse.data as SendMessageResponse?;
+        apiResponse.data as SendMessageResponse?;
     setState(() {
       isLoading = false;
     });
@@ -122,16 +128,17 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         _fetchData();
         _scrollToBottom();
         setState(() {
-          _controller.text="";
+          _controller.text = "";
           imageUrl = null;
           hasAttachment = false;
           hideKeyBoard();
 
-         //liveChatResponses.addAll(newItems);
+          //liveChatResponses.addAll(newItems);
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -173,11 +180,11 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushNamed(context, '/SupportScreen');
+              Navigator.pop(context);
             },
           ),
           title: Text(
-            "Support ticket chat",
+            "Support Ticket Chat",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
         ),
@@ -194,16 +201,13 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                         ? Expanded(
                             child: RefreshIndicator(
                             onRefresh: () {
-                              print("Refreshh");
+                              print("Refresh");
                               return Future.delayed(Duration(seconds: 2), () {
                                 _fetchData();
                               });
                             },
                             child: ListView.builder(
-                              //shrinkWrap: true,
-                              //scrollDirection: Axis.vertical,
                               controller: _scrollController,
-                              //physics: const BouncingScrollPhysics(),
                               itemCount: liveChatResponses.length,
                               itemBuilder: (context, index) {
                                 SupportChatDetail response =
@@ -224,111 +228,116 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                 final userImg = isUserMessage ? profileImg : "";
 
                                 return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 1.0),
-                                child: Align(
-                                  alignment: messageAlignment,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5.0),
-                                        child: userImg == ""
-                                            ? Container(
-                                          height: 32,
-                                          width: 32,
-                                          child: CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor: AppColor.WHITE,
-                                            backgroundImage: AssetImage(
-                                                "assets/profile_user.png"),
-                                          ),
-                                        )
-                                            : Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(100),
-                                            border: Border.all(
-                                                color: AppColor.PRIMARY,
-                                                width: 0.3),
-                                            color: Colors.white,
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                100.0),
-                                            child: Image.network(
-                                              userImg,
-                                              height: 32,
-                                              width: 32,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (BuildContext
-                                              context,
-                                                  Object exception,
-                                                  StackTrace? stackTrace) {
-                                                return Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 1.0),
+                                  child: Align(
+                                    alignment: messageAlignment,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5.0),
+                                          child: userImg == ""
+                                              ? Container(
                                                   height: 32,
                                                   width: 32,
                                                   child: CircleAvatar(
                                                     radius: 30,
                                                     backgroundColor:
-                                                    AppColor.WHITE,
-                                                    backgroundImage:
-                                                    AssetImage(
-                                                      "assets/profile_user.png",
-                                                    ),
+                                                        AppColor.WHITE,
+                                                    backgroundImage: AssetImage(
+                                                        "assets/profile_user.png"),
                                                   ),
-                                                );
-                                              },
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                  Widget child,
-                                                  ImageChunkEvent?
-                                                  loadingProgress) {
-                                                if (loadingProgress ==
-                                                    null) {
-                                                  return child;
-                                                } else {
-                                                  return Shimmer.fromColors(
-                                                    baseColor:
-                                                    Colors.white38,
-                                                    highlightColor:
-                                                    Colors.grey,
-                                                    child: Container(
+                                                )
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    border: Border.all(
+                                                        color: AppColor.PRIMARY,
+                                                        width: 0.3),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100.0),
+                                                    child: Image.network(
+                                                      userImg,
                                                       height: 32,
                                                       width: 32,
-                                                      color: Colors.white,
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder:
+                                                          (BuildContext context,
+                                                              Object exception,
+                                                              StackTrace?
+                                                                  stackTrace) {
+                                                        return Container(
+                                                          height: 32,
+                                                          width: 32,
+                                                          child: CircleAvatar(
+                                                            radius: 30,
+                                                            backgroundColor:
+                                                                AppColor.WHITE,
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                              "assets/profile_user.png",
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      loadingBuilder: (BuildContext
+                                                              context,
+                                                          Widget child,
+                                                          ImageChunkEvent?
+                                                              loadingProgress) {
+                                                        if (loadingProgress ==
+                                                            null) {
+                                                          return child;
+                                                        } else {
+                                                          return Shimmer
+                                                              .fromColors(
+                                                            baseColor:
+                                                                Colors.white38,
+                                                            highlightColor:
+                                                                Colors.grey,
+                                                            child: Container(
+                                                              height: 32,
+                                                              width: 32,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
                                                     ),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                          ),
+                                                  ),
+                                                ),
                                         ),
-                                      ),
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxWidth: screenWidth * 0.8,
-                                            minWidth: screenWidth * 0.8),
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                          ),
-                                          color: messageColor,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10.0,
-                                                left: 10.0,
-                                                right: 6.0,
-                                                bottom: 10.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                /* Text(
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              maxWidth: screenWidth * 0.8,
+                                              minWidth: screenWidth * 0.8),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8)),
+                                            ),
+                                            color: messageColor,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 6.0,
+                                                  bottom: 10.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  /* Text(
                                                     response.userType ?? '',
                                                     overflow: TextOverflow.visible,
                                                     style: TextStyle(
@@ -336,227 +345,247 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                                         fontSize: 12),
                                                     textAlign: TextAlign.left,
                                                   ),*/
-                                                Align(
-                                                  alignment: Alignment.topRight,
-                                                  child: Text(
-                                                    convertTime(
-                                                        "${response
-                                                            .createdAt}"),
-                                                    overflow: TextOverflow
-                                                        .visible,
-                                                    style: TextStyle(
-                                                        color: textColor,
-                                                        fontSize: 8),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsets.only(
-                                                      left: 4.0,
-                                                      right: 4,
-                                                      bottom: 4),
-                                                  child: Text(
-                                                    response.content ?? '',
-                                                    overflow:
-                                                    TextOverflow.visible,
-                                                    style: TextStyle(
-                                                        color: textColor,
-                                                        fontSize: 12),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                ),
-                                                response.attachments?.isEmpty ==
-                                                    true ||
-                                                    response.attachments?[0] ==
-                                                        "" ||
-                                                    response.attachments?[0] ==
-                                                        null
-                                                    ? SizedBox()
-                                                    : GestureDetector(
-                                                  onTap: () {
-                                                    _showModal(context, response
-                                                        .attachments?[0],);
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      //borderRadius: BorderRadius.circular(100),
-                                                      border: Border.all(
-                                                          color: AppColor
-                                                              .PRIMARY,
-                                                          width: 0.3),
-                                                      color: Colors.white,
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 4.0,
+                                                            right: 4,
+                                                            bottom: 4),
+                                                    child: Text(
+                                                      response.content ?? '',
+                                                      overflow:
+                                                          TextOverflow.visible,
+                                                      style: TextStyle(
+                                                          color: textColor,
+                                                          fontSize: 13),
+                                                      textAlign: TextAlign.left,
                                                     ),
-                                                    child: ClipRRect(
-                                                      //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                      child: Image.network(
-                                                        response
-                                                            .attachments?[0],
-                                                        height: 90,
-                                                        width: 90,
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder:
-                                                            (BuildContext
-                                                        context,
-                                                            Object
-                                                            exception,
-                                                            StackTrace?
-                                                            stackTrace) {
-                                                          return SizedBox();
-                                                        },
-                                                        loadingBuilder:
-                                                            (BuildContext
-                                                        context,
-                                                            Widget child,
-                                                            ImageChunkEvent?
-                                                            loadingProgress) {
-                                                          if (loadingProgress ==
-                                                              null) {
-                                                            return child;
-                                                          } else {
-                                                            return Shimmer
-                                                                .fromColors(
-                                                              baseColor: Colors
-                                                                  .white38,
-                                                              highlightColor:
-                                                              Colors.grey,
-                                                              child:
-                                                              Container(
-                                                                height: 80,
-                                                                width: 80,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
+                                                  ),
+                                                  response.attachments
+                                                                  ?.isEmpty ==
+                                                              true ||
+                                                          response.attachments?[
+                                                                  0] ==
+                                                              "" ||
+                                                          response.attachments?[
+                                                                  0] ==
+                                                              null
+                                                      ? SizedBox()
+                                                      : GestureDetector(
+                                                          onTap: () {
+                                                            _showModal(
+                                                              context,
+                                                              response
+                                                                  .attachments?[0],
                                                             );
-                                                          }
-                                                        },
-                                                      ),
+                                                          },
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              //borderRadius: BorderRadius.circular(100),
+                                                              border: Border.all(
+                                                                  color: AppColor
+                                                                      .PRIMARY,
+                                                                  width: 0.3),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            child: ClipRRect(
+                                                              //borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                              child:
+                                                                  Image.network(
+                                                                response
+                                                                    .attachments?[0],
+                                                                height: 90,
+                                                                width: 90,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                errorBuilder: (BuildContext
+                                                                        context,
+                                                                    Object
+                                                                        exception,
+                                                                    StackTrace?
+                                                                        stackTrace) {
+                                                                  return SizedBox();
+                                                                },
+                                                                loadingBuilder: (BuildContext
+                                                                        context,
+                                                                    Widget
+                                                                        child,
+                                                                    ImageChunkEvent?
+                                                                        loadingProgress) {
+                                                                  if (loadingProgress ==
+                                                                      null) {
+                                                                    return child;
+                                                                  } else {
+                                                                    return Shimmer
+                                                                        .fromColors(
+                                                                      baseColor:
+                                                                          Colors
+                                                                              .white38,
+                                                                      highlightColor:
+                                                                          Colors
+                                                                              .grey,
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            80,
+                                                                        width:
+                                                                            80,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    child: Text(
+                                                      convertTime(
+                                                          "${response.createdAt}"),
+                                                      overflow:
+                                                          TextOverflow.visible,
+                                                      style: TextStyle(
+                                                          color: textColor,
+                                                          fontSize: 8),
+                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ))
+                        : Center(child: Text('No Messages')),
+                    widget.details.ticketStatus == "Pending"
+                        ? Card(
+                            elevation: 5,
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  left: 8, right: 5, top: 5, bottom: 5),
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  imageUrl == null && !hasAttachment
+                                      ? SizedBox()
+                                      : IntrinsicWidth(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: AppColor.BLACK,
+                                                  width: 0.3),
+                                              color: Colors.white,
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                ClipRRect(
+                                                  child: Image.file(
+                                                    imageUrl as File,
+                                                    height: 90,
+                                                    width: 90,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (BuildContext context,
+                                                            Object exception,
+                                                            StackTrace?
+                                                                stackTrace) {
+                                                      return SizedBox();
+                                                    },
+                                                  ),
                                                 ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      hasAttachment = false;
+                                                      imageUrl = null;
+                                                    });
+                                                  },
+                                                  child: Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: Icon(
+                                                        Icons.cancel,
+                                                        color: Colors.black,
+                                                        size: 22,
+                                                      )),
+                                                )
                                               ],
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                  SizedBox(
+                                    height: 2,
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ))
-                        : Center(child: Text('No Messages')),
-                    widget.details.ticketStatus == "Pending" ?
-                    Card(
-                      elevation: 5,
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            left: 8, right: 5, top: 5, bottom: 5),
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            imageUrl == null && !hasAttachment
-                                ? SizedBox()
-                                : IntrinsicWidth(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: AppColor.BLACK, width: 0.3),
-                                        color: Colors.white,
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          ClipRRect(
-                                            child: Image.file(
-                                              imageUrl as File,
-                                              height: 90,
-                                              width: 90,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (BuildContext context,
-                                                      Object exception,
-                                                      StackTrace? stackTrace) {
-                                                return SizedBox();
-                                              },
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                hasAttachment = false;
-                                                imageUrl = null;
-                                              });
-                                            },
-                                            child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Icon(
-                                                  Icons.cancel,
-                                                  color: Colors.black,
-                                                  size: 22,
+                                  TextField(
+                                    controller: _controller,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: TextStyle(fontSize: 14.0),
+                                    obscureText: false,
+                                    obscuringCharacter: "*",
+                                    onChanged: (value) {
+                                      //setState(() {});
+                                    },
+                                    scrollPadding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom),
+                                    textInputAction: TextInputAction.done,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: "Message",
+                                        alignLabelWithHint: true,
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        suffixIcon: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            GestureDetector(
+                                                onTap: () {
+                                                  _showPicker(context: context);
+                                                  hideKeyBoard();
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8.0),
+                                                  child: Icon(Icons.attach_file,
+                                                      color: isDarkMode
+                                                          ? AppColor.WHITE
+                                                          : AppColor.PRIMARY),
                                                 )),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                            //SizedBox(width: 4,),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  _sendMsg(_controller.text);
+                                                },
+                                                child: Icon(Icons.send,
+                                                    color: isDarkMode
+                                                        ? AppColor.WHITE
+                                                        : AppColor.PRIMARY)),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                          ],
+                                        )),
                                   ),
-                            SizedBox(
-                              height: 2,
+                                ],
+                              ),
                             ),
-                            TextField(
-                              controller: _controller,
-                              textAlignVertical: TextAlignVertical.center,
-                              style: TextStyle(fontSize: 14.0),
-                              obscureText: false,
-                              obscuringCharacter: "*",
-                              onChanged: (value) {
-                                //setState(() {});
-                              },
-                              scrollPadding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom),
-                              textInputAction: TextInputAction.done,
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Message",
-                                  alignLabelWithHint: true,
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      GestureDetector(
-                                          onTap: () {
-                                            _showPicker(context: context);
-                                            hideKeyBoard();
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Icon(Icons.attach_file,
-                                                color: isDarkMode
-                                                    ? AppColor.WHITE
-                                                    : AppColor.PRIMARY),
-                                          )),
-                                      //SizedBox(width: 4,),
-                                      GestureDetector(
-                                          onTap: () {
-                                            _sendMsg(_controller.text);
-                                          },
-                                          child: Icon(Icons.send,
-                                              color: isDarkMode
-                                                  ? AppColor.WHITE
-                                                  : AppColor.PRIMARY)),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ):SizedBox(),
+                          )
+                        : SizedBox(),
                   ],
                 ),
                 isLoading
@@ -580,9 +609,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     );
   }
 
-
-  Future<void> _fetchData(
-      ) async {
+  Future<void> _fetchData() async {
     print("Fetch Data");
     try {
       setState(() {
@@ -595,15 +622,17 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
         });
       } else {
-
         await Provider.of<MainViewModel>(context, listen: false)
-            .getSupportChatData("api/v1/app/payorio_support_tickets/${widget.details.id}/messages", );
+            .getSupportChatData(
+          "api/v1/app/payorio_support_tickets/${widget.details.id}/messages",
+        );
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getSupportData(context, apiResponse);
@@ -626,13 +655,13 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
         });
       } else {
-
         await Provider.of<MainViewModel>(context, listen: false)
             .postMultiFormMessageResponse(
           "api/v1/app/payorio_support_tickets/${widget.details.id}/messages",

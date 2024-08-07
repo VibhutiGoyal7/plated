@@ -40,7 +40,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   String? name = "";
   String? uniqueId = "";
   String? receiverUsername = "";
-  String? imageUrl = "";
+  String? imageUrl     = "";
   String? paymentTransactionId = "";
   String? country = "";
   late double screenWidth;
