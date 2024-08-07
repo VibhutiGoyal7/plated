@@ -5,7 +5,7 @@ import '../response/dashboardResponse.dart';
 
 @dao
 abstract class DashboardTransactionDao {
-  @Query('SELECT * FROM TransactionDetails ORDER BY created DESC')
+  @Query('SELECT * FROM TransactionDetails ORDER BY createdAt DESC')
   Future<List<TransactionDetails?>> findAllTransactions();
   @insert
   Future<void> insertTransaction(TransactionDetails transaction);

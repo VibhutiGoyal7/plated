@@ -14,6 +14,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
+import '../../../model/db/dao.dart';
 import '../../../model/request/shortcutItemList.dart';
 import '../../../model/response/offersResponse.dart';
 import '../../../theme/AppColor.dart';
@@ -43,6 +44,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isUSDVisible = false;
   late List<Shortcutitemlist> _shortcutCardsList;
   late PayorioDatabase database;
+  late DashboardTransactionDao dashboardTransactionDao;
+  late CustomerDataDao customerDataDao;
   static const maxDuration = Duration(seconds: 2);
   bool isLoading = false;
   bool isApiLoading = false;
@@ -104,13 +107,18 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       dashBoardKycStatus = status;
     });
 
-    $FloorPayorioDatabase
+    intializeDatabase();
+
+    /*$FloorPayorioDatabase
         .databaseBuilder('payorio_database.db')
         .build()
         .then((value) async {
       this.database = value;
-      _fetchDashboardData();
-    });
+
+
+    });*/
+
+
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
 
@@ -1230,7 +1238,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   void _fetchDashboardData() async {
     Helper.getProfileDetails().then((profile) async {
       CustomerData? customer =
-          await database.personDao.findCustomerByEmail("${profile?.email}");
+          await customerDataDao.findCustomerByEmail("${profile?.email}");
       if (mounted) {
         if (customer?.email?.isNotEmpty == true) {
           name = customer?.firstName == null
@@ -1246,20 +1254,27 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       }
     });
 
-    List<TransactionDetails?> localTransactionList =
-        await database.dashboardTransactionDao.findAllTransactions();
-    if (localTransactionList.isNotEmpty) {
-      print("localTransactionList.length::${localTransactionList.length}");
-      setState(() {
-        transactionList.addAll(localTransactionList.reversed);
-      });
-      getDashBoardDataFromApi();
+    if(dashboardTransactionDao != null){
+      List<TransactionDetails?> localTransactionList = await dashboardTransactionDao.findAllTransactions();
+      if (localTransactionList.isNotEmpty) {
+        print("localTransactionList.length::${localTransactionList.length}");
+        setState(() {
+          transactionList.addAll(localTransactionList.reversed);
+        });
+        getDashBoardDataFromApi();
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        getDashBoardDataFromApi();
+      }
     } else {
       setState(() {
         isLoading = true;
       });
       getDashBoardDataFromApi();
     }
+
   }
 
   void getDashBoardDataFromApi() async {
@@ -1301,29 +1316,31 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     await Helper.saveKycStatus(customerData?.kycStatus);
 
     CustomerData? customer =
-        await database.personDao.findCustomerByEmail("${customerData?.email}");
+        await customerDataDao.findCustomerByEmail("${customerData?.email}");
     if (mounted) {
       if (customer?.email?.isNotEmpty == true) {
-        await database.personDao.updateCustomer(customerData!);
+        await customerDataDao.updateCustomer(customerData!);
       } else {
-        await database.personDao.insertCustomer(customerData!);
+        await customerDataDao.insertCustomer(customerData!);
       }
     }
 
-    List<TransactionDetails?> localTransactionList =
-        await database.dashboardTransactionDao.findAllTransactions();
-    if (mounted) {
-      // Iterate through customerRecentTxn
-      for (var transactionData in dashboardResponse?.customerRecentTxn ?? []) {
-        // Check if the transaction already exists in localTransactionList
-        bool transactionExists = localTransactionList
-            .any((localData) => localData?.id == transactionData.id);
-        // If it doesn't exist, insert the transaction
-        if (!transactionExists) {
-          await database.dashboardTransactionDao
-              .insertTransaction(transactionData);
+    if(dashboardResponse?.customerRecentTxn?.isNotEmpty == true){
+      List<TransactionDetails?> localTransactionList =
+      await dashboardTransactionDao.findAllTransactions();
+      if (mounted) {
+        // Iterate through customerRecentTxn
+        for (var transactionData in dashboardResponse?.customerRecentTxn ?? []) {
+          // Check if the transaction already exists in localTransactionList
+          bool transactionExists = localTransactionList
+              .any((localData) => localData?.id == transactionData.id);
+          // If it doesn't exist, insert the transaction
+          if (!transactionExists) {
+            dashboardTransactionDao.insertTransaction(transactionData);
+          }
         }
       }
+
     }
 
     setState(() {
@@ -1422,5 +1439,15 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         );
       },
     );
+  }
+
+  Future<void> intializeDatabase() async {
+    database = await $FloorPayorioDatabase
+        .databaseBuilder('payorio_database.db')
+        .build();
+
+    dashboardTransactionDao = database.dashboardTransactionDao;
+    customerDataDao = database.personDao;
+    _fetchDashboardData();
   }
 }

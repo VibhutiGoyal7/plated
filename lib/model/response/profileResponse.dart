@@ -7,7 +7,7 @@ class ProfileResponse {
   final int? userId;
   final String? imageUrl;
   final String? email;
-  final String? address;
+  final AddressDetails? address;
   final String? dob;
   final int? status;
   final String? phoneNumber;
@@ -70,7 +70,9 @@ class ProfileResponse {
       imageUrl: json['data']?['image_url'] as String?,
       phoneNumber: json['data']?['phone_number'] as String?,
       email: json['data']?['email'] as String?,
-      address: json['data']?['address'] as String?,
+      address: json['data']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['address'])
+          : null,
       dob: json['data']?['dob'] as String?,
       isEmailVerified: json['data']?['is_email_verified'] as bool?,
       username: json['data']?['username'] as String?,
@@ -84,10 +86,11 @@ class ProfileResponse {
       createdAt: json['data']?['created_at'] as String?,
       tpin: json['data']?['customer']?['tpin'] as String?,
       countryCurrencySymbol:
-      json['data']?['country_currency_symbol'] as String?,
+          json['data']?['country_currency_symbol'] as String?,
       token: json['data']?['token'] as String?,
       documentDetail: json['data']?['recent_kyc_documents_id_number'] != null
-          ? DocumentDetail.fromJson(json['data']?['recent_kyc_documents_id_number'])
+          ? DocumentDetail.fromJson(
+              json['data']?['recent_kyc_documents_id_number'])
           : null,
     );
   }
@@ -103,7 +106,9 @@ class ProfileResponse {
       createdAt: json['data']?['customer']?['created_at'] as String?,
       email: json['data']?['customer']?['email'] as String?,
       countryName: json['data']?['customer']?['country_name'] as String?,
-      address: json['data']?['customer']?['address'] as String?,
+      address: json['data']?['customer']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['customer']?['address'])
+          : null,
       dob: json['data']?['customer']?['dob'] as String?,
       isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
       kycStatus: json['data']?['customer']?['kyc_status'] as String?,
@@ -111,18 +116,19 @@ class ProfileResponse {
       balance: json['data']?['customer']?['balance'] as String?,
       username: json['data']?['customer']?['username'] as String?,
       countryCurrencySymbol:
-      json['data']?['customer']?['country_currency_symbol'] as String?,
-      countryPhoneCode:
-      json['data']?['country_phone_code'] as String?,
+          json['data']?['customer']?['country_currency_symbol'] as String?,
+      countryPhoneCode: json['data']?['country_phone_code'] as String?,
       tpin: json['data']?['customer']?['tpin'] as String?,
       countryId: json['data']?['customer']?['country_id'] as int?,
       isProfileSetupDone:
-      json['data']?['customer']?['is_profile_setup_done'] as bool?,
+          json['data']?['customer']?['is_profile_setup_done'] as bool?,
       activityPoints: json['data']?['customer']?['activity_points'] as int?,
       token: json['data']?['token'] as String?,
-      documentDetail: json['data']?['recent_kyc_documents_id_number'] != null
-          ? DocumentDetail.fromJson(json['data']?['recent_kyc_documents_id_number'])
-          : null,
+      documentDetail:
+          json['data']?['customer']?['recent_kyc_documents_id_number'] != null
+              ? DocumentDetail.fromJson(
+                  json['data']?['customer']?['recent_kyc_documents_id_number'])
+              : null,
     );
   }
 
@@ -162,7 +168,9 @@ class ProfileResponse {
       imageUrl: json['image_url'] as String?,
       phoneNumber: json['phone_number'] as String?,
       email: json['email'] as String?,
-      address: json['address'] as String?,
+      address: json['address'] != null
+          ? AddressDetails.fromJson(json['address'])
+          : null,
       dob: json['dob'] as String?,
       username: json['username'] as String?,
       balance: json['balance'] as String?,
@@ -179,6 +187,42 @@ class ProfileResponse {
       documentDetail: json['recent_kyc_documents_id_number'] != null
           ? DocumentDetail.fromJson(json['recent_kyc_documents_id_number'])
           : null,
+    );
+  }
+}
+
+class AddressDetails {
+  String? line1;
+  String? line2;
+  String? city;
+  String? state;
+  String? postal_code;
+
+  AddressDetails({
+    this.line1,
+    this.line2,
+    this.city,
+    this.state,
+    this.postal_code,
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['line1'] = this.line1;
+    data['line2'] = this.line2;
+    data['city'] = this.city;
+    data['state'] = this.state;
+    data['postal_code'] = this.postal_code;
+    return data;
+  }
+
+  factory AddressDetails.fromJson(Map<String, dynamic> json) {
+    return AddressDetails(
+      line1: json["line1"] as String?,
+      line2: json["line2"] as String?,
+      city: json["city"] as String?,
+      state: json["state"] as String?,
+      postal_code: json["postal_code"] as String?,
     );
   }
 }

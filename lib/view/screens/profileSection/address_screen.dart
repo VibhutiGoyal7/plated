@@ -317,7 +317,7 @@ class _AddressScreenState extends State<AddressScreen> {
     ProfileResponse? profileDetails = await Helper.getProfileDetails();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        address = (profileDetails?.address == null? "" : profileDetails?.address)! ;
+        //address = (profileDetails?.address == null? "" : profileDetails?.address)! ;
         isLoading = false;
       });
     });

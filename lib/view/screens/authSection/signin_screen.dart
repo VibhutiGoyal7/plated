@@ -32,14 +32,19 @@ class _SigninScreenState extends State<SigninScreen> {
   bool isChecked = false;
   late double screenWidth;
   late bool isDarkMode;
+  String? deviceToken;
 
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
     inputValid = false;
+    Helper.getDeviceToken().then((token) {
+      setState(() {
+        deviceToken = token;
+      });
+    });
     Helper.getUserId().then((id) {
-     // print("id${id}");
       setState(() {
         if (id != null && id.isNotEmpty) {
           isChecked = true;
@@ -152,7 +157,8 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      minHeight: screenHeight - MediaQuery.of(context).viewInsets.bottom,
+                      minHeight: screenHeight -
+                          MediaQuery.of(context).viewInsets.bottom,
                     ),
                     child: IntrinsicHeight(
                       child: Column(
@@ -195,8 +201,13 @@ class _SigninScreenState extends State<SigninScreen> {
                                   child: Column(
                                     children: [
                                       SizedBox(height: 20),
-                                      _buildLabelText(context, "Welcome Back!", 26, true),
-                                      _buildLabelText(context, "Welcome back we missed you", 14, false),
+                                      _buildLabelText(
+                                          context, "Welcome Back!", 26, true),
+                                      _buildLabelText(
+                                          context,
+                                          "Welcome back we missed you",
+                                          14,
+                                          false),
                                       SizedBox(height: 25),
                                       _buildPhoneInput(
                                         context,
@@ -205,7 +216,9 @@ class _SigninScreenState extends State<SigninScreen> {
                                         Icon(
                                           Icons.person,
                                           size: 20,
-                                          color: isDarkMode ? Colors.white : Colors.black,
+                                          color: isDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
                                       ),
                                       SizedBox(height: 15),
@@ -216,16 +229,20 @@ class _SigninScreenState extends State<SigninScreen> {
                                           Icon(
                                             Icons.password,
                                             size: 18,
-                                            color: isDarkMode ? Colors.white : Colors.black,
+                                            color: isDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
                                           ),
                                           passwordVisible,
                                           isDarkMode),
                                       SizedBox(height: 8),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 32.0),
                                         child: GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context, '/ForgotPasswordScreen');
+                                            Navigator.pushNamed(context,
+                                                '/ForgotPasswordScreen');
                                           },
                                           child: Align(
                                             alignment: Alignment.topRight,
@@ -241,19 +258,24 @@ class _SigninScreenState extends State<SigninScreen> {
                                       ),
                                       SizedBox(height: 15),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
                                         child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              _buildFooter(context, apiResponse),
+                                              _buildFooter(
+                                                  context, apiResponse),
                                             ]),
                                       ),
                                       SizedBox(height: 8),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               "Need account? ",
@@ -264,14 +286,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                Navigator.pushNamed(context, '/PhoneVerifyScreen');
+                                                Navigator.pushNamed(context,
+                                                    '/PhoneVerifyScreen');
                                               },
                                               child: Text(
                                                 "Register here.",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.blue,
-                                                    fontWeight: FontWeight.w600),
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                             ),
                                           ],
@@ -303,8 +327,7 @@ class _SigninScreenState extends State<SigninScreen> {
             ],
           ),
         ),
-      )
-      ,
+      ),
     );
   }
 
@@ -317,7 +340,8 @@ class _SigninScreenState extends State<SigninScreen> {
     );
   }
 
-  Widget _buildPhoneInput(BuildContext context, String text, TextEditingController nameController, Icon icon) {
+  Widget _buildPhoneInput(BuildContext context, String text,
+      TextEditingController nameController, Icon icon) {
     //nameController.text = widget.data as String;
     return Card(
       child: Container(
@@ -359,7 +383,8 @@ class _SigninScreenState extends State<SigninScreen> {
                 onSubmitted: (value) {},
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,],
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                     border: InputBorder.none,
@@ -379,7 +404,8 @@ class _SigninScreenState extends State<SigninScreen> {
                           checkColor: Colors.white,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
-                          semanticLabel: "${Languages.of(context)?.labelSaveId}",
+                          semanticLabel:
+                              "${Languages.of(context)?.labelSaveId}",
                           side: BorderSide(
                               color: isDarkMode ? Colors.white : Colors.black),
                           value: isChecked,
@@ -495,7 +521,8 @@ class _SigninScreenState extends State<SigninScreen> {
                   SignInRequest request = SignInRequest(
                       customer: CustomerSignIn(
                           phoneNumber: _phoneNoController.text,
-                          password: _passwordController.text));
+                          password: _passwordController.text,
+                          deviceToken: deviceToken));
 
                   setState(() {
                     isLoading = true;
@@ -507,7 +534,8 @@ class _SigninScreenState extends State<SigninScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                          content: Text(
+                              '${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );
@@ -525,7 +553,8 @@ class _SigninScreenState extends State<SigninScreen> {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('${Languages.of(context)?.labelPleaseEnterAllDetails}'),
+                    content: Text(
+                        '${Languages.of(context)?.labelPleaseEnterAllDetails}'),
                     duration: maxDuration,
                   ));
                 }

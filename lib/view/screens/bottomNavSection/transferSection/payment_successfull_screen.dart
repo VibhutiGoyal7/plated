@@ -12,7 +12,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/request/completeP2PRequest.dart';
 import '../../../../utils/Helper.dart';
-import '../../../../utils/Util.dart';
 import '../../../component/toastMessage.dart';
 
 class PaymentSuccessfulScreen extends StatefulWidget {
@@ -32,6 +31,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
   String imageUrl = "";
   String name = "";
   String phoneNo = "";
+  String? userName = "";
   String amount = "";
   String? currencySymbol = "";
   String? country = "";
@@ -60,6 +60,9 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
         country = countryName;
       });
     });
+    Helper.getProfileDetails().then((profile) {
+      userName = profile?.username;
+    });
   }
 
   @override
@@ -68,147 +71,317 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Screenshot(
-                  controller: screenshotController,
-                  child: Container(
-                    width: screenWidth,
-                    padding: EdgeInsets.all(8),
-                    color: isDarkMode ? Colors.black : Colors.white,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 50,
+      body: SafeArea(
+        child: Container(
+          height: screenHeight,
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Screenshot(
+                controller: screenshotController,
+                child: Container(
+                  width: screenWidth,
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Icon(
+                        Icons.check_circle,
+                        color: AppColor.PRIMARY,
+                        size: 75,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Success",
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.8),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Your fund transfer is successful",
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
+                            letterSpacing: 0.8),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      IntrinsicHeight(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade50,
+                              border: Border.all(
+                                  width: 0.1, color: Colors.grey)),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "TRANSFER FROM",
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${userName}",
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Icon(
+                                Icons.food_bank_outlined,
+                                size: 28,
+                              ),
+                            ],
+                          ),
                         ),
-                        Icon(
-                          Icons.check_circle,
-                          color: AppColor.PRIMARY,
-                          size: 120,
-                        ),
-                        SizedBox(
-                          height: 110,
-                        ),
-                        Text(
-                          currencyFormat(
-                              "${currencySymbol}", amount, "${country}"),
-                          style: TextStyle(
-                              fontSize: 38,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.8),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "${Languages.of(context)?.labelPaidTo} ${name}",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w100,
-                              color: isDarkMode ? Colors.white : Colors.black),
-                        ),
-                        Text(
-                            "${Languages.of(context)?.labelUserId} ${widget.data?.receiverUsername}",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w100,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black)),
-                        SizedBox(
-                          height: 100,
-                        ),
-                        Text("Payment @"),
-                        Text(
-                          "${date} ${Languages.of(context)?.labelAt} ${time}",
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: isDarkMode ? Colors.white : Colors.black),
-                        ),
-                        /*   Text(
-                          "${Languages.of(context)?.labelTransactionId} ${widget.data?.paymentTransactionId}",
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: isDarkMode ? Colors.white : Colors.black),
-                        ),*/
-                        SizedBox(
-                          height: 70,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                            onTap: () {
-                              captureAndDownloadScreenshot();
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.PRIMARY),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Icon(
-                                  Icons.file_download,
-                                  color: AppColor.WHITE,
+                      ),
+                      IntrinsicHeight(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(width: 0.1, color: Colors.grey),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              IntrinsicWidth(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "TOTAL AMOUNT",
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Text(
+                                      "$currencySymbol${amount}",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "$currencySymbol${amount} + ${currencySymbol}0",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ))),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _captureAndSharePng(context);
-                      },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border(
-                                top: BorderSide(
-                                    color: AppColor.PRIMARY, width: 0.8),
-                                bottom: BorderSide(
-                                    color: AppColor.PRIMARY, width: 0.8),
-                                left: BorderSide(
-                                    color: AppColor.PRIMARY, width: 0.8),
-                                right: BorderSide(
-                                    color: AppColor.PRIMARY, width: 0.8))),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          Icon(
-                            Icons.share,
-                            size: 18,
-                            color: AppColor.PRIMARY,
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 20),
+                                height: 40,
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "TRANSFER TO",
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(
+                                    name,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${widget.data?.receiverUsername}",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 3,
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            "${Languages.of(context)?.labelShareScreenshot}",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ]),
+                        ),
                       ),
+                      IntrinsicHeight(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 16),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 0.1, color: Colors.grey)),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "DATE & TIME",
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                  Text(
+                                    "${date} ${Languages.of(context)?.labelAt} ${time}",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              IntrinsicWidth(
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushNamed("/PaymentReceiptScreen", arguments: widget.data);
+                  },
+                  child: Column(
+                    children: [
+                      Text(
+                        "View Receipt",
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: isDarkMode
+                                ? AppColor.WHITE
+                                : AppColor.PRIMARY,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 3),
+                          width: screenWidth * 0.22,
+                          height: 0.5,
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? AppColor.WHITE
+                                : AppColor.PRIMARY,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                          onTap: () {
+                            captureAndDownloadScreenshot();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColor.PRIMARY),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.file_download,
+                                color: AppColor.WHITE,
+                              ),
+                            ),
+                          ))),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _captureAndSharePng(context);
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border(
+                              top: BorderSide(
+                                  color: AppColor.PRIMARY, width: 0.8),
+                              bottom: BorderSide(
+                                  color: AppColor.PRIMARY, width: 0.8),
+                              left: BorderSide(
+                                  color: AppColor.PRIMARY, width: 0.8),
+                              right: BorderSide(
+                                  color: AppColor.PRIMARY, width: 0.8))),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Icon(
+                          Icons.share,
+                          size: 18,
+                          color: AppColor.PRIMARY,
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          "${Languages.of(context)?.labelShareScreenshot}",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ]),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                _buildFooter(context)
-              ],
-            ),
+                  ),
+                ],
+              ),*/
+              Spacer(),
+              _buildFooter(context),
+              SizedBox(height: 10,)
+            ],
           ),
         ),
       ),
@@ -255,7 +428,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
 
   Widget _buildFooter(BuildContext context) {
     return Container(
-      width: screenWidth * 0.28,
+      width: screenWidth * 0.3,
       //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
@@ -265,9 +438,22 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
               onPressed: () async {
                 Navigator.pushReplacementNamed(context, '/BottomNav');
               },
-              child: Text(
-                "${Languages.of(context)?.labelDone}",
-                style: TextStyle(color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.close,
+                    color: AppColor.WHITE,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    "Close",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
               ),
               style: ElevatedButton.styleFrom(
                   //padding: EdgeInsets.symmetric(vertical: 2.0),
