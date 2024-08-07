@@ -51,7 +51,13 @@ class _AddressScreenState extends State<AddressScreen> {
         _streetNumberController.text.isNotEmpty &&
         _stateController.text.isNotEmpty &&
         _cityController.text.isNotEmpty &&
-        _postalCodeController.text.isNotEmpty) {
+        _postalCodeController.text.isNotEmpty &&
+        streetName != _streetController.text &&
+        streetNumber != _streetNumberController.text &&
+        city != _cityController.text &&
+        state != _stateController.text &&
+        postCode != _postalCodeController.text
+    ) {
       setState(() {
         inputValid = true;
       });
@@ -118,71 +124,81 @@ class _AddressScreenState extends State<AddressScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildTextField(Languages.of(context)!.labelStreetName, streetName,
-                      (value) {
-                    setState(() {
-                      streetName = value;
-                    });
-                  }, _streetController),
-                  buildTextField(Languages.of(context)!.labelStreetNo, streetNumber,
-                      (value) {
-                    setState(() {
-                      streetNumber = value;
-                    });
-                  }, _streetNumberController),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: buildReadOnlyField(
-                            Languages.of(context)!.labelCountry,
-                            Languages.of(context)!.labelIndia,
-                            isDarkMode),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: buildTextField(
-                            Languages.of(context)!.labelState, state, (value) {
-                          setState(() {
-                            state = value;
-                          });
-                        }, _stateController),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: buildTextField(
-                            Languages.of(context)!.labelCity, city, (value) {
-                          setState(() {
-                            city = value;
-                          });}
-                        , _cityController),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: buildTextField(
-                            Languages.of(context)!.labelPostalCode, postCode,
+            SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: screenHeight*0.88 -
+                      MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildTextField(Languages.of(context)!.labelStreetName, streetName,
                             (value) {
                           setState(() {
-                            postCode = value;
+                            streetName = value;
                           });
-                        }, _postalCodeController),
-                      ),
-                    ],
+                        }, _streetController),
+                        buildTextField(Languages.of(context)!.labelStreetNo, streetNumber,
+                            (value) {
+                          setState(() {
+                            streetNumber = value;
+                          });
+                        }, _streetNumberController),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: buildReadOnlyField(
+                                  Languages.of(context)!.labelCountry,
+                                  Languages.of(context)!.labelIndia,
+                                  isDarkMode),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: buildTextField(
+                                  Languages.of(context)!.labelState, state, (value) {
+                                setState(() {
+                                  state = value;
+                                });
+                              }, _stateController),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: buildTextField(
+                                  Languages.of(context)!.labelCity, city, (value) {
+                                setState(() {
+                                  city = value;
+                                });}
+                              , _cityController),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: buildTextField(
+                                  Languages.of(context)!.labelPostalCode, postCode,
+                                  (value) {
+                                setState(() {
+                                  postCode = value;
+                                });
+                              }, _postalCodeController),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        _buildFooter(context),
+                      ],
+                    ),
                   ),
-                  Spacer(),
-                  _buildFooter(context),
-                ],
+                ),
               ),
             ),
             isLoading
@@ -366,14 +382,19 @@ class _AddressScreenState extends State<AddressScreen> {
   Future<void> _fetchData() async {
     Helper.getProfileDetails().then((profile) {
       setState(() {
-        _streetController.text = "${profile?.address?.line1}";
-        _streetNumberController.text = "${profile?.address?.line2}";
-        _cityController.text =
+        streetName =   "${profile?.address?.line1}";
+         streetNumber = "${profile?.address?.line2}";
+         city =
             capitalizeFirstLetter("${profile?.address?.city}");
-        _stateController.text =
+         state =
             capitalizeFirstLetter("${profile?.address?.state}");
-        _postalCodeController.text = "${profile?.address?.postal_code}";
+        postCode= "${profile?.address?.postal_code}";
         isLoading = false;
+        _streetController.text =streetName;
+        _streetNumberController.text = streetNumber;
+        _cityController.text = city;
+        _stateController.text = state;
+        _postalCodeController.text = postCode;
       });
     });
   }
