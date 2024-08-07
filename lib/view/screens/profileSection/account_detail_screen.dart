@@ -648,7 +648,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     print(isCameraGranted);
     return await isCameraGranted;
   }
-
 /*
   void _showModal(BuildContext context, String? image, bool isVideo,
       String status, String route, String data, String rejectionReason) {
@@ -811,8 +810,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         );
       },
     );
-  }
-*/
+  }*/
 
   void _fetchData() async {
     Helper.getProfileDetails().then((profileDetails) {

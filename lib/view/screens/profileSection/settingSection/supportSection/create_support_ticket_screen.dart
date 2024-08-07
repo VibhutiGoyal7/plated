@@ -190,7 +190,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
             },
             child: Icon(
               Icons.attach_file_rounded,
-              color: AppColor.WHITE,
+              color:isDarkMode? AppColor.WHITE : AppColor.PRIMARY,
               size: 28,
             ),
           ),
@@ -840,7 +840,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         Text(labelText),
         Container(
           width: labelText == "Transaction Provider"
-              ? screenWidth * 0.9
+              ? screenWidth * 0.88
               : screenWidth * 0.42,
           child: Card(
             child: Container(

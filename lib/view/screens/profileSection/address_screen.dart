@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../../view_model/main_view_model.dart';
 
 class AddressScreen extends StatefulWidget {
   @override
@@ -271,6 +274,44 @@ class _AddressScreenState extends State<AddressScreen> {
       ),
     );
   }
+
+ /* Future<void> saveAddress() async {
+    {
+      setState(() {
+        isLoading = true;
+      });
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        print(_newPasswordController.text);
+        CustomerChangePassDetail customer =
+        CustomerChangePassDetail(
+            password: _oldPasswordController.text,
+            newPassword: _newPasswordController.text);
+
+        ChangeOldPassRequest request =
+        ChangeOldPassRequest(customer: customer);
+
+        await Provider.of<MainViewModel>(context, listen: false)
+            .changeOldPasswordData(
+            "/api/v1/app/customers/update_password_with_old_password",
+            request);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false)
+                .response;
+        getChangePassResponse(context, apiResponse);
+      }
+    }
+  }*/
   Future<ProfileResponse?> _fetchData() async {
     //await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();
