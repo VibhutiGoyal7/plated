@@ -81,6 +81,7 @@ import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/response/initiateP2PResponse.dart';
 import 'model/services/PushNotificationService.dart';
 
 void main() async {
@@ -408,7 +409,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/PaymentSuccessfulScreen': (context) {
               final args = ModalRoute.of(context)!.settings.arguments
-                  as CompleteP2PRequest?;
+                  as InitiateP2PResponse?;
               return PaymentSuccessfulScreen(data: args);
             },
             '/LanguageSelectionScreen': (context) {
@@ -470,7 +471,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/PaymentReceiptScreen': (context) {
               final args = ModalRoute.of(context)!.settings.arguments
-              as CompleteP2PRequest?;
+              as InitiateP2PResponse?;
               return PaymentReceiptScreen(data: args);
             },
           }),

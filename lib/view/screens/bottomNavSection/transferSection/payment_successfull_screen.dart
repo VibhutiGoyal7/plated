@@ -11,11 +11,12 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/request/completeP2PRequest.dart';
+import '../../../../model/response/initiateP2PResponse.dart';
 import '../../../../utils/Helper.dart';
 import '../../../component/toastMessage.dart';
 
 class PaymentSuccessfulScreen extends StatefulWidget {
-  final CompleteP2PRequest? data; // Define the 'data' parameter here
+  final InitiateP2PResponse? data; // Define the 'data' parameter here
 
   PaymentSuccessfulScreen({Key? key, required this.data}) : super(key: key);
 
@@ -38,7 +39,6 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
   late double screenWidth;
   late double screenHeight;
   late bool isDarkMode;
-  final _repaintBoundaryKey = GlobalKey();
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
@@ -149,7 +149,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                 ],
                               ),
                               Icon(
-                                Icons.food_bank_outlined,
+                                Icons.account_balance,
                                 size: 28,
                               ),
                             ],
@@ -169,35 +169,40 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                             children: [
-                              IntrinsicWidth(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "TOTAL AMOUNT",
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Text(
-                                      "$currencySymbol${amount}",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      "$currencySymbol${amount} + ${currencySymbol}0",
-                                      style: TextStyle(
-                                        fontSize: 10,
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    minWidth: screenWidth * 0.35,
+                                    maxWidth: screenWidth * 0.35),
+                                child: IntrinsicWidth(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "TOTAL AMOUNT",
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.normal),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Text(
+                                        "$currencySymbol${amount}",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "$currencySymbol${amount} + ${currencySymbol}0",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Container(
@@ -207,33 +212,40 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                 color: Colors.grey,
                                 width: 1,
                               ),
-                              Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "TRANSFER TO",
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.normal),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                    minWidth: screenWidth * 0.4,
+                                    maxWidth: screenWidth * 0.4),
+                                child: IntrinsicWidth(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "TRANSFER TO",
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Text(
+                                        name,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "${widget.data?.receiverUserName}",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text(
-                                    name,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "${widget.data?.receiverUsername}",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                                ),
                               ),
                               SizedBox(
                                 width: 3,

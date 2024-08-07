@@ -28,7 +28,7 @@ class TransferTpinScreen extends StatefulWidget {
 class _TransferTpinScreenState extends State<TransferTpinScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-      List.generate(6, (index) => TextEditingController());
+  List.generate(6, (index) => TextEditingController());
   String amount = "0.00";
   String paymentValidateBy = "";
   String notes = "";
@@ -115,9 +115,11 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
     super.dispose();
   }
 
-  Future<Widget> initiateTransactionResponse(
-      BuildContext context, ApiResponse apiResponse) async {
+  Future<Widget> initiateTransactionResponse(BuildContext context,
+      ApiResponse apiResponse) async {
     var message = apiResponse?.message.toString();
+    InitiateP2PResponse? initiateP2PResponse = apiResponse
+        .data as InitiateP2PResponse?;
     setState(() {
       isLoading = false;
     });
@@ -125,43 +127,60 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        CheckCustomerResponse prefData = CheckCustomerResponse(username: widget.data?.receiverUsername,fullName:widget.data?.fullName,
-          phoneNumber: widget.data?.receiverPhoneNumber, imageUrl: widget.data?.imageUrl );
-      print("PrefData ${prefData.username}");
+        CheckCustomerResponse prefData = CheckCustomerResponse(
+            username: widget.data?.receiverUsername,
+            fullName: widget.data?.fullName,
+            phoneNumber: widget.data?.receiverPhoneNumber,
+            imageUrl: widget.data?.imageUrl);
+        print("PrefData ${prefData.username}");
 
-      List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
+        List<CheckCustomerResponse>? prefResponse = await Helper
+            .getRecentP2PDetails();
         bool dataExist = false;
-        if(prefResponse?.length != null) {
+        if (prefResponse?.length != null) {
           for (int i = 0; i < prefResponse!.length; i++) {
             if (prefData.username == prefResponse[i].username) {
               dataExist = true;
             }
           }
-        }else{
+        } else {
           dataExist = false;
         }
-        if(!dataExist) {
-          if(prefResponse!=null) {
+        if (!dataExist) {
+          if (prefResponse != null) {
             prefResponse.add(prefData);
             print("prefResponse ${prefResponse[0].username}");
             Helper.saveRecentP2PDetails(prefResponse);
-          }else{
-            List<CheckCustomerResponse>? dataList = [] ;
+          } else {
+            List<CheckCustomerResponse>? dataList = [];
             Helper.saveRecentP2PDetails(dataList);
           }
         }
-        CompleteP2PRequest data = CompleteP2PRequest(
-          otp: "",
-          fullName: name,
-          imageUrl: "",
-          amount: amount,
-          paymentTransactionId: "",
-          receiverPhoneNumber: receiverPhoneNumber,
-          receiverUsername: receiverUsername,
-          uniqueId: "",
-        );
+        InitiateP2PResponse response = InitiateP2PResponse(
+            fullName: name,
+            amount: initiateP2PResponse?.amount,
+            receiverPhoneNumber: initiateP2PResponse?.receiverPhoneNumber,
+            uniqueId: initiateP2PResponse?.uniqueId,
+            otp: initiateP2PResponse?.otp,
+            notes: initiateP2PResponse?.notes,
+            createdAt: initiateP2PResponse?.createdAt,
+            customerId: initiateP2PResponse?.customerId,
+            dataStatus: initiateP2PResponse?.dataStatus,
+            id: initiateP2PResponse?.id,
+            message: initiateP2PResponse?.message,
+            receiverId: initiateP2PResponse?.receiverId,
+            receiverUserName: receiverUsername,
+            senderId: initiateP2PResponse?.senderId,
+            status: initiateP2PResponse?.status,
+            transactionMethod: initiateP2PResponse?.transactionMethod,
+            transactionProvider: initiateP2PResponse?.transactionMethod,
+            transactionType: initiateP2PResponse?.transactionType,
+            trxDetails: initiateP2PResponse?.trxDetails,
+            updatedAt: initiateP2PResponse?.updatedAt,
+            imageUrl: imageUrl);
 
-        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen', arguments: data);
+        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen',
+            arguments: response);
         //Navigator.pushNamed(context, '/BottomNav');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -179,10 +198,20 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    bool isDarkMode = Theme
+        .of(context)
+        .brightness == Brightness.dark;
+    ApiResponse apiResponse = Provider
+        .of<MainViewModel>(context)
+        .response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       /*appBar: AppBar(toolbarHeight: 65,leading:
@@ -199,7 +228,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                   //height: screenHeight * 0.15,
                   margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8),
                   child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
-                      Column(
+                  Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -217,7 +246,9 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                               width: 8,
                             ),
                             Text(
-                              "${Languages.of(context)?.labelPayingTo}",
+                              "${Languages
+                                  .of(context)
+                                  ?.labelPayingTo}",
                               style: TextStyle(fontSize: 16),
                             ),
                             Spacer(),
@@ -230,7 +261,9 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("${Languages.of(context)?.labelPhoneNo}"),
+                          Text("${Languages
+                              .of(context)
+                              ?.labelPhoneNo}"),
                           SizedBox(
                             width: 10,
                           ),
@@ -247,12 +280,15 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("${Languages.of(context)?.labelSending}"),
+                          Text("${Languages
+                              .of(context)
+                              ?.labelSending}"),
                           SizedBox(
                             width: 10,
                           ),
                           Text(currencyFormat(
-                              "${currencySymbol}", "${widget.data?.amount}","${country}")),
+                              "${currencySymbol}", "${widget.data?.amount}",
+                              "${country}")),
                         ],
                       ),
                     ],
@@ -274,7 +310,9 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                           SizedBox(height: 20),
                           Center(
                             child: _buildLabelText(
-                                context, "${Languages.of(context)?.labelEnter4DigitPin}", 20, true),
+                                context, "${Languages
+                                .of(context)
+                                ?.labelEnter4DigitPin}", 20, true),
                           ),
                           SizedBox(height: 22),
                           _buildPhoneInput(context, screenWidth, isDarkMode),
@@ -293,7 +331,10 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                                   horizontal: 10, vertical: 6),
                               width: screenWidth * 0.65,
                               child: Text(
-                                "${Languages.of(context)?.labelYouAreTransferringMoneyTo}${widget.data?.receiverUsername}",
+                                "${Languages
+                                    .of(context)
+                                    ?.labelYouAreTransferringMoneyTo}${widget
+                                    .data?.receiverUsername}",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 13),
@@ -325,17 +366,17 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
           ),
           isLoading
               ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(
-                        dismissible: false,
-                        color: Colors.transparent),
-                    // Loader indicator
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
+            children: [
+              // Block interaction
+              ModalBarrier(
+                  dismissible: false,
+                  color: Colors.transparent),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
               : SizedBox(),
         ],
       ),
@@ -376,35 +417,39 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
           "api/v1/app/transfer_transactions/initiate_p2p_transaction",
           request);
       ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
       initiateTransactionResponse(context, apiResponse);
     }
   }
 
-  Widget _buildPhoneInput(
-      BuildContext context, double screenWidth, bool isDarkMode) {
+  Widget _buildPhoneInput(BuildContext context, double screenWidth,
+      bool isDarkMode) {
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           4,
-          (index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            width: screenWidth / 8.1,
-            height: 62.0,
-            child: Center(
-              child: Text(
-                _inputValues[index],
-                style: TextStyle(fontSize: 20),
+              (index) =>
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: isDarkMode ? Colors.grey : Colors.black54,
+                      width: 0.4),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                width: screenWidth / 8.1,
+                height: 62.0,
+                child: Center(
+                  child: Text(
+                    _inputValues[index],
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
               ),
-            ),
-          ),
         ),
       ),
     );

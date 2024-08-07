@@ -177,7 +177,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                             ],
                           ),
                           Icon(
-                            Icons.food_bank_outlined,
+                            Icons.account_balance,
                             size: 28,
                           ),
                         ],

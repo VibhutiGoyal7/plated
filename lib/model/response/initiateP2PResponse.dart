@@ -16,6 +16,10 @@ class InitiateP2PResponse {
   final TrxDetails? trxDetails;
   final String? createdAt;
   final String? updatedAt;
+  final String? fullName;
+  final String? receiverPhoneNumber;
+  final String? receiverUserName;
+  final String? imageUrl;
 
   InitiateP2PResponse({
     this.message,
@@ -35,6 +39,10 @@ class InitiateP2PResponse {
     this.trxDetails,
     this.createdAt,
     this.updatedAt,
+    this.fullName,
+    this.receiverPhoneNumber,
+    this.receiverUserName,
+    this.imageUrl
   });
 
   factory InitiateP2PResponse.fromJson(Map<String, dynamic> json) {

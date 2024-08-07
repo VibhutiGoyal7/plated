@@ -1,16 +1,13 @@
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
-import 'package:Payrio/model/response/completeP2PResponse.dart';
-import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../languageSection/Languages.dart';
-import '../../../../model/request/initiateP2PRequest.dart';
+import '../../../../model/response/initiateP2PResponse.dart';
 import '../../../../utils/Util.dart';
 import '../../../component/connectivity_service.dart';
 import '../../../component/customNumberKeyboard.dart';
@@ -29,7 +26,7 @@ class TransferOtpScreen extends StatefulWidget {
 class _TransferOtpScreenState extends State<TransferOtpScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
   final List<String> _otp = List.generate(6, (_) => '');
 
   List<String> _inputValues = ['', '', '', '', '', ''];
@@ -43,6 +40,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
   String? name = "";
   String? uniqueId = "";
   String? receiverUsername = "";
+  String? imageUrl = "";
   String? paymentTransactionId = "";
   String? country = "";
   late double screenWidth;
@@ -55,6 +53,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     isValid = false;
     resendOtp = false;
     receiverUsername = widget.data?.receiverUsername;
+    imageUrl = widget.data?.imageUrl;
     paymentTransactionId = widget.data?.paymentTransactionId;
     name = "${widget.data?.fullName}";
     receiverPhoneNumber = "${widget.data?.receiverPhoneNumber}";
@@ -102,7 +101,6 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     }
   }
 
-
   void _handleKeyTap(String value) {
     setState(() {
       for (int i = 0; i < _inputValues.length; i++) {
@@ -125,12 +123,10 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     });
   }
 
-
   Future<Widget> completeTransactionResponse(
-      BuildContext context, ApiResponse apiResponse) async
-  {
-    CompleteP2PResponse? completeP2PResponse =
-    apiResponse.data as CompleteP2PResponse?;
+      BuildContext context, ApiResponse apiResponse) async {
+    InitiateP2PResponse? initiateP2PResponse =
+        apiResponse.data as InitiateP2PResponse?;
     var message = apiResponse?.message.toString();
     setState(() {
       isLoading = false;
@@ -139,58 +135,74 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("Complete Transaction ${completeP2PResponse?.amount}");
-        CheckCustomerResponse prefData = CheckCustomerResponse(username: widget.data.receiverUsername,fullName:widget.data.fullName,
-        phoneNumber: widget.data.receiverPhoneNumber, imageUrl: widget.data.imageUrl );
+        CheckCustomerResponse prefData = CheckCustomerResponse(
+            username: widget.data.receiverUsername,
+            fullName: widget.data.fullName,
+            phoneNumber: widget.data.receiverPhoneNumber,
+            imageUrl: widget.data.imageUrl);
         print("PrefData ${prefData.username}");
-        List<CheckCustomerResponse>? prefResponse = await Helper.getRecentP2PDetails();
+        List<CheckCustomerResponse>? prefResponse =
+            await Helper.getRecentP2PDetails();
         bool dataExist = false;
-        if(prefResponse?.length != null) {
+        if (prefResponse?.length != null) {
           for (int i = 0; i < prefResponse!.length; i++) {
             if (prefData.username == prefResponse[i].username) {
               dataExist = true;
             }
           }
-        }else{
+        } else {
           dataExist = false;
         }
-        if(!dataExist) {
-          if(prefResponse!=null) {
+        if (!dataExist) {
+          if (prefResponse != null) {
             prefResponse.add(prefData);
             print("prefResponse ${prefResponse[0].username}");
             Helper.saveRecentP2PDetails(prefResponse);
-          }else{
-            List<CheckCustomerResponse>? dataList = [] ;
+          } else {
+            List<CheckCustomerResponse>? dataList = [];
             Helper.saveRecentP2PDetails(dataList);
           }
         }
 
         ToastComponent.showToast(context: context, message: message);
 
-        CompleteP2PRequest data = CompleteP2PRequest(
-            otp: "",
+        InitiateP2PResponse response = InitiateP2PResponse(
             fullName: name,
-            imageUrl: "",
-            amount: amount,
-            paymentTransactionId: paymentTransactionId,
-            receiverPhoneNumber: receiverPhoneNumber,
-            receiverUsername: receiverUsername,
-            uniqueId: widget.data.uniqueId,
-        );
-
-        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen', arguments: data);
+            amount: initiateP2PResponse?.amount,
+            receiverPhoneNumber: initiateP2PResponse?.receiverPhoneNumber,
+            uniqueId: initiateP2PResponse?.uniqueId,
+            otp: initiateP2PResponse?.otp,
+            notes: initiateP2PResponse?.notes,
+            createdAt: initiateP2PResponse?.createdAt,
+            customerId: initiateP2PResponse?.customerId,
+            dataStatus: initiateP2PResponse?.dataStatus,
+            id: initiateP2PResponse?.id,
+            message: initiateP2PResponse?.message,
+            receiverId: initiateP2PResponse?.receiverId,
+            receiverUserName: receiverUsername,
+            senderId: initiateP2PResponse?.senderId,
+            status: initiateP2PResponse?.status,
+            transactionMethod: initiateP2PResponse?.transactionMethod,
+            transactionProvider: initiateP2PResponse?.transactionMethod,
+            transactionType: initiateP2PResponse?.transactionType,
+            trxDetails: initiateP2PResponse?.trxDetails,
+            updatedAt: initiateP2PResponse?.updatedAt,
+            imageUrl: imageUrl);
+        Navigator.pushReplacementNamed(context, '/PaymentSuccessfulScreen',
+            arguments: response);
 
         return Container();
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(context: context, message: message);
         }
         return Center(
-          //child: Text('Please try again later!!!'),
-        );
+            //child: Text('Please try again later!!!'),
+            );
       case Status.INITIAL:
       default:
         return Center(
@@ -207,7 +219,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-     // appBar:
+      // appBar:
       body: Stack(
         children: [
           SafeArea(
@@ -219,7 +231,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                   //height: screenHeight * 0.15,
                   margin: EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 8),
                   child: /*_buildLabelText(context, "Transaction \nPIN ", 28, true),*/
-                  Column(
+                      Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -271,8 +283,8 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(currencyFormat(
-                              "${currencySymbol}", "${widget.data?.amount}", "${country}")),
+                          Text(currencyFormat("${currencySymbol}",
+                              "${widget.data?.amount}", "${country}")),
                         ],
                       ),
                     ],
@@ -286,65 +298,74 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                     margin: EdgeInsets.zero,
                     child: Card(
                       margin: EdgeInsets.all(0),
-                      shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 20),
                           Center(
-                            child: _buildLabelText(context,
-                                "${Languages.of(context)?.labelEnterOtpToCompleteTransaction}", 14, false),
+                            child: _buildLabelText(
+                                context,
+                                "${Languages.of(context)?.labelEnterOtpToCompleteTransaction}",
+                                14,
+                                false),
                           ),
                           SizedBox(height: 4),
                           SizedBox(height: 22),
                           _buildOtpInput(context, screenWidth, isDarkMode),
                           Spacer(),
-                        CustomNumberKeyboard(onKeyTap: (value) async {
-                          if (value == "clear") {
-                            _handleBackspace();
-                          } else if (value == "submit") {
-                            String otp = _inputValues.map((
-                                controller) => controller).join();
-                            if (otp.isNotEmpty && otp.length == 6) {
-                              const maxDuration = Duration(seconds: 2);
+                          CustomNumberKeyboard(onKeyTap: (value) async {
+                            if (value == "clear") {
+                              _handleBackspace();
+                            } else if (value == "submit") {
+                              String otp = _inputValues
+                                  .map((controller) => controller)
+                                  .join();
                               if (otp.isNotEmpty && otp.length == 6) {
-                                setState(() {
-                                  //isLoading = true;
-                                });
-                                CompleteP2PRequest request = CompleteP2PRequest(
-                                  otp: otp,
-                                  uniqueId: uniqueId,
-                                  receiverUsername: receiverUsername,
-                                  receiverPhoneNumber: receiverPhoneNumber,
-                                  paymentTransactionId: paymentTransactionId,
-                                  amount: amount,
-                                  fullName: name,
-                                  imageUrl: ""
-                                );
-                                await Provider.of<MainViewModel>(context, listen: false)
-                                    .completeP2PTransaction(
-                                    "api/v1/app/transfer_transactions/complete_p2p_transaction",
-                                    request);
-                                ApiResponse apiResponse =
-                                    Provider.of<MainViewModel>(context, listen: false).response;
-                                completeTransactionResponse(context, apiResponse);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Please enter valid amount'),
-                                    duration: maxDuration,
-                                  ),
-                                );
+                                const maxDuration = Duration(seconds: 2);
+                                if (otp.isNotEmpty && otp.length == 6) {
+                                  setState(() {
+                                    //isLoading = true;
+                                  });
+                                  CompleteP2PRequest request =
+                                      CompleteP2PRequest(
+                                          otp: otp,
+                                          uniqueId: uniqueId,
+                                          receiverUsername: receiverUsername,
+                                          receiverPhoneNumber:
+                                              receiverPhoneNumber,
+                                          paymentTransactionId:
+                                              paymentTransactionId,
+                                          amount: amount,
+                                          fullName: name,
+                                          imageUrl: "");
+                                  await Provider.of<MainViewModel>(context,
+                                          listen: false)
+                                      .completeP2PTransaction(
+                                          "api/v1/app/transfer_transactions/complete_p2p_transaction",
+                                          request);
+                                  ApiResponse apiResponse =
+                                      Provider.of<MainViewModel>(context,
+                                              listen: false)
+                                          .response;
+                                  completeTransactionResponse(
+                                      context, apiResponse);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('Please enter valid amount'),
+                                      duration: maxDuration,
+                                    ),
+                                  );
+                                }
                               }
-                            }
                             } else {
                               _handleKeyTap(value);
                             }
-                          }
-                          ),
-                         // _buildFooter(context),
+                          }),
+                          // _buildFooter(context),
                         ],
                       ),
                     ),
@@ -365,7 +386,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-              (index) => Container(
+          (index) => Container(
             margin: EdgeInsets.symmetric(horizontal: 5.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -397,5 +418,4 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
       ),
     );
   }
-
 }
