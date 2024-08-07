@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
 import 'package:Payrio/model/response/sendMessageResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
@@ -21,9 +22,9 @@ import '../../../../component/connectivity_service.dart';
 import '../../../../component/session_expired_dialog.dart';
 
 class SupportChatScreen extends StatefulWidget {
-  final int userId;
+  final AllSupportTicketsDetails details;
 
-  SupportChatScreen({Key? key, required this.userId}) : super(key: key);
+  SupportChatScreen({Key? key, required this.details}) : super(key: key);
   @override
   _SupportChatScreenState createState() => _SupportChatScreenState();
 }
@@ -446,6 +447,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           ),
                         ))
                         : Center(child: Text('No Messages')),
+                    widget.details.ticketStatus == "Pending" ?
                     Card(
                       elevation: 5,
                       child: Container(
@@ -476,7 +478,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                                   (BuildContext context,
                                                       Object exception,
                                                       StackTrace? stackTrace) {
-                                                return Text("data");
+                                                return SizedBox();
                                               },
                                             ),
                                           ),
@@ -554,7 +556,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           ],
                         ),
                       ),
-                    ),
+                    ):SizedBox(),
                   ],
                 ),
                 isLoading
@@ -601,7 +603,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
       } else {
 
         await Provider.of<MainViewModel>(context, listen: false)
-            .getSupportChatData("api/v1/app/payorio_support_tickets/${widget.userId}/messages", );
+            .getSupportChatData("api/v1/app/payorio_support_tickets/${widget.details.id}/messages", );
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getSupportData(context, apiResponse);
@@ -633,7 +635,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
         await Provider.of<MainViewModel>(context, listen: false)
             .postMultiFormMessageResponse(
-          "api/v1/app/payorio_support_tickets/${widget.userId}/messages",
+          "api/v1/app/payorio_support_tickets/${widget.details.id}/messages",
           imageFile,
           content,
         );

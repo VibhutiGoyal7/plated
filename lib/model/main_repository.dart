@@ -10,6 +10,7 @@ import 'package:Payrio/model/request/exustingUserRequest.dart';
 import 'package:Payrio/model/request/generateOtpTpinChange.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/saveAddressRequest.dart';
 import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/request/serviceTypeListRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
@@ -127,6 +128,19 @@ class MainRepository {
     dynamic response = await _payrioService.getResponse(value);
     print(value);
     final jsonData = response;
+    ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+
+  Future<ProfileResponse> saveAddressData(
+      String value, SaveAddressRequest saveAddressRequest) async {
+    print(saveAddressRequest);
+    dynamic response =
+    await _payrioService.putResponse(value, saveAddressRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
     return mediaList;
   }

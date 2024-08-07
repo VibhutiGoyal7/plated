@@ -1,3 +1,5 @@
+import 'package:Payrio/model/request/saveAddressRequest.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +9,9 @@ import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/session_expired_dialog.dart';
+import '../../component/toastMessage.dart';
 
 class AddressScreen extends StatefulWidget {
   @override
@@ -21,6 +26,10 @@ class _AddressScreenState extends State<AddressScreen> {
   String postCode = "";
   bool inputValid = false;
   bool isLoading = false;
+  late bool isDarkMode;
+
+  static const maxDuration = Duration(seconds: 2);
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -55,10 +64,43 @@ class _AddressScreenState extends State<AddressScreen> {
 
   String address = "";
 
+  Future<Widget> getChangePassResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    ProfileResponse mediaList = apiResponse.data;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        print("response: ${apiResponse}");
+
+        ToastComponent.showToast(
+            context: context, message: "${apiResponse.message}");
+        Navigator.pushNamed(context, '/ProfileScreen');
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (apiResponse?.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}")
+          SessionExpiredDialog.showDialogBox(context: context);
+        else
+          ToastComponent.showToast(
+              context: context, message: "${apiResponse.message}");
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(toolbarHeight: 65,
@@ -165,37 +207,46 @@ class _AddressScreenState extends State<AddressScreen> {
 
   Widget buildTextField(String label, String text, Function(String) onChanged,
       TextEditingController nameController) {
-    return Card(
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 2.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6.0),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 14.0,
-                ),
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: label,
-                  hintStyle: TextStyle(color: Colors.grey),
+    return Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.symmetric(horizontal: 2.0),
+      decoration: BoxDecoration(
+        border: Border.all(color:isDarkMode ?Colors.grey: Colors.black, width: 0.2),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 5),
+            child: Text("$label", style: TextStyle(fontSize: 13),),
+          ),
+          Row(
+            children: [
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  style: TextStyle(
+                    fontSize: 14.0,
+                  ),
+                  controller: nameController,
+                  onChanged: (value) {
+                    _isValidInput();
+                  },
+                  onSubmitted: (value) {},
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: label,
+                    contentPadding: EdgeInsets.symmetric(vertical: 0),
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -242,7 +293,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   Widget _buildFooter(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         children: [
           SizedBox(
@@ -252,7 +303,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 _isValidInput();
                 print(_streetController.text);
                 if (inputValid) {
-                  Navigator.pushNamed(context, '/BottomNav');
+                  saveAddress();
                   //getMediaWidget(context, apiResponse);
                 }
               },
@@ -275,7 +326,7 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
- /* Future<void> saveAddress() async {
+  Future<void> saveAddress() async {
     {
       setState(() {
         isLoading = true;
@@ -292,35 +343,38 @@ class _AddressScreenState extends State<AddressScreen> {
           );
         });
       } else {
-        print(_newPasswordController.text);
-        CustomerChangePassDetail customer =
-        CustomerChangePassDetail(
-            password: _oldPasswordController.text,
-            newPassword: _newPasswordController.text);
+        print(_cityController.text);
+        SaveAddressDetails params = SaveAddressDetails(
+            line1: "${_streetController.text}",
+            line2: "${_streetNumberController.text}",
+            city: capitalizeFirstLetter("${_cityController.text}"),
+            state: capitalizeFirstLetter("${_stateController.text}"),
+            postalCode: "${_postalCodeController.text}");
 
-        ChangeOldPassRequest request =
-        ChangeOldPassRequest(customer: customer);
+        SaveAddressRequest request = SaveAddressRequest(addressParams: params);
 
         await Provider.of<MainViewModel>(context, listen: false)
-            .changeOldPasswordData(
-            "/api/v1/app/customers/update_password_with_old_password",
-            request);
+            .saveAddressData("api/v1/app/customers/update_address", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false)
                 .response;
         getChangePassResponse(context, apiResponse);
       }
     }
-  }*/
-  Future<ProfileResponse?> _fetchData() async {
-    //await Future.delayed(Duration(milliseconds: 2));
-    ProfileResponse? profileDetails = await Helper.getProfileDetails();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  }
+
+  Future<void> _fetchData() async {
+    Helper.getProfileDetails().then((profile) {
       setState(() {
-        //address = (profileDetails?.address == null? "" : profileDetails?.address)! ;
+        _streetController.text = "${profile?.address?.line1}";
+        _streetNumberController.text = "${profile?.address?.line2}";
+        _cityController.text =
+            capitalizeFirstLetter("${profile?.address?.city}");
+        _stateController.text =
+            capitalizeFirstLetter("${profile?.address?.state}");
+        _postalCodeController.text = "${profile?.address?.postal_code}";
         isLoading = false;
       });
     });
-    return profileDetails;
   }
 }

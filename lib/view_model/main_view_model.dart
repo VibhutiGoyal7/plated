@@ -4,6 +4,7 @@ import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/saveAddressRequest.dart';
 import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/request/serviceTypeListRequest.dart';
 import 'package:Payrio/model/request/setUpAccountRequest.dart';
@@ -227,6 +228,32 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+
+  Future<void> saveAddressData(
+      String value, SaveAddressRequest saveAddressRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess" + saveAddressRequest.addressParams.city);
+    notifyListeners();
+    try {
+      print(saveAddressRequest.addressParams.state);
+      ProfileResponse profileResponse = await MainRepository()
+          .saveAddressData(value, saveAddressRequest);
+      print("Yess" + profileResponse.email.toString());
+      //_apiResponse = ApiResponse.completed(setUpAccountResponse);
+      if (profileResponse.status  == 200 || profileResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(profileResponse);
+      } else {
+        print("viewmodel ${profileResponse.message}");
+        _apiResponse = ApiResponse.error(profileResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+
   Future<void> putMultiFormResponse(String value, File file) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
@@ -312,10 +339,7 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
-    try {
-
-
-      ProfileResponse profileResponse =
+    try {ProfileResponse profileResponse =
       await MainRepository()
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
 

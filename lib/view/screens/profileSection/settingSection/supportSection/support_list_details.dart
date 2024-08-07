@@ -69,15 +69,17 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
                             children: [
                               _buildSection("Ticket Id :","${widget.data?.id}",isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
                               _buildSection("Amount :","${widget.data?.amount}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
-                              _buildSection("Transaction Id :","${widget.data?.trxId}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
-                              _buildSection("Payment time :",convertTime("${widget.data?.paymentTime}"), isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
-                              _buildSection("Customer number :","${widget.data?.customerMerchantNumber}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
-                              _buildSection("Ticket created at :","${convertDateFormat("${widget.data?.createdAt}")} ${convertTime("${widget.data?.createdAt}")}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
-                              _buildSection("Query type :","${widget.data?.queryType}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
-                              _buildSection("Transaction type :","${widget.data?.transactionType}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
-                              _buildSection("Transaction method :","${widget.data?.transactionMethod}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
-                              _buildSection("Transaction provider :","${widget.data?.transactionProvider}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
-                              _buildSection("Comment :","${widget.data?.comment}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Status :","${widget.data?.ticketStatus}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Transaction Id :","${widget.data?.trxId}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Payment time :",convertTime("${widget.data?.paymentTime}"), isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Customer number :","${widget.data?.customerMerchantNumber}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Ticket created at :","${convertDateFormat("${widget.data?.createdAt}")} ${convertTime("${widget.data?.createdAt}")}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Query type :","${widget.data?.queryType}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Transaction type :","${widget.data?.transactionType}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Transaction method :","${widget.data?.transactionMethod}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Transaction provider :","${widget.data?.transactionProvider}",isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Comment :","${widget.data?.comment}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              SizedBox(height: 80,)
                             ],
                           ),
                         ),
@@ -104,7 +106,7 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(onPressed:(){
-                  Navigator.pushNamed(context, "/SupportChatScreen", arguments: widget.data?.id);
+                  Navigator.pushNamed(context, "/SupportChatScreen", arguments: widget.data);
                 },
                   child: Icon(Icons.support_agent_outlined),
                 ),
