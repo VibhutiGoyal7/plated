@@ -56,6 +56,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   List<TransactionProvidersListDetails> providerTypeList = [];
   late double screenWidth;
   static const maxDuration = Duration(seconds: 2);
+
   ///Time
   TimeOfDay timeOfDay = TimeOfDay.now();
   String selectedTime = "Payment Time";
@@ -68,12 +69,18 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     confirmPasswordVisible = true;
     inputValid = false;
     isDarkMode = false;
-    Helper.getProfileDetails().then((profile){
+    Helper.getProfileDetails().then((profile) {
       countryId = profile?.countryId;
       customerId = "${profile?.userId}";
       customerPhoneNo = "${profile?.phoneNumber}";
     });
-    serviceTypeValue = ServiceTypeListDetails(id: 0, serviceName: "Select", countryId: 1, status: "inactive", createdAt: "createdAt", updatedAt: "updatedAt");
+    serviceTypeValue = ServiceTypeListDetails(
+        id: 0,
+        serviceName: "Select",
+        countryId: 1,
+        status: "inactive",
+        createdAt: "createdAt",
+        updatedAt: "updatedAt");
     methodTypeValue = TransactionMethodListDetails(
         id: 0,
         serviceName: "Select",
@@ -90,7 +97,6 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         updatedAt: "updatedAt",
         transactionMethodId: 1);
     ;
-
   }
 
   void _isValidInput() {
@@ -102,7 +108,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         "$transactionTypeId".isNotEmpty &&
         "$transactionMethodId".isNotEmpty &&
         "$transactionProviderId".isNotEmpty &&
-    imageUrl!.isNotEmpty) {
+        imageUrl!.isNotEmpty) {
       setState(() {
         inputValid = true;
       });
@@ -162,7 +168,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
-      appBar : AppBar(
+      appBar: AppBar(
         toolbarHeight: 65,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -175,9 +181,23 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         ),
         title: Text(
           "Create Support Ticket",
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
         ),
-
+        actions: [
+          GestureDetector(
+            onTap: () {
+              _showPicker(context: context);
+            },
+            child: Icon(
+              Icons.attach_file_rounded,
+              color: AppColor.WHITE,
+              size: 28,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          )
+        ],
       ),
       body: SafeArea(
         child: Stack(
@@ -187,7 +207,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 constraints: BoxConstraints(minHeight: screenHeight * 0.87),
                 child: Padding(
                     padding:
-                        const EdgeInsets.only(left: 16.0, right: 16, top: 8),
+                        const EdgeInsets.only(left: 20.0, right: 20, top: 12),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +215,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 10),
+                            SizedBox(height: 15),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -217,7 +237,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                     "Transaction Method"),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(height: 15),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -229,19 +249,9 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                     providerTypeList,
                                     providerTypeValue,
                                     "Transaction Provider"),
-
-                                /*  _buildDropDownWidget(
-                                    context,
-                                    "",
-                                    _bankTypeController,
-                                    Icon(Icons.merge),
-                                    bankTypeList,
-                                    bankTypeValue,
-                                    ""),*/
                               ],
                             ),
-
-                            SizedBox(height: 10),
+                            SizedBox(height: 15),
                             _buildPhoneInput(
                                 context,
                                 "Amount",
@@ -252,7 +262,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   color:
                                       isDarkMode ? Colors.white : Colors.black,
                                 )),
-                            SizedBox(height: 10),
+                            SizedBox(height: 15),
                             _buildPaymentTimeInput(
                                 context,
                                 "Payment Time",
@@ -263,8 +273,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   color:
                                       isDarkMode ? Colors.white : Colors.black,
                                 )),
-                            SizedBox(height: 10),
-                          /*  _buildPhoneInput(
+                            SizedBox(height: 15),
+                            /*  _buildPhoneInput(
                                 context,
                                 "Customer Number",
                                 _customerNumberController,
@@ -286,7 +296,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                       isDarkMode ? Colors.white : Colors.black,
                                 ),
                                 isDarkMode),
-                            SizedBox(height: 10),
+                            SizedBox(height: 15),
                             _buildPasswordInput(
                                 context,
                                 "Comment",
@@ -295,91 +305,96 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   Icons.merge_type,
                                   size: 18,
                                   color:
-                                  isDarkMode ? Colors.white : Colors.black,
+                                      isDarkMode ? Colors.white : Colors.black,
                                 ),
                                 isDarkMode),
-                            SizedBox(height: 10),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Card(
-                                child: Container(
-                                  width: screenWidth * 0.6,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.PRIMARY,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      imageUrl == ""
-                                          ? Container(
-                                              height: 130,
-                                              width: 130,
+                            SizedBox(height: 15),
+                            imageUrl != ""
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: IntrinsicWidth(
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            minHeight: 180, minWidth: 180),
+                                        child: Container(
+                                          decoration: BoxDecoration(
                                               color: Colors.transparent,
-                                              /*child: Image.asset(
-                                                "assets/india_flag_icon.png",
-                                              ),*/
-                                            )
-                                          : Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                right: BorderSide(
-                                                    color: AppColor.PRIMARY),
-                                                left: BorderSide(
-                                                    color: AppColor.PRIMARY),
-                                                top: BorderSide(
-                                                    color: AppColor.PRIMARY),
-                                                bottom: BorderSide(
-                                                    color: AppColor.PRIMARY),
-                                              )),
-                                              child: Image.file(
-                                                galleryFile!,
-                                                height: 130,
-                                                width: 130,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (BuildContext
-                                                        context,
-                                                    Object exception,
-                                                    StackTrace? stackTrace) {
-                                                  return Container(
-                                                    height: 130,
-                                                    width: 130,
-                                                    child: CircleAvatar(
-                                                      radius: 30,
-                                                      backgroundColor:
-                                                          AppColor.WHITE,
-                                                      backgroundImage:
-                                                          AssetImage(
-                                                        "assets/profile_user.png",
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              imageUrl == ""
+                                                  ? Container(
+                                                      height: 150,
+                                                      width: 150,
+                                                      color: Colors.transparent,
+                                                    )
+                                                  : Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20)),
+                                                          border: Border(
+                                                            right: BorderSide(
+                                                                color: AppColor
+                                                                    .PRIMARY),
+                                                            left: BorderSide(
+                                                                color: AppColor
+                                                                    .PRIMARY),
+                                                            top: BorderSide(
+                                                                color: AppColor
+                                                                    .PRIMARY),
+                                                            bottom: BorderSide(
+                                                                color: AppColor
+                                                                    .PRIMARY),
+                                                          )),
+                                                      child: Image.file(
+                                                        galleryFile!,
+                                                        width: 180,
+                                                        fit: BoxFit.fill,
+                                                        errorBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                Object
+                                                                    exception,
+                                                                StackTrace?
+                                                                    stackTrace) {
+                                                          return Container(
+                                                            height: 130,
+                                                            width: 150,
+                                                            child: CircleAvatar(
+                                                              radius: 30,
+                                                              backgroundColor:
+                                                                  AppColor
+                                                                      .WHITE,
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                "assets/profile_user.png",
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _showPicker(context: context);
-                                        },
-                                        child: Icon(
-                                          Icons.attach_file_rounded,
-                                          color: AppColor.WHITE,
-                                          size: 45,
+                                              SizedBox(
+                                                width: 2,
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 2,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                                    ),
+                                  )
+                                : SizedBox(),
                           ],
                         ),
-                        //SizedBox(height: 10),
+                        SizedBox(height: 10),
                         _buildFooter(context, apiResponse),
+                        SizedBox(height: 10),
                       ],
                     )),
               ),
@@ -515,7 +530,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
             Expanded(
               child: TextField(
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
                 obscureText: false,
                 obscuringCharacter: "*",
@@ -523,6 +538,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 onChanged: (value) {
                   _isValidInput();
                 },
+                textAlignVertical: TextAlignVertical.center,
                 onSubmitted: (value) {},
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
@@ -580,36 +596,48 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                 /* final RenderBox overlay = Overlay.of(context)
+                                  /* final RenderBox overlay = Overlay.of(context)
                                       .context
                                       .findRenderObject() as RenderBox;*/
-                                  final RenderBox button = _buttonKey.currentContext?.findRenderObject() as RenderBox;
-                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-                                  final RelativeRect position = RelativeRect.fromRect(
+                                  final RenderBox button = _buttonKey
+                                      .currentContext
+                                      ?.findRenderObject() as RenderBox;
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  final RelativeRect position =
+                                      RelativeRect.fromRect(
                                     Rect.fromPoints(
-                                      button.localToGlobal(Offset.zero, ancestor: overlay),
-                                      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                                      button.localToGlobal(Offset.zero,
+                                          ancestor: overlay),
+                                      button.localToGlobal(
+                                          button.size.bottomRight(Offset.zero),
+                                          ancestor: overlay),
                                     ),
                                     Offset.zero & overlay.size,
                                   );
                                   showMenu(
                                     context: context,
-                                    position: position /*RelativeRect.fromRect(
+                                    position:
+                                        position /*RelativeRect.fromRect(
                                       Rect.fromLTWH(
                                           -20,
                                           120,
                                           overlay.size.width,
                                           overlay.size.height),
                                       Offset.zero & overlay.size,
-                                    ),*/,
+                                    ),*/
+                                    ,
                                     items: typeList.map((item) {
                                       return PopupMenuItem<
                                           ServiceTypeListDetails>(
                                         value: item,
                                         child: Text(
-                                          capitalizeFirstLetter("${item.serviceName}"),
-                                          style:
-                                              TextStyle(color: AppColor.WHITE),
+                                          capitalizeFirstLetter(
+                                              "${item.serviceName}"),
+                                          style: TextStyle(
+                                              color: AppColor.WHITE,
+                                              fontSize: 14),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       );
@@ -625,7 +653,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
-                                        : Text(capitalizeFirstLetter("${selectedValue.serviceName}")),
+                                        : Text(capitalizeFirstLetter(
+                                            "${selectedValue.serviceName}")),
                                     SizedBox(width: 5),
                                     Icon(Icons.keyboard_arrow_down_sharp),
                                   ],
@@ -720,31 +749,42 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                /*  final RenderBox overlay = Overlay.of(context)
+                                  /*  final RenderBox overlay = Overlay.of(context)
                                       .context
                                       .findRenderObject() as RenderBox;*/
-                                  final RenderBox button = _buttonKey.currentContext?.findRenderObject() as RenderBox;
-                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-                                  final RelativeRect position = RelativeRect.fromRect(
+                                  final RenderBox button = _buttonKey
+                                      .currentContext
+                                      ?.findRenderObject() as RenderBox;
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  final RelativeRect position =
+                                      RelativeRect.fromRect(
                                     Rect.fromPoints(
-                                      button.localToGlobal(Offset.zero, ancestor: overlay),
-                                      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                                      button.localToGlobal(Offset.zero,
+                                          ancestor: overlay),
+                                      button.localToGlobal(
+                                          button.size.bottomRight(Offset.zero),
+                                          ancestor: overlay),
                                     ),
                                     Offset.zero & overlay.size,
                                   );
                                   showMenu(
                                     context: context,
-                                    position: position /*RelativeRect.fromRect(
+                                    position:
+                                        position /*RelativeRect.fromRect(
                                       Rect.fromLTRB(
                                           100,100,100,100),
                                       Offset.zero & overlay.size,
-                                    )*/,
+                                    )*/
+                                    ,
                                     items: typeList.map((item) {
                                       return PopupMenuItem<
                                           TransactionMethodListDetails>(
                                         value: item,
                                         child: Text(
-                                          capitalizeFirstLetter("${item.serviceName}"),
+                                          capitalizeFirstLetter(
+                                              "${item.serviceName}"),
                                           style:
                                               TextStyle(color: AppColor.WHITE),
                                           overflow: TextOverflow.ellipsis,
@@ -762,7 +802,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
-                                        : Text(capitalizeFirstLetter("${selectedValue.serviceName}")),
+                                        : Text(capitalizeFirstLetter(
+                                            "${selectedValue.serviceName}")),
                                     SizedBox(width: 5),
                                     Icon(Icons.keyboard_arrow_down_sharp),
                                   ],
@@ -823,31 +864,42 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                 /* final RenderBox overlay = Overlay.of(context)
+                                  /* final RenderBox overlay = Overlay.of(context)
                                       .context
                                       .findRenderObject() as RenderBox;*/
-                                  final RenderBox button = _buttonKey.currentContext?.findRenderObject() as RenderBox;
-                                  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-                                  final RelativeRect position = RelativeRect.fromRect(
+                                  final RenderBox button = _buttonKey
+                                      .currentContext
+                                      ?.findRenderObject() as RenderBox;
+                                  final RenderBox overlay = Overlay.of(context)
+                                      .context
+                                      .findRenderObject() as RenderBox;
+                                  final RelativeRect position =
+                                      RelativeRect.fromRect(
                                     Rect.fromPoints(
-                                      button.localToGlobal(Offset.zero, ancestor: overlay),
-                                      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+                                      button.localToGlobal(Offset.zero,
+                                          ancestor: overlay),
+                                      button.localToGlobal(
+                                          button.size.bottomRight(Offset.zero),
+                                          ancestor: overlay),
                                     ),
                                     Offset.zero & overlay.size,
                                   );
                                   showMenu(
                                     context: context,
-                                    position: position /*RelativeRect.fromRect(
+                                    position:
+                                        position /*RelativeRect.fromRect(
                                       Rect.fromLTWH(0, 120, overlay.size.width,
                                           overlay.size.height),
                                       Offset.zero & overlay.size,
-                                    )*/,
+                                    )*/
+                                    ,
                                     items: typeList.map((item) {
                                       return PopupMenuItem<
                                           TransactionProvidersListDetails>(
                                         value: item,
                                         child: Text(
-                                          capitalizeFirstLetter("${item.serviceName}"),
+                                          capitalizeFirstLetter(
+                                              "${item.serviceName}"),
                                           style:
                                               TextStyle(color: AppColor.WHITE),
                                           overflow: TextOverflow.ellipsis,
@@ -865,7 +917,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                                   children: [
                                     selectedValue.serviceName!.isEmpty
                                         ? Container(width: 40)
-                                        : Text(capitalizeFirstLetter("${selectedValue.serviceName}")),
+                                        : Text(capitalizeFirstLetter(
+                                            "${selectedValue.serviceName}")),
                                     SizedBox(width: 5),
                                     Icon(Icons.keyboard_arrow_down_sharp),
                                   ],
@@ -965,7 +1018,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                       color: selectedTime == "Payment Time"
                           ? Colors.grey
                           : AppColor.TEXT_COLOR,
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                     ),
                   ),
                 ],
@@ -1002,9 +1055,8 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
             SizedBox(width: 16),
             Expanded(
               child: TextField(
-                textAlignVertical: TextAlignVertical.center,
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
                 controller: nameController,
                 onChanged: (value) {
@@ -1013,6 +1065,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 onSubmitted: (value) {},
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
+                textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
@@ -1028,91 +1081,99 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   }
 
   Widget _buildFooter(BuildContext context, ApiResponse apiResponse) {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () async {
-              _isValidInput();
-              const maxDuration = Duration(seconds: 2);
-              print(_amountController.text);
-              if (inputValid) {
-                setState(() {
-                  isLoading = true;
-                });
-
-                bool isConnected = await _connectivityService.isConnected();
-                if (!isConnected) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            width: screenWidth * 0.65,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () async {
+                _isValidInput();
+                const maxDuration = Duration(seconds: 2);
+                print(_amountController.text);
+                if (inputValid) {
                   setState(() {
-                    isLoading = false;
+                    isLoading = true;
+                  });
+
+                  bool isConnected = await _connectivityService.isConnected();
+                  if (!isConnected) {
+                    setState(() {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              '${Languages.of(context)?.labelNoInternetConnection}'),
+                          duration: maxDuration,
+                        ),
+                      );
+                    });
+                  } else {
+                    File? compressedFile =
+                        await _resizeAndCompressImage(galleryFile as File, 800);
+                    await Provider.of<MainViewModel>(context, listen: false)
+                        .postMultiFormResponseToCreateSupport(
+                            url: "api/v1/app/payorio_support_tickets",
+                            amount: _amountController.text,
+                            paymentTime: _paymentTimeController.text,
+                            comment: _commentController.text,
+                            supportTicketDocument: compressedFile,
+                            trxId: _transactionIdController.text,
+                            customerId: '$customerId',
+                            customerMerchantNumber: "$customerPhoneNo",
+                            transactionProviderId: '$transactionProviderId',
+                            transactionMethodId: '$transactionMethodId',
+                            transactionTypeId: '$transactionTypeId');
+                    //Navigator.pushNamed(context, '/BottomNav');
+
+                    ApiResponse apiResponse =
+                        Provider.of<MainViewModel>(context, listen: false)
+                            .response;
+                    getSetUpAccountWidget(context, apiResponse);
+                  }
+                } else {
+                  if (_amountController.text.isEmpty &&
+                      _paymentTimeController.text.isEmpty &&
+                      _customerNumberController.text.isEmpty &&
+                      _transactionIdController.text.isEmpty &&
+                      _serviceTypeController.text.isEmpty &&
+                      _bankTypeController.text.isEmpty &&
+                      _commentController.text.isEmpty &&
+                      _issueTypeController.text.isEmpty &&
+                      _methodTypeController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                        content: Text('Please enter all the details'),
                         duration: maxDuration,
                       ),
                     );
-                  });
-                } else {
-                  File? compressedFile =
-                  await _resizeAndCompressImage(galleryFile as File, 800);
-                  await Provider.of<MainViewModel>(context, listen: false)
-                      .postMultiFormResponseToCreateSupport(
-                          url: "api/v1/app/payorio_support_tickets",
-                          amount: _amountController.text,
-                      paymentTime: _paymentTimeController.text,
-                      comment: _commentController.text,
-                          supportTicketDocument: compressedFile,
-                          trxId: _transactionIdController.text,
-                      customerId: '$customerId',
-                      customerMerchantNumber: "$customerPhoneNo",
-                      transactionProviderId: '$transactionProviderId',
-                      transactionMethodId: '$transactionMethodId',
-                      transactionTypeId: '$transactionTypeId');
-                  //Navigator.pushNamed(context, '/BottomNav');
-
-                  ApiResponse apiResponse =
-                      Provider.of<MainViewModel>(context, listen: false)
-                          .response;
-                  getSetUpAccountWidget(context, apiResponse);
+                  }
                 }
-              } else {
-                if (_amountController.text.isEmpty &&
-                    _paymentTimeController.text.isEmpty &&
-                    _customerNumberController.text.isEmpty &&
-                    _transactionIdController.text.isEmpty &&
-                    _serviceTypeController.text.isEmpty &&
-                    _bankTypeController.text.isEmpty &&
-                    _commentController.text.isEmpty &&
-                    _issueTypeController.text.isEmpty &&
-                    _methodTypeController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please enter all the details'),
-                      duration: maxDuration,
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text(
-              Languages.of(context)!.labelConfirm,
-              style: TextStyle(
-                  color: inputValid ? Colors.white : AppColor.PRIMARY),
+              },
+              child: Text(
+                Languages.of(context)!.labelConfirm,
+                style: TextStyle(
+                    color: inputValid ? Colors.white : AppColor.PRIMARY),
+              ),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  backgroundColor: inputValid
+                      ? AppColor.PRIMARY
+                      : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
+                  elevation: 3,
+                  shape:
+                      BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
             ),
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                backgroundColor: inputValid
-                    ? AppColor.PRIMARY
-                    : AppColor.SHORTCUT_CARD_LIGHT_COLOR,
-                elevation: 3,
-                shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero)),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
 
   Future<void> _fetchTransactionTypesData() async {
     print("Fetch Data");
@@ -1137,7 +1198,9 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           countryId: countryId,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .serviceTypeListData("api/v1/app/payorio_support_tickets/transaction_types", request);
+            .serviceTypeListData(
+                "api/v1/app/payorio_support_tickets/transaction_types",
+                request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getServiceTypeData(context, apiResponse);
@@ -1217,9 +1280,10 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     }
   }
 
-  Future<void> getServiceTypeData(BuildContext context, ApiResponse apiResponse) async {
-    ServiceTypeListResponse? serviceTypeListResponse   =
-    apiResponse.data as ServiceTypeListResponse?;
+  Future<void> getServiceTypeData(
+      BuildContext context, ApiResponse apiResponse) async {
+    ServiceTypeListResponse? serviceTypeListResponse =
+        apiResponse.data as ServiceTypeListResponse?;
     setState(() {
       isLoading = false;
     });

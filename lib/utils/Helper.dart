@@ -24,6 +24,7 @@ class Helper {
   static String countryList = 'CountryList';
   static String profileDetailPref = 'ProfileDetail';
   static const String prefSelectedLanguageCode = "SelectedLanguageCode";
+  static const String prefRecentDocument = "RecentDocument";
 
 // Write DATA
   static Future<bool> saveUserToken(token) async {
@@ -236,6 +237,24 @@ class Helper {
   static Future<bool> saveKycStatus(token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return await sharedPreferences.setString(kycStatusPref, token);
+  }
+
+  // Recent Document Read Data
+  static Future<DocumentDetail?> getRecentDocument() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final String? recentDocumentJson = sharedPreferences.getString(prefRecentDocument);
+
+    if (recentDocumentJson == null) {
+      return null;
+    }
+    final Map<String, dynamic> recentDocumentMap = jsonDecode(recentDocumentJson);
+    return DocumentDetail.fromJson(recentDocumentMap);
+  }
+
+  static Future<bool> saveRecentDocument(documentDetail) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final String documentDetailJson = jsonEncode(documentDetail.toJson());
+    return await sharedPreferences.setString(prefRecentDocument, documentDetailJson);
   }
 
   // Read Data

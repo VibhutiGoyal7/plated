@@ -15,6 +15,9 @@ abstract class DashboardTransactionDao {
 
   @update
   Future<void> updateTransaction(TransactionDetails transaction);
+
+  @Query('DELETE FROM TransactionDetails')
+  Future<void> clearAllTransactions();
 }
 
 @dao
@@ -30,4 +33,7 @@ abstract class CustomerDataDao {
 
   @update
   Future<void> updateCustomer(CustomerData customer);
+
+  @Query('DELETE FROM CustomerData')
+  Future<void> clearAllCustomerDetails();
 }

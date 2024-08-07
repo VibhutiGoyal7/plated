@@ -4,7 +4,6 @@ import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
-import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
@@ -24,21 +23,21 @@ import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:Payrio/view/screens/authSection/splash_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_successfull_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/request_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transaction_overview_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_successfull_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_otp_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_overview_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_tpin_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_method_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_method_type_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/withdrawSection/withdraw_screen.dart';
 import 'package:Payrio/view/screens/coming_soon_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_access_screen.dart';
 import 'package:Payrio/view/screens/kycSection/camera_screen.dart';
@@ -72,37 +71,40 @@ import 'package:Payrio/view/screens/redeemSection/redeem_balance_screen.dart';
 import 'package:Payrio/view/screens/redeemSection/redeem_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/services/PushNotificationService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
   await Firebase.initializeApp();
-  //await PushNotificationService().setupInteractedMessage();
+  await PushNotificationService().setupInteractedMessage();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
   });
 
-  /*  RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
+  RemoteMessage? initialMessage =
+      await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: ${initialMessage}");
     // App received a notification when it was killed
   }
   await Permission.notification.isDenied.then(
-        (bool value) {
+    (bool value) {
       if (value) {
         Permission.notification.request();
       }
     },
-  );*/
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -229,13 +231,13 @@ class _MyAppState extends State<MyApp> {
               return ForgotPasswordScreen();
             },
             '/OtpForgotPassScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as CustomerVerifyOtpPass?;
-              return OtpForgotPassScreen(data :args);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as CustomerVerifyOtpPass?;
+              return OtpForgotPassScreen(data: args);
             },
             '/NewPassForgotPassScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as CustomerVerifyOtpPass?;
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as CustomerVerifyOtpPass?;
               return NewPassForgotPassScreen(data: args);
             },
             '/PersonalDataScreen': (context) {
@@ -263,7 +265,9 @@ class _MyAppState extends State<MyApp> {
             '/VerifyEmailOtpScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return VerifyEmailOtpScreen(data: args,);
+              return VerifyEmailOtpScreen(
+                data: args,
+              );
             },
             '/VerifyIdentityScreen': (context) {
               final args =
@@ -318,7 +322,9 @@ class _MyAppState extends State<MyApp> {
             '/VideoKycScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as DocumentData?;
-              return VideoKycScreen(data: args,);
+              return VideoKycScreen(
+                data: args,
+              );
             },
             '/PaymentScreen': (context) {
               final args =
@@ -351,14 +357,18 @@ class _MyAppState extends State<MyApp> {
               return ComingSoonScreen();
             },
             '/TransferScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as CheckCustomerResponse?;
-              return TransferScreen(data: args,);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as CheckCustomerResponse?;
+              return TransferScreen(
+                data: args,
+              );
             },
             '/TransactionOverviewScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as TransactionDetails?;
-              return TransactionOverviewScreen(data: args,);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as TransactionDetails?;
+              return TransactionOverviewScreen(
+                data: args,
+              );
             },
             '/WithdrawScreen': (context) {
               final args =
@@ -381,26 +391,28 @@ class _MyAppState extends State<MyApp> {
               return ChangeTpinScreen();
             },
             '/TransferTPINScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as InitiateP2PRequest?;
-              return TransferTpinScreen(data: args );
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as InitiateP2PRequest?;
+              return TransferTpinScreen(data: args);
             },
             '/TransferOtpScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest;
-              return TransferOtpScreen(data: args,);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as CompleteP2PRequest;
+              return TransferOtpScreen(
+                data: args,
+              );
             },
             '/TransferContactScreen': (context) {
               return TransferContactScreen();
             },
             '/PaymentSuccessfulScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest?;
-              return PaymentSuccessfulScreen(data : args);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as CompleteP2PRequest?;
+              return PaymentSuccessfulScreen(data: args);
             },
             '/LanguageSelectionScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as CompleteP2PRequest?;
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as CompleteP2PRequest?;
               return LanguageSelectionScreen(
                 setLocale: setLocale,
               );
@@ -409,49 +421,50 @@ class _MyAppState extends State<MyApp> {
               return SupportScreen();
             },
             '/SupportListDetails': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as AllSupportTicketsDetails?;
-              return SupportListDetailScreen(data: args,);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as AllSupportTicketsDetails?;
+              return SupportListDetailScreen(
+                data: args,
+              );
             },
             '/SupportChatScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as int;
-              return SupportChatScreen(userId : args);
+              final args = ModalRoute.of(context)!.settings.arguments as int;
+              return SupportChatScreen(userId: args);
             },
             '/LiveChatListScreen': (context) {
-              return LiveChatListScreen( );
+              return LiveChatListScreen();
             },
             '/CreateSupportTicketScreen': (context) {
               return CreateSupportTicketScreen();
             },
             '/PaymentMethodTypeScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return PaymentMethodTypeScreen(data: args);
             },
             '/RequestQrScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return RequestQrScreen();
             },
             '/WithdrawMethodScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return WithdrawMethodScreen();
             },
             '/SupportSelectionScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return SupportSelectionScreen();
             },
             '/WithdrawMethodTypeScreen': (context) {
               final args =
-              ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as String?;
               return WithdrawMethodTypeScreen(data: args);
             },
             '/TransferOverviewScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as InitiateP2PRequest?;
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as InitiateP2PRequest?;
               return TransferOverviewScreen(data: args);
             },
           }),

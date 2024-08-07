@@ -263,7 +263,7 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
                                   onTap: () {
                                     _addMessage(_controller.text);
                                   },
-                                  child: Icon(Icons.send))),
+                                  child: Icon(Icons.send, color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY))),
                         ),
                       ),
                     ),

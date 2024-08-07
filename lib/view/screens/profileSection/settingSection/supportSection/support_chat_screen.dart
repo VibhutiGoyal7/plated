@@ -287,7 +287,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                 onTap: () {
                                   _sendMsg(_controller.text);
                                 },
-                                child: Icon(Icons.send))),
+                                child: Icon(Icons.send, color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY))),
                       ),
                     ),
                   ),

@@ -1,5 +1,4 @@
 import 'package:Payrio/model/request/supportListRequest.dart';
-import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +103,8 @@ class _SupportScreenState extends State<SupportScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
@@ -118,7 +118,8 @@ class _SupportScreenState extends State<SupportScreen> {
           agentNumber: "",
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .supportListData("api/v1/app/payorio_support_tickets/list", request);
+            .supportListData(
+                "api/v1/app/payorio_support_tickets/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getSupportData(context, apiResponse, pageKey, isScroll);
@@ -149,7 +150,8 @@ class _SupportScreenState extends State<SupportScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -159,7 +161,8 @@ class _SupportScreenState extends State<SupportScreen> {
     }
   }
 
-  Future<void> getFilteredSupportTicketData(BuildContext context, ApiResponse apiResponse) async {
+  Future<void> getFilteredSupportTicketData(
+      BuildContext context, ApiResponse apiResponse) async {
     AllSupportTicketsDetails? supportDataListResponse =
         apiResponse.data as AllSupportTicketsDetails?;
     setState(() {
@@ -170,15 +173,16 @@ class _SupportScreenState extends State<SupportScreen> {
       case Status.LOADING:
         return;
       case Status.COMPLETED:
-        AllSupportTicketsDetails? newItems = supportDataListResponse ;
+        AllSupportTicketsDetails? newItems = supportDataListResponse;
         setState(() {
           //filteredSupportDataList.clear();
           filteredSupportDataList.add(newItems!);
-             // : supportDataList.addAll(newItems);
+          // : supportDataList.addAll(newItems);
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -261,10 +265,9 @@ class _SupportScreenState extends State<SupportScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      //height: 40,
                       margin: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                          color: const Color(0xffF5F5F5),
+                          color: isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
                           borderRadius: BorderRadius.circular(5)),
                       child: TextField(
                         controller: _filterController,
@@ -273,12 +276,14 @@ class _SupportScreenState extends State<SupportScreen> {
                           prefixIcon: IconButton(
                             icon: Icon(
                               Icons.search_rounded,
+                              color: isDarkMode ? AppColor.WHITE: AppColor.PRIMARY
                             ),
                             onPressed: () => FocusScope.of(context).unfocus(),
                           ),
                           suffixIcon: IconButton(
                               icon: Icon(
                                 Icons.clear_rounded,
+                                  color: isDarkMode ? AppColor.WHITE: AppColor.PRIMARY
                               ),
                               onPressed: () {
                                 setState(() {
@@ -287,12 +292,13 @@ class _SupportScreenState extends State<SupportScreen> {
                                 });
                                 _filterController.text = "";
 
-                               // filterAccToTicketId("");
+                                // filterAccToTicketId("");
                               }),
                           hintText: Languages.of(context)!.labelSearch,
                           border: InputBorder.none,
                         ),
-                        onSubmitted: (value) => filterAccToTicketId(_filterController.text),
+                        onSubmitted: (value) =>
+                            filterAccToTicketId(_filterController.text),
                       ),
                     ),
                     Expanded(
@@ -317,7 +323,10 @@ class _SupportScreenState extends State<SupportScreen> {
                                                   Text('Error loading data'));
                                         } else {
                                           // Group transactions by date
-                                          Map<String, List<AllSupportTicketsDetails>>
+                                          Map<
+                                                  String,
+                                                  List<
+                                                      AllSupportTicketsDetails>>
                                               groupedSupportData =
                                               groupSupportDataByDate(
                                                   filterApplied
@@ -416,12 +425,13 @@ class _SupportScreenState extends State<SupportScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(14.0),
                 child: FloatingActionButton(
-                    child: Icon(Icons.add), onPressed: () {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    "/CreateSupportTicketScreen",
-                  );
-                }),
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        "/CreateSupportTicketScreen",
+                      );
+                    }),
               ),
             ),
           ],
@@ -443,15 +453,16 @@ class _SupportScreenState extends State<SupportScreen> {
           isInternetConnected = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
               duration: maxDuration,
             ),
           );
         });
       } else {
-
         await Provider.of<MainViewModel>(context, listen: false)
-            .getFilteredSupportTicket("api/v1/app/payorio_support_tickets/$ticketId");
+            .getFilteredSupportTicket(
+                "api/v1/app/payorio_support_tickets/$ticketId");
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getFilteredSupportTicketData(context, apiResponse);
@@ -459,7 +470,6 @@ class _SupportScreenState extends State<SupportScreen> {
     } catch (error) {
       print("Error fetching data: $error");
     }
-
   }
 
   void _showModal(BuildContext context, ApiResponse apiResponse) {
@@ -712,7 +722,8 @@ class TransactionItem extends StatelessWidget {
         padding: const EdgeInsets.all(6.0),
         child: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, "/SupportListDetails", arguments: transaction);
+            Navigator.pushNamed(context, "/SupportListDetails",
+                arguments: transaction);
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 4),
@@ -729,11 +740,12 @@ class TransactionItem extends StatelessWidget {
                         shape: CircleBorder(
                             side: BorderSide(
                                 width: 0,
-                                /*color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.}"))*/)),
-                        /*color: colorStatus(
-                            capitalizeFirstLetter("${transaction.status}")),*/
-                        child: Icon(Icons.airplane_ticket, color: Colors.black),
+                                color: isDarkMode
+                                    ? AppColor.WHITE
+                                    : AppColor.PRIMARY)),
+                        child: Icon(Icons.airplane_ticket,
+                            color:
+                                isDarkMode ? AppColor.WHITE : AppColor.PRIMARY),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -742,23 +754,29 @@ class TransactionItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          capitalizeFirstLetter(
-                              "${transaction.trxId}"),
+                          capitalizeFirstLetter("${transaction.trxId}"),
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 13),
                         ),
-                        Text(capitalizeFirstLetter("${transaction.transactionType}"),
+                        Text(
+                            capitalizeFirstLetter(
+                                "${transaction.transactionType}"),
                             style: TextStyle(
-                                fontSize: 11,
-                               /* color: colorStatus(capitalizeFirstLetter(
-                                    "${transaction.status}"))*/)),
+                              fontSize: 11,
+                              /* color: colorStatus(capitalizeFirstLetter(
+                                    "${transaction.status}"))*/
+                            )),
                         Container(
-                          width: MediaQuery.of(context).size.width*0.38,
-                          child: Text("Ticket id :${transaction.id}",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                 /* color: colorStatus(capitalizeFirstLetter(
-                                      "${transaction.status}"))*/), overflow: TextOverflow.ellipsis,),
+                          width: MediaQuery.of(context).size.width * 0.38,
+                          child: Text(
+                            "Ticket id :${transaction.id}",
+                            style: TextStyle(
+                              fontSize: 10,
+                              /* color: colorStatus(capitalizeFirstLetter(
+                                      "${transaction.status}"))*/
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -773,10 +791,11 @@ class TransactionItem extends StatelessWidget {
                             capitalizeFirstLetter(
                                 "${transaction.transactionTypeId}")),
                         style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
                           /*color: colorPaymentType(capitalizeFirstLetter(
-                                "${transaction.transactionType}"))*/)),
+                                "${transaction.transactionType}"))*/
+                        )),
                     Text(convertTime("${transaction.createdAt}"),
                         style: TextStyle(fontSize: 11)),
                   ],

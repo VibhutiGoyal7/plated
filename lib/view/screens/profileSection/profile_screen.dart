@@ -4,6 +4,7 @@ import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
+import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -17,6 +18,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
+import '../../../model/db/PayorioDatabase.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
@@ -41,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String dashBoardKycStatus = "";
   late double screenWidth;
   late double screenHeight;
-
+  late PayorioDatabase database;
   static const maxDuration = Duration(seconds: 2);
 
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -54,6 +56,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     imageUrl = "";
     _fetchDataFromPref();
     _fetchData();
+    $FloorPayorioDatabase
+        .databaseBuilder('payorio_database.db')
+        .build()
+        .then((value) async {
+      this.database = value;
+    });
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
         isBiometricEnable = retrievedBiometric ?? false; // Handle null case
@@ -92,7 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (apiResponse.message ==
+            "${Languages.of(context)?.labelInvalidAccessToken}") {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -334,50 +343,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   "assets/profile_user.png"),
                                             ),
                                           )
-                                        : ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                            child: Image.network(
-                                              imageUrl,
-                                              height: 90,
-                                              width: 90,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (BuildContext context,
-                                                      Object exception,
-                                                      StackTrace? stackTrace) {
-                                                return Container(
-                                                  height: 90,
-                                                  width: 90,
-                                                  child: CircleAvatar(
-                                                    radius: 30,
-                                                    backgroundColor:
-                                                        AppColor.WHITE,
-                                                    backgroundImage: AssetImage(
-                                                      "assets/profile_user.png",
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                } else {
-                                                  return Shimmer.fromColors(
-                                                    baseColor: Colors.white38,
-                                                    highlightColor: Colors.grey,
-                                                    child: Container(
-                                                      height: 80,
-                                                      width: 80,
-                                                      color: Colors.white,
+                                        : Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              border: Border.all(
+                                                  color: AppColor.PRIMARY,
+                                                  width: 0.3),
+                                              color: Colors.white,
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(100.0),
+                                              child: Image.network(
+                                                imageUrl,
+                                                height: 90,
+                                                width: 90,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (BuildContext
+                                                        context,
+                                                    Object exception,
+                                                    StackTrace? stackTrace) {
+                                                  return Container(
+                                                    height: 90,
+                                                    width: 90,
+                                                    child: CircleAvatar(
+                                                      radius: 30,
+                                                      backgroundColor:
+                                                          AppColor.WHITE,
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        "assets/profile_user.png",
+                                                      ),
                                                     ),
                                                   );
-                                                }
-                                              },
+                                                },
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return Shimmer.fromColors(
+                                                      baseColor: Colors.white38,
+                                                      highlightColor:
+                                                          Colors.grey,
+                                                      child: Container(
+                                                        height: 80,
+                                                        width: 80,
+                                                        color: Colors.white,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
                                             ),
                                           ),
                                   ),
@@ -658,7 +679,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            content:
+                Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );
@@ -666,9 +688,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       String? retrievedToken = await Helper.getUserToken();
       print("Token $retrievedToken");
-      if(mounted) {
+      if (mounted) {
         await Provider.of<MainViewModel>(context, listen: false)
-            .profileScreenData("/api/v1/app/customers/show_customer_details");
+            .profileScreenData("api/v1/app/customers/show_customer_details");
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         getProfileResponse(context, apiResponse);
@@ -813,46 +835,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   AssetImage("assets/profile_user.png"),
                             ),
                           )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(100.0),
-                            child: Image.network(
-                              imageUrl,
-                              height: 60,
-                              width: 60,
-                              fit: BoxFit.cover,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace) {
-                                // You can return any widget here to display in case of an error
-                                return Container(
+                        : Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(
+                                  color: AppColor.PRIMARY, width: 0.3),
+                              color: Colors.white,
+                            ),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100.0),
+                                child: Image.network(
+                                  imageUrl,
                                   height: 60,
                                   width: 60,
-                                  child: CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: AppColor.WHITE,
-                                    backgroundImage: AssetImage(
-                                      "assets/profile_user.png",
-                                    ),
-                                  ),
-                                );
-                              },
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.black54,
-                                    highlightColor: Colors.black45,
-                                    child: Container(
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    // You can return any widget here to display in case of an error
+                                    return Container(
                                       height: 60,
                                       width: 60,
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }
-                              },
-                            )),
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: AppColor.WHITE,
+                                        backgroundImage: AssetImage(
+                                          "assets/profile_user.png",
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.black54,
+                                        highlightColor: Colors.black45,
+                                        child: Container(
+                                          height: 60,
+                                          width: 60,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
+                          ),
                   ),
                   SizedBox(
                     height: 10,
@@ -1011,6 +1042,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Text('Yes'),
                         onPressed: () {
                           Helper.clearAllSharedPreferences();
+                          database.personDao.clearAllCustomerDetails();
+                          database.dashboardTransactionDao.clearAllTransactions();
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => SigninScreen()),

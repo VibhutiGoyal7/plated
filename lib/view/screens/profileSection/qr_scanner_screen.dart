@@ -104,46 +104,53 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                         backgroundImage: AssetImage("assets/profile_user.png"),
                       ),
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(100.0),
-                      clipBehavior: Clip.antiAlias,
-                      child: Image.network(
-                        imageUrl,
-                        height: 75,
-                        width: 75,
-                        fit: BoxFit.cover,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          // You can return any widget here to display in case of an error
-                          return Container(
+                  : Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: AppColor.PRIMARY, width: 0.3),
+                        color: Colors.white,
+                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100.0),
+                          clipBehavior: Clip.antiAlias,
+                          child: Image.network(
+                            imageUrl,
                             height: 75,
                             width: 75,
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundColor: AppColor.WHITE,
-                              backgroundImage: AssetImage(
-                                "assets/profile_user.png",
-                              ),
-                            ),
-                          );
-                        },
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.black54,
-                              highlightColor: Colors.black45,
-                              child: Container(
-                                height: 60,
-                                width: 60,
-                                color: Colors.white,
-                              ),
-                            );
-                          }
-                        },
-                      )),
+                            fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              // You can return any widget here to display in case of an error
+                              return Container(
+                                height: 75,
+                                width: 75,
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: AppColor.WHITE,
+                                  backgroundImage: AssetImage(
+                                    "assets/profile_user.png",
+                                  ),
+                                ),
+                              );
+                            },
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.black54,
+                                  highlightColor: Colors.black45,
+                                  child: Container(
+                                    height: 60,
+                                    width: 60,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }
+                            },
+                          )),
+                    ),
             ),
             SizedBox(
               height: 10,
