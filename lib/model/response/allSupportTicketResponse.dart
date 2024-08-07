@@ -49,6 +49,7 @@ class AllSupportTicketsDetails {
   final int? transactionMethodId;
   final int? transactionProviderId ;
   final String? createdAt;
+  final String? ticketStatus;
   final String? updatedAt;
   final int? customerId;
 
@@ -70,6 +71,7 @@ class AllSupportTicketsDetails {
     this.createdAt,
     this.updatedAt,
     this.customerId,
+    this.ticketStatus,
     this.transactionType,
     this.transactionMethod,
     this.transactionProvider,
@@ -79,6 +81,7 @@ class AllSupportTicketsDetails {
     return AllSupportTicketsDetails(
       id: json['id'] as int?,
       amount: json['amount'] as String?,
+      ticketStatus: json['status'] as String?,
       merchantId: json['merchant_id'] as int?,
       paymentTime: json['payment_time'] as String?,
       transactionTypeId: json['transaction_type_id'] as int?,
@@ -106,6 +109,7 @@ class AllSupportTicketsDetails {
       amount: json['data']?['amount'] as String?,
       merchantId: json['data']?['merchant_id'] as int?,
       paymentTime: json['data']?['payment_time'] as String?,
+      ticketStatus: json['data']?['status'] as String?,
       transactionTypeId: json['data']?['transaction_type_id'] as int?,
       transactionType: json['data']?['transaction_type'] as String?,
       transactionProviderId: json['data']?['transaction_provider_id'] as int?,

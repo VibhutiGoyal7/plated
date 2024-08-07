@@ -16,6 +16,7 @@ class SupportListDetailScreen extends StatefulWidget {
 
 class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
   bool isLoading = false;
+  late bool isDarkMode;
   String amount = "";
   bool expanded = false;
   final tokenInputController = TextEditingController();
@@ -34,7 +35,7 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -66,17 +67,19 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
                         Container(
                           child: Column(
                             children: [
-                              _buildSection("Ticket Id :","${widget.data?.id}", Colors.white54),
-                              _buildSection("Amount :","${widget.data?.amount}", Colors.grey.shade200),
-                              _buildSection("Transaction Id :","${widget.data?.trxId}", Colors.white54),
-                              _buildSection("Payment time :",convertTime("${widget.data?.paymentTime}"), Colors.grey.shade200),
-                              _buildSection("Customer number :","${widget.data?.customerMerchantNumber}", Colors.white54),
-                              _buildSection("Ticket created at :","${convertDateFormat("${widget.data?.createdAt}")} ${convertTime("${widget.data?.createdAt}")}", Colors.grey.shade200),
-                              _buildSection("Query type :","${widget.data?.queryType}", Colors.white54),
-                              _buildSection("Transaction type :","${widget.data?.transactionType}", Colors.grey.shade200),
-                              _buildSection("Transaction method :","${widget.data?.transactionMethod}", Colors.white54),
-                              _buildSection("Transaction provider :","${widget.data?.transactionProvider}", Colors.grey.shade200),
-                              _buildSection("Comment :","${widget.data?.comment}", Colors.white54),
+                              _buildSection("Ticket Id :","${widget.data?.id}",isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Amount :","${widget.data?.amount}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Status :","${widget.data?.ticketStatus}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Transaction Id :","${widget.data?.trxId}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Payment time :",convertTime("${widget.data?.paymentTime}"), isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Customer number :","${widget.data?.customerMerchantNumber}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Ticket created at :","${convertDateFormat("${widget.data?.createdAt}")} ${convertTime("${widget.data?.createdAt}")}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Query type :","${widget.data?.queryType}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Transaction type :","${widget.data?.transactionType}", isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Transaction method :","${widget.data?.transactionMethod}",isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              _buildSection("Transaction provider :","${widget.data?.transactionProvider}",isDarkMode ? AppColor.DARK_BG_COLOR : Colors.white54),
+                              _buildSection("Comment :","${widget.data?.comment}", isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey.shade200),
+                              SizedBox(height: 80,)
                             ],
                           ),
                         ),
@@ -103,7 +106,7 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(onPressed:(){
-                  Navigator.pushNamed(context, "/SupportChatScreen", arguments: widget.data?.id);
+                  Navigator.pushNamed(context, "/SupportChatScreen", arguments: widget.data);
                 },
                   child: Icon(Icons.support_agent_outlined),
                 ),
@@ -117,7 +120,10 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
           color: color,
-          border: Border(top: BorderSide(color: Colors.grey, width: 0.1),left: BorderSide(color: Colors.grey, width: 0.1),right: BorderSide(color: Colors.grey, width: 0.1),bottom: BorderSide(color: Colors.grey, width: 0.1),)),
+         border: Border.all(
+             color:isDarkMode ? Colors.grey.shade800: Colors.grey, width: 0.1
+         ),),
+
       child: Column(
         mainAxisAlignment:
         MainAxisAlignment.spaceBetween,

@@ -263,19 +263,42 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       headingTextSize: 14,
                       subHeadingTextSize: 13,
                     ),
-                    /*  DetailBox(
-                    heading: Languages.of(context)!.labelEmail,
-                    subHeading: "${email}",
-                    icon: Icons.mail,
-                    headingTextSize: 14,
-                    subHeadingTextSize: 13,
-                  ),*/
+
                     DetailBox(
                       heading: Languages.of(context)!.labelDOB,
                       subHeading: convertDateFormat("${dob}"),
                       icon: Icons.calendar_month,
                       headingTextSize: 14,
                       subHeadingTextSize: 13,
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pushNamed(context, "/AddressScreen");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric( vertical: 2.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 18.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.home),
+                              SizedBox(width: 8,),
+                              Text(
+                                "Address",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  //color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                     DetailBox(
                       heading: 'Document Name',

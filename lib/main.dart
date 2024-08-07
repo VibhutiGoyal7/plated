@@ -430,8 +430,8 @@ class _MyAppState extends State<MyApp> {
               );
             },
             '/SupportChatScreen': (context) {
-              final args = ModalRoute.of(context)!.settings.arguments as int;
-              return SupportChatScreen(userId: args);
+              final args = ModalRoute.of(context)!.settings.arguments as AllSupportTicketsDetails;
+              return SupportChatScreen(details: args);
             },
             '/LiveChatListScreen': (context) {
               return LiveChatListScreen();
