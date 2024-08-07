@@ -11,6 +11,7 @@ import '../model/response/setUpAccountResponse.dart';
 class Helper {
   static String valueSharedPreferences = '';
   static String pref_token = 'token';
+  static String pref_device_token = 'device_token';
   static String biometricPref = 'biometricPref';
   static String isAuthenticatedPref = 'isAuthenticatedPref';
   static String userBalancePref = 'UserBalance';
@@ -36,6 +37,18 @@ class Helper {
   static Future<String?> getUserToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(pref_token);
+  }
+
+// Write DATA
+  static Future<bool> saveDeviceToken(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(pref_device_token, token);
+  }
+
+  // Read Data
+  static Future<String?> getDeviceToken() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(pref_device_token);
   }
 
   // Write DATA

@@ -37,6 +37,7 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
   var senderUsername;
   var name;
   var receiverPhoneNumber;
+  var uniqueID;
   String dropdownValue = "";
   bool isValid = false;
   bool resendOtp = false;

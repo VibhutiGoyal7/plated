@@ -4,7 +4,6 @@ import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
-import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -62,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .then((value) async {
       this.database = value;
     });
+
     Helper.getBiometric().then((retrievedBiometric) {
       setState(() {
         isBiometricEnable = retrievedBiometric ?? false; // Handle null case
@@ -1043,7 +1043,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () {
                           Helper.clearAllSharedPreferences();
                           database.personDao.clearAllCustomerDetails();
-                          database.dashboardTransactionDao.clearAllTransactions();
+                          database.dashboardTransactionDao
+                              .clearAllTransactions();
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => SigninScreen()),
@@ -1064,16 +1065,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _fetchDataFromPref() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    ProfileResponse? profileResponse = await Helper.getProfileDetails();
-
-    setState(() {
-      customerName =
-          "${profileResponse?.firstName} ${profileResponse?.lastName}";
-      userName = "${profileResponse?.username}";
-      imageUrl = profileResponse?.imageUrl.toString();
+    Helper.getProfileDetails().then((profile) {
+      customerName = "${profile?.firstName} ${profile?.lastName}";
+      userName = "${profile?.username}";
+      imageUrl = profile?.imageUrl.toString();
       isLoading = false;
       isUsernameRetrieved = true;
+      dashBoardKycStatus = "${profile?.kycStatus}";
     });
   }
 }

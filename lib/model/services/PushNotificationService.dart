@@ -1,3 +1,4 @@
+import 'package:Payrio/utils/Helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -32,6 +33,14 @@ class PushNotificationService {
   Future<void> getToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
     print("FCM Token: $token");
+    bool isSaved = await Helper.saveDeviceToken(token);
+
+    // Check if the token was saved successfully
+    if (isSaved) {
+      print('Token saved successfully.');
+    } else {
+      print('Failed to save token.');
+    }
     // Save this token to your server or wherever you need it
   }
 
