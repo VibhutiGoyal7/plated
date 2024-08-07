@@ -52,11 +52,11 @@ class _AddressScreenState extends State<AddressScreen> {
         _stateController.text.isNotEmpty &&
         _cityController.text.isNotEmpty &&
         _postalCodeController.text.isNotEmpty &&
-        streetName != _streetController.text &&
-        streetNumber != _streetNumberController.text &&
-        city != _cityController.text &&
-        state != _stateController.text &&
-        postCode != _postalCodeController.text
+        (streetName != _streetController.text ||
+        streetNumber != _streetNumberController.text ||
+        city != _cityController.text ||
+        state != _stateController.text ||
+        postCode != _postalCodeController.text)
     ) {
       setState(() {
         inputValid = true;
@@ -70,7 +70,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   String address = "";
 
-  Future<Widget> getChangePassResponse(
+  Future<Widget> getChangeAddressResponse(
       BuildContext context, ApiResponse apiResponse) async {
     ProfileResponse mediaList = apiResponse.data;
     setState(() {
@@ -374,7 +374,9 @@ class _AddressScreenState extends State<AddressScreen> {
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false)
                 .response;
-        getChangePassResponse(context, apiResponse);
+
+        hideKeyBoard();
+        getChangeAddressResponse(context, apiResponse);
       }
     }
   }
