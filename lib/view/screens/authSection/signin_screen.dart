@@ -39,11 +39,8 @@ class _SigninScreenState extends State<SigninScreen> {
     super.initState();
     passwordVisible = true;
     inputValid = false;
-    Helper.getDeviceToken().then((token) {
-      setState(() {
-        deviceToken = token;
-      });
-    });
+
+    getUserDeviceId();
     Helper.getUserId().then((id) {
       setState(() {
         if (id != null && id.isNotEmpty) {
@@ -144,6 +141,7 @@ class _SigninScreenState extends State<SigninScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
+
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -580,5 +578,9 @@ class _SigninScreenState extends State<SigninScreen> {
   void Validate(String email) {
     bool isValid = EmailValidator.validate(email);
     print(isValid);
+  }
+
+  Future<void> getUserDeviceId() async {
+    deviceToken = await getDeviceId();
   }
 }
