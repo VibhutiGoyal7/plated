@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../languageSection/Languages.dart';
 import '../../../../utils/Helper.dart';
 import '../../../model/response/transactionListReponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../component/connectivity_service.dart';
 
 class TransactionOverviewScreen extends StatefulWidget {
@@ -339,6 +340,40 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                   fontSize: 13, fontWeight: FontWeight.bold),
                             ),
                           ],
+                        ),
+                        SizedBox(height: 25,),
+                        IntrinsicWidth(
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).pushNamed("/TransactionReceiptScreen", arguments: widget.data);
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  "${Languages.of(context)?.labelViewReceipt}",
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: isDarkMode
+                                          ? AppColor.WHITE
+                                          : AppColor.PRIMARY,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 3),
+                                    width: screenWidth * 0.22,
+                                    height: 0.5,
+                                    decoration: BoxDecoration(
+                                      color: isDarkMode
+                                          ? AppColor.WHITE
+                                          : AppColor.PRIMARY,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

@@ -28,6 +28,7 @@ import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transaction_overview_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/transaction_receipt_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_receipt_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_successfull_screen.dart';
@@ -562,6 +563,11 @@ class _MyAppState extends State<MyApp> {
               final args = ModalRoute.of(context)!.settings.arguments
                   as InitiateP2PResponse?;
               return PaymentReceiptScreen(data: args);
+            },
+            '/TransactionReceiptScreen': (context) {
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as TransactionDetails?;
+              return TransactionReceiptScreen(data: args);
             },
           }),
     );

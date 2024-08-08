@@ -1433,6 +1433,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       child: TextButton(
                         child: Text('Yes'),
                         onPressed: () async {
+                          /*Helper.clearAllSharedPreferences();
+                          database.personDao.clearAllCustomerDetails();
+                          database.dashboardTransactionDao
+                              .clearAllTransactions();*/
                           Navigator.of(context).pop();
                           await Future.delayed(Duration(milliseconds: 6));
                           SystemNavigator.pop();
