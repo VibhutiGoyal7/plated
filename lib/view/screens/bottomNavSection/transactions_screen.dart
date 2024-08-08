@@ -157,7 +157,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -761,7 +761,7 @@ class TransactionItem extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
-                          color: transaction.status == "in_complete"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
+                          color: transaction.status == "${Languages.of(context)?.statusInComplete}"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
                               "${transaction.transactionType}"))),
                     ),
                     Text(

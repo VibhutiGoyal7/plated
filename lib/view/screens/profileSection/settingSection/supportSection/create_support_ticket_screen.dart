@@ -59,7 +59,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
 
   ///Time
   TimeOfDay timeOfDay = TimeOfDay.now();
-  String selectedTime = "Payment Time";
+  String selectedTime = "Payment Date & Time";
 
   @override
   void initState() {
@@ -987,6 +987,62 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
     }
   }
 
+  Future<void> _selectDateTime(BuildContext context) async {
+    final DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate:DateTime.now().subtract(Duration(days: 365*18)),
+        firstDate: DateTime(1950),
+        //DateTime.now() - not to allow to choose before today.
+        lastDate: DateTime.now().subtract(Duration(days: 365*18)),
+        helpText: "${Languages.of(context)?.labelSelectDob}",
+        confirmText: "${Languages.of(context)?.labelConfirm}",
+        errorFormatText: '${Languages.of(context)?.labelEnterValidDate}',
+        errorInvalidText: '${Languages.of(context)?.labelEnterDateInValidRange}',
+        builder: (context, child) {
+          return Theme(
+            data: isDarkMode
+                ? ThemeData.dark()
+                : ThemeData
+                .light(), // This will change to light theme.
+            child: child!,
+          );
+        });
+
+    if (selectedDate != null) {
+      final TimeOfDay? time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+          builder: (context, child) {
+            return Theme(
+              data: isDarkMode
+                  ? ThemeData.dark()
+                  : ThemeData
+                  .light(), // This will change to light theme.
+              child: child!,
+            );}
+      );
+
+      if (time != null) {
+        setState(() {
+          _paymentTimeController.text = convertDateTimeFormat("${DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            time.hour,
+            time.minute,
+          )}");
+          selectedTime = convertDateTimeFormat("${DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            time.hour,
+            time.minute,
+          )}");
+        });
+      }
+    }
+  }
+
   Widget _buildPaymentTimeInput(BuildContext context, String text,
       TextEditingController nameController, Icon icon) {
     return GestureDetector(
@@ -997,39 +1053,42 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Icon(
-                    Icons.access_time,
-                    color: isDarkMode ? AppColor.WHITE : AppColor.TEXT_COLOR,
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    selectedTime,
-                    style: TextStyle(
-                      color: selectedTime == "Payment Time"
-                          ? Colors.grey
-                          : AppColor.TEXT_COLOR,
-                      fontSize: 14.0,
+          child: GestureDetector(
+            onTap: () async {
+              hideKeyBoard();
+              _selectDateTime(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 15,
                     ),
-                  ),
-                ],
-              ),
-              GestureDetector(
-                  onTap: () async {
-                    hideKeyBoard();
-                    displayTimePicker(context);
-                  },
-                  child: Icon(Icons.timer_outlined)),
-            ],
+                    Icon(
+                      Icons.access_time,
+                      color: isDarkMode ? AppColor.WHITE : AppColor.TEXT_COLOR,
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      selectedTime,
+                      style: TextStyle(
+                        color: selectedTime == "Payment Date & Time"
+                            ? Colors.grey
+                            : AppColor.TEXT_COLOR,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ],
+                ),
+                /*GestureDetector(
+
+                    child: Icon(Icons.timer_outlined)),*/
+              ],
+            ),
           ),
         ),
       ),

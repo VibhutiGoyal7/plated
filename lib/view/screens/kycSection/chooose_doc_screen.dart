@@ -7,6 +7,7 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
@@ -120,7 +121,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("object");
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}"){
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(context: context, message: apiResponse?.message);
@@ -313,13 +314,13 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
 
-    if (status == "verified") {
+    if (nonCapitalizeString(status) == nonCapitalizeString("verified")) {
       verificationStatus = Languages.of(context)!.labelVerified;
       textColor = Colors.green;
-    } else if (status == "rejected") {
+    } else if (nonCapitalizeString(status) == nonCapitalizeString("rejected")) {
       verificationStatus = "Rejected";
       textColor = Colors.red;
-    } else if (status == "in_progress") {
+    } else if (nonCapitalizeString(status) == nonCapitalizeString("in_progress")) {
       verificationStatus = Languages.of(context)!.labelInProgress;
       textColor = Colors.deepOrange;
     } else {
@@ -328,8 +329,8 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
     }
     return GestureDetector(
       onTap: () async {
-        if (verificationStatus == "Pending" ||
-            verificationStatus == "Rejected") {
+        if (nonCapitalizeString(verificationStatus) == nonCapitalizeString("Pending") ||
+            nonCapitalizeString(verificationStatus) == nonCapitalizeString("Rejected")) {
           if (await checkPermissionStatus()) {
             Navigator.pushReplacementNamed(context, "/DocImageScreen",
                 arguments: "${data}");
@@ -385,11 +386,11 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
                               ),
                             ),
                             Text(
-                              (status == "rejected")
+                              (nonCapitalizeString(status) == nonCapitalizeString("rejected"))
                                   ? rejectionReason
                                   : subtitle,
                               style: TextStyle(
-                                color: (status == "rejected")
+                                color: (nonCapitalizeString(status) == nonCapitalizeString("rejected"))
                                     ? textColor
                                     : isDarkMode
                                         ? Colors.white

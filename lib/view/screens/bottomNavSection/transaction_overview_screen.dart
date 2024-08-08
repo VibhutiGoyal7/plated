@@ -77,7 +77,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
             ),
           ),
           title: Text(
-            "Transaction Overview",
+            "${Languages.of(context)?.labelTransactionOverview}",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
           ),
         ),
@@ -154,7 +154,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 32,
-                                    color: transactionDetails?.status == "in_complete"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
+                                    color: transactionDetails?.status == "${Languages.of(context)?.statusInComplete}"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
                                         "${transactionDetails?.transactionType}")))
                               ),
                               Text(
@@ -185,7 +185,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Customer Id",
+                                        "${Languages.of(context)?.labelCustomerId}",
                                         style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.normal),
@@ -218,7 +218,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "User name",
+                                        "${Languages.of(context)?.labelUsername}",
                                         style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.normal),
@@ -250,7 +250,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "Phone Number",
+                                      "${Languages.of(context)?.labelPhoneNumber}",
                                       style: TextStyle(
                                           fontSize: 13, fontWeight: FontWeight.normal),
                                     ),
@@ -278,7 +278,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Email",
+                              "${Languages.of(context)?.labelEmail}",
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.normal),
                             ),
@@ -302,7 +302,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Payment method",
+                              "${Languages.of(context)?.labelPaymentMethod}",
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.normal),
                             ),
@@ -329,7 +329,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Payment ID",
+                              "${Languages.of(context)?.labelPaymentId}",
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.normal),
                             ),

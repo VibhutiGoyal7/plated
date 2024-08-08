@@ -11,6 +11,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../model/response/kycStatusResponse.dart';
 import '../../../theme/AppColor.dart';
+import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
@@ -125,7 +126,8 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == Languages.of(context)!.labelInvalidAccessToken) {
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -213,7 +215,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

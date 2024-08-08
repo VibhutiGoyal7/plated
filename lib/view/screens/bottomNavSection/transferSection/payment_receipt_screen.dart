@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +107,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                       alignment: Alignment.topRight,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      //padding: EdgeInsets.symmetric(horizontal: 20),
                       margin:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                       //height: screenHeight,
@@ -117,6 +118,8 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                           Screenshot(
                             controller: screenshotController,
                             child: Container(
+                              padding:EdgeInsets.symmetric(horizontal: 20),
+                              color: isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                               width: screenWidth,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -137,27 +140,30 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                     height: 20,
                                   ),
                                   Text(
-                                    "Transfer",
+                                    "${Languages.of(context)?.labelTransfer}",
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.normal,
+                                      color: isDarkMode ? AppColor.WHITE : AppColor.BLACK
                                     ),
                                   ),
                                   Text(
-                                    "RECEIPT COPY",
+                                    "${Languages.of(context)?.labelReceiptCopy}",
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
+                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK
                                     ),
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   Text(
-                                    "REF: ${uniqueID}",
+                                    "${Languages.of(context)?.labelRef} ${uniqueID}",
                                     style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
+                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK,
                                         letterSpacing: 0.8),
                                   ),
                                   SizedBox(
@@ -256,7 +262,8 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Text("${profileName}")
+                                      Text("${profileName}", style: TextStyle(
+                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),)
                                     ],
                                   ),
                                   SizedBox(
@@ -279,47 +286,52 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                         children: [
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                minWidth: screenWidth * 0.35,
-                                                maxWidth: screenWidth * 0.35),
+                                                minWidth: screenWidth * 0.32,
+                                                maxWidth: screenWidth * 0.32),
                                             child: IntrinsicWidth(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "FROM",
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.normal),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 3,
-                                                  ),
-                                                  Text(
-                                                    "${userName}",
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "${Languages.of(context)?.labelFrom}",
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 3,
+                                                    ),
+                                                    Text(
+                                                      "${userName}",
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                           Container(
                                             margin: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 20),
+                                                horizontal: 8, vertical: 20),
                                             height: 40,
                                             color: Colors.grey,
                                             width: 0.3,
                                           ),
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                minWidth: screenWidth * 0.35,
-                                                maxWidth: screenWidth * 0.35),
+                                                minWidth: screenWidth * 0.32,
+                                                maxWidth: screenWidth * 0.32),
                                             child: IntrinsicWidth(
                                               child: Column(
                                                 crossAxisAlignment:
@@ -328,11 +340,12 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "TO",
+                                                    "${Languages.of(context)?.labelTo}",
                                                     style: TextStyle(
                                                         fontSize: 11,
                                                         fontWeight:
-                                                            FontWeight.normal),
+                                                            FontWeight.normal,
+                                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                   ),
                                                   SizedBox(
                                                     height: 3,
@@ -342,7 +355,8 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                     style: TextStyle(
                                                         fontSize: 11,
                                                         fontWeight:
-                                                            FontWeight.bold),
+                                                            FontWeight.bold,
+                                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                   ),
                                                 ],
                                               ),
@@ -371,30 +385,35 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           IntrinsicWidth(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  "TOTAL AMOUNT",
-                                                  style: TextStyle(
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.normal),
-                                                ),
-                                                SizedBox(
-                                                  height: 3,
-                                                ),
-                                                Text(
-                                                  "$currencySymbol${amount}",
-                                                  style: TextStyle(
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "${Languages.of(context)?.labelTotalAmount}",
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 3,
+                                                  ),
+                                                  Text(
+                                                    "$currencySymbol${amount}",
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           Row(
@@ -406,41 +425,46 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                               ConstrainedBox(
                                                 constraints: BoxConstraints(
                                                     minWidth:
-                                                        screenWidth * 0.35,
+                                                        screenWidth * 0.32,
                                                     maxWidth:
-                                                        screenWidth * 0.35),
+                                                        screenWidth * 0.32),
                                                 child: IntrinsicWidth(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        "TRANSFER AMOUNT",
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                      ),
-                                                      Text(
-                                                        "$currencySymbol${amount}",
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ],
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          "${Languages.of(context)?.labelTransferAmount}",
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                        ),
+                                                        Text(
+                                                          "$currencySymbol${amount}",
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                               Container(
                                                 margin: EdgeInsets.symmetric(
-                                                    horizontal: 10,
+                                                    horizontal: 8,
                                                     vertical: 20),
                                                 height: 40,
                                                 color: Colors.grey,
@@ -449,9 +473,9 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                               ConstrainedBox(
                                                 constraints: BoxConstraints(
                                                     minWidth:
-                                                        screenWidth * 0.35,
+                                                        screenWidth * 0.32,
                                                     maxWidth:
-                                                        screenWidth * 0.35),
+                                                        screenWidth * 0.32),
                                                 child: IntrinsicWidth(
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -462,20 +486,22 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        "SERVICE CHARGE",
+                                                        "${Languages.of(context)?.labelServiceCharge}",
                                                         style: TextStyle(
                                                             fontSize: 11,
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .normal),
+                                                                    .normal,
+                                                            color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                       ),
                                                       Text(
-                                                        "(No charge applicable)",
+                                                        "${Languages.of(context)?.labelNoChargeApplicable}",
                                                         style: TextStyle(
                                                             fontSize: 10,
                                                             fontWeight:
                                                                 FontWeight
-                                                                    .bold),
+                                                                    .bold,
+                                                            color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                       ),
                                                     ],
                                                   ),
@@ -506,44 +532,49 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                         children: [
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                minWidth: screenWidth * 0.35,
-                                                maxWidth: screenWidth * 0.35),
+                                                minWidth: screenWidth * 0.32,
+                                                maxWidth: screenWidth * 0.32),
                                             child: IntrinsicWidth(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "TRANSFER TYPE",
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.normal),
-                                                  ),
-                                                  Text(
-                                                    "${capitalizeFirstLetter("${widget.data?.transactionType}")}",
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "${Languages.of(context)?.labelTransferType}",
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                    ),
+                                                    Text(
+                                                      "${capitalizeFirstLetter("${widget.data?.transactionType}")}",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                           Container(
                                             margin: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 20),
+                                                horizontal: 8, vertical: 20),
                                             height: 40,
                                             color: Colors.grey,
                                             width: 0.3,
                                           ),
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                minWidth: screenWidth * 0.35,
-                                                maxWidth: screenWidth * 0.35),
+                                                minWidth: screenWidth * 0.32,
+                                                maxWidth: screenWidth * 0.32),
                                             child: IntrinsicWidth(
                                               child: Column(
                                                 crossAxisAlignment:
@@ -552,18 +583,20 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "DATE & TIME",
+                                                    "${Languages.of(context)?.labelDateTime}",
                                                     style: TextStyle(
                                                         fontSize: 11,
                                                         fontWeight:
-                                                            FontWeight.normal),
+                                                            FontWeight.normal,
+                                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                   ),
                                                   Text(
                                                     "${date} ${time}",
                                                     style: TextStyle(
                                                         fontSize: 11,
                                                         fontWeight:
-                                                            FontWeight.bold),
+                                                            FontWeight.bold,
+                                                        color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                   ),
                                                 ],
                                               ),
@@ -624,7 +657,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                     width: 4,
                                   ),
                                   Text(
-                                    "Download",
+                                    "${Languages.of(context)?.labelDownload}",
                                     style: TextStyle(fontSize: 13),
                                   )
                                 ],
@@ -661,7 +694,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                       width: 4,
                                     ),
                                     Text(
-                                      "Share",
+                                      "${Languages.of(context)?.labelShare}",
                                       style: TextStyle(fontSize: 13),
                                     ),
                                   ]),
@@ -774,7 +807,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
       // Save the screenshot to the gallery
       final result = await ImageGallerySaver.saveImage(screenshot);
       ToastComponent.showToast(
-          context: context, message: "Downloaded Successfully");
+          context: context, message: "${Languages.of(context)?.labelDownloadedSuccessfully}");
       print(result); // Print or handle the result
     }
   }
@@ -791,7 +824,7 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
         child: Row(
           children: [
             Text(
-              "Close",
+              "${Languages.of(context)?.labelClose}",
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(

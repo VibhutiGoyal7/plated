@@ -11,9 +11,9 @@ class GenerateOtpTPINChangeResponse {
 
   factory GenerateOtpTPINChangeResponse.fromJson(Map<String, dynamic> json) {
     return GenerateOtpTPINChangeResponse(
-      otp: json['data']['otp'] as String?,
-      message: json['message'] as String?,
-      status: json['status'] as int?,
+    message: json['message'] as String?,
+    status: json['status'] as int?,
+        otp: json['data']?['otp'] as String?
     );
   }
 }

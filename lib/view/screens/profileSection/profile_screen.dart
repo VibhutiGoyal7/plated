@@ -100,8 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1066,12 +1065,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _fetchDataFromPref() async {
     Helper.getProfileDetails().then((profile) {
-      customerName = "${profile?.firstName} ${profile?.lastName}";
-      userName = "${profile?.username}";
-      imageUrl = profile?.imageUrl.toString();
-      isLoading = false;
-      isUsernameRetrieved = true;
-      dashBoardKycStatus = "${profile?.kycStatus}";
+      setState(() {
+        customerName = "${profile?.firstName} ${profile?.lastName}";
+        userName = "${profile?.username}";
+        imageUrl = profile?.imageUrl.toString();
+        isLoading = false;
+        isUsernameRetrieved = true;
+        dashBoardKycStatus = "${profile?.kycStatus}";
+      });
     });
   }
 }

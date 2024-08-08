@@ -96,7 +96,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                         height: 10,
                       ),
                       Text(
-                        "Success",
+                        "${Languages.of(context)?.labelSuccess}",
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
@@ -106,7 +106,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                         height: 10,
                       ),
                       Text(
-                        "Your fund transfer is successful",
+                        "${Languages.of(context)?.labelFundTransferSuccessful}",
                         style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.normal,
@@ -135,7 +135,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "TRANSFER FROM",
+                                    "${Languages.of(context)?.labelTransferFrom}",
                                     style: TextStyle(
                                       fontSize: 13,
                                     ),
@@ -158,8 +158,8 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                       ),
                       IntrinsicHeight(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          padding: EdgeInsets.symmetric(horizontal: 18),
                           decoration: BoxDecoration(
                             border:
                                 Border.all(width: 0.1, color: Colors.grey),
@@ -181,7 +181,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                         MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "TOTAL AMOUNT",
+                                        "${Languages.of(context)?.labelTotalAmount}",
                                         style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.normal),
@@ -207,7 +207,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                               ),
                               Container(
                                 margin: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
+                                    horizontal: 8, vertical: 20),
                                 height: 40,
                                 color: Colors.grey,
                                 width: 1,
@@ -223,7 +223,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "TRANSFER TO",
+                                        "${Languages.of(context)?.labelTransferTo}",
                                         style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.normal),
@@ -273,7 +273,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "DATE & TIME",
+                                    "${Languages.of(context)?.labelDateTime}",
                                     style: TextStyle(fontSize: 11),
                                   ),
                                   Text(
@@ -303,7 +303,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "View Receipt",
+                        "${Languages.of(context)?.labelViewReceipt}",
                         style: TextStyle(
                             fontSize: 14.0,
                             color: isDarkMode
@@ -433,14 +433,14 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
       // Save the screenshot to the gallery
       final result = await ImageGallerySaver.saveImage(screenshot);
       ToastComponent.showToast(
-          context: context, message: "Downloaded Successfully");
+          context: context, message: "${Languages.of(context)?.labelDownloadedSuccessfully}");
       print(result); // Print or handle the result
     }
   }
 
   Widget _buildFooter(BuildContext context) {
     return Container(
-      width: screenWidth * 0.3,
+      width: screenWidth * 0.35,
       //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
@@ -462,7 +462,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                     width: 5,
                   ),
                   Text(
-                    "Close",
+                    "${Languages.of(context)?.labelClose}",
                     style: TextStyle(color: Colors.white),
                   ),
                 ],

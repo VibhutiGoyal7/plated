@@ -1,5 +1,6 @@
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/theme/AppColor.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +138,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -176,7 +177,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}")
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
             //child: Text('Please try again later!!!'),

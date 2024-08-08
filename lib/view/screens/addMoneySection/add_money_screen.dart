@@ -105,7 +105,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == Languages.of(context)?.labelInvalidAccessToken)
+        if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
           child: Text('Please try again later!!!'),

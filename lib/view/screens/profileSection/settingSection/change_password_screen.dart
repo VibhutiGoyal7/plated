@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/apis/api_response.dart';
 import '../../../../theme/AppColor.dart';
+import '../../../../utils/Util.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
 import '../../../component/session_expired_dialog.dart';
@@ -59,7 +60,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
 
-        if(apiResponse?.message== "${Languages.of(context)?.labelInvalidAccessToken}")
+        if(nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
           SessionExpiredDialog.showDialogBox(context: context);
         else
           ToastComponent.showToast(context: context, message: "${apiResponse.message}");

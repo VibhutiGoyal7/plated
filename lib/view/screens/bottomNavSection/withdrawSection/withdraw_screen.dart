@@ -166,7 +166,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              _inputController.text = _allLogList[index];
+                              _inputController.text = "+${_allLogList[index]}";
                               _isValidInput();
                             });
                           },
@@ -361,8 +361,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}")
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
           SessionExpiredDialog.showDialogBox(context: context);
         else {
           _inputController.text = "";

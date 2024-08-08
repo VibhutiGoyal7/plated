@@ -99,8 +99,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -137,8 +137,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -213,7 +213,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                 SupportChatDetail response =
                                     liveChatResponses[index];
                                 final isUserMessage =
-                                    response.userType == "Customer";
+                                    nonCapitalizeString("${response.userType}") == nonCapitalizeString("Customer");
                                 final messageAlignment = Alignment.topLeft;
                                 final messageColor = isUserMessage
                                     ? isDarkMode
@@ -469,7 +469,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                             ),
                           ))
                         : Center(child: Text('No Messages')),
-                    widget.details.ticketStatus == "Pending"
+                    nonCapitalizeString("${widget.details.ticketStatus}") == nonCapitalizeString("pending")
                         ? Card(
                             elevation: 5,
                             child: Container(
@@ -585,7 +585,14 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                               ),
                             ),
                           )
-                        : SizedBox(),
+                        : Container(
+                      padding: EdgeInsets.all(8),
+                      margin: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.green.shade700, width: 1),
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Text("Ticket Resolved", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade700),)),
                   ],
                 ),
                 isLoading

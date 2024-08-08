@@ -92,7 +92,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
             ),
           ),
           title: Text(
-            "Transfer Screen",
+            "${Languages.of(context)?.labelTransferScreen}",
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
           ),
         ),
@@ -139,7 +139,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.bold),
                               ),
-                              Text("Account Transfer",
+                              Text("${Languages.of(context)?.labelAccountTransfer}",
                                   style: TextStyle(
                                     fontSize: 12,
                                   )),
@@ -164,7 +164,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "TRANSFER FROM",
+                                "${Languages.of(context)?.labelTransferFrom}",
                                 style: TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.bold),
                               ),
@@ -200,7 +200,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "TOTAL AMOUNT",
+                                  "${Languages.of(context)?.labelTotalAmount}",
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal),
@@ -226,7 +226,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "TRANSFER TO",
+                                "${Languages.of(context)?.labelTransferTo}",
                                 style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.normal),
@@ -254,7 +254,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "NOTES",
+                            "${Languages.of(context)?.labelNotes}",
                             style: TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w700),
                           ),
@@ -281,7 +281,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                       //counterText: "",
                                       counterStyle: TextStyle(fontSize: 11),
                                       border: InputBorder.none,
-                                      hintText: 'Write Something..',
+                                      hintText: '${Languages.of(context)?.labelWriteSomething}',
                                       hintStyle: TextStyle(color: Colors.grey),
                                       suffixIcon: GestureDetector(
                                           onTap: () {},
@@ -331,7 +331,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                     isTPINSelected ? Colors.green : Colors.grey,
                               ),
                               Text(
-                                "TPIN",
+                                "${Languages.of(context)?.labelTPIN}",
                                 style: TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.w700),
                               )
@@ -367,7 +367,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                     isTPINSelected ? Colors.grey : Colors.green,
                               ),
                               Text(
-                                "Email OTP",
+                                "${Languages.of(context)?.labelEmailOtp}",
                                 style: TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.w700),
                               )

@@ -423,7 +423,7 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<dynamic> verifyOtpTPinChange(
+  Future<GenerateTpinResponse> verifyOtpTPinChange(
       String value, VerifyOtpTPinChange generateOtpTPinChange) async {
     print(generateOtpTPinChange);
     dynamic response =
@@ -431,7 +431,9 @@ class MainRepository {
     print(value);
     final jsonData = response;
     print(jsonData);
-    return response;
+    GenerateTpinResponse mediaList =
+    GenerateTpinResponse.fromJson(jsonData);
+    return mediaList;
   }
 
   Future<dynamic> initiateP2PTransaction(
@@ -459,14 +461,14 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<dynamic> completeP2PTransaction(
+  Future<InitiateP2PResponse> completeP2PTransaction(
       String value, CompleteP2PRequest completeP2PRequest) async {
     print(completeP2PRequest);
     dynamic response =
         await _payrioService.postResponse(value, completeP2PRequest);
     print(value);
     final jsonData = response;
-    CompleteP2PResponse mediaList = CompleteP2PResponse.fromJson(jsonData);
+    InitiateP2PResponse mediaList = InitiateP2PResponse.fromJson(jsonData);
     print(jsonData);
     return mediaList;
   }

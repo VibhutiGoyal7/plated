@@ -101,7 +101,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}"){
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(
@@ -269,7 +269,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                       onPressed: () {
                         setState(
                           () {
-                            if (text == Languages.of(context)!.labelNewPass) {
+                            if (nonCapitalizeString(text) == nonCapitalizeString("${Languages.of(context)!.labelNewPass}")) {
                               newPasswordVisible = !newPasswordVisible;
                             } else {
                               confirmPasswordVisible = !confirmPasswordVisible;

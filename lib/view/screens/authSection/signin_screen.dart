@@ -202,16 +202,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                     children: [
                                       SizedBox(height: 20),
                                       _buildLabelText(
-                                          context, "Welcome Back!", 26, true),
+                                          context, "${Languages.of(context)?.labelWelcomeBack}", 26, true),
                                       _buildLabelText(
                                           context,
-                                          "Welcome back we missed you",
+                                          "${Languages.of(context)?.labelWeMissedYou}",
                                           14,
                                           false),
                                       SizedBox(height: 25),
                                       _buildPhoneInput(
                                         context,
-                                        "Phone Number",
+                                        "${Languages.of(context)?.labelPhoneNumber}",
                                         _phoneNoController,
                                         Icon(
                                           Icons.person,
@@ -278,7 +278,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Need account? ",
+                                              "${Languages.of(context)?.labelNeedAcc} ",
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey[400],
@@ -290,7 +290,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                                     '/PhoneVerifyScreen');
                                               },
                                               child: Text(
-                                                "Register here.",
+                                                "${Languages.of(context)?.labelRegisterHere}",
                                                 style: TextStyle(
                                                     fontSize: 14,
                                                     color: Colors.blue,

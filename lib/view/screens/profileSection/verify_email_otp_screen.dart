@@ -11,6 +11,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/createOtpForEmailVerifyResponse.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/customNumberKeyboard.dart';
@@ -116,7 +117,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
         //Navigator.pushNamed(context, '/BottomNav');
         return Container();
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -150,7 +151,7 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }else
         {

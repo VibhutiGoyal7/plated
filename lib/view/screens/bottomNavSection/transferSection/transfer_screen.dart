@@ -213,7 +213,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                           amount = value;
                                           // countryBalance = balance as String ;
                                         });
-                                        //_checkInputValidation();
+                                        _checkInputValidation();
                                       },
                                       maxLength: 6,
                                       textAlign: TextAlign.center,

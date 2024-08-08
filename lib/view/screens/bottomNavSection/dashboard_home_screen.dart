@@ -142,8 +142,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message ==
-            Languages.of(context)!.labelInvalidAccessToken) {
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
@@ -189,23 +190,28 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         if (kycStatusApi != Languages.of(context)!.statusVerified) {
           isApiLoading = false;
           Navigator.pushNamed(context, '/ChooseDocScreen');
-        } else if (kycStatusApi == Languages.of(context)!.statusVerified) {
+        } else if (nonCapitalizeString(kycStatusApi) ==
+            nonCapitalizeString("${Languages.of(context)!.statusVerified}")) {
           isApiLoading = false;
-          if (calledShortCut == Languages.of(context)!.labelAdd) {
+          if (nonCapitalizeString(calledShortCut) ==
+              nonCapitalizeString("${Languages.of(context)!.labelAdd}")) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/PaymentMethodScreen');
-          } else if (calledShortCut == Languages.of(context)!.labelWithdraw) {
+          } else if (nonCapitalizeString(calledShortCut) ==
+              nonCapitalizeString("${Languages.of(context)!.labelWithdraw}")) {
             calledShortCut = "";
             Navigator.pushNamed(context, '/WithdrawMethodScreen');
-          } else if (calledShortCut == Languages.of(context)!.labelRequestQR) {
+          } else if (nonCapitalizeString(calledShortCut) ==
+              nonCapitalizeString("${Languages.of(context)!.labelRequestQR}")) {
             calledShortCut = "";
             // Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message ==
-            Languages.of(context)!.labelInvalidAccessToken) {
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -447,9 +453,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                       ),
                                                     ),
                                                   ),
-                                                  dashBoardKycStatus ==
-                                                          Languages.of(context)!
-                                                              .statusVerified
+                                                  nonCapitalizeString(
+                                                              "${dashBoardKycStatus}") ==
+                                                          nonCapitalizeString(
+                                                              "${Languages.of(context)!.statusVerified}")
                                                       ? Icon(
                                                           Icons.verified,
                                                           color: Colors
@@ -831,7 +838,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                   Row(
                                                                     children: [
                                                                       Icon(
-                                                                          transactionList[index]?.transactionType == "${Languages.of(context)?.statusWithdraw}" || transactionList[index]?.transactionType == "${Languages.of(context)?.statusTransfer}"
+                                                                          nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusWithdraw}")
+                                                                              || nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusTransfer}")
                                                                               ? Icons
                                                                                   .call_made
                                                                               : Icons
@@ -879,8 +887,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                             .w600,
                                                                     fontSize:
                                                                         13,
-                                                                    color: "${transactionList[index]?.status}" ==
-                                                                            "in_complete"
+                                                                    color: nonCapitalizeString("${transactionList[index]?.status}") ==
+                                                                        nonCapitalizeString("${Languages.of(context)?.labelInComplete}")
                                                                         ? Colors
                                                                             .grey
                                                                         : colorPaymentType(
@@ -1361,7 +1369,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   bool checkKYCStatus() {
-    return dashBoardKycStatus == "verified";
+    return dashBoardKycStatus == "${Languages.of(context)?.statusVerified}";
   }
 
   Future<void> _showExitDialog() async {
@@ -1373,7 +1381,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           shape: Border.all(),
           title: Center(
               child: Text(
-            "Exit",
+            "${Languages.of(context)?.labelExit}",
             style: TextStyle(fontSize: 20),
           )),
           content: Container(

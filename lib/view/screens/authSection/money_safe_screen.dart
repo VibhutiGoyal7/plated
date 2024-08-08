@@ -125,7 +125,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                 ),
                 _buildFooter(
                     context: context,
-                    text: "Register",
+                    text:"${ Languages.of(context)?.labelRegister}",
                     onTap: () {
                       Navigator.pushNamed(context, '/PhoneVerifyScreen');
                     }),

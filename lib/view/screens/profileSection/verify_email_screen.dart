@@ -118,7 +118,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         Navigator.pushNamed(context, '/VerifyEmailOtpScreen', arguments: emailController.text);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -152,7 +152,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse?.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }else
           {

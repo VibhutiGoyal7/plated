@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/apis/api_response.dart';
 import '../../../../model/request/generateOtpTpinChange.dart';
+import '../../../../utils/Util.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
 import '../../../component/customNumberKeyboard.dart';
@@ -107,7 +108,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         Navigator.pushReplacementNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(context: context, message: message);
@@ -137,13 +138,17 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       case Status.COMPLETED:
         print("rwrwr ${response?.otp}");
         ToastComponent.showToast(context: context, message: response?.otp);
+        if(response == null){
+          ToastComponent.showToast(context: context, message: apiResponse.message);
+        }
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (apiResponse.message == "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
-          ToastComponent.showToast(context: context, message: message);
+          print("aaa${apiResponse.message}");
+          ToastComponent.showToast(context: context, message: apiResponse.message);
         }
         return Center(
             // child: Text('Please try again later!!!'),

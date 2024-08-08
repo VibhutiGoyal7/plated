@@ -150,8 +150,7 @@ class _SupportScreenState extends State<SupportScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -181,8 +180,7 @@ class _SupportScreenState extends State<SupportScreen> {
         });
         return;
       case Status.ERROR:
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -267,6 +265,7 @@ class _SupportScreenState extends State<SupportScreen> {
                     Container(
                       margin: EdgeInsets.all(8),
                       decoration: BoxDecoration(
+                        border: Border.all(color: isDarkMode? Colors.grey : AppColor.PRIMARY, width: 0.5),
                           color: isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
                           borderRadius: BorderRadius.circular(5)),
                       child: TextField(
@@ -294,7 +293,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
                                 // filterAccToTicketId("");
                               }),
-                          hintText: Languages.of(context)!.labelSearch,
+                          hintText: "Search using ticketId..",
                           border: InputBorder.none,
                         ),
                         onSubmitted: (value) =>
@@ -549,7 +548,7 @@ class _SupportScreenState extends State<SupportScreen> {
         });
       },
       child: Card(
-        color: status == text
+        color: nonCapitalizeString(status) == nonCapitalizeString(text)
             ? AppColor.PRIMARY
             : isDarkMode
                 ? AppColor.DARK_CARD_COLOR
@@ -557,7 +556,7 @@ class _SupportScreenState extends State<SupportScreen> {
         shape: RoundedRectangleBorder(
             side: BorderSide(
                 width: 0.5,
-                color: status == text
+                color: nonCapitalizeString(status) == nonCapitalizeString(text)
                     ? AppColor.PRIMARY
                     : isDarkMode
                         ? AppColor.WHITE
@@ -568,7 +567,7 @@ class _SupportScreenState extends State<SupportScreen> {
           child: Text(
             text,
             style: TextStyle(
-              color: status == text
+              color: nonCapitalizeString(status) == nonCapitalizeString(text)
                   ? AppColor.WHITE
                   : isDarkMode
                       ? AppColor.WHITE
@@ -588,7 +587,7 @@ class _SupportScreenState extends State<SupportScreen> {
         });
       },
       child: Card(
-        color: requestType == text
+        color: nonCapitalizeString(requestType) == nonCapitalizeString(text)
             ? AppColor.PRIMARY
             : isDarkMode
                 ? AppColor.DARK_CARD_COLOR
@@ -596,7 +595,7 @@ class _SupportScreenState extends State<SupportScreen> {
         shape: RoundedRectangleBorder(
             side: BorderSide(
                 width: 0.5,
-                color: requestType == text
+                color: nonCapitalizeString(requestType) == nonCapitalizeString(text)
                     ? AppColor.PRIMARY
                     : isDarkMode
                         ? AppColor.WHITE
@@ -607,7 +606,7 @@ class _SupportScreenState extends State<SupportScreen> {
           child: Text(
             text,
             style: TextStyle(
-              color: requestType == text
+              color: nonCapitalizeString(requestType) == nonCapitalizeString(text)
                   ? AppColor.WHITE
                   : isDarkMode
                       ? AppColor.WHITE
@@ -717,7 +716,7 @@ class TransactionItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-              width: 0.2, color: isDarkMode ? AppColor.WHITE : Colors.black)),
+              width: 0.2, color: isDarkMode ? Colors.grey : Colors.black)),
       child: Padding(
         padding: const EdgeInsets.all(6.0),
         child: GestureDetector(

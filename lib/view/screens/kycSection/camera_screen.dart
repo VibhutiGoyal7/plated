@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:Payrio/model/documentData.dart';
+import 'package:Payrio/utils/Util.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -52,17 +53,17 @@ class _DocImageScreenState extends State<DocImageScreen> {
   void initState() {
     super.initState();
     docType = widget.data.toString();
-    if (docType == "passport") {
+    if (nonCapitalizeString(docType) == nonCapitalizeString("passport")) {
       isBothSides = false;
-    } else if (docType == "national_id") {
+    } else if (nonCapitalizeString(docType) == nonCapitalizeString("national_id")) {
       isBothSides = true;
-    } else if (docType == "driving_licence") {
+    } else if (nonCapitalizeString(docType) == nonCapitalizeString("driving_licence")) {
       isBothSides = true;
-    } else if (docType == "video_kyc_clip") {
+    } else if (nonCapitalizeString(docType) == nonCapitalizeString("video_kyc_clip")) {
       isBothSides = false;
-    }else if (docType == "address_kyc") {
+    }else if (nonCapitalizeString(docType) == nonCapitalizeString("address_kyc")) {
       isBothSides = false;
-    }else if (docType == "bank_statement") {
+    }else if (nonCapitalizeString(docType) == nonCapitalizeString("bank_statement")) {
       isBothSides = false;
     }
     imageName="kyc_file";
@@ -87,7 +88,7 @@ class _DocImageScreenState extends State<DocImageScreen> {
        // });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if(apiResponse?.message== "${Languages.of(context)?.labelInvalidAccessToken}"){
+        if(nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(context: context, message: apiResponse?.message);

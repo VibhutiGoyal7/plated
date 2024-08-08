@@ -27,18 +27,36 @@ String convertDateFormat(String input) {
   if (input.isEmpty) {
     return input;
   }
+  String localTime = convertUtcDateToLocal(input);
 
-  DateTime parsedDate = DateTime.parse(input);
+  DateTime parsedDate = DateTime.parse(localTime);
   String formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
 
   return formattedDate;
 }
+
+String convertUtcDateToLocal(String utcTime) {
+  if (utcTime.isEmpty) {
+    return utcTime;
+  }
+  DateTime utcDateTime = DateTime.parse(utcTime);
+
+  // Convert the DateTime object to local time
+  DateTime localDateTime = utcDateTime.toLocal();
+
+  // Print the local time
+ // print('Local Time: ${localDateTime.toString()}');
+
+  return "${localDateTime.toString()}";
+}
+
 String convertDateTimeFormat(String input) {
   if (input.isEmpty) {
     return input;
   }
+  String localTime = convertUtcDateToLocal(input);
 
-  DateTime parsedDate = DateTime.parse(input);
+  DateTime parsedDate = DateTime.parse(localTime);
   String formattedDate = DateFormat('yyyy-MM-dd hh:mm a').format(parsedDate);
 
   return formattedDate;
@@ -48,8 +66,8 @@ String convertTime(String input) {
   if (input.isEmpty) {
     return input;
   }
-
-  DateTime date = DateTime.parse(input); // Example date and time
+  String localTime = convertUtcDateToLocal(input);
+  DateTime date = DateTime.parse(localTime); // Example date and time
   String formattedTime =
       DateFormat('hh:mm a').format(date); // This will output "02:30 PM"
   return formattedTime;

@@ -99,8 +99,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

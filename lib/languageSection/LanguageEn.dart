@@ -674,25 +674,104 @@ class LanguageEn extends Languages {
 
   @override
   String get labelWithdrawMethods => "Withdraw Methods";
-/*
-  @override
-  String get labelPay2Local => "Pay2Local";
 
   @override
-  String get labelPay2Local => "Pay2Local";
+  String get labelRegister => "Register";
 
   @override
-  String get labelPay2Local => "Pay2Local";
+  String get labelRegisterHere => "Register here.";
 
   @override
-  String get labelPay2Local => "Pay2Local";
+  String get statusInComplete => "in_complete";
 
   @override
-  String get labelPay2Local => "Pay2Local";
+  String get labelExit => "Exit";
 
   @override
-  String get labelPay2Local => "Pay2Local";
+  String get labelTransactionOverview => "Transaction Overview";
 
   @override
-  String get labelPay2Local => "Pay2Local";*/
+  String get labelCustomerId => "Customer Id";
+
+  @override
+  String get labelPaymentId => "Payment Id";
+
+  @override
+  String get labelReceiptCopy => "RECEIPT COPY";
+
+  @override
+  String get labelRef => "REF:";
+
+  @override
+  String get labelFrom => "FROM";
+
+  @override
+  String get labelTo => "TO";
+
+  @override
+  String get labelTotalAmount => "TOTAL AMOUNT";
+
+  @override
+  String get labelTransferAmount => "TRANSFER AMOUNT";
+
+  @override
+  String get labelServiceCharge => "SERVICE CHARGE";
+
+  @override
+  String get labelNoChargeApplicable => "(No charge applicable)";
+
+  @override
+  String get labelTransferType => "TRANSFER TYPE";
+
+  @override
+  String get labelDateTime => "DATE & TIME";
+
+  @override
+  String get labelDownload => "Download";
+
+  @override
+  String get labelShare => "Share";
+
+  @override
+  String get labelDownloadedSuccessfully => "Downloaded Successfully";
+
+  @override
+  String get labelClose => "Close";
+
+  @override
+  String get labelFundTransferSuccessful => "Your fund transfer is successful";
+
+  @override
+  String get labelTransferFrom => "TRANSFER FROM";
+
+  @override
+  String get labelViewReceipt => "View Receipt";
+
+  @override
+  String get labelPleaseEnterValidAmt => "Please enter valid amount.";
+
+  @override
+  String get labelTransferScreen => "Transfer Screen";
+
+  @override
+  String get labelAccountTransfer => "Account Transfer";
+
+  @override
+  String get labelNotes => "Notes";
+
+  @override
+  String get labelWriteSomething => "Write something..";
+
+  @override
+  String get labelTPIN => "TPIN";
+
+  @override
+  String get labelEmailOtp => "EmailOTP";
+
+  @override
+  String get labelGeneral => "General";
+
+  @override
+  String get labelTransactional => "Transactional";
+
 }

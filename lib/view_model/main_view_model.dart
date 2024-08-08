@@ -816,7 +816,7 @@ class MainViewModel with ChangeNotifier {
     print("Yess  ${completeP2PRequest.otp}");
     notifyListeners();
     try {
-      CompleteP2PResponse completeP2PResponse = await MainRepository()
+      InitiateP2PResponse completeP2PResponse = await MainRepository()
           .completeP2PTransaction(value, completeP2PRequest);
       if (completeP2PResponse.status == 200 || completeP2PResponse.status == 201) {
         _apiResponse = ApiResponse.completed(completeP2PResponse);

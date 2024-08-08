@@ -447,32 +447,72 @@ abstract class Languages {
 
   String get labelWithdrawMethods;
 
- /* String get docTypePassport;
+  String get labelRegister;
 
-  String get docTypeNationalId;
+  String get labelRegisterHere;
 
-  String get docTypeDrivingLicence;
+  String get statusInComplete;
 
-  String get docTypeVideoKycClip;
+  String get labelExit;
 
-  String get docTypeAddressKyc;
+  String get labelTransactionOverview;
 
-  String get imageNameKycFile;
+  String get labelCustomerId;
 
-  String get labelFrontSide;
+  String get labelPaymentId;
 
-  String get labelBackSide;
+  String get labelReceiptCopy;
 
-  String get docTypePBankStatement;
+  String get labelRef;
 
-  String get docTypePBankStatement;
+  String get labelFrom;
 
-  String get docTypePBankStatement;
+  String get labelTo;
 
-  String get docTypePBankStatement;
+  String get labelTotalAmount;
 
-  String get docTypePBankStatement;
-*/
+  String get labelTransferAmount;
+
+  String get labelServiceCharge;
+
+  String get labelNoChargeApplicable;
+
+  String get labelTransferType;
+
+  String get labelDateTime;
+
+  String get labelDownload;
+
+  String get labelShare;
+
+  String get labelDownloadedSuccessfully;
+
+  String get labelClose;
+
+  String get labelFundTransferSuccessful;
+
+  String get labelTransferFrom;
+
+  String get labelViewReceipt;
+
+  String get labelPleaseEnterValidAmt;
+
+  String get labelTransferScreen;
+
+  String get labelAccountTransfer;
+
+  String get labelNotes;
+
+  String get labelWriteSomething;
+
+  String get labelTPIN;
+
+  String get labelEmailOtp;
+
+  String get labelGeneral;
+
+  String get labelTransactional;
+
 
 
 }

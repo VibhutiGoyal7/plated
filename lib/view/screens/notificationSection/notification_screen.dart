@@ -53,8 +53,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
             TabBar(
               dividerColor: Colors.transparent,
               tabs: [
-                Tab(text: "General"),
-                Tab(text: "Transactional"),
+                Tab(text: "${Languages.of(context)!.labelGeneral}"),
+                Tab(text: "${Languages.of(context)!.labelTransactional}"),
               ],
             ),
             Expanded(

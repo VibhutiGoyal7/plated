@@ -202,7 +202,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                   height: screenHeight * 0.15,
                   margin: EdgeInsets.zero,
                   child: _buildLabelText(
-                      context, "OTP \n VERIFICATION ", 28, true),
+                      context, "${Languages.of(context)?.labelOtpVerification}", 28, true),
                   alignment: AlignmentDirectional.center,
                 ),
                 Expanded(
@@ -309,7 +309,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                          'Please enter valid phone number and select country code.'),
+                                          '${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
                                       duration: maxDuration,
                                     ),
                                   );

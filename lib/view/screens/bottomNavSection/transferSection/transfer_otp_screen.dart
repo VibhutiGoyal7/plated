@@ -193,8 +193,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
 
         return Container();
       case Status.ERROR:
-        if (apiResponse.message ==
-            "${Languages.of(context)?.labelInvalidAccessToken}") {
+        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
@@ -355,7 +354,7 @@ class _TransferOtpScreenState extends State<TransferOtpScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content:
-                                          Text('Please enter valid amount'),
+                                          Text('${Languages.of(context)?.labelPleaseEnterValidAmt}'),
                                       duration: maxDuration,
                                     ),
                                   );
