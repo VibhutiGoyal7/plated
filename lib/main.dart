@@ -73,9 +73,12 @@ import 'package:Payrio/view/screens/redeemSection/redeem_screen.dart';
 import 'package:Payrio/view_model/main_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -84,24 +87,88 @@ import 'languageSection/L10n.dart';
 import 'model/response/initiateP2PResponse.dart';
 import 'model/services/PushNotificationService.dart';
 
+
+//GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  await setupFlutterNotifications();
+  showFlutterNotification(message);
+  print('Handling a background message ${message.messageId}');
+}
+
+late AndroidNotificationChannel channel;
+bool isFlutterLocalNotificationsInitialized = false;
+
+Future<void> setupFlutterNotifications() async {
+  if (isFlutterLocalNotificationsInitialized) {
+    return;
+  }
+  channel = const AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    description: 'This channel is used for important notifications.',
+    importance: Importance.high,
+  );
+
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  isFlutterLocalNotificationsInitialized = true;
+}
+
+void showFlutterNotification(RemoteMessage message) {
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+  if (notification != null && android != null && !kIsWeb) {
+    flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          icon: 'launch_background',
+        ),
+      ),
+    );
+  }
+}
+
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Firebase
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   await PushNotificationService().setupInteractedMessage();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
   });
 
   RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
+  await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: ${initialMessage}");
-    // App received a notification when it was killed
   }
+
   await Permission.notification.isDenied.then(
-    (bool value) {
+        (bool value) {
       if (value) {
         Permission.notification.request();
       }
@@ -117,10 +184,31 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   Locale _locale = const Locale('en');
+  String? initialMessage;
+  bool _resolved = false;
 
   @override
   void initState() {
     super.initState();
+ /*   FirebaseMessaging.instance.getInitialMessage().then(
+          (value) => setState(
+            () {
+              _resolved = true;
+              initialMessage = value?.data.toString();
+            },
+          ),
+        );
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+
+      Navigator.pushNamed(
+        navigatorKey.currentState!.context,
+        '/ProfileScreen',
+        arguments: ProfileScreen(),
+      );
+    });*/
     _fetchData();
   }
 
@@ -430,7 +518,8 @@ class _MyAppState extends State<MyApp> {
               );
             },
             '/SupportChatScreen': (context) {
-              final args = ModalRoute.of(context)!.settings.arguments as AllSupportTicketsDetails;
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as AllSupportTicketsDetails;
               return SupportChatScreen(details: args);
             },
             '/LiveChatListScreen': (context) {
@@ -471,7 +560,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/PaymentReceiptScreen': (context) {
               final args = ModalRoute.of(context)!.settings.arguments
-              as InitiateP2PResponse?;
+                  as InitiateP2PResponse?;
               return PaymentReceiptScreen(data: args);
             },
           }),

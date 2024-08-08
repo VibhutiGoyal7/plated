@@ -118,7 +118,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
     });*/
 
-
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
 
@@ -486,10 +485,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               width: 8,
                                             ),
                                             GestureDetector(
-                                              onTap: ()
-                                              {
-                                                Navigator.pushNamed(
-                                                    context, "/NotificationScreen");
+                                              onTap: () {
+                                                Navigator.pushNamed(context,
+                                                    "/NotificationScreen");
                                               },
                                               child: Icon(
                                                 Icons.notifications,
@@ -1254,12 +1252,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       }
     });
 
-    if(dashboardTransactionDao != null){
-      List<TransactionDetails?> localTransactionList = await dashboardTransactionDao.findAllTransactions();
+    if (dashboardTransactionDao != null) {
+      List<TransactionDetails?> localTransactionList =
+          await dashboardTransactionDao.findAllTransactions();
       if (localTransactionList.isNotEmpty) {
         print("localTransactionList.length::${localTransactionList.length}");
         setState(() {
-          transactionList.addAll(localTransactionList.reversed);
+          // Filter out null values and cast to non-nullable type
+          transactionList.addAll(localTransactionList
+              .where((item) => item != null)
+              .cast<TransactionDetails>());
         });
         getDashBoardDataFromApi();
       } else {
@@ -1274,7 +1276,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       });
       getDashBoardDataFromApi();
     }
-
   }
 
   void getDashBoardDataFromApi() async {
@@ -1325,12 +1326,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       }
     }
 
-    if(dashboardResponse?.customerRecentTxn?.isNotEmpty == true){
+    if (dashboardResponse?.customerRecentTxn?.isNotEmpty == true) {
       List<TransactionDetails?> localTransactionList =
-      await dashboardTransactionDao.findAllTransactions();
+          await dashboardTransactionDao.findAllTransactions();
       if (mounted) {
         // Iterate through customerRecentTxn
-        for (var transactionData in dashboardResponse?.customerRecentTxn ?? []) {
+        for (var transactionData
+            in dashboardResponse?.customerRecentTxn ?? []) {
           // Check if the transaction already exists in localTransactionList
           bool transactionExists = localTransactionList
               .any((localData) => localData?.id == transactionData.id);
@@ -1340,7 +1342,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           }
         }
       }
-
     }
 
     setState(() {

@@ -1,3 +1,5 @@
+import 'AddressDetails.dart';
+
 class OtpVerifyResponse {
   final String? firstName;
   final String? lastName;
@@ -6,7 +8,7 @@ class OtpVerifyResponse {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? email;
-  final String? address;
+  final AddressDetails? address;
   final String? dob;
   final String? token;
   final String? kycStatus;
@@ -38,7 +40,6 @@ class OtpVerifyResponse {
 
   factory OtpVerifyResponse.fromJson(Map<String, dynamic> json) {
     return OtpVerifyResponse(
-
       token: json['data']?['token'] as String?,
       message: json['message'] as String?,
       status: json['status'] as int?,
@@ -53,10 +54,13 @@ class OtpVerifyResponse {
           ? DateTime.parse(json['data']?['customer']?['updated_at'] as String)
           : null,
       email: json['data']?['customer']?['email'] as String?,
-      address: json['data']?['customer']?['address'] as String?,
+      address: json['data']?['customer']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['customer']?['address'])
+          : null,
       dob: json['data']?['customer']?['dob'] as String?,
       isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
-      mobileOtpExpireAt: json['data']?['customer']?['mobile_otp_expire_at'] as String?,
+      mobileOtpExpireAt:
+          json['data']?['customer']?['mobile_otp_expire_at'] as String?,
       mobileOtp: json['data']?['customer']?['mobile_otp'] as String?,
       kycStatus: json['data']?['customer']?['kyc_status'] as String?,
     );

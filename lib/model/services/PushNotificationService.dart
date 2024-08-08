@@ -1,114 +1,88 @@
 import 'package:Payrio/utils/Helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../view/screens/profileSection/profile_screen.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class PushNotificationService {
   FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
   Future<void> setupInteractedMessage() async {
     await Firebase.initializeApp();
-// This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
+
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
+          (RemoteMessage message) {
         print("PushNotificationService:: ${message.toString()}");
-        //notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
+        _handleMessage(message.data);
       },
     );
 
     FirebaseMessaging.onMessage.listen(
-        (RemoteMessage message) {
-      print("PushNotificationServiceOnMessage:: ${message.toString()}");
-      //notificationRedirect(message.data[keyTypeValue], message.data[keyType]);
-    },
+          (RemoteMessage message) {
+        print("PushNotificationServiceOnMessage:: ${message.data['status']}");
+        _showNotification(message);
+      },
     );
+
     enableIOSNotifications();
-    // Get FCM token
     await getToken();
     await registerNotificationListeners();
   }
 
-
   Future<void> getToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
     print("FCM Token: $token");
-    bool isSaved = await Helper.saveDeviceToken(token);
+    //bool isSaved = await Helper.saveDeviceToken(token);
 
-    // Check if the token was saved successfully
-    if (isSaved) {
+    /*if (isSaved) {
       print('Token saved successfully.');
     } else {
       print('Failed to save token.');
-    }
-    // Save this token to your server or wherever you need it
+    }*/
   }
 
   Future<void> registerNotificationListeners() async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@drawable/launch_background');
+    AndroidInitializationSettings('@drawable/launch_background');
     const DarwinInitializationSettings iOSSettings =
-        DarwinInitializationSettings(
+    DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
     const InitializationSettings initSettings =
-        InitializationSettings(android: androidSettings, iOS: iOSSettings);
+    InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-// We're receiving the payload as string that looks like this
-// {buttontext: Button Text, subtitle: Subtitle, imageurl: , typevalue: 14, type: course_details}
-// So the code below is used to convert string to map and read whatever property you want
-        final List<String> str =
-            details.payload!.replaceAll('{', '').replaceAll('}', '').split(',');
-        final Map<String, dynamic> result = <String, dynamic>{};
-        for (int i = 0; i < str.length; i++) {
-          final List<String> s = str[i].split(':');
-          result.putIfAbsent(s[0].trim(), () => s[1].trim());
-        }
-        //notificationRedirect(result[keyTypeValue], result[keyType]);
+        _handleNotificationClick(details.payload);
       },
     );
-// onMessage is called when the app is in foreground and a notification is received
+
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-      //consoleLog(message, key: 'firebase_message');
-      print("${message}");
-      final RemoteNotification? notification = message!.notification;
-      final AndroidNotification? android = message.notification?.android;
-// If `onMessage` is triggered with a notification, construct our own
-// local notification to show to users using the created channel.
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          flutter_local_notifications.NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              icon: android.smallIcon,
-            ),
-          ),
-          payload: message.data.toString(),
-        );
-      }
+      print("message?.data :: ${message?.data}");
+      _showNotification(message);
     });
   }
 
   Future<void> enableIOSNotifications() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
+      alert: true,
       badge: true,
       sound: true,
     );
@@ -116,10 +90,59 @@ class PushNotificationService {
 
   AndroidNotificationChannel androidNotificationChannel() =>
       const AndroidNotificationChannel(
-        'high_importance_channel', // id
-        'High Importance Notifications', // title
-        description:
-            'This channel is used for important notifications.', // description
+        'high_importance_channel',
+        'High Importance Notifications',
+        description: 'This channel is used for important notifications.',
         importance: Importance.max,
       );
+
+  void _showNotification(RemoteMessage? message) {
+    final notification = message?.notification;
+    final android = message?.notification?.android;
+
+    if (notification != null && android != null) {
+      final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            androidNotificationChannel().id,
+            androidNotificationChannel().name,
+            channelDescription: androidNotificationChannel().description,
+            icon: android.smallIcon,
+          ),
+        ),
+        payload: message?.data.toString(),
+      );
+    }
+  }
+
+  void _handleMessage(Map<String, dynamic> data) {
+    Navigator.push(
+      navigatorKey.currentState!.context,
+      MaterialPageRoute(builder: (context) => ProfileScreen()),
+    );
+  }
+
+  void _handleNotificationClick(String? payload) {
+    if (payload != null) {
+      final data = _parsePayload(payload);
+      Navigator.push(
+        navigatorKey.currentState!.context,
+        MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
+    }
+  }
+
+  Map<String, dynamic> _parsePayload(String payload) {
+    final List<String> str = payload.replaceAll('{', '').replaceAll('}', '').split(',');
+    final Map<String, dynamic> result = {};
+    for (int i = 0; i < str.length; i++) {
+      final List<String> s = str[i].split(':');
+      result[s[0].trim()] = s[1].trim();
+    }
+    return result;
+  }
 }

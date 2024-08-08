@@ -1,3 +1,5 @@
+import 'AddressDetails.dart';
+
 class SignInResponse {
   final String? firstName;
   final String? lastName;
@@ -5,7 +7,7 @@ class SignInResponse {
   final String? phoneNumber;
   final String? createdAt;
   final String? email;
-  final String? address;
+  final AddressDetails? address;
   final String? dob;
   final String? token;
   final String? kycStatus;
@@ -58,18 +60,23 @@ class SignInResponse {
       createdAt: json['data']?['customer']?['created_at'] as String?,
       email: json['data']?['customer']?['email'] as String?,
       countryName: json['data']?['customer']?['country_name'] as String?,
-      address: json['data']?['customer']?['address'] as String?,
+      address: json['data']?['customer']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['customer']?['address'])
+          : null,
       dob: json['data']?['customer']?['dob'] as String?,
       isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
       kycStatus: json['data']?['customer']?['kyc_status'] as String?,
       vipLevel: json['data']?['customer']?['vip_level'] as String?,
       balance: json['data']?['customer']?['balance'] as String?,
       username: json['data']?['customer']?['username'] as String?,
-      countryCurrencySymbol: json['data']?['customer']?['country_currency_symbol'] as String?,
-      countryPhoneCode: json['data']?['customer']?['country_phone_code'] as String?,
+      countryCurrencySymbol:
+          json['data']?['customer']?['country_currency_symbol'] as String?,
+      countryPhoneCode:
+          json['data']?['customer']?['country_phone_code'] as String?,
       tpin: json['data']?['customer']?['tpin'] as String?,
       countryId: json['data']?['customer']?['country_id'] as int?,
-      isProfileSetupDone: json['data']?['customer']?['is_profile_setup_done'] as bool?,
+      isProfileSetupDone:
+          json['data']?['customer']?['is_profile_setup_done'] as bool?,
       activityPoints: json['data']?['customer']?['activity_points'] as int?,
       token: json['data']?['token'] as String?,
     );
@@ -111,7 +118,9 @@ class SignInResponse {
       countryCurrencySymbol: json['country_currency_symbol'] as String?,
       countryPhoneCode: json['country_phone_code'] as String?,
       tpin: json['tpin'] as String?,
-      address: json['address'] as String?,
+      address: json['address'] != null
+          ? AddressDetails.fromJson(json['address'])
+          : null,
       dob: json['dob'] as String?,
       kycStatus: json['kyc_status'] as String?,
       isEmailVerified: json['is_email_verified'] as bool?,

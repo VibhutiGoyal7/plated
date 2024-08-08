@@ -1,3 +1,5 @@
+import 'AddressDetails.dart';
+
 class SetUpAccountResponse {
   final String? firstName;
   final String? lastName;
@@ -5,7 +7,7 @@ class SetUpAccountResponse {
   final String? phoneNumber;
   final String? createdAt;
   final String? email;
-  final String? address;
+  final AddressDetails? address;
   final String? dob;
   final int? status;
   final String? dataStatus;
@@ -54,7 +56,9 @@ class SetUpAccountResponse {
           : null*/,
 
       email: json['data']?['email'] as String?,
-      address: json['data']?['address'] as String?,
+      address: json['data']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['address'])
+          : null,
       dob: json['data']?['dob'] as String?,
       kycStatus: json['data']?['kyc_status'] as String?,
       message: json['message'] as String?,
@@ -106,7 +110,9 @@ class SetUpAccountResponse {
           ? DateTime.parse(json['created_at'] */as String/*)
           : null*/,
       email: json['email'] as String?,
-      address: json['address'] as String?,
+      address: json['address'] != null
+          ? AddressDetails.fromJson(json['address'])
+          : null,
       dob: json['dob'] as String?,
       kycStatus: json['kyc_status'] as String?,
       balance: json['balance'] as String?,
