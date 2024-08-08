@@ -38,13 +38,13 @@ class PushNotificationService {
   Future<void> getToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
     print("FCM Token: $token");
-    //bool isSaved = await Helper.saveDeviceToken(token);
+    bool isSaved = await Helper.saveDeviceToken(token);
 
-    /*if (isSaved) {
+    if (isSaved) {
       print('Token saved successfully.');
     } else {
       print('Failed to save token.');
-    }*/
+    }
   }
 
   Future<void> registerNotificationListeners() async {

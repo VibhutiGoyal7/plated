@@ -39,8 +39,12 @@ class _SigninScreenState extends State<SigninScreen> {
     super.initState();
     passwordVisible = true;
     inputValid = false;
-
-    getUserDeviceId();
+    Helper.getDeviceToken().then((token) {
+      setState(() {
+        deviceToken = token;
+      });
+    });
+    //getUserDeviceId();
     Helper.getUserId().then((id) {
       setState(() {
         if (id != null && id.isNotEmpty) {

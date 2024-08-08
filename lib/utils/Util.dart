@@ -36,6 +36,7 @@ String convertDateFormat(String input) {
 
   return formattedDate;
 }
+
 String convertDateTimeFormat(String input) {
   if (input.isEmpty) {
     return input;
@@ -274,5 +275,3 @@ Future<String?> getDeviceId() async {
   }
   return null;
 }
-
-
