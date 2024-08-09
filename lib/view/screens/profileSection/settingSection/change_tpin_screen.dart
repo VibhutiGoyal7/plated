@@ -136,7 +136,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${response?.otp}");
+        print("GetOtpResponse : ${response?.otp}");
         ToastComponent.showToast(context: context, message: response?.otp);
         if(response == null){
           ToastComponent.showToast(context: context, message: apiResponse.message);

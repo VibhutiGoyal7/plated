@@ -116,7 +116,7 @@ class _TpinVerifyScreenState extends State<TpinVerifyScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${generateTpinResponse?.tpin}");
+        print("GenerateTpinResponse : ${generateTpinResponse?.tpin}");
         //Call Toast
         ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response

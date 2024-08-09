@@ -150,33 +150,37 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
   await Firebase.initializeApp();
+
+  // Handle background messages
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  // Setup interaction with notifications
   await PushNotificationService().setupInteractedMessage();
-  /*await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);*/
-  RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    print("FirebaseMessaging:: ${initialMessage}");
+
+  // Request notification permissions
+  final permissionStatus = await Permission.notification.status;
+  if (permissionStatus.isDenied) {
+    await Permission.notification.request();
   }
 
-  await Permission.notification.isDenied.then(
-    (bool value) {
-      if (value) {
-        Permission.notification.request();
-      }
-    },
-  );
+  // Get initial message
+  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    print("FirebaseMessaging:: $initialMessage");
+  }
 
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(MyApp());
-  });
+  // Set preferred orientations and run app
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
+  runApp(MyApp());
 }
+
 
 class MyApp extends StatefulWidget {
   @override

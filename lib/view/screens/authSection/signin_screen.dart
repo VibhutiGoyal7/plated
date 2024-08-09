@@ -84,7 +84,7 @@ class _SigninScreenState extends State<SigninScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${mediaList?.firstName}");
+        print("GetSignInResponse : ${mediaList?.firstName}");
         /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
             username: mediaList?.username,userId: mediaList?.id, email: mediaList?.email,   );*/
 

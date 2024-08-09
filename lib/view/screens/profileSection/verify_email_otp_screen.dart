@@ -146,7 +146,6 @@ class _VerifyEmailOtpScreenState extends State<VerifyEmailOtpScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${apiResponse.data}");
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away

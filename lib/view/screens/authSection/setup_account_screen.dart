@@ -82,7 +82,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${setUpAccountResponse?.firstName}");
+        print("GetSetUpAccountWidget : ${setUpAccountResponse?.firstName}");
         await Helper.saveProfileDetails(setUpAccountResponse);
         if (await Helper.saveProfileDetails(setUpAccountResponse))
           print("data saved");
