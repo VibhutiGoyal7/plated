@@ -10,6 +10,7 @@ import 'package:Payrio/model/request/exustingUserRequest.dart';
 import 'package:Payrio/model/request/generateOtpTpinChange.dart';
 import 'package:Payrio/model/request/generateTpinRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/notificationListRequest.dart';
 import 'package:Payrio/model/request/saveAddressRequest.dart';
 import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/request/serviceTypeListRequest.dart';
@@ -38,6 +39,7 @@ import 'package:Payrio/model/response/generateTpinResponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
+import 'package:Payrio/model/response/notificationListResponse.dart';
 import 'package:Payrio/model/response/sendMessageResponse.dart';
 import 'package:Payrio/model/response/transactionProviderListReponse.dart';
 import 'package:Payrio/model/response/payorioMethodListReponse.dart';
@@ -323,6 +325,19 @@ class MainRepository {
     print(jsonData);
     TransactionListResponse mediaList =
         TransactionListResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<NotificationListResponse> notificationListData(
+      String value, NotificationListRequest notificationListRequest) async {
+    print(notificationListRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, notificationListRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    NotificationListResponse mediaList =
+    NotificationListResponse.fromJson(jsonData);
     return mediaList;
   }
 
