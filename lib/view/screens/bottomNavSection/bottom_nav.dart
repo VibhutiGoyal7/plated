@@ -46,7 +46,7 @@ class _BottomNavState extends State<BottomNav>
     );
     _animation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeInOut,
+      curve: Curves.bounceIn,
     );
   }
 

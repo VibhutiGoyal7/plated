@@ -22,6 +22,7 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
   String kycStatus = "";
   String amount = "";
   String fistName = "";
+  String imageUrl = "";
   String lastName = "";
   String userId = "";
   bool expanded = false;
@@ -44,7 +45,9 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
         userId = "${profile?.userId}";
         fistName = "${profile?.firstName}";
         lastName = "${profile?.lastName}";
+        imageUrl = "${profile?.imageUrl}";
         _commentStream = service.getUsers(userId);
+        service.resetUnReadByMerchantCount(userId);
       });
     });
 
@@ -67,26 +70,35 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
           duration: Duration(milliseconds: 500),
           curve: Curves.easeOut,
         );
-      } else {
-        // You can also add a retry mechanism here if necessary
       }
     });
   }
 
-  void _addMessage(String message) {
+  Future<void> _addMessage(String message) async {
     LiveChatResponse liveChatResponse = LiveChatResponse(
       text: message,
       isRead: false,
-      user: 2,
+      user: int.parse(userId),
     );
+
+    int? adminCount = await service.getUnReadByAdminCount(userId);
+    if (adminCount == null) {
+      adminCount = 0; // If no count exists, start with 0
+    }
+
+    // Increment the count
+    int updatedCount = adminCount + 1;
+
+    // Update the count in Firestore
 
     LiveChatUserDetailsResponse liveChatUserDetailsResponse =
         LiveChatUserDetailsResponse(
             first_name: fistName,
             last_name: lastName,
+            image_url: imageUrl,
             lastMessage: message,
-            unReadByAdmin: 1,
-            unReadByMerchant: 1);
+            unReadByAdmin: updatedCount,
+        unReadByMerchant: 0);
 
     service.add(liveChatResponse, userId).then((_) {
       service.addUserDetails(liveChatUserDetailsResponse, userId).then((_) {

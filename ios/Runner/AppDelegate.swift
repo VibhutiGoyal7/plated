@@ -12,6 +12,8 @@ import Firebase
    if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
           }
+   // Initialize Firebase
+    FirebaseApp.configure()
     //GMSServices.provideAPIKey("your-google-api-key-here")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
