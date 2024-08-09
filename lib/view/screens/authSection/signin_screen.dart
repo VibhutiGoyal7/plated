@@ -57,8 +57,6 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   void _isValidInput() {
-    const maxDuration = Duration(seconds: 2);
-    //print(input);
     if (_passwordController.text.isNotEmpty &&
         _phoneNoController.text.isNotEmpty &&
         _passwordController.text.length >= 8) {

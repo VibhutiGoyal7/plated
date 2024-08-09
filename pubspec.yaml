@@ -71,6 +71,7 @@ dependencies:
   sqflite: ^2.3.3+1
   floor: ^1.4.2
   device_info_plus: ^10.1.1
+  flutter_broadcasts: ^0.4.0
 
 dev_dependencies:
   flutter_test:
