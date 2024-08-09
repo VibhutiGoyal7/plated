@@ -2,6 +2,7 @@ import 'package:Payrio/utils/Helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as flutter_local_notifications;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,7 +19,13 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
           (RemoteMessage message) {
+
         print("PushNotificationService:: ${message.toString()}");
+        sendBroadcast(
+          BroadcastMessage(
+            name: "de.kevlatus.flutter_broadcasts_example.demo_action",
+          ),
+        );
         _handleMessage(message.data);
       },
     );
@@ -26,6 +33,11 @@ class PushNotificationService {
     FirebaseMessaging.onMessage.listen(
           (RemoteMessage message) {
         print("PushNotificationServiceOnMessage:: ${message.data['status']}");
+        sendBroadcast(
+          BroadcastMessage(
+            name: "de.kevlatus.flutter_broadcasts_example.demo_action",
+          ),
+        );
         _showNotification(message);
       },
     );

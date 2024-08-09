@@ -9,6 +9,7 @@ import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -54,6 +55,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
   List<TransactionDetails?> transactionList = [];
+  BroadcastReceiver receiver = BroadcastReceiver(
+    names: <String>[
+      "de.kevlatus.flutter_broadcasts_example.demo_action",
+    ],
+  );
   final List<OfferResponse> imgList = [
     OfferResponse(
         image:
@@ -87,12 +93,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         daysLeft: "5d left"),
   ];
   final ScrollController _scrollController = ScrollController();
+  late Stream<BroadcastMessage> _commentStream;
 
   @override
   void initState() {
     super.initState();
     imageUrl = "";
     flagImg = "";
+    receiver.start();
+    receiver.messages.listen(print);
+    _commentStream = receiver.messages;
     Helper.getProfileDetails().then((profile) {
       setState(() {
         name = profile?.firstName;
@@ -103,21 +113,17 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       });
     });
 
+    @override
+    void dispose() {
+      receiver.stop();
+      super.dispose();
+    }
+
     Helper.getKycStatus().then((status) {
       dashBoardKycStatus = status;
     });
 
     intializeDatabase();
-
-    /*$FloorPayorioDatabase
-        .databaseBuilder('payorio_database.db')
-        .build()
-        .then((value) async {
-      this.database = value;
-
-
-    });*/
-
     final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
     String? isoCountryCode = systemLocales.first.languageCode;
 
@@ -144,6 +150,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         if (apiResponse.message ==
             Languages.of(context)!.labelInvalidAccessToken) {
           print(apiResponse.message);
+          if (receiver.isListening) {
+            receiver.stop();
+          }
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           Helper.getProfileDetails().then((userDetails) {
@@ -921,6 +930,22 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       ],
                     ),
                   ),
+                ),
+                StreamBuilder<BroadcastMessage>(
+                  initialData: null,
+                  stream: _commentStream,
+                  builder: (context, snapshot) {
+                    print(snapshot.data);
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        // Call your function here with snapshot.data
+                        getDashBoardDataFromApi();
+                      }
+                      return Text('' ?? '');
+                    } else {
+                      return SizedBox();
+                    }
+                  },
                 ),
               ],
             ),

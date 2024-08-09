@@ -78,7 +78,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -87,14 +86,13 @@ import 'languageSection/L10n.dart';
 import 'model/response/initiateP2PResponse.dart';
 import 'model/services/PushNotificationService.dart';
 
-
 //GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   await setupFlutterNotifications();
-  showFlutterNotification(message);
+  //showFlutterNotification(message);
   print('Handling a background message ${message.messageId}');
 }
 
@@ -116,7 +114,7 @@ Future<void> setupFlutterNotifications() async {
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -155,25 +153,28 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await PushNotificationService().setupInteractedMessage();
-
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(MyApp());
-  });
-
+  /*await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);*/
   RemoteMessage? initialMessage =
-  await FirebaseMessaging.instance.getInitialMessage();
+      await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: ${initialMessage}");
   }
 
   await Permission.notification.isDenied.then(
-        (bool value) {
+    (bool value) {
       if (value) {
         Permission.notification.request();
       }
     },
   );
+
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -190,7 +191,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
- /*   FirebaseMessaging.instance.getInitialMessage().then(
+    /*   FirebaseMessaging.instance.getInitialMessage().then(
           (value) => setState(
             () {
               _resolved = true;
