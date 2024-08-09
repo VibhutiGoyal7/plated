@@ -144,7 +144,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${createSupportTicketResponse?.trxId}");
+        print("GetSetUpAccountWidget : ${createSupportTicketResponse?.trxId}");
 
         Navigator.pushReplacementNamed(context, '/SupportScreen');
         return Container(); // Return an empty container as you'll navigate away

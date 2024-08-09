@@ -177,7 +177,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[1].name}");
+        print("GetCountryList : ${countryListResponse?.countries?[1].name}");
         Helper.saveCountryList(countryListResponse?.countries);
 
         setState(() {

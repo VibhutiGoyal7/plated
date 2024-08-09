@@ -93,7 +93,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         daysLeft: "5d left"),
   ];
   final ScrollController _scrollController = ScrollController();
-  late Stream<BroadcastMessage> _commentStream;
 
   @override
   void initState() {
@@ -101,8 +100,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     imageUrl = "";
     flagImg = "";
     receiver.start();
-    receiver.messages.listen(print);
-    _commentStream = receiver.messages;
+    // Listen to messages and print them
+    receiver.messages.listen((message) {
+      getDashBoardDataFromApi();
+    });
+
     Helper.getProfileDetails().then((profile) {
       setState(() {
         name = profile?.firstName;
@@ -112,12 +114,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         amount = profile?.balance;
       });
     });
-
-    @override
-    void dispose() {
-      receiver.stop();
-      super.dispose();
-    }
 
     Helper.getKycStatus().then((status) {
       dashBoardKycStatus = status;
@@ -131,6 +127,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     // Initial setup for 5 checkboxes
   }
 
+  @override
+  void dispose() {
+    receiver.stop();
+    super.dispose();
+  }
+
   Future<Widget> getDashboardData(
       BuildContext context, ApiResponse apiResponse) async {
     DashboardResponse? dashboardResponse =
@@ -141,8 +143,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${dashboardResponse?.customerData?.email}");
-
+        print("GetDashboardData : ${dashboardResponse?.customerData?.email}");
         updateCustomerDashBoardDetails(dashboardResponse);
 
         return Container(); // Return an empty container as you'll navigate away
@@ -193,7 +194,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${kycStatusResponse?.kycStatus}");
+        print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;
         if (kycStatusApi != Languages.of(context)!.statusVerified) {
           isApiLoading = false;
@@ -212,7 +213,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           } else if (nonCapitalizeString(calledShortCut) ==
               nonCapitalizeString("${Languages.of(context)!.labelRequestQR}")) {
             calledShortCut = "";
-             Navigator.pushNamed(context, '/RequestQrScreen');
+            Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -845,8 +846,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                   Row(
                                                                     children: [
                                                                       Icon(
-                                                                          nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusWithdraw}")
-                                                                              || nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusTransfer}")
+                                                                          nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusWithdraw}") || nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusTransfer}")
                                                                               ? Icons
                                                                                   .call_made
                                                                               : Icons
@@ -887,7 +887,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     currencySymbol,
                                                                     "${transactionList[index]?.amount}",
                                                                     capitalizeFirstLetter(
-                                                                        "${transactionList[index]?.transactionType}"),transactionList[index]?.userId , transactionList[index]?.senderId  ),
+                                                                        "${transactionList[index]?.transactionType}"),
+                                                                    transactionList[
+                                                                            index]
+                                                                        ?.userId,
+                                                                    transactionList[
+                                                                            index]
+                                                                        ?.senderId),
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -895,11 +901,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     fontSize:
                                                                         13,
                                                                     color: nonCapitalizeString("${transactionList[index]?.status}") ==
-                                                                        nonCapitalizeString("${Languages.of(context)?.labelInComplete}")
+                                                                            nonCapitalizeString(
+                                                                                "${Languages.of(context)?.labelInComplete}")
                                                                         ? Colors
                                                                             .grey
                                                                         : colorPaymentType(
-                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"),transactionList[index]?.userId , transactionList[index]?.senderId)),
+                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"),
+                                                                            transactionList[index]?.userId,
+                                                                            transactionList[index]?.senderId)),
                                                               ),
                                                               Text(
                                                                 "${convertTime("${transactionList[index]?.createdAt}")}",
@@ -938,22 +947,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       ],
                     ),
                   ),
-                ),
-                StreamBuilder<BroadcastMessage>(
-                  initialData: null,
-                  stream: _commentStream,
-                  builder: (context, snapshot) {
-                    print(snapshot.data);
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.hasData && snapshot.data != null) {
-                        // Call your function here with snapshot.data
-                        getDashBoardDataFromApi();
-                      }
-                      return Text('' ?? '');
-                    } else {
-                      return SizedBox();
-                    }
-                  },
                 ),
               ],
             ),
@@ -1233,7 +1226,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         {
                           calledShortCut =
                               Languages.of(context)!.labelRequestQR,
-                           if (checkKYCStatus())
+                          if (checkKYCStatus())
                             {Navigator.pushNamed(context, '/RequestQrScreen')}
                           else
                             {Navigator.pushNamed(context, '/ChooseDocScreen')}
@@ -1318,6 +1311,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       setState(() {
         isLoading = false;
         isInternetConnected = false;
+        receiver.stop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(Languages.of(context)!.labelNoInternetConnection),
