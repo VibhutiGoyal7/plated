@@ -786,11 +786,13 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
         final imagePath = '$directory/screenshot.png';
         final imageFile = File(imagePath);
         // Write the image data to the file
+        // Write the image data to the file
         await imageFile.writeAsBytes(image);
+        final xFile = XFile(imageFile.path);
 
         // Share the screenshot
-        Share.shareFiles(
-          [imagePath],
+        Share.shareXFiles(
+          [xFile],
           text: 'Hey, I paid $currencySymbol$amount to $receiverName using payorio',
         );
       }

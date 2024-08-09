@@ -105,56 +105,60 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
   }
 
   _buildCard(BuildContext context, String title, Icon icon, bool isDarkMode) {
-    return Container(
-      width: double.infinity,
-      child: isLoading
-          ? Shimmer.fromColors(
-              baseColor: Colors.white38,
-              highlightColor: Colors.grey,
-              child: Container(
-                width: double.infinity,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white38,
-                  borderRadius: BorderRadius.circular(
-                      8.0), // Adjust the radius as needed
+    return Card(
+      elevation: 0,
+      color: isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+      child: Container(
+        width: double.infinity,
+        child: isLoading
+            ? Shimmer.fromColors(
+                baseColor: Colors.white38,
+                highlightColor: Colors.grey,
+                child: Container(
+                  width: double.infinity,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white38,
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Adjust the radius as needed
+                  ),
                 ),
-              ),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 18),
-                      child: icon,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 16,
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+                        child: icon,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.call_made_sharp,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                    size: 18,
+                    ],
                   ),
-                )
-              ],
-            ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.call_made_sharp,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      size: 18,
+                    ),
+                  )
+                ],
+              ),
+      ),
     );
   }
 

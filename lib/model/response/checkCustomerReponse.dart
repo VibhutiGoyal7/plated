@@ -8,6 +8,7 @@ class CheckCustomerResponse {
   String? phoneNumber;
   String? imageUrl;
   String? message;
+  String? amount;
   int? status;
 
   CheckCustomerResponse({
@@ -16,6 +17,7 @@ class CheckCustomerResponse {
      this.phoneNumber,
      this.imageUrl,
     this.message,
+    this.amount,
     this.status,
   });
 

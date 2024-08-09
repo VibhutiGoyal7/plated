@@ -96,12 +96,12 @@ class TransactionDialog {
                                         symbol,
                                         "${transaction?.amount}",
                                         capitalizeFirstLetter(
-                                            "${transaction?.transactionType}")),
+                                            "${transaction?.transactionType}"),transaction?.userId , transaction?.senderId  ),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                         color: "${transaction?.status}" == "in_complete"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
-                                    "${transaction?.transactionType}"))))
+                                    "${transaction?.transactionType}"),transaction?.userId , transaction?.senderId)))
                               ],
                             )
                                 : SizedBox(),

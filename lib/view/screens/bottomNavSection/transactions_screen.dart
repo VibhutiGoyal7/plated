@@ -757,12 +757,12 @@ class TransactionItem extends StatelessWidget {
                       addCurrencySymbolTransaction(
                           symbol,
                           "${transaction.amount}",
-                          capitalizeFirstLetter("${transaction.transactionType}")),
+                          capitalizeFirstLetter("${transaction.transactionType}"),transaction?.userId , transaction?.senderId),
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
                           color: transaction.status == "${Languages.of(context)?.statusInComplete}"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
-                              "${transaction.transactionType}"))),
+                              "${transaction.transactionType}"),transaction?.userId , transaction?.senderId)),
                     ),
                     Text(
                       "${convertTime(

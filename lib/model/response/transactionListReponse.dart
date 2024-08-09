@@ -41,7 +41,9 @@ class TransactionDetails {
   String? phoneNumber;
   String? status;
   String? createdAt;
-  int? customerId;
+  int? userId;
+  int? senderId;
+  int? receiverId;
 
   TransactionDetails({
     required this.id,
@@ -54,7 +56,9 @@ class TransactionDetails {
     required this.phoneNumber,
     required this.status,
     required this.createdAt,
-    required this.customerId,
+    required this.userId,
+    required this.senderId,
+    required this.receiverId,
   });
 
   factory TransactionDetails.fromJson(Map<String, dynamic> json) {
@@ -69,7 +73,9 @@ class TransactionDetails {
       email: json["email"] as String?,
       status: json["status"] as String?,
       createdAt: json["created_at"] as String?,
-      customerId: json["customer_id"] as int?,
+      userId: json["customer_id"] as int?,
+      senderId: json["sender_id"] as int?,
+      receiverId: json["receiver_id"] as int?,
     );
   }
 
@@ -85,7 +91,9 @@ class TransactionDetails {
       "email": email,
       "status": status,
       "created_at": createdAt,
-      "customer_id": customerId,
+      "customer_id": userId,
+      "sender_id": senderId,
+      "receiver_id": receiverId,
     };
   }
 }

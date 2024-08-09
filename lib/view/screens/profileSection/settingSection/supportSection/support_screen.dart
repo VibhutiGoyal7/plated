@@ -784,11 +784,9 @@ class TransactionItem extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                        addCurrencySymbolTransaction(
+                        addCurrencySymbol(
                             symbol,
-                            "${transaction.amount}",
-                            capitalizeFirstLetter(
-                                "${transaction.transactionTypeId}")),
+                            "${transaction.amount}"),
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,

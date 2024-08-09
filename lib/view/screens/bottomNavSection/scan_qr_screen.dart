@@ -25,6 +25,8 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   var flashLightOff = "true";
   static const maxDuration = Duration(seconds: 2);
+  String amount = "";
+  String username = "";
 
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -140,7 +142,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     }
   }
 
-  Future<void> _initiateTransaction(String userName) async {
+  Future<void> _initiateTransaction(String data) async {
     setState(() {
       isLoading = true;
     });
@@ -156,14 +158,23 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         );
       });
     } else {
+      if(data.contains("-")){
+      List<String> splitData = data.split("-");
+
+      username = splitData[0];
+       amount = splitData[1];
+      }else{
+        username = data;
+      }
+
       CheckCustomerRequest request =
-          CheckCustomerRequest(username: userName, phoneNo: null);
+          CheckCustomerRequest(username: username, phoneNo: null);
       await Provider.of<MainViewModel>(context, listen: false)
           .checkCustomerByUsername(
               "api/v1/app/customers/check_customer_by_username", request);
       ApiResponse apiResponse =
           Provider.of<MainViewModel>(context, listen: false).response;
-      initiateCheckCustomerResponse(context, apiResponse, userName);
+      initiateCheckCustomerResponse(context, apiResponse, username);
     }
   }
 
@@ -179,6 +190,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("pushNamed $userName");
+        checkCustomerResponse?.amount =amount;
         Navigator.pushNamed(context, '/TransferScreen',
             arguments: checkCustomerResponse);
         // Navigate to the new screen after receiving the response

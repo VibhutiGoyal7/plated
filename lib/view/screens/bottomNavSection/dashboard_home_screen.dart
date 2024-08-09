@@ -203,7 +203,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           } else if (nonCapitalizeString(calledShortCut) ==
               nonCapitalizeString("${Languages.of(context)!.labelRequestQR}")) {
             calledShortCut = "";
-            // Navigator.pushNamed(context, '/RequestQrScreen');
+             Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -878,7 +878,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     currencySymbol,
                                                                     "${transactionList[index]?.amount}",
                                                                     capitalizeFirstLetter(
-                                                                        "${transactionList[index]?.transactionType}")),
+                                                                        "${transactionList[index]?.transactionType}"),transactionList[index]?.userId , transactionList[index]?.senderId  ),
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -890,7 +890,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                         ? Colors
                                                                             .grey
                                                                         : colorPaymentType(
-                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"))),
+                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"),transactionList[index]?.userId , transactionList[index]?.senderId)),
                                                               ),
                                                               Text(
                                                                 "${convertTime("${transactionList[index]?.createdAt}")}",
@@ -1208,10 +1208,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         {
                           calledShortCut =
                               Languages.of(context)!.labelRequestQR,
-                          /* if (checkKYCStatus())
+                           if (checkKYCStatus())
                             {Navigator.pushNamed(context, '/RequestQrScreen')}
                           else
-                            {Navigator.pushNamed(context, '/ChooseDocScreen')}*/
+                            {Navigator.pushNamed(context, '/ChooseDocScreen')}
 
                           //_getKycStatus()
                         }

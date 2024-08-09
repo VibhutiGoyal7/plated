@@ -34,6 +34,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
 
   bool isUsernameRetrieved = false;
   String otp = '';
+  String currencySymbol = '';
   bool phoneNumberValid = false;
   bool isDarkMode = false;
   String selectedItem = "";
@@ -54,6 +55,11 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
         isUsernameRetrieved = true;
       });
     });
+    Helper.getCurrencySymbol().then((symbol) {
+      setState(() {
+        currencySymbol = "${symbol}";
+      });
+    });
   }
 
   @override
@@ -72,56 +78,60 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Stack(children: [
-      Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 65,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      GestureDetector(
+        onTap: ()=> hideKeyBoard(),
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 65,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                hideKeyBoard();
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              "${Languages.of(context)?.labelRequestQR}",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+            ),
           ),
-          title: Text(
-            "${Languages.of(context)?.labelRequestQR}",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-          ),
-        ),
-        //backgroundColor: Theme.of(context).backgroundColor,
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Center(
-                      child: Image(
-                        alignment: Alignment.topLeft,
-                        //width: screenWidth*0.8,
-                        height: screenHeight * 0.2,
-                        image: AssetImage("assets/requestQR.png"),
+          //backgroundColor: Theme.of(context).backgroundColor,
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Image(
+                          alignment: Alignment.topLeft,
+                          //width: screenWidth*0.8,
+                          height: screenHeight * 0.2,
+                          image: AssetImage("assets/requestQR.png"),
+                        ),
                       ),
-                    ),
-                    _buildAddMoneyInput(context, "0.00"),
-                    _buildFooter(context)
-                  ],
+                      _buildAddMoneyInput(context, "0.00"),
+                      _buildFooter(context)
+                    ],
+                  ),
                 ),
               ),
-            ),
-            isLoading
-                ? Stack(
-                    children: [
-                      // Block interaction
-                      ModalBarrier(
-                          dismissible: false,
-                          color: Colors.transparent),
-                      // Loader indicator
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  )
-                : SizedBox(),
-          ],
+              isLoading
+                  ? Stack(
+                      children: [
+                        // Block interaction
+                        ModalBarrier(
+                            dismissible: false,
+                            color: Colors.transparent),
+                        // Loader indicator
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    )
+                  : SizedBox(),
+            ],
+          ),
         ),
       ),
     ]);
@@ -221,7 +231,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                 print(_amountController.text);
                 if (isValid) {
                   data = RequestQRData(amount: '${_amountController.text}', username: '$username');
-                  generateQrCode(username);
+                  generateQrCode("$username-${_amountController.text}");
 
                 /*  setState(() {
                     isLoading = true;
@@ -308,6 +318,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
         print(qrCodeImage);
         isQrCodeGenerated = true;
       });
+      hideKeyBoard();
       _showModal(context,);
     }
   }
@@ -447,8 +458,13 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                       )
                     ],
                   ),*/
+                  Text(
+                    "Requested amount : ${addCurrencySymbol(currencySymbol,"${_amountController.text}", )}",
+                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
+                  ),
                   SizedBox(
-                    height: 15,
+                    height: 20,
                   ),
               isUsernameRetrieved && isQrCodeGenerated
                   ? //Text("data")

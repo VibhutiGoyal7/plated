@@ -45,6 +45,11 @@ class _TransferScreenState extends State<TransferScreen> {
     name = "${widget.data?.fullName}";
     phoneNo = "${widget.data?.phoneNumber}";
     imageUrl = "${widget.data?.imageUrl}";
+    if(widget.data?.amount !="" &&widget.data?.amount != null &&widget.data?.amount?.isNotEmpty == true){
+      _inputController.text = "${widget.data?.amount}";
+      amount = "${widget.data?.amount}";
+      inputValid =true;
+    }
     print("object ${userName}");
     Helper.getUserBalance().then((balance) {
       setState(() {

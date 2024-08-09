@@ -151,13 +151,13 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                 addCurrencySymbolTransaction(
                                     countryCurrencySymbol,
                                     "${transactionDetails?.amount}",
-                                    capitalizeFirstLetter("${transactionDetails?.transactionType}")),
+                                    capitalizeFirstLetter("${transactionDetails?.transactionType}"), transactionDetails?.userId , transactionDetails?.senderId  ),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 32,
                                     color: transactionDetails?.status == "${Languages.of(context)?.statusInComplete}"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
-                                        "${transactionDetails?.transactionType}")))
-                              ),
+                                        "${transactionDetails?.transactionType}"),transactionDetails?.userId , transactionDetails?.senderId)))
+                              ,
                               Text(
                                   "${convertDateTimeFormat("${transactionDetails?.createdAt}")}",
                                   style: TextStyle(
@@ -176,7 +176,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        "${transactionDetails?.customerId}" != "null"
+                        "${transactionDetails?.userId}" != "null"
                             ? Column(
                                 children: [
                                   Row(
@@ -192,7 +192,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                             fontWeight: FontWeight.normal),
                                       ),
                                       Text(
-                                        "${transactionDetails?.customerId}",
+                                        "${transactionDetails?.userId}",
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,

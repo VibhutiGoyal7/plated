@@ -20,7 +20,7 @@ class LanguageEn extends Languages {
   String get labelAccountDetails => "Account Details";
 
   @override
-  String get labelAddMoney => "Add";
+  String get labelAddMoney => "Add Money";
 
   @override
   String get labelAddedCard => "Added Cards";

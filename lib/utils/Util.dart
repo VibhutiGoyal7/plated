@@ -26,6 +26,20 @@ String nonCapitalizeString(String input) {
   return input.toLowerCase();
 }
 
+bool checkMoneyOut(String transactionType, int? senderId, int? userId){
+  if(nonCapitalizeString(transactionType) == nonCapitalizeString("transfer")){
+    if(userId == senderId)
+      return true;
+    else
+      return false;
+  }else if(nonCapitalizeString(transactionType) == nonCapitalizeString("withdraw")){
+    return true;
+  }else{
+    return false;
+  }
+  
+}
+
 String convertDateFormat(String input) {
   if (input.isEmpty) {
     return input;
@@ -172,7 +186,7 @@ double extractFloat(String str) {
 }
 
 String addCurrencySymbolTransaction(
-    String? currencySymbol, String input, String requestType) {
+    String? currencySymbol, String input, String requestType, int? userId, int? senderId) {
   if (input.isEmpty) {
     return input;
   }
@@ -181,15 +195,15 @@ String addCurrencySymbolTransaction(
       ? amount =
           "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
       : "${double.parse("${input}").toStringAsFixed(2)}";
-  if (requestType == "Deposit") {
-    amount = "+$amount";
-  } else if (requestType == "Withdraw") {
+  if (checkMoneyOut(requestType, senderId, userId)) {
     amount = "-$amount";
-  } else if (requestType == "Transfer") {
+  } else/* if (requestType == "Withdraw")*/ {
+    amount = "+$amount";
+  } /*else if (requestType == "Transfer") {
     amount = "-$amount";
   } else if (requestType == "In complete") {
     amount = "-$amount";
-  }
+  }*/
   return amount;
 }
 
@@ -207,17 +221,17 @@ colorStatus(String status, BuildContext context) {
   return color;
 }
 
-colorPaymentType(String status) {
+colorPaymentType(String status, int? userId, int? senderId) {
   Color color = Colors.black;
-  if (status == "Deposit") {
-    color = Colors.green;
-  } else if (status == "Withdraw") {
+  if (checkMoneyOut(status, senderId, userId)) {
     color = Colors.red;
-  } else if (status == "Transfer") {
+  } else /*if (status == "Withdraw")*/ {
+    color = Colors.green;
+  } /*else if (status == "Transfer") {
     color = Colors.red;
   } else if (status == "In complete") {
     color = Colors.grey;
-  }
+  }*/
   return color;
 }
 
