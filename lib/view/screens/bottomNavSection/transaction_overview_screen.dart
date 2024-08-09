@@ -22,6 +22,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
   bool isTPINSelected = true;
   String amount = "0.00";
   String paymentValidateBy = "tpin";
+  late int? userId;
   bool isDarkMode = false;
   var name;
   var countryCurrencySymbol;
@@ -38,7 +39,9 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
   void initState() {
     super.initState();
     inputValid = false;
-    Helper.getProfileDetails().then((profile) {});
+    Helper.getProfileDetails().then((profile) {
+      userId = profile?.userId;
+    });
     Helper.getUserBalance().then((balance) {
       setState(() {
         countryBalance = balance!;
@@ -151,12 +154,12 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                                 addCurrencySymbolTransaction(
                                     countryCurrencySymbol,
                                     "${transactionDetails?.amount}",
-                                    capitalizeFirstLetter("${transactionDetails?.transactionType}"), transactionDetails?.userId , transactionDetails?.senderId  ),
+                                    capitalizeFirstLetter("${transactionDetails?.transactionType}"), userId , transactionDetails?.senderId  ),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 32,
                                     color: transactionDetails?.status == "${Languages.of(context)?.statusInComplete}"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
-                                        "${transactionDetails?.transactionType}"),transactionDetails?.userId , transactionDetails?.senderId)))
+                                        "${transactionDetails?.transactionType}"),userId , transactionDetails?.senderId)))
                               ,
                               Text(
                                   "${convertDateTimeFormat("${transactionDetails?.createdAt}")}",

@@ -26,6 +26,7 @@ class TransactionDialog {
     required BuildContext context,
     required TransactionDetails? transaction,
     required String symbol,
+    required int? userId,
   }) {
     return showDialog<void>(
       barrierDismissible: true,
@@ -96,12 +97,12 @@ class TransactionDialog {
                                         symbol,
                                         "${transaction?.amount}",
                                         capitalizeFirstLetter(
-                                            "${transaction?.transactionType}"),transaction?.userId , transaction?.senderId  ),
+                                            "${transaction?.transactionType}"),userId , transaction?.senderId  ),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                         color: "${transaction?.status}" == "in_complete"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
-                                    "${transaction?.transactionType}"),transaction?.userId , transaction?.senderId)))
+                                    "${transaction?.transactionType}"),userId , transaction?.senderId)))
                               ],
                             )
                                 : SizedBox(),

@@ -24,6 +24,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   String amount = "";
   String status = "";
   String requestType = "";
+  late int? userId;
   bool expanded = false;
   bool inputValid = false;
   bool filterApplied = false;
@@ -57,6 +58,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     Helper.getUserBalance().then((balance) {
       setState(() {
         currentBalance = balance;
+      });
+    });
+    Helper.getProfileDetails().then((profile) {
+      setState(() {
+        userId = profile?.userId;
       });
     });
     Helper.getCurrencySymbol().then((symbol) {
@@ -372,6 +378,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                                               transaction,
                                                           symbol:
                                                               countryCurrencySymbol,
+                                                          userId: userId,
                                                         );
                                                       }).toList(),
                                                     ],
@@ -657,8 +664,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 class TransactionItem extends StatelessWidget {
   final TransactionDetails transaction;
   final String symbol;
+  final int?  userId;
 
-  TransactionItem({required this.transaction, required this.symbol});
+  TransactionItem({required this.transaction, required this.symbol, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -757,12 +765,12 @@ class TransactionItem extends StatelessWidget {
                       addCurrencySymbolTransaction(
                           symbol,
                           "${transaction.amount}",
-                          capitalizeFirstLetter("${transaction.transactionType}"),transaction?.userId , transaction?.senderId),
+                          capitalizeFirstLetter("${transaction.transactionType}"), userId , transaction?.senderId),
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
                           color: transaction.status == "${Languages.of(context)?.statusInComplete}"? Colors.grey : colorPaymentType(capitalizeFirstLetter(
-                              "${transaction.transactionType}"),transaction?.userId , transaction?.senderId)),
+                              "${transaction.transactionType}"),userId , transaction?.senderId)),
                     ),
                     Text(
                       "${convertTime(

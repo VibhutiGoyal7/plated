@@ -39,6 +39,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   String? country;
   String calledShortCut = "";
   String? name = "";
+  late int? userId;
   var imageUrl;
   var flagImg;
   bool isAmountVisible = true;
@@ -110,6 +111,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         currencySymbol = profile?.countryCurrencySymbol;
         country = profile?.countryName;
         amount = profile?.balance;
+        userId = profile?.userId;
       });
     });
 
@@ -168,6 +170,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
               dashBoardKycStatus = userDetails?.kycStatus;
               print("imageUrl${imageUrl}");
             });
+            Helper.saveUserId("${userDetails?.userId}");
           });
         }
         return Center(
@@ -782,7 +785,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                           transactionList[
                                                               index],
                                                       symbol:
-                                                          "${currencySymbol}");
+                                                          "${currencySymbol}",userId : userId);
+
                                                 },
                                                 child: Card(
                                                   elevation: 0,
@@ -887,7 +891,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     currencySymbol,
                                                                     "${transactionList[index]?.amount}",
                                                                     capitalizeFirstLetter(
-                                                                        "${transactionList[index]?.transactionType}"),transactionList[index]?.userId , transactionList[index]?.senderId  ),
+                                                                        "${transactionList[index]?.transactionType}"),userId , transactionList[index]?.senderId  ),
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -899,7 +903,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                         ? Colors
                                                                             .grey
                                                                         : colorPaymentType(
-                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"),transactionList[index]?.userId , transactionList[index]?.senderId)),
+                                                                            capitalizeFirstLetter("${transactionList[index]?.transactionType}"),userId , transactionList[index]?.senderId)),
                                                               ),
                                                               Text(
                                                                 "${convertTime("${transactionList[index]?.createdAt}")}",
