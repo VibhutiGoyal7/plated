@@ -59,7 +59,7 @@ dependencies:
   firebase_messaging: ^15.0.0
   flutter_local_notifications: ^17.2.1
   webview_flutter: ^4.8.0
-  share_plus: ^6.0.0
+  share_plus: ^10.0.0
   connectivity_plus: ^6.0.3
   smooth_page_indicator: ^1.1.0
   dropdown_button2: ^2.3.9
@@ -70,7 +70,7 @@ dependencies:
   flutter_keyboard_visibility: ^6.0.0
   sqflite: ^2.3.3+1
   floor: ^1.4.2
-  device_info_plus: ^8.0.0
+  device_info_plus: ^10.1.1
 
 dev_dependencies:
   flutter_test:

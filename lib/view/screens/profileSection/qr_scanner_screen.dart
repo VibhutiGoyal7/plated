@@ -257,8 +257,9 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       final tempDir = await getTemporaryDirectory();
       final file = await File('${tempDir.path}/qr_code.png').create();
       await file.writeAsBytes(pngBytes);
-
-      await Share.shareFiles([file.path], text: 'Here is my QR code');
+       // Create an XFile from the file path
+      final xFile = XFile(file.path);
+      await Share.shareXFiles([xFile], text: 'Here is my QR code');
     } catch (e) {
       print(e.toString());
     }
