@@ -4,6 +4,7 @@ import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
+import 'package:Payrio/model/request/notificationListRequest.dart';
 import 'package:Payrio/model/request/saveAddressRequest.dart';
 import 'package:Payrio/model/request/transactionProviderListRequest.dart';
 import 'package:Payrio/model/request/serviceTypeListRequest.dart';
@@ -22,6 +23,7 @@ import 'package:Payrio/model/response/fetchKycDocResponse.dart';
 import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
+import 'package:Payrio/model/response/notificationListResponse.dart';
 import 'package:Payrio/model/response/transactionProviderListReponse.dart';
 import 'package:Payrio/model/response/payorioMethodListReponse.dart';
 import 'package:Payrio/model/response/phoneVerifyResponse.dart';
@@ -568,6 +570,27 @@ class MainViewModel with ChangeNotifier {
         _apiResponse = ApiResponse.completed(transactionListResponse);
       } else {
         _apiResponse = ApiResponse.error(transactionListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> notificationListData(
+      String value, NotificationListRequest notificationListRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${notificationListRequest.notificationType}");
+    notifyListeners();
+    try {
+      NotificationListResponse notificationListResponse = await MainRepository()
+          .notificationListData(value, notificationListRequest);
+      if (notificationListResponse.status  == 200 || notificationListResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(notificationListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(notificationListResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

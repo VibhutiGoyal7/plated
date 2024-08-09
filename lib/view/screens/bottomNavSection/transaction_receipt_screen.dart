@@ -785,8 +785,6 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
         // Create a file to store the screenshot
         final imagePath = '$directory/screenshot.png';
         final imageFile = File(imagePath);
-        // Write the image data to the file
-        // Write the image data to the file
         await imageFile.writeAsBytes(image);
         final xFile = XFile(imageFile.path);
 

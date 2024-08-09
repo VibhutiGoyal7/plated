@@ -990,10 +990,10 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
   Future<void> _selectDateTime(BuildContext context) async {
     final DateTime? selectedDate = await showDatePicker(
         context: context,
-        initialDate:DateTime.now().subtract(Duration(days: 365*18)),
-        firstDate: DateTime(1950),
+        initialDate:DateTime.now(),
+        firstDate: DateTime(1960),
         //DateTime.now() - not to allow to choose before today.
-        lastDate: DateTime.now().subtract(Duration(days: 365*18)),
+        lastDate: DateTime.now(),
         helpText: "${Languages.of(context)?.labelSelectDob}",
         confirmText: "${Languages.of(context)?.labelConfirm}",
         errorFormatText: '${Languages.of(context)?.labelEnterValidDate}',

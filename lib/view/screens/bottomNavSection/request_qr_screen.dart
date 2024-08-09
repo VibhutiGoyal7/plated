@@ -6,8 +6,11 @@ import 'package:Payrio/model/requestQRData.dart';
 import 'package:Payrio/theme/AppColor.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/setting_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:image/image.dart' as img;
@@ -39,6 +42,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
   bool isDarkMode = false;
   String selectedItem = "";
   final _repaintBoundaryKey = GlobalKey();
+  ScreenshotController screenshotController = ScreenshotController();
 
   final TextEditingController _amountController = TextEditingController();
   List<TextEditingController> _controllers =
@@ -343,147 +347,74 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  /*GestureDetector(
-                    onTap: () => {},
-                    child: imageUrl == ""
-                        ? Container(
-                      height: 60,
-                      width: 60,
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColor.WHITE,
-                        backgroundImage:
-                        AssetImage("assets/profile_user.png"),
-                      ),
-                    )
-                        : ClipRRect(
-                        borderRadius: BorderRadius.circular(100.0),
-                        child: Image.network(
-                          imageUrl,
-                          height: 60,
-                          width: 60,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context,
-                              Object exception, StackTrace? stackTrace) {
-                            // You can return any widget here to display in case of an error
-                            return Container(
-                              height: 60,
-                              width: 60,
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundColor: AppColor.WHITE,
-                                backgroundImage: AssetImage(
-                                  "assets/profile_user.png",
+                  Screenshot(
+                    controller: screenshotController,
+                    child: Container(
+                      padding: EdgeInsets.all(12),
+                      color: isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                      child: IntrinsicWidth(
+                        child: Column(
+                          children: [
+                            Text(
+                              "Requested amount",
+                              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                            SizedBox(height: 2,),
+                            Text("${addCurrencySymbol(currencySymbol,"${_amountController.text}", )}",
+                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            isUsernameRetrieved && isQrCodeGenerated
+                                ? //Text("data")
+                            qrCodeImage != null
+                                ? Image.memory(qrCodeImage!,
+                            )
+                                : Text("${Languages.of(context)?.labelErrorLoadingQR}")
+                                : Shimmer.fromColors(
+                              baseColor: Colors.white38,
+                              highlightColor: Colors.grey,
+                              child: Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  color: Colors.white38,
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
-                            );
-                          },
-                          loadingBuilder: (BuildContext context,
-                              Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.black54,
-                                highlightColor: Colors.black45,
-                                child: Container(
-                                  height: 60,
-                                  width: 60,
-                                  color: Colors.white,
-                                ),
-                              );
-                            }
-                          },
-                        )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  isLoading
-                      ? Shimmer.fromColors(
-                    baseColor: Colors.white38,
-                    highlightColor: Colors.grey,
+                  
+                  SizedBox(height: 20,),
+                  GestureDetector(
+                    onTap: (){
+                      _captureAndSharePng(context);
+                    },
                     child: Container(
-                      width: 100,
-                      height: 20,
                       decoration: BoxDecoration(
-                        color: Colors.white38,
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the radius as needed
+                        color: AppColor.PRIMARY,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: AppColor.PRIMARY, width: 0.5)
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share, color: AppColor.WHITE,),
+                          SizedBox(width: 2,),
+                          Text("Share QR", style: TextStyle(color: AppColor.WHITE),),
+                        ],
                       ),
                     ),
                   )
-                      : _buildLabelText(context, customerName.toString(), 14.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      isLoading
-                          ? Shimmer.fromColors(
-                        baseColor: Colors.white38,
-                        highlightColor: Colors.grey,
-                        child: Container(
-                          width: 100,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.white38,
-                            borderRadius: BorderRadius.circular(
-                                8.0), // Adjust the radius as needed
-                          ),
-                        ),
-                      )
-                          : Text(
-                        userName,
-                        style: TextStyle(fontSize: 14.0),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      isLoading
-                          ? SizedBox()
-                          : GestureDetector(
-                        onTap: () => {
-                          copyTextToClipboard(userName.toString()),
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                Text("Text copied to clipboard")),
-                          )
-                        },
-                        child: Icon(
-                          Icons.copy,
-                          size: 16,
-                        ),
-                      )
-                    ],
-                  ),*/
-                  Text(
-                    "Requested amount : ${addCurrencySymbol(currencySymbol,"${_amountController.text}", )}",
-                    style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-              isUsernameRetrieved && isQrCodeGenerated
-                  ? //Text("data")
-              qrCodeImage != null
-                  ? Image.memory(qrCodeImage!,
-              )
-                  : Text("${Languages.of(context)?.labelErrorLoadingQR}")
-                  : Shimmer.fromColors(
-                baseColor: Colors.white38,
-                highlightColor: Colors.grey,
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.white38,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
                 ],
               ),
             );
@@ -492,4 +423,30 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
       },
     );
   }
+
+
+  Future<void> _captureAndSharePng(BuildContext context) async {
+    try {
+      final image = await screenshotController.capture();
+
+      if (image != null) {
+        // Get the temporary directory
+        final directory = (await getApplicationDocumentsDirectory()).path;
+        // Create a file to store the screenshot
+        final imagePath = '$directory/screenshot.png';
+        final imageFile = File(imagePath);
+        // Write the image data to the file
+        await imageFile.writeAsBytes(image);
+        final xFile = XFile(imageFile.path);
+        // Share the screenshot
+        Share.shareXFiles(
+          [xFile],
+          text: 'Hey, I request you to pay ${addCurrencySymbol(currencySymbol,"${_amountController.text}")}',
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
 }

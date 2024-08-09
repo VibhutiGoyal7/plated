@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Payrio/utils/Helper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,20 +25,6 @@ String nonCapitalizeString(String input) {
     return input;
   }
   return input.toLowerCase();
-}
-
-bool checkMoneyOut(String transactionType, int? senderId, int? userId){
-  if(nonCapitalizeString(transactionType) == nonCapitalizeString("transfer")){
-    if(userId == senderId)
-      return true;
-    else
-      return false;
-  }else if(nonCapitalizeString(transactionType) == nonCapitalizeString("withdraw")){
-    return true;
-  }else{
-    return false;
-  }
-  
 }
 
 String convertDateFormat(String input) {
@@ -183,6 +170,21 @@ double extractFloat(String str) {
   } else {
     throw FormatException('No floating-point number found in the string');
   }
+}
+
+bool checkMoneyOut(String transactionType, int? senderId, int? userId){
+
+  if(nonCapitalizeString(transactionType) == nonCapitalizeString("transfer")){
+    if(userId== senderId){
+      return true;}
+    else{
+      return false;}
+  }else if(nonCapitalizeString(transactionType) == nonCapitalizeString("withdraw")){
+    return true;
+  }else{
+    return false;
+  }
+
 }
 
 String addCurrencySymbolTransaction(
