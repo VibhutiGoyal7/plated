@@ -256,12 +256,12 @@ class MainViewModel with ChangeNotifier {
   }
 
 
-  Future<void> putMultiFormResponse(String value, File file) async {
+  Future<void> putMultiFormResponse(String value, File file ,String firstName,String lastName,String dob) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
       ProfileResponse profileResponse =
-          await MainRepository().putMultiFormResponse(value, file);
+          await MainRepository().putMultiFormResponse(value, file ,firstName, lastName, dob);
       print("Yess" + profileResponse.firstName.toString());
       if (profileResponse.status  == 200 || profileResponse.status == 201) {
         _apiResponse = ApiResponse.completed(profileResponse);

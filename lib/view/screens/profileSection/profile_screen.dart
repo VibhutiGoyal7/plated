@@ -696,6 +696,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
   }
+/*
 
   Future<void> _uploadProfilePic(File? file) async {
     await Future.delayed(Duration(milliseconds: 2));
@@ -706,6 +707,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Provider.of<MainViewModel>(context, listen: false).response;
     getProfileResponse(context, apiResponse);
   }
+*/
 
   _showPicker({required BuildContext context}) {
     showModalBottomSheet(
@@ -749,7 +751,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           await _resizeAndCompressImage(galleryFile as File, 800);
       if (compressedFile != null) {
         setState(() {
-          _uploadProfilePic(compressedFile);
+          //_uploadProfilePic(compressedFile);
         });
       } else {
         print('Compression failed.');

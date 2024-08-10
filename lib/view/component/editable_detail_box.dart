@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class DetailBox extends StatelessWidget  {
+class EditableDetailBox extends StatelessWidget  {
 
   late final String heading;
   late final String subHeading;
   late final double subHeadingTextSize;
   late final double headingTextSize;
   late final IconData icon;
+  late final TextEditingController controller;
+  late final Function isInputValid;
 
-  DetailBox({required this.heading,required this.subHeading,required this.icon,required this.headingTextSize,required this.subHeadingTextSize});
+  EditableDetailBox({required this.heading,required this.subHeading,required this.icon,required this.headingTextSize,required this.subHeadingTextSize});
 
 
   Widget build(BuildContext context)
@@ -41,17 +45,35 @@ class DetailBox extends StatelessWidget  {
                     width: 10,
                   ),
                   Align(
-                    child: Text(
+                    child:
+                    TextField(
+                      style: TextStyle(fontSize: 15.0),
+                      controller: controller,
+                      textAlignVertical: TextAlignVertical.center,
+                      onChanged: (value) {
+                        isInputValid();
+                      },
+                      onSubmitted: (value) {},
+                      keyboardType: TextInputType.visiblePassword,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: heading,
+                        hintStyle: TextStyle(color: Colors.grey),
+
+                      ),
+                    )
+                    /*Text(
                       subHeading.isEmpty ? "" : "${subHeading}",
                       style: TextStyle(
                         fontSize:subHeadingTextSize,
                         fontWeight: FontWeight.normal,
-                        /* color: value.isEmpty
+                        *//* color: value.isEmpty
                           ? Colors.grey
                           : isDarkMode ? Colors.white : Colors.black,
-                                */
+                                *//*
                       ),
-                    ),
+                    ),*/
                   ),
                 ],
               ),

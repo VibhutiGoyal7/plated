@@ -147,8 +147,8 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<ProfileResponse> putMultiFormResponse(String value, File file) async {
-    dynamic response = await _payrioService.putMultiFormResponse(value, file);
+  Future<ProfileResponse> putMultiFormResponse(String value, File file,String firstName,String lastName,String dob) async {
+    dynamic response = await _payrioService.putMultiFormResponse(value, file, firstName, lastName, dob);
     print(value);
     final jsonData = response;
     print(jsonData);
