@@ -2,6 +2,7 @@ import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:floor/floor.dart';
 
 import '../response/dashboardResponse.dart';
+import '../response/notificationListResponse.dart';
 
 @dao
 abstract class DashboardTransactionDao {
@@ -36,4 +37,16 @@ abstract class CustomerDataDao {
 
   @Query('DELETE FROM CustomerData')
   Future<void> clearAllCustomerDetails();
+}
+
+@dao
+abstract class NotificationDao {
+  @Query('SELECT * FROM NotificationDetail WHERE notificationType = :type ORDER BY createdAt DESC LIMIT :limit OFFSET :offset')
+  Future<List<NotificationDetail>> fetchNotifications(String type, int limit, int offset);
+
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertNotification(NotificationDetail notification);
+
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertNotifications(List<NotificationDetail> notifications);
 }

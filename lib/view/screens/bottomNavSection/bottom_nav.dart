@@ -239,17 +239,11 @@ class _BottomNavState extends State<BottomNav>
     if (authenticated) {
       await Helper.saveUserAuthenticated(true);
       print("User authenticated successfully.");
-      //ToastComponent.showToast(context: context, message: "User authenticated successfully.");
-      // Proceed with authorized action
-      // For example:
-      // Navigator.pushReplacementNamed(context, '/home');
+
     } else {
       await Helper.saveUserAuthenticated(true);
-      // User cancelled authentication
       print("User cancelled authentication.");
-      //ToastComponent.showToast(context: context, message: "User cancelled authentication.");
-      // Close the app or show a message and handle accordingly
-      //SystemNavigator.pop(); // This will close the app
+
     }
   }
 }

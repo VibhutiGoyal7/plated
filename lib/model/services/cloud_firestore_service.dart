@@ -62,25 +62,6 @@ class CloudFirestoreService {
   }
 
   // get all `user` collection's documents
-  Stream<int> getMerchantCount(String userId) {
-    return db
-        .collection('support_chat')
-        .doc("customer")
-        .collection("user_id")
-        .doc(userId)
-        .collection("messages")
-        .snapshots()
-        .map((snapshot) {
-      // Assuming unread messages have a specific field or status, e.g., 'isRead: false'
-      int unreadCount = snapshot.docs
-          .where((doc) => doc.data()['isRead'] == false) // Adjust the condition based on your data structure
-          .length;
-
-      return unreadCount;
-    });
-  }
-
-  // get all `user` collection's documents
   Future<int?> getUnReadByAdminCount(String userId) async {
     DocumentReference userDocRef = db
         .collection('support_chat')

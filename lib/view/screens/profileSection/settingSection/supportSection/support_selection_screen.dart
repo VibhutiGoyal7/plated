@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../../model/services/cloud_firestore_service.dart';
+import '../../../../../utils/Helper.dart';
 
 class SupportSelectionScreen extends StatefulWidget {
   @override
@@ -14,41 +15,32 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
   bool isLoading = false;
   String kycStatus = "";
   String amount = "";
+  String userId = "";
   bool expanded = false;
   bool inputValid = false;
   final tokenInputController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   late CloudFirestoreService service;
   int messageCount = 0;
-  late Stream<int?> _commentStream;
 
   @override
   void initState() {
     super.initState();
     inputValid = false;
     service = CloudFirestoreService(FirebaseFirestore.instance);
-    //_commentStream = service.getMerchantCount(userId);
-    displayUnReadByMerchant("3");
+
+    Helper.getProfileDetails().then((profile) {
+      setState(() {
+        userId = "${profile?.userId}";
+        displayUnReadByMerchant(userId);
+      });
+    });
   }
 
   @override
   void dispose() {
     tokenInputController.dispose();
     super.dispose();
-  }
-
-  void _isValidInput() {
-    //print(input);
-    if (_amountController.text.isNotEmpty &&
-        _amountController.text.length >= 2) {
-      setState(() {
-        inputValid = true;
-      });
-    } else {
-      setState(() {
-        inputValid = false;
-      });
-    }
   }
 
   @override
@@ -106,13 +98,12 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
                 //_showPicker(context: context);
                 Navigator.pushNamed(context, "/LiveChatListScreen");
               },
-              child: _buildCard(
-                  context, "Live Chat", Icon(Icons.mark_chat_unread_outlined), isDarkMode),
+              child: _buildCard(context, "Live Chat",
+                  Icon(Icons.mark_chat_unread_outlined), isDarkMode),
             ),
           ]),
         )));
   }
-
 
   void displayUnReadByMerchant(String userId) async {
     int? unReadCount = await service.getUnReadByMerchantCount(userId);
@@ -170,69 +161,42 @@ class _SupportSelectionScreenState extends State<SupportSelectionScreen> {
                       ),
                     ],
                   ),
-                  title != "Live Chat" ?
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.call_made_sharp,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      size: 18,
-                    ),
-                  ) :
-                  messageCount > 0 ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 20,
-                          width: 20,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                          child: Text("$messageCount", style: TextStyle(
-                            color: AppColor.WHITE
-                          ),),
-                        ),
-                      ) :  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.call_made_sharp,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      size: 18,
-                    ),
-                  )
+                  title != "Live Chat"
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.call_made_sharp,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            size: 18,
+                          ),
+                        )
+                      : messageCount > 0
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green),
+                                child: Text(
+                                  "$messageCount",
+                                  style: TextStyle(color: AppColor.WHITE),
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.call_made_sharp,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                                size: 18,
+                              ),
+                            )
                 ],
               ),
       ),
-    );
-  }
-
-  _showPicker({required BuildContext context}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.attach_money),
-                title: const Text('A Bank'),
-                onTap: () {
-                  //getImage(ImageSource.gallery);
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context, "/AddMoneyScreen");
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.attach_money),
-                title: const Text('B Bank'),
-                onTap: () {
-                  //getImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context, "/AddMoneyScreen");
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
