@@ -55,6 +55,7 @@ import 'package:Payrio/view/screens/profileSection/personal_data_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
 import 'package:Payrio/view/screens/profileSection/qr_scanner_screen.dart';
+import 'package:Payrio/view/screens/profileSection/settingSection/CustomBiometricScreen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/change_password_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/change_tpin_screen.dart';
 import 'package:Payrio/view/screens/profileSection/settingSection/language_selection_screen.dart';
@@ -573,6 +574,9 @@ class _MyAppState extends State<MyApp> {
               final args = ModalRoute.of(context)!.settings.arguments
                   as TransactionDetails?;
               return TransactionReceiptScreen(data: args);
+            },
+            '/CustomBiometricScreen': (context) {
+              return CustomBiometricScreen();
             },
           }),
     );
