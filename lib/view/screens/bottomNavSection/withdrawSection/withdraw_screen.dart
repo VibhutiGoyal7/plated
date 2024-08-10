@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/apis/api_response.dart';
 import '../../../../model/request/withdrawRequest.dart';
+import '../../../../model/webviewData.dart';
 import '../../../../theme/AppColor.dart';
 import '../../../../utils/Helper.dart';
 import '../../../../utils/Util.dart';
@@ -166,7 +167,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              _inputController.text = "+${_allLogList[index]}";
+                              _inputController.text = "${_allLogList[index]}";
                               _isValidInput();
                             });
                           },
@@ -356,7 +357,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${withDrawResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-        Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
+
+        WebViewData data =WebViewData(redirectUrl: withDrawResponse?.redirectUrl, uniqueId: withDrawResponse?.uniqueId);
+        Navigator.pushNamed(context, "/WebViewScreen", arguments: data);
         //_showModal(context, "${_inputController.text}");
 
         return Container(); // Return an empty container as you'll navigate away

@@ -5,6 +5,7 @@ import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
+import 'package:Payrio/model/webviewData.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/screens/addMoneySection/add_money_screen.dart';
@@ -314,7 +315,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/WebViewScreen': (context) {
               final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
+                  ModalRoute.of(context)!.settings.arguments as WebViewData?;
               return WebViewScreen(data: args);
             },
             '/PaymentMethodScreen': (context) {

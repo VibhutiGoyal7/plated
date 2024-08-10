@@ -12,6 +12,7 @@ import 'package:Payrio/model/request/setUpAccountRequest.dart';
 import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/transactionMethodRequest.dart';
+import 'package:Payrio/model/request/trxStatusRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
@@ -30,6 +31,7 @@ import 'package:Payrio/model/response/phoneVerifyResponse.dart';
 import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
+import 'package:Payrio/model/response/trxStatusResponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:flutter/cupertino.dart';
@@ -464,6 +466,27 @@ class MainViewModel with ChangeNotifier {
         _apiResponse = ApiResponse.completed(addMoneyResponse);
       } else {
         _apiResponse = ApiResponse.error(addMoneyResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("MainViewModelError $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> trxStatusData(
+      String value, TrxStatusRequest trxStatusRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      TrxStatusResponse trxStatusResponse =
+          await MainRepository().trxStatusData(value, trxStatusRequest);
+      print("MainViewModel ${trxStatusResponse.status}");
+      //  _apiResponse = ApiResponse.completed(response);
+      if (trxStatusResponse.status ==200 || trxStatusResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(trxStatusResponse);
+      } else {
+        _apiResponse = ApiResponse.error(trxStatusResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

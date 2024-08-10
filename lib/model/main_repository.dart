@@ -20,6 +20,7 @@ import 'package:Payrio/model/request/signInWithPhoneNumber.dart';
 import 'package:Payrio/model/request/supportListRequest.dart';
 import 'package:Payrio/model/request/transactionListRequest.dart';
 import 'package:Payrio/model/request/transactionMethodRequest.dart';
+import 'package:Payrio/model/request/trxStatusRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/request/verifyOtpEmailVerifyRequest.dart';
 import 'package:Payrio/model/request/withdrawRequest.dart';
@@ -48,6 +49,7 @@ import 'package:Payrio/model/response/profileResponse.dart';
 import 'package:Payrio/model/response/setUpAccountResponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/response/transactionMethodListReponse.dart';
+import 'package:Payrio/model/response/trxStatusResponse.dart';
 import 'package:Payrio/model/response/uploadKycResponse.dart';
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:Payrio/model/services/base_service.dart';
@@ -271,6 +273,18 @@ class MainRepository {
     print("Repo $value");
     final jsonData = response;
     AddMoneyResponse mediaList = AddMoneyResponse.fromJson(jsonData);
+    print("RepoJsonData $jsonData");
+    return mediaList;
+  }
+
+  Future<TrxStatusResponse> trxStatusData(
+      String value, TrxStatusRequest trxStatusRequest) async {
+    print(trxStatusRequest);
+    dynamic response =
+        await _payrioService.postResponse(value, trxStatusRequest);
+    print("Repo $value");
+    final jsonData = response;
+    TrxStatusResponse mediaList = TrxStatusResponse.fromJson(jsonData);
     print("RepoJsonData $jsonData");
     return mediaList;
   }

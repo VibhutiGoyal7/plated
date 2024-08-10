@@ -1,13 +1,25 @@
 import 'dart:async';
 
 import 'package:Payrio/languageSection/Languages.dart';
+import 'package:Payrio/model/request/trxStatusRequest.dart';
+import 'package:Payrio/model/response/AddMoneyResponse.dart';
+import 'package:Payrio/model/response/trxStatusResponse.dart';
+import 'package:Payrio/model/webviewData.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
+import '../../../model/apis/api_response.dart';
+import '../../../theme/AppColor.dart';
+import '../../../utils/Util.dart';
+import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/session_expired_dialog.dart';
+
 class WebViewScreen extends StatefulWidget {
-  final String? data;
+  final WebViewData? data;
 
   WebViewScreen({Key? key, this.data}) : super(key: key);
 
@@ -21,6 +33,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String span2 = '';
   String warningText = '';
   WebViewController? controller;
+
+  static const maxDuration = Duration(seconds: 2);
+
+  bool isLoading = false;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   late Timer _timer;
   bool _isActive = true;
@@ -62,13 +79,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
           print("uRL:::{url}");
           if (url.contains("https://admin.payorio.com/")) {
             await Future.delayed(Duration(seconds: 10));
-            Navigator.pushReplacementNamed(context, "/BottomNav");
+            /*
+            Navigator.pushReplacementNamed(context, "/BottomNav");*/
           }
           setState(() {
             loadingPercentage = 100;
           });
 
-         // fetchData();
+          fetchData();
         },
       ))
       ..addJavaScriptChannel(
@@ -78,7 +96,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         },
       )
       ..loadRequest(
-        Uri.parse("${widget.data}"),
+        Uri.parse("${widget.data?.redirectUrl}"),
       );
 
     if (controller?.platform is AndroidWebViewController) {
@@ -97,6 +115,35 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _isActive = false;
     super.dispose();
   }
+
+
+  Future<Widget> getTrxStatusResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    TrxStatusResponse? addMoneyResponse = apiResponse.data as TrxStatusResponse?;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
+      case Status.COMPLETED:
+        Navigator.pushReplacementNamed(context, "/BottomNav");
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
+          SessionExpiredDialog.showDialogBox(context: context);
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
+
 
   void fetchData() async {
     // Ensure a reasonable delay to allow WebView to load content
@@ -122,10 +169,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
       if (_isActive) {
         if (trimmedResult.contains("Requested AmountPayment Method")) {
           print('Match found: $trimmedResult');
-          Navigator.pushReplacementNamed(context, "/BottomNav");
+          fetchStatus();
+         // Navigator.pushReplacementNamed(context, "/BottomNav");
         } else if (trimmedResult.contains("Requested Amount")) {
           print('Match found: $trimmedResult');
-          Navigator.pushReplacementNamed(context, "/BottomNav");
+          fetchStatus();
+         // Navigator.pushReplacementNamed(context, "/BottomNav");
         } else {
           fetchData();
           print('No match found: $trimmedResult');
@@ -161,5 +210,42 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchStatus() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "${Languages.of(context)?.labelNoInternetConnection}",
+              style: TextStyle(color: AppColor.WHITE),
+            ),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      TrxStatusRequest request = TrxStatusRequest(
+          uniqueId: "${widget.data?.uniqueId}");
+      if(mounted) {
+        await Provider.of<MainViewModel>(context, listen: false)
+            .trxStatusData(
+            "api/v1/app/wallet_transactions/update_pay2local_trx_status",
+            request);
+
+        ApiResponse apiResponse =
+            Provider
+                .of<MainViewModel>(context, listen: false)
+                .response;
+        getTrxStatusResponse(context, apiResponse);
+      }
+    }
   }
 }

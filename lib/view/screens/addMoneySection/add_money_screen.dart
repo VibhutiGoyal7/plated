@@ -1,5 +1,6 @@
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
 import 'package:Payrio/model/response/AddMoneyResponse.dart';
+import 'package:Payrio/model/webviewData.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -102,7 +103,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${addMoneyResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-        Navigator.pushNamed(context, "/WebViewScreen", arguments: "${redirectUrl}");
+        WebViewData data =WebViewData(redirectUrl: addMoneyResponse?.redirectUrl, uniqueId: addMoneyResponse?.uniqueId);
+        Navigator.pushNamed(context, "/WebViewScreen", arguments: data);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
