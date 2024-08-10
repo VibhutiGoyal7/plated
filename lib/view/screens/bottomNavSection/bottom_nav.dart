@@ -17,7 +17,7 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _selectedIndex = 0;
   final LocalAuthentication auth = LocalAuthentication();
   bool _canCheckBiometric = false;
@@ -26,6 +26,7 @@ class _BottomNavState extends State<BottomNav>
   String _authorized = 'Not Authorized';
   late AnimationController _animationController;
   late Animation<double> _animation;
+  bool _authOnResume = false;
 
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
@@ -48,11 +49,31 @@ class _BottomNavState extends State<BottomNav>
       parent: _animationController,
       curve: Curves.bounceIn,
     );
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+
+    if (state == AppLifecycleState.resumed) {
+      if (!_authOnResume) {
+        print("ResumeBio");
+        setState(() {
+          _authenticationAttempted = false;
+        });
+
+        _initializeBiometrics();
+      }
+      print("Resume");
+    }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -206,6 +227,7 @@ class _BottomNavState extends State<BottomNav>
           _canCheckBiometric =
               canCheckBiometric! && availableBiometric.isNotEmpty;
         });
+        print("_authenticationAttempted $_authenticationAttempted");
 
         if (_canCheckBiometric && !_authenticationAttempted) {
           print("Checking Number of times");
@@ -224,6 +246,7 @@ class _BottomNavState extends State<BottomNav>
         //useErrorDialogs: true,
         //stickyAuth: true,
       );
+      print("authenticated $authenticated");
     } on PlatformException catch (e) {
       print('Error authenticating: $e');
     }
@@ -232,6 +255,9 @@ class _BottomNavState extends State<BottomNav>
 
     setState(() {
       _isAuthenticated = authenticated;
+
+      _authOnResume = authenticated;
+      print("_authOnResume $_authOnResume");
       _authorized = authenticated ? 'Authorized' : 'Failed to authenticate';
       _authenticationAttempted = true; // Mark authentication attempted
     });
@@ -244,7 +270,7 @@ class _BottomNavState extends State<BottomNav>
       // For example:
       // Navigator.pushReplacementNamed(context, '/home');
     } else {
-      await Helper.saveUserAuthenticated(true);
+      await Helper.saveUserAuthenticated(false);
       // User cancelled authentication
       print("User cancelled authentication.");
       //ToastComponent.showToast(context: context, message: "User cancelled authentication.");

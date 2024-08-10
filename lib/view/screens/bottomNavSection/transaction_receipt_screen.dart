@@ -380,8 +380,8 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                         children: [
                                           ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                minWidth: screenWidth * 0.32,
-                                                maxWidth: screenWidth * 0.32),
+                                                minWidth: screenWidth * 0.6,
+                                                maxWidth: screenWidth * 0.6),
                                             child: IntrinsicWidth(
                                               child: Padding(
                                                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
