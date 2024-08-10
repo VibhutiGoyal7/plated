@@ -1,9 +1,8 @@
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/request/notificationListRequest.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/notificationListResponse.dart';
@@ -155,7 +154,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         });
         return;
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         }
         return;
@@ -169,7 +170,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     setState(() {
       _currentTabIndex = index;
     });
-    // This will find the TabController from the DefaultTabController
     Future.delayed(Duration(milliseconds: 100), () {
       final TabController? controller = DefaultTabController.of(context);
       if (controller != null) {
@@ -197,21 +197,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
         Column(
           children: [
             TabBar(
-              /*labelColor: AppColor.WHITE,
-              labelStyle: TextStyle(backgroundColor: AppColor.PRIMARY),
-              unselectedLabelStyle: TextStyle(backgroundColor: AppColor.WHITE),
-              unselectedLabelColor: AppColor.BLACK,
-              labelPadding: EdgeInsets.all(0),
-              indicatorPadding: EdgeInsets.all(0),*/
-              //controller: _pageController,
-              onTap: (index){
-                runApi(index);
+                dividerHeight: 0.5,
+                labelColor: AppColor.WHITE,
+                unselectedLabelColor: AppColor.PRIMARY,
+                indicatorPadding: EdgeInsets.all(0),
+                padding: EdgeInsets.all(0),
+                labelPadding: EdgeInsets.zero,
+                labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+                indicator: BoxDecoration(
+                  color: AppColor.PRIMARY,
+                ),
+                onTap: (index) {
+                  runApi(index);
               },
               dividerColor: Colors.transparent,
               tabs: [
-                Tab(text: "${Languages.of(context)!.labelGeneral}"),
-                Tab(text: "${Languages.of(context)!.labelTransactional}"),
-              ],
+                  Container(
+                    width: screenWidth * 0.5,
+                    child: Tab(text: "${Languages.of(context)!.labelGeneral}"),
+                  ),
+                  Container(
+                    width: screenWidth * 0.5,
+                    child: Tab(
+                        text: "${Languages.of(context)!.labelTransactional}"),
+                  ),
+                ],
             ),
             Expanded(
               child: TabBarView(

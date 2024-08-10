@@ -279,7 +279,9 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                   color: Colors.grey))
                                           //border: Border.all(width: 0.1, color: Colors.grey),
                                           ),
-                                      child: Row(
+                                      child:
+                                      nonCapitalizeString("${widget.data?.transactionType}") == nonCapitalizeString("transfer")?
+                                      Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         mainAxisAlignment:
@@ -292,7 +294,8 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                             child: IntrinsicWidth(
                                               child: Padding(
                                                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                                child: Column(
+                                                child:
+                                                Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   mainAxisAlignment:
@@ -318,7 +321,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                           color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                     ),
                                                   ],
-                                                ),
+                                                ) ,
                                               ),
                                             ),
                                           ),
@@ -366,6 +369,56 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                           SizedBox(
                                             width: 3,
                                           )
+                                        ],
+                                      ):
+                                      Row(
+
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                minWidth: screenWidth * 0.32,
+                                                maxWidth: screenWidth * 0.32),
+                                            child: IntrinsicWidth(
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                                child:
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "${Languages.of(context)?.labelUsername}",
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                          FontWeight.normal,
+                                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 3,
+                                                    ),
+                                                    Text(
+                                                      "${userName}",
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 6,
+                                                    ),
+                                                  ],
+                                                ) ,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -441,7 +494,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                               .center,
                                                       children: [
                                                         Text(
-                                                          "${Languages.of(context)?.labelTransferAmount}",
+                                                          "Transaction Amount",
                                                           style: TextStyle(
                                                               fontSize: 11,
                                                               fontWeight:
@@ -545,7 +598,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      "${Languages.of(context)?.labelTransferType}",
+                                                      "TRANSACTION TYPE",
                                                       style: TextStyle(
                                                           fontSize: 11,
                                                           fontWeight:
