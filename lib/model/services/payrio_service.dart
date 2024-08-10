@@ -132,7 +132,7 @@ class PayrioService extends BaseService {
     return responseJson;
   }
 
-  Future<dynamic> putMultiFormResponse(String url, File file) async {
+  Future<dynamic> putMultiFormResponse(String url, File file, String firstName,String lastName,String dob,) async {
     print("::::: File: $file");
     dynamic responseJson;
 
@@ -140,14 +140,20 @@ class PayrioService extends BaseService {
       // Create a multipart request
       var requestBody = http.MultipartRequest('PUT', Uri.parse(getFullUrl(url)));
 
-      // Add file
-      var stream = http.ByteStream(file.openRead());
-      var length = await file.length();
+      if(file.path.isNotEmpty) {
+        // Add file
+        var stream = http.ByteStream(file.openRead());
+        var length = await file.length();
 
-      // multipart that takes file
-      var multipartFile = http.MultipartFile('customer_image', stream, length, filename: basename(file.path));
-      print("Multipart File: ${multipartFile.filename}");
-      requestBody.files.add(multipartFile);
+        // multipart that takes file
+        var multipartFile = http.MultipartFile(
+            'customer_image', stream, length, filename: basename(file.path));
+        print("Multipart File: ${multipartFile.filename}");
+        requestBody.files.add(multipartFile);
+      }
+      requestBody.fields['first_name'] = firstName;
+      requestBody.fields['last_name'] = lastName;
+      requestBody.fields['dob'] = dob;
 
       // Add headers
       var headers = await getHeaders();
@@ -295,15 +301,19 @@ class PayrioService extends BaseService {
       // Create a multipart request
       var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
 
-      // Add file
-      var stream = http.ByteStream(supportTicketDocument!.openRead());
-      var length = await supportTicketDocument.length();
-      print("length:::${length}");
-      // multipart that takes file
-      var multipartFile = http.MultipartFile("support_ticket_document", stream, length, filename: basename(supportTicketDocument.path));
-      print("Multipart File: ${multipartFile.filename}");
-      //RequestBody.
-      requestBody.files.add(multipartFile);
+      if(supportTicketDocument?.path.isNotEmpty == true) {
+        // Add file
+        var stream = http.ByteStream(supportTicketDocument!.openRead());
+        var length = await supportTicketDocument.length();
+        print("length:::${length}");
+        // multipart that takes file
+        var multipartFile = http.MultipartFile(
+            "support_ticket_document", stream, length,
+            filename: basename(supportTicketDocument.path));
+        print("Multipart File: ${multipartFile.filename}");
+        //RequestBody.
+        requestBody.files.add(multipartFile);
+      }
       requestBody.fields['customer_id'] = customerId;
       requestBody.fields['transaction_type_id'] = transactionTypeId;
       requestBody.fields['transaction_method_id'] = transactionMethodId;

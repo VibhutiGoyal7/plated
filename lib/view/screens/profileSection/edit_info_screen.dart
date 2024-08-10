@@ -20,13 +20,13 @@ import '../../component/editable_detail_box.dart';
 import '../../component/session_expired_dialog.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
-class PersonalInformationScreen extends StatefulWidget {
+class EditInformationScreen extends StatefulWidget {
   @override
-  _PersonalInformationScreenState createState() =>
-      _PersonalInformationScreenState();
+  _EditInformationScreenState createState() =>
+      _EditInformationScreenState();
 }
 
-class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
+class _EditInformationScreenState extends State<EditInformationScreen> {
   bool isLoading = false;
   bool isInternetConnected = true;
   bool isDarkMode = false;
@@ -50,6 +50,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   bool isDataLoading = false;
   final TextEditingController documentNumberController =
       TextEditingController();
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
 
   @override
   void initState() {
@@ -159,11 +163,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           Languages.of(context)!.labelPersonalInfo,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        actions: [
-          IconButton(onPressed: (){
-            Navigator.pushNamed(context, "/EditInformationScreen");
-          }, icon: Icon(Icons.edit))
-        ],
       ),
       body: Stack(
         children: [
@@ -178,7 +177,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       child: Stack(
                         children: [
                           GestureDetector(
-                            onTap: () => {},
+                            onTap: () => {_showPicker(context: context)},
                             child: imageUrl == ""
                                 ? Container(
                                     height: 110,
@@ -240,7 +239,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                     ),
                                   ),
                           ),
-                          /*Positioned(
+                          Positioned(
                             bottom: -5,
                             right: -4,
                             child: Padding(
@@ -254,14 +253,14 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                   child: IconButton(
                                     iconSize: 20,
                                     onPressed: () {
-                                      //_showPicker(context: context);
+                                      _showPicker(context: context);
                                     },
                                     icon: Icon(Icons.edit_outlined),
                                   ),
                                 ),
                               ),
                             ),
-                          ),*/
+                          ),
                         ],
                       ),
                     ),
@@ -269,17 +268,20 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       height: 20,
                     ),
 
-                    Row(
+                   /* Row(
                       children: [
-                        ConstrainedBox(constraints: BoxConstraints(
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
                           maxWidth: screenWidth*0.5,
-                          minWidth: screenWidth*0.5,
-                        ),child:DetailBox(
-                          heading: Languages.of(context)!.labelFirstname,
-                          subHeading: "${firstName}",
-                          icon: Icons.person,
-                          headingTextSize: 14,
-                          subHeadingTextSize: 13,
+                          minWidth: screenWidth*0.5,),
+                          child:editableDetailBox(
+                           Languages.of(context)!.labelFirstname,
+                           "${firstName}",
+                            14,
+                            13,
+                           Icons.person,
+                            _nameController,
+
                         ) ,),
 
                         ConstrainedBox(constraints: BoxConstraints(
@@ -287,24 +289,26 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                           minWidth: screenWidth*0.4,
                         ),
                           child:
-                          DetailBox(
-                          heading: Languages.of(context)!.labelLastname,
-                          subHeading: "${lastName}",
-                          icon: Icons.person,
-                          headingTextSize: 14,
-                          subHeadingTextSize: 13,
+                          editableDetailBox(
+                           Languages.of(context)!.labelLastname,
+                           "${lastName}",
+                            14,
+                            13,
+                           Icons.person,
+                            _lastNameController
                         ),),
 
 
                       ],
-                    ),
+                    ),*/
 
-                    EditableDetailBox(
-                      heading: Languages.of(context)!.labelDOB,
-                      subHeading: convertDateFormat("${dob}"),
-                      icon: Icons.calendar_month,
-                      headingTextSize: 14,
-                      subHeadingTextSize: 13,
+                    editableDetailBox(
+                       Languages.of(context)!.labelDOB,
+                       convertDateFormat("${dob}"),
+                      14,
+                      13,
+                       Icons.calendar_month,
+                      _dobController
                     ),
                     GestureDetector(
                       onTap: (){
@@ -317,20 +321,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                         headingTextSize: 14,
                         subHeadingTextSize: 13,
                       ),
-                    ),
-                    DetailBox(
-                      heading: 'Document Name',
-                      subHeading: "${recentDocumentName}",
-                      icon: Icons.file_open,
-                      headingTextSize: 14,
-                      subHeadingTextSize: 13,
-                    ),
-                    DetailBox(
-                      heading: 'Document Number',
-                      subHeading: "${recentDocumentNumber}",
-                      icon: Icons.numbers,
-                      headingTextSize: 14,
-                      subHeadingTextSize: 13,
                     ),
                   ],
                 ),
@@ -356,88 +346,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     );
   }
 
-  Widget buildProfileSection(String label, String value) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(vertical: 10),
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 5),
-            Text(
-              value,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildDocumentDropdown() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Choose Document",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          TextField(
-            readOnly: true,
-            controller: TextEditingController(text: mSelectedText),
-            decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.8)),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.7)),
-              //labelText: 'Choose Document',
-              suffixIcon: IconButton(
-                icon: Icon(
-                    mExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
-                onPressed: () {
-                  setState(() {
-                    mExpanded = !mExpanded;
-                  });
-                },
-              ),
-            ),
-          ),
-          if (mExpanded)
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: docType.map((city) {
-                  return ListTile(
-                    title: Text(city),
-                    onTap: () {
-                      setState(() {
-                        mSelectedText = city;
-                        mExpanded = false;
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
 
   Widget buildBirthdateSection() {
     return Card(
@@ -489,4 +397,185 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     );
   }
 
+  _showPicker({required BuildContext context}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  getImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  getImage(ImageSource.camera);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future getImage(
+    ImageSource image,
+  ) async {
+    final pickedFile = await picker.pickImage(source: image);
+    XFile? xfilePick = pickedFile;
+
+    if (xfilePick != null) {
+      galleryFile = File(pickedFile!.path);
+      File? compressedFile =
+          await _resizeAndCompressImage(galleryFile as File, 800);
+      if (compressedFile != null) {
+        setState(() {
+          _uploadProfilePic(compressedFile);
+        });
+      } else {
+        print('Compression failed.');
+      }
+
+      //print(compressedFile);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+          const SnackBar(content: Text('Nothing is selected')));
+    }
+  }
+
+  Future<File?> _resizeAndCompressImage(File file, int targetWidth) async {
+    try {
+      final directory = await getTemporaryDirectory();
+      final targetPath = path.join(directory.path,
+          '${DateTime.now().millisecondsSinceEpoch}_compressed.jpg');
+
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        minWidth: targetWidth,
+        quality: 85, // Adjust quality to balance size and quality
+        format: CompressFormat.jpeg,
+        keepExif: false, // Remove metadata
+      );
+
+      if (result == null) {
+        print('Resizing and compression failed.');
+        return null;
+      }
+
+      print('Original size: ${file.lengthSync()} bytes');
+      print('Resized and compressed size: ${result.lengthSync()} bytes');
+
+      return result;
+    } catch (e) {
+      print('Error resizing and compressing image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _uploadProfilePic(File? file) async {
+    setState(() {
+      isLoading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 2));
+    await Provider.of<MainViewModel>(context, listen: false)
+        .putMultiFormResponse(
+            "/api/v1/app/customers/update_profile_pic", file!,"","","");
+    ApiResponse apiResponse =
+        Provider.of<MainViewModel>(context, listen: false).response;
+    getProfileResponse(context, apiResponse);
+  }
+
+
+  Widget editableDetailBox(
+      String heading,
+   String subHeading,
+   double subHeadingTextSize,
+   double headingTextSize,
+   IconData icon,
+   TextEditingController controller,
+
+  ){
+    controller.text = subHeading;
+    return Padding(
+      padding: const EdgeInsets.symmetric( vertical: 2.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 18.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon),
+            SizedBox(width: 8,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  heading,
+                  style: TextStyle(
+                    fontSize: headingTextSize,
+                    fontWeight: FontWeight.w600,
+                    //color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Align(
+                    child:
+                    IntrinsicWidth(
+                      child: TextField(
+                        style: TextStyle(fontSize: 13.0),
+                        scrollPadding: EdgeInsets.all(0),
+                        controller: controller,
+                        textAlignVertical: TextAlignVertical.center,
+                        onChanged: (value) {
+                          isInputValid();
+                        },
+                        onSubmitted: (value) {},
+                        keyboardType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: heading,
+                          hintStyle: TextStyle(color: Colors.grey),
+                      
+                        ),
+                      ),
+                    )
+                  /*Text(
+                      subHeading.isEmpty ? "" : "${subHeading}",
+                      style: TextStyle(
+                        fontSize:subHeadingTextSize,
+                        fontWeight: FontWeight.normal,
+                        *//* color: value.isEmpty
+                          ? Colors.grey
+                          : isDarkMode ? Colors.white : Colors.black,
+                                *//*
+                      ),
+                    ),*/
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void isInputValid(){
+
+  }
 }

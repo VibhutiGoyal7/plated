@@ -12,7 +12,7 @@ abstract class BaseService {
   Future<dynamic> postResponse(String url, dynamic phoneRequest);
   Future<dynamic> putResponse(String url, dynamic phoneRequest);
   Future<dynamic> getResponse(String url);
-  Future<dynamic> putMultiFormResponse(String url, File file);
+  Future<dynamic> putMultiFormResponse(String url, File file,String firstName,String lastName,String dob);
   Future<dynamic> postMultiFormResponse(String url, File imageFile, String docType,File videoFile);
   Future<dynamic> postMultiFormMessageResponse(String url, File imageFile, String content);
   Future<dynamic> postMultiFormResponseToCreateSupport(

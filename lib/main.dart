@@ -51,6 +51,7 @@ import 'package:Payrio/view/screens/notificationSection/notification_detail_s%20
 import 'package:Payrio/view/screens/notificationSection/notification_screen.dart';
 import 'package:Payrio/view/screens/profileSection/account_detail_screen.dart';
 import 'package:Payrio/view/screens/profileSection/address_screen.dart';
+import 'package:Payrio/view/screens/profileSection/edit_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_data_screen.dart';
 import 'package:Payrio/view/screens/profileSection/personal_info_screen.dart';
 import 'package:Payrio/view/screens/profileSection/profile_screen.dart';
@@ -295,6 +296,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return PersonalInformationScreen();
+            },
+            '/EditInformationScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as String?;
+              return EditInformationScreen();
             },
             '/AccountDetailScreen': (context) {
               final args =

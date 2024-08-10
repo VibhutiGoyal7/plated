@@ -780,13 +780,15 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                 int index) {
                                               return GestureDetector(
                                                 onTap: () {
-                                                  TransactionDialog.showDialogBox(
+                                                  /*TransactionDialog.showDialogBox(
                                                       context: context,
                                                       transaction:
                                                           transactionList[
                                                               index],
                                                       symbol:
-                                                          "${currencySymbol}",userId : userId);
+                                                          "${currencySymbol}",userId : userId);*/
+                                                  Navigator.pushNamed(context, '/TransactionOverviewScreen',
+                                                      arguments: transactionList[index]);
 
                                                 },
                                                 child: Card(
