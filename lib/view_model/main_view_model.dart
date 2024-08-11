@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Payrio/model/apis/api_response.dart';
 import 'package:Payrio/model/main_repository.dart';
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
+import 'package:Payrio/model/request/P2PTransactionListRequest.dart';
 import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/notificationListRequest.dart';
 import 'package:Payrio/model/request/saveAddressRequest.dart';
@@ -54,6 +55,7 @@ import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
+import '../model/response/p2PTransactionListReponse.dart';
 import '../model/response/sendMessageResponse.dart';
 import '../model/response/transactionMethodListReponse.dart';
 
@@ -570,6 +572,26 @@ class MainViewModel with ChangeNotifier {
         _apiResponse = ApiResponse.completed(transactionListResponse);
       } else {
         _apiResponse = ApiResponse.error(transactionListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> p2PTransactionListData(
+      String value, P2PTransactionListRequest request) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess ${request.uniqueId}");
+    notifyListeners();
+    try {
+      P2PTransactionListResponse p2PTransactionListResponse = await MainRepository()
+          .p2PTransactionListData(value, request);
+      if (p2PTransactionListResponse.status  == 200 || p2PTransactionListResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(p2PTransactionListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(p2PTransactionListResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

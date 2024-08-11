@@ -3,11 +3,7 @@ import 'dart:io';
 import 'package:Payrio/utils/Util.dart';
 import 'package:Payrio/view/component/detail_box.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -15,8 +11,6 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/editable_detail_box.dart';
 import '../../component/session_expired_dialog.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
@@ -71,7 +65,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             profileDetails?.documentDetail?.recentKycDocumentsName;
         recentDocumentNumber =
             profileDetails?.documentDetail?.recentKycDocumentsIdNumber;
-        address ="${profileDetails?.address?.city != null ? "${profileDetails?.address?.city}, ": ''}"
+        address =
+            "${profileDetails?.address?.city != null ? "${profileDetails?.address?.city}, " : ''}"
             "${profileDetails?.address?.state != null ? "${profileDetails?.address?.state}, " : ''}"
             "${profileDetails?.countryName}"
             "${profileDetails?.address?.postal_code != null ? ", ${profileDetails?.address?.postal_code}" : ''}";
@@ -102,7 +97,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse?.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -143,8 +140,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
 
   @override
   Widget build(BuildContext context) {
-      screenHeight = MediaQuery.of(context).size.height;
-      screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
@@ -152,7 +149,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, "/ProfileScreen");
           },
         ),
         title: Text(
@@ -160,9 +157,11 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         actions: [
-          IconButton(onPressed: (){
-            Navigator.pushNamed(context, "/EditInformationScreen");
-          }, icon: Icon(Icons.edit))
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/EditInformationScreen");
+              },
+              icon: Icon(Icons.edit))
         ],
       ),
       body: Stack(
@@ -193,7 +192,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                                 : Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(color: AppColor.PRIMARY, width: 0.3),
+                                      border: Border.all(
+                                          color: AppColor.PRIMARY, width: 0.3),
                                       color: Colors.white,
                                     ),
                                     child: ClipRRect(
@@ -268,38 +268,37 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                     SizedBox(
                       height: 20,
                     ),
-
                     Row(
                       children: [
-                        ConstrainedBox(constraints: BoxConstraints(
-                          maxWidth: screenWidth*0.5,
-                          minWidth: screenWidth*0.5,
-                        ),child:DetailBox(
-                          heading: Languages.of(context)!.labelFirstname,
-                          subHeading: "${firstName}",
-                          icon: Icons.person,
-                          headingTextSize: 14,
-                          subHeadingTextSize: 13,
-                        ) ,),
-
-                        ConstrainedBox(constraints: BoxConstraints(
-                          maxWidth: screenWidth*0.4,
-                          minWidth: screenWidth*0.4,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: screenWidth * 0.5,
+                            minWidth: screenWidth * 0.5,
+                          ),
+                          child: DetailBox(
+                            heading: Languages.of(context)!.labelFirstname,
+                            subHeading: "${firstName}",
+                            icon: Icons.person,
+                            headingTextSize: 14,
+                            subHeadingTextSize: 13,
+                          ),
                         ),
-                          child:
-                          DetailBox(
-                          heading: Languages.of(context)!.labelLastname,
-                          subHeading: "${lastName}",
-                          icon: Icons.person,
-                          headingTextSize: 14,
-                          subHeadingTextSize: 13,
-                        ),),
-
-
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: screenWidth * 0.4,
+                            minWidth: screenWidth * 0.4,
+                          ),
+                          child: DetailBox(
+                            heading: Languages.of(context)!.labelLastname,
+                            subHeading: "${lastName}",
+                            icon: Icons.person,
+                            headingTextSize: 14,
+                            subHeadingTextSize: 13,
+                          ),
+                        ),
                       ],
                     ),
-
-                    EditableDetailBox(
+                    DetailBox(
                       heading: Languages.of(context)!.labelDOB,
                       subHeading: convertDateFormat("${dob}"),
                       icon: Icons.calendar_month,
@@ -307,10 +306,10 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       subHeadingTextSize: 13,
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, "/AddressScreen");
                       },
-                      child:  DetailBox(
+                      child: DetailBox(
                         heading: Languages.of(context)!.labelAddress,
                         subHeading: "${address}",
                         icon: Icons.calendar_month,
@@ -488,5 +487,4 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       ),
     );
   }
-
 }

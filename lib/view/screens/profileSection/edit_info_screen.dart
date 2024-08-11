@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:Payrio/utils/Util.dart';
-import 'package:Payrio/view/component/detail_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,14 +16,12 @@ import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
-import '../../component/editable_detail_box.dart';
+import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
-//import 'package:flutter_svg/flutter_svg.dart';
 
 class EditInformationScreen extends StatefulWidget {
   @override
-  _EditInformationScreenState createState() =>
-      _EditInformationScreenState();
+  _EditInformationScreenState createState() => _EditInformationScreenState();
 }
 
 class _EditInformationScreenState extends State<EditInformationScreen> {
@@ -41,7 +39,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
   String? recentDocumentName = "";
   String? recentDocumentNumber = "";
   String? address = "";
-  File? galleryFile;
+  File? galleryFile = File("");
   final picker = ImagePicker();
   bool mExpanded = false;
   String mSelectedText = "";
@@ -54,6 +52,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
@@ -63,11 +62,15 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
     dob = "";
     email = "";
     isDataLoading = true;
+
     Helper.getProfileDetails().then((profileDetails) {
       setState(() {
         firstName = profileDetails?.firstName;
         lastName = profileDetails?.lastName;
         dob = profileDetails?.dob;
+        _nameController.text = "${firstName}";
+        _lastNameController.text = "${lastName}";
+        _dobController.text = convertDateFormat("${dob}");
         email = profileDetails?.email;
         imageUrl = profileDetails?.imageUrl;
         isDataLoading = false;
@@ -75,7 +78,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
             profileDetails?.documentDetail?.recentKycDocumentsName;
         recentDocumentNumber =
             profileDetails?.documentDetail?.recentKycDocumentsIdNumber;
-        address ="${profileDetails?.address?.city != null ? "${profileDetails?.address?.city}, ": ''}"
+        address =
+            "${profileDetails?.address?.city != null ? "${profileDetails?.address?.city}, " : ''}"
             "${profileDetails?.address?.state != null ? "${profileDetails?.address?.state}, " : ''}"
             "${profileDetails?.countryName}"
             "${profileDetails?.address?.postal_code != null ? ", ${profileDetails?.address?.postal_code}" : ''}";
@@ -84,7 +88,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
   }
 
   Future<Widget> getProfileResponse(
-      BuildContext context, ApiResponse apiResponse) async {
+      BuildContext context, ApiResponse apiResponse) async
+  {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
     print("apiResponse${apiResponse.status}");
     setState(() {
@@ -101,12 +106,14 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
         print(mediaList?.countryName);
 
         _fetchDataFromPref();
-
+        //Navigator.pushReplacementNamed(context, "/PersonalInfoScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse?.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -147,8 +154,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
 
   @override
   Widget build(BuildContext context) {
-      screenHeight = MediaQuery.of(context).size.height;
-      screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
@@ -156,11 +163,11 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, "/PersonalInfoScreen");
           },
         ),
         title: Text(
-          Languages.of(context)!.labelPersonalInfo,
+          Languages.of(context)!.labelEditPersonalInfo,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),
@@ -178,67 +185,90 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                         children: [
                           GestureDetector(
                             onTap: () => {_showPicker(context: context)},
-                            child: imageUrl == ""
+                            child: galleryFile != null && galleryFile!.path.isNotEmpty
                                 ? Container(
-                                    height: 110,
-                                    width: 110,
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: AppColor.WHITE,
-                                      backgroundImage:
-                                          AssetImage("assets/profile_user.png"),
-                                    ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(color: AppColor.PRIMARY, width: 0.3),
-                                      color: Colors.white,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      child: Image.network(
-                                        "${imageUrl}",
-                                        height: 110,
-                                        width: 110,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context,
-                                            Object exception,
-                                            StackTrace? stackTrace) {
-                                          return Container(
-                                            height: 110,
-                                            width: 110,
-                                            child: CircleAvatar(
-                                              radius: 30,
-                                              backgroundColor: AppColor.WHITE,
-                                              backgroundImage: AssetImage(
-                                                "assets/profile_user.png",
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.white38,
-                                              highlightColor: Colors.grey,
-                                              child: Container(
-                                                height: 80,
-                                                width: 80,
-                                                color: Colors.white,
-                                              ),
-                                            );
-                                          }
-                                        },
+                              height: 110,
+                              width: 110,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(color: AppColor.PRIMARY, width: 0.3),
+                                color: Colors.white,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100.0),
+                                child: Image.file(
+                                  galleryFile!,
+                                  height: 110,
+                                  width: 110,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    return Container(
+                                      height: 110,
+                                      width: 110,
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: AppColor.WHITE,
+                                        backgroundImage: AssetImage("assets/profile_user.png"),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            )
+                                : imageUrl == ""
+                                ? Container(
+                              height: 110,
+                              width: 110,
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: AppColor.WHITE,
+                                backgroundImage: AssetImage("assets/profile_user.png"),
+                              ),
+                            )
+                                : Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(color: AppColor.PRIMARY, width: 0.3),
+                                color: Colors.white,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100.0),
+                                child: Image.network(
+                                  "${imageUrl}",
+                                  height: 110,
+                                  width: 110,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    return Container(
+                                      height: 110,
+                                      width: 110,
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: AppColor.WHITE,
+                                        backgroundImage: AssetImage("assets/profile_user.png"),
+                                      ),
+                                    );
+                                  },
+                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.white38,
+                                        highlightColor: Colors.grey,
+                                        child: Container(
+                                          height: 80,
+                                          width: 80,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
+
                           Positioned(
                             bottom: -5,
                             right: -4,
@@ -267,59 +297,72 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                     SizedBox(
                       height: 20,
                     ),
-
-                   /* Row(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                          maxWidth: screenWidth*0.5,
-                          minWidth: screenWidth*0.5,),
-                          child:editableDetailBox(
-                           Languages.of(context)!.labelFirstname,
-                           "${firstName}",
+                            maxWidth: screenWidth * 0.45,
+                            minWidth: screenWidth * 0.45,
+                          ),
+                          child: editableDetailBox(
+                            Languages.of(context)!.labelFirstname,
+                            "${firstName}",
                             14,
                             13,
-                           Icons.person,
+                            Icons.person,
                             _nameController,
-
-                        ) ,),
-
-                        ConstrainedBox(constraints: BoxConstraints(
-                          maxWidth: screenWidth*0.4,
-                          minWidth: screenWidth*0.4,
+                          ),
                         ),
-                          child:
-                          editableDetailBox(
-                           Languages.of(context)!.labelLastname,
-                           "${lastName}",
-                            14,
-                            13,
-                           Icons.person,
-                            _lastNameController
-                        ),),
-
-
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: screenWidth * 0.45,
+                            minWidth: screenWidth * 0.45,
+                          ),
+                          child: editableDetailBox(
+                              Languages.of(context)!.labelLastname,
+                              "${lastName}",
+                              14,
+                              13,
+                              Icons.person,
+                              _lastNameController),
+                        ),
                       ],
-                    ),*/
-
-                    editableDetailBox(
-                       Languages.of(context)!.labelDOB,
-                       convertDateFormat("${dob}"),
-                      14,
-                      13,
-                       Icons.calendar_month,
-                      _dobController
                     ),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.pushNamed(context, "/AddressScreen");
-                      },
-                      child:  DetailBox(
-                        heading: Languages.of(context)!.labelAddress,
-                        subHeading: "${address}",
-                        icon: Icons.calendar_month,
-                        headingTextSize: 14,
-                        subHeadingTextSize: 13,
+
+                    _buildDOBInput(
+                        context,
+                        Languages.of(context)!.labelDOB,
+                        _dobController,
+                        Icon(
+                          Icons.calendar_month,
+                          size: 18,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        )
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: screenWidth * 0.45,
+                        child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all( AppColor.PRIMARY),
+                          ),
+                          onPressed: () async {
+                            _uploadProfilePic();
+                          },
+                          child: Text(
+                            Languages.of(context)!.labelSubmit,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -333,6 +376,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                     // Block interaction
                     ModalBarrier(
                       dismissible: false,
+                        color: Colors.grey.shade50
                     ),
                     // Loader indicator
                     Center(
@@ -345,7 +389,6 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
       ),
     );
   }
-
 
   Widget buildBirthdateSection() {
     return Card(
@@ -429,7 +472,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
 
   Future getImage(
     ImageSource image,
-  ) async {
+  ) async
+  {
     final pickedFile = await picker.pickImage(source: image);
     XFile? xfilePick = pickedFile;
 
@@ -439,7 +483,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
           await _resizeAndCompressImage(galleryFile as File, 800);
       if (compressedFile != null) {
         setState(() {
-          _uploadProfilePic(compressedFile);
+          galleryFile = compressedFile;
+          //_uploadProfilePic(compressedFile);
         });
       } else {
         print('Compression failed.');
@@ -482,45 +527,60 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
     }
   }
 
-  Future<void> _uploadProfilePic(File? file) async {
-    setState(() {
-      isLoading = true;
-    });
-    await Future.delayed(Duration(milliseconds: 2));
-    await Provider.of<MainViewModel>(context, listen: false)
-        .putMultiFormResponse(
-            "/api/v1/app/customers/update_profile_pic", file!,"","","");
-    ApiResponse apiResponse =
-        Provider.of<MainViewModel>(context, listen: false).response;
-    getProfileResponse(context, apiResponse);
+  Future<void> _uploadProfilePic() async {
+    bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        isInternetConnected = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      String firstName = _nameController.text.toString();
+      String lastName = _lastNameController.text.toString();
+      String dob = _dobController.text.toString();
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+        await Future.delayed(Duration(milliseconds: 2));
+        await Provider.of<MainViewModel>(context, listen: false)
+            .putMultiFormResponse(
+            "/api/v1/app/customers/update_profile_pic", galleryFile!, firstName, lastName, dob);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        getProfileResponse(context, apiResponse);
+      }
+    }
   }
 
-
   Widget editableDetailBox(
-      String heading,
-   String subHeading,
-   double subHeadingTextSize,
-   double headingTextSize,
-   IconData icon,
-   TextEditingController controller,
-
-  ){
-    controller.text = subHeading;
+    String heading,
+    String subHeading,
+    double subHeadingTextSize,
+    double headingTextSize,
+    IconData icon,
+    TextEditingController controller,
+  ) {
+    //controller.text = subHeading;
     return Padding(
-      padding: const EdgeInsets.symmetric( vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 18.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(icon),
-            SizedBox(width: 8,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(
               children: [
                 Text(
                   heading,
@@ -530,44 +590,32 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                     //color: isDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Align(
-                    child:
-                    IntrinsicWidth(
-                      child: TextField(
-                        style: TextStyle(fontSize: 13.0),
-                        scrollPadding: EdgeInsets.all(0),
-                        controller: controller,
-                        textAlignVertical: TextAlignVertical.center,
-                        onChanged: (value) {
-                          isInputValid();
-                        },
-                        onSubmitted: (value) {},
-                        keyboardType: TextInputType.visiblePassword,
-                        textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: heading,
-                          hintStyle: TextStyle(color: Colors.grey),
-                      
-                        ),
-                      ),
-                    )
-                  /*Text(
-                      subHeading.isEmpty ? "" : "${subHeading}",
-                      style: TextStyle(
-                        fontSize:subHeadingTextSize,
-                        fontWeight: FontWeight.normal,
-                        *//* color: value.isEmpty
-                          ? Colors.grey
-                          : isDarkMode ? Colors.white : Colors.black,
-                                *//*
-                      ),
-                    ),*/
-                ),
               ],
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Container(
+             // width: screenWidth *0.8,
+              child: TextField(
+                scrollPadding: EdgeInsets.all(0),
+                controller: controller,
+                textAlignVertical: TextAlignVertical.center,
+                onChanged: (value) {
+                  //isInputValid();
+                },
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.2)),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.25, color: AppColor.PRIMARY)),
+                  hintText: heading,
+                  prefixIcon: Icon(icon),
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              ),
             ),
           ],
         ),
@@ -575,7 +623,70 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
     );
   }
 
-  void isInputValid(){
+  Widget  _buildDOBInput(BuildContext context, String text,
+      TextEditingController dateController, Icon icon)
+  {
+    return Container(
+      height: 60,
+      padding: EdgeInsets.symmetric(horizontal: 24.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+              child: TextField(
+                  controller: dateController,
+                  //editing controller of this TextField
+                  textInputAction: TextInputAction.done,
 
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: Languages.of(context)!.labelBirthdate,
+                      hintStyle: TextStyle(color: Colors.grey),
+                      icon: icon
+                    //icon of text field
+                  ),
+                  readOnly: true,
+                  // when true user cannot edit text
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate:DateTime.now().subtract(Duration(days: 365*18)),
+                        firstDate: DateTime(1950),
+                        //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime.now().subtract(Duration(days: 365*18)),
+                        helpText: "${Languages.of(context)?.labelSelectDob}",
+                        confirmText: "${Languages.of(context)?.labelConfirm}",
+                        errorFormatText: '${Languages.of(context)?.labelEnterValidDate}',
+                        errorInvalidText: '${Languages.of(context)?.labelEnterDateInValidRange}',
+                        builder: (context, child) {
+                          return Theme(
+                            data: isDarkMode
+                                ? ThemeData.dark()
+                                : ThemeData
+                                .light(), // This will change to light theme.
+                            child: child!,
+                          );
+                        });
+
+                    if (pickedDate != null) {
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate =
+                      DateFormat('dd-MM-yyyy').format(pickedDate);
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      setState(() {
+                        _dobController.text =
+                            formattedDate; //set output date to TextField value.
+                      });
+                    } else {}
+                  })),
+        ],
+      ),
+    );
   }
+
+  void isInputValid() {}
 }

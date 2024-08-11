@@ -95,6 +95,8 @@ abstract class Languages {
 
   String get labelPersonalInfo;
 
+  String get labelEditPersonalInfo;
+
   String get labelSecurity;
 
   String get labelStepVerification;

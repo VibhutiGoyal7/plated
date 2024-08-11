@@ -83,6 +83,9 @@ class LanguageHi extends Languages {
   String get labelPersonalInfo => "व्यक्तिगत जानकारी";
 
   @override
+  String get labelEditPersonalInfo => "Edit Personal Information";
+
+  @override
   String get labelProfile => "प्रोफ़ाइल";
 
   @override
