@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:flutter/material.dart';
 import 'package:Payrio/utils/Helper.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+
+import '../profileSection/settingSection/CustomBiometricScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,12 +15,24 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   String? token = "";
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _canCheckBiometric = false;
+  bool _isAuthenticated = false;
+  bool _authenticationAttempted = false; // Add this flag
+  String _authorized = 'Not Authorized';
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  bool _authOnResume = false;
+  bool? isUserAuthenticated = false;
+
 
   @override
   void initState() {
     super.initState();
     _fetchToken();
-
+    Helper.getUserAuthenticated().then((onValue) {
+      isUserAuthenticated = onValue;
+    });
     Timer(Duration(seconds: 2), () {
       _navigation();
     });
@@ -55,12 +71,53 @@ class _SplashScreenState extends State<SplashScreen> {
 
   }
 
+  Future<void> _initializeBiometrics() async {
+    bool? retrievedBiometric = await Helper.getBiometric();
+    bool? canCheckBiometric = retrievedBiometric;
+    print('Can CheckBiometric: $canCheckBiometric');
+    if (isUserAuthenticated != true) {
+      if (canCheckBiometric != null && canCheckBiometric == true) {
+        List<BiometricType> availableBiometric = [];
+        try {
+          canCheckBiometric = await auth.canCheckBiometrics;
+          if (canCheckBiometric) {
+            availableBiometric = await auth.getAvailableBiometrics();
+          }
+        } on PlatformException catch (e) {
+          print(e);
+        }
+
+        if (!mounted) return;
+
+        setState(() {
+          _canCheckBiometric =
+              canCheckBiometric! && availableBiometric.isNotEmpty;
+        });
+        print("_authenticationAttempted $_authenticationAttempted");
+
+        if (_canCheckBiometric && !_authenticationAttempted) {
+          print("Checking Number of times");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CustomBiometricScreen()),
+          );
+          //_authenticate(); // Only call authenticate if not attempted before
+        }
+      }
+    }
+  }
   void _navigation() {
     print("token:::${token} ${token?.isEmpty}");
     if (token == null || token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/MoneySafeScreen");
     } else {
-      Navigator.pushReplacementNamed(context, "/BottomNav");
+      if (isUserAuthenticated != true) {
+        _initializeBiometrics();
+      }else{
+        Navigator.pushReplacementNamed(context, "/BottomNav");
+      }
     }
   }
+
+
 }

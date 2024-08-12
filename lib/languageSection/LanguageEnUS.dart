@@ -156,6 +156,9 @@ class LanguageEnUS extends Languages {
   String get labelPersonalInfo => "Personal Information";
 
   @override
+  String get labelEditPersonalInfo => "Edit Personal Information";
+
+  @override
   String get labelProfile => "Profile";
 
   @override

@@ -308,7 +308,8 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
   }
 
   Widget  _buildDOBInput(BuildContext context, String text,
-      TextEditingController dateController, Icon icon) {
+      TextEditingController dateController, Icon icon)
+  {
     return Card(
       child: Container(
         height: 60,

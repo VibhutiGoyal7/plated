@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:Payrio/model/request/AddMoneyRequest.dart';
+import 'package:Payrio/model/request/P2PTransactionListRequest.dart';
 import 'package:Payrio/model/request/changeOldPasswordRequest.dart';
 import 'package:Payrio/model/request/checkCustomerRequest.dart';
 import 'package:Payrio/model/request/completeP2PRequest.dart';
@@ -41,6 +42,7 @@ import 'package:Payrio/model/response/initiateP2PResponse.dart';
 import 'package:Payrio/model/response/kycStatusResponse.dart';
 import 'package:Payrio/model/response/messagesSupportChatResponse.dart';
 import 'package:Payrio/model/response/notificationListResponse.dart';
+import 'package:Payrio/model/response/p2PTransactionListReponse.dart';
 import 'package:Payrio/model/response/sendMessageResponse.dart';
 import 'package:Payrio/model/response/transactionProviderListReponse.dart';
 import 'package:Payrio/model/response/payorioMethodListReponse.dart';
@@ -339,6 +341,19 @@ class MainRepository {
     print(jsonData);
     TransactionListResponse mediaList =
         TransactionListResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+
+  Future<P2PTransactionListResponse> p2PTransactionListData(
+      String value, P2PTransactionListRequest request) async {
+    print(request);
+    dynamic response =
+        await _payrioService.postResponse(value, request);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    P2PTransactionListResponse mediaList = P2PTransactionListResponse.fromJson(jsonData);
     return mediaList;
   }
 

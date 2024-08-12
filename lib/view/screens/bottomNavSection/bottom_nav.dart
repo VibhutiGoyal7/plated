@@ -27,7 +27,7 @@ class _BottomNavState extends State<BottomNav>
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool _authOnResume = false;
-
+  bool? isUserAuthenticated;
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
     TransferContactScreen(),
@@ -38,9 +38,11 @@ class _BottomNavState extends State<BottomNav>
 
   @override
   void initState() {
-    _initializeBiometrics();
+    //_initializeBiometrics();
     super.initState();
-
+    Helper.getUserAuthenticated().then((onValue) {
+      isUserAuthenticated = onValue;
+    });
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -55,7 +57,6 @@ class _BottomNavState extends State<BottomNav>
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-
 
     if (state == AppLifecycleState.resumed) {
       if (!_authOnResume) {
@@ -206,7 +207,7 @@ class _BottomNavState extends State<BottomNav>
 
   Future<void> _initializeBiometrics() async {
     bool? retrievedBiometric = await Helper.getBiometric();
-    bool? isUserAuthenticated = await Helper.getUserAuthenticated();
+
     bool? canCheckBiometric = retrievedBiometric;
     print('Can CheckBiometric: $canCheckBiometric');
     if (isUserAuthenticated != true) {
@@ -231,7 +232,11 @@ class _BottomNavState extends State<BottomNav>
 
         if (_canCheckBiometric && !_authenticationAttempted) {
           print("Checking Number of times");
-          _authenticate(); // Only call authenticate if not attempted before
+          /* Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CustomBiometricScreen()),
+          );*/
+          //_authenticate(); // Only call authenticate if not attempted before
         }
       }
     }
@@ -265,11 +270,10 @@ class _BottomNavState extends State<BottomNav>
     if (authenticated) {
       await Helper.saveUserAuthenticated(true);
       print("User authenticated successfully.");
-
     } else {
       await Helper.saveUserAuthenticated(false);
       // User cancelled authentication
       print("User cancelled authentication.");
-        }
+    }
   }
 }

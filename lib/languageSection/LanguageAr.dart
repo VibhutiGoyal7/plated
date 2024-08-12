@@ -153,6 +153,9 @@ class LanguageAr extends Languages {
   String get labelPersonalInfo => "معلومات شخصية";
 
   @override
+  String get labelEditPersonalInfo => "معلومات شخصية";
+
+  @override
   String get labelProfile => "حساب تعريفي";
 
   @override

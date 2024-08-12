@@ -1,10 +1,12 @@
 import 'package:Payrio/languageSection/Languages.dart';
+import 'package:Payrio/model/db/dao.dart';
 import 'package:Payrio/model/request/notificationListRequest.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
+import '../../../model/db/PayorioDatabase.dart';
 import '../../../model/response/notificationListResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Util.dart';
@@ -22,7 +24,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   var imageUrl;
   late double screenWidth;
   late double screenHeight;
-
+  late PayorioDatabase database;
+  late NotificationDao notificationDao;
   List<NotificationDetail> generalNotificationList = [];
   List<NotificationDetail> transactionalNotificationList = [];
 
@@ -40,23 +43,42 @@ class _NotificationScreenState extends State<NotificationScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   bool isInternetConnected = true;
+  String generalType = "general";
+  String transactionType = "transaction";
+  String selectedNotificationType = "";
 
 
   void initState() {
     super.initState();
     imageUrl = "";
-
+    intializeDatabase();
     _scrollController.addListener(_generalLoadMore);
-    _fetchDataFuture = _fetchData(_currentPage, false, "general");
+    selectedNotificationType = generalType;
+
+    _fetchDataFuture = _fetchData(_currentPage, false);
   }
 
   runApi(int? index){
     if(index == 0){
+      setState(() {
+        selectedNotificationType =generalType;
+      });
+      _currentPage = 1;
       _scrollController.addListener(_generalLoadMore);
-    _fetchDataFuture = _fetchData(_currentPage, false, "general");}
+      //_fetchData(_currentPage, true);
+      _fetchDataFuture = _fetchData(_currentPage, false);
+      _fetchPaginatedNotifications(selectedNotificationType, _currentPage);
+   //
+    }
     else{
+      setState(() {
+        selectedNotificationType = transactionType;
+      });
+      _currentPage = 1;
       _scrollController.addListener(_transactionalLoadMore);
-      _fetchDataFuture = _fetchData(_currentPage, false,"transaction" );
+      _fetchDataFuture = _fetchData(_currentPage, false);
+      _fetchPaginatedNotifications(selectedNotificationType, _currentPage);
+     // _fetchDataFuture = _fetchData(_currentPage, false);
 
     }
   }
@@ -70,7 +92,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         _isLoadingMore = true;
       });
       _currentPage++;
-      await _fetchData(_currentPage, true, "general");
+      await _fetchData(_currentPage, true);
       setState(() {
         _isLoadingMore = false;
       });
@@ -84,15 +106,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
         _isLoadingMore = true;
       });
       _currentPage++;
-      await _fetchData(_currentPage, true, "general");
+      await _fetchData(_currentPage, true);
       setState(() {
         _isLoadingMore = false;
       });
     }
   }
 
-  Future<void> _fetchData(
-      int pageKey,  bool isScroll , String notificationType) async {
+  Future<void> _fetchData(int pageKey, bool isScroll) async
+  {
     print("Fetch Data");
     try {
       setState(() {
@@ -114,11 +136,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
         SortingDetail sorting = SortingDetail(createdAt: "desc");
         NotificationListRequest request = NotificationListRequest(
           pageNo: pageKey,
-          pageSize: _numberOfPostsPerRequest, notificationType: '${notificationType}', sorting: sorting,
+          pageSize: _numberOfPostsPerRequest,
+          notificationType: selectedNotificationType,
+          sorting: sorting,
         );
         await Provider.of<MainViewModel>(context, listen: false)
-            .notificationListData(
-            "api/v1/app/notifications/list", request);
+            .notificationListData("api/v1/app/notifications/list", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         await getNotificationData(context, apiResponse, pageKey, isScroll);
@@ -128,8 +151,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
+
   Future<void> getNotificationData(BuildContext context, ApiResponse apiResponse,
-      int pageKey, bool isScroll) async {
+      int pageKey, bool isScroll) async
+  {
     NotificationListResponse? notificationListResponse =
     apiResponse.data as NotificationListResponse?;
     setState(() {
@@ -140,25 +165,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
         return;
       case Status.COMPLETED:
         final newItems = notificationListResponse?.data ?? [];
-        setState(() {
-        /*  print("isScroll:: ${isScroll}  ${filterApplied}");
-          if (!isScroll) {
-            filteredTransactionList.clear();
-          }*/if(notificationListResponse?.data?[0].notificationType == "general"){
-            generalNotificationList.clear();
-            generalNotificationList.addAll(newItems);
-          }else if(notificationListResponse?.data?[0].notificationType == "transaction"){
-            transactionalNotificationList.clear();
-            transactionalNotificationList.addAll(newItems);
-          }
-        });
+        // Insert into the local database
+
+        await database.notificationDao.insertNotifications(newItems);
+
+        await _fetchPaginatedNotifications(selectedNotificationType, pageKey);
+        // Fetch paginated data from the local database
+
         return;
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse.message}") ==
-            nonCapitalizeString(
-                "${Languages.of(context)?.labelInvalidAccessToken}")) {
-          SessionExpiredDialog.showDialogBox(context: context);
-        }
+      // Handle error
         return;
       case Status.INITIAL:
       default:
@@ -166,19 +182,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
-  void _updateTab(int index) {
+  Future<void> _fetchPaginatedNotifications(String type, int pageKey) async
+  {
+    final notifications = await database.notificationDao
+        .fetchNotifications(type, _numberOfPostsPerRequest, (pageKey - 1) * _numberOfPostsPerRequest);
+
     setState(() {
-      _currentTabIndex = index;
-    });
-    Future.delayed(Duration(milliseconds: 100), () {
-      final TabController? controller = DefaultTabController.of(context);
-      if (controller != null) {
-        controller.animateTo(index);
-      } else {
-        print('No DefaultTabController found in context.');
+      if (type == generalType) {
+        if (pageKey == 1) {
+          generalNotificationList.clear();
+        }
+        generalNotificationList.addAll(notifications);
+      } else if (type == transactionType) {
+        if (pageKey == 1) {
+          transactionalNotificationList.clear();
+        }
+        transactionalNotificationList.addAll(notifications);
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -250,12 +273,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         future: _fetchDataFuture,
         builder: (BuildContext context,
             AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return Center(
-                child:
-                CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+          if (snapshot.hasError) {
             return Center(
                 child:
                 Text('Error loading data'));
@@ -322,7 +340,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       )
           : Center(
         child: Text(
-          "${Languages.of(context)?.labelNoTransaction}",
+          "No Notifications",
           style: TextStyle(
               fontSize: 15, color: Colors.grey),
         ),
@@ -498,12 +516,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         future: _fetchDataFuture,
         builder: (BuildContext context,
             AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return Center(
-                child:
-                CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+         if (snapshot.hasError) {
             return Center(
                 child:
                 Text('Error loading data'));
@@ -582,7 +595,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
     );
   }
+
+  Future<void> intializeDatabase() async {
+    database = await $FloorPayorioDatabase
+        .databaseBuilder('payorio_database.db')
+        .build();
+
+    notificationDao = database.notificationDao;
+    _fetchPaginatedNotifications(selectedNotificationType, _currentPage);
+  }
+
 }
+
+
 
 class NotificationItem extends StatelessWidget {
   final NotificationData data;
