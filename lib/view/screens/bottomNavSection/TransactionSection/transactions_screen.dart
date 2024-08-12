@@ -6,15 +6,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
-import '../../../model/response/p2PTransactionListReponse.dart';
-import '../../../utils/Helper.dart';
-import '../../../utils/Util.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/ShimmerList.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/session_expired_dialog.dart';
+import '../../../../languageSection/Languages.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../model/response/p2PTransactionListReponse.dart';
+import '../../../../utils/Helper.dart';
+import '../../../../utils/Util.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/ShimmerList.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/session_expired_dialog.dart';
 
 class TransactionsScreen extends StatefulWidget {
   @override
@@ -30,13 +30,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   bool expanded = false;
   bool inputValid = false;
   bool filterApplied = false;
-  final int _pageSize = 10;
   List<TransactionDetails> transactionList = [];
   List<P2PTransactionDetails> p2PTransactionList = [];
   List<TransactionDetails> filteredTransactionList = [];
   List<P2PTransactionDetails> filteredP2PTransactionList = [];
   final tokenInputController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
   final _numberOfPostsPerRequest = 20;
   var screenHeight;
   var screenWidth;
@@ -44,12 +42,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   var country;
   var currentBalance;
   late bool isDarkMode;
+  bool isTransactional = false;
 
   String dwType = "dw";
   String p2pType = "p2p";
   String selectedNotificationType = "";
 
-  final _scrollController = ScrollController();
+  ScrollController _firstTabController = ScrollController();
+  ScrollController _secondTabController = ScrollController();
+
   int _currentPage = 1;
   bool _isLoadingMore = false;
   Future<void>? _fetchDataFuture;
@@ -84,18 +85,23 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         country = countryName;
       });
     });
-    _scrollController.addListener(_generalLoadMore);
-    _fetchDataFuture = _fetchDWData(_currentPage, filterApplied, false);
+      _secondTabController.addListener(_transactionalLoadMore);
+    _fetchP2PDataFuture = _fetchP2PData(_currentPage, filterApplied, false);
+
+      _firstTabController.addListener(_generalLoadMore);
+      _fetchDataFuture = _fetchDWData(_currentPage, filterApplied, false);
+
   }
 
   @override
   void dispose() {
     tokenInputController.dispose();
-    _scrollController.dispose();
+    _firstTabController.dispose();
+    _secondTabController.dispose();
     super.dispose();
   }
 
-  void _loadMore() async {
+ /* void _loadMore() async {
     if (!_isLoadingMore &&
         _scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
@@ -108,14 +114,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         _isLoadingMore = false;
       });
     }
-  }
+  }*/
 
   Future<void> _fetchDWData(
       int pageKey, bool filterApplied, bool isScroll) async
   {
     try {
       setState(() {
-        //_isLoadingMore = true;
+        //isLoading = true;
       });
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
@@ -155,7 +161,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   {
     try {
       setState(() {
-        //_isLoadingMore = true;
+        //isLoading = true;
       });
       bool isConnected = await _connectivityService.isConnected();
       if (!isConnected) {
@@ -174,6 +180,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         P2PTransactionListRequest request = P2PTransactionListRequest(
           pageNo: pageKey,
           pageSize: _numberOfPostsPerRequest,
+          status: nonCapitalizeString(status),
           uniqueId: '',
         );
         await Provider.of<MainViewModel>(context, listen: false)
@@ -211,7 +218,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
         return;
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") ==
+        if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
@@ -245,7 +252,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
         return;
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") ==
+        if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
@@ -284,25 +291,22 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return groupedTransactions;
   }
 
-  Future<bool> _onWillPop() async {
-    Navigator.pushReplacementNamed(
-      context,
-      "/BottomNav",
-    );
-    return false;
-  }
+
 
   runApi(int? index){
     if(index == 0){
       setState(() {
         selectedNotificationType = dwType;
+        isLoading =true;
+        isTransactional = false;
+        status = "";
       });
       _currentPage = 1;
       filteredTransactionList.clear();
       transactionList.clear();
       p2PTransactionList.clear();
       filteredP2PTransactionList.clear();
-      _scrollController.addListener(_generalLoadMore);
+      _firstTabController.addListener(_generalLoadMore);
       //_fetchData(_currentPage, true);
       _fetchDataFuture = _fetchDWData(_currentPage, filterApplied, false);
       //_fetchPaginatedNotifications(selectedNotificationType, _currentPage);
@@ -311,13 +315,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     else{
       setState(() {
         selectedNotificationType = p2pType;
+        isLoading =true;
+        isTransactional = true;
+        status = "";
       });
       _currentPage = 1;
       filteredTransactionList.clear();
       transactionList.clear();
       p2PTransactionList.clear();
       filteredP2PTransactionList.clear();
-      _scrollController.addListener(_transactionalLoadMore);
+      _secondTabController.addListener(_transactionalLoadMore);
       _fetchP2PDataFuture = _fetchP2PData(_currentPage,  filterApplied, false);
       //_fetchPaginatedNotifications(selectedNotificationType, _currentPage);
       // _fetchDataFuture = _fetchData(_currentPage, false);
@@ -327,8 +334,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   void _generalLoadMore() async {
     if (!_isLoadingMore &&
-        _scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
+        _firstTabController.position.pixels ==
+            _firstTabController.position.maxScrollExtent) {
       setState(() {
         _isLoadingMore = true;
       });
@@ -341,8 +348,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
   void _transactionalLoadMore() async {
     if (!_isLoadingMore &&
-        _scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
+        _secondTabController.position.pixels ==
+            _secondTabController.position.maxScrollExtent) {
       setState(() {
         _isLoadingMore = true;
       });
@@ -418,7 +425,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             children: [
               SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  padding: const EdgeInsets.only(top: 0, /*left: 10, right: 10*/),
                   child: DefaultTabController(
                     length: 2,
                     child: Column(
@@ -495,7 +502,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   ),
                 ),
               ),
-              isLoading
+              _isLoadingMore
                   ? Stack(
                       children: [
                         // Block interaction
@@ -516,89 +523,83 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   Widget generalNotification() {
+
     return Container(
       width: screenWidth,
-      child: Card(
-        elevation: 20,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-        child: Container(
-          margin: EdgeInsets.only(top: 12),
-          child: isInternetConnected && !isLoading
-              ? checkListEmpty()
-                  ? FutureBuilder(
-                      future: _fetchDataFuture,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<void> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text('Error loading data'));
-                        } else {
-                          // Group transactions by date
-                          Map<String, List<TransactionDetails>>
-                              groupedTransactions = groupTransactionsByDate(
-                                  filterApplied
-                                      ? filteredTransactionList
-                                      : transactionList);
-                          List<String> dates =
-                              groupedTransactions.keys.toList();
+      child: Container(
+        margin: EdgeInsets.only(top: 12),
+        child: isInternetConnected && !isLoading
+            ? checkListEmpty()
+                ? FutureBuilder(
+                    future: _fetchDataFuture,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<void> snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error loading data'));
+                      } else {
+                        // Group transactions by date
+                        Map<String, List<TransactionDetails>>
+                            groupedTransactions = groupTransactionsByDate(
+                                filterApplied
+                                    ? filteredTransactionList
+                                    : transactionList);
+                        List<String> dates =
+                            groupedTransactions.keys.toList();
 
-                          return ListView.builder(
-                            controller: _scrollController,
-                            itemCount: dates.length + (_isLoadingMore ? 1 : 0),
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == dates.length) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
-                              String date = dates[index];
-                              List<TransactionDetails> transactionsForDate =
-                                  groupedTransactions[date]!;
+                        return ListView.builder(
+                          controller: _firstTabController,
+                          itemCount: dates.length + (_isLoadingMore ? 1 : 0),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == dates.length) {
+                              return Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            String date = dates[index];
+                            List<TransactionDetails> transactionsForDate =
+                                groupedTransactions[date]!;
 
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        date,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12),
-                                      ),
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      date,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12),
                                     ),
-                                    ...transactionsForDate.map((transaction) {
-                                      return TransactionItem(
-                                        transaction: transaction,
-                                        symbol: countryCurrencySymbol,
-                                        userId: userId,
-                                      );
-                                    }).toList(),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
-                    )
-                  : Center(
-                      child: Text(
-                        "${Languages.of(context)?.labelNoTransaction}",
-                        style: TextStyle(fontSize: 15, color: Colors.grey),
-                      ),
-                    )
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-                  child: ShimmerList(itemCount: 2),
-                ),
-        ),
+                                  ),
+                                  ...transactionsForDate.map((transaction) {
+                                    return TransactionItem(
+                                      transaction: transaction,
+                                      symbol: countryCurrencySymbol,
+                                      userId: userId,
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  )
+                : Center(
+                    child: Text(
+                      "${Languages.of(context)?.labelNoTransaction}",
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
+                  )
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
+                child: ShimmerList(itemCount: 2),
+              ),
       ),
     );
   }
@@ -606,87 +607,80 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget transactionalNotification() {
     return Container(
       width: screenWidth,
-      child: Card(
-        elevation: 20,
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-        child: Container(
-          margin: EdgeInsets.only(top: 12),
-          child: isInternetConnected && !isLoading
-              ? checkP2PListEmpty()
-                  ? FutureBuilder(
-                      future: _fetchP2PDataFuture,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<void> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text('Error loading data'));
-                        } else {
-                          // Group transactions by date
-                          Map<String, List<P2PTransactionDetails>>
-                              groupedTransactions = groupP2PTransactionsByDate(
-                                  filterApplied
-                                      ? filteredP2PTransactionList
-                                      : p2PTransactionList);
-                          List<String> dates =
-                              groupedTransactions.keys.toList();
+      child: Container(
+        margin: EdgeInsets.only(top: 12),
+        child: isInternetConnected && !isLoading
+            ? checkP2PListEmpty()
+                ? FutureBuilder(
+                    future: _fetchP2PDataFuture,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<void> snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error loading data'));
+                      } else {
+                        // Group transactions by date
+                        Map<String, List<P2PTransactionDetails>>
+                            groupedTransactions = groupP2PTransactionsByDate(
+                                filterApplied
+                                    ? filteredP2PTransactionList
+                                    : p2PTransactionList);
+                        List<String> dates =
+                            groupedTransactions.keys.toList();
 
-                          return ListView.builder(
-                            controller: _scrollController,
-                            itemCount: dates.length + (_isLoadingMore ? 1 : 0),
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == dates.length) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
-                              String date = dates[index];
-                              List<P2PTransactionDetails> transactionsForDate =
-                                  groupedTransactions[date]!;
+                        return ListView.builder(
+                          controller: _secondTabController,
+                          itemCount: dates.length + (_isLoadingMore ? 1 : 0),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == dates.length) {
+                              return Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            String date = dates[index];
+                            List<P2PTransactionDetails> transactionsForDate =
+                                groupedTransactions[date]!;
 
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        date,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12),
-                                      ),
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      date,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12),
                                     ),
-                                    ...transactionsForDate.map((transaction) {
-                                      return P2PTransactionItem(
-                                        transaction: transaction,
-                                        symbol: countryCurrencySymbol,
-                                        userId: userId,
-                                      );
-                                    }).toList(),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
-                    )
-                  : Center(
-                      child: Text(
-                        "${Languages.of(context)?.labelNoTransaction}",
-                        style: TextStyle(fontSize: 15, color: Colors.grey),
-                      ),
-                    )
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
-                  child: ShimmerList(itemCount: 2),
-                ),
-        ),
+                                  ),
+                                  ...transactionsForDate.map((transaction) {
+                                    return P2PTransactionItem(
+                                      transaction: transaction,
+                                      symbol: countryCurrencySymbol,
+                                      userId: userId,
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  )
+                : Center(
+                    child: Text(
+                      "${Languages.of(context)?.labelNoTransaction}",
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
+                  )
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
+                child: ShimmerList(itemCount: 2),
+              ),
       ),
     );
   }
@@ -739,22 +733,32 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           "${Languages.of(context)?.labelSuccess}", setState),
                       filterStatusCard(
                           "${Languages.of(context)?.labelPending}", setState),
+                      !isTransactional ?
                       filterStatusCard(
-                          "${Languages.of(context)?.labelRejected}", setState),
+                          "${Languages.of(context)?.labelRejected}", setState) : SizedBox(),
                     ],
                   ),
-                  Text(
-                    "${Languages.of(context)?.labelRequestType}",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  Row(
+                  isTransactional ?
+                      SizedBox():
+                  Wrap(
+                    spacing: 20,
+                    runSpacing: 20,
                     children: [
-                      filterRequestTypeCard(
-                          "${Languages.of(context)?.labelDeposit}", setState),
-                      filterRequestTypeCard(
-                          "${Languages.of(context)?.labelWithdraw}", setState),
+                      Text(
+                        "${Languages.of(context)?.labelRequestType}",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Row(
+                        children: [
+                          filterRequestTypeCard(
+                              "${Languages.of(context)?.labelDeposit}", setState),
+                          filterRequestTypeCard(
+                              "${Languages.of(context)?.labelWithdraw}", setState),
+                        ],
+                      ),
                     ],
                   ),
+
                   _buildFooter(context, apiResponse),
                 ],
               ),
@@ -856,16 +860,31 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 width: screenWidth * 0.3,
                 child: ElevatedButton(
                   onPressed: () async {
-                    setState(() {
-                      status = "";
-                      requestType = "";
-                      filterApplied = false;
-                      //Navigator.pop(context);
-                      isLoading = true;
-                      filteredTransactionList.clear();
-                      transactionList.clear();
-                    });
-                    _fetchDataFuture = _fetchDWData(_currentPage, filterApplied, false);
+                    if(!isTransactional) {
+                      setState(() {
+                        status = "";
+                        requestType = "";
+                        filterApplied = false;
+                        //Navigator.pop(context);
+                        isLoading = true;
+                        filteredTransactionList.clear();
+                        transactionList.clear();
+                      });
+                      _fetchDataFuture =
+                          _fetchDWData(_currentPage, filterApplied, false);
+                    }else{
+                      setState(() {
+                        status = "";
+                        requestType = "";
+                        filterApplied = false;
+                        //Navigator.pop(context);
+                        isLoading = true;
+                        filteredP2PTransactionList.clear();
+                        p2PTransactionList.clear();
+                      });
+                      _fetchP2PDataFuture =
+                          _fetchP2PData(_currentPage, filterApplied, false);
+                    }
                     Navigator.pop(context);
                   },
                   child: Text(
@@ -887,13 +906,23 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
                   onPressed: () async {
-                    setState(() {
-                      filterApplied = true;
-                      _currentPage = 1;
-                      isLoading = true;
-                    });
-                    _fetchDataFuture =
-                        _fetchDWData(_currentPage, filterApplied, false);
+                    if(!isTransactional) {
+                      setState(() {
+                        filterApplied = true;
+                        _currentPage = 1;
+                        isLoading = true;
+                      });
+                      _fetchDataFuture =
+                          _fetchDWData(_currentPage, filterApplied, false);
+                    }else{
+                      setState(() {
+                        filterApplied = true;
+                        _currentPage = 1;
+                        isLoading = true;
+                      });
+                      _fetchP2PDataFuture =
+                          _fetchP2PData(_currentPage, filterApplied, false);
+                    }
                     Navigator.pop(context);
                   },
                   child: Text(
@@ -1053,7 +1082,7 @@ class TransactionItem extends StatelessWidget {
                           capitalizeFirstLetter(
                               "${transaction.transactionType}"),
                           userId,
-                          transaction?.senderId),
+                          transaction.senderId),
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -1064,7 +1093,7 @@ class TransactionItem extends StatelessWidget {
                                   capitalizeFirstLetter(
                                       "${transaction.transactionType}"),
                                   userId,
-                                  transaction?.senderId)),
+                                  transaction.senderId)),
                     ),
                     Text(
                       "${convertTime("${transaction.createdAt}")}",
@@ -1094,7 +1123,7 @@ class P2PTransactionItem extends StatelessWidget {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/TransactionOverviewScreen',
+        Navigator.pushNamed(context, '/P2PTransactionOverviewScreen',
             arguments: transaction);
         //TransactionDialog.showDialogBox(context: context,transaction : transaction, symbol: symbol);
         //_showModal(context: context, transaction: transaction);
@@ -1195,7 +1224,7 @@ class P2PTransactionItem extends StatelessWidget {
                           capitalizeFirstLetter(
                               "${transaction.transactionType}"),
                           userId,
-                          transaction?.senderId),
+                          transaction.senderId),
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -1206,7 +1235,7 @@ class P2PTransactionItem extends StatelessWidget {
                                   capitalizeFirstLetter(
                                       "${transaction.transactionType}"),
                                   userId,
-                                  transaction?.senderId)),
+                                  transaction.senderId)),
                     ),
                     Text(
                       "${convertTime("${transaction.createdAt}")}",

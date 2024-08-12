@@ -61,7 +61,7 @@ String convertDateTimeFormat(String input) {
   String localTime = convertUtcDateToLocal(input);
 
   DateTime parsedDate = DateTime.parse(localTime);
-  String formattedDate = DateFormat('yyyy-MM-dd hh:mm a').format(parsedDate);
+  String formattedDate = DateFormat('dd-MM-yyyy hh:mm a').format(parsedDate);
 
   return formattedDate;
 }
@@ -175,10 +175,15 @@ double extractFloat(String str) {
 bool checkMoneyOut(String transactionType, int? senderId, int? userId){
 
   if(nonCapitalizeString(transactionType) == nonCapitalizeString("transfer")){
-    if(userId== senderId){
-      return true;}
-    else{
-      return false;}
+    if(userId !=0) {
+      if (userId == senderId) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }else
+      return false;
   }else if(nonCapitalizeString(transactionType) == nonCapitalizeString("withdraw")){
     return true;
   }else{

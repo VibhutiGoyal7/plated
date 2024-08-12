@@ -446,7 +446,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                                     alignment:
                                                         Alignment.topRight,
                                                     child: Text(
-                                                      convertTime(
+                                                      convertDateTimeFormat(
                                                           "${response.createdAt}"),
                                                       overflow:
                                                           TextOverflow.visible,

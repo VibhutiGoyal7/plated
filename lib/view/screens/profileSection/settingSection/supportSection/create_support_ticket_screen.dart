@@ -107,8 +107,7 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
         _commentController.text.isNotEmpty &&
         "$transactionTypeId".isNotEmpty &&
         "$transactionMethodId".isNotEmpty &&
-        "$transactionProviderId".isNotEmpty &&
-        imageUrl!.isNotEmpty) {
+        "$transactionProviderId".isNotEmpty ) {
       setState(() {
         inputValid = true;
       });
@@ -1173,8 +1172,11 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                       );
                     });
                   } else {
-                    File? compressedFile =
+                    File? compressedFile = File("");
+                    if(galleryFile?.path.isNotEmpty == true)
+                      compressedFile =
                         await _resizeAndCompressImage(galleryFile as File, 800);
+
                     await Provider.of<MainViewModel>(context, listen: false)
                         .postMultiFormResponseToCreateSupport(
                             url: "api/v1/app/payorio_support_tickets",

@@ -72,6 +72,7 @@ dependencies:
   floor: ^1.4.2
   device_info_plus: ^10.1.1
   flutter_broadcasts: ^0.4.0
+  fluttertoast: ^8.2.1
 
 dev_dependencies:
   flutter_test:

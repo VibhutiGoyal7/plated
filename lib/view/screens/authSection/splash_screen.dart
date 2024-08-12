@@ -103,6 +103,8 @@ class _SplashScreenState extends State<SplashScreen> {
           );
           //_authenticate(); // Only call authenticate if not attempted before
         }
+      }else{
+        Navigator.pushReplacementNamed(context, "/BottomNav");
       }
     }
   }

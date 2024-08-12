@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:toastification/toastification.dart';
 
 class ToastComponent {
@@ -7,16 +8,16 @@ class ToastComponent {
     required String? message,
     Duration duration = const Duration(seconds: 5),
   }) {
-    if(message != null && message != "null") {
-      toastification.show(
-        context: context,
-        title: Text("${message}"),
-        style: ToastificationStyle.flat,
-        autoCloseDuration: duration,
-        direction: TextDirection.ltr,
-        closeOnClick: true,
-        pauseOnHover: true,
-      );
+    Fluttertoast.cancel(); // Cancel any existing toast before showing a new one
+
+    Fluttertoast.showToast(
+      msg: "${message}",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,/*
+      backgroundColor: Colors.black,
+      textColor: Colors.white,*/
+      fontSize: 16.0,
+    );
     }
   }
-}

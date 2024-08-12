@@ -759,7 +759,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               Container(
                                 height: screenHeight * 0.32,
                                 margin:
-                                    EdgeInsets.only(top: 5, left: 2, right: 6),
+                                    EdgeInsets.only(top: 5, left: 2, right: 4),
                                 child: isInternetConnected && !isLoading
                                     ? transactionList.isNotEmpty
                                         ? ListView.builder(
@@ -804,7 +804,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                     child: Container(
                                                       margin:
                                                           EdgeInsets.symmetric(
-                                                              vertical: 4),
+                                                              vertical: 4, horizontal: 5),
                                                       child: Row(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1009,10 +1009,10 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           return GestureDetector(
                             onTap: () {
                               if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)!.labelAdd) {
+                                  Languages.of(context)!.labelAddMoney) {
                                 Navigator.pop(context);
                                 calledShortCut =
-                                    Languages.of(context)!.labelAdd;
+                                    Languages.of(context)!.labelAddMoney;
                                 if (checkKYCStatus()) {
                                   Navigator.pushNamed(
                                       context, '/PaymentMethodScreen');
@@ -1037,6 +1037,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   Languages.of(context)?.labelTransfer) {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(context, '/TransferScreen');
+                              }
+                              else if (_shortcutCardsList[index].title ==
+                                  Languages.of(context)?.labelRequestQR) {
+
+                                calledShortCut =
+                                    Languages.of(context)!.labelWithdraw;
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/RequestQrScreen');
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
@@ -1048,7 +1056,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               child: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(18),
+                                    padding: EdgeInsets.all(15),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColor.PRIMARY),
@@ -1073,7 +1081,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     ),
                   ),
                 ),
-                Text(Languages.of(context)!.labelSend,
+                Text("Receive money",
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 SizedBox(
@@ -1094,15 +1102,25 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         if (index == 2) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pushNamed(context, '/ComingSoonScreen');
+                              if (_shortcutCardsList[index].title ==
+                                  Languages.of(context)?.labelRequestQR) {
+
+                                calledShortCut =
+                                    Languages.of(context)!.labelWithdraw;
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/RequestQrScreen');
+                              }else {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                    context, '/ComingSoonScreen');
+                              }
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(18),
+                                    padding: EdgeInsets.all(15),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColor.PRIMARY),
@@ -1156,7 +1174,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               child: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(18),
+                                    padding: EdgeInsets.all(15),
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColor.PRIMARY),

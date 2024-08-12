@@ -12,22 +12,21 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../model/request/completeP2PRequest.dart';
-import '../../../../model/response/initiateP2PResponse.dart';
+import '../../../../model/response/p2PTransactionListReponse.dart';
+import '../../../../model/response/transactionListReponse.dart';
 import '../../../../utils/Helper.dart';
-import '../../../model/response/transactionListReponse.dart';
-import '../../component/toastMessage.dart';
+import '../../../component/toastMessage.dart';
 
-class TransactionReceiptScreen extends StatefulWidget {
-  final TransactionDetails? data; // Define the 'data' parameter here
+class P2PTransactionReceiptScreen extends StatefulWidget {
+  final P2PTransactionDetails? data; // Define the 'data' parameter here
 
-  TransactionReceiptScreen({Key? key, required this.data}) : super(key: key);
+  P2PTransactionReceiptScreen({Key? key, required this.data}) : super(key: key);
 
   @override
-  _TransactionReceiptScreenState createState() => _TransactionReceiptScreenState();
+  _P2PTransactionReceiptScreenState createState() => _P2PTransactionReceiptScreenState();
 }
 
-class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
+class _P2PTransactionReceiptScreenState extends State<P2PTransactionReceiptScreen> {
   String token = "";
   String date = "";
   String time = "";
@@ -53,7 +52,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
     date = "${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
     time = "${DateFormat('hh:mm a').format(DateTime.now())}";
 
-    receiverName = "${widget.data?.fullName}";
+    receiverName = "${widget.data?.senderUsername}";
     phoneNo = "receiverPhoneNumber";
     receiverUsername = "receiverUserName";
     amount = "${widget.data?.amount}";
@@ -313,7 +312,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                       height: 3,
                                                     ),
                                                     Text(
-                                                      "${userName}",
+                                                      "${widget.data?.senderUsername}",
                                                       style: TextStyle(
                                                           fontSize: 11,
                                                           fontWeight:
@@ -355,7 +354,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                     height: 3,
                                                   ),
                                                   Text(
-                                                    "${receiverUsername}",
+                                                    "${widget.data?.receiverUsername}",
                                                     style: TextStyle(
                                                         fontSize: 11,
                                                         fontWeight:

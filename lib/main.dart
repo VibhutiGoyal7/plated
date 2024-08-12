@@ -4,6 +4,7 @@ import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/request/verifyOtpChangePass.dart';
 import 'package:Payrio/model/response/allSupportTicketResponse.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
+import 'package:Payrio/model/response/p2PTransactionListReponse.dart';
 import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/webviewData.dart';
 import 'package:Payrio/theme/AppTheme.dart';
@@ -22,15 +23,17 @@ import 'package:Payrio/view/screens/authSection/phone_verify_screen.dart';
 import 'package:Payrio/view/screens/authSection/setup_account_screen.dart';
 import 'package:Payrio/view/screens/authSection/signin_screen.dart';
 import 'package:Payrio/view/screens/authSection/splash_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/TransactionSection/p2p_transaction_overview_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/TransactionSection/p2p_transaction_receipt_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/TransactionSection/transactions_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/request_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_create_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/tpinSection/tpin_verify_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transaction_overview_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transaction_receipt_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transactions_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/TransactionSection/transaction_overview_screen.dart';
+import 'package:Payrio/view/screens/bottomNavSection/TransactionSection/transaction_receipt_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_receipt_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/payment_successfull_screen.dart';
 import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
@@ -474,6 +477,13 @@ class _MyAppState extends State<MyApp> {
                 data: args,
               );
             },
+            '/P2PTransactionOverviewScreen': (context) {
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as P2PTransactionDetails?;
+              return P2PTransactionOverviewScreen(
+                data: args,
+              );
+            },
             '/WithdrawScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
@@ -576,6 +586,11 @@ class _MyAppState extends State<MyApp> {
               final args = ModalRoute.of(context)!.settings.arguments
                   as InitiateP2PResponse?;
               return PaymentReceiptScreen(data: args);
+            },
+            '/P2PTransactionReceiptScreen': (context) {
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as P2PTransactionDetails?;
+              return P2PTransactionReceiptScreen(data: args);
             },
             '/TransactionReceiptScreen': (context) {
               final args = ModalRoute.of(context)!.settings.arguments

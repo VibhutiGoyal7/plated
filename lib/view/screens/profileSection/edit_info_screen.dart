@@ -18,6 +18,7 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
+import '../../component/toastMessage.dart';
 
 class EditInformationScreen extends StatefulWidget {
   @override
@@ -105,13 +106,16 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
         await Helper.saveKycStatus(mediaList?.kycStatus);
         print(mediaList?.countryName);
 
+        ToastComponent.showToast(
+            context: context, message: "Personal information updated successfully");
+
         _fetchDataFromPref();
         //Navigator.pushReplacementNamed(context, "/PersonalInfoScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         _fetchDataFromPref();
         print("Message : ${apiResponse.message}");
-        if (nonCapitalizeString("${apiResponse?.message}") ==
+        if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
@@ -609,10 +613,10 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.2)),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.2 ,color :isDarkMode ? Colors.white : Colors.black), ),
                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.25, color: AppColor.PRIMARY)),
                   hintText: heading,
-                  prefixIcon: Icon(icon),
+                  prefixIcon: Icon(icon, color: isDarkMode ? Colors.white : Colors.black,),
                   hintStyle: TextStyle(color: Colors.grey),
                 ),
               ),

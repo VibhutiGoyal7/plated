@@ -309,14 +309,19 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                       onTap: () {
                         Navigator.pushNamed(context, "/AddressScreen");
                       },
-                      child: DetailBox(
-                        heading: Languages.of(context)!.labelAddress,
-                        subHeading: "${address}",
-                        icon: Icons.calendar_month,
-                        headingTextSize: 14,
-                        subHeadingTextSize: 13,
-                      ),
-                    ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            DetailBox(
+                              heading: Languages.of(context)!.labelAddress,
+                              subHeading: "${address}",
+                              icon: Icons.calendar_month,
+                              headingTextSize: 14,
+                              subHeadingTextSize: 13,
+                            ),
+                            Icon(Icons.arrow_forward_ios, size: 20,)
+                          ],
+                        )),
                     DetailBox(
                       heading: 'Document Name',
                       subHeading: "${recentDocumentName}",

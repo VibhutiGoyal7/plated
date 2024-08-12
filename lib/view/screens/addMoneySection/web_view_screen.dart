@@ -78,9 +78,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
         onPageFinished: (url) async {
           print("uRL:::{url}");
           if (url.contains("https://admin.payorio.com/")) {
-            await Future.delayed(Duration(seconds: 10));
-            /*
-            Navigator.pushReplacementNamed(context, "/BottomNav");*/
+            await Future.delayed(Duration(seconds: 6));
+            Navigator.pushReplacementNamed(context, "/BottomNav");
           }
           setState(() {
             loadingPercentage = 100;
@@ -127,7 +126,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        Navigator.pushReplacementNamed(context, "/BottomNav");
+       // Navigator.pushReplacementNamed(context, "/BottomNav");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
@@ -160,7 +159,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
   })();
   ''';
 
-    controller?.runJavaScriptReturningResult(jsScript).then((result) {
+    controller?..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+      //..clearCache()
+      ..runJavaScriptReturningResult(jsScript
+    ).then((result) {
       String trimmedResult = result.toString().trim();
 
       print('JavaScript executed: $trimmedResult');
