@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/apis/api_response.dart';
+import '../../../../model/response/generateTpinResponse.dart';
 import '../../../../theme/AppColor.dart';
 import '../../../../utils/Util.dart';
 import '../../../../view_model/main_view_model.dart';
@@ -45,7 +46,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Future<Widget> getChangePassResponse(
       BuildContext context, ApiResponse apiResponse) async {
-    final mediaList = apiResponse.data;
+    GenerateTpinResponse generateTpinResponse = apiResponse.data;
     setState(() {
       isLoading = false;
     });
@@ -55,7 +56,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       case Status.COMPLETED:
         print("response: ${apiResponse}");
 
-        ToastComponent.showToast(context: context, message: "${apiResponse.message}");
+        ToastComponent.showToast(context: context, message: "${generateTpinResponse.message}");
         Navigator.pushNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:

@@ -92,7 +92,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
       BuildContext context, ApiResponse apiResponse) async
   {
     ProfileResponse? mediaList = apiResponse.data as ProfileResponse?;
-    print("apiResponse${apiResponse.status}");
+    print("apiResponse${mediaList?.message}");
     setState(() {
       isLoading = false;
     });
@@ -107,7 +107,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
         print(mediaList?.countryName);
 
         ToastComponent.showToast(
-            context: context, message: "Personal information updated successfully");
+            context: context, message: "${mediaList?.message}");
 
         _fetchDataFromPref();
         //Navigator.pushReplacementNamed(context, "/PersonalInfoScreen");

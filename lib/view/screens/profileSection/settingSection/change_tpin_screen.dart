@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/apis/api_response.dart';
 import '../../../../model/request/generateOtpTpinChange.dart';
+import '../../../../model/response/generateTpinResponse.dart';
 import '../../../../utils/Util.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
@@ -93,8 +94,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
 
   Future<Widget> verifyOtpTpinChange(
       BuildContext context, ApiResponse apiResponse) async {
-    final response = apiResponse.data;
-    var message = apiResponse.message.toString();
+    final GenerateTpinResponse generateTpinResponse = apiResponse.data;
+    var message = generateTpinResponse.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -102,13 +103,14 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        ToastComponent.showToast(
-            context: context, message: "TPIN changed successfully.");
+        ToastComponent.showToast(context: context, message: message);
 
         Navigator.pushReplacementNamed(context, '/ProfileScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse?.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(context: context, message: message);
@@ -137,18 +139,24 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("GetOtpResponse : ${response?.otp}");
-        ToastComponent.showToast(context: context, message: response?.otp);
-        if(response == null){
-          ToastComponent.showToast(context: context, message: apiResponse.message);
+        ToastComponent.showToast(
+            context: context,
+            message: response?.otp != null ? response?.otp : response?.message);
+        if (response == null) {
+          ToastComponent.showToast(
+              context: context, message: apiResponse.message);
         }
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse?.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           print("aaa${apiResponse.message}");
-          ToastComponent.showToast(context: context, message: apiResponse.message);
+          ToastComponent.showToast(
+              context: context, message: apiResponse.message);
         }
         return Center(
             // child: Text('Please try again later!!!'),
@@ -186,7 +194,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
           child: SafeArea(
             child: Column(
               children: [
-               /* Center(
+                /* Center(
                   child: Image(
                     alignment: Alignment.topLeft,
                     //width: screenWidth*0.8,
@@ -289,7 +297,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                             isLoading = false;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                                content: Text(
+                                    '${Languages.of(context)?.labelNoInternetConnection}'),
                                 duration: maxDuration,
                               ),
                             );
@@ -334,7 +343,7 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
           ? Stack(
               children: [
                 ModalBarrier(
-                    dismissible: false, color : Colors.black.withOpacity(0.3)),
+                    dismissible: false, color: Colors.black.withOpacity(0.3)),
                 // Loader indicator
                 Center(
                   child: CircularProgressIndicator(),
@@ -371,7 +380,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
                       isLoading = false;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                          content: Text(
+                              '${Languages.of(context)?.labelNoInternetConnection}'),
                           duration: maxDuration,
                         ),
                       );
@@ -541,7 +551,8 @@ class _ChangeTpinScreenState extends State<ChangeTpinScreen> {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            content:
+                Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );
