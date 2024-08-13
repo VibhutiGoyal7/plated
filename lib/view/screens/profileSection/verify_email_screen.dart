@@ -113,7 +113,7 @@ class _VerifyEmailScreenContentState extends State<VerifyEmailScreen> {
        /* setState(() {
           isOtpBoxVisible = true;
         });*/
-        ToastComponent.showToast(context: context, message: mediaList?.emailOtp);
+        // ToastComponent.showToast(context: context, message: mediaList?.emailOtp);
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/VerifyEmailOtpScreen', arguments: emailController.text);
         return Container(); // Return an empty container as you'll navigate away

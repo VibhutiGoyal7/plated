@@ -315,7 +315,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                             DetailBox(
                               heading: Languages.of(context)!.labelAddress,
                               subHeading: "${address}",
-                              icon: Icons.calendar_month,
+                              icon: Icons.home,
                               headingTextSize: 14,
                               subHeadingTextSize: 13,
                             ),

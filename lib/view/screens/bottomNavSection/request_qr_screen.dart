@@ -114,6 +114,10 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                           image: AssetImage("assets/requestQR.png"),
                         ),
                       ),
+                      /*Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                        child: Text("Enter amount which you want to request from another user to create a QR code."),
+                      ),*/
                       _buildAddMoneyInput(context, "0.00"),
                       _buildFooter(context)
                     ],
@@ -166,7 +170,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  "${Languages.of(context)?.labelAddMoney}",
+                  "${Languages.of(context)?.labelEnterAmount}",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                 ),
               ),
@@ -236,39 +240,6 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                 if (isValid) {
                   data = RequestQRData(amount: '${_amountController.text}', username: '$username');
                   generateQrCode("$username-${_amountController.text}");
-
-                /*  setState(() {
-                    isLoading = true;
-                  });
-
-                  bool isConnected = await _connectivityService.isConnected();
-                  if (!isConnected) {
-                    setState(() {
-                      isLoading = false;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${Languages.of(context)?.labelNoInternetConnection}',
-                            style: TextStyle(color: AppColor.WHITE),
-                          ),
-                          duration: maxDuration,
-                        ),
-                      );
-                    });
-                  } else {
-                    AddMoneyRequest request = AddMoneyRequest(
-                        amount: int.parse(_amountController.text));
-
-                    await Provider.of<MainViewModel>(context, listen: false)
-                        .addMoneyData(
-                        "api/v1/app/payment_transactions/add_money_to_wallet",
-                        request);
-
-                    ApiResponse apiResponse =
-                        Provider.of<MainViewModel>(context, listen: false)
-                            .response;
-                    getAddMoneyResponse(context, apiResponse);
-                  }*/
                 }
               },
               child: Text(

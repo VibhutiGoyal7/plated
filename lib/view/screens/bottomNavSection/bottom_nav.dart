@@ -91,11 +91,11 @@ class _BottomNavState extends State<BottomNav>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child: _selectedIndex != 0
+        child: /*_selectedIndex != 0
             ? ScaleTransition(
                 scale: _animation,
                 child: _widgetOptions.elementAt(_selectedIndex))
-            : _widgetOptions.elementAt(_selectedIndex),
+            :*/ _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
       floatingActionButton: FloatingActionButton(

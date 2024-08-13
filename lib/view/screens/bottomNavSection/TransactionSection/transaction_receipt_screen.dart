@@ -31,7 +31,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
   String time = "";
   String imageUrl = "";
   String profileName = "";
-  String receiverName = "";
+  String senderrName = "";
   String phoneNo = "";
   String? userName = "";
   String? receiverUsername = "";
@@ -51,9 +51,9 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
     date = "${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
     time = "${DateFormat('hh:mm a').format(DateTime.now())}";
 
-    receiverName = "${widget.data?.fullName}";
-    phoneNo = "receiverPhoneNumber";
-    receiverUsername = "receiverUserName";
+    senderrName = "${widget.data?.senderFullName}";
+    phoneNo = "";
+    receiverUsername = "${widget.data?.receiverUsername}";
     amount = "${widget.data?.amount}";
     uniqueID = "${widget.data?.uniqueId}";
     setState(() {
@@ -311,7 +311,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                       height: 3,
                                                     ),
                                                     Text(
-                                                      "${userName}",
+                                                      "${widget.data?.senderUsername}",
                                                       style: TextStyle(
                                                           fontSize: 11,
                                                           fontWeight:
@@ -842,7 +842,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
         // Share the screenshot
         Share.shareXFiles(
           [xFile],
-          text: 'Hey, I paid $currencySymbol$amount to $receiverName using payorio',
+          text: 'Hey, I paid $currencySymbol$amount to $senderrName using payorio',
         );
       }
     } catch (e) {

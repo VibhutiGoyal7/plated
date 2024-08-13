@@ -13,7 +13,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../model/response/p2PTransactionListReponse.dart';
-import '../../../../model/response/transactionListReponse.dart';
 import '../../../../utils/Helper.dart';
 import '../../../component/toastMessage.dart';
 
@@ -43,7 +42,6 @@ class _P2PTransactionReceiptScreenState extends State<P2PTransactionReceiptScree
   late double screenWidth;
   late double screenHeight;
   late bool isDarkMode;
-  final _repaintBoundaryKey = GlobalKey();
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
@@ -90,7 +88,6 @@ class _P2PTransactionReceiptScreenState extends State<P2PTransactionReceiptScree
       statusBarColor: Colors.grey, //or set color with: Color(0xFF0000FF)
     ));
     return Scaffold(
-
       body: SafeArea(
         child: Container(
           color: isDarkMode ? Colors.black45: Colors.grey,

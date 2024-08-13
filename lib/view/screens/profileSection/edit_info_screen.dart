@@ -108,6 +108,8 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
 
         ToastComponent.showToast(
             context: context, message: "${mediaList?.message}");
+        hideKeyBoard();
+        Navigator.pushReplacementNamed(context, "/ProfileScreen");
 
         _fetchDataFromPref();
         //Navigator.pushReplacementNamed(context, "/PersonalInfoScreen");
@@ -334,7 +336,6 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                         ),
                       ],
                     ),
-
                     _buildDOBInput(
                         context,
                         Languages.of(context)!.labelDOB,
@@ -546,6 +547,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
         );
       });
     } else {
+      hideKeyBoard();
       String firstName = _nameController.text.toString();
       String lastName = _lastNameController.text.toString();
       String dob = _dobController.text.toString();
