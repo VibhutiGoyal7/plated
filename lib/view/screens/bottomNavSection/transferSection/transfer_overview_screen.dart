@@ -361,13 +361,13 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                           child: Column(
                             children: [
                               Icon(
-                                Icons.email,
+                                Icons.phone_android,
                                 size: 34,
                                 color:
                                     isTPINSelected ? Colors.grey : Colors.green,
                               ),
                               Text(
-                                "${Languages.of(context)?.labelEmailOtp}",
+                                "Mobile Otp",
                                 style: TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.w700),
                               )
@@ -499,10 +499,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("TPIN ${initiateP2PResponse?.otp}");
-        if (initiateP2PResponse?.otp != null) {
-          ToastComponent.showToast(
-              context: context, message: initiateP2PResponse?.otp);
-        } else {
+        if (initiateP2PResponse?.otp == null) {
           ToastComponent.showToast(context: context, message: message);
         }
         CompleteP2PRequest data = CompleteP2PRequest(

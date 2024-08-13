@@ -132,7 +132,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           imageUrl = null;
           hasAttachment = false;
           hideKeyBoard();
-
           //liveChatResponses.addAll(newItems);
         });
         return;

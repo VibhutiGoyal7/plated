@@ -306,7 +306,7 @@ class _TransactionOverviewScreenState extends State<TransactionOverviewScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${Languages.of(context)?.labelPaymentMethod}",
+                              "Payment Status",
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.normal),
                             ),

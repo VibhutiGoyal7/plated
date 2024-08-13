@@ -148,9 +148,9 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
         ToastComponent.showToast(context: context, message: message);
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(context, '/OtpVerify',
-            arguments: "${_inputController.text}");
+            arguments: "${_inputController.text}");/*
         ToastComponent.showToast(
-            context: context, message: "${phoneVerifyResponse?.mobileOtp}");
+            context: context, message: "${phoneVerifyResponse?.mobileOtp}");*/
         return Container(); // Return an empty container as yo u'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);

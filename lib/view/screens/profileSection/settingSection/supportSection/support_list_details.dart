@@ -20,7 +20,6 @@ class _SupportListDetailScreenState extends State<SupportListDetailScreen> {
   String amount = "";
   bool expanded = false;
   final tokenInputController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
 
   @override
   void initState() {

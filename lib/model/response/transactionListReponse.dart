@@ -41,6 +41,9 @@ class TransactionDetails {
   String? phoneNumber;
   String? status;
   String? createdAt;
+  String? senderUsername;
+  String? senderFullName;
+  String? receiverUsername;
   int? userId;
   int? senderId;
   int? receiverId;
@@ -56,6 +59,9 @@ class TransactionDetails {
     required this.phoneNumber,
     required this.status,
     required this.createdAt,
+    required this.senderUsername,
+    required this.senderFullName,
+    required this.receiverUsername,
     required this.userId,
     required this.senderId,
     required this.receiverId,
@@ -72,6 +78,9 @@ class TransactionDetails {
       phoneNumber: json["phone_number"] as String?,
       email: json["email"] as String?,
       status: json["status"] as String?,
+      senderUsername: json["sender_username"] as String?,
+      senderFullName: json["sender_full_name"] as String?,
+      receiverUsername: json["receiver_username"] as String?,
       createdAt: json["created_at"] as String?,
       userId: json["customer_id"] as int?,
       senderId: json["sender_id"] as int?,

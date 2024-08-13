@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../languageSection/Languages.dart';
 import '../../../../../utils/Helper.dart';
-import '../../../../model/response/transactionListReponse.dart';
 import '../../../../theme/AppColor.dart';
-import '../../../component/connectivity_service.dart';
 
 class P2PTransactionOverviewScreen extends StatefulWidget {
   final P2PTransactionDetails? data;
@@ -29,10 +27,7 @@ class _P2PTransactionOverviewScreenState extends State<P2PTransactionOverviewScr
   var countryCurrencySymbol;
   var country;
   String countryBalance = "";
-  final TextEditingController _notesController = TextEditingController();
   bool isLoading = false;
-  final ConnectivityService _connectivityService = ConnectivityService();
-  static const maxDuration = Duration(seconds: 2);
   late double screenWidth;
   late double screenHeight;
 
@@ -308,7 +303,7 @@ class _P2PTransactionOverviewScreenState extends State<P2PTransactionOverviewScr
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "${Languages.of(context)?.labelPaymentMethod}",
+                              "Payment Status",
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.normal),
                             ),

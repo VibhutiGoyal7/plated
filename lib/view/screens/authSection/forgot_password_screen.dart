@@ -128,9 +128,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         ToastComponent.showToast(
             context: context, message: mediaList?.mobileOtp);
-        ToastComponent.showToast(
-            context: context, message: apiResponse?.message);
+        if(mediaList?.mobileOtp== null ) {
+          ToastComponent.showToast(
+              context: context, message: apiResponse?.message);
+        }
         Navigator.pushNamed(context, "/OtpForgotPassScreen", arguments: data );
+        /*ToastComponent.showToast(
+            context: context, message: mediaList?.mobileOtp);*/
 
         setState(() {
           isOtpBoxVisible = true;
