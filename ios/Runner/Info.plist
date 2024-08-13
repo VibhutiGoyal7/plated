@@ -27,13 +27,13 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
-    <string>This will allow ${PRODUCT_NAME} to take photos of your credentials.</string>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Why is my app authenticating using face id?</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Can I use the photos please?</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>Can I use the photos please?</string>
+	<string>This will allow ${PRODUCT_NAME} to take photos of your credentials.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Why is my app authenticating using face id?</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Can I use the photos please?</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Can I use the photos please?</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -53,11 +53,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
-
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
