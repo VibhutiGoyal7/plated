@@ -266,7 +266,7 @@ class MainViewModel with ChangeNotifier {
     try {
       ProfileResponse profileResponse =
           await MainRepository().putMultiFormResponse(value, file ,firstName, lastName, dob);
-      print("Yess" + profileResponse.firstName.toString());
+      print("Yess" + profileResponse.message.toString());
       if (profileResponse.status  == 200 || profileResponse.status == 201) {
         _apiResponse = ApiResponse.completed(profileResponse);
       } else {
@@ -345,14 +345,15 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
-    try {ProfileResponse profileResponse =
+    try {
+      GenerateTpinResponse generateTpinResponse =
       await MainRepository()
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
 
-      if (profileResponse.status == 200 || profileResponse.status == 201) {
-        _apiResponse = ApiResponse.completed(profileResponse.message);
+      if (generateTpinResponse.status == 200 || generateTpinResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(generateTpinResponse);
       } else {
-        _apiResponse = ApiResponse.error(profileResponse.message);
+        _apiResponse = ApiResponse.error(generateTpinResponse.message);
       }
 
     } catch (e) {

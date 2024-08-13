@@ -204,14 +204,14 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<ProfileResponse> ChangeWithOldPasswordData(
+  Future<GenerateTpinResponse> ChangeWithOldPasswordData(
       String value, ChangeOldPassRequest changeOldPassRequest) async {
     print(changeOldPassRequest);
     dynamic response =
         await _payrioService.putResponse(value, changeOldPassRequest);
     print(value);
     final jsonData = response;
-    ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
+    GenerateTpinResponse mediaList = GenerateTpinResponse.fromJson(jsonData);
     print(jsonData);
     return mediaList;
   }

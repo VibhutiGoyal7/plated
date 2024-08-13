@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/request/trxStatusRequest.dart';
@@ -62,8 +63,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
       params = const PlatformWebViewControllerCreationParams();
     }
     controller = WebViewController.fromPlatformCreationParams(params);
+
     controller
       ?..setJavaScriptMode(JavaScriptMode.unrestricted)
+
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (url) {
           setState(() {
@@ -102,6 +105,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
       AndroidWebViewController.enableDebugging(true);
       (controller?.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
+
+    }
+    if (Platform.isAndroid && controller?.platform is AndroidWebViewController) {
+      final AndroidWebViewController androidController =
+      controller?.platform as AndroidWebViewController;
+
+      androidController.setJavaScriptMode(JavaScriptMode.unrestricted);
+      androidController.setMediaPlaybackRequiresUserGesture(false);
+      // Access WebSettings to allow mixed content
+     // androidController.settings.setMixedContentMode(AndroidMixedContentMode.compatibility);
     }
   }
 

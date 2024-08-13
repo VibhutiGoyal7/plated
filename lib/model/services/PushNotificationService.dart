@@ -123,7 +123,7 @@ class PushNotificationService {
             androidNotificationChannel().id,
             androidNotificationChannel().name,
             channelDescription: androidNotificationChannel().description,
-            icon: android.smallIcon,
+            icon: "notification",
           ),
         ),
         payload: message?.data.toString(),
