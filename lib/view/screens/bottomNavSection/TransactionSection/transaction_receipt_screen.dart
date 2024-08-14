@@ -48,8 +48,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
   @override
   void initState() {
     super.initState();
-    date = "${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
-    time = "${DateFormat('hh:mm a').format(DateTime.now())}";
+    date = convertDateTimeFormat("${widget.data?.createdAt}");
 
     senderrName = "${widget.data?.senderFullName}";
     phoneNo = "";
@@ -643,7 +642,7 @@ class _TransactionReceiptScreenState extends State<TransactionReceiptScreen> {
                                                         color: isDarkMode ? AppColor.WHITE : AppColor.BLACK),
                                                   ),
                                                   Text(
-                                                    "${date} ${time}",
+                                                    "${date}",
                                                     style: TextStyle(
                                                         fontSize: 11,
                                                         fontWeight:

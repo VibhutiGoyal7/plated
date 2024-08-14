@@ -217,224 +217,204 @@ class _SupportScreenState extends State<SupportScreen> {
             filterApplied ? filteredSupportDataList : supportDataList);
     List<String> dates = groupedSupportData.keys.toList();
 
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool didPop) {
-        print("DashBoard $didPop");
-        if (didPop) {
-          return;
-        }
-        if (kDebugMode) {
-          Navigator.pushReplacementNamed(
-            context,
-            "/ProfileScreen",
-          );
-          // return Future.value(true);
-        }
-        Navigator.pushReplacementNamed(
-          context,
-          "/ProfileScreen",
-        );
-      },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
-          toolbarHeight: 65,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacementNamed(
-                context,
-                "/ProfileScreen",
-              );
-            },
-          ),
-          title: Text(
-            "Support List",
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
-          ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        toolbarHeight: 65,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+              context,
+              "/SupportSelectionScreen",
+            );
+          },
         ),
-        body: Stack(
-          children: [
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: isDarkMode? Colors.grey : AppColor.PRIMARY, width: 0.5),
-                          color: isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: TextField(
-                        controller: _filterController,
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          prefixIcon: IconButton(
-                            icon: Icon(
-                              Icons.search_rounded,
-                              color: isDarkMode ? AppColor.WHITE: AppColor.PRIMARY
-                            ),
-                            onPressed: () => FocusScope.of(context).unfocus(),
+        title: Text(
+          "Support List",
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
+        ),
+      ),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: isDarkMode? Colors.grey : AppColor.PRIMARY, width: 0.5),
+                        color: isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TextField(
+                      controller: _filterController,
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        prefixIcon: IconButton(
+                          icon: Icon(
+                            Icons.search_rounded,
+                            color: isDarkMode ? AppColor.WHITE: AppColor.PRIMARY
                           ),
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                Icons.clear_rounded,
-                                  color: isDarkMode ? AppColor.WHITE: AppColor.PRIMARY
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _filterController.text = "";
-                                  filterApplied = false;
-                                });
-                                _filterController.text = "";
-
-                                // filterAccToTicketId("");
-                              }),
-                          hintText: "Search using ticketId..",
-                          border: InputBorder.none,
+                          onPressed: () => FocusScope.of(context).unfocus(),
                         ),
-                        onSubmitted: (value) =>
-                            filterAccToTicketId(_filterController.text),
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.clear_rounded,
+                                color: isDarkMode ? AppColor.WHITE: AppColor.PRIMARY
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _filterController.text = "";
+                                filterApplied = false;
+                              });
+                              _filterController.text = "";
+
+                              // filterAccToTicketId("");
+                            }),
+                        hintText: "Search using ticketId..",
+                        border: InputBorder.none,
+                      ),
+                      onSubmitted: (value) =>
+                          filterAccToTicketId(_filterController.text),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      width: screenWidth,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: isInternetConnected && !isLoading
+                            ? checkListEmpty()
+                                ? FutureBuilder(
+                                    future: _fetchDataFuture,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<void> snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child:
+                                                CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                            child:
+                                                Text('Error loading data'));
+                                      } else {
+                                        // Group transactions by date
+                                        Map<
+                                                String,
+                                                List<
+                                                    AllSupportTicketsDetails>>
+                                            groupedSupportData =
+                                            groupSupportDataByDate(
+                                                filterApplied
+                                                    ? filteredSupportDataList
+                                                    : supportDataList);
+                                        List<String> dates =
+                                            groupedSupportData.keys.toList();
+
+                                        return ListView.builder(
+                                          controller: _scrollController,
+                                          itemCount: dates.length +
+                                              (_isLoadingMore ? 1 : 0),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            if (index == dates.length) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+                                            String date = dates[index];
+                                            List<AllSupportTicketsDetails>
+                                                supportDataForDate =
+                                                groupedSupportData[date]!;
+
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      date,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 12),
+                                                    ),
+                                                  ),
+                                                  ...supportDataForDate
+                                                      .map((transaction) {
+                                                    return TransactionItem(
+                                                      transaction:
+                                                          transaction,
+                                                      symbol:
+                                                          countryCurrencySymbol,
+                                                    );
+                                                  }).toList(),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  )
+                                : Center(
+                                    child: Text(
+                                      "No Data Found",
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.grey),
+                                    ),
+                                  )
+                            : Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 18),
+                                child: ShimmerList(itemCount: 2),
+                              ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        width: screenWidth,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 12),
-                          child: isInternetConnected && !isLoading
-                              ? checkListEmpty()
-                                  ? FutureBuilder(
-                                      future: _fetchDataFuture,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<void> snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (snapshot.hasError) {
-                                          return Center(
-                                              child:
-                                                  Text('Error loading data'));
-                                        } else {
-                                          // Group transactions by date
-                                          Map<
-                                                  String,
-                                                  List<
-                                                      AllSupportTicketsDetails>>
-                                              groupedSupportData =
-                                              groupSupportDataByDate(
-                                                  filterApplied
-                                                      ? filteredSupportDataList
-                                                      : supportDataList);
-                                          List<String> dates =
-                                              groupedSupportData.keys.toList();
-
-                                          return ListView.builder(
-                                            controller: _scrollController,
-                                            itemCount: dates.length +
-                                                (_isLoadingMore ? 1 : 0),
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              if (index == dates.length) {
-                                                return Center(
-                                                    child:
-                                                        CircularProgressIndicator());
-                                              }
-                                              String date = dates[index];
-                                              List<AllSupportTicketsDetails>
-                                                  supportDataForDate =
-                                                  groupedSupportData[date]!;
-
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Text(
-                                                        date,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                    ...supportDataForDate
-                                                        .map((transaction) {
-                                                      return TransactionItem(
-                                                        transaction:
-                                                            transaction,
-                                                        symbol:
-                                                            countryCurrencySymbol,
-                                                      );
-                                                    }).toList(),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
-                                    )
-                                  : Center(
-                                      child: Text(
-                                        "No Data Found",
-                                        style: TextStyle(
-                                            fontSize: 15, color: Colors.grey),
-                                      ),
-                                    )
-                              : Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 18),
-                                  child: ShimmerList(itemCount: 2),
-                                ),
-                        ),
-                      ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          isLoading
+              ? Stack(
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                      dismissible: false,
+                    ),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
                     ),
                   ],
-                ),
-              ),
+                )
+              : SizedBox(),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      "/CreateSupportTicketScreen",
+                    );
+                  }),
             ),
-            isLoading
-                ? Stack(
-                    children: [
-                      // Block interaction
-                      ModalBarrier(
-                        dismissible: false,
-                      ),
-                      // Loader indicator
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  )
-                : SizedBox(),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        "/CreateSupportTicketScreen",
-                      );
-                    }),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -704,7 +684,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
 class TransactionItem extends StatelessWidget {
   final AllSupportTicketsDetails transaction;
-  final String symbol;
+  final String? symbol;
 
   TransactionItem({required this.transaction, required this.symbol});
 

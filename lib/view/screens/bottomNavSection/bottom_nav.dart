@@ -60,14 +60,12 @@ class _BottomNavState extends State<BottomNav>
 
     if (state == AppLifecycleState.resumed) {
       if (!_authOnResume) {
-        print("ResumeBio");
         setState(() {
           _authenticationAttempted = false;
         });
 
         _initializeBiometrics();
       }
-      print("Resume");
     }
   }
 

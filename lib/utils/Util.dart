@@ -128,6 +128,8 @@ String convertDateMonthFormat(String input) {
 String addCurrencySymbol(String? currencySymbol, String input) {
   if (input.isEmpty) {
     return input;
+  }else if(currencySymbol == null || currencySymbol == "null"){
+    return input;
   }
 
   if (input == "**") {
