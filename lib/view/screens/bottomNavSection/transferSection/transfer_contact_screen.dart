@@ -98,9 +98,9 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                             height: screenHeight * 0.27,
                             image: AssetImage(isDarkMode
                                 ? "assets/header_night.png"
-                                : "assets/header.png"),
+                                : "assets/header_day.png"),
                             fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                            opacity: isDarkMode ? const AlwaysStoppedAnimation(.5) : const AlwaysStoppedAnimation(.9),
+                            opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.4),
                           ),
                         ],
                       ),

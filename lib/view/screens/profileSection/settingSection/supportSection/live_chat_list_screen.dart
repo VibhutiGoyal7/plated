@@ -78,7 +78,7 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
     LiveChatResponse liveChatResponse = LiveChatResponse(
       text: message,
       isRead: false,
-      user: int.parse(userId),
+      user: 2,
     );
 
     int? adminCount = await service.getUnReadByAdminCount(userId);
@@ -102,6 +102,7 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
 
     service.add(liveChatResponse, userId).then((_) {
       service.addUserDetails(liveChatUserDetailsResponse, userId).then((_) {
+        //print(liveChatResponse.user);
         _controller.clear();
         _scrollToBottom(); // Scroll to bottom after adding a message
       });
@@ -179,6 +180,7 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
                                   itemCount: liveChatResponses.length,
                                   itemBuilder: (context, index) {
                                     final response = liveChatResponses[index];
+                                    print("response ${response.user}");
                                     final isUserMessage = response.user == 2;
                                     final messageAlignment = isUserMessage
                                         ? Alignment.topRight

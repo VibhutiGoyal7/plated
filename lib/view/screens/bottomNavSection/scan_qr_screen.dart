@@ -96,7 +96,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
                     child: FutureBuilder(
                       future: controller?.getFlashStatus(),
                       builder: (context, snapshot) {
-                        return "${snapshot?.data}" == "false"
+                        return "${snapshot.data}" == "false"
                             ? Icon(
                                 Icons.flashlight_off,
                                 size: 28,
@@ -181,7 +181,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
   Future<Widget> initiateCheckCustomerResponse(
       BuildContext context, ApiResponse apiResponse, String userName) async {
     CheckCustomerResponse? checkCustomerResponse = apiResponse.data;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });

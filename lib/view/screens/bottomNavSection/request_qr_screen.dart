@@ -41,7 +41,6 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
   bool phoneNumberValid = false;
   bool isDarkMode = false;
   String selectedItem = "";
-  final _repaintBoundaryKey = GlobalKey();
   ScreenshotController screenshotController = ScreenshotController();
 
   final TextEditingController _amountController = TextEditingController();
@@ -273,7 +272,9 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
       final painter = QrPainter.withQr(
         qr: qrCode!,
         color: Colors.black,
-        emptyColor: Colors.white,
+        dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: Color(0xFF000000)),
+        eyeStyle:  const QrEyeStyle(eyeShape: QrEyeShape.square, color: Colors.white),
+       // emptyColor: Colors.white,
         gapless: true,
       );
 
@@ -322,7 +323,7 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                     controller: screenshotController,
                     child: Container(
                       padding: EdgeInsets.all(12),
-                      color: isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                      color: isDarkMode? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
                       child: IntrinsicWidth(
                         child: Column(
                           children: [
@@ -342,8 +343,13 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                             isUsernameRetrieved && isQrCodeGenerated
                                 ? //Text("data")
                             qrCodeImage != null
-                                ? Image.memory(qrCodeImage!,
-                            )
+                                ? Container(
+                              padding: EdgeInsets.zero,
+                              color: Colors.white,
+                                  child: Image.memory(qrCodeImage!,
+                                   // color: Colors.white,
+                                                              ),
+                                )
                                 : Text("${Languages.of(context)?.labelErrorLoadingQR}")
                                 : Shimmer.fromColors(
                               baseColor: Colors.white38,

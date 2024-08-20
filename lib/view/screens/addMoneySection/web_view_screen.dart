@@ -207,7 +207,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
       appBar: AppBar(
         toolbarHeight: 65,
         title: Text(
-          "${Languages.of(context)?.labelAddMoney}",
+          widget.data?.transactionType == '${Languages.of(context)?.labelAddMoney}'?
+          "${Languages.of(context)?.labelAddMoney}" :
+          '${Languages.of(context)?.labelWithdraw}',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
         ),
       ),

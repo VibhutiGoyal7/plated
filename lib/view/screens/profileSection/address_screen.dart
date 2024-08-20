@@ -231,7 +231,7 @@ class _AddressScreenState extends State<AddressScreen> {
       padding: EdgeInsets.symmetric(horizontal: 2.0),
       decoration: BoxDecoration(
         border: Border.all(
-            color: isDarkMode ? Colors.grey : Colors.black, width: 0.2),
+            color: isDarkMode ? Colors.grey.shade600 : Colors.black, width: 0.2),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(

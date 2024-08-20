@@ -300,64 +300,59 @@ class _TransferTpinScreenState extends State<TransferTpinScreen> {
                     width: screenWidth,
                     height: screenHeight * 0.72,
                     margin: EdgeInsets.zero,
-                    child: Card(
-                      margin: EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 20),
-                          Center(
-                            child: _buildLabelText(
-                                context, "${Languages
-                                .of(context)
-                                ?.labelEnter4DigitPin}", 20, true),
-                          ),
-                          SizedBox(height: 22),
-                          _buildPhoneInput(context, screenWidth, isDarkMode),
-                          SizedBox(height: 10),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Center(
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.yellow.shade700,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 6),
-                              width: screenWidth * 0.65,
-                              child: Text(
-                                "${Languages
-                                    .of(context)
-                                    ?.labelYouAreTransferringMoneyTo}${widget
-                                    .data?.receiverUsername}",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 13),
-                              ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20),
+                        Center(
+                          child: _buildLabelText(
+                              context, "${Languages
+                              .of(context)
+                              ?.labelEnter4DigitPin}", 20, true),
+                        ),
+                        SizedBox(height: 22),
+                        _buildPhoneInput(context, screenWidth, isDarkMode),
+                        SizedBox(height: 10),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Center(
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: Colors.yellow.shade700,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 6),
+                            width: screenWidth * 0.65,
+                            child: Text(
+                              "${Languages
+                                  .of(context)
+                                  ?.labelYouAreTransferringMoneyTo}${widget
+                                  .data?.receiverUsername}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 13),
                             ),
                           ),
-                          Spacer(),
-                          CustomNumberKeyboard(onKeyTap: (value) async {
-                            if (value == "clear") {
-                              _handleBackspace();
-                            } else if (value == "submit") {
-                              String tpin = _inputValues
-                                  .map((controller) => controller)
-                                  .join();
-                              if (tpin.isNotEmpty && tpin.length == 4) {
-                                _initiateTransaction(tpin);
-                              }
-                            } else {
-                              _handleKeyTap(value);
+                        ),
+                        Spacer(),
+                        CustomNumberKeyboard(onKeyTap: (value) async {
+                          if (value == "clear") {
+                            _handleBackspace();
+                          } else if (value == "submit") {
+                            String tpin = _inputValues
+                                .map((controller) => controller)
+                                .join();
+                            if (tpin.isNotEmpty && tpin.length == 4) {
+                              _initiateTransaction(tpin);
                             }
-                          }),
-                        ],
-                      ),
+                          } else {
+                            _handleKeyTap(value);
+                          }
+                        }),
+                      ],
                     ),
                   ),
                 ),
