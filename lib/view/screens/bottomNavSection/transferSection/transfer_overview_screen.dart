@@ -279,7 +279,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
                                       //counterText: "",
-                                      counterStyle: TextStyle(fontSize: 11),
+                                      counterStyle: TextStyle(fontSize: 11 , color:  isDarkMode ? Colors.white : Colors.black),
                                       border: InputBorder.none,
                                       hintText: '${Languages.of(context)?.labelWriteSomething}',
                                       hintStyle: TextStyle(color: Colors.grey),
@@ -287,6 +287,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                           onTap: () {},
                                           child: Icon(
                                             Icons.edit,
+                                            color: isDarkMode ? Colors.white : Colors.black,
                                           )),
                                     ),
                                   ),
@@ -490,7 +491,7 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     InitiateP2PResponse? initiateP2PResponse =
         apiResponse.data as InitiateP2PResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });

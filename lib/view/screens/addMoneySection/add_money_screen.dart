@@ -103,7 +103,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
         print("response: ${apiResponse}");
         String redirectUrl = "${addMoneyResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
-        WebViewData data =WebViewData(redirectUrl: addMoneyResponse?.redirectUrl, uniqueId: addMoneyResponse?.uniqueId);
+        WebViewData data = WebViewData(
+            redirectUrl: addMoneyResponse?.redirectUrl,
+            uniqueId: addMoneyResponse?.uniqueId,
+            transactionType: '${Languages.of(context)?.labelAddMoney}');
         Navigator.pushNamed(context, "/WebViewScreen", arguments: data);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -161,10 +164,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                 height: screenHeight * 0.35,
                                 image: AssetImage(isDarkMode
                                     ? "assets/header_night.png"
-                                    : "assets/header.png"),
+                                    : "assets/header_day.png"),
                                 fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
                                 opacity: isDarkMode
-                                    ? const AlwaysStoppedAnimation(.5)
+                                    ? const AlwaysStoppedAnimation(.9)
                                     : const AlwaysStoppedAnimation(.9),
                               ),
                               alignment: AlignmentDirectional.center,

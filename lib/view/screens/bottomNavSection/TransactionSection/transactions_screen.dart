@@ -1046,7 +1046,12 @@ class TransactionItem extends StatelessWidget {
                                             "${Languages.of(context)?.statusWithdraw}" ||
                                         transaction.transactionType ==
                                             "${Languages.of(context)?.statusTransfer}"
-                                    ? Icons.call_made
+                                    ?
+                                transaction.transactionType ==
+                                    "${Languages.of(context)?.statusTransfer}" && !checkMoneyOut(
+                                    capitalizeFirstLetter(
+                                        "${transaction.transactionType}"), transaction.senderId, userId)?
+                                Icons.call_received : Icons.call_made
                                     : Icons.call_received,
                                 size: 15,
                                 color: colorStatus(
@@ -1188,7 +1193,11 @@ class P2PTransactionItem extends StatelessWidget {
                                             "${Languages.of(context)?.statusWithdraw}" ||
                                         transaction.transactionType ==
                                             "${Languages.of(context)?.statusTransfer}"
-                                    ? Icons.call_made
+                                    ? transaction.transactionType ==
+                                    "${Languages.of(context)?.statusTransfer}" && !checkMoneyOut(
+                                    capitalizeFirstLetter(
+                                        "${transaction.transactionType}"), transaction.senderId, userId)?
+                                Icons.call_received : Icons.call_made
                                     : Icons.call_received,
                                 size: 15,
                                 color: colorStatus(

@@ -49,7 +49,7 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
     } else {
       await Helper.saveUserAuthenticated(false);
       print("User cancelled authentication.");
-      SystemNavigator.pop();
+      //SystemNavigator.pop();
     }
   }
 

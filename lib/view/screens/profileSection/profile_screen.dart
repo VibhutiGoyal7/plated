@@ -187,11 +187,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: screenHeight * 0.3,
                       image: AssetImage(isDarkMode
                           ? "assets/header_night.png"
-                          : "assets/header.png"),
+                          : "assets/header_day.png"),
                       fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
                       opacity: isDarkMode
-                          ? const AlwaysStoppedAnimation(.5)
-                          : const AlwaysStoppedAnimation(.9),
+                          ? const AlwaysStoppedAnimation(.4)
+                          : const AlwaysStoppedAnimation(.3),
                     ),
                     alignment: AlignmentDirectional.center,
                   ),

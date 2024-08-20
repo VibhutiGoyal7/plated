@@ -24,7 +24,6 @@ import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
-import '../../component/transaction_dialog.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
   @override
@@ -139,7 +138,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     DashboardResponse? dashboardResponse =
         apiResponse.data as DashboardResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
@@ -308,11 +307,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             height: screenHeight * 0.28,
                             image: AssetImage(isDarkMode
                                 ? "assets/header_night.png"
-                                : "assets/header.png"),
+                                : "assets/header_day.png"),
                             fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
                             opacity: isDarkMode
                                 ? const AlwaysStoppedAnimation(.5)
-                                : const AlwaysStoppedAnimation(.9),
+                                : const AlwaysStoppedAnimation(.55),
                           ),
                           alignment: AlignmentDirectional.center,
                         ),
@@ -853,8 +852,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     children: [
                                                                       Icon(
                                                                           nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusWithdraw}") || nonCapitalizeString("${transactionList[index]?.transactionType}") == nonCapitalizeString("${Languages.of(context)?.statusTransfer}")
-                                                                              ? Icons
-                                                                                  .call_made
+                                                                              ? transactionList[index]?.transactionType == "${Languages.of(context)?.statusTransfer}" && !checkMoneyOut(capitalizeFirstLetter("${transactionList[index]?.transactionType}"), transactionList[index]?.senderId, userId)
+                                                                                  ? Icons.call_received
+                                                                                  : Icons.call_made
                                                                               : Icons
                                                                                   .call_received,
                                                                           size:

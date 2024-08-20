@@ -519,11 +519,11 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
                                   IntrinsicHeight(
                                     child: Container(
                                       width: screenWidth,
-                                      decoration: BoxDecoration(
+                                     /* decoration: BoxDecoration(
                                           border: Border(
                                               bottom: BorderSide(
                                                   width: 0.1,
-                                                  color: Colors.grey))),
+                                                  color: Colors.grey))),*/
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,

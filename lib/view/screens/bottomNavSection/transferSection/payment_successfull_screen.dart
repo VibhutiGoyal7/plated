@@ -117,7 +117,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                       ),
                       IntrinsicHeight(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(horizontal: 8),
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 20),
                           decoration: BoxDecoration(
@@ -256,7 +256,7 @@ class _PaymentSuccessfulScreenState extends State<PaymentSuccessfulScreen> {
                       ),
                       IntrinsicHeight(
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(horizontal: 8),
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 16),
                           decoration: BoxDecoration(

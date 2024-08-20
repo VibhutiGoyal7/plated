@@ -358,7 +358,10 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         String redirectUrl = "${withDrawResponse?.redirectUrl}";
         print("redirectUrl: ${redirectUrl}");
 
-        WebViewData data =WebViewData(redirectUrl: withDrawResponse?.redirectUrl, uniqueId: withDrawResponse?.uniqueId);
+        WebViewData data = WebViewData(
+            redirectUrl: withDrawResponse?.redirectUrl,
+            uniqueId: withDrawResponse?.uniqueId,
+            transactionType: '${Languages.of(context)?.labelWithdraw}');
         Navigator.pushNamed(context, "/WebViewScreen", arguments: data);
         //_showModal(context, "${_inputController.text}");
 
