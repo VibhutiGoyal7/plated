@@ -17,6 +17,7 @@ import 'package:Payrio/view/screens/authSection/forgot_password_screen.dart';
 import 'package:Payrio/view/screens/authSection/get_started_screen.dart';
 import 'package:Payrio/view/screens/authSection/money_safe_screen.dart';
 import 'package:Payrio/view/screens/authSection/new_forgot_pass_screen.dart';
+import 'package:Payrio/view/screens/authSection/notification_otp_screen.dart';
 import 'package:Payrio/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:Payrio/view/screens/authSection/otp_verify_screen.dart';
 import 'package:Payrio/view/screens/authSection/phone_verify_screen.dart';
@@ -91,6 +92,7 @@ import 'package:provider/provider.dart';
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
 import 'model/response/initiateP2PResponse.dart';
+import 'model/response/notificationOtpResponse.dart';
 import 'model/services/PushNotificationService.dart';
 
 //GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -145,7 +147,7 @@ void showFlutterNotification(RemoteMessage message) {
           channel.id,
           channel.name,
           channelDescription: channel.description,
-          icon: 'launch_background',
+          icon: 'notification',
         ),
       ),
     );
@@ -156,6 +158,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   // Initialize Firebase
   await Firebase.initializeApp();
@@ -197,30 +200,10 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   Locale _locale = const Locale('en');
   String? initialMessage;
-  bool _resolved = false;
 
   @override
   void initState() {
     super.initState();
-    /*   FirebaseMessaging.instance.getInitialMessage().then(
-          (value) => setState(
-            () {
-              _resolved = true;
-              initialMessage = value?.data.toString();
-            },
-          ),
-        );
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-
-      Navigator.pushNamed(
-        navigatorKey.currentState!.context,
-        '/ProfileScreen',
-        arguments: ProfileScreen(),
-      );
-    });*/
     _fetchData();
   }
 
@@ -238,7 +221,8 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Media Player',
+          navigatorKey: navigatorKey,
+          title: 'Payorio',
           locale: _locale,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
@@ -276,6 +260,11 @@ class _MyAppState extends State<MyApp> {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
               return OTPVerifyScreen(data: args);
+            },
+            '/NotificationOtpScreen': (context) {
+              final args =
+                  ModalRoute.of(context)!.settings.arguments as NotificationOtpResponse?;
+              return NotificationOtpScreen(data: args);
             },
             '/SetUpAccount': (context) {
               final args =

@@ -1,13 +1,13 @@
 import 'package:Payrio/utils/Helper.dart';
+import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as flutter_local_notifications;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../view/screens/profileSection/profile_screen.dart';
+import '../../view/screens/authSection/notification_otp_screen.dart';
+import '../response/notificationOtpResponse.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -18,8 +18,7 @@ class PushNotificationService {
     await Firebase.initializeApp();
 
     FirebaseMessaging.onMessageOpenedApp.listen(
-          (RemoteMessage message) {
-
+      (RemoteMessage message) {
         print("PushNotificationService:: ${message.toString()}");
         sendBroadcast(
           BroadcastMessage(
@@ -31,7 +30,7 @@ class PushNotificationService {
     );
 
     FirebaseMessaging.onMessage.listen(
-          (RemoteMessage message) {
+      (RemoteMessage message) {
         print("PushNotificationServiceOnMessage:: ${message.data['status']}");
         sendBroadcast(
           BroadcastMessage(
@@ -43,6 +42,24 @@ class PushNotificationService {
     );
 
     enableIOSNotifications();
+    /*   if (Platform.isIOS) {
+      String? apnsToken = await _messaging.getAPNSToken();
+      if (apnsToken != null) {
+        await _messaging.subscribeToTopic(personID);
+      } else {
+        await Future<void>.delayed(
+          const Duration(
+            seconds: 3,
+          ),
+        );
+        apnsToken = await _messaging.getAPNSToken();
+        if (apnsToken != null) {
+          await _messaging.subscribeToTopic(personID);
+        }
+      }
+    } else {
+      await _firebaseMessaging.subscribeToTopic(personID);
+    }*/
     await getToken();
     await registerNotificationListeners();
   }
@@ -62,22 +79,22 @@ class PushNotificationService {
   Future<void> registerNotificationListeners() async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+        FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     const AndroidInitializationSettings androidSettings =
-    AndroidInitializationSettings('@drawable/launch_background');
+        AndroidInitializationSettings('@drawable/notification');
     const DarwinInitializationSettings iOSSettings =
-    DarwinInitializationSettings(
+        DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
     const InitializationSettings initSettings =
-    InitializationSettings(android: androidSettings, iOS: iOSSettings);
+        InitializationSettings(android: androidSettings, iOS: iOSSettings);
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
@@ -87,7 +104,28 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
       print("message?.data :: ${message?.data}");
+      Map<String, dynamic> jsonData =
+          message?.data ?? {}; // Assuming message?.data is the JSON data
+
+      final notificationResponse = NotificationOtpResponse.fromJson(jsonData);
+      print("NotificationResponse :: ${notificationResponse.otp}");
       _showNotification(message);
+      if (notificationResponse.notificationType == "deposit_otp" ||
+          notificationResponse.notificationType == "withdraw_otp") {
+        Navigator.push(
+          navigatorKey.currentState!.context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  NotificationOtpScreen(data: notificationResponse)),
+        );
+      }else{
+        Navigator.push(
+          navigatorKey.currentState!.context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  BottomNav()),
+        );
+      }
     });
   }
 
@@ -132,24 +170,56 @@ class PushNotificationService {
   }
 
   void _handleMessage(Map<String, dynamic> data) {
-    Navigator.push(
-      navigatorKey.currentState!.context,
-      MaterialPageRoute(builder: (context) => ProfileScreen()),
-    );
+    final notificationResponse = NotificationOtpResponse.fromJson(data);
+    print("_handleMessage :: ${notificationResponse.otp}");
+    if (notificationResponse.notificationType == "deposit_otp" ||
+        notificationResponse.notificationType == "withdraw_otp") {
+      Navigator.push(
+        navigatorKey.currentState!.context,
+        MaterialPageRoute(
+            builder: (context) => NotificationOtpScreen(
+                  data: notificationResponse,
+                )),
+      );
+    }else{
+      Navigator.push(
+        navigatorKey.currentState!.context,
+        MaterialPageRoute(
+            builder: (context) =>
+                BottomNav()),
+      );
+    }
   }
 
   void _handleNotificationClick(String? payload) {
     if (payload != null) {
       final data = _parsePayload(payload);
-      Navigator.push(
-        navigatorKey.currentState!.context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      );
+      // Create a NotificationOtpResponse object from parsed data
+      final notificationResponse = NotificationOtpResponse.fromJson(data);
+      print("_handleNotificationClick :: ${notificationResponse.otp}");
+      if (notificationResponse.notificationType == "deposit_otp" ||
+          notificationResponse.notificationType == "withdraw_otp") {
+        Navigator.push(
+          navigatorKey.currentState!.context,
+          MaterialPageRoute(
+              builder: (context) => NotificationOtpScreen(
+                    data: notificationResponse,
+                  )),
+        );
+      }else{
+        Navigator.push(
+          navigatorKey.currentState!.context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  BottomNav()),
+        );
+      }
     }
   }
 
   Map<String, dynamic> _parsePayload(String payload) {
-    final List<String> str = payload.replaceAll('{', '').replaceAll('}', '').split(',');
+    final List<String> str =
+        payload.replaceAll('{', '').replaceAll('}', '').split(',');
     final Map<String, dynamic> result = {};
     for (int i = 0; i < str.length; i++) {
       final List<String> s = str[i].split(':');

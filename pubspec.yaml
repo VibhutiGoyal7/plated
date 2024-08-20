@@ -96,7 +96,6 @@ flutter:
   assets:
       - assets/profile_user.png
       - assets/india_flag_icon.png
-      - assets/united_states_flag_icon.png
       - assets/payment_image.png
       - assets/money_safe.png
       - assets/id_card.png

@@ -777,4 +777,10 @@ class LanguageHi extends Languages {
   @override
   String get labelTransactional => "Transactional";
 
+  @override
+  String get labelDepositOtp => "Deposit Otp";
+
+  @override
+  String get labelWithdrawOtp => "Withdraw Otp";
+
 }

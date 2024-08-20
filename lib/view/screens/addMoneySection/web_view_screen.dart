@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/request/trxStatusRequest.dart';
-import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/response/trxStatusResponse.dart';
 import 'package:Payrio/model/webviewData.dart';
 import 'package:flutter/material.dart';

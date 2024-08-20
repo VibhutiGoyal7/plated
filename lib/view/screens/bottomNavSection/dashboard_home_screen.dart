@@ -60,6 +60,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     names: <String>[
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
+
+
   );
   final List<OfferResponse> imgList = [
     OfferResponse(
@@ -103,6 +105,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     receiver.start();
     // Listen to messages and print them
     receiver.messages.listen((message) {
+      print("BroadCast");
       getDashBoardDataFromApi();
     });
 

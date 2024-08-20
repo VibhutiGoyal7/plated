@@ -1,7 +1,7 @@
 import UIKit
 import Jumio
 import Flutter
-import Firebase
+//import Firebase
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -13,7 +13,7 @@ import Firebase
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
           }
    // Initialize Firebase
-    FirebaseApp.configure()
+    //FirebaseApp.configure()
     //GMSServices.provideAPIKey("your-google-api-key-here")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)

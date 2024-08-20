@@ -515,6 +515,10 @@ abstract class Languages {
 
   String get labelTransactional;
 
+  String get labelDepositOtp;
+
+  String get labelWithdrawOtp;
+
 
 
 }
