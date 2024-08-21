@@ -2,6 +2,7 @@ import 'package:Payrio/utils/Helper.dart';
 import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -29,37 +30,39 @@ class PushNotificationService {
       },
     );
 
-    FirebaseMessaging.onMessage.listen(
-      (RemoteMessage message) {
-        print("PushNotificationServiceOnMessage:: ${message.data['status']}");
-        sendBroadcast(
-          BroadcastMessage(
-            name: "de.kevlatus.flutter_broadcasts_example.demo_action",
-          ),
-        );
-        _showNotification(message);
-      },
-    );
+    FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+      print("message?.data :: ${message?.data}");
+      Map<String, dynamic> jsonData =
+          message?.data ?? {}; // Assuming message?.data is the JSON data
 
-    enableIOSNotifications();
-    /*   if (Platform.isIOS) {
-      String? apnsToken = await _messaging.getAPNSToken();
-      if (apnsToken != null) {
-        await _messaging.subscribeToTopic(personID);
-      } else {
-        await Future<void>.delayed(
-          const Duration(
-            seconds: 3,
-          ),
-        );
-        apnsToken = await _messaging.getAPNSToken();
-        if (apnsToken != null) {
-          await _messaging.subscribeToTopic(personID);
+      final notificationResponse = NotificationOtpResponse.fromJson(jsonData);
+      print("NotificationResponse :: ${notificationResponse.otp}");
+
+      // Check if the app is in the foreground
+      if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
+        if (navigatorKey.currentState?.context != null) {
+          // App is in foreground, decide not to show the notification badge
+          if (notificationResponse.notificationType == "deposit_otp" ||
+              notificationResponse.notificationType == "withdraw_otp") {
+            Navigator.push(
+              navigatorKey.currentState!.context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      NotificationOtpScreen(data: notificationResponse)),
+            );
+          } else if(notificationResponse.notificationType == "payment_successful" || notificationResponse.notificationType == "payment_cancel"){
+            Navigator.push(
+              navigatorKey.currentState!.context,
+              MaterialPageRoute(builder: (context) => BottomNav()),
+            );
+          }
+          return; // Do not show the notification
         }
       }
-    } else {
-      await _firebaseMessaging.subscribeToTopic(personID);
-    }*/
+
+      _showNotification(message);
+    });
+    enableIOSNotifications();
     await getToken();
     await registerNotificationListeners();
   }
@@ -86,7 +89,7 @@ class PushNotificationService {
         ?.createNotificationChannel(channel);
 
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@drawable/notification');
+        AndroidInitializationSettings("notification");
     const DarwinInitializationSettings iOSSettings =
         DarwinInitializationSettings(
       requestSoundPermission: false,
@@ -102,31 +105,7 @@ class PushNotificationService {
       },
     );
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
-      print("message?.data :: ${message?.data}");
-      Map<String, dynamic> jsonData =
-          message?.data ?? {}; // Assuming message?.data is the JSON data
 
-      final notificationResponse = NotificationOtpResponse.fromJson(jsonData);
-      print("NotificationResponse :: ${notificationResponse.otp}");
-      _showNotification(message);
-      if (notificationResponse.notificationType == "deposit_otp" ||
-          notificationResponse.notificationType == "withdraw_otp") {
-        Navigator.push(
-          navigatorKey.currentState!.context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  NotificationOtpScreen(data: notificationResponse)),
-        );
-      }else{
-        Navigator.push(
-          navigatorKey.currentState!.context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  BottomNav()),
-        );
-      }
-    });
   }
 
   Future<void> enableIOSNotifications() async {
@@ -181,12 +160,10 @@ class PushNotificationService {
                   data: notificationResponse,
                 )),
       );
-    }else{
+    } else if(notificationResponse.notificationType == "payment_successful" || notificationResponse.notificationType == "payment_cancel") {
       Navigator.push(
         navigatorKey.currentState!.context,
-        MaterialPageRoute(
-            builder: (context) =>
-                BottomNav()),
+        MaterialPageRoute(builder: (context) => BottomNav()),
       );
     }
   }
@@ -206,12 +183,10 @@ class PushNotificationService {
                     data: notificationResponse,
                   )),
         );
-      }else{
+      } else if(notificationResponse.notificationType == "payment_successful" || notificationResponse.notificationType == "payment_cancel") {
         Navigator.push(
           navigatorKey.currentState!.context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  BottomNav()),
+          MaterialPageRoute(builder: (context) => BottomNav()),
         );
       }
     }

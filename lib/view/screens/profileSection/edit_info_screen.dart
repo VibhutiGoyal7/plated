@@ -618,8 +618,7 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                   enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.2 ,color :isDarkMode ? Colors.white : Colors.black), ),
                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 0.25, color: AppColor.PRIMARY)),
                   hintText: heading,
-                  prefixIcon: Icon(icon, color: isDarkMode ? Colors.white : Colors.black,),
-                  hintStyle: TextStyle(color: Colors.grey),
+                  prefixIcon: Icon(icon),
                 ),
               ),
             ),
@@ -649,7 +648,6 @@ class _EditInformationScreenState extends State<EditInformationScreen> {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: Languages.of(context)!.labelBirthdate,
-                      hintStyle: TextStyle(color: Colors.grey),
                       icon: icon
                     //icon of text field
                   ),

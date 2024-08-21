@@ -10,7 +10,6 @@ import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../model/response/kycStatusResponse.dart';
-import '../../../theme/AppColor.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
@@ -86,15 +85,14 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     isEmailVerified = false;
     isPasswordVisible = false;
 
-    Helper.getKycStatus().then((status)
-    {
+    Helper.getKycStatus().then((status) {
       kycStatus = status;
-      if(kycStatus?.isEmpty == true){
+      if (kycStatus?.isEmpty == true) {
         setState(() {
           isLoading = true;
         });
         _fetchKycStatus();
-      }else{
+      } else {
         _fetchKycStatus();
       }
     });
@@ -105,10 +103,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     _fetchDocData();
   }
 
-
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
-    apiResponse.data as KycStatusResponse?;
+        apiResponse.data as KycStatusResponse?;
     var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
@@ -123,11 +120,11 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
           kycStatus = kycStatusResponse?.kycStatus;
         });
 
-
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") ==
-            nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -143,7 +140,6 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         );
     }
   }
-
 
   Future<Widget> getDocData(
       BuildContext context, ApiResponse apiResponse) async {
@@ -215,7 +211,9 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse?.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -321,18 +319,16 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                     ),*/
                     isInternetConnected && !isLoading
                         ? Column(
-                      children: [
-                        //if (isPassportAvailable)
-                          _buildDocumentOption(
-                              context,
-                              "Identity Proof",
-                              "${kycStatus}"),
-                      /*  if (isDrivingLicenceAvailable)
+                            children: [
+                              //if (isPassportAvailable)
+                              _buildDocumentOption(
+                                  context, "Identity Proof", "${kycStatus}"),
+                              /*  if (isDrivingLicenceAvailable)
                           _buildDocumentOption(
                               context,
                               "Address Proof",
                               "${kycStatus}",),*/
-                        /*if (isNationalIdAvailable)
+                              /*if (isNationalIdAvailable)
                           _buildDocumentOption(
                               context,
                               Languages.of(context)!.labelNationalId,
@@ -388,14 +384,12 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                               "${kycVideoStatus}",
                               "${kycVideoRejectedReason}"),
 */
-                      ],
-                    )
-                        :
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: ShimmerCard(),
-                    ),
-
+                            ],
+                          )
+                        : Padding(
+                            padding: EdgeInsets.all(8),
+                            child: ShimmerCard(),
+                          ),
                   ],
                 ),
               ),
@@ -552,9 +546,10 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   }
 
   Widget _buildDocumentOption(
-      BuildContext context,
-      String title,
-      String status,) {
+    BuildContext context,
+    String title,
+    String status,
+  ) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     String verificationStatus = "";
     Color textColor = isDarkMode ? Colors.white : Colors.black;
@@ -566,7 +561,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       verificationStatus = "Click to verify";
       textColor = Colors.red;
     } else if (status == "in_progress") {
-      verificationStatus = "Click to verify"/*"Verification under process"*/;
+      verificationStatus = "Click to verify" /*"Verification under process"*/;
       textColor = Colors.deepOrange;
     } else {
       verificationStatus = "Click to verify";
@@ -574,41 +569,41 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     }
     return GestureDetector(
       onTap: () async {
-        if (verificationStatus == "Verification under process" || verificationStatus == "Click to verify" ) {
+        if (verificationStatus == "Verification under process" ||
+            verificationStatus == "Click to verify") {
           if (await checkPermissionStatus()) {
             Navigator.pushReplacementNamed(context, "/ChooseDocScreen");
           }
         }
-
       },
       child: Card(
         child: isLoading
             ? Shimmer.fromColors(
-          baseColor: Colors.white38,
-          highlightColor: Colors.grey,
-          child: Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
-            child: Container(
-              width: double.infinity,
-              //height: 100,
-              decoration: BoxDecoration(
-                color: Colors.white38,
-                borderRadius: BorderRadius.circular(
-                    8.0), // Adjust the radius as needed
-              ),
-            ),
-          ),
-        )
+                baseColor: Colors.white38,
+                highlightColor: Colors.grey,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+                  child: Container(
+                    width: double.infinity,
+                    //height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white38,
+                      borderRadius: BorderRadius.circular(
+                          8.0), // Adjust the radius as needed
+                    ),
+                  ),
+                ),
+              )
             : Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18),
-          child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                /*Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 18),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      /*Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: Image(
                     alignment: Alignment.topLeft,
@@ -616,31 +611,33 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
                     image: AssetImage(icon),
                   ),
                 ),*/
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold
+                      Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        width: 100,
+                        alignment: Alignment.centerRight,
+                        margin: EdgeInsets.only(right: 6),
+                        child: verificationStatus ==
+                                Languages.of(context)!.labelVerified
+                            ? Icon(
+                                Icons.verified,
+                                color: Colors.green.shade700,
+                              )
+                            : Text(
+                                verificationStatus,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: textColor,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                      ),
+                    ],
                   ),
                 ),
-                Container(
-                  width: 100,
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.only(right: 6),
-                  child: verificationStatus == Languages.of(context)!.labelVerified ?
-                      Icon(Icons.verified, color: Colors.green.shade700,)
-                  :Text(
-                    verificationStatus,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: textColor,
-                        fontWeight: FontWeight.w300),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }
@@ -650,6 +647,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     print(isCameraGranted);
     return await isCameraGranted;
   }
+
 /*
   void _showModal(BuildContext context, String? image, bool isVideo,
       String status, String route, String data, String rejectionReason) {
@@ -826,7 +824,7 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
   }
 
   Future<void> _fetchDocData() async {
- /*   setState(() {
+    /*   setState(() {
       isLoading = true;
     });*/
     bool isConnected = await _connectivityService.isConnected();
@@ -836,18 +834,22 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
         isInternetConnected = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            content:
+                Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );
       });
     } else {
       await Future.delayed(Duration(milliseconds: 2));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .fetchKycDocData("/api/v1/app/customers/customer_uploaded_documents");
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getDocData(context, apiResponse);
+      if (mounted) {
+        await Provider.of<MainViewModel>(context, listen: false)
+            .fetchKycDocData(
+                "/api/v1/app/customers/customer_uploaded_documents");
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        getDocData(context, apiResponse);
+      }
     }
   }
 
@@ -855,8 +857,8 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     password = await Helper.getPassword();
   }
-  void _fetchKycStatus() async {
 
+  void _fetchKycStatus() async {
     bool isConnected = await _connectivityService.isConnected();
     if (!isConnected) {
       setState(() {
@@ -878,7 +880,4 @@ class _AccountDetailScreenState extends State<AccountDetailScreen> {
       getKycStatus(context, apiResponse);
     }
   }
-
-
-
 }

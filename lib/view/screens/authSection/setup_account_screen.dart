@@ -296,7 +296,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                 ),
               ),
@@ -328,7 +327,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: Languages.of(context)!.labelBirthdate,
-                        hintStyle: TextStyle(color: Colors.grey),
                         icon: icon
                         //icon of text field
                         ),
@@ -403,7 +401,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                 ),
               ),
@@ -448,7 +445,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                   suffixIcon: IconButton(
                     icon: Icon(

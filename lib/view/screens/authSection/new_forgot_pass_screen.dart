@@ -256,7 +256,6 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: text,
-                    hintStyle: TextStyle(color: Colors.grey),
                     icon: icon,
                     suffixIcon: IconButton(
                       icon: Icon(

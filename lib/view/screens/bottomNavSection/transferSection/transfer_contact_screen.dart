@@ -307,9 +307,6 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(18),
-            /*enabledBorder: UnderlineInputBorder(
-                borderSide:
-                BorderSide(color: Colors.black, style: BorderStyle.solid)),*/
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.8)),
@@ -317,13 +314,6 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                 borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.7)),
             hintText: Languages.of(context)!.labelHintUserNameOrPhoneNo,
-            hintStyle:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
-            /*  suffixIcon: Icon(
-              Icons.perm_contact_cal,
-              color:AppColor.PRIMARY,
-              size: 25,
-            ),*/
           ),
         ),
       ),

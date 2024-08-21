@@ -391,7 +391,6 @@ class _SigninScreenState extends State<SigninScreen> {
                     hintText: text,
                     alignLabelWithHint: true,
                     counterText: "",
-                    hintStyle: TextStyle(color: Colors.grey),
                     icon: icon,
                     suffixIcon: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -475,7 +474,6 @@ class _SigninScreenState extends State<SigninScreen> {
                   border: InputBorder.none,
                   hintText: text,
                   alignLabelWithHint: true,
-                  hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                   suffixIcon: IconButton(
                     icon: Icon(

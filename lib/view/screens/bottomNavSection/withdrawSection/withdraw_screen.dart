@@ -1,6 +1,7 @@
 import 'package:Payrio/model/response/withdrawResponse.dart';
 import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../languageSection/Languages.dart';
@@ -319,7 +320,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   counterText: "",
                   border: InputBorder.none,
                   hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: GoogleFonts.getFont('Poppins',
+                      fontSize: 34, fontWeight: FontWeight.normal, color: Colors.grey),
                   alignLabelWithHint: true),
             ),
           ),

@@ -490,7 +490,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                         counterText: "",
                         border: InputBorder.none,
                         hintText: 'XXXXXXXXXX',
-                        hintStyle: TextStyle(color: Colors.grey),
                         //suffixIcon:Icon(Icons.phone_enabled_sharp),
                       ),
                     ),

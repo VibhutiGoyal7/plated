@@ -342,14 +342,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: text,
-                      hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
                       icon: icon,
                       suffixIcon: IconButton(
                         icon: Icon(
                           passwordVisibles
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: isDarkMode ? Colors.white : Colors.black,
                           size: 20,
                         ),
                         onPressed: () {
