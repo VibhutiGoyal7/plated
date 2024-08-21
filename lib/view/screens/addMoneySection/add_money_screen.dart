@@ -3,6 +3,7 @@ import 'package:Payrio/model/response/AddMoneyResponse.dart';
 import 'package:Payrio/model/webviewData.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -380,7 +381,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         counterText: "",
                         border: InputBorder.none,
                         hintText: text,
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: GoogleFonts.getFont('Poppins',
+                            fontSize: 24, fontWeight: FontWeight.normal, color: Colors.grey),
                         alignLabelWithHint: true),
                   ),
                 ),

@@ -87,7 +87,8 @@ class _PaymentReceiptScreenState extends State<PaymentReceiptScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.grey, //or set color with: Color(0xFF0000FF)
+      statusBarColor: isDarkMode? AppColor.DARK_BG_COLOR : Colors.grey,
+        statusBarIconBrightness: isDarkMode? Brightness.light: Brightness.dark//or set color with: Color(0xFF0000FF)
     ));
     return Scaffold(
 

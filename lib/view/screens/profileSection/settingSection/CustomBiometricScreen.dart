@@ -6,19 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../../../model/response/notificationOtpResponse.dart';
 import '../../../../utils/Helper.dart';
 
 class CustomBiometricScreen extends StatefulWidget {
+
+  final NotificationOtpResponse? data; // Define the 'data' parameter here
+
+  CustomBiometricScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _CustomBiometricScreenState createState() => _CustomBiometricScreenState();
 }
 
 class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
+
   final LocalAuthentication auth = LocalAuthentication();
   bool _isAuthenticated = false;
   bool _authOnResume = false;
   bool _authenticationAttempted = false;
   String _authorized = 'Not Authorized';
+  NotificationOtpResponse? notificationOtpResponse;
 
   Future<void> _authenticate() async {
     print("Called _authenticate()");
@@ -45,7 +53,13 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
     if (authenticated) {
       await Helper.saveUserAuthenticated(true);
       print("User authenticated successfully.");
-      Navigator.pushReplacementNamed(context, "/BottomNav");
+      if(notificationOtpResponse?.otp?.isNotEmpty == true){
+        Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
+        return;
+      }else
+      {
+        Navigator.pushReplacementNamed(context, "/BottomNav");
+      }
     } else {
       await Helper.saveUserAuthenticated(false);
       print("User cancelled authentication.");
@@ -56,6 +70,7 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
   @override
   void initState() {
     super.initState();
+    notificationOtpResponse = widget.data;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(milliseconds: 300), () {
         _authenticate(); // Trigger biometric after a short delay

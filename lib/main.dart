@@ -9,6 +9,7 @@ import 'package:Payrio/model/response/transactionListReponse.dart';
 import 'package:Payrio/model/webviewData.dart';
 import 'package:Payrio/theme/AppTheme.dart';
 import 'package:Payrio/utils/Helper.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:Payrio/view/screens/addMoneySection/add_money_screen.dart';
 import 'package:Payrio/view/screens/addMoneySection/payment_method_screen.dart';
 import 'package:Payrio/view/screens/addMoneySection/payment_method_type_screen.dart';
@@ -101,7 +102,6 @@ import 'model/services/PushNotificationService.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   await setupFlutterNotifications();
-  //showFlutterNotification(message);
   print('Handling a background message ${message.messageId}');
 }
 
@@ -134,31 +134,10 @@ Future<void> setupFlutterNotifications() async {
   isFlutterLocalNotificationsInitialized = true;
 }
 
-void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null && !kIsWeb) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          icon: 'notification',
-        ),
-      ),
-    );
-  }
-}
-
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   // Initialize Firebase
   await Firebase.initializeApp();
@@ -187,19 +166,24 @@ void main() async {
     DeviceOrientation.portraitDown
   ]);
 
-  runApp(MyApp());
+  runApp(MyApp(initialMessage: initialMessage));
 }
 
-
 class MyApp extends StatefulWidget {
+  final RemoteMessage? initialMessage;
+
+  MyApp({this.initialMessage});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState(initialMessage);
 }
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   Locale _locale = const Locale('en');
-  String? initialMessage;
+  final RemoteMessage? initialMessage;
+
+  _MyAppState(this.initialMessage);
 
   @override
   void initState() {
@@ -212,6 +196,22 @@ class _MyAppState extends State<MyApp> {
       _locale = locale;
     });
   }
+
+  void setupNotificationHandlers(BuildContext context) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      ToastComponent.showToast(context: context, message: "$message");
+      // Navigate to the ProfileScreen when the notification is clicked
+      final notificationResponse = NotificationOtpResponse.fromJson(message.data);
+      Navigator.push(
+        navigatorKey.currentState!.context,
+        MaterialPageRoute(
+            builder: (context) => NotificationOtpScreen(
+              data: notificationResponse,
+            )),
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +231,6 @@ class _MyAppState extends State<MyApp> {
             // support localization string for Cupertino Widget
             GlobalWidgetsLocalizations.delegate,
             // support localization string for text format from right to left.
-            // Add your generated localization delegate here
             AppLocalizationsDelegate()
           ],
           supportedLocales: L10n.all,
@@ -240,20 +239,20 @@ class _MyAppState extends State<MyApp> {
           themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
-            '/': (context) => SplashScreen(),
+            '/': (context) {
+              NotificationOtpResponse? notificationResponse = NotificationOtpResponse(otp: "", notificationType: "");
+              if(initialMessage?.data != null){
+                notificationResponse = NotificationOtpResponse.fromJson(initialMessage!.data);
+              }
+              return SplashScreen(data : notificationResponse);
+            },
             '/GetStartedScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return GetStartedScreen();
             },
             '/MoneySafeScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return MoneySafeScreen();
             },
             '/PhoneVerifyScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return PhoneVerifyScreen();
             },
             '/OtpVerify': (context) {
@@ -277,28 +276,18 @@ class _MyAppState extends State<MyApp> {
               return SigninScreen(data: args);
             },
             '/BottomNav': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return BottomNav();
             },
             '/ProfileScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ProfileScreen();
             },
             '/PersonalInfoScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return PersonalInformationScreen();
             },
             '/EditInformationScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return EditInformationScreen();
             },
             '/AccountDetailScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return AccountDetailScreen();
             },
             '/AddMoneyScreen': (context) {
@@ -312,18 +301,12 @@ class _MyAppState extends State<MyApp> {
               return WebViewScreen(data: args);
             },
             '/PaymentMethodScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return PaymentMethodScreen();
             },
             '/ChangePasswordScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ChangePasswordScreen();
             },
             '/ForgotPasswordScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ForgotPasswordScreen();
             },
             '/OtpForgotPassScreen': (context) {
@@ -337,25 +320,17 @@ class _MyAppState extends State<MyApp> {
               return NewPassForgotPassScreen(data: args);
             },
             '/PersonalDataScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return PersonalDataScreen();
             },
             '/AddressScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return AddressScreen();
             },
             '/SettingScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return SettingScreen(
                 setLocale: setLocale,
               );
             },
             '/VerifyEmail': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return VerifyEmailScreen();
             },
             '/VerifyEmailOtpScreen': (context) {
@@ -366,43 +341,27 @@ class _MyAppState extends State<MyApp> {
               );
             },
             '/VerifyIdentityScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return VerifyIdentityScreen();
             },
             '/ChooseDocScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ChooseDocScreen();
             },
             '/SelectCountryScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return SelectCountryScreen();
             },
             '/LevelBenefitScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return LevelBenefitScreen();
             },
             '/NotificationScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return NotificationScreen();
             },
             '/NotificationDetailScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return NotificationDetailScreen();
             },
             '/RedeemBalScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return RedeemBalanceScreen();
             },
             '/RedeemBalance': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return RedeemScreen();
             },
             '/CameraAccessScreen': (context) {
@@ -423,33 +382,21 @@ class _MyAppState extends State<MyApp> {
               );
             },
             '/PaymentScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return PaymentScreen();
             },
             '/ScanQrScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ScanQrScreen();
             },
             '/ManageAppLockScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ManageAppLockScreen();
             },
             '/TransactionsScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return TransactionsScreen();
             },
             '/QRScannerScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return QrScannerScreen();
             },
             '/ComingSoonScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ComingSoonScreen();
             },
             '/TransferScreen': (context) {
@@ -479,8 +426,6 @@ class _MyAppState extends State<MyApp> {
               return WithdrawScreen(data: args);
             },
             '/TpinCreateScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return TpinCreateScreen();
             },
             '/TpinVerifyScreen': (context) {
@@ -489,8 +434,6 @@ class _MyAppState extends State<MyApp> {
               return TpinVerifyScreen(data: args);
             },
             '/ChangeTPinScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return ChangeTpinScreen();
             },
             '/TransferTPINScreen': (context) {
@@ -514,8 +457,6 @@ class _MyAppState extends State<MyApp> {
               return PaymentSuccessfulScreen(data: args);
             },
             '/LanguageSelectionScreen': (context) {
-              final args = ModalRoute.of(context)!.settings.arguments
-                  as CompleteP2PRequest?;
               return LanguageSelectionScreen(
                 setLocale: setLocale,
               );
@@ -547,18 +488,12 @@ class _MyAppState extends State<MyApp> {
               return PaymentMethodTypeScreen(data: args);
             },
             '/RequestQrScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return RequestQrScreen();
             },
             '/WithdrawMethodScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return WithdrawMethodScreen();
             },
             '/SupportSelectionScreen': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
               return SupportSelectionScreen();
             },
             '/WithdrawMethodTypeScreen': (context) {
@@ -587,7 +522,9 @@ class _MyAppState extends State<MyApp> {
               return TransactionReceiptScreen(data: args);
             },
             '/CustomBiometricScreen': (context) {
-              return CustomBiometricScreen();
+              final args =
+              ModalRoute.of(context)!.settings.arguments as NotificationOtpResponse?;
+              return CustomBiometricScreen(data: args);
             },
           }),
     );

@@ -212,7 +212,6 @@ class _RequestQrScreenState extends State<RequestQrScreen> {
                         counterText: "",
                         border: InputBorder.none,
                         hintText: text,
-                        hintStyle: TextStyle(color: Colors.grey),
                         alignLabelWithHint: true),
                   ),
                 ),

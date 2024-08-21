@@ -546,8 +546,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                                         border: InputBorder.none,
                                         hintText: "Message",
                                         alignLabelWithHint: true,
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey),
                                         suffixIcon: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [

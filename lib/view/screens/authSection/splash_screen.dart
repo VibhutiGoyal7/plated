@@ -1,14 +1,21 @@
 import 'dart:async';
 
 import 'package:Payrio/languageSection/Languages.dart';
+import 'package:Payrio/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:Payrio/utils/Helper.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../../model/response/notificationOtpResponse.dart';
 import '../profileSection/settingSection/CustomBiometricScreen.dart';
 
 class SplashScreen extends StatefulWidget {
+
+  final NotificationOtpResponse? data; // Define the 'data' parameter here
+
+  SplashScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -24,12 +31,12 @@ class _SplashScreenState extends State<SplashScreen> {
   late Animation<double> _animation;
   bool _authOnResume = false;
   bool? isUserAuthenticated = false;
-
-
+  NotificationOtpResponse? notificationOtpResponse;
   @override
   void initState() {
     super.initState();
     _fetchToken();
+    notificationOtpResponse = widget.data;
     Helper.getUserAuthenticated().then((onValue) {
       isUserAuthenticated = onValue;
     });
@@ -99,27 +106,40 @@ class _SplashScreenState extends State<SplashScreen> {
           print("Checking Number of times");
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CustomBiometricScreen()),
+            MaterialPageRoute(builder: (context) => CustomBiometricScreen(data: notificationOtpResponse,)),
           );
           //_authenticate(); // Only call authenticate if not attempted before
         }
       }else{
-        Navigator.pushReplacementNamed(context, "/BottomNav");
+        if(notificationOtpResponse?.otp?.isNotEmpty == true){
+          Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
+          return;
+        }else
+        {
+          Navigator.pushReplacementNamed(context, "/BottomNav");
+        }
       }
     }
   }
   void _navigation() {
-    print("token:::${token} ${token?.isEmpty}");
+    print("token:::${widget.data}");
+    //ToastComponent.showToast(context: context, message: "token:::${notificationOtpResponse?.otp}");
     if (token == null || token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/MoneySafeScreen");
     } else {
+
       if (isUserAuthenticated != true) {
         _initializeBiometrics();
       }else{
-        Navigator.pushReplacementNamed(context, "/BottomNav");
+        if(notificationOtpResponse?.otp?.isNotEmpty == true){
+          Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
+          return;
+        }else
+          {
+            Navigator.pushReplacementNamed(context, "/BottomNav");
+          }
       }
     }
   }
-
 
 }

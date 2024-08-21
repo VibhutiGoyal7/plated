@@ -265,7 +265,6 @@ class _AddressScreenState extends State<AddressScreen> {
                     hintText: label,
                     counterText: "",
                     contentPadding: EdgeInsets.symmetric(vertical: 0),
-                    hintStyle: TextStyle(color: Colors.grey),
                   ),
                 ),
               ),

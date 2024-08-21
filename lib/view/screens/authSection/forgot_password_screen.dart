@@ -471,7 +471,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           counterText: "",
                           border: InputBorder.none,
                           hintText: 'XXXXXXXXXX',
-                          hintStyle: TextStyle(color: Colors.grey),
                           //suffixIcon:Icon(Icons.phone_enabled_sharp),
                         ),
                       ),
@@ -601,7 +600,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: text,
-                    hintStyle: TextStyle(color: Colors.grey),
                     icon: icon,
                     suffixIcon: IconButton(
                       icon: Icon(

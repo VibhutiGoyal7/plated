@@ -2,6 +2,7 @@ import 'package:Payrio/model/request/initiateP2PRequest.dart';
 import 'package:Payrio/model/response/checkCustomerReponse.dart';
 import 'package:Payrio/utils/Util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../languageSection/Languages.dart';
@@ -185,8 +186,6 @@ class _TransferScreenState extends State<TransferScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              /*Text("${countryCurrencySymbol}", style: TextStyle(fontSize: 38, fontWeight: FontWeight.normal,
-                                  color: Colors.grey),),*/
                               Card(
                                 child: Container(
                                   width:
@@ -212,11 +211,8 @@ class _TransferScreenState extends State<TransferScreen> {
                                       controller: _inputController,
                                       autofocus: true,
                                       onChanged: (value) {
-                                        /*    int balance = extractNumber(countryBalance) - extractNumber(amount);
-                                        print(balance);*/
                                         setState(() {
                                           amount = value;
-                                          // countryBalance = balance as String ;
                                         });
                                         _checkInputValidation();
                                       },
@@ -235,6 +231,8 @@ class _TransferScreenState extends State<TransferScreen> {
                                         border: InputBorder.none,
                                         hintText:
                                             Languages.of(context)?.labelZero,
+                                        hintStyle: GoogleFonts.getFont('Poppins',
+                                            fontSize: 24, fontWeight: FontWeight.normal, color: Colors.grey),
                                       ),
                                     ),
                                   ),

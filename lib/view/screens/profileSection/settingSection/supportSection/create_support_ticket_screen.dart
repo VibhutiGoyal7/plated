@@ -544,7 +544,6 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                 ),
               ),
@@ -1127,7 +1126,6 @@ class _CreateSupportTicketScreenState extends State<CreateSupportTicketScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,
-                  hintStyle: TextStyle(color: Colors.grey),
                   icon: icon,
                 ),
               ),

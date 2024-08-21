@@ -272,7 +272,6 @@ class _LiveChatListScreenState extends State<LiveChatListScreen> {
                               border: InputBorder.none,
                               hintText: "Message",
                               alignLabelWithHint: true,
-                              hintStyle: TextStyle(color: Colors.grey),
                               suffixIcon: GestureDetector(
                                   onTap: () {
                                     _addMessage(_controller.text);

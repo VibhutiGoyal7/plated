@@ -282,12 +282,10 @@ class _TransferOverviewScreenState extends State<TransferOverviewScreen> {
                                       counterStyle: TextStyle(fontSize: 11 , color:  isDarkMode ? Colors.white : Colors.black),
                                       border: InputBorder.none,
                                       hintText: '${Languages.of(context)?.labelWriteSomething}',
-                                      hintStyle: TextStyle(color: Colors.grey),
                                       suffixIcon: GestureDetector(
                                           onTap: () {},
                                           child: Icon(
-                                            Icons.edit,
-                                            color: isDarkMode ? Colors.white : Colors.black,
+                                            Icons.edit
                                           )),
                                     ),
                                   ),

@@ -8,7 +8,10 @@ class AppTheme {
     return ThemeData(
       appBarTheme: AppBarTheme(
         titleTextStyle: GoogleFonts.getFont('Poppins',
-            fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.BLACK, letterSpacing: 0.5),
+            fontSize: 18,
+            fontWeight: FontWeight.normal,
+            color: AppColor.BLACK,
+            letterSpacing: 0.5),
         actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
         iconTheme: const IconThemeData(color: AppColor.BLACK),
         backgroundColor: AppColor.WHITE,
@@ -25,15 +28,17 @@ class AppTheme {
             fontSize: 12), /*indicatorSize: TabBarIndicatorSize.label*/
       ),
       timePickerTheme: TimePickerThemeData(
-        backgroundColor: AppColor.WHITE,
-        dialBackgroundColor: Colors.blue, 
-        dialHandColor: AppColor.WHITE,
-        confirmButtonStyle: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
-        cancelButtonStyle: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.redAccent)),
-        hourMinuteColor: Colors.blue,
-        timeSelectorSeparatorColor: WidgetStateProperty.all(Colors.transparent),
-        entryModeIconColor: Colors.blue
-      ),
+          backgroundColor: AppColor.WHITE,
+          dialBackgroundColor: Colors.blue,
+          dialHandColor: AppColor.WHITE,
+          confirmButtonStyle: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(Colors.blue)),
+          cancelButtonStyle: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(Colors.redAccent)),
+          hourMinuteColor: Colors.blue,
+          timeSelectorSeparatorColor:
+              WidgetStateProperty.all(Colors.transparent),
+          entryModeIconColor: Colors.blue),
       popupMenuTheme: PopupMenuThemeData(
         color: AppColor.PRIMARY,
       ),
@@ -42,8 +47,12 @@ class AppTheme {
       highlightColor: AppColor.PRIMARY,
       scaffoldBackgroundColor: AppColor.BG_COLOR,
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.getFont('Poppins',
-            fontSize: 20, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        displayLarge: GoogleFonts.getFont(
+          'Poppins',
+          fontSize: 20,
+          fontWeight: FontWeight.normal,
+          color: AppColor.BLACK,
+        ),
         displayMedium: GoogleFonts.getFont('Poppins',
             fontSize: 18, fontWeight: FontWeight.normal, color: AppColor.BLACK),
         displaySmall: GoogleFonts.getFont('Poppins',
@@ -56,10 +65,21 @@ class AppTheme {
             fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.BLACK),
         bodyLarge: GoogleFonts.getFont('Poppins',
             fontSize: 16, fontWeight: FontWeight.normal, color: AppColor.BLACK),
-        bodyMedium: GoogleFonts.getFont('Poppins',
-            fontSize: 14, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+        bodyMedium: GoogleFonts.getFont(
+          'Poppins',
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: AppColor.BLACK,
+        ),
         bodySmall: GoogleFonts.getFont('Poppins',
             fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.BLACK),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: GoogleFonts.getFont('Poppins',
+            fontSize: 14, fontWeight: FontWeight.normal, color: Colors.grey),
+        iconColor: Colors.grey,
+        suffixIconColor: AppColor.BLACK,
+        prefixIconColor: AppColor.BLACK,
       ),
       listTileTheme: ListTileThemeData(
           iconColor: AppColor.BLACK,
@@ -120,7 +140,7 @@ class AppTheme {
             fontSize: 18, fontWeight: FontWeight.w600, color: AppColor.WHITE),
         actionsIconTheme: const IconThemeData(color: AppColor.WHITE),
         iconTheme: const IconThemeData(color: AppColor.WHITE),
-        backgroundColor: AppColor.BODY_COLOR,
+        backgroundColor: AppColor.DARK_BG_COLOR,
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: AppColor.PRIMARY,
@@ -168,6 +188,14 @@ class AppTheme {
         bodySmall: GoogleFonts.getFont('Poppins',
             fontSize: 12, fontWeight: FontWeight.normal, color: AppColor.WHITE),
       ),
+      inputDecorationTheme: InputDecorationTheme(
+          hintStyle: GoogleFonts.getFont('Poppins',
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
+              color: Colors.white70),
+          iconColor: Colors.white70,
+          suffixIconColor: AppColor.WHITE,
+          prefixIconColor: AppColor.WHITE),
       iconTheme: IconThemeData(color: AppColor.WHITE),
       iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
