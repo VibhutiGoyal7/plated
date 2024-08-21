@@ -207,7 +207,7 @@ class _BottomNavState extends State<BottomNav>
     bool? retrievedBiometric = await Helper.getBiometric();
 
     bool? canCheckBiometric = retrievedBiometric;
-    print('Can CheckBiometric: $canCheckBiometric');
+   // print('Can CheckBiometric: $canCheckBiometric');
     if (isUserAuthenticated != true) {
       if (canCheckBiometric != null && canCheckBiometric == true) {
         List<BiometricType> availableBiometric = [];

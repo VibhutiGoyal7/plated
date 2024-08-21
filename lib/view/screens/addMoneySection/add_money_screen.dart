@@ -165,7 +165,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                 image: AssetImage(isDarkMode
                                     ? "assets/header_night.png"
                                     : "assets/header_day.png"),
-                                fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                                fit: isDarkMode ? BoxFit.cover : BoxFit.fitHeight,
                                 opacity: isDarkMode
                                     ? const AlwaysStoppedAnimation(.9)
                                     : const AlwaysStoppedAnimation(.9),
@@ -265,7 +265,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    _amountController.text = _allLogList[index];
+                                    hideKeyBoard();
+                                    addAmount(_allLogList[index]);
                                     _isValidInput();
                                   });
                                 },
@@ -278,7 +279,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: Text(
-                                          _allLogList[index],
+                                          "+${_allLogList[index]}",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 12),
                                         ),
@@ -425,7 +426,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     });
                   } else {
                     AddMoneyRequest request = AddMoneyRequest(
-                        amount: int.parse(_amountController.text));
+                        amount: _amountController.text);
 
                     await Provider.of<MainViewModel>(context, listen: false)
                         .addMoneyData(
@@ -513,6 +514,14 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     }
   }
 */
+
+  void addAmount(String amount){
+    if(_amountController.text.isNotEmpty){
+      _amountController.text = "${extractFloat(_amountController.text)+extractFloat(amount) }";
+    }else{
+      _amountController.text = amount;
+    }
+  }
   Future<ProfileResponse?> _fetchData() async {
     await Future.delayed(Duration(milliseconds: 2));
     ProfileResponse? profileDetails = await Helper.getProfileDetails();

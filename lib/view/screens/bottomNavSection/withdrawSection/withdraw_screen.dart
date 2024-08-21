@@ -167,7 +167,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              _inputController.text = "${_allLogList[index]}";
+                              hideKeyBoard();
+                              addAmount(_allLogList[index]);
                               _isValidInput();
                             });
                           },
@@ -180,7 +181,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: Text(
-                                    _allLogList[index],
+                                    "+${_allLogList[index]}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 12),
                                   ),
@@ -325,6 +326,14 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         ],
       ),
     );
+  }
+
+  void addAmount(String amount){
+    if(_inputController.text.isNotEmpty){
+      _inputController.text = "${extractFloat(_inputController.text)+extractFloat(amount) }";
+    }else{
+      _inputController.text = amount;
+    }
   }
 
   void _isValidInput() {

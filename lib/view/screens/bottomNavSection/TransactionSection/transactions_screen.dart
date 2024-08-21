@@ -458,29 +458,46 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),*/
                         TabBar(
                           dividerHeight: 0.5,
-                          labelColor: AppColor.WHITE,
-                          unselectedLabelColor: AppColor.PRIMARY,
+                          unselectedLabelColor: Colors.grey,
+                         /* labelColor: AppColor.WHITE,
+                          unselectedLabelColor: AppColor.PRIMARY,*/
                           indicatorPadding: EdgeInsets.all(0),
                           padding: EdgeInsets.all(0),
                           labelPadding: EdgeInsets.zero,
                           labelStyle: TextStyle(fontWeight: FontWeight.bold),
                           unselectedLabelStyle:
                               TextStyle(fontWeight: FontWeight.bold),
-                          indicator: BoxDecoration(
+                         /* indicator: BoxDecoration(
                             color: AppColor.PRIMARY,
-                          ),
+                          ),*/
                           onTap: (index) {
                             runApi(index);
                           },
                           dividerColor: Colors.transparent,
                           tabs: [
                             Container(
+                              margin: EdgeInsets.only(right: 2),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(0),
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey, width: 0.4),
+                                  )),
                               width: screenWidth * 0.5,
                               child: Tab(
                                   text:
                                       "D/W"),
                             ),
                             Container(
+                              margin: EdgeInsets.only(left: 2),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(0),
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey, width: 0.4),
+                                  )),
                               width: screenWidth * 0.5,
                               child: Tab(
                                   text:
@@ -715,6 +732,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.cancel_outlined),
+                        color: isDarkMode ? Colors.white : AppColor.PRIMARY,
                         style:
                             ButtonStyle(iconSize: WidgetStateProperty.all(30)),
                         onPressed: () {

@@ -311,7 +311,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                             image: AssetImage(isDarkMode
                                 ? "assets/header_night.png"
                                 : "assets/header_day.png"),
-                            fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                            fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
                             opacity: isDarkMode
                                 ? const AlwaysStoppedAnimation(.5)
                                 : const AlwaysStoppedAnimation(.55),
@@ -600,39 +600,54 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 25,
-                                      child: Row(
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: isDarkMode
+                                            ? Colors.black12
+                                            : Colors.white38),
+                                    child: IntrinsicWidth(
+                                      child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                            CrossAxisAlignment.start,
                                         children: [
+                                          Container(
+                                            height: 25,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  Languages.of(context)!
+                                                      .labelTotalBalance,
+                                                  style: TextStyle(
+                                                      fontSize: 15.0,
+                                                      letterSpacing: 1.25),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                           Text(
-                                            Languages.of(context)!
-                                                .labelTotalBalance,
+                                            currencyFormat(
+                                                "${currencySymbol}",
+                                                "${isAmountVisible ? amount : "**"} ",
+                                                "${country}"),
                                             style: TextStyle(
-                                                fontSize: 15.0,
-                                                letterSpacing: 1.25),
+                                              fontSize: 26.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    Text(
-                                      currencyFormat(
-                                          "${currencySymbol}",
-                                          "${isAmountVisible ? amount : "**"} ",
-                                          "${country}"),
-                                      style: TextStyle(
-                                        fontSize: 26.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               SizedBox(

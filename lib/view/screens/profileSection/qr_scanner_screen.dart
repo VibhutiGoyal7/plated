@@ -97,7 +97,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                   ? Container(
                       height: 65,
                       width: 65,
-                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                      decoration: BoxDecoration(border: Border.all(width: 0.5), borderRadius: BorderRadius.circular(50)),
                       child: CircleAvatar(
                         radius: 30,
                         backgroundColor: AppColor.WHITE,
