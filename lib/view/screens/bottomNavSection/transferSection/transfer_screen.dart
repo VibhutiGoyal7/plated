@@ -229,7 +229,6 @@ class _TransferScreenState extends State<TransferScreen> {
                                       decoration: InputDecoration(
                                         counterText: "",
                                         border: InputBorder.none,
-                                        hintStyle: TextStyle(color: Colors.grey),
                                         hintText:
                                             Languages.of(context)?.labelZero,
                                         hintStyle: GoogleFonts.getFont('Poppins',
