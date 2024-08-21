@@ -36,10 +36,10 @@ class PushNotificationService {
           message?.data ?? {}; // Assuming message?.data is the JSON data
 
       final notificationResponse = NotificationOtpResponse.fromJson(jsonData);
-      print("NotificationResponse :: ${notificationResponse.otp}");
 
       // Check if the app is in the foreground
-      if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
+      if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android) {
         if (navigatorKey.currentState?.context != null) {
           // App is in foreground, decide not to show the notification badge
           if (notificationResponse.notificationType == "deposit_otp" ||
@@ -50,17 +50,22 @@ class PushNotificationService {
                   builder: (context) =>
                       NotificationOtpScreen(data: notificationResponse)),
             );
-          } else if(notificationResponse.notificationType == "payment_successful" || notificationResponse.notificationType == "payment_cancel"){
+          } else if (notificationResponse.notificationType ==
+                  "payment_successful" ||
+              notificationResponse.notificationType == "payment_cancel") {
+            _showNotification(message);
             Navigator.push(
               navigatorKey.currentState!.context,
               MaterialPageRoute(builder: (context) => BottomNav()),
             );
+          } else {
+            _showNotification(message);
           }
           return; // Do not show the notification
         }
       }
 
-      _showNotification(message);
+      //_showNotification(message);
     });
     enableIOSNotifications();
     await getToken();
@@ -104,8 +109,6 @@ class PushNotificationService {
         _handleNotificationClick(details.payload);
       },
     );
-
-
   }
 
   Future<void> enableIOSNotifications() async {
@@ -160,7 +163,8 @@ class PushNotificationService {
                   data: notificationResponse,
                 )),
       );
-    } else if(notificationResponse.notificationType == "payment_successful" || notificationResponse.notificationType == "payment_cancel") {
+    } else if (notificationResponse.notificationType == "payment_successful" ||
+        notificationResponse.notificationType == "payment_cancel") {
       Navigator.push(
         navigatorKey.currentState!.context,
         MaterialPageRoute(builder: (context) => BottomNav()),
@@ -183,7 +187,9 @@ class PushNotificationService {
                     data: notificationResponse,
                   )),
         );
-      } else if(notificationResponse.notificationType == "payment_successful" || notificationResponse.notificationType == "payment_cancel") {
+      } else if (notificationResponse.notificationType ==
+              "payment_successful" ||
+          notificationResponse.notificationType == "payment_cancel") {
         Navigator.push(
           navigatorKey.currentState!.context,
           MaterialPageRoute(builder: (context) => BottomNav()),
