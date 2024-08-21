@@ -188,10 +188,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       image: AssetImage(isDarkMode
                           ? "assets/header_night.png"
                           : "assets/header_day.png"),
-                      fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
+                      fit: isDarkMode ? BoxFit.cover : BoxFit.cover ,
                       opacity: isDarkMode
                           ? const AlwaysStoppedAnimation(.4)
-                          : const AlwaysStoppedAnimation(.3),
+                          : const AlwaysStoppedAnimation(.4),
                     ),
                     alignment: AlignmentDirectional.center,
                   ),
@@ -233,95 +233,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    isLoading
-                                        ? Shimmer.fromColors(
-                                            baseColor: Colors.white38,
-                                            highlightColor: Colors.grey,
-                                            child: Container(
-                                              width: 100,
-                                              height: 40,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white38,
-                                                borderRadius: BorderRadius.circular(
-                                                    8.0), // Adjust the radius as needed
+                                child: Container(
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color:isDarkMode ?  Colors.black12 :  Colors.white24),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      isLoading
+                                          ? Shimmer.fromColors(
+                                              baseColor: Colors.white38,
+                                              highlightColor: Colors.grey,
+                                              child: Container(
+                                                width: 100,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white38,
+                                                  borderRadius: BorderRadius.circular(
+                                                      8.0), // Adjust the radius as needed
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        : Container(
-                                            width: screenWidth * 0.65,
-                                            child: Row(
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    child: Text(
-                                                      "${capitalizeFirstLetter("${customerName}")}",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                            )
+                                          : Container(
+                                              width: screenWidth * 0.65,
+                                              child: Row(
+                                                children: [
+                                                  Flexible(
+                                                    child: Container(
+                                                      child: Text(
+                                                        "${capitalizeFirstLetter("${customerName}")}",
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                dashBoardKycStatus == "verified"
-                                                    ? Icon(
-                                                        Icons.verified,
-                                                        color: Colors
-                                                            .green.shade700,
-                                                      )
-                                                    : SizedBox(),
-                                              ],
-                                            ),
-                                          ),
-                                    Row(
-                                      children: [
-                                        isLoading
-                                            ? SizedBox()
-                                            : Row(
-                                                children: [
-                                                  Text(
-                                                    "User ID: ",
-                                                    style: TextStyle(
-                                                        fontSize: 14.0),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                  Text(
-                                                    userName,
-                                                    style: TextStyle(
-                                                        fontSize: 13.0),
-                                                    textAlign: TextAlign.left,
-                                                  ),
+                                                  dashBoardKycStatus == "verified"
+                                                      ? Icon(
+                                                          Icons.verified,
+                                                          color: Colors
+                                                              .green.shade700,
+                                                        )
+                                                      : SizedBox(),
                                                 ],
                                               ),
-                                        SizedBox(
-                                          width: 4,
-                                        ),
-                                        isLoading
-                                            ? SizedBox()
-                                            : GestureDetector(
-                                                onTap: () => {
-                                                  copyTextToClipboard(
-                                                      userName.toString()),
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                        content: Text(
-                                                            "Text copied to clipboard")),
-                                                  )
-                                                },
-                                                child: Icon(
-                                                  Icons.copy,
-                                                  size: 16,
+                                            ),
+                                      Row(
+                                        children: [
+                                          isLoading
+                                              ? SizedBox()
+                                              : Row(
+                                                  children: [
+                                                    Text(
+                                                      "User ID: ",
+                                                      style: TextStyle(
+                                                          fontSize: 14.0),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                    Text(
+                                                      userName,
+                                                      style: TextStyle(
+                                                          fontSize: 13.0),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  ],
                                                 ),
-                                              )
-                                      ],
-                                    ),
-                                  ],
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          isLoading
+                                              ? SizedBox()
+                                              : GestureDetector(
+                                                  onTap: () => {
+                                                    copyTextToClipboard(
+                                                        userName.toString()),
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                              "Text copied to clipboard")),
+                                                    )
+                                                  },
+                                                  child: Icon(
+                                                    Icons.copy,
+                                                    size: 16,
+                                                  ),
+                                                )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Stack(

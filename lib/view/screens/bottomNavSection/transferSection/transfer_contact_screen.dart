@@ -99,8 +99,8 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                             image: AssetImage(isDarkMode
                                 ? "assets/header_night.png"
                                 : "assets/header_day.png"),
-                            fit: isDarkMode ? BoxFit.cover : BoxFit.fill,
-                            opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.4),
+                            fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
+                            opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.45),
                           ),
                         ],
                       ),
@@ -130,11 +130,15 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
                                 vertical: 6.0, horizontal: 10),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                Languages.of(context)!.labelEnterPhoneNoOrUsernameSub,
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal),
+                              child: Container(
+
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color:isDarkMode ?  Colors.black12 :  Colors.white38),
+                                child: Text(
+                                  Languages.of(context)!.labelEnterPhoneNoOrUsernameSub,
+                                  style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.normal),
+                                ),
                               ),
                             ),
                           ),

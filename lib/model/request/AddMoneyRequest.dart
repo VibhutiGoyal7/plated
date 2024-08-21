@@ -1,5 +1,5 @@
 class AddMoneyRequest {
-  int? amount;
+  String? amount;
 
   AddMoneyRequest({required this.amount});
 

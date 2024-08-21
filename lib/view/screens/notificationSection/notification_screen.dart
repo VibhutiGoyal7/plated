@@ -1,7 +1,6 @@
 import 'package:Payrio/languageSection/Languages.dart';
 import 'package:Payrio/model/db/dao.dart';
 import 'package:Payrio/model/request/notificationListRequest.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +12,6 @@ import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/session_expired_dialog.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -39,6 +37,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   int _currentIndex = 0;
   // late TabController _tabController;
   int _currentTabIndex = 0;
+  late bool isDarkMode;
 
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -206,6 +205,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -220,27 +220,51 @@ class _NotificationScreenState extends State<NotificationScreen> {
         Column(
           children: [
             TabBar(
-                dividerHeight: 0.5,
-                labelColor: AppColor.WHITE,
-                unselectedLabelColor: AppColor.PRIMARY,
+                dividerHeight: 0.4,
+                unselectedLabelColor: Colors.grey,
+
+                /*labelColor: AppColor.WHITE,
                 indicatorPadding: EdgeInsets.all(0),
                 padding: EdgeInsets.all(0),
                 labelPadding: EdgeInsets.zero,
+                */
                 labelStyle: TextStyle(fontWeight: FontWeight.bold),
                 unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-                indicator: BoxDecoration(
+                indicatorWeight: 2,
+                indicatorPadding: EdgeInsets.symmetric(horizontal: 5),
+                padding: EdgeInsets.all(0),
+                labelPadding: EdgeInsets.zero,
+                // indicator: BoxDecoration(shape: BoxShape.rectangle) ,
+                /*indicator: BoxDecoration(
                   color: AppColor.PRIMARY,
-                ),
+                ),*/
                 onTap: (index) {
+                  _currentIndex = index;
                   runApi(index);
               },
               dividerColor: Colors.transparent,
               tabs: [
                   Container(
-                    width: screenWidth * 0.5,
-                    child: Tab(text: "${Languages.of(context)!.labelGeneral}"),
-                  ),
+                      margin: EdgeInsets.only(right: 2),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(0),
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey, width: 0.4),
+                              )),
+                      width: screenWidth * 0.5,
+                      child: Tab(
+                          text: "${Languages.of(context)!.labelGeneral}")),
                   Container(
+                    margin: EdgeInsets.only(left: 2),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(0),
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.grey, width: 0.4),
+                        )),
                     width: screenWidth * 0.5,
                     child: Tab(
                         text: "${Languages.of(context)!.labelTransactional}"),
@@ -374,8 +398,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColor.PRIMARY,width: 0.22),
-          borderRadius: BorderRadius.circular(12)
+            border: Border.all(
+                color: isDarkMode ? Colors.grey.shade700 : Colors.black,
+                width: 0.22),
+            borderRadius: BorderRadius.circular(12)
         ),
         child: IntrinsicHeight(
           child: Column(
@@ -479,7 +505,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(8),
         decoration: BoxDecoration(
-            border: Border.all(color: AppColor.PRIMARY,width: 0.2),
+            border: Border.all(
+                color: isDarkMode ? Colors.grey.shade700 : Colors.black,
+                width: 0.2),
             borderRadius: BorderRadius.circular(12)
         ),
         child: IntrinsicHeight(
