@@ -1,13 +1,13 @@
 import 'dart:io'; // Import this for exit(0)
 import 'dart:ui';
 
-import 'package:Payrio/theme/AppColor.dart';
+import 'package:FlutterBasicStructure/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
-import '../../../../model/response/notificationOtpResponse.dart';
-import '../../../../utils/Helper.dart';
+import '../../model/response/notificationOtpResponse.dart';
+import '../../utils/Helper.dart';
 
 class CustomBiometricScreen extends StatefulWidget {
 
@@ -54,7 +54,7 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
       await Helper.saveUserAuthenticated(true);
       print("User authenticated successfully.");
       if(notificationOtpResponse?.otp?.isNotEmpty == true){
-        Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
+        //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
         return;
       }else
       {

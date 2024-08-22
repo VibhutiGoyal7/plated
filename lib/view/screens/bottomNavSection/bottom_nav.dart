@@ -1,9 +1,9 @@
-import 'package:Payrio/languageSection/Languages.dart';
-import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/view/screens/bottomNavSection/payment_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/reward_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/scan_qr_screen.dart';
-import 'package:Payrio/view/screens/bottomNavSection/transferSection/transfer_contact_screen.dart';
+import 'package:FlutterBasicStructure/languageSection/Languages.dart';
+import 'package:FlutterBasicStructure/theme/AppColor.dart';
+import 'package:FlutterBasicStructure/view/screens/bottomNavSection/payment_screen.dart';
+import 'package:FlutterBasicStructure/view/screens/bottomNavSection/reward_screen.dart';
+import 'package:FlutterBasicStructure/view/screens/bottomNavSection/scan_qr_screen.dart';
+import 'package:FlutterBasicStructure/view/screens/bottomNavSection/transfer_contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';

@@ -1,7 +1,7 @@
-import 'package:Payrio/model/apis/api_response.dart';
-import 'package:Payrio/model/request/setUpAccountRequest.dart';
-import 'package:Payrio/utils/Util.dart';
-import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:FlutterBasicStructure/model/apis/api_response.dart';
+import 'package:FlutterBasicStructure/model/request/setUpAccountRequest.dart';
+import 'package:FlutterBasicStructure/utils/Util.dart';
+import 'package:FlutterBasicStructure/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

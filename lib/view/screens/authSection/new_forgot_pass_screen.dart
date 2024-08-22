@@ -1,8 +1,8 @@
-import 'package:Payrio/model/request/verifyOtpChangePass.dart';
-import 'package:Payrio/theme/AppColor.dart';
-import 'package:Payrio/utils/Util.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
-import 'package:Payrio/view/screens/authSection/signin_screen.dart';
+import 'package:FlutterBasicStructure/model/request/verifyOtpChangePass.dart';
+import 'package:FlutterBasicStructure/theme/AppColor.dart';
+import 'package:FlutterBasicStructure/utils/Util.dart';
+import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
+import 'package:FlutterBasicStructure/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

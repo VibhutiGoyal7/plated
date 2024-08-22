@@ -1,5 +1,5 @@
-import 'package:Payrio/languageSection/Languages.dart';
-import 'package:Payrio/utils/Helper.dart';
+import 'package:FlutterBasicStructure/languageSection/Languages.dart';
+import 'package:FlutterBasicStructure/utils/Helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

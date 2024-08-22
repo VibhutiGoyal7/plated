@@ -1,6 +1,6 @@
-import 'package:Payrio/model/apis/api_response.dart';
-import 'package:Payrio/utils/Helper.dart';
-import 'package:Payrio/view_model/main_view_model.dart';
+import 'package:FlutterBasicStructure/model/apis/api_response.dart';
+import 'package:FlutterBasicStructure/utils/Helper.dart';
+import 'package:FlutterBasicStructure/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';

@@ -1,17 +1,17 @@
-import 'package:Payrio/model/response/checkCustomerReponse.dart';
-import 'package:Payrio/theme/AppColor.dart';
+import 'package:FlutterBasicStructure/model/response/checkCustomerReponse.dart';
+import 'package:FlutterBasicStructure/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../languageSection/Languages.dart';
-import '../../../../model/apis/api_response.dart';
-import '../../../../model/request/checkCustomerRequest.dart';
-import '../../../../utils/Helper.dart';
-import '../../../../utils/Util.dart';
-import '../../../../view_model/main_view_model.dart';
-import '../../../component/connectivity_service.dart';
-import '../../../component/toastMessage.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/apis/api_response.dart';
+import '../../../model/request/checkCustomerRequest.dart';
+import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
+import '../../../view_model/main_view_model.dart';
+import '../../component/connectivity_service.dart';
+import '../../component/toastMessage.dart';
 
 class TransferContactScreen extends StatefulWidget {
   @override
@@ -354,9 +354,9 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
         }
         CheckCustomerRequest request =
             CheckCustomerRequest(username: username, phoneNo: phoneNo);
-        await Provider.of<MainViewModel>(context, listen: false)
+  /*      await Provider.of<MainViewModel>(context, listen: false)
             .checkCustomerByUsername(
-                "api/v1/app/customers/check_customer_by_username", request);
+                "api/v1/app/customers/check_customer_by_username", request);*/
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         initiateCheckCustomerResponse(context, apiResponse);

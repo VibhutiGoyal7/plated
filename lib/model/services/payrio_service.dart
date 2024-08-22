@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
-import 'package:Payrio/model/apis/app_exception.dart';
-import 'package:Payrio/model/services/base_service.dart';
+import 'package:FlutterBasicStructure/model/apis/app_exception.dart';
+import 'package:FlutterBasicStructure/model/services/base_service.dart';
 import 'package:path/path.dart';
 import '../../utils/Helper.dart';
 import 'dart:convert';
 
-class PayrioService extends BaseService {
+class FlutterBasicStructureService extends BaseService {
   String? retrievedToken;
   var selectedLanguage;
 
@@ -180,173 +180,6 @@ class PayrioService extends BaseService {
     return responseJson;
   }
 
-  Future<dynamic> postMultiFormResponse(String url, File imageFile,String docType,File videoFile) async {
-    print("::::: File: $imageFile");
-    dynamic responseJson;
-
-    try {
-      // Create a multipart request
-      var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
-
-      // Add file
-      var stream = http.ByteStream(imageFile.openRead());
-      var length = await imageFile.length();
-
-      // multipart that takes file
-      var multipartFile = http.MultipartFile("kyc_file", stream, length, filename: basename(imageFile.path));
-      print("Multipart File: ${multipartFile.filename}");
-
-      var streamVid = http.ByteStream(videoFile.openRead());
-      var lengthVid = await videoFile.length();
-
-      // multipart that takes file
-      var multipartFileVid = http.MultipartFile("kyc_video", streamVid, lengthVid, filename: basename(videoFile.path));
-      print("MultipartVid File: ${multipartFileVid.filename}");
-      requestBody.files.add(multipartFile);
-      requestBody.files.add(multipartFileVid);
-      requestBody.fields['document_type'] = docType;
-      //requestBody.
-      // Add headers
-      var headers = await getHeaders();
-      requestBody.headers.addAll(headers);
-
-      // Debugging the request
-      print("Request URL: ${getFullUrl(url)}");
-      print("Request Headers: $headers");
-      print("Request Files: ${requestBody.files.map((file) => file.filename).join(', ')}");
-
-      // Send the request and get the response
-      var response = await requestBody.send();
-      final responses = await http.Response.fromStream(response);
-      print("Response Status Code: ${responses.statusCode}");
-      print("Response Body: ${responses.body}");
-
-      responseJson = returnResponse(responses);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } catch (e) {
-      print('Error: $e');
-      throw FetchDataException('Error occurred while sending the request');
-    }
-    return responseJson;
-  }
-
-  Future<dynamic> postMultiFormMessageResponse(String url, File imageFile,String content) async {
-    print("::::: File: $imageFile");
-    dynamic responseJson;
-
-    try {
-      // Create a multipart request
-      var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
-      print(imageFile);
-
-      if(imageFile.path.isNotEmpty) {
-        // Add file
-        var stream = http.ByteStream(imageFile.openRead());
-        var length = await imageFile.length();
-
-        // multipart that takes file
-        var multipartFile = http.MultipartFile(
-            "attachment", stream, length, filename: basename(imageFile.path));
-        print("Multipart File: ${multipartFile.filename}");
-
-        requestBody.files.add(multipartFile);
-        requestBody.fields['message'] = content;
-      }else{
-        requestBody.fields['message'] = content;
-
-      }
-      //requestBody.
-      // Add headers
-      var headers = await getHeaders();
-      requestBody.headers.addAll(headers);
-
-      // Debugging the request
-      print("Request URL: ${getFullUrl(url)}");
-      print("Request Headers: $headers");/*
-      print("Request Files: ${requestBody.files.map((file) => file.filename).join(', ')}");*/
-
-      // Send the request and get the response
-      var response = await requestBody.send();
-      final responses = await http.Response.fromStream(response);
-      print("Response Status Code: ${responses.statusCode}");
-      print("Response Body: ${responses.body}");
-
-      responseJson = returnResponse(responses);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } catch (e) {
-      print('Error: $e');
-      throw FetchDataException('Error occurred while sending the request');
-    }
-    return responseJson;
-  }
-  //Support Ticket
-  Future<dynamic> postMultiFormResponseToCreateSupport(
-      String url,
-      String customerId,
-      String amount,
-      String paymentTime,
-      String customerMerchantNumber,
-      String trxId,
-      String transactionProviderId,
-      String transactionMethodId,
-      String comment,
-      String transactionTypeId,
-      File? supportTicketDocument) async {
-    print("::::: File: $supportTicketDocument");
-    dynamic responseJson;
-
-    try {
-      // Create a multipart request
-      var requestBody = http.MultipartRequest('POST', Uri.parse(getFullUrl(url)));
-
-      if(supportTicketDocument?.path.isNotEmpty == true) {
-        // Add file
-        var stream = http.ByteStream(supportTicketDocument!.openRead());
-        var length = await supportTicketDocument.length();
-        print("length:::${length}");
-        // multipart that takes file
-        var multipartFile = http.MultipartFile(
-            "support_ticket_document", stream, length,
-            filename: basename(supportTicketDocument.path));
-        print("Multipart File: ${multipartFile.filename}");
-        //RequestBody.
-        requestBody.files.add(multipartFile);
-      }
-      requestBody.fields['customer_id'] = customerId;
-      requestBody.fields['transaction_type_id'] = transactionTypeId;
-      requestBody.fields['transaction_method_id'] = transactionMethodId;
-      requestBody.fields['transaction_provider_id'] = transactionProviderId;
-      requestBody.fields['amount'] = amount;
-      requestBody.fields['customer_merchant_number'] = customerMerchantNumber;
-      requestBody.fields['payment_time'] = paymentTime;
-      requestBody.fields['trx_id'] = trxId;
-      requestBody.fields['comment'] = comment;
-      // Add headers
-      var headers = await getHeaders();
-      requestBody.headers.addAll(headers);
-
-      // Debugging the request
-      //print("Request URL: ${getFullUrl(url)}");
-      print("Request Headers: $headers");
-      print("Request Files: ${requestBody.files.map((file) => file.filename).join(', ')}");
-
-      // Send the request and get the response
-      var response = await requestBody.send();
-      final responses = await http.Response.fromStream(response);
-      print("Response Status Code: ${responses.statusCode}");
-      print("Response Body: ${responses.body}");
-
-      responseJson = returnResponse(responses);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } catch (e) {
-      print('Error: $e');
-      throw FetchDataException('Error occurred while sending the request');
-    }
-    return responseJson;
-  }
   dynamic returnResponses(String responseString, int statusCode) {
     // Implement this function to parse and return the response
     return {

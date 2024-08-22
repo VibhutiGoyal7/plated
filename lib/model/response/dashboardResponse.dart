@@ -1,4 +1,4 @@
-import 'package:Payrio/model/response/transactionListReponse.dart';
+import 'package:FlutterBasicStructure/model/response/transactionListReponse.dart';
 import 'package:floor/floor.dart';
 
 class DashboardResponse {

@@ -1,22 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:Payrio/languageSection/Languages.dart';
-import 'package:Payrio/model/request/trxStatusRequest.dart';
-import 'package:Payrio/model/response/trxStatusResponse.dart';
-import 'package:Payrio/model/webviewData.dart';
+import 'package:FlutterBasicStructure/languageSection/Languages.dart';
+import 'package:FlutterBasicStructure/model/response/trxStatusResponse.dart';
+import 'package:FlutterBasicStructure/model/webviewData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
-import '../../../model/apis/api_response.dart';
-import '../../../theme/AppColor.dart';
-import '../../../utils/Util.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/session_expired_dialog.dart';
+import '../../model/apis/api_response.dart';
+import '../../theme/AppColor.dart';
+import '../../utils/Util.dart';
+import '../../view_model/main_view_model.dart';
+import '../component/connectivity_service.dart';
+import '../component/session_expired_dialog.dart';
 
 class WebViewScreen extends StatefulWidget {
   final WebViewData? data;
@@ -249,13 +248,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
         );
       });
     } else {
-      TrxStatusRequest request = TrxStatusRequest(
-          uniqueId: "${widget.data?.uniqueId}");
+     /* TrxStatusRequest request = TrxStatusRequest(
+          uniqueId: "${widget.data?.uniqueId}");*/
       if(mounted) {
-        await Provider.of<MainViewModel>(context, listen: false)
+       /* await Provider.of<MainViewModel>(context, listen: false)
             .trxStatusData(
             "api/v1/app/wallet_transactions/update_pay2local_trx_status",
-            request);
+            request);*/
 
         ApiResponse apiResponse =
             Provider

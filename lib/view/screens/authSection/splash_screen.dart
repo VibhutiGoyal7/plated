@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:Payrio/languageSection/Languages.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:FlutterBasicStructure/languageSection/Languages.dart';
+import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
-import 'package:Payrio/utils/Helper.dart';
+import 'package:FlutterBasicStructure/utils/Helper.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../model/response/notificationOtpResponse.dart';
-import '../profileSection/settingSection/CustomBiometricScreen.dart';
+import '../CustomBiometricScreen.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }else{
         if(notificationOtpResponse?.otp?.isNotEmpty == true){
-          Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
+          //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
           return;
         }else
         {
@@ -132,7 +132,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _initializeBiometrics();
       }else{
         if(notificationOtpResponse?.otp?.isNotEmpty == true){
-          Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
+          //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
           return;
         }else
           {

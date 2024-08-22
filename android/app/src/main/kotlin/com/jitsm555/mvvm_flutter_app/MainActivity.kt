@@ -1,4 +1,4 @@
-package com.payorio
+package com.flutterBasicStructure
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

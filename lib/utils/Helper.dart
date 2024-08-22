@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Payrio/model/response/checkCustomerReponse.dart';
+import 'package:FlutterBasicStructure/model/response/checkCustomerReponse.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';

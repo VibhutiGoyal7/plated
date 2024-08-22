@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:Payrio/model/request/checkCustomerRequest.dart';
-import 'package:Payrio/model/response/checkCustomerReponse.dart';
-import 'package:Payrio/theme/AppColor.dart';
+import 'package:FlutterBasicStructure/model/request/checkCustomerRequest.dart';
+import 'package:FlutterBasicStructure/model/response/checkCustomerReponse.dart';
+import 'package:FlutterBasicStructure/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -169,9 +169,9 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
 
       CheckCustomerRequest request =
           CheckCustomerRequest(username: username, phoneNo: null);
-      await Provider.of<MainViewModel>(context, listen: false)
+     /* await Provider.of<MainViewModel>(context, listen: false)
           .checkCustomerByUsername(
-              "api/v1/app/customers/check_customer_by_username", request);
+              "api/v1/app/customers/check_customer_by_username", request);*/
       ApiResponse apiResponse =
           Provider.of<MainViewModel>(context, listen: false).response;
       initiateCheckCustomerResponse(context, apiResponse, username);

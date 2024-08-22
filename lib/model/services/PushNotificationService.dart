@@ -1,5 +1,5 @@
-import 'package:Payrio/utils/Helper.dart';
-import 'package:Payrio/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:FlutterBasicStructure/utils/Helper.dart';
+import 'package:FlutterBasicStructure/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../view/screens/authSection/notification_otp_screen.dart';
 import '../response/notificationOtpResponse.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -44,12 +43,12 @@ class PushNotificationService {
           // App is in foreground, decide not to show the notification badge
           if (notificationResponse.notificationType == "deposit_otp" ||
               notificationResponse.notificationType == "withdraw_otp") {
-            Navigator.push(
+           /* Navigator.push(
               navigatorKey.currentState!.context,
               MaterialPageRoute(
                   builder: (context) =>
                       NotificationOtpScreen(data: notificationResponse)),
-            );
+            );*/
           } else if (notificationResponse.notificationType ==
                   "payment_successful" ||
               notificationResponse.notificationType == "payment_cancel") {
@@ -155,14 +154,14 @@ class PushNotificationService {
     final notificationResponse = NotificationOtpResponse.fromJson(data);
     print("_handleMessage :: ${notificationResponse.otp}");
     if (notificationResponse.notificationType == "deposit_otp" ||
-        notificationResponse.notificationType == "withdraw_otp") {
+        notificationResponse.notificationType == "withdraw_otp") {/*
       Navigator.push(
         navigatorKey.currentState!.context,
         MaterialPageRoute(
             builder: (context) => NotificationOtpScreen(
                   data: notificationResponse,
                 )),
-      );
+      );*/
     } else if (notificationResponse.notificationType == "payment_successful" ||
         notificationResponse.notificationType == "payment_cancel") {
       Navigator.push(
@@ -180,13 +179,13 @@ class PushNotificationService {
       print("_handleNotificationClick :: ${notificationResponse.otp}");
       if (notificationResponse.notificationType == "deposit_otp" ||
           notificationResponse.notificationType == "withdraw_otp") {
-        Navigator.push(
+       /* Navigator.push(
           navigatorKey.currentState!.context,
           MaterialPageRoute(
               builder: (context) => NotificationOtpScreen(
                     data: notificationResponse,
                   )),
-        );
+        );*/
       } else if (notificationResponse.notificationType ==
               "payment_successful" ||
           notificationResponse.notificationType == "payment_cancel") {

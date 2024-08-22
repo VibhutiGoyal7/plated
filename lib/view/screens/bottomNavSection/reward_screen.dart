@@ -57,8 +57,8 @@ class _RewardScreenState extends State<RewardScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context, "/LevelBenefitScreen");
+                                 /* Navigator.pushNamed(
+                                      context, "/LevelBenefitScreen");*/
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,

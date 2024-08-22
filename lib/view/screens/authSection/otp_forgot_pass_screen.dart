@@ -1,4 +1,4 @@
-import 'package:Payrio/model/request/verifyOtpChangePass.dart';
+import 'package:FlutterBasicStructure/model/request/verifyOtpChangePass.dart';
 import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';

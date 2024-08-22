@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:Payrio/model/db/PayorioDatabase.dart';
-import 'package:Payrio/model/response/dashboardResponse.dart';
-import 'package:Payrio/model/response/kycStatusResponse.dart';
-import 'package:Payrio/model/response/transactionListReponse.dart';
-import 'package:Payrio/utils/Util.dart';
-import 'package:Payrio/view/component/toastMessage.dart';
+import 'package:FlutterBasicStructure/model/db/BasicStructureDatabase.dart';
+import 'package:FlutterBasicStructure/model/response/dashboardResponse.dart';
+import 'package:FlutterBasicStructure/model/response/kycStatusResponse.dart';
+import 'package:FlutterBasicStructure/model/response/transactionListReponse.dart';
+import 'package:FlutterBasicStructure/utils/Util.dart';
+import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,7 +44,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isAmountVisible = true;
   bool isUSDVisible = false;
   late List<Shortcutitemlist> _shortcutCardsList;
-  late PayorioDatabase database;
+  late BasicStructureDatabase database;
   late DashboardTransactionDao dashboardTransactionDao;
   late CustomerDataDao customerDataDao;
   static const maxDuration = Duration(seconds: 2);
@@ -203,7 +203,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         kycStatusApi = kycStatusResponse!.kycStatus!;
         if (kycStatusApi != Languages.of(context)!.statusVerified) {
           isApiLoading = false;
-          Navigator.pushNamed(context, '/ChooseDocScreen');
+         // Navigator.pushNamed(context, '/ChooseDocScreen');
         } else if (nonCapitalizeString(kycStatusApi) ==
             nonCapitalizeString("${Languages.of(context)!.statusVerified}")) {
           isApiLoading = false;
@@ -214,11 +214,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           } else if (nonCapitalizeString(calledShortCut) ==
               nonCapitalizeString("${Languages.of(context)!.labelWithdraw}")) {
             calledShortCut = "";
-            Navigator.pushNamed(context, '/WithdrawMethodScreen');
+           // Navigator.pushNamed(context, '/WithdrawMethodScreen');
           } else if (nonCapitalizeString(calledShortCut) ==
               nonCapitalizeString("${Languages.of(context)!.labelRequestQR}")) {
             calledShortCut = "";
-            Navigator.pushNamed(context, '/RequestQrScreen');
+            //Navigator.pushNamed(context, '/RequestQrScreen');
           }
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -347,8 +347,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               ),
                                               child: GestureDetector(
                                                 onTap: () => {
-                                                  Navigator.pushNamed(
-                                                      context, '/ProfileScreen')
+                                                 /* Navigator.pushNamed(
+                                                      context, '/ProfileScreen')*/
                                                 },
                                                 child: imageUrl == null ||
                                                         imageUrl == ""
@@ -508,8 +508,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                Navigator.pushNamed(context,
-                                                    "/NotificationScreen");
+                                               /* Navigator.pushNamed(context,
+                                                    "/NotificationScreen");*/
                                               },
                                               child: Icon(
                                                 Icons.notifications,
@@ -532,8 +532,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                       dashBoardKycStatus != null)
                                   ? GestureDetector(
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/ChooseDocScreen');
+                                       /* Navigator.pushNamed(
+                                            context, '/ChooseDocScreen');*/
                                       },
                                       child: Column(
                                         children: [
@@ -724,8 +724,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context, '/TransactionsScreen');
+                                      /*  Navigator.pushNamed(
+                                            context, '/TransactionsScreen');*/
                                       },
                                       child: Column(
                                         mainAxisAlignment:
@@ -804,8 +804,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                               index],
                                                       symbol:
                                                           "${currencySymbol}",userId : userId);*/
-                                                  Navigator.pushNamed(context, '/TransactionOverviewScreen',
-                                                      arguments: transactionList[index]);
+                                                 /* Navigator.pushNamed(context, '/TransactionOverviewScreen',
+                                                      arguments: transactionList[index]);*/
 
                                                 },
                                                 child: Card(
@@ -1031,30 +1031,30 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 Navigator.pop(context);
                                 calledShortCut =
                                     Languages.of(context)!.labelAddMoney;
-                                if (checkKYCStatus()) {
+                               /* if (checkKYCStatus()) {
                                   Navigator.pushNamed(
                                       context, '/PaymentMethodScreen');
                                 } else {
                                   Navigator.pushNamed(
                                       context, '/ChooseDocScreen');
-                                }
+                                }*/
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelWithdraw) {
                                 Navigator.pop(context);
                                 calledShortCut =
                                     Languages.of(context)!.labelWithdraw;
-                                if (checkKYCStatus()) {
+                               /* if (checkKYCStatus()) {
                                   Navigator.pushNamed(
                                       context, '/WithdrawMethodScreen');
                                 } else {
                                   Navigator.pushNamed(
                                       context, '/ChooseDocScreen');
-                                }
+                                }*/
                                 //_getKycStatus();
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelTransfer) {
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/TransferScreen');
+                               // Navigator.pushNamed(context, '/TransferScreen');
                               }
                               else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelRequestQR) {
@@ -1062,7 +1062,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 calledShortCut =
                                     Languages.of(context)!.labelWithdraw;
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/RequestQrScreen');
+                                //Navigator.pushNamed(context, '/RequestQrScreen');
                               } else {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
@@ -1126,7 +1126,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 calledShortCut =
                                     Languages.of(context)!.labelWithdraw;
                                 Navigator.pop(context);
-                                Navigator.pushNamed(context, '/RequestQrScreen');
+                                //Navigator.pushNamed(context, '/RequestQrScreen');
                               }else {
                                 Navigator.pop(context);
                                 Navigator.pushNamed(
@@ -1240,44 +1240,44 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             child: IconButton(
                 onPressed: () => {
                       if (text == Languages.of(context)!.labelTransfer)
-                        {Navigator.pushNamed(context, '/TransferScreen')}
+                        {/*Navigator.pushNamed(context, '/TransferScreen')*/}
                       else if (text == Languages.of(context)!.labelSend)
                         {}
                       else if (text == Languages.of(context)!.labelAddMoney)
                         {
                           calledShortCut = Languages.of(context)!.labelAddMoney,
-                          if (checkKYCStatus())
+                         /* if (checkKYCStatus())
                             {
                               Navigator.pushNamed(
                                   context, '/PaymentMethodScreen')
                             }
                           else
                             {Navigator.pushNamed(context, '/ChooseDocScreen')}
-
+*/
                           //_getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelRequestQR)
                         {
                           calledShortCut =
                               Languages.of(context)!.labelRequestQR,
-                          if (checkKYCStatus())
+                        /*  if (checkKYCStatus())
                             {Navigator.pushNamed(context, '/RequestQrScreen')}
                           else
                             {Navigator.pushNamed(context, '/ChooseDocScreen')}
-
+*/
                           //_getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelWithdraw)
                         {
                           calledShortCut = Languages.of(context)!.labelWithdraw,
-                          if (checkKYCStatus())
+                         /* if (checkKYCStatus())
                             {
                               Navigator.pushNamed(
                                   context, '/WithdrawMethodScreen')
                             }
                           else
                             {Navigator.pushNamed(context, '/ChooseDocScreen')}
-
+*/
                           //_getKycStatus()
                         }
                       else if (text == Languages.of(context)!.labelMore)
@@ -1369,7 +1369,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       DashboardResponse? dashboardResponse) async {
     if (dashboardResponse?.customerData?.tpin == null ||
         dashboardResponse?.customerData?.tpin == "") {
-      Navigator.pushNamed(context, '/TpinCreateScreen');
+     // Navigator.pushNamed(context, '/TpinCreateScreen');
     }
 
     CustomerData? customerData = dashboardResponse?.customerData;
