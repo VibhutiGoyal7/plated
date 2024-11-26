@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:FlutterBasicStructure/model/apis/api_response.dart';
-import 'package:FlutterBasicStructure/model/main_repository.dart';
-import 'package:FlutterBasicStructure/model/request/setUpAccountRequest.dart';
-import 'package:FlutterBasicStructure/model/request/signInWithPhoneNumber.dart';
-import 'package:FlutterBasicStructure/model/response/dashboardResponse.dart';
-import 'package:FlutterBasicStructure/model/response/fetchKycDocResponse.dart';
-import 'package:FlutterBasicStructure/model/response/kycStatusResponse.dart';
-import 'package:FlutterBasicStructure/model/response/phoneVerifyResponse.dart';
-import 'package:FlutterBasicStructure/model/response/profileResponse.dart';
-import 'package:FlutterBasicStructure/model/response/setUpAccountResponse.dart';
+import 'package:BDPass/model/apis/api_response.dart';
+import 'package:BDPass/model/main_repository.dart';
+import 'package:BDPass/model/request/setUpAccountRequest.dart';
+import 'package:BDPass/model/request/signInWithPhoneNumber.dart';
+import 'package:BDPass/model/response/dashboardResponse.dart';
+import 'package:BDPass/model/response/fetchKycDocResponse.dart';
+import 'package:BDPass/model/response/kycStatusResponse.dart';
+import 'package:BDPass/model/response/phoneVerifyResponse.dart';
+import 'package:BDPass/model/response/profileResponse.dart';
+import 'package:BDPass/model/response/setUpAccountResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';

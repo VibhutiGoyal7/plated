@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:FlutterBasicStructure/model/request/signInWithPhoneNumber.dart';
+import 'package:BDPass/model/request/signInWithPhoneNumber.dart';
 
 abstract class BaseService {
   final String BaseUrl = "https://custapi.payorio.com/";

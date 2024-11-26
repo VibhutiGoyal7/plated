@@ -1,5 +1,5 @@
-import 'package:FlutterBasicStructure/utils/Helper.dart';
-import 'package:FlutterBasicStructure/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';

@@ -1,22 +1,22 @@
-import 'package:FlutterBasicStructure/model/request/verifyOtpChangePass.dart';
-import 'package:FlutterBasicStructure/model/webviewData.dart';
-import 'package:FlutterBasicStructure/theme/AppTheme.dart';
-import 'package:FlutterBasicStructure/utils/Helper.dart';
-import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
-import 'package:FlutterBasicStructure/view/screens/web_view_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/forgot_password_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/money_safe_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/new_forgot_pass_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/otp_forgot_pass_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/otp_verify_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/phone_verify_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/setup_account_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/signin_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/splash_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/bottomNavSection/bottom_nav.dart';
-import 'package:FlutterBasicStructure/view/screens/coming_soon_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/change_password_screen.dart';
-import 'package:FlutterBasicStructure/view_model/main_view_model.dart';
+import 'package:BDPass/model/request/verifyOtpChangePass.dart';
+import 'package:BDPass/model/webviewData.dart';
+import 'package:BDPass/theme/AppTheme.dart';
+import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
+import 'package:BDPass/view/screens/web_view_screen.dart';
+import 'package:BDPass/view/screens/authSection/forgot_password_screen.dart';
+import 'package:BDPass/view/screens/authSection/money_safe_screen.dart';
+import 'package:BDPass/view/screens/authSection/new_forgot_pass_screen.dart';
+import 'package:BDPass/view/screens/authSection/otp_forgot_pass_screen.dart';
+import 'package:BDPass/view/screens/authSection/otp_verify_screen.dart';
+import 'package:BDPass/view/screens/authSection/phone_verify_screen.dart';
+import 'package:BDPass/view/screens/authSection/setup_account_screen.dart';
+import 'package:BDPass/view/screens/authSection/signin_screen.dart';
+import 'package:BDPass/view/screens/authSection/splash_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:BDPass/view/screens/coming_soon_screen.dart';
+import 'package:BDPass/view/screens/change_password_screen.dart';
+import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -156,7 +156,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
         //  navigatorKey: navigatorKey,
-          title: 'Flutter-Basic-Structure',
+          title: 'BD-Pass',
           locale: _locale,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,

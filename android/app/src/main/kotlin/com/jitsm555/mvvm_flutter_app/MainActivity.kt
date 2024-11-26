@@ -1,4 +1,4 @@
-package com.flutterBasicStructure
+package com.bdPass
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

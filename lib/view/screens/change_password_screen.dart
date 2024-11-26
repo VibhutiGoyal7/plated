@@ -1,5 +1,5 @@
-import 'package:FlutterBasicStructure/model/request/changeOldPasswordRequest.dart';
-import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
+import 'package:BDPass/model/request/changeOldPasswordRequest.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,4 +1,4 @@
-import 'package:FlutterBasicStructure/model/response/transactionListReponse.dart';
+import 'package:BDPass/model/response/transactionListReponse.dart';
 import 'package:floor/floor.dart';
 
 import '../response/dashboardResponse.dart';

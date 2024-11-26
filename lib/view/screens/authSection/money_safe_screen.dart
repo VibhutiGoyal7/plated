@@ -1,5 +1,5 @@
-import 'package:FlutterBasicStructure/languageSection/Languages.dart';
-import 'package:FlutterBasicStructure/utils/Helper.dart';
+import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/utils/Helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,7 +1,7 @@
 import 'dart:io'; // Import this for exit(0)
 import 'dart:ui';
 
-import 'package:FlutterBasicStructure/theme/AppColor.dart';
+import 'package:BDPass/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';

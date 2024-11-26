@@ -2,7 +2,7 @@ import 'Languages.dart';
 
 class LanguageEn extends Languages {
   @override
-  String get appName => "Payorio";
+  String get appName => "BDPass";
 
   @override
   String get labelWelcome => "Welcome";

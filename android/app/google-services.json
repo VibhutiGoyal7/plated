@@ -1,7 +1,7 @@
 {
   "project_info": {
     "project_number": "381401072487",
-    "project_id": "flutterBasicStructure",
+    "project_id": "bdPass",
     "storage_bucket": "payorio.appspot.com"
   },
   "client": [
@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:381401072487:android:b732d5c781d5a200cf65c2",
         "android_client_info": {
-          "package_name": "com.flutterBasicStructure"
+          "package_name": "com.bdPass"
         }
       },
       "oauth_client": [],

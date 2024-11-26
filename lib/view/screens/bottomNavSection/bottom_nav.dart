@@ -1,9 +1,9 @@
-import 'package:FlutterBasicStructure/languageSection/Languages.dart';
-import 'package:FlutterBasicStructure/theme/AppColor.dart';
-import 'package:FlutterBasicStructure/view/screens/bottomNavSection/payment_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/bottomNavSection/reward_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/bottomNavSection/scan_qr_screen.dart';
-import 'package:FlutterBasicStructure/view/screens/bottomNavSection/transfer_contact_screen.dart';
+import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/theme/AppColor.dart';
+import 'package:BDPass/view/screens/bottomNavSection/payment_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/reward_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/scan_qr_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/transfer_contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';

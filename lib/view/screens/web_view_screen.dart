@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:FlutterBasicStructure/languageSection/Languages.dart';
-import 'package:FlutterBasicStructure/model/response/trxStatusResponse.dart';
-import 'package:FlutterBasicStructure/model/webviewData.dart';
+import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/model/response/trxStatusResponse.dart';
+import 'package:BDPass/model/webviewData.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';

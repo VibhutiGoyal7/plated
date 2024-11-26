@@ -1,7 +1,7 @@
-import 'package:FlutterBasicStructure/model/apis/api_response.dart';
-import 'package:FlutterBasicStructure/model/request/setUpAccountRequest.dart';
-import 'package:FlutterBasicStructure/utils/Util.dart';
-import 'package:FlutterBasicStructure/view_model/main_view_model.dart';
+import 'package:BDPass/model/apis/api_response.dart';
+import 'package:BDPass/model/request/setUpAccountRequest.dart';
+import 'package:BDPass/utils/Util.dart';
+import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

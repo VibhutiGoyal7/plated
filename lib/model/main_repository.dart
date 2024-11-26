@@ -1,35 +1,35 @@
 import 'dart:io';
 
-import 'package:FlutterBasicStructure/model/request/changeOldPasswordRequest.dart';
-import 'package:FlutterBasicStructure/model/request/createOtpChangePass.dart';
-import 'package:FlutterBasicStructure/model/request/exustingUserRequest.dart';
-import 'package:FlutterBasicStructure/model/request/generateTpinRequest.dart';
-import 'package:FlutterBasicStructure/model/request/setUpAccountRequest.dart';
-import 'package:FlutterBasicStructure/model/request/signInRequest.dart';
-import 'package:FlutterBasicStructure/model/request/signInWithPhoneNumber.dart';
-import 'package:FlutterBasicStructure/model/request/verifyOtpChangePass.dart';
-import 'package:FlutterBasicStructure/model/response/countryListResponse.dart';
-import 'package:FlutterBasicStructure/model/response/createOtpChangePassResponse.dart';
-import 'package:FlutterBasicStructure/model/response/dashboardResponse.dart';
-import 'package:FlutterBasicStructure/model/response/existingUserResponse.dart';
-import 'package:FlutterBasicStructure/model/response/fetchKycDocResponse.dart';
-import 'package:FlutterBasicStructure/model/response/generateTpinResponse.dart';
-import 'package:FlutterBasicStructure/model/response/kycStatusResponse.dart';
-import 'package:FlutterBasicStructure/model/response/phoneVerifyResponse.dart';
-import 'package:FlutterBasicStructure/model/response/profileResponse.dart';
-import 'package:FlutterBasicStructure/model/response/setUpAccountResponse.dart';
-import 'package:FlutterBasicStructure/model/services/base_service.dart';
-import 'package:FlutterBasicStructure/model/services/payrio_service.dart';
+import 'package:BDPass/model/request/changeOldPasswordRequest.dart';
+import 'package:BDPass/model/request/createOtpChangePass.dart';
+import 'package:BDPass/model/request/exustingUserRequest.dart';
+import 'package:BDPass/model/request/generateTpinRequest.dart';
+import 'package:BDPass/model/request/setUpAccountRequest.dart';
+import 'package:BDPass/model/request/signInRequest.dart';
+import 'package:BDPass/model/request/signInWithPhoneNumber.dart';
+import 'package:BDPass/model/request/verifyOtpChangePass.dart';
+import 'package:BDPass/model/response/countryListResponse.dart';
+import 'package:BDPass/model/response/createOtpChangePassResponse.dart';
+import 'package:BDPass/model/response/dashboardResponse.dart';
+import 'package:BDPass/model/response/existingUserResponse.dart';
+import 'package:BDPass/model/response/fetchKycDocResponse.dart';
+import 'package:BDPass/model/response/generateTpinResponse.dart';
+import 'package:BDPass/model/response/kycStatusResponse.dart';
+import 'package:BDPass/model/response/phoneVerifyResponse.dart';
+import 'package:BDPass/model/response/profileResponse.dart';
+import 'package:BDPass/model/response/setUpAccountResponse.dart';
+import 'package:BDPass/model/services/base_service.dart';
+import 'package:BDPass/model/services/bd_pass_service.dart';
 
 import 'response/otpVerifyResponse.dart';
 
 class MainRepository {
-  BaseService _FlutterBasicStructureService = FlutterBasicStructureService();
+  BaseService _BDPassService = BDPassService();
 
   Future<PhoneVerifyResponse> fetchPhoneVerifyResponse(
       String value, PhoneRequest phoneRequest) async {
     print(phoneRequest);
-    dynamic response = await _FlutterBasicStructureService.postResponse(value, phoneRequest);
+    dynamic response = await _BDPassService.postResponse(value, phoneRequest);
     final jsonData = response;
     print(jsonData);
     PhoneVerifyResponse mediaList = PhoneVerifyResponse.fromJson(jsonData);
@@ -40,7 +40,7 @@ class MainRepository {
       String value, ExistingUserRequest existingUserRequest) async {
     print(existingUserRequest);
     dynamic response =
-        await _FlutterBasicStructureService.postResponse(value, existingUserRequest);
+        await _BDPassService.postResponse(value, existingUserRequest);
     final jsonData = response;
     print(jsonData);
     ExistingUserResponse mediaList = ExistingUserResponse.fromJson(jsonData);
@@ -50,7 +50,7 @@ class MainRepository {
   Future<OtpVerifyResponse> fetchOtpVerifyData(
       String value, PhoneRequest phoneRequest) async {
     print(phoneRequest);
-    dynamic response = await _FlutterBasicStructureService.postResponse(value, phoneRequest);
+    dynamic response = await _BDPassService.postResponse(value, phoneRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -62,7 +62,7 @@ class MainRepository {
       String value, GenerateTpinrequest generateTpinrequest) async {
     print(generateTpinrequest);
     dynamic response =
-        await _FlutterBasicStructureService.postResponse(value, generateTpinrequest);
+        await _BDPassService.postResponse(value, generateTpinrequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -74,7 +74,7 @@ class MainRepository {
   Future<ProfileResponse> signInWithPass(
       String value, SignInRequest signInRequest) async {
     print(signInRequest);
-    dynamic response = await _FlutterBasicStructureService.postResponse(value, signInRequest);
+    dynamic response = await _BDPassService.postResponse(value, signInRequest);
     print(value);
     final jsonData = response;
     print(" ${jsonData}");
@@ -86,7 +86,7 @@ class MainRepository {
       String value, SetUpAccountRequest setUpAccountRequest) async {
     print(setUpAccountRequest);
     dynamic response =
-        await _FlutterBasicStructureService.putResponse(value, setUpAccountRequest);
+        await _BDPassService.putResponse(value, setUpAccountRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -95,7 +95,7 @@ class MainRepository {
   }
 
   Future<ProfileResponse> putMultiFormResponse(String value, File file,String firstName,String lastName,String dob) async {
-    dynamic response = await _FlutterBasicStructureService.putMultiFormResponse(value, file, firstName, lastName, dob);
+    dynamic response = await _BDPassService.putMultiFormResponse(value, file, firstName, lastName, dob);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -109,7 +109,7 @@ class MainRepository {
       String value, ChangeOldPassRequest changeOldPassRequest) async {
     print(changeOldPassRequest);
     dynamic response =
-        await _FlutterBasicStructureService.putResponse(value, changeOldPassRequest);
+        await _BDPassService.putResponse(value, changeOldPassRequest);
     print(value);
     final jsonData = response;
     GenerateTpinResponse mediaList = GenerateTpinResponse.fromJson(jsonData);
@@ -121,7 +121,7 @@ class MainRepository {
       CreateOtpChangePassRequest createOtpChangePassRequest) async {
     print(createOtpChangePassRequest);
     dynamic response =
-        await _FlutterBasicStructureService.postResponse(value, createOtpChangePassRequest);
+        await _BDPassService.postResponse(value, createOtpChangePassRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -134,7 +134,7 @@ class MainRepository {
       String value, VerifyOtChangePassRequest verifyOtChangePassRequest) async {
     print(verifyOtChangePassRequest);
     dynamic response =
-        await _FlutterBasicStructureService.postResponse(value, verifyOtChangePassRequest);
+        await _BDPassService.postResponse(value, verifyOtChangePassRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -142,7 +142,7 @@ class MainRepository {
   }
 
   Future<FetchKycDocResponse> fetchKycDocData(String value) async {
-    dynamic response = await _FlutterBasicStructureService.getResponse(value);
+    dynamic response = await _BDPassService.getResponse(value);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -151,7 +151,7 @@ class MainRepository {
   }
 
   Future<CountryListResponse> fetchCountryList(String value) async {
-    dynamic response = await _FlutterBasicStructureService.getResponse(value);
+    dynamic response = await _BDPassService.getResponse(value);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -160,7 +160,7 @@ class MainRepository {
   }
 
   Future<KycStatusResponse> kycStatusData(String value) async {
-    dynamic response = await _FlutterBasicStructureService.getResponse(value);
+    dynamic response = await _BDPassService.getResponse(value);
     print(value);
     final jsonData = response;
     //print("jsonData $jsonData");
@@ -170,7 +170,7 @@ class MainRepository {
   }
 
   Future<DashboardResponse> dashboardData(String value) async {
-    dynamic response = await _FlutterBasicStructureService.getResponse(value);
+    dynamic response = await _BDPassService.getResponse(value);
     print(value);
     final jsonData = response;
     //print("jsonData $jsonData");

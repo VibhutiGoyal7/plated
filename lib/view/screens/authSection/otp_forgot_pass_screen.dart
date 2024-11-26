@@ -1,4 +1,4 @@
-import 'package:FlutterBasicStructure/model/request/verifyOtpChangePass.dart';
+import 'package:BDPass/model/request/verifyOtpChangePass.dart';
 import 'package:flutter/material.dart';
 
 import '../../../languageSection/Languages.dart';

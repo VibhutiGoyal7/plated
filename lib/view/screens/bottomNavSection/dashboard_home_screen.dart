@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:FlutterBasicStructure/model/db/BasicStructureDatabase.dart';
-import 'package:FlutterBasicStructure/model/response/dashboardResponse.dart';
-import 'package:FlutterBasicStructure/model/response/kycStatusResponse.dart';
-import 'package:FlutterBasicStructure/model/response/transactionListReponse.dart';
-import 'package:FlutterBasicStructure/utils/Util.dart';
-import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
+import 'package:BDPass/model/db/BDPassDatabase.dart';
+import 'package:BDPass/model/response/dashboardResponse.dart';
+import 'package:BDPass/model/response/kycStatusResponse.dart';
+import 'package:BDPass/model/response/transactionListReponse.dart';
+import 'package:BDPass/utils/Util.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,7 +44,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isAmountVisible = true;
   bool isUSDVisible = false;
   late List<Shortcutitemlist> _shortcutCardsList;
-  late BasicStructureDatabase database;
+  late BDPassDatabase database;
   late DashboardTransactionDao dashboardTransactionDao;
   late CustomerDataDao customerDataDao;
   static const maxDuration = Duration(seconds: 2);
@@ -1508,8 +1508,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   }
 
   Future<void> intializeDatabase() async {
-    database = await $FloorPayorioDatabase
-        .databaseBuilder('payorio_database.db')
+    database = await $FloorBDPassDatabase
+        .databaseBuilder('bd_pass_database.db')
         .build();
 
     dashboardTransactionDao = database.dashboardTransactionDao;

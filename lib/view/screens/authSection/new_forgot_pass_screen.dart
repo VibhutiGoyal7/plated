@@ -1,8 +1,8 @@
-import 'package:FlutterBasicStructure/model/request/verifyOtpChangePass.dart';
-import 'package:FlutterBasicStructure/theme/AppColor.dart';
-import 'package:FlutterBasicStructure/utils/Util.dart';
-import 'package:FlutterBasicStructure/view/component/toastMessage.dart';
-import 'package:FlutterBasicStructure/view/screens/authSection/signin_screen.dart';
+import 'package:BDPass/model/request/verifyOtpChangePass.dart';
+import 'package:BDPass/theme/AppColor.dart';
+import 'package:BDPass/utils/Util.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
+import 'package:BDPass/view/screens/authSection/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -72,7 +72,7 @@ class LanguageEnCand extends Languages {
   String get statusVerified => "verified";
 
   @override
-  String get appName => "Payorio";
+  String get appName => "BDPass";
 
   @override
   String get labelWelcome => "Welcome";
