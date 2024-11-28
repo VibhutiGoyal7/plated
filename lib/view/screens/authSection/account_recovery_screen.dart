@@ -14,16 +14,16 @@ import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
-class SetUpAccountScreen extends StatefulWidget {
+class AccountRecoveryScreen extends StatefulWidget {
   final String? userId; // Define the 'data' parameter here
 
-  SetUpAccountScreen({Key? key, this.userId}) : super(key: key);
+  AccountRecoveryScreen({Key? key, this.userId}) : super(key: key);
 
   @override
-  _SetUpAccountScreenState createState() => _SetUpAccountScreenState();
+  _AccountRecoveryScreenState createState() => _AccountRecoveryScreenState();
 }
 
-class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
+class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
   bool passwordVisible = false;
   bool confirmPasswordVisible = false;
   bool isLoading = false;
@@ -148,101 +148,42 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              _buildLabelText(
-                                  context, "Confirm Details", 24, true),
+                              _buildLabelText(context, "Account Recovery", 24,
+                                  true, AppColor.TEXT_COLOR),
                               SizedBox(height: 4),
                               _buildLabelText(
                                   context,
-                                  "Please review and confirm details",
-                                  13,
-                                  false),
+                                  "To initiate the account recovery process, please enter the email/mobile/emirates ID registered with your BD PASS account.",
+                                  12,
+                                  false,
+                                  AppColor.TEXT_COLOR),
                               SizedBox(height: 25),
-                              _buildLabelText(
-                                  context, "Personal Details", 14, false),
+                              _buildPhoneInput(
+                                  context,
+                                  "Email/Mobile/Emirates ID",
+                                  _nameController,
+                                  Icon(
+                                    Icons.person,
+                                    size: 20,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  )),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  _buildLabelText(
+                                      context,
+                                      "Mobile Number e.g.: 971500000000",
+                                      12,
+                                      false,
+                                      Colors.grey),
+                                ],
+                              ),
                               SizedBox(height: 4),
-                              _buildPhoneInput(
-                                  context,
-                                  "ID Number",
-                                  _nameController,
-                                  Icon(
-                                    Icons.person,
-                                    size: 20,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
-                              SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "First Name",
-                                  _nameController,
-                                  Icon(
-                                    Icons.person,
-                                    size: 20,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
-                              SizedBox(height: 10),
-                              _buildPhoneInput(
-                                  context,
-                                  Languages.of(context)!.labelLastname,
-                                  _lastNameController,
-                                  Icon(
-                                    Icons.person,
-                                    size: 20,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
-                              SizedBox(height: 5),
-                              _buildDOBInput(
-                                  context,
-                                  Languages.of(context)!.labelDOB,
-                                  _dateController,
-                                  Icon(
-                                    Icons.calendar_month,
-                                    size: 18,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
-                              SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "Nationality",
-                                  _emailController,
-                                  Icon(
-                                    Icons.mail,
-                                    size: 18,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
-                              SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "Gender",
-                                  _passwordController,
-                                  Icon(
-                                    Icons.mail,
-                                    size: 18,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
-                              SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "Expiry Date",
-                                  _confirmPasswordController,
-                                  Icon(
-                                    Icons.mail,
-                                    size: 18,
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  )),
                             ],
                           ),
                           _buildFooter(context, apiResponse),
@@ -270,11 +211,13 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     );
   }
 
-  _buildLabelText(BuildContext context, String text, int size, bool isBold) {
+  _buildLabelText(
+      BuildContext context, String text, int size, bool isBold, Color grey) {
     return Text(
       text,
       style: TextStyle(
         fontSize: size.toDouble(),
+        color: grey,
         fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
@@ -286,7 +229,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       elevation: 0,
       child: Container(
         height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 4.0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(width: 0.2, color: Colors.grey)),
@@ -586,7 +529,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                 }
               },
               child: Text(
-                Languages.of(context)!.labelConfirm,
+                "Continue",
                 style: TextStyle(
                     color: inputValid ? Colors.white : AppColor.PRIMARY),
               ),

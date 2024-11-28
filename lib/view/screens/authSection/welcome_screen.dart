@@ -1,10 +1,7 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
@@ -34,7 +31,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     //_fetchData();
   }
 
-
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -49,64 +45,60 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(
                 height: 80,
               ),
-              Text("BD Pass",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-              SizedBox(
-                height: 20,
-              ),
-              /*Image(
-                //height: screenHeight * 0.35,
+              Image(
+                height: screenHeight * 0.25,
                 image: AssetImage(isDarkMode
                     ? "assets/app_logo_dark.png"
                     : "assets/app_logo.png"),
                 fit: BoxFit.cover,
-              ),*/
-              Container(
-                height: screenHeight*0.38,
-                alignment: Alignment.center,
-                child: Center(
-                  child: PageView(
-                    controller: _pageController,
-                    children: [
-                      firstSlide(),
-                      secondSlide(),
-                      thirdSlide(),
-                      forthSlide()
-                    ],
-                  ),
-                ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SmoothPageIndicator(
-                  controller: _pageController,
-                  count: 4,
-                  effect: WormEffect(
-                    dotHeight: 6.0,
-                    dotWidth: 6.0,
-                    spacing: 10.0,
-                    dotColor: Colors.grey,
-                    activeDotColor: Colors.black,
-                  ),
-                ),
+              SizedBox(
+                height: 20,
               ),
               Spacer(),
-              _buildFooter(
-                  context: context,
-                  text:"Continue",
-                  onTap: () {
-                    Navigator.pushNamed(context, '/CreateAccountScreen');
-                  }),
-              SizedBox(
-                height: 52,
-              )
+              Container(
+                  height: screenHeight * 0.45,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                      color: AppColor.PRIMARY,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Welcome",
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: AppColor.WHITE,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "The National Digital Identity for all citizens, residents and visitors in Bangladesh.",
+                        style: TextStyle(fontSize: 12, color: AppColor.WHITE),
+                      ),
+                      _buildFooter(
+                          context: context,
+                          text: "Continue",
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/SliderScreen');
+                          }),
+                    ],
+                  )),
             ],
           ),
           isLoading
               ? Stack(
                   children: [
                     // Block interaction
-                    ModalBarrier(
-                        dismissible: false, color: Colors.white38),
+                    ModalBarrier(dismissible: false, color: Colors.white38),
                     // Loader indicator
                     Center(
                       child: CustomLoader(),
@@ -119,165 +111,47 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget firstSlide() {
-    return Column(
-      children: [
-        Image(
-          //alignment: Alignment.topLeft,
-          width: screenWidth * 0.7,
-          height: screenHeight * 0.2,
-          image: AssetImage("assets/payment_image.png"),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-        Text(
-          "Mobile Based Secure Sign In",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          width: screenWidth * 0.9,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "Login and Sign up to many digital services with one account",
-            style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-      ],
-    );
-  }
-
-  Widget secondSlide() {
-    return Column(
-      children: [
-        Image(
-          //alignment: Alignment.topLeft,
-          width: screenWidth * 0.7,
-          height: screenHeight * 0.2,
-          image: AssetImage("assets/money_safe.png"),
-        ),
-        SizedBox(
-          height: 2,
-        ),
-        Text(
-          "Digital Signature",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          width: screenWidth * 0.9,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "Sign and verify document digitally",
-            style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
-
-  Widget thirdSlide() {
-    return Column(
-      children: [
-        Image(
-          //alignment: Alignment.topLeft,
-          width: screenWidth * 0.9,
-          height: screenHeight * 0.2,
-          image: AssetImage("assets/money_safe.png"),
-        ),
-        SizedBox(
-          height: 2,
-        ),
-        Text(
-          "Document Sharing",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          width: screenWidth * 0.9,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "Request and share  official documents",
-            style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
-
-  Widget forthSlide() {
-    return Column(
-      children: [
-        Image(
-          //alignment: Alignment.topLeft,
-          width: screenWidth * 0.9,
-          height: screenHeight * 0.3,
-          image: AssetImage("assets/money_safe.png"),
-        ),
-        SizedBox(
-          height: 2,
-        ),
-        Text(
-          "The first national digital identity of UAE.",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          width: screenWidth * 0.9,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            "The First digital identity of BD",
-            style: TextStyle(fontSize: 11,fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
-
   Widget _buildFooter(
       {required BuildContext context,
       required String text,
       required VoidCallback onTap}) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Column(
+      margin: EdgeInsets.symmetric(vertical: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: double.infinity,
+          Container(
+            width: screenWidth * 0.43,
             child: ElevatedButton(
               onPressed: onTap,
               child: Text(
-                text,
-                style: TextStyle(color: Colors.white),
+                "English",
+                style: TextStyle(
+                    color: AppColor.PRIMARY, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: AppColor.PRIMARY,
+                  backgroundColor: AppColor.WHITE,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8))),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: screenWidth * 0.43,
+            child: ElevatedButton(
+              onPressed: onTap,
+              child: Text(
+                "Bangladesh",
+                style: TextStyle(
+                    color: AppColor.PRIMARY, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  backgroundColor: AppColor.WHITE,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8))),
@@ -315,10 +189,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
   }
 
-
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
-    apiResponse.data as CountryListResponse?;
+        apiResponse.data as CountryListResponse?;
     var message = apiResponse?.message.toString();
     print("message ${message}");
     setState(() {

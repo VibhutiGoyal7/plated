@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +26,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
   List<CountryData> countryList = [];
+  File? docImg;
 
   @override
   void initState() {
@@ -59,15 +63,23 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 ),
                 Row(
                   children: [
-                    InstructionStep(icon: Icons.document_scanner_rounded, title: "Step 1",
-                        isActive: true, iconColor: Colors.green.shade900),
-                    InstructionStep(icon: Icons.person_sharp, title: "Step 2",
-                        isActive: false, iconColor: Colors.green.shade900),
-                    InstructionStep(icon: Icons.lock_sharp, title: "Step 3",
-                        isActive: false, iconColor: Colors.green.shade900),
+                    InstructionStep(
+                        icon: Icons.document_scanner_rounded,
+                        title: "Step 1",
+                        isActive: true,
+                        iconColor: Colors.green.shade900),
+                    InstructionStep(
+                        icon: Icons.person_sharp,
+                        title: "Step 2",
+                        isActive: false,
+                        iconColor: Colors.green.shade900),
+                    InstructionStep(
+                        icon: Icons.lock_sharp,
+                        title: "Step 3",
+                        isActive: false,
+                        iconColor: Colors.green.shade900),
                   ],
                 ),
-
                 Text(
                   "Scan Your BD ID",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -78,15 +90,21 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 ),
                 Image(
                   //alignment: Alignment.topLeft,
-                  width: screenWidth ,
+                  width: screenWidth,
                   height: screenHeight * 0.5,
                   image: AssetImage("assets/payment_image.png"),
                 ),
                 Spacer(),
-                _buildFooter(context: context, text: "Scan Now", onTap: (){
-                  Navigator.pushNamed(context,"/");
-                }),
-                SizedBox(height: 35,)
+                _buildFooter(
+                    context: context,
+                    text: "Scan Now",
+                    onTap: () {
+                      //onPressedFrontImage();
+                      Navigator.pushNamed(context, "/PhoneVerificationScreen");
+                    }),
+                SizedBox(
+                  height: 35,
+                )
               ],
             ),
           ),
@@ -106,31 +124,46 @@ class _VerificationScreenState extends State<VerificationScreen> {
       ),
     );
   }
+
   Widget _buildFooter(
       {required BuildContext context,
-        required String text,
-        required VoidCallback onTap}) {
+      required String text,
+      required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: screenWidth*0.94,
+        width: screenWidth * 0.94,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black,width: 0.8),
+            border: Border.all(color: Colors.black, width: 0.8),
             borderRadius: BorderRadius.circular(8),
-            color: Colors.black
-        ),
+            color: Colors.black),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12,color: Colors.white ),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
           ),
         ),
       ),
     );
   }
 
+  void onPressedFrontImage() async {
+    List<String> pictures;
+    try {
+      pictures = await CunningDocumentScanner.getPictures(noOfPages: 1) ?? [];
+      if (!mounted) return;
+      setState(() {
+        print("Front Image: ${pictures}");
+        docImg = File(pictures.first);
+        print("Front Image: $docImg");
+      });
+    } catch (exception) {
+      // Handle exception here
+    }
+  }
 
   void _fetchData() async {
     setState(() {

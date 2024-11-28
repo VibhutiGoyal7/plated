@@ -1,14 +1,13 @@
+import 'dart:io';
+
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
-import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 
@@ -27,12 +26,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   static const maxDuration = Duration(seconds: 2);
   List<CountryData> countryList = [];
 
+
   @override
   void initState() {
     super.initState();
     //_fetchData();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +42,33 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       body: SafeArea(
         child: Stack(children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("BD Pass",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
-                SizedBox(height: 6,),
-                Text("Create BD Pass Account",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                SizedBox(height: 3,),
-                Text("The national digital identity and signature solution.",style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),),
+                Image(
+                  height: screenHeight * 0.08,
+                  image: AssetImage(isDarkMode
+                      ? "assets/app_logo_dark.png"
+                      : "assets/app_logo.png"),
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  "Create BD Pass Account",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  "The national digital identity and signature solution.",
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                ),
                 /*Image(
                   //height: screenHeight * 0.35,
                   image: AssetImage(isDarkMode
@@ -61,11 +76,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       : "assets/app_logo.png"),
                   fit: BoxFit.cover,
                 ),*/
-                SizedBox(height: 70,),
+                SizedBox(
+                  height: 70,
+                ),
                 Center(
                   child: _buildFooter(
                       context: context,
-                      text:"Create New Account",
+                      text: "Create New Account",
                       onTap: () {
                         Navigator.pushNamed(context, '/InstructionScreen');
                       }),
@@ -73,9 +90,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 Center(
                   child: _buildExistingAccFooter(
                       context: context,
-                      text:"I have an existing account",
+                      text: "I have an existing account",
                       onTap: () {
-                       // Navigator.pushNamed(context, '/SliderScreen');
+                        // Navigator.pushNamed(context, '/SliderScreen');
                       }),
                 ),
                 SizedBox(
@@ -86,16 +103,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           ),
           isLoading
               ? Stack(
-            children: [
-              // Block interaction
-              ModalBarrier(
-                  dismissible: false, color: Colors.transparent),
-              // Loader indicator
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
+                  children: [
+                    // Block interaction
+                    ModalBarrier(dismissible: false, color: Colors.transparent),
+                    // Loader indicator
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
               : SizedBox()
         ]),
       ),
@@ -104,23 +120,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   Widget _buildFooter(
       {required BuildContext context,
-        required String text,
-        required VoidCallback onTap}) {
+      required String text,
+      required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: screenWidth*0.94,
+        width: screenWidth * 0.94,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black,width: 0.8),
+            border: Border.all(color: Colors.black, width: 0.8),
             borderRadius: BorderRadius.circular(8),
-          color: Colors.black
-        ),
+            color: Colors.black),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12,color: Colors.white ),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
           ),
         ),
       ),
@@ -129,22 +145,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   Widget _buildExistingAccFooter(
       {required BuildContext context,
-        required String text,
-        required VoidCallback onTap}) {
+      required String text,
+      required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: screenWidth*0.94,
+        width: screenWidth * 0.94,
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black,width: 0.8),
-          borderRadius: BorderRadius.circular(8)
-        ),
+            border: Border.all(color: Colors.black, width: 0.8),
+            borderRadius: BorderRadius.circular(8)),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12 ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ),
       ),
@@ -163,7 +178,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-            Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                Text('${Languages.of(context)?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );
@@ -179,9 +194,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   }
 
 
+
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
-    apiResponse.data as CountryListResponse?;
+        apiResponse.data as CountryListResponse?;
     var message = apiResponse?.message.toString();
     print("message ${message}");
     setState(() {

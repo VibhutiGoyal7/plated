@@ -33,6 +33,7 @@ class _SigninScreenState extends State<SigninScreen> {
   late double screenWidth;
   late bool isDarkMode;
   String? deviceToken;
+  String selectedItem = "";
 
   @override
   void initState() {
@@ -202,7 +203,10 @@ class _SigninScreenState extends State<SigninScreen> {
                                     children: [
                                       SizedBox(height: 20),
                                       _buildLabelText(
-                                          context, "${Languages.of(context)?.labelWelcomeBack}", 26, true),
+                                          context,
+                                          "${Languages.of(context)?.labelWelcomeBack}",
+                                          26,
+                                          true),
                                       _buildLabelText(
                                           context,
                                           "${Languages.of(context)?.labelWeMissedYou}",

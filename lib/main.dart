@@ -3,24 +3,27 @@ import 'package:BDPass/model/webviewData.dart';
 import 'package:BDPass/theme/AppTheme.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
+import 'package:BDPass/view/screens/authSection/account_recovery_screen.dart';
 import 'package:BDPass/view/screens/authSection/create_account_screen.dart';
-import 'package:BDPass/view/screens/authSection/instruction_screen.dart';
-import 'package:BDPass/view/screens/authSection/proceed_as_screen.dart';
-import 'package:BDPass/view/screens/authSection/verification_screen.dart';
-import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
-import 'package:BDPass/view/screens/web_view_screen.dart';
 import 'package:BDPass/view/screens/authSection/forgot_password_screen.dart';
-import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
+import 'package:BDPass/view/screens/authSection/instruction_screen.dart';
 import 'package:BDPass/view/screens/authSection/new_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_forgot_pass_screen.dart';
+import 'package:BDPass/view/screens/authSection/otp_verification_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_verify_screen.dart';
+import 'package:BDPass/view/screens/authSection/phone_verification_screen.dart';
 import 'package:BDPass/view/screens/authSection/phone_verify_screen.dart';
+import 'package:BDPass/view/screens/authSection/proceed_as_screen.dart';
 import 'package:BDPass/view/screens/authSection/setup_account_screen.dart';
 import 'package:BDPass/view/screens/authSection/signin_screen.dart';
+import 'package:BDPass/view/screens/authSection/slider_screen.dart';
 import 'package:BDPass/view/screens/authSection/splash_screen.dart';
+import 'package:BDPass/view/screens/authSection/verification_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
-import 'package:BDPass/view/screens/coming_soon_screen.dart';
 import 'package:BDPass/view/screens/change_password_screen.dart';
+import 'package:BDPass/view/screens/coming_soon_screen.dart';
+import 'package:BDPass/view/screens/web_view_screen.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -94,16 +97,15 @@ void main() async {
   }
 
   // Get initial message
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  RemoteMessage? initialMessage =
+      await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: $initialMessage");
   }
 
   // Set preferred orientations and run app
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(MyApp(initialMessage: initialMessage));
 }
@@ -140,8 +142,9 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       ToastComponent.showToast(context: context, message: "$message");
       // Navigate to the ProfileScreen when the notification is clicked
-      final notificationResponse = NotificationOtpResponse.fromJson(message.data);
-     /* Navigator.push(
+      final notificationResponse =
+          NotificationOtpResponse.fromJson(message.data);
+      /* Navigator.push(
         navigatorKey.currentState!.context,
         MaterialPageRoute(
             builder: (context) => NotificationOtpScreen(
@@ -151,7 +154,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -160,7 +162,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-        //  navigatorKey: navigatorKey,
+          //  navigatorKey: navigatorKey,
           title: 'BD-Pass',
           locale: _locale,
           localizationsDelegates: [
@@ -179,15 +181,17 @@ class _MyAppState extends State<MyApp> {
           initialRoute: '/',
           routes: {
             '/': (context) {
-              NotificationOtpResponse? notificationResponse = NotificationOtpResponse(otp: "", notificationType: "");
-              if(initialMessage?.data != null){
-                notificationResponse = NotificationOtpResponse.fromJson(initialMessage!.data);
+              NotificationOtpResponse? notificationResponse =
+                  NotificationOtpResponse(otp: "", notificationType: "");
+              if (initialMessage?.data != null) {
+                notificationResponse =
+                    NotificationOtpResponse.fromJson(initialMessage!.data);
               }
-              return SplashScreen(data : notificationResponse);
+              return SplashScreen(data: notificationResponse);
             },
-            // '/SliderScreen': (context) {
-            //   return SliderScreen();
-            // },
+            '/SliderScreen': (context) {
+              return SliderScreen();
+            },
             '/WelcomeScreen': (context) {
               return WelcomeScreen();
             },
@@ -202,6 +206,15 @@ class _MyAppState extends State<MyApp> {
             },
             '/VerificationScreen': (context) {
               return VerificationScreen();
+            },
+            '/PhoneVerificationScreen': (context) {
+              return PhoneVerificationScreen();
+            },
+            '/OtpVerificationScreen': (context) {
+              return OtpVerificationScreen();
+            },
+            '/AccountRecoveryScreen': (context) {
+              return AccountRecoveryScreen();
             },
             '/PhoneVerifyScreen': (context) {
               return PhoneVerifyScreen();
@@ -248,7 +261,6 @@ class _MyAppState extends State<MyApp> {
             '/ComingSoonScreen': (context) {
               return ComingSoonScreen();
             },
-
           }),
     );
   }

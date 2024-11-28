@@ -105,7 +105,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   }
 
   Future<Widget> getOtpResponseDataWidget(
-      BuildContext context, ApiResponse apiResponse) async {
+      BuildContext context, ApiResponse apiResponse) async
+  {
     OtpVerifyResponse? otpVerifyResponse =
         apiResponse.data as OtpVerifyResponse?;
     var message = apiResponse?.message.toString();
@@ -153,7 +154,8 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     }
   }
 
-  Widget getResendOtpResponse(BuildContext context, ApiResponse apiResponse) {
+  Widget getResendOtpResponse(BuildContext context, ApiResponse apiResponse)
+  {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
     var message = apiResponse?.message.toString();

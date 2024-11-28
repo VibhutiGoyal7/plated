@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:BDPass/languageSection/Languages.dart';
-import 'package:BDPass/view/component/toastMessage.dart';
-import 'package:flutter/material.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -11,7 +10,6 @@ import '../../../model/response/notificationOtpResponse.dart';
 import '../CustomBiometricScreen.dart';
 
 class SplashScreen extends StatefulWidget {
-
   final NotificationOtpResponse? data; // Define the 'data' parameter here
 
   SplashScreen({Key? key, this.data}) : super(key: key);
@@ -32,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _authOnResume = false;
   bool? isUserAuthenticated = false;
   NotificationOtpResponse? notificationOtpResponse;
+
   @override
   void initState() {
     super.initState();
@@ -48,23 +47,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: GestureDetector(
         onTap: () {},
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: Center(
-            child:
-            /*Image(
-              //height: screenHeight * 0.35,
-              image: AssetImage(
-                  isDarkMode ? "assets/app_logo_dark.png" :"assets/app_logo.png"),
-              fit: BoxFit.cover ,
-            )*/
-            Text(
-              "${Languages.of(context)!.appName}",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-            ),
+        child: Center(
+          child: Image(
+            height: screenHeight * 0.2,
+            image: AssetImage(isDarkMode
+                ? "assets/app_logo_dark.png"
+                : "assets/app_logo.png"),
+            fit: BoxFit.cover,
           ),
         ),
       ),
@@ -76,7 +69,6 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(Duration(milliseconds: 2));
     token = await Helper.getUserToken();
     print(token);
-
   }
 
   Future<void> _initializeBiometrics() async {
@@ -107,40 +99,40 @@ class _SplashScreenState extends State<SplashScreen> {
           print("Checking Number of times");
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CustomBiometricScreen(data: notificationOtpResponse,)),
+            MaterialPageRoute(
+                builder: (context) => CustomBiometricScreen(
+                      data: notificationOtpResponse,
+                    )),
           );
           //_authenticate(); // Only call authenticate if not attempted before
         }
-      }else{
-        if(notificationOtpResponse?.otp?.isNotEmpty == true){
+      } else {
+        if (notificationOtpResponse?.otp?.isNotEmpty == true) {
           //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
           return;
-        }else
-        {
+        } else {
           Navigator.pushReplacementNamed(context, "/BottomNav");
         }
       }
     }
   }
+
   void _navigation() {
     print("token:::${widget.data}");
     //ToastComponent.showToast(context: context, message: "token:::${notificationOtpResponse?.otp}");
     if (token == null || token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/WelcomeScreen");
     } else {
-
       if (isUserAuthenticated != true) {
         _initializeBiometrics();
-      }else{
-        if(notificationOtpResponse?.otp?.isNotEmpty == true){
+      } else {
+        if (notificationOtpResponse?.otp?.isNotEmpty == true) {
           //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
           return;
-        }else
-          {
-            Navigator.pushReplacementNamed(context, "/BottomNav");
-          }
+        } else {
+          Navigator.pushReplacementNamed(context, "/BottomNav");
+        }
       }
     }
   }
-
 }
