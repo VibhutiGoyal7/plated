@@ -55,15 +55,16 @@ class _SplashScreenState extends State<SplashScreen> {
           padding: EdgeInsets.all(8),
           child: Center(
             child:
-            Image(
+            /*Image(
               //height: screenHeight * 0.35,
               image: AssetImage(
                   isDarkMode ? "assets/app_logo_dark.png" :"assets/app_logo.png"),
               fit: BoxFit.cover ,
-            )/* Text(
+            )*/
+            Text(
               "${Languages.of(context)!.appName}",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-            ),*/
+            ),
           ),
         ),
       ),
@@ -125,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print("token:::${widget.data}");
     //ToastComponent.showToast(context: context, message: "token:::${notificationOtpResponse?.otp}");
     if (token == null || token?.isEmpty == true) {
-      Navigator.pushReplacementNamed(context, "/MoneySafeScreen");
+      Navigator.pushReplacementNamed(context, "/WelcomeScreen");
     } else {
 
       if (isUserAuthenticated != true) {

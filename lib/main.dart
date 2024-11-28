@@ -3,9 +3,14 @@ import 'package:BDPass/model/webviewData.dart';
 import 'package:BDPass/theme/AppTheme.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
+import 'package:BDPass/view/screens/authSection/create_account_screen.dart';
+import 'package:BDPass/view/screens/authSection/instruction_screen.dart';
+import 'package:BDPass/view/screens/authSection/proceed_as_screen.dart';
+import 'package:BDPass/view/screens/authSection/verification_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
 import 'package:BDPass/view/screens/web_view_screen.dart';
 import 'package:BDPass/view/screens/authSection/forgot_password_screen.dart';
-import 'package:BDPass/view/screens/authSection/money_safe_screen.dart';
+import 'package:BDPass/view/screens/authSection/slider_screen.dart';
 import 'package:BDPass/view/screens/authSection/new_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_verify_screen.dart';
@@ -180,8 +185,23 @@ class _MyAppState extends State<MyApp> {
               }
               return SplashScreen(data : notificationResponse);
             },
-            '/MoneySafeScreen': (context) {
-              return MoneySafeScreen();
+            '/SliderScreen': (context) {
+              return SliderScreen();
+            },
+            '/WelcomeScreen': (context) {
+              return WelcomeScreen();
+            },
+            '/InstructionScreen': (context) {
+              return InstructionScreen();
+            },
+            '/CreateAccountScreen': (context) {
+              return CreateAccountScreen();
+            },
+            '/ProceedAsScreen': (context) {
+              return ProceedAsScreen();
+            },
+            '/VerificationScreen': (context) {
+              return VerificationScreen();
             },
             '/PhoneVerifyScreen': (context) {
               return PhoneVerifyScreen();
