@@ -72,7 +72,7 @@ class LanguageEnUk extends Languages {
   String get statusVerified => "verified";
 
   @override
-  String get appName => "BDPass";
+  String get appName => "BD Pass";
 
   @override
   String get labelWelcome => "Welcome";
