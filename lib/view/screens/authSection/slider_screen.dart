@@ -104,8 +104,10 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                   child: PageView(
                     controller: _pageController,
                     children: [
-                      getStartedScreen(),
-                      moneyScreen(),
+                      mobileBaseSecureSignin(),
+                      digitalScreen(),
+                      documentSharingScreen(),
+                      nationalDigitalIdentity(),
                     ],
                   ),
                 ),
@@ -113,7 +115,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: SmoothPageIndicator(
                     controller: _pageController,
-                    count: 2,
+                    count: 4,
                     effect: WormEffect(
                       dotHeight: 8.0,
                       dotWidth: 8.0,
@@ -123,15 +125,10 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
                     ),
                   ),
                 ),
+
                 _buildFooter(
                     context: context,
-                    text:"${ Languages.of(context)?.labelRegister}",
-                    onTap: () {
-                      Navigator.pushNamed(context, '/PhoneVerifyScreen');
-                    }),
-                _buildFooter(
-                    context: context,
-                    text: "${Languages.of(context)?.labelSignin}",
+                    text: "Continue",
                     onTap: () {
                       Navigator.pushNamed(context, '/SignInScreen',
                           arguments: "");
@@ -160,7 +157,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
     );
   }
 
-  Widget getStartedScreen() {
+  Widget mobileBaseSecureSignin() {
     return Column(
       children: [
         Image(
@@ -173,7 +170,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           height: 6,
         ),
         Text(
-          "${Languages.of(context)?.labelAddMoneyAndManage}",
+          "Mobile based Secure Sign In",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -183,7 +180,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "${Languages.of(context)?.subHeadingApplicationForReachingGoal}",
+            "Login and sign up to many digital services with one account",
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -195,7 +192,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
     );
   }
 
-  Widget moneyScreen() {
+  Widget documentSharingScreen() {
     return Column(
       children: [
         Image(
@@ -208,7 +205,7 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           height: 2,
         ),
         Text(
-          "${Languages.of(context)?.labelMoneyStaysSafe}",
+          "Documents Sharing",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -218,7 +215,77 @@ class _MoneySafeScreenState extends State<MoneySafeScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "${Languages.of(context)?.labelMoneyStaysSafeSubHeading}",
+            "Request and share official documents",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  Widget digitalScreen() {
+    return Column(
+      children: [
+        Image(
+          //alignment: Alignment.topLeft,
+          width: screenWidth * 0.9,
+          height: screenHeight * 0.4,
+          image: AssetImage("assets/money_safe.png"),
+        ),
+        SizedBox(
+          height: 2,
+        ),
+        Text(
+          "Digital Signature",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: screenWidth * 0.9,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "Sign and verify documents digitally",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  Widget nationalDigitalIdentity() {
+    return Column(
+      children: [
+        Image(
+          //alignment: Alignment.topLeft,
+          width: screenWidth * 0.9,
+          height: screenHeight * 0.4,
+          image: AssetImage("assets/money_safe.png"),
+        ),
+        SizedBox(
+          height: 2,
+        ),
+        Text(
+          "The first national digital identity of UAE.",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: screenWidth * 0.9,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "Sign and verify documents digitally",
             style: TextStyle(fontSize: 14),
             textAlign: TextAlign.center,
           ),

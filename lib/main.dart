@@ -5,7 +5,7 @@ import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/web_view_screen.dart';
 import 'package:BDPass/view/screens/authSection/forgot_password_screen.dart';
-import 'package:BDPass/view/screens/authSection/money_safe_screen.dart';
+import 'package:BDPass/view/screens/authSection/slider_screen.dart';
 import 'package:BDPass/view/screens/authSection/new_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_verify_screen.dart';
