@@ -1,12 +1,20 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:BDPass/model/db/BDPassDatabase.dart';
+import 'package:BDPass/utils/Helper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../languageSection/Languages.dart';
 import '../model/request/shortcutItemList.dart';
+import '../model/response/offersResponse.dart';
+import '../theme/AppColor.dart';
 import '../view/component/toastMessage.dart';
+import '../view/screens/authSection/signin_screen.dart';
+import 'Helper.dart';
 
 String capitalizeFirstLetter(String input) {
   if (input.isEmpty) {
@@ -48,7 +56,7 @@ String convertUtcDateToLocal(String utcTime) {
   DateTime localDateTime = utcDateTime.toLocal();
 
   // Print the local time
- // print('Local Time: ${localDateTime.toString()}');
+  // print('Local Time: ${localDateTime.toString()}');
 
   return "${localDateTime.toString()}";
 }
@@ -72,7 +80,7 @@ String convertTime(String input) {
   String localTime = convertUtcDateToLocal(input);
   DateTime date = DateTime.parse(localTime); // Example date and time
   String formattedTime =
-      DateFormat('hh:mm a').format(date); // This will output "02:30 PM"
+  DateFormat('hh:mm a').format(date); // This will output "02:30 PM"
   return formattedTime;
 }
 
@@ -81,7 +89,7 @@ String currencyFormat(String symbol, String input, String country) {
     return input;
   }
   double value = 0;
-  print(country);
+  //print(country);
 
   var locale;
 
@@ -105,7 +113,7 @@ String currencyFormat(String symbol, String input, String country) {
     );
   } else {
     formatter = NumberFormat.currency(
-      locale: locale,
+      /*locale: locale,*/
       symbol: "${symbol}",
       decimalDigits: 2,
     );
@@ -131,7 +139,7 @@ String addCurrencySymbol(String? currencySymbol, String input) {
     return input;
   }
 
-  if (input == "**") {
+  if (input == "*****") {
     print("object");
     return "${currencySymbol}${input}";
   }
@@ -139,12 +147,12 @@ String addCurrencySymbol(String? currencySymbol, String input) {
   try {
     currencySymbol != null
         ? amount =
-            "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
+    "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
         : "${double.parse("${input}").toStringAsFixed(2)}";
   } catch (e) {
     return "${currencySymbol}${input}";
   }
-  print("${input == "**"}");
+  print("${input == "*****"}");
   print("${input}");
 
   return amount;
@@ -174,21 +182,19 @@ double extractFloat(String str) {
 }
 
 bool checkMoneyOut(String transactionType, int? senderId, int? userId){
-
   if(nonCapitalizeString(transactionType) == nonCapitalizeString("transfer")){
-    if(userId !=0) {
-      if (userId == senderId) {
-        return true;
-      }
-      else {
-        return false;
-      }
-    }else
-      return false;
+    if(userId== senderId){
+      return true;}
+    else{
+      return false;}
   }else if(nonCapitalizeString(transactionType) == nonCapitalizeString("withdraw")){
     return true;
-  }else{
+  }else if(nonCapitalizeString(transactionType) == nonCapitalizeString("deposit")){
     return false;
+  } else if(nonCapitalizeString(transactionType) == nonCapitalizeString("payin")){
+    return false;
+  }else {
+    return true;
   }
 
 }
@@ -201,7 +207,7 @@ String addCurrencySymbolTransaction(
   String amount = "";
   currencySymbol != null
       ? amount =
-          "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
+  "${currencySymbol}${double.parse("${input}").toStringAsFixed(2)}"
       : "${double.parse("${input}").toStringAsFixed(2)}";
   if (checkMoneyOut(requestType, senderId, userId)) {
     amount = "-$amount";
@@ -218,13 +224,13 @@ String addCurrencySymbolTransaction(
 colorStatus(String status, BuildContext context) {
   Color color = Colors.black;
   if (status == Languages.of(context)!.labelPending) {
-    color = Colors.orange;
+    color = AppColor.TEXT_YELLOW;
   } else if (status == Languages.of(context)!.labelSuccess) {
-    color = Colors.green;
+    color = AppColor.TEXT_GREEN;
   } else if (status == Languages.of(context)!.labelRejected) {
-    color = Colors.red;
+    color = AppColor.TEXT_RED;
   } else if (status == Languages.of(context)!.labelInComplete) {
-    color = Colors.red;
+    color = AppColor.TEXT_RED;
   }
   return color;
 }
@@ -232,9 +238,9 @@ colorStatus(String status, BuildContext context) {
 colorPaymentType(String status, int? userId, int? senderId) {
   Color color = Colors.black;
   if (checkMoneyOut(status, senderId, userId)) {
-    color = Colors.red;
+    color = AppColor.TEXT_RED;
   } else /*if (status == "Withdraw")*/ {
-    color = Colors.green;
+    color = AppColor.TEXT_GREEN;
   } /*else if (status == "Transfer") {
     color = Colors.red;
   } else if (status == "In complete") {
@@ -247,6 +253,10 @@ void hideKeyBoard() {
   FocusManager.instance.primaryFocus?.unfocus();
 }
 
+bool isKeyboardOpen(BuildContext context) {
+  return MediaQuery.of(context).viewInsets.bottom != 0;
+}
+
 getShortCutList(BuildContext context) {
   List<Shortcutitemlist> _shortcutCardsList = [
     Shortcutitemlist(
@@ -254,16 +264,20 @@ getShortCutList(BuildContext context) {
         icon: Icons.add_rounded,
         selected: true),
     Shortcutitemlist(
-        title: Languages.of(context)!.labelWithdraw,
-        icon: Icons.call_made,
+        title: "Withdraw Money",
+        icon: Icons.arrow_upward_sharp,
         selected: true),
     Shortcutitemlist(
         title: Languages.of(context)!.labelRequestQR,
-        icon: Icons.send,
+        icon: Icons.qr_code_2_sharp,
         selected: true),
     Shortcutitemlist(
         title: Languages.of(context)!.labelExchange,
         icon: Icons.currency_exchange,
+        selected: true),
+    Shortcutitemlist(
+        title: Languages.of(context)!.labelTransfer,
+        icon: Icons.transfer_within_a_station,
         selected: true),
     Shortcutitemlist(
         title: Languages.of(context)!.labelRewards,
@@ -272,6 +286,43 @@ getShortCutList(BuildContext context) {
   ];
 
   return _shortcutCardsList;
+}
+
+getOfferList(BuildContext context) {
+  final List<OfferResponse> imgList = [
+    OfferResponse(
+        image:
+        "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+        "https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+        "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+        "https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+    OfferResponse(
+        image:
+        "https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80",
+        title: "Flat 50% off",
+        description: "Bonus on Rummy Circle & My11Circle",
+        daysLeft: "5d left"),
+  ];
+
+  return imgList;
 }
 
 /*
@@ -315,4 +366,113 @@ Future<String?> getDeviceId() async {
   return null;
 }
 
+void copyTextToClipboard(String text) {
+  Clipboard.setData(ClipboardData(text: text));
+  // Optionally show a message to the user
+  print("Text copied to clipboard: $text");
+}
 
+bool getIsTablet(BuildContext context, double screenWidth, double screenHeight)
+{
+  // Calculate diagonal screen size in inches
+  // Get the screen width in logical pixels
+  double screenWidth = MediaQuery.of(context).size.width;
+
+  // Check if the device is in portrait mode
+  bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+  // Consider a typical tablet width range (e.g., between 600 and 900 logical pixels)
+
+  //print("IsTablet ${isPortrait && screenWidth >= 600 && screenWidth <= 900}");
+  return isPortrait && screenWidth >= 520 && screenWidth <= 900;
+
+
+}
+
+Future<void> showExitDialog(BuildContext context, double screenWidth, double screenHeight, BDPassDatabase database) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: Border.all(),
+        title: Center(
+            child: Text(
+              "${Languages.of(context)?.labelExit}",
+              style: TextStyle(fontSize: 20),
+            )),
+        content: Container(
+          height: screenHeight * 0.3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).cardColor),
+                      child: Icon(
+                        Icons.logout_outlined,
+                        size: 55,
+                        color: Colors.white,
+                      )),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                      child: Text(
+                        Languages.of(context)!.labelPressBackToExit,
+                        textAlign: TextAlign.center,
+                      )),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    width: screenWidth * 0.6,
+                    child: TextButton(
+                      child: Text("No"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: screenWidth * 0.6,
+                    child: TextButton(
+                      child: Text("Yes"),
+                      onPressed: () async {
+                        /* Navigator.of(context).pop();
+                          await Future.delayed(Duration(milliseconds: 6));
+                          SystemNavigator.pop();*/
+                        Helper.clearAllSharedPreferences();
+                        database.personDao.clearAllCustomerDetails();
+                        database.dashboardTransactionDao
+                            .clearAllTransactions();
+                        //database.recentCustomerDao.clearAllRecentCustomers();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => SigninScreen()),
+                              (Route<dynamic> route) => false,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[],
+      );
+    },
+  );
+}
