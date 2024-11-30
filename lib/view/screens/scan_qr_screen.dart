@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/toastMessage.dart';
+import '../../languageSection/Languages.dart';
+import '../../model/apis/api_response.dart';
+import '../../view_model/main_view_model.dart';
+import '../component/connectivity_service.dart';
+import '../component/toastMessage.dart';
 
 class ScanQrScreen extends StatefulWidget {
   @override

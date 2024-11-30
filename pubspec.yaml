@@ -74,6 +74,9 @@ dependencies:
   fluttertoast: ^8.2.1
   flutter_svg: ^2.0.0
 
+  meta: any
+  webview_flutter_android: any
+  webview_flutter_wkwebview: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -11,13 +11,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
-import '../../../model/response/fetchKycDocResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/session_expired_dialog.dart';
-import '../../component/toastMessage.dart';
 
 class DocImageScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here

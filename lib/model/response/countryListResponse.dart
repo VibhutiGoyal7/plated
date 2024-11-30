@@ -15,7 +15,7 @@ class CountryListResponse {
   factory CountryListResponse.fromJson(Map<String, dynamic> json) {
 
     var list = json['data'] as List;
-    List<CountryData>? countriesList = list?.map((i) => CountryData.fromJson(i)).toList();
+    List<CountryData>? countriesList = list.map((i) => CountryData.fromJson(i)).toList();
 
     return CountryListResponse(
       countries: countriesList,

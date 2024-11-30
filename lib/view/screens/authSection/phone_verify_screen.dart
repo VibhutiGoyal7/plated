@@ -61,8 +61,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       });
 
       print(countryList);
-      if (countryList == null ||
-          countryList == [] ||
+      if (countryList == [] ||
           countryList.isEmpty ||
           countryList == list) {
         _fetchData();
@@ -95,7 +94,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
 
   Widget existingUserWidget(BuildContext context, ApiResponse apiResponse) {
     ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -133,7 +132,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;
@@ -168,7 +167,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

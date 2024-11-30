@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:BDPass/utils/Helper.dart';
@@ -14,7 +13,6 @@ import '../model/response/offersResponse.dart';
 import '../theme/AppColor.dart';
 import '../view/component/toastMessage.dart';
 import '../view/screens/authSection/signin_screen.dart';
-import 'Helper.dart';
 
 String capitalizeFirstLetter(String input) {
   if (input.isEmpty) {

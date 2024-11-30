@@ -6,7 +6,6 @@ import 'package:BDPass/model/apis/app_exception.dart';
 import 'package:BDPass/model/services/base_service.dart';
 import 'package:path/path.dart';
 import '../../utils/Helper.dart';
-import 'dart:convert';
 
 class BDPassService extends BaseService {
   String? retrievedToken;

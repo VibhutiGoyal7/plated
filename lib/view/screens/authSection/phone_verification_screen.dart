@@ -100,7 +100,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0, bottom: 5.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GestureDetector(
@@ -244,7 +244,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                             size: 20,
                             color: isDarkMode ? Colors.white : Colors.black,
                           ),
-                          0.7),
+                          0.66),
                     ],
                   ),
                 ),
@@ -433,7 +433,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

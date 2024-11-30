@@ -155,7 +155,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         print("object");
-        if (nonCapitalizeString("${apiResponse?.message}") ==
+        if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);

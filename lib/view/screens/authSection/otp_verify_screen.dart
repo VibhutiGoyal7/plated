@@ -109,7 +109,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   {
     OtpVerifyResponse? otpVerifyResponse =
         apiResponse.data as OtpVerifyResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -158,7 +158,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
   {
     PhoneVerifyResponse? phoneVerifyResponse =
         apiResponse.data as PhoneVerifyResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -173,7 +173,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(
-            context: context, message: apiResponse?.message);
+            context: context, message: apiResponse.message);
         return Center(
           child: Text('Please try again later!!!'),
         );
