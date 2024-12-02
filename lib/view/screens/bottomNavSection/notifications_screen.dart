@@ -292,7 +292,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               : Center(
                   child: Text(
                     "No Notifications",
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 )
           : Padding(

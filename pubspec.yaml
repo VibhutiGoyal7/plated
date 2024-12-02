@@ -73,6 +73,9 @@ dependencies:
   flutter_broadcasts: ^0.4.0
   fluttertoast: ^8.2.1
   flutter_svg: ^2.0.0
+  google_mlkit_text_recognition: ^0.14.0
+  camera: ^0.11.0+2
+  flutter_mrz_scanner: ^2.1.0
 
   meta: any
   webview_flutter_android: any
