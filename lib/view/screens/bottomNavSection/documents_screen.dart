@@ -31,12 +31,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   final ScrollController _scrollController = ScrollController();
   List<CheckCustomerResponse>? prefResponse = <CheckCustomerResponse>[];
   late bool isDarkMode;
+  List<String> list =["Driving License","Emirate ID card","Residence Visa","Emirate ID card","Residence Visa","Emirate ID card","Residence Visa","Emirate ID card","Residence Visa"];
 
   @override
   void initState() {
     super.initState();
-    _fetchRecentData();
-    _isRecentDataEmpty();
   }
 
   Future<Widget> initiateCheckCustomerResponse(
@@ -87,178 +86,105 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              SafeArea(
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      height: screenHeight * 0.27,
-                      child: Column(
-                        children: [
-                          Image(
-                            height: screenHeight * 0.27,
-                            image: AssetImage(isDarkMode
-                                ? "assets/header_night.png"
-                                : "assets/header_day.png"),
-                            fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
-                            opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.45),
-                          ),
-                        ],
-                      ),
-                      alignment: AlignmentDirectional.center,
+              Stack(
+                children: <Widget>[
+                 /* Container(
+                    height: screenHeight * 0.27,
+                    child: Column(
+                      children: [
+                        Image(
+                          height: screenHeight * 0.27,
+                          image: AssetImage(isDarkMode
+                              ? "assets/header_night.png"
+                              : "assets/header_day.png"),
+                          fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
+                          opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.45),
+                        ),
+                      ],
                     ),
-                    Padding(
+                    alignment: AlignmentDirectional.center,
+                  ),*/
+                  SafeArea(
+                    child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0 ,vertical: 12.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         //mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 50,),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(
-                                Languages.of(context)!.labelMoneyTransfer,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 24.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Documents",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.search_outlined,size: 24,),
+                                  SizedBox(width: 12,),
+                                  Icon(Icons.transfer_within_a_station_outlined,size: 20,),
+                                  SizedBox(width: 12,),
+                                  Icon(Icons.menu_sharp,size: 24,),
+                                  SizedBox(width: 6,),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12,),
+                          Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey,width: 0.6)
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Issued"),
+                                  SizedBox(width: 6,),
+                                  Container(
+                                    width: 1,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(width: 6,),
+                                  Text("Uploaded"),
+                                ],
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 6.0, horizontal: 10),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color:isDarkMode ?  Colors.black12 :  Colors.white38),
-                                child: Text(
-                                  Languages.of(context)!.labelEnterPhoneNoOrUsernameSub,
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              ),
+                          SizedBox(height: 8,),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _buildTab(Icons.file_copy_sharp,"All Documents"),
+                                _buildTab(Icons.person_outline_outlined,"Personal"),
+                                _buildTab(Icons.local_post_office_outlined,"Professional"),
+                                _buildTab(Icons.padding_outlined,"Legal"),
+                                _buildTab(Icons.home_work_outlined,"Property"),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          _buildPhoneInput(context, _usernameController),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStateProperty.all( AppColor.PRIMARY),
-                              ),
-                              onPressed: () async {
-                                _fetchData(_usernameController.text);
-
+                          SizedBox(height: 4,),
+                          Text("7 issued documents under 'All Documents'",style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.black54),),
+                          SizedBox(height: 8,),
+                          Expanded(
+                            child: ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: _scrollController,
+                              itemCount: list.length,
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.only(bottom: 10),
+                              itemBuilder: (BuildContext context, int index) {
+                                return _buildCard(list[index]);
                               },
-                              child: Text(
-                                Languages.of(context)!.labelSubmit,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              Languages.of(context)!.labelRecents,
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          isRecentDataEmpty
-                              ? Container(
-                                  height: screenHeight * 0.3,
-                                  child: Center(
-                                    child: Text(
-                                      Languages.of(context)!.labelNoRecentTransaction,
-                                      style: TextStyle(
-                                          color: isDarkMode
-                                              ? Colors.white30
-                                              : Colors.grey),
-                                    ),
-                                  ),
-                                )
-                              : Expanded(
-                                  child: ListView.builder(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    controller: _scrollController,
-                                    itemCount: prefResponse?.length,
-                                    shrinkWrap: true,
-                                    padding:
-                                        const EdgeInsets.only(bottom: 0),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ListTile(
-                                        /*
-                            tileColor: Colors.white12,*/
-                                        contentPadding:
-                                            EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 6),
-                                        onTap: () {
-                                          setState(() {
-                                            _fetchData(
-                                                "${prefResponse?[index].username}");
-                                          });
-                                          //Navigator.of(context).pop();
-                                        },
-                                        leading: prefResponse?[index]
-                                                    .imageUrl ==
-                                                ""
-                                            ? Container(
-                                                height: 45,
-                                                width: 45,
-                                                child: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundColor:
-                                                      AppColor.WHITE,
-                                                  backgroundImage: AssetImage(
-                                                      "assets/profile_user.png"),
-                                                ),
-                                              )
-                                            : Container(
-                                          height: 45,
-                                          width: 45,
-                                          child: CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor:
-                                            AppColor.WHITE,
-                                            backgroundImage: AssetImage(
-                                                "assets/profile_user.png"),
-                                          ),
-                                        ),
-                                        title: Text(
-                                          prefResponse?[index].fullName
-                                              as String,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                          _buildFooter( context: context, text: 'Request a document', onTap: () {  }, )
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               isLoading
                   ? Stack(
@@ -281,45 +207,81 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     );
   }
 
-  Widget _buildPhoneInput(
-      BuildContext context, TextEditingController nameController) {
-    //nameController.text = widget.data as String;
+  Widget _buildTab(IconData icon, String text){
+    return Container(
+      margin: EdgeInsets.only(right: 4,top: 2,bottom: 2),
+      padding: EdgeInsets.symmetric(horizontal: 6,vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey,
+          width: 0.6
+        )
+      ),
+      child: Row(
+        children: [
+          Icon(icon,size: 16,),
+          SizedBox(width: 2,),
+          Text("$text",style: TextStyle(fontSize: 11),)
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildCard(String text){
     return Card(
+      margin: EdgeInsets.symmetric(vertical: 5,horizontal: 4),
+      elevation: 4,
       child: Container(
-        alignment: Alignment.center,
-        width: screenWidth,
-        //padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: TextField(
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-          obscureText: false,
-          obscuringCharacter: "*",
-          controller: nameController,
-          onChanged: (value) {
-            _checkInputValidation();
-          },
-          onSubmitted: (value) {
-            _checkInputValidation();
-            //_fetchData(_usernameController.text);
-          },
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.done,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(18),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.8)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColor.PRIMARY, width: 0.7)),
-            hintText: Languages.of(context)!.labelHintUserNameOrPhoneNo,
-          ),
+        padding: EdgeInsets.symmetric(vertical: 14,horizontal: 12),
+        child: 
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Valid until 10 Dec 2026",style: TextStyle(fontSize: 10,color: AppColor.PRIMARY),),
+                SizedBox(height: 1,),
+                Text("$text",style: TextStyle(fontSize: 13)),
+                Text("Ministry of Interior",style: TextStyle(fontSize: 10,color: Colors.black45,fontWeight: FontWeight.bold)),
+              ],
+            ),
+            Icon(Icons.keyboard_control_outlined,)
+          ],
         ),
       ),
     );
   }
 
+
+
+  Widget _buildFooter(
+      {required BuildContext context,
+        required String text,
+        required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        width: screenWidth * 0.94,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 0.8),
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.black),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+                 fontSize: 13, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+  
   Future<void> _fetchData(String userSelected) async {
     //_isValidInput();
     const maxDuration = Duration(seconds: 2);
@@ -345,13 +307,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         });
       } else {
         String user = userSelected;
-        if (isNumeric(user)) {
-          phoneNo = user;
-          username = null;
-        } else {
+
           phoneNo = null;
           username = user;
-        }
         CheckCustomerRequest request =
             CheckCustomerRequest(username: username, phoneNo: phoneNo);
   /*      await Provider.of<MainViewModel>(context, listen: false)
@@ -369,45 +327,4 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     }
   }
 
-  bool isNumeric(String s) {
-    final numericRegex = RegExp(r'^[0-9]+$');
-    return numericRegex.hasMatch(s);
-  }
-
-  void _checkInputValidation() {
-    if (_usernameController.text.isNotEmpty) {
-      inputValid = true;
-    }
-  }
-
-  Future<void> _fetchRecentData() async {
-    await Future.delayed(Duration(milliseconds: 2));
-    List<CheckCustomerResponse>? prefResult =
-        await Helper.getRecentP2PDetails();
-    //print("prefResult ${prefResult?[0].username}");
-
-    setState(() {
-      prefResponse = prefResult;
-      _isRecentDataEmpty();
-      // print("prefResponse ${prefResponse?[0].username}");
-    });
-  }
-
-  void _isRecentDataEmpty() {
-    if (prefResponse == null ||
-        prefResponse == [] ||
-        prefResponse!.isEmpty ||
-        prefResponse?[0] == null ||
-        prefResponse?[0].username == null) {
-      setState(() {
-        isRecentDataEmpty = true;
-      });
-    } else {
-      setState(() {
-        isRecentDataEmpty = false;
-      });
-    }
-
-    print("${isRecentDataEmpty}");
-  }
 }

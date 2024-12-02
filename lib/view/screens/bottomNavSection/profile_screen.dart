@@ -215,16 +215,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                                alignment: Alignment.topRight,
-                                child: Icon(Icons.search_outlined)),
-                            SizedBox(
-                              height: isTablet ? 0 : 20,
-                            ),
-                            Text("Account",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                            SizedBox(height: 12,),
+                            Text("Account",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                            SizedBox(height: 14,),
                             Card(
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 8,vertical: 10),
@@ -343,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
-                                                  context, '/SettingScreen',
+                                                  context, '/AccountBenefitScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(

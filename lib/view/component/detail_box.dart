@@ -36,7 +36,7 @@ class DetailBox extends StatelessWidget  {
                   ),
                 ),
                 Spacer(),
-                Icon(Icons.arrow_forward_ios,size: 18,)
+                Icon(Icons.arrow_forward_ios,size: 14,)
               ],
             ),
           ),

@@ -1,18 +1,17 @@
-import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:BDPass/model/db/dao.dart';
 import 'package:BDPass/theme/AppColor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
-import '../../../model/db/BDPassDatabase.dart';
-import '../../../model/db/dao.dart';
 import '../../../model/response/notificationListResponse.dart';
-import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
+import 'history_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -25,7 +24,49 @@ class _NotificationScreenState extends State<NotificationScreen> {
   late double screenHeight;
   late BDPassDatabase database;
   late NotificationDao notificationDao;
-  List<NotificationDetail> generalNotificationList = [];
+  final TextEditingController _searchController = TextEditingController();
+  List<NotificationDetails> generalNotificationList = [
+    NotificationDetails(
+        status: "Expired",
+        date: "18 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Shared",
+        date: "19 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Expired",
+        date: "19 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Shared",
+        date: "20 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Shared",
+        date: "20 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Expired",
+        date: "21 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Shared",
+        date: "20 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+    NotificationDetails(
+        status: "Expired",
+        date: "21 Oct 2024",
+        detail: "Emirate Telecommunication Corporation",
+        heading: "Request for sharing"),
+  ];
 
   final _scrollController = ScrollController();
   int _currentPage = 1;
@@ -33,49 +74,28 @@ class _NotificationScreenState extends State<NotificationScreen> {
   final _numberOfPostsPerRequest = 20;
   Future<void>? _fetchDataFuture;
   static const maxDuration = Duration(seconds: 2);
-  late PageController _pageController;
-  int _currentIndex = 0;
 
-  // late TabController _tabController;
-  int _currentTabIndex = 0;
   late bool isDarkMode;
 
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   bool isInternetConnected = true;
-  String generalType = "general";
-  String transactionType = "transaction";
-  String selectedNotificationType = "";
 
   void initState() {
     super.initState();
     imageUrl = "";
     intializeDatabase();
     _scrollController.addListener(_generalLoadMore);
-    selectedNotificationType = generalType;
 
     _fetchDataFuture = _fetchData(_currentPage, false);
   }
 
   runApi(int? index) {
-    if (index == 0) {
-      setState(() {
-        selectedNotificationType = generalType;
-      });
-      _currentPage = 1;
-      _scrollController.addListener(_generalLoadMore);
-      //_fetchData(_currentPage, true);
-      _fetchDataFuture = _fetchData(_currentPage, false);
-      _fetchPaginatedNotifications(selectedNotificationType, _currentPage);
-    } else {
-      setState(() {
-        selectedNotificationType = transactionType;
-      });
-      _currentPage = 1;
-      _fetchDataFuture = _fetchData(_currentPage, false);
-      _fetchPaginatedNotifications(selectedNotificationType, _currentPage);
-      // _fetchDataFuture = _fetchData(_currentPage, false);
-    }
+    _currentPage = 1;
+    _scrollController.addListener(_generalLoadMore);
+    //_fetchData(_currentPage, true);
+    _fetchDataFuture = _fetchData(_currentPage, false);
+    //_fetchPaginatedNotifications(selectedNotificationType, _currentPage);
   }
 
   void _generalLoadMore() async {
@@ -120,7 +140,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           notificationType: selectedNotificationType,
           sorting: sorting,
         );*/
-       /* await Provider.of<MainViewModel>(context, listen: false)
+        /* await Provider.of<MainViewModel>(context, listen: false)
             .notificationListData("api/v1/app/notifications/list", request);*/
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
@@ -146,7 +166,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
         await database.notificationDao.insertNotifications(newItems);
 
-        await _fetchPaginatedNotifications(selectedNotificationType, pageKey);
+        //await _fetchPaginatedNotifications(selectedNotificationType, pageKey);
         // Fetch paginated data from the local database
 
         return;
@@ -158,6 +178,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         return;
     }
   }
+
+/*
 
   Future<void> _fetchPaginatedNotifications(String type, int pageKey) async {
     final notifications = await database.notificationDao.fetchNotifications(
@@ -173,34 +195,47 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     });
   }
+*/
 
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 65,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
+    return Scaffold(
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+      value:
+          isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 10.0, top: 10,bottom: 5,right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Notification",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Icon(Icons.menu)
+                ],
+              ),
             ),
-            title: Text(Languages.of(context)!.labelNotification),
-          ),
-          body: Column(
-            children: [
-              generalNotification(),
-            ],
-          )),
-    );
+            _buildSearch(),
+            SizedBox(height: 4,),
+            generalNotification(),
+          ],
+        ),
+      ),
+    ));
   }
 
   Widget generalNotification() {
     return Container(
-      margin: EdgeInsets.only(top: 12),
+      height: screenHeight*0.74,
       child: isInternetConnected && !isLoading
           ? checkListEmpty(generalNotificationList)
               ? FutureBuilder(
@@ -211,38 +246,40 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       return Center(child: Text('Error loading data'));
                     } else {
                       // Group transactions by date
-                      Map<String, List<NotificationDetail>>
+                      Map<String, List<NotificationDetails>>
                           groupedNotifications =
                           groupNotificationsByDate(generalNotificationList);
                       List<String> dates = groupedNotifications.keys.toList();
+                      int i = 0;
 
                       return ListView.builder(
                         controller: _scrollController,
                         itemCount: dates.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
                           if (index == dates.length) {
-                            return Center(child: CircularProgressIndicator(color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,));
+                            return Center(
+                                child: CircularProgressIndicator(
+                              color: isDarkMode
+                                  ? AppColor.WHITE
+                                  : AppColor.PRIMARY,
+                            ));
                           }
                           String date = dates[index];
-                          List<NotificationDetail> notificationsForDate =
+                          List<NotificationDetails> notificationsForDate =
                               groupedNotifications[date]!;
 
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(vertical: 0.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    date,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12),
-                                  ),
-                                ),
-                                ...notificationsForDate.asMap().entries.map((notification) {
-                                  return generalNotificationItem(notification.value, notification.key);
+                                ...notificationsForDate
+                                    .asMap()
+                                    .entries
+                                    .map((notification) {
+                                      i++;
+                                  return generalNotificationItem(
+                                      notification.value, i /*notification.key*/);
                                 }).toList(),
                               ],
                             ),
@@ -265,12 +302,44 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Map<String, List<NotificationDetail>> groupNotificationsByDate(
-      List<NotificationDetail> notifications) {
-    Map<String, List<NotificationDetail>> groupedNotifications = {};
+  Widget _buildSearch(){
+    return Container(
+      height: 43,
+      width: screenWidth,
+      margin: EdgeInsets.symmetric(horizontal: 8,vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey[100],
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: TextField(
+        style: TextStyle(
+          fontSize: 14.0,
+        ),
+        obscureText: false,
+        obscuringCharacter: "*",
+        controller: _searchController,
+        onChanged: (value) {
+          //_isValidInput();
+        },
+        onSubmitted: (value) {},
+        keyboardType: TextInputType.visiblePassword,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: "Search",
+          icon: Icon(Icons.search),
+        ),
+      ),
+    );
+  }
+
+  Map<String, List<NotificationDetails>> groupNotificationsByDate(
+      List<NotificationDetails> notifications) {
+    Map<String, List<NotificationDetails>> groupedNotifications = {};
 
     for (var notification in notifications) {
-      String date = convertDateFormat("${notification.createdAt}");
+      String date = "${notification.date}";
       if (!groupedNotifications.containsKey(date)) {
         groupedNotifications[date] = [];
       }
@@ -279,106 +348,45 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return groupedNotifications;
   }
 
-  Widget generalNotificationItem(NotificationDetail data, int index) {
+  Widget generalNotificationItem(NotificationDetails data, int index) {
     return Center(
       child: Container(
-        width: screenWidth * 0.88,
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(8),
+        width: screenWidth,
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         decoration: BoxDecoration(
-            color: index % 2 == 0 ? Theme.of(context).canvasColor  : Theme.of(context).dividerColor,
-            border: Border.all(
+          color: index % 2 == 0
+              ? Colors.white
+              : Colors.grey[100],
+          border: Border(
+            bottom: BorderSide(
                 color: isDarkMode ? Colors.grey.shade700 : Colors.black,
                 width: 0.22),
-            borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
         child: IntrinsicHeight(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              /*imageUrl == "" || imageUrl == null
-                  ? Center(
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey.shade700,
-                        highlightColor: Colors.grey,
-                        child: Container(
-                          height: screenHeight*0.19,
-                          width: screenWidth*0.8,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                            border: Border.all(width: 0.12, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(12)
-                          ),
-                        ),
-                      ),
-                  )
-                  : Center(
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: Theme.of(context).cardColor, width: 0.3),
-                          color: Colors.white,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image.network(
-                            imageUrl,
-                            height: 90,
-                            width: 90,
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object exception,
-                                StackTrace? stackTrace) {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.white38,
-                                highlightColor: Colors.grey,
-                                child: Container(
-                                  height: 80,
-                                  width: 80,
-                                  color: Colors.white,
-                                ),
-                              );
-                            },
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return Shimmer.fromColors(
-                                  baseColor: Colors.white38,
-                                  highlightColor: Colors.grey,
-                                  child: Container(
-                                    height: 80,
-                                    width: 80,
-                                    color: Colors.white,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                  ),*/
-              SizedBox(
-                height: 5,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${data.status}",
+                    style: TextStyle(fontSize: 10, color: AppColor.PRIMARY),
+                  ),
+                  Text(
+                    "${data.heading}",
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
+                  Text("${data.detail}",
+                      style: TextStyle(fontSize: 11, color: Colors.black54)),
+                  Text(
+                    "${data.date}",
+                    style: TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
+                ],
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
-                child: Text(
-                  "${data.title}",
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                child: Text("${data.message}", style: TextStyle(fontSize: 12)),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  convertDateTimeFormat("${data.createdAt}"),
-                  style: TextStyle(fontSize: 11),
-                ),
-              ),
+              Icon(Icons.arrow_forward_ios_sharp,size: 15,)
             ],
           ),
         ),
@@ -386,7 +394,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  bool checkListEmpty(List<NotificationDetail> list) {
+  bool checkListEmpty(List<NotificationDetails> list) {
     bool isListEmpty = false;
 
     isListEmpty = list.isNotEmpty;
@@ -400,8 +408,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         .build();
 
     notificationDao = database.notificationDao;
-    _fetchPaginatedNotifications(selectedNotificationType, _currentPage);
+    //_fetchPaginatedNotifications(selectedNotificationType, _currentPage);
   }
 }
-
-

@@ -69,7 +69,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     // Listen to messages and print them
     receiver.messages.listen((message) {
       print("BroadCast");
-      getDashBoardDataFromApi();
+      //getDashBoardDataFromApi();
     });
 
     Helper.getProfileDetails().then((profile) {
@@ -156,9 +156,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             Column(
               children: [
                 AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: isDarkMode
-                      ? SystemUiOverlayStyle.light
-                      : SystemUiOverlayStyle.dark,
+                  value:SystemUiOverlayStyle.light,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.0),
                     child: Stack(
@@ -230,7 +228,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                   AppColor.PRIMARY),
                                                         ),
                                                         SizedBox(
-                                                          height: 45,
+                                                          height: 34,
                                                         ),
                                                         Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,13 +270,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                           children: [
                                             Icon(Icons.edit_outlined),
                                             SizedBox(width: 4,),
-                                            Text("Sign\ndocuments",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
+                                            Text("Sign\ndocuments",style: TextStyle(fontSize: 12.5,))
                                           ],
                                         ),Row(
                                           children: [
                                             Icon(Icons.check_circle_outline_outlined),
                                             SizedBox(width: 4,),
-                                            Text("Verify\nSignature",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold))
+                                            Text("Verify\nSignature",style: TextStyle(fontSize: 12.5,))
                                           ],
                                         ),
                                       ],
@@ -308,7 +306,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 280,
+                                  height: 300,
                                 ),
                                 _buildCard(Icons.file_open,"Add Documents","Request official documents from an official"),
                                 _buildCard(Icons.qr_code_scanner_rounded,"Scan QR Code","Use your camera to start sharing documents"),
@@ -352,7 +350,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:[
-                  Text(heading,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
+                  Text(heading,style: TextStyle(fontSize: 14)),
                   Text(detail,style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.black54)),
                 ]
             ),
@@ -700,12 +698,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             .where((item) => item != null)
             .cast<TransactionDetails>());
       });
-      getDashBoardDataFromApi();
+      //getDashBoardDataFromApi();
     } else {
       setState(() {
         isLoading = true;
       });
-      getDashBoardDataFromApi();
+      //getDashBoardDataFromApi();
     }
   }
 

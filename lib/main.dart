@@ -20,6 +20,7 @@ import 'package:BDPass/view/screens/authSection/slider_screen.dart';
 import 'package:BDPass/view/screens/authSection/splash_screen.dart';
 import 'package:BDPass/view/screens/authSection/verification_screen.dart';
 import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/account_benefit_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:BDPass/view/screens/change_password_screen.dart';
 import 'package:BDPass/view/screens/coming_soon_screen.dart';
@@ -218,6 +219,9 @@ class _MyAppState extends State<MyApp> {
             },
             '/AccountRecoveryScreen': (context) {
               return AccountRecoveryScreen();
+            },
+            '/AccountBenefitScreen': (context) {
+              return AccountBenefitScreen();
             },
             '/PhoneVerifyScreen': (context) {
               return PhoneVerifyScreen();
