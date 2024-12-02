@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
@@ -198,7 +197,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

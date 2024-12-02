@@ -8,12 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../languageSection/Languages.dart';
-import '../../../model/apis/api_response.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Util.dart';
-import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/session_expired_dialog.dart';
 
 class VideoKycScreen extends StatefulWidget {
 

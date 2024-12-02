@@ -77,11 +77,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       print(countries);
       countryList = countries!;
       print(countryList);
-      if(countryList == null || countryList == [] || countryList.isEmpty || countryList == list){
+      if(countryList == [] || countryList.isEmpty || countryList == list){
         _fetchData();
       }else {
         setState(() {
-          countryList = countries!;
+          countryList = countries;
           selectedItem = "${countries[0].flagImageUrl}";
           countryCode = int.parse("${countries[0].id}");
           phoneCode = "+${countries[0].phoneCode}";
@@ -121,7 +121,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
         print("response: ${apiResponse.message}");
-        print("data: ${apiResponse?.data}");
+        print("data: ${apiResponse.data}");
         print("otp ${mediaList?.mobileOtp}");
         CustomerVerifyOtpPass data =
         CustomerVerifyOtpPass(phoneNumber: "${_phoneNumberController.text}", countryId:countryCode );
@@ -130,7 +130,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             context: context, message: mediaList?.mobileOtp);
         if(mediaList?.mobileOtp== null ) {
           ToastComponent.showToast(
-              context: context, message: apiResponse?.message);
+              context: context, message: apiResponse.message);
         }
         Navigator.pushNamed(context, "/OtpForgotPassScreen", arguments: data );
         /*ToastComponent.showToast(
@@ -142,11 +142,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
+        if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
-              context: context, message: apiResponse?.message);
+              context: context, message: apiResponse.message);
         }
         return Center(
           child: Text('Please try again later!!!'),
@@ -172,7 +172,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         print("rwrwr ");
         //Navigator.pushNamed(context, '/ProfileScreen');
         ToastComponent.showToast(
-            context: context, message: apiResponse?.message);
+            context: context, message: apiResponse.message);
         Helper.clearAllSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => SigninScreen()),
@@ -181,7 +181,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
+        if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}"))
           SessionExpiredDialog.showDialogBox(context: context);
         return Center(
             //child: Text('Please try again later!!!'),
@@ -211,9 +211,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
 
         countryList = countryListResponse!.countries!;
-        selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-        countryCode = int.parse("${countryListResponse?.countries?[0].id}");
-        phoneCode = "+${countryListResponse?.countries?[0].phoneCode}";
+        selectedItem = "${countryListResponse.countries?[0].flagImageUrl}";
+        countryCode = int.parse("${countryListResponse.countries?[0].id}");
+        phoneCode = "+${countryListResponse.countries?[0].phoneCode}";
         print("countriess ${countryList}");
 
         //_showPicker(context: context);
@@ -932,10 +932,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _changeItem(CountryData newValue) {
     setState(() {
-      print("${newValue?.id}");
-      countryCode =  int.parse("${newValue?.id}");
-      phoneCode =  "${newValue?.code}";
-      selectedItem = "${newValue?.flagImageUrl}";
+      print("${newValue.id}");
+      countryCode =  int.parse("${newValue.id}");
+      phoneCode =  "${newValue.code}";
+      selectedItem = "${newValue.flagImageUrl}";
     });
   }
 }

@@ -13,12 +13,12 @@ import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/toastMessage.dart';
 
-class TransferContactScreen extends StatefulWidget {
+class DocumentsScreen extends StatefulWidget {
   @override
-  _TransferContactScreenState createState() => _TransferContactScreenState();
+  _DocumentsScreenState createState() => _DocumentsScreenState();
 }
 
-class _TransferContactScreenState extends State<TransferContactScreen> {
+class _DocumentsScreenState extends State<DocumentsScreen> {
   late double screenWidth;
   late double screenHeight;
   bool isLoading = false;
@@ -43,7 +43,7 @@ class _TransferContactScreenState extends State<TransferContactScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     CheckCustomerResponse? checkCustomerResponse =
         apiResponse.data as CheckCustomerResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });

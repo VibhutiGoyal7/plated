@@ -13,7 +13,7 @@ class AppColor {
   static const TEXT_GREEN = Color(0xFF03B961);
   static const TEXT_YELLOW = Color(0xFFFF9800);
   static const TEXT_COLOR = Color(0xFF3a3f49);
-  static const BODY_COLOR = Color(0xFF334a97);
+  static const BODY_COLOR = Color(0xFF185519);
   static const BLACK = Color(0xff171717);
   static const WHITE = Color(0xffffffff);
   static const DARK_BG_COLOR = Color(0xff131313);

@@ -75,7 +75,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     SetUpAccountResponse? setUpAccountResponse =
         apiResponse.data as SetUpAccountResponse?;
-    String? message = apiResponse?.message.toString();
+    String? message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -370,19 +370,17 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             );
                           });
 
-                      if (pickedDate != null) {
-                        print(
-                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                        String formattedDate =
-                            DateFormat('dd-MM-yyyy').format(pickedDate);
-                        print(
-                            formattedDate); //formatted date output using intl package =>  2021-03-16
-                        setState(() {
-                          _dateController.text =
-                              formattedDate; //set output date to TextField value.
-                        });
-                      } else {}
-                    })),
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate =
+                          DateFormat('dd-MM-yyyy').format(pickedDate!);
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      setState(() {
+                        _dateController.text =
+                            formattedDate; //set output date to TextField value.
+                      });
+                                        })),
           ],
         ),
       ),

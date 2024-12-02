@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:BDPass/model/response/checkCustomerReponse.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/response/checkCustomerReponse.dart';
 import '../model/response/countryListResponse.dart';
 import '../model/response/profileResponse.dart';
 import '../model/response/setUpAccountResponse.dart';
@@ -280,7 +278,7 @@ class Helper {
   }
 
   static Locale _locale(String languageCode) {
-    return languageCode != null && languageCode.isNotEmpty
+    return languageCode.isNotEmpty
         ? Locale(languageCode, '')
         : Locale('en', '');
   }

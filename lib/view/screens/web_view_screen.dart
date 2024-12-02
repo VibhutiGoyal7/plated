@@ -119,10 +119,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void dispose() {
     controller = null;
-    if (_timer != null) {
-      _timer.cancel();
-    }
-    _isActive = false;
+    _timer.cancel();
+      _isActive = false;
     super.dispose();
   }
 

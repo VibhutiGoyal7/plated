@@ -120,7 +120,7 @@ class _SliderScreenState extends State<SliderScreen> {
         Image(
           //alignment: Alignment.topLeft,
           width: screenWidth * 0.7,
-          height: screenHeight * 0.35,
+          height: screenHeight * 0.33,
           image: AssetImage("assets/slide_1.png"),
         ),
         SizedBox(
@@ -313,7 +313,7 @@ class _SliderScreenState extends State<SliderScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

@@ -120,10 +120,10 @@ class MainViewModel with ChangeNotifier {
           .generateTpinrequestData(value, generateTpinrequest);
       print("Yess" + generateTpinResponse.message.toString());
       //_apiResponse = ApiResponse.completed(otpVerifyResponse);
-      if (generateTpinResponse?.status  == 200 || generateTpinResponse.status == 20) {
+      if (generateTpinResponse.status  == 200 || generateTpinResponse.status == 20) {
         _apiResponse = ApiResponse.completed(generateTpinResponse);
       } else {
-        _apiResponse = ApiResponse.error(generateTpinResponse?.message);
+        _apiResponse = ApiResponse.error(generateTpinResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

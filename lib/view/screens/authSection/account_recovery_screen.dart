@@ -75,7 +75,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
       BuildContext context, ApiResponse apiResponse) async {
     SetUpAccountResponse? setUpAccountResponse =
         apiResponse.data as SetUpAccountResponse?;
-    String? message = apiResponse?.message.toString();
+    String? message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
     });
@@ -313,19 +313,17 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                             );
                           });
 
-                      if (pickedDate != null) {
-                        print(
-                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                        String formattedDate =
-                            DateFormat('dd-MM-yyyy').format(pickedDate);
-                        print(
-                            formattedDate); //formatted date output using intl package =>  2021-03-16
-                        setState(() {
-                          _dateController.text =
-                              formattedDate; //set output date to TextField value.
-                        });
-                      } else {}
-                    })),
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate =
+                          DateFormat('dd-MM-yyyy').format(pickedDate!);
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      setState(() {
+                        _dateController.text =
+                            formattedDate; //set output date to TextField value.
+                      });
+                                        })),
           ],
         ),
       ),
@@ -449,7 +447,8 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 hideKeyBoard();
-                _isValidInput();
+                Navigator.pushNamed(context, "/BottomNav");
+               /* _isValidInput();
                 const maxDuration = Duration(seconds: 2);
                 print(_nameController.text);
                 if (inputValid) {
@@ -526,7 +525,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                       ),
                     );
                   }
-                }
+                }*/
               },
               child: Text(
                 "Continue",

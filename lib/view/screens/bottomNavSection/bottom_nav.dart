@@ -1,15 +1,15 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/theme/AppColor.dart';
-import 'package:BDPass/view/screens/bottomNavSection/payment_screen.dart';
-import 'package:BDPass/view/screens/bottomNavSection/reward_screen.dart';
-import 'package:BDPass/view/screens/bottomNavSection/scan_qr_screen.dart';
-import 'package:BDPass/view/screens/bottomNavSection/transfer_contact_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/history_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/documents_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
+import 'profile_screen.dart';
 import 'dashboard_home_screen.dart';
+import 'notifications_screen.dart';
 
 class BottomNav extends StatefulWidget {
   @override
@@ -30,10 +30,10 @@ class _BottomNavState extends State<BottomNav>
   bool? isUserAuthenticated;
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
-    TransferContactScreen(),
-    PaymentScreen(),
-    RewardScreen(),
-    ScanQrScreen(),
+    DocumentsScreen(),
+    NotificationScreen(),
+    HistoryScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -89,14 +89,10 @@ class _BottomNavState extends State<BottomNav>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child: /*_selectedIndex != 0
-            ? ScaleTransition(
-                scale: _animation,
-                child: _widgetOptions.elementAt(_selectedIndex))
-            :*/ _widgetOptions.elementAt(_selectedIndex),
+        child:  _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
-      floatingActionButton: FloatingActionButton(
+     /* floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.WHITE,
         shape: CircleBorder(
             side: BorderSide(style: BorderStyle.solid, color: AppColor.WHITE)),
@@ -108,14 +104,14 @@ class _BottomNavState extends State<BottomNav>
           size: 32,
           color: AppColor.BLACK,
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),*/
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         height: 60,
         color: AppColor.BODY_COLOR,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6,
+       /* shape: const CircularNotchedRectangle(),
+        notchMargin: 6,*/
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +121,7 @@ class _BottomNavState extends State<BottomNav>
               onTap: () => {_onItemTapped(0)},
               child: Row(
                 children: [
-                  SizedBox(width: 14),
+                  SizedBox(width: 6),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -136,7 +132,7 @@ class _BottomNavState extends State<BottomNav>
                       ),
                       Text(
                         "${Languages.of(context)?.labelHome}",
-                        style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                        style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                       )
                     ],
                   ),
@@ -149,19 +145,16 @@ class _BottomNavState extends State<BottomNav>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.transfer_within_a_station_sharp,
+                    Icons.file_copy_sharp,
                     color: AppColor.WHITE,
                     size: 24,
                   ),
                   Text(
-                    "${Languages.of(context)?.labelTransfer}",
-                    style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                    "Documents",
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                   )
                 ],
               ),
-            ),
-            SizedBox(
-              width: 5,
             ),
             GestureDetector(
               onTap: () => {_onItemTapped(2)},
@@ -169,13 +162,13 @@ class _BottomNavState extends State<BottomNav>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.payment,
+                    Icons.notifications,
                     color: AppColor.WHITE,
-                    size: 26,
+                    size: 24,
                   ),
                   Text(
-                    "${Languages.of(context)?.labelPayBill}",
-                    style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                    "Notifications",
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                   )
                 ],
               ),
@@ -186,14 +179,36 @@ class _BottomNavState extends State<BottomNav>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.wallet_giftcard,
+                    Icons.history_toggle_off_rounded,
                     color: AppColor.WHITE,
                     size: 26,
                   ),
                   Text(
-                    "${Languages.of(context)?.labelRewards}",
-                    style: TextStyle(color: AppColor.WHITE, fontSize: 12),
+                    "History",
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                   )
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {_onItemTapped(4)},
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.person,
+                        color: AppColor.WHITE,
+                        size: 26,
+                      ),
+                      Text(
+                        "Profile",
+                        style: TextStyle(color: AppColor.WHITE, fontSize: 10),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 6),
                 ],
               ),
             ),

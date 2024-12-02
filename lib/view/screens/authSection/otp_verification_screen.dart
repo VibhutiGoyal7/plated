@@ -429,7 +429,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

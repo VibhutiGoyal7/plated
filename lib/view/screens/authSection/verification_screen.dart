@@ -195,7 +195,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
         apiResponse.data as CountryListResponse?;
-    var message = apiResponse?.message.toString();
+    var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
       isLoading = false;

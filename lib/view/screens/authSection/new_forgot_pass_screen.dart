@@ -92,7 +92,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         print("rwrwr ");
         //Navigator.pushNamed(context, '/ProfileScreen');
         ToastComponent.showToast(
-            context: context, message: apiResponse?.message);
+            context: context, message: apiResponse.message);
         Helper.clearAllSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => SigninScreen()),
@@ -101,11 +101,11 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
 
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse?.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")){
+        if (nonCapitalizeString("${apiResponse.message}") == nonCapitalizeString("${Languages.of(context)?.labelInvalidAccessToken}")){
           SessionExpiredDialog.showDialogBox(context: context);}
         else{
           ToastComponent.showToast(
-              context: context, message: apiResponse?.message);
+              context: context, message: apiResponse.message);
         }
         return Center(
             //child: Text('Please try again later!!!'),

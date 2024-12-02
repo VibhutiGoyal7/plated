@@ -16,7 +16,7 @@ class NotificationListResponse {
   factory NotificationListResponse.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
     List<NotificationDetail>? transactionList =
-    list?.map((i) => NotificationDetail.fromJson(i)).toList();
+    list.map((i) => NotificationDetail.fromJson(i)).toList();
 
     return NotificationListResponse(
       message: json['message'] as String?,

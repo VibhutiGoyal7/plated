@@ -211,6 +211,9 @@ class _MyAppState extends State<MyApp> {
             '/PhoneVerificationScreen': (context) {
               return PhoneVerificationScreen();
             },
+            '/BottomNav': (context) {
+              return BottomNav();
+            },
             '/OtpVerificationScreen': (context) {
               return OtpVerificationScreen();
             },

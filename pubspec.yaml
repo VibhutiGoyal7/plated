@@ -77,6 +77,9 @@ dependencies:
   camera: ^0.11.0+2
   flutter_mrz_scanner: ^2.1.0
 
+  meta: any
+  webview_flutter_android: any
+  webview_flutter_wkwebview: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
