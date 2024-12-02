@@ -211,20 +211,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                                alignment: Alignment.topRight,
-                                child: Icon(Icons.search_outlined)),
-                            SizedBox(
-                              height: isTablet ? 0 : 20,
-                            ),
-                            Text("Account",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                            Text("Account",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                             Card(
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 8,vertical: 10),

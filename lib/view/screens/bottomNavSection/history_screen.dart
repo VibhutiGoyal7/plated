@@ -334,18 +334,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 15.0),
+                            vertical: 0.0, horizontal: 15.0),
                         child: Text(
-                          "${Languages.of(context)!.labelTransaction}s",
+                          "History",
                           style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.w600,
-                              color: AppColor.WHITE),
+                              color: AppColor.BLACK),
                         ),
                       ),
                       width: screenWidth,
                       alignment: Alignment.bottomLeft,
-                      height: 80,
+                      height: 50,
                       decoration: BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage("assets/app_header_bg.png"),

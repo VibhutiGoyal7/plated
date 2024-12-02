@@ -182,18 +182,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 65,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, top: 15, right: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Languages.of(context)!.labelNotification,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700
+                  ),),
+                  generalNotification(),
+                ],
+              ),
             ),
-            title: Text(Languages.of(context)!.labelNotification),
-          ),
-          body: Column(
-            children: [
-              generalNotification(),
-            ],
           )),
     );
   }
@@ -255,7 +259,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               : Center(
                   child: Text(
                     "No Notifications",
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 )
           : Padding(
