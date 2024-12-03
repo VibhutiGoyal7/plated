@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,10 +58,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 SizedBox(
                   height: 8,
                 ),
-                Text(
+                Image(
+                  height: screenHeight * 0.06,
+                  image: AssetImage(isDarkMode
+                      ? "assets/app_logo_dark.png"
+                      : "assets/app_logo.png"),
+                  fit: BoxFit.cover,
+                ),
+                /*Text(
                   "BD ID",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+                ),*/
                 Row(
                   children: [
                     InstructionStep(
@@ -92,16 +100,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   //alignment: Alignment.topLeft,
                   width: screenWidth,
                   height: screenHeight * 0.5,
-                  image: AssetImage("assets/payment_image.png"),
+                  image: AssetImage("assets/slide_1.png"),
                 ),
                 Spacer(),
-                _buildFooter(
-                    context: context,
-                    text: "Scan Now",
-                    onTap: () {
-                      //onPressedFrontImage();
-                      Navigator.pushNamed(context, "/PhoneVerificationScreen");
-                    }),
+                CustomButtonComponent(text: "Scan Now",
+                    screenWidth: screenWidth, onTap: () {
+                  Navigator.pushNamed(context, "/PhoneVerificationScreen");
+                }),
                 SizedBox(
                   height: 35,
                 )
@@ -121,31 +126,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 )
               : SizedBox()
         ]),
-      ),
-    );
-  }
-
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: screenWidth * 0.94,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.8),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.black),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
-          ),
-        ),
       ),
     );
   }

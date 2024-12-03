@@ -1,6 +1,7 @@
 import 'package:BDPass/model/response/checkCustomerReponse.dart';
 import 'package:BDPass/theme/AppColor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -86,105 +87,110 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              Stack(
-                children: <Widget>[
-                 /* Container(
-                    height: screenHeight * 0.27,
-                    child: Column(
-                      children: [
-                        Image(
-                          height: screenHeight * 0.27,
-                          image: AssetImage(isDarkMode
-                              ? "assets/header_night.png"
-                              : "assets/header_day.png"),
-                          fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
-                          opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.45),
-                        ),
-                      ],
-                    ),
-                    alignment: AlignmentDirectional.center,
-                  ),*/
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0 ,vertical: 12.0),
+              AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark),
+                child: Stack(
+                  children: <Widget>[
+                   /* Container(
+                      height: screenHeight * 0.27,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        //mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Documents",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(Icons.search_outlined,size: 24,),
-                                  SizedBox(width: 12,),
-                                  Icon(Icons.transfer_within_a_station_outlined,size: 20,),
-                                  SizedBox(width: 12,),
-                                  Icon(Icons.menu_sharp,size: 24,),
-                                  SizedBox(width: 6,),
-                                ],
-                              ),
-                            ],
+                          Image(
+                            height: screenHeight * 0.27,
+                            image: AssetImage(isDarkMode
+                                ? "assets/header_night.png"
+                                : "assets/header_day.png"),
+                            fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
+                            opacity: isDarkMode ? const AlwaysStoppedAnimation(.3) : const AlwaysStoppedAnimation(.45),
                           ),
-                          SizedBox(height: 12,),
-                          Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey,width: 0.6)
-                            ),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Issued"),
-                                  SizedBox(width: 6,),
-                                  Container(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(width: 6,),
-                                  Text("Uploaded"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 8,),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                _buildTab(Icons.file_copy_sharp,"All Documents"),
-                                _buildTab(Icons.person_outline_outlined,"Personal"),
-                                _buildTab(Icons.local_post_office_outlined,"Professional"),
-                                _buildTab(Icons.padding_outlined,"Legal"),
-                                _buildTab(Icons.home_work_outlined,"Property"),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 4,),
-                          Text("7 issued documents under 'All Documents'",style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.black54),),
-                          SizedBox(height: 8,),
-                          Expanded(
-                            child: ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              controller: _scrollController,
-                              itemCount: list.length,
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.only(bottom: 10),
-                              itemBuilder: (BuildContext context, int index) {
-                                return _buildCard(list[index]);
-                              },
-                            ),
-                          ),
-                          _buildFooter( context: context, text: 'Request a document', onTap: () {  }, )
                         ],
                       ),
+                      alignment: AlignmentDirectional.center,
+                    ),*/
+                    SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0 ,vertical: 12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Documents",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Icon(Icons.search_outlined,size: 24,),
+                                    SizedBox(width: 12,),
+                                    Icon(Icons.transfer_within_a_station_outlined,size: 20,),
+                                    SizedBox(width: 12,),
+                                    Icon(Icons.menu_sharp,size: 24,),
+                                    SizedBox(width: 6,),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12,),
+                            Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey,width: 0.6)
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Issued"),
+                                    SizedBox(width: 6,),
+                                    Container(
+                                      width: 1,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(width: 6,),
+                                    Text("Uploaded"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 8,),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  _buildTab(Icons.file_copy_sharp,"All Documents"),
+                                  _buildTab(Icons.person_outline_outlined,"Personal"),
+                                  _buildTab(Icons.local_post_office_outlined,"Professional"),
+                                  _buildTab(Icons.padding_outlined,"Legal"),
+                                  _buildTab(Icons.home_work_outlined,"Property"),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 4,),
+                            Text("7 issued documents under 'All Documents'",style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.black54),),
+                            SizedBox(height: 8,),
+                            Expanded(
+                              child: ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                controller: _scrollController,
+                                itemCount: list.length,
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.only(bottom: 10),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _buildCard(list[index]);
+                                },
+                              ),
+                            ),
+                            _buildFooter( context: context, text: 'Request a document', onTap: () {  }, )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               isLoading
                   ? Stack(

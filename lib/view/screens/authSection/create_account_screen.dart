@@ -1,9 +1,10 @@
-
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
+import 'package:BDPass/view/component/custom_button_component.dart';
+import 'package:BDPass/view/screens/authSection/instruction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
@@ -21,15 +22,32 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   late double screenHeight;
   PageController _pageController = PageController();
   bool isLoading = false;
+  bool isInstruction = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
   List<CountryData> countryList = [];
-
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
+    /* _controller = VideoPlayerController.asset(
+      'assets/video.mp4',
+    )
+      ..initialize().then((_) {
+        // Ensure the first frame is shown
+        setState(() {
+          _controller.setLooping(true); // Enable seamless looping
+          _controller.play(); // Start playing immediately
+        });
+      });*/
     //_fetchData();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,6 +65,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /*_controller.value.isInitialized
+                    ? SizedBox(
+                  height: screenHeight*0.5,
+                  child: FittedBox(
+                    fit: BoxFit.cover, // Make the video fill the screen
+                    child: SizedBox(
+                      width: _controller.value.size.width,
+                      height: _controller.value.size.height,
+                      child: VideoPlayer(_controller),
+                    ),
+                  ),
+                )
+                    : SizedBox(),*/
                 Image(
                   height: screenHeight * 0.08,
                   image: AssetImage(isDarkMode
@@ -79,13 +110,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   height: 70,
                 ),
                 Center(
-                  child: _buildFooter(
-                      context: context,
-                      text: "Create New Account",
-                      onTap: () {
-                        Navigator.pushNamed(context, '/InstructionScreen');
-                      }),
-                ),
+                    child: CustomButtonComponent(
+                        text: "Create New Account",
+                        screenWidth: screenWidth,
+                        onTap: () {
+                          setState(() {
+                            isInstruction = true;
+                          });
+                        })),
                 Center(
                   child: _buildExistingAccFooter(
                       context: context,
@@ -100,6 +132,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ],
             ),
           ),
+          isInstruction
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isInstruction = false;
+                    });
+                    Navigator.pushNamed(context, "/ProceedAsScreen");
+                  },
+                  child: InstructionScreen())
+              : SizedBox(),
           isLoading
               ? Stack(
                   children: [
@@ -191,8 +233,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       getCountryList(context, apiResponse);
     }
   }
-
-
 
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =

@@ -61,7 +61,7 @@ class CustomNumberKeyboard extends StatelessWidget {
                   )),
               _buildKey('0', isDarkMode),
               Container(
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF334a97)),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: AppColor.PRIMARY),
                 child: IconButton(
                     onPressed: () {
                       _onKeyPressed("submit");

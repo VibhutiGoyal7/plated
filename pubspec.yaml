@@ -76,7 +76,7 @@ dependencies:
   google_mlkit_text_recognition: ^0.14.0
   camera: ^0.11.0+2
   flutter_mrz_scanner: ^2.1.0
-
+  country_picker: ^2.0.18
   meta: any
   webview_flutter_android: any
   webview_flutter_wkwebview: any
@@ -114,6 +114,7 @@ flutter:
       - assets/slide_1.png
       - assets/slide_2.png
       - assets/slide_3.png
+      - assets/video.mp4
 
   fonts:
     - family: CustomFont

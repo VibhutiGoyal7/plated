@@ -60,8 +60,8 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap:() {
-                    Navigator.pushNamed(context,"/VerificationScreen");
+                  onTap: () {
+                    Navigator.pushNamed(context, "/VerificationScreen");
                   },
                   child: _buildCard(Icons.house_sharp, "Citizen or Resident",
                       "Individual holding ID issued by BD Government"),

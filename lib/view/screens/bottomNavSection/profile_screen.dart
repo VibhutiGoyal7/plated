@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
@@ -86,7 +86,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator(color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,));
+        return Center(
+            child: CircularProgressIndicator(
+          color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,
+        ));
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
         await Helper.saveUserBalance(mediaList?.balance);
@@ -211,16 +214,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 12,),
-                            Text("Account",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-                            SizedBox(height: 14,),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Text(
+                              "Account",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 14,
+                            ),
                             Card(
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8,vertical: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 10),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -233,17 +246,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       needTextLetter: true,
                                       placeholderImage: "",
                                     ),
-                                    SizedBox(width: 8,),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text("Full Name", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),
-                                        Text("Show Profile",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 9,color: Colors.black54),)
+                                        Text(
+                                          "Full Name",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
+                                        Text(
+                                          "Show Profile",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 9,
+                                              color: Colors.black54),
+                                        )
                                       ],
                                     ),
                                     Spacer(),
-                                    Icon(Icons.arrow_forward_ios,size: 18,)
-
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 18,
+                                    )
                                   ],
                                 ),
                               ),
@@ -265,28 +294,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: isTablet ? 0 : 10.0),
-                                        Text("Account", style : TextStyle(fontWeight: FontWeight.bold)),
+                                        Text("Account",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/AccountDetailScreen',
+                                              Navigator.pushNamed(context,
+                                                  '/AccountDetailScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading: "Change PIN",
-                                                icon: Icons.key,
-                                                headingTextSize: 14,)),
+                                              heading: "Change PIN",
+                                              icon: Icons.key,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/PersonalInfoScreen',
+                                              Navigator.pushNamed(context,
+                                                  '/PersonalInfoScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading: "Manage Devices",
-                                                icon: Icons.phone_android,
-                                                headingTextSize: 14,)),
-
+                                              heading: "Manage Devices",
+                                              icon: Icons.phone_android,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -295,10 +327,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       "${Languages.of(context)!.labelAddedCard}");
                                             },
                                             child: DetailBox(
-                                                heading: "Reset Signing Password",
-                                                icon:
-                                                    Icons.password,
-                                                headingTextSize: 14,)),
+                                              heading: "Reset Signing Password",
+                                              icon: Icons.password,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -306,10 +338,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading:
-                                                "Biometrics",
-                                                icon: Icons.border_inner_outlined,
-                                                headingTextSize: 14,)),
+                                              heading: "Biometrics",
+                                              icon: Icons.border_inner_outlined,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -317,10 +349,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading:
-                                                "Language",
-                                                icon: Icons.abc_outlined,
-                                                headingTextSize: 14,)),
+                                              heading: "Language",
+                                              icon: Icons.abc_outlined,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -328,22 +360,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading:
-                                                "Accessibility",
-                                                icon: Icons.accessibility,
-                                                headingTextSize: 14,)),
-                                        Text("More", style : TextStyle(fontWeight: FontWeight.bold)),
+                                              heading: "Accessibility",
+                                              icon: Icons.accessibility,
+                                              headingTextSize: 14,
+                                            )),
+                                        Text("More",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/AccountBenefitScreen',
+                                              Navigator.pushNamed(context,
+                                                  '/AccountBenefitScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading:
-                                                "About BD Pass",
-                                                icon: Icons.fingerprint,
-                                                headingTextSize: 14,)),
+                                              heading: "About BD Pass",
+                                              icon: Icons.fingerprint,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -351,10 +385,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                                heading:
-                                                "Walkthrough",
-                                                icon: Icons.play_arrow_rounded,
-                                                headingTextSize: 14,)),
+                                              heading: "Walkthrough",
+                                              icon: Icons.play_arrow_rounded,
+                                              headingTextSize: 14,
+                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               _showLogOutDialog();
@@ -537,7 +571,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             Navigator.of(context).pushNamedAndRemoveUntil(
                               '/SignInScreen',
-                                  (Route<dynamic> route) => false,
+                              (Route<dynamic> route) => false,
                             );
                           },
                         ),

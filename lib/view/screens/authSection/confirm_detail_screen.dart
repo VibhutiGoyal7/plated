@@ -12,6 +12,7 @@ import '../../../model/response/setUpAccountResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_button_component.dart';
 import '../../component/toastMessage.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
@@ -245,7 +246,11 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                   )),
                             ],
                           ),
-                          _buildFooter(context, apiResponse),
+                          CustomButtonComponent(text: Languages.of(context)!.labelConfirm,
+                              screenWidth: screenWidth,
+                              onTap: () {
+
+                              }),
                         ],
                       )),
                 ),

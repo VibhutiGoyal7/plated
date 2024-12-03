@@ -2,15 +2,14 @@ import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
-import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/instruction_step.dart';
@@ -34,6 +33,8 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   bool isDarkMode = false;
   bool isChecked = false;
   String selectedItem = "";
+  String selectedCountryFlag = "";
+  Country? selectedCountry;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNoController = TextEditingController();
@@ -41,7 +42,14 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   @override
   void initState() {
     super.initState();
+    setInitialCountry();
     //_fetchData();
+  }
+
+  void setInitialCountry() {
+    // Use a predefined country code to find the Country object
+    final initialCountryCode = 'IN'; // Example: India
+    selectedCountry = Country.tryParse(initialCountryCode);
   }
 
   @override
@@ -105,60 +113,24 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          final RenderBox overlay = Overlay.of(context)
-                              .context
-                              .findRenderObject() as RenderBox;
-                          showMenu(
+                          showCountryPicker(
+                            useSafeArea: true,
+
                             context: context,
-                            position: RelativeRect.fromRect(
-                              Rect.fromLTWH(0, 290, overlay.size.width,
-                                  overlay.size.height),
-                              Offset.zero & overlay.size,
-                            ),
-                            items: countryList.map((item) {
-                              return PopupMenuItem<CountryData>(
-                                value: item,
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      child: Image.network(
-                                        "${item.flagImageUrl}",
-                                        height: 24,
-                                        width: 40,
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.white30,
-                                              highlightColor: Colors.grey,
-                                              child: Container(
-                                                height: 24,
-                                                width: 40,
-                                                color: Colors.grey,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "${item.phoneCode}",
-                                      style: TextStyle(color: AppColor.WHITE),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ).then((value) {
-                            if (value != null) {
-                              _changeItem(value);
-                            }
-                          });
+                            showPhoneCode: true,
+                            // Show phone code next to country
+                            onSelect: (Country country) {
+                              setState(() {
+                                selectedItem = country.phoneCode;
+                                selectedCountryFlag = country.flagEmoji;
+                                selectedCountry == null;
+                              });
+                              print(
+                                  'Selected country flag: ${country.flagEmoji}');
+                              print('Phone code: ${country.phoneCode}');
+                              print('Country code: ${country.countryCode}');
+                            },
+                          );
                         },
                         child: Container(
                           height: 48,
@@ -192,40 +164,42 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               selectedItem.isEmpty
-                                  ? Container(
-                                      width: 55,
+                                  ? IntrinsicWidth(
+                                      child: Row(
+                                        children: [
+                                          SizedBox(width: 2),
+                                          Text(
+                                            selectedCountry != null
+                                                ? "${selectedCountry?.flagEmoji}"
+                                                : "",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            selectedCountry != null
+                                                ? "+${selectedCountry?.phoneCode}"
+                                                : "+",
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
                                     )
                                   : IntrinsicWidth(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          /*Image.network(
-                                      "${Uri.parse(selectedItem)}",
-                                      height: 24,
-                                      width: 40,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
-                                          return Shimmer.fromColors(
-                                            baseColor: Colors.white30,
-                                            highlightColor: Colors.grey,
-                                            child: Container(
-                                              height: 24,
-                                              width: 40,
-                                              color: Colors.grey,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),*/
-                                          SizedBox(width: 3),
+                                          SizedBox(width: 2),
                                           Text(
-                                            "+91",
-                                            style: TextStyle(fontSize: 14),
+                                            "$selectedCountryFlag",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            "+$selectedItem",
+                                            style: TextStyle(fontSize: 12),
                                           ),
                                         ],
                                       ),
@@ -244,11 +218,11 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                             size: 20,
                             color: isDarkMode ? Colors.white : Colors.black,
                           ),
-                          0.66),
+                          0.65),
                     ],
                   ),
                 ),
-                _buildPhoneInput(
+                _buildEmailInput(
                     context,
                     Languages.of(context)!.labelEmail,
                     _emailController,
@@ -318,7 +292,9 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
             child: Text(
               text,
               style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Colors.white),
             ),
           ),
         ),
@@ -406,7 +382,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 onChanged: (value) {
                   //_isValidInput();
                 },
-                maxLength: 12,
+                maxLength: 10,
                 textAlignVertical: TextAlignVertical.top,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -416,6 +392,67 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                   FilteringTextInputFormatter.digitsOnly,
                 ],
                 textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: text,
+                  alignLabelWithHint: true,
+                  counterText: "",
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailInput(BuildContext context, String text,
+      TextEditingController nameController, Icon icon, double height) {
+    //nameController.text = widget.data as String;
+    return Card(
+      child: Container(
+        //height: 60,
+        width: screenWidth * height,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border(
+              top: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54,
+                  width: 0.4)),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 14.0,
+                ),
+                obscureText: false,
+                obscuringCharacter: "*",
+                controller: nameController,
+                onChanged: (value) {
+                  //_isValidInput();
+                },
+                textAlignVertical: TextAlignVertical.top,
+                scrollPadding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.done,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                ],
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: text,

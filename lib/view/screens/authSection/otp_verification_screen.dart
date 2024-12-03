@@ -12,6 +12,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/customNumberKeyboard.dart';
 import '../../component/instruction_step.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   String token = "";
   late double screenWidth;
   late double screenHeight;
+  late DateTime endTime;
   PageController _pageController = PageController();
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -39,14 +41,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       List.generate(6, (index) => TextEditingController());
   final List<String> _otp = List.generate(6, (_) => '');
   List<String> _inputValues = ['', '', '', '', '', ''];
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNoController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     isValid = false;
     resendOtp = false;
+    endTime = DateTime.now().add(const Duration(minutes: 1, seconds: 0));
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -107,7 +108,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       body: SafeArea(
         child: Stack(children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -160,6 +161,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           true),
                       SizedBox(height: 8,),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _countdownTimer(),
                           //Spacer(),
@@ -181,16 +183,73 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     ),
                     1.0),*/
                 Spacer(),
-                _buildFooter(
+                /*_buildFooter(
                     context: context,
                     text: "Continue",
                     onTap: () {
                       //onPressedFrontImage();
                       Navigator.pushNamed(context, "/AccountRecoveryScreen");
-                    }),
-                SizedBox(
-                  height: 35,
-                )
+                    }),*/
+
+                CustomNumberKeyboard(onKeyTap: (value) async {
+                  if (value == "clear") {
+                    _handleBackspace();
+                  } else if (value == "submit") {
+                    String otp = _inputValues
+                        .map((controller) => controller)
+                        .join();
+                    Navigator.pushNamed(context, "/AccountRecoveryScreen");
+                    /*if (otp.isNotEmpty && otp.length == 6) {
+                      /*String otp =
+                                _controllers.map((controller) => controller.text).join();*/
+                      const maxDuration = Duration(seconds: 2);
+                      if (otp.isNotEmpty && otp.length == 6) {
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        bool isConnected = await _connectivityService.isConnected();
+                        if (!isConnected) {
+                          setState(() {
+                            isLoading = false;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
+                                duration: maxDuration,
+                              ),
+                            );
+                          });
+                        } else {
+                          PhoneRequest phoneRequest = PhoneRequest(
+                              customer: Customer(
+                                  phoneNumber: widget.data.toString(),
+                                  mobileOtp: otp,
+                                  countryId: null));
+                          await Provider.of<MainViewModel>(context, listen: false)
+                              .fetchOtpVerifyData(
+                              "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
+                              phoneRequest);
+
+                          ApiResponse apiResponse =
+                              Provider.of<MainViewModel>(context, listen: false)
+                                  .response;
+                          getOtpResponseDataWidget(context, apiResponse);
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                '${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
+                            duration: maxDuration,
+                          ),
+                        );
+                      }
+                    }*/
+                  } else {
+                    _handleKeyTap(value);
+                  }
+                }),
+
               ],
             ),
           ),
@@ -215,7 +274,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return Row(
       children: [
         TimerCountdown(
-          endTime: DateTime.now().add(const Duration(minutes: 1, seconds: 0)),
+          endTime: endTime,
           format: CountDownTimerFormat.minutesSeconds,
           enableDescriptions: false,
           spacerWidth: 2,
@@ -287,7 +346,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           "Send Again",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.grey,
+            color: Colors.black87,
             decoration: TextDecoration.underline,
           ),
         ));

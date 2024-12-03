@@ -206,8 +206,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value:
-          isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+          value:SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark),
           child: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

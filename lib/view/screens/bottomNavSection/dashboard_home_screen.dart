@@ -19,7 +19,6 @@ import '../../../model/request/shortcutItemList.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
-import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/session_expired_dialog.dart';
 
@@ -156,7 +155,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             Column(
               children: [
                 AnnotatedRegion<SystemUiOverlayStyle>(
-                  value:SystemUiOverlayStyle.light,
+                  value: SystemUiOverlayStyle.light,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.0),
                     child: Stack(
@@ -197,12 +196,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                           child: Column(
                                             children: [
                                               Padding(
-                                          padding: EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 10),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 8,
+                                                    horizontal: 10),
                                                 child: Stack(
                                                   children: [
                                                     Align(
-                                                        alignment: Alignment.topRight,
+                                                        alignment:
+                                                            Alignment.topRight,
                                                         child: Image(
                                                           image: AssetImage(
                                                               "assets/app_logo.png"),
@@ -212,77 +213,148 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                         )),
                                                     Column(
                                                       crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         SizedBox(
                                                           height: 28,
                                                         ),
-                                                        Text("Full Name",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                                                        Text(
+                                                          "Full Name",
+                                                          style: TextStyle(
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                         Text(
                                                           "Verified Account",
                                                           style: TextStyle(
                                                               fontSize: 10,
                                                               fontWeight:
-                                                                  FontWeight.bold,
-                                                              color:
-                                                                  AppColor.PRIMARY),
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColor
+                                                                  .PRIMARY),
                                                         ),
                                                         SizedBox(
                                                           height: 34,
                                                         ),
                                                         Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
                                                             Row(
                                                               children: [
-                                                                Icon(Icons.check_circle,color: AppColor.PRIMARY,size: 16,),
-                                                                Text("Signature: ",style: TextStyle(fontSize: 10)),
-                                                                Text("Qualified",style: TextStyle(fontSize: 10),)
+                                                                Icon(
+                                                                  Icons
+                                                                      .check_circle,
+                                                                  color: AppColor
+                                                                      .PRIMARY,
+                                                                  size: 16,
+                                                                ),
+                                                                Text(
+                                                                    "Signature: ",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            10)),
+                                                                Text(
+                                                                  "Qualified",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10),
+                                                                )
                                                               ],
-                                                            ),  Row(
+                                                            ),
+                                                            Row(
                                                               children: [
-                                                                Icon(Icons.check_circle,color: AppColor.PRIMARY,size: 16,),
-                                                                Text("Documents: ",style: TextStyle(fontSize: 10)),
-                                                                Text("Available",style: TextStyle(fontSize: 10),),
-                                                                Icon(Icons.arrow_forward,size: 15  ,)
+                                                                Icon(
+                                                                  Icons
+                                                                      .check_circle,
+                                                                  color: AppColor
+                                                                      .PRIMARY,
+                                                                  size: 16,
+                                                                ),
+                                                                Text(
+                                                                    "Documents: ",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            10)),
+                                                                Text(
+                                                                  "Available",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10),
+                                                                ),
+                                                                Icon(
+                                                                  Icons
+                                                                      .arrow_forward,
+                                                                  size: 15,
+                                                                )
                                                               ],
                                                             ),
                                                           ],
                                                         ),
-                                                        SizedBox(height: 2,),
+                                                        SizedBox(
+                                                          height: 2,
+                                                        ),
                                                       ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
-
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12.5),bottomRight: Radius.circular(12.5))
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.edit_outlined),
-                                            SizedBox(width: 4,),
-                                            Text("Sign\ndocuments",style: TextStyle(fontSize: 12.5,))
-                                          ],
-                                        ),Row(
-                                          children: [
-                                            Icon(Icons.check_circle_outline_outlined),
-                                            SizedBox(width: 4,),
-                                            Text("Verify\nSignature",style: TextStyle(fontSize: 12.5,))
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius
+                                                        .only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    12.5),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    12.5))),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Icon(Icons
+                                                              .edit_outlined),
+                                                          SizedBox(
+                                                            width: 4,
+                                                          ),
+                                                          Text(
+                                                              "Sign\ndocuments",
+                                                              style: TextStyle(
+                                                                fontSize: 12.5,
+                                                              ))
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Icon(Icons
+                                                              .check_circle_outline_outlined),
+                                                          SizedBox(
+                                                            width: 4,
+                                                          ),
+                                                          Text(
+                                                              "Verify\nSignature",
+                                                              style: TextStyle(
+                                                                fontSize: 12.5,
+                                                              ))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -308,8 +380,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 SizedBox(
                                   height: 300,
                                 ),
-                                _buildCard(Icons.file_open,"Add Documents","Request official documents from an official"),
-                                _buildCard(Icons.qr_code_scanner_rounded,"Scan QR Code","Use your camera to start sharing documents"),
+                                _buildCard(Icons.file_open, "Add Documents",
+                                    "Request official documents from an official"),
+                                _buildCard(
+                                    Icons.qr_code_scanner_rounded,
+                                    "Scan QR Code",
+                                    "Use your camera to start sharing documents"),
                               ],
                             ),
                           ),
@@ -339,23 +415,27 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Widget _buildCard(IconData icon, String heading,String detail){
+  Widget _buildCard(IconData icon, String heading, String detail) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
         child: Row(
           children: [
             Icon(icon),
-            SizedBox(width : 6),
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:[
-                  Text(heading,style: TextStyle(fontSize: 14)),
-                  Text(detail,style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.black54)),
-                ]
-            ),
+            SizedBox(width: 6),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(heading, style: TextStyle(fontSize: 14)),
+              Text(detail,
+                  style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black54)),
+            ]),
             Spacer(),
-            Icon(Icons.arrow_forward_ios,size: 18,)
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 18,
+            )
           ],
         ),
       ),

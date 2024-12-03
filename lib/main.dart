@@ -14,7 +14,7 @@ import 'package:BDPass/view/screens/authSection/otp_verify_screen.dart';
 import 'package:BDPass/view/screens/authSection/phone_verification_screen.dart';
 import 'package:BDPass/view/screens/authSection/phone_verify_screen.dart';
 import 'package:BDPass/view/screens/authSection/proceed_as_screen.dart';
-import 'package:BDPass/view/screens/authSection/setup_account_screen.dart';
+import 'package:BDPass/view/screens/authSection/confirm_detail_screen.dart';
 import 'package:BDPass/view/screens/authSection/signin_screen.dart';
 import 'package:BDPass/view/screens/authSection/slider_screen.dart';
 import 'package:BDPass/view/screens/authSection/splash_screen.dart';

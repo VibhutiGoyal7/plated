@@ -1,6 +1,7 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
@@ -37,76 +38,81 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: SafeArea(
-        child: Stack(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 80,
-              ),
-              Image(
-                height: screenHeight * 0.25,
-                image: AssetImage(isDarkMode
-                    ? "assets/app_logo_dark.png"
-                    : "assets/app_logo.png"),
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Spacer(),
-              Container(
-                  height: screenHeight * 0.45,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                      color: AppColor.PRIMARY,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20))),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      body:AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness:
+            isDarkMode ? Brightness.light : Brightness.dark),
+        child: SafeArea(
+          child: Stack(children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 80,
+                ),
+                Image(
+                  height: screenHeight * 0.25,
+                  image: AssetImage(isDarkMode
+                      ? "assets/app_logo_dark.png"
+                      : "assets/app_logo.png"),
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Spacer(),
+                Container(
+                    height: screenHeight * 0.45,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                        color: AppColor.PRIMARY,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome",
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: AppColor.WHITE,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          "The National Digital Identity for all citizens, residents and visitors in Bangladesh.",
+                          style: TextStyle(fontSize: 12, color: AppColor.WHITE),
+                        ),
+                        _buildFooter(
+                            context: context,
+                            text: "Continue",
+                            onTap: () {
+                              Navigator.pushNamed(context, '/SliderScreen');
+                            }),
+                      ],
+                    )),
+              ],
+            ),
+            isLoading
+                ? Stack(
                     children: [
-                      Text(
-                        "Welcome",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: AppColor.WHITE,
-                            fontWeight: FontWeight.bold),
+                      // Block interaction
+                      ModalBarrier(dismissible: false, color: Colors.white38),
+                      // Loader indicator
+                      Center(
+                        child: CustomLoader(),
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "The National Digital Identity for all citizens, residents and visitors in Bangladesh.",
-                        style: TextStyle(fontSize: 12, color: AppColor.WHITE),
-                      ),
-                      _buildFooter(
-                          context: context,
-                          text: "Continue",
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, '/SliderScreen');
-                          }),
                     ],
-                  )),
-            ],
-          ),
-          isLoading
-              ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(dismissible: false, color: Colors.white38),
-                    // Loader indicator
-                    Center(
-                      child: CustomLoader(),
-                    ),
-                  ],
-                )
-              : SizedBox()
-        ]),
+                  )
+                : SizedBox()
+          ]),
+        ),
       ),
     );
   }

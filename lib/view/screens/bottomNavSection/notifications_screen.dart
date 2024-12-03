@@ -204,15 +204,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
-      value:
-          isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              isDarkMode ? Brightness.light : Brightness.dark),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(left: 10.0, top: 10,bottom: 5,right: 10),
+              padding: const EdgeInsets.only(
+                  left: 10.0, top: 10, bottom: 5, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -225,7 +227,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ),
             ),
             _buildSearch(),
-            SizedBox(height: 4,),
+            SizedBox(
+              height: 4,
+            ),
             generalNotification(),
           ],
         ),
@@ -235,7 +239,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Widget generalNotification() {
     return Container(
-      height: screenHeight*0.74,
+      height: screenHeight * 0.74,
       child: isInternetConnected && !isLoading
           ? checkListEmpty(generalNotificationList)
               ? FutureBuilder(
@@ -277,9 +281,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     .asMap()
                                     .entries
                                     .map((notification) {
-                                      i++;
+                                  i++;
                                   return generalNotificationItem(
-                                      notification.value, i /*notification.key*/);
+                                      notification.value,
+                                      i /*notification.key*/);
                                 }).toList(),
                               ],
                             ),
@@ -302,11 +307,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Widget _buildSearch(){
+  Widget _buildSearch() {
     return Container(
       height: 43,
       width: screenWidth,
-      margin: EdgeInsets.symmetric(horizontal: 8,vertical: 6),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.grey[100],
@@ -354,9 +359,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         width: screenWidth,
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         decoration: BoxDecoration(
-          color: index % 2 == 0
-              ? Colors.white
-              : Colors.grey[100],
+          color: index % 2 == 0 ? Colors.white : Colors.grey[100],
           border: Border(
             bottom: BorderSide(
                 color: isDarkMode ? Colors.grey.shade700 : Colors.black,
@@ -386,7 +389,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ],
               ),
-              Icon(Icons.arrow_forward_ios_sharp,size: 15,)
+              Icon(
+                Icons.arrow_forward_ios_sharp,
+                size: 15,
+              )
             ],
           ),
         ),

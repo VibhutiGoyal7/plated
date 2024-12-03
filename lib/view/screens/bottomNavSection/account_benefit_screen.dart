@@ -1,14 +1,11 @@
-  import 'dart:io';
+import 'dart:io';
+
 import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
@@ -17,9 +14,7 @@ import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
-import '../../component/circluar_profile_image.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/detail_box.dart';
 import '../../component/session_expired_dialog.dart';
 
 class AccountBenefitScreen extends StatefulWidget {
@@ -100,7 +95,7 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
         child: Scaffold(
           appBar: AppBar(
             leading: GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Icon(Icons.arrow_back)),
@@ -114,14 +109,22 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 8),
                     child: Column(
                       children: [
-                        Text("These are benefits if Basic Account and Verified Account.",style: TextStyle(fontSize:13 ,fontWeight: FontWeight.bold),),
-                        SizedBox(height: 5,),
+                        Text(
+                          "These are benefits if Basic Account and Verified Account.",
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Card(
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 12),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 12),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -129,18 +132,32 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Icon(Icons.person),
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: 4,),
-                                    Text("Verified Account",style: TextStyle(fontSize:12,fontWeight: FontWeight.bold ),),
-                                    SizedBox(height: 6,),
-                                    _buildRow("Access all available Government Services"),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      "Verified Account",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 6,
+                                    ),
+                                    _buildRow(
+                                        "Access all available Government Services"),
                                     _buildRow("Advanced Signature"),
-                                    _buildRow("Verify BD Pass signed documents"),
+                                    _buildRow(
+                                        "Verify BD Pass signed documents"),
                                     _buildRow("Qualified signatures"),
-                                    _buildRow("Request and add documents from issuers"),
+                                    _buildRow(
+                                        "Request and add documents from issuers"),
                                     _buildRow("Sharing digital documents"),
                                     _buildRow("Managing digital documents"),
                                   ],
@@ -161,14 +178,22 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
     );
   }
 
-  Widget _buildRow(String text){
+  Widget _buildRow(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 1.0,vertical: 1),
+      padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1),
       child: Row(
         children: [
-          Icon(Icons.check,size: 15,),
-          SizedBox(width: 4,),
-          Text("$text",style: TextStyle(fontSize: 11),)
+          Icon(
+            Icons.check,
+            size: 15,
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Text(
+            "$text",
+            style: TextStyle(fontSize: 11),
+          )
         ],
       ),
     );
@@ -217,11 +242,10 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
             .profileScreenData("api/v1/app/customers/show_customer_details");*/
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
-       // getProfileResponse(context, apiResponse);
+        // getProfileResponse(context, apiResponse);
       }
     }
   }
-
 
   Future<Widget> getProfileResponse(
       BuildContext context, ApiResponse apiResponse) async {
@@ -232,7 +256,10 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator(color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,));
+        return Center(
+            child: CircularProgressIndicator(
+          color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY,
+        ));
       case Status.COMPLETED:
         await Helper.saveProfileDetails(mediaList);
         await Helper.saveUserBalance(mediaList?.balance);

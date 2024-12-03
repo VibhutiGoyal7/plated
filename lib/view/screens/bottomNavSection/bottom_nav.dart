@@ -1,15 +1,15 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/theme/AppColor.dart';
-import 'package:BDPass/view/screens/bottomNavSection/history_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/documents_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
-import 'profile_screen.dart';
 import 'dashboard_home_screen.dart';
 import 'notifications_screen.dart';
+import 'profile_screen.dart';
 
 class BottomNav extends StatefulWidget {
   @override
@@ -89,10 +89,10 @@ class _BottomNavState extends State<BottomNav>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
-        child:  _widgetOptions.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
-     /* floatingActionButton: FloatingActionButton(
+      /* floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.WHITE,
         shape: CircleBorder(
             side: BorderSide(style: BorderStyle.solid, color: AppColor.WHITE)),
@@ -110,7 +110,7 @@ class _BottomNavState extends State<BottomNav>
         padding: const EdgeInsets.symmetric(horizontal: 10),
         height: 60,
         color: AppColor.BODY_COLOR,
-       /* shape: const CircularNotchedRectangle(),
+        /* shape: const CircularNotchedRectangle(),
         notchMargin: 6,*/
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -122,92 +122,149 @@ class _BottomNavState extends State<BottomNav>
               child: Row(
                 children: [
                   SizedBox(width: 6),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.home,
-                        color: AppColor.WHITE,
-                        size: 26,
-                      ),
-                      Text(
-                        "${Languages.of(context)?.labelHome}",
-                        style: TextStyle(color: AppColor.WHITE, fontSize: 10),
-                      )
-                    ],
-                  ),
+                  _selectedIndex == 0
+                      ? Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(60),
+                              color: Colors.white),
+                          child: Icon(
+                            Icons.home,
+                            size: 28,
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.home,
+                              color: AppColor.WHITE,
+                              size: 28,
+                            ),
+                            Text(
+                              "${Languages.of(context)?.labelHome}",
+                              style: TextStyle(
+                                  color: AppColor.WHITE, fontSize: 10),
+                            )
+                          ],
+                        ),
                 ],
               ),
             ),
             GestureDetector(
               onTap: () => {_onItemTapped(1)},
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.file_copy_sharp,
-                    color: AppColor.WHITE,
-                    size: 24,
-                  ),
-                  Text(
-                    "Documents",
-                    style: TextStyle(color: AppColor.WHITE, fontSize: 10),
-                  )
-                ],
-              ),
+              child: _selectedIndex == 1
+                  ? Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color: Colors.white),
+                      child: Icon(
+                        Icons.file_copy_sharp,
+                        size: 28,
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.file_copy_sharp,
+                          color: AppColor.WHITE,
+                          size: 24,
+                        ),
+                        Text(
+                          "Documents",
+                          style: TextStyle(color: AppColor.WHITE, fontSize: 10),
+                        )
+                      ],
+                    ),
             ),
             GestureDetector(
               onTap: () => {_onItemTapped(2)},
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.notifications,
-                    color: AppColor.WHITE,
-                    size: 24,
-                  ),
-                  Text(
-                    "Notifications",
-                    style: TextStyle(color: AppColor.WHITE, fontSize: 10),
-                  )
-                ],
-              ),
+              child: _selectedIndex == 2
+                  ? Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color: Colors.white),
+                      child: Icon(
+                        Icons.notifications,
+                        size: 28,
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.notifications,
+                          color: AppColor.WHITE,
+                          size: 24,
+                        ),
+                        Text(
+                          "Notifications",
+                          style: TextStyle(color: AppColor.WHITE, fontSize: 10),
+                        )
+                      ],
+                    ),
             ),
             GestureDetector(
               onTap: () => {_onItemTapped(3)},
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.history_toggle_off_rounded,
-                    color: AppColor.WHITE,
-                    size: 26,
-                  ),
-                  Text(
-                    "History",
-                    style: TextStyle(color: AppColor.WHITE, fontSize: 10),
-                  )
-                ],
-              ),
+              child: _selectedIndex == 3
+                  ? Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color: Colors.white),
+                      child: Icon(
+                        Icons.history_toggle_off_rounded,
+                        size: 28,
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.history_toggle_off_rounded,
+                          color: AppColor.WHITE,
+                          size: 26,
+                        ),
+                        Text(
+                          "History",
+                          style: TextStyle(color: AppColor.WHITE, fontSize: 10),
+                        )
+                      ],
+                    ),
             ),
             GestureDetector(
               onTap: () => {_onItemTapped(4)},
               child: Row(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        color: AppColor.WHITE,
-                        size: 26,
-                      ),
-                      Text(
-                        "Profile",
-                        style: TextStyle(color: AppColor.WHITE, fontSize: 10),
-                      ),
-                    ],
-                  ),
+                  _selectedIndex == 4
+                      ? Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(60),
+                              color: Colors.white),
+                          child: Icon(
+                            Icons.person,
+                            size: 28,
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: AppColor.WHITE,
+                              size: 26,
+                            ),
+                            Text(
+                              "Profile",
+                              style: TextStyle(
+                                  color: AppColor.WHITE, fontSize: 10),
+                            ),
+                          ],
+                        ),
                   SizedBox(width: 6),
                 ],
               ),
@@ -222,7 +279,7 @@ class _BottomNavState extends State<BottomNav>
     bool? retrievedBiometric = await Helper.getBiometric();
 
     bool? canCheckBiometric = retrievedBiometric;
-   // print('Can CheckBiometric: $canCheckBiometric');
+    // print('Can CheckBiometric: $canCheckBiometric');
     if (isUserAuthenticated != true) {
       if (canCheckBiometric != null && canCheckBiometric == true) {
         List<BiometricType> availableBiometric = [];
