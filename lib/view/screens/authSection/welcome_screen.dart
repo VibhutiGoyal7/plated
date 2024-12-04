@@ -75,6 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 40 ),
                         Text(
                           "Welcome",
                           style: TextStyle(
@@ -89,6 +90,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           "The National Digital Identity for all citizens, residents and visitors in Bangladesh.",
                           style: TextStyle(fontSize: 12, color: AppColor.WHITE),
                         ),
+                        SizedBox(height: 60 ),
                         _buildFooter(
                             context: context,
                             text: "Continue",
