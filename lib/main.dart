@@ -289,3 +289,10 @@ class _MyAppState extends State<MyApp> {
     }
   }
 }
+
+
+ await availableCameras(); /
+
+'/FaceDetectorView': (context) {
+              return FaceDetectorView();
+            },
