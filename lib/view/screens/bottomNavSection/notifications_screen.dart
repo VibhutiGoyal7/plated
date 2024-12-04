@@ -203,38 +203,44 @@ class _NotificationScreenState extends State<NotificationScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              isDarkMode ? Brightness.light : Brightness.dark),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        body: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 10.0, top: 10, bottom: 5, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness:
+                  isDarkMode ? Brightness.light : Brightness.dark),
+                  child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Notification",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 10, bottom: 5, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Notification",
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        //Icon(Icons.menu)
+                      ],
+                    ),
                   ),
-                  Icon(Icons.menu)
+                  _buildSearch(),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  generalNotification(),
                 ],
               ),
             ),
-            _buildSearch(),
-            SizedBox(
-              height: 4,
-            ),
-            generalNotification(),
+                  ),
+                ),
           ],
-        ),
-      ),
-    ));
+        ));
   }
 
   Widget generalNotification() {
