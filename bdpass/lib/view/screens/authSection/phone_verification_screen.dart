@@ -12,6 +12,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_button_component.dart';
 import '../../component/instruction_step.dart';
 
 class PhoneVerificationScreen extends StatefulWidget {
@@ -132,80 +133,82 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                             },
                           );
                         },
-                        child: Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            border: Border(
-                                top: BorderSide(
-                                    color: isDarkMode
-                                        ? Colors.grey
-                                        : Colors.black54,
-                                    width: 0.4),
-                                bottom: BorderSide(
-                                    color: isDarkMode
-                                        ? Colors.grey
-                                        : Colors.black54,
-                                    width: 0.4),
-                                right: BorderSide(
-                                    color: isDarkMode
-                                        ? Colors.grey
-                                        : Colors.black54,
-                                    width: 0.4),
-                                left: BorderSide(
-                                    color: isDarkMode
-                                        ? Colors.grey
-                                        : Colors.black54,
-                                    width: 0.4)),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              selectedItem.isEmpty
-                                  ? IntrinsicWidth(
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 2),
-                                          Text(
-                                            selectedCountry != null
-                                                ? "${selectedCountry?.flagEmoji}"
-                                                : "",
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                          Text(
-                                            selectedCountry != null
-                                                ? "+${selectedCountry?.phoneCode}"
-                                                : "+",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
+                        child: Card(
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              border: Border(
+                                  top: BorderSide(
+                                      color: isDarkMode
+                                          ? Colors.grey
+                                          : Colors.black54,
+                                      width: 0.4),
+                                  bottom: BorderSide(
+                                      color: isDarkMode
+                                          ? Colors.grey
+                                          : Colors.black54,
+                                      width: 0.4),
+                                  right: BorderSide(
+                                      color: isDarkMode
+                                          ? Colors.grey
+                                          : Colors.black54,
+                                      width: 0.4),
+                                  left: BorderSide(
+                                      color: isDarkMode
+                                          ? Colors.grey
+                                          : Colors.black54,
+                                      width: 0.4)),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                selectedItem.isEmpty
+                                    ? IntrinsicWidth(
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: 2),
+                                            Text(
+                                              selectedCountry != null
+                                                  ? "${selectedCountry?.flagEmoji}"
+                                                  : "",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text(
+                                              selectedCountry != null
+                                                  ? "+${selectedCountry?.phoneCode}"
+                                                  : "+",
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : IntrinsicWidth(
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: 2),
+                                            Text(
+                                              "$selectedCountryFlag",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text(
+                                              "+$selectedItem",
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    )
-                                  : IntrinsicWidth(
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 2),
-                                          Text(
-                                            "$selectedCountryFlag",
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                          Text(
-                                            "+$selectedItem",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                              Icon(Icons.keyboard_arrow_down_sharp),
-                            ],
+                                Icon(Icons.keyboard_arrow_down_sharp),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -233,13 +236,14 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                     ),
                     1.0),
                 Spacer(),
-                _buildFooter(
-                    context: context,
-                    text: "Continue",
-                    onTap: () {
-                      //onPressedFrontImage();
-                      Navigator.pushNamed(context, "/OtpVerificationScreen");
-                    }),
+                Center(
+                    child: CustomButtonComponent(
+                        text: "Continue",
+                        screenWidth: screenWidth,
+                        isDarkMode: isDarkMode,
+                        onTap: () {
+                          Navigator.pushNamed(context, "/OtpVerificationScreen");
+                        })),
                 SizedBox(
                   height: 35,
                 )

@@ -81,7 +81,7 @@ class _SliderScreenState extends State<SliderScreen> {
                     dotWidth: 6.0,
                     spacing: 10.0,
                     dotColor: Colors.grey,
-                    activeDotColor: Colors.black,
+                    activeDotColor:isDarkMode? Colors.white : Colors.black,
                   ),
                 ),
               ),

@@ -247,6 +247,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             ],
                           ),
                           CustomButtonComponent(text: Languages.of(context)!.labelConfirm,
+                              isDarkMode: isDarkMode,
                               screenWidth: screenWidth,
                               onTap: () {
 

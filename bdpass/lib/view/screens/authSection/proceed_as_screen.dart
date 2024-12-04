@@ -1,4 +1,5 @@
 import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,7 +96,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Row(
           children: [
-            Icon(icon),
+            Icon(icon,color: AppColor.PRIMARY,),
             SizedBox(
               width: 8,
             ),
@@ -116,7 +117,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
               ],
             ),
             Spacer(),
-            Icon(Icons.arrow_forward_ios_sharp)
+            Icon(Icons.arrow_forward_ios_sharp,color: AppColor.PRIMARY,)
           ],
         ),
       ),

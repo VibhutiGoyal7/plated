@@ -225,7 +225,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                               fontSize: 15,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .bold),
+                                                                      .bold,
+                                                              color: Colors.black),
                                                         ),
                                                         Text(
                                                           "Verified Account",
@@ -258,12 +259,14 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     "Signature: ",
                                                                     style: TextStyle(
                                                                         fontSize:
-                                                                            10)),
+                                                                            10,
+                                                                        color: Colors.black)),
                                                                 Text(
                                                                   "Qualified",
                                                                   style: TextStyle(
                                                                       fontSize:
-                                                                          10),
+                                                                          10,
+                                                                      color: Colors.black),
                                                                 )
                                                               ],
                                                             ),
@@ -280,17 +283,20 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                     "Documents: ",
                                                                     style: TextStyle(
                                                                         fontSize:
-                                                                            10)),
+                                                                            10,
+                                                                        color: Colors.black)),
                                                                 Text(
                                                                   "Available",
                                                                   style: TextStyle(
                                                                       fontSize:
-                                                                          10),
+                                                                          10,
+                                                                      color: Colors.black),
                                                                 ),
                                                                 Icon(
                                                                   Icons
                                                                       .arrow_forward,
                                                                   size: 15,
+                                                                    color: AppColor.PRIMARY
                                                                 )
                                                               ],
                                                             ),
@@ -334,7 +340,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                               "Sign\ndocuments",
                                                               style: TextStyle(
                                                                 fontSize: 12.5,
-                                                              ))
+                                                              )
+                                                          )
                                                         ],
                                                       ),
                                                       Row(

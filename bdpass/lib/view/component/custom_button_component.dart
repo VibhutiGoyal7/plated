@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomButtonComponent extends StatelessWidget {
   late final String text;
+  late final bool isDarkMode;
   late final double screenWidth;
   final Function() onTap;
 
   CustomButtonComponent(
       {required this.text,
       required this.screenWidth,
+      required this.isDarkMode,
       required this.onTap});
 
   Widget build(BuildContext context) {
@@ -22,12 +24,12 @@ class CustomButtonComponent extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 0.8),
             borderRadius: BorderRadius.circular(8),
-            color: Colors.black),
+            color:isDarkMode ? Colors.white :  Colors.black),
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+                fontWeight: FontWeight.bold, fontSize: 14, color:isDarkMode ? Colors.black : Colors.white),
           ),
         ),
       ),

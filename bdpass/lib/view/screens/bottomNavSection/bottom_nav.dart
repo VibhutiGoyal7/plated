@@ -131,6 +131,7 @@ class _BottomNavState extends State<BottomNav>
                           child: Icon(
                             Icons.home,
                             size: 28,
+                            color: AppColor.PRIMARY,
                           ),
                         )
                       : Column(
@@ -162,6 +163,7 @@ class _BottomNavState extends State<BottomNav>
                       child: Icon(
                         Icons.file_copy_sharp,
                         size: 28,
+                        color: AppColor.PRIMARY,
                       ),
                     )
                   : Column(
@@ -190,6 +192,7 @@ class _BottomNavState extends State<BottomNav>
                       child: Icon(
                         Icons.notifications,
                         size: 28,
+                        color: AppColor.PRIMARY,
                       ),
                     )
                   : Column(
@@ -218,6 +221,7 @@ class _BottomNavState extends State<BottomNav>
                       child: Icon(
                         Icons.history_toggle_off_rounded,
                         size: 28,
+                        color: AppColor.PRIMARY,
                       ),
                     )
                   : Column(
@@ -248,6 +252,7 @@ class _BottomNavState extends State<BottomNav>
                           child: Icon(
                             Icons.person,
                             size: 28,
+                            color: AppColor.PRIMARY,
                           ),
                         )
                       : Column(

@@ -113,6 +113,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     child: CustomButtonComponent(
                         text: "Create New Account",
                         screenWidth: screenWidth,
+                        isDarkMode: isDarkMode,
                         onTap: () {
                           setState(() {
                             isInstruction = true;
@@ -120,6 +121,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         })),
                 Center(
                   child: _buildExistingAccFooter(
+                    isDarkMode: isDarkMode,
                       context: context,
                       text: "I have an existing account",
                       onTap: () {
@@ -187,6 +189,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget _buildExistingAccFooter(
       {required BuildContext context,
       required String text,
+      required bool isDarkMode,
       required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
@@ -195,7 +198,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.8),
+            border: Border.all(color: isDarkMode ? Colors.white : Colors.black, width: 0.8),
             borderRadius: BorderRadius.circular(8)),
         child: Center(
           child: Text(

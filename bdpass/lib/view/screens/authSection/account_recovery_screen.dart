@@ -198,6 +198,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 28.0),
                             child: CustomButtonComponent(text: "Continue",
+                                isDarkMode: isDarkMode,
                                 screenWidth: screenWidth,
                                 onTap: () {
                                   hideKeyBoard();
@@ -234,7 +235,6 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
       text,
       style: TextStyle(
         fontSize: size.toDouble(),
-        color: grey,
         fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
     );
