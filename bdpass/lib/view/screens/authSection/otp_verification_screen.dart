@@ -140,12 +140,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
                 Text(
                   "Please enter the OTP (One Time Password) sent via SMS to mobile 971557403260",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
                   height: 20,
                 ),
+
+                //OTP Boxes
                 _buildOtpInput(context, screenWidth, isDarkMode),
+
                 SizedBox(height: 12),
                 Padding(
                   padding:
@@ -155,101 +158,36 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildLabelText(
-                          context,
-                          "Didn't receive the OTP yet?",
-                          12,
-                          true),
-                      SizedBox(height: 8,),
+                          context, "Didn't receive the OTP yet?", 11, true),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _countdownTimer(),
                           //Spacer(),
-                          SizedBox(width: 5,),
+                          SizedBox(
+                            width: 5,
+                          ),
                           if (resendOtp) _resendOtpButton(context)
                         ],
                       )
                     ],
                   ),
                 ),
-                /* _buildPhoneInput(
-                    context,
-                    Languages.of(context)!.labelEmail,
-                    _emailController,
-                    Icon(
-                      Icons.mail,
-                      size: 18,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                    ),
-                    1.0),*/
                 Spacer(),
-                /*_buildFooter(
-                    context: context,
-                    text: "Continue",
-                    onTap: () {
-                      //onPressedFrontImage();
-                      Navigator.pushNamed(context, "/AccountRecoveryScreen");
-                    }),*/
-
                 CustomNumberKeyboard(onKeyTap: (value) async {
                   if (value == "clear") {
                     _handleBackspace();
                   } else if (value == "submit") {
-                    String otp = _inputValues
-                        .map((controller) => controller)
-                        .join();
+                    String otp =
+                        _inputValues.map((controller) => controller).join();
                     Navigator.pushNamed(context, "/AccountRecoveryScreen");
-                    /*if (otp.isNotEmpty && otp.length == 6) {
-                      /*String otp =
-                                _controllers.map((controller) => controller.text).join();*/
-                      const maxDuration = Duration(seconds: 2);
-                      if (otp.isNotEmpty && otp.length == 6) {
-                        setState(() {
-                          isLoading = true;
-                        });
-
-                        bool isConnected = await _connectivityService.isConnected();
-                        if (!isConnected) {
-                          setState(() {
-                            isLoading = false;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('${Languages.of(context)?.labelNoInternetConnection}'),
-                                duration: maxDuration,
-                              ),
-                            );
-                          });
-                        } else {
-                          PhoneRequest phoneRequest = PhoneRequest(
-                              customer: Customer(
-                                  phoneNumber: widget.data.toString(),
-                                  mobileOtp: otp,
-                                  countryId: null));
-                          await Provider.of<MainViewModel>(context, listen: false)
-                              .fetchOtpVerifyData(
-                              "/api/v1/app/temp_customers/verify_customer_mobile_otp_for_signup",
-                              phoneRequest);
-
-                          ApiResponse apiResponse =
-                              Provider.of<MainViewModel>(context, listen: false)
-                                  .response;
-                          getOtpResponseDataWidget(context, apiResponse);
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                '${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
-                            duration: maxDuration,
-                          ),
-                        );
-                      }
-                    }*/
                   } else {
                     _handleKeyTap(value);
                   }
                 }),
-
               ],
             ),
           ),
@@ -277,8 +215,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           endTime: endTime,
           format: CountDownTimerFormat.minutesSeconds,
           enableDescriptions: false,
-          spacerWidth: 2,
-          timeTextStyle: TextStyle(fontWeight: FontWeight.w600),
+          spacerWidth: 1,
+          timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
           onEnd: () {
             setState(() {
               resendOtp = true;
@@ -287,16 +225,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         ),
       ],
     );
-  }
-
-  void _changeItem(CountryData? newValue) {
-    setState(() {
-      print("${newValue?.id}");
-      //countryCode = int.parse("${newValue?.id}");
-      //phoneCode = "${newValue?.code}";
-      //selectedCountryCode = "${newValue?.phoneCode}";
-      ///selectedItem = "${newValue?.flagImageUrl}";
-    });
   }
 
   _buildLabelText(BuildContext context, String text, int size, bool isBold) {
@@ -323,10 +251,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             decoration: BoxDecoration(
               border: Border.all(
                   color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(100),
             ),
             width: screenWidth / 8.1,
-            height: 62.0,
+            height: 52.0,
             child: Center(
               child: Text(
                 _inputValues[index],
@@ -347,6 +275,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.black87,
+            fontSize: 12,
             decoration: TextDecoration.underline,
           ),
         ));

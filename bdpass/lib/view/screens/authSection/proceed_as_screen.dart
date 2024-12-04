@@ -56,7 +56,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     "Proceed As",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 GestureDetector(
@@ -90,12 +90,12 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
 
   Widget _buildCard(IconData icon, String heading, String detail) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: Row(
           children: [
-            Icon(icon),
+            Icon(icon, color: Colors.brown, size: 28,),
             SizedBox(
               width: 8,
             ),
@@ -104,19 +104,19 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
               children: [
                 Text(
                   heading,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 Container(
                     width: screenWidth * 0.66,
                     child: Text(
                       detail,
-                      style: TextStyle(fontSize: 9),
+                      style: TextStyle(fontSize: 12),
                       overflow: TextOverflow.visible,
                     )),
               ],
             ),
             Spacer(),
-            Icon(Icons.arrow_forward_ios_sharp)
+            Icon(Icons.arrow_forward_ios_sharp, size: 18,)
           ],
         ),
       ),

@@ -123,7 +123,7 @@ flutter:
       - assets/slide_1.png
       - assets/slide_2.png
       - assets/slide_3.png
-      #- assets/video.mp4
+      - assets/video.mp4
   fonts:
     - family: CustomFont
       fonts:

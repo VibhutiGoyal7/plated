@@ -105,8 +105,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 Spacer(),
                 CustomButtonComponent(text: "Scan Now",
                     screenWidth: screenWidth, onTap: () {
-                  //Navigator.pushNamed(context, "/PhoneVerificationScreen");
-                  Navigator.pushNamed(context, "/FaceDetectorView");
+                  Navigator.pushNamed(context, "/PhoneVerificationScreen");
+                  //Navigator.pushNamed(context, "/FaceDetectorView");
                 }),
                 SizedBox(
                   height: 35,

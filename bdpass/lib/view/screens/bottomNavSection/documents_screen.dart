@@ -3,12 +3,10 @@ import 'package:BDPass/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/request/checkCustomerRequest.dart';
-import '../../../utils/Helper.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
@@ -32,7 +30,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   final ScrollController _scrollController = ScrollController();
   List<CheckCustomerResponse>? prefResponse = <CheckCustomerResponse>[];
   late bool isDarkMode;
-  List<String> list =["Driving License","Emirate ID card","Residence Visa","Emirate ID card","Residence Visa","Emirate ID card","Residence Visa","Emirate ID card","Residence Visa"];
+  List<String> list = [
+    "Driving License",
+    "Emirate ID card",
+    "Residence Visa",
+    "Emirate ID card",
+    "Residence Visa",
+    "Emirate ID card",
+    "Residence Visa",
+    "Emirate ID card",
+    "Residence Visa"
+  ];
 
   @override
   void initState() {
@@ -90,10 +98,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               AnnotatedRegion<SystemUiOverlayStyle>(
                 value: SystemUiOverlayStyle(
                     statusBarColor: Colors.transparent,
-                    statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark),
+                    statusBarIconBrightness:
+                        isDarkMode ? Brightness.light : Brightness.dark),
                 child: Stack(
                   children: <Widget>[
-                   /* Container(
+                    /* Container(
                       height: screenHeight * 0.27,
                       child: Column(
                         children: [
@@ -111,7 +120,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     ),*/
                     SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0 ,vertical: 12.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           //mainAxisAlignment: MainAxisAlignment.center,
@@ -119,59 +129,101 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Documents",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                                Text(
+                                  "Documents",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Icon(Icons.search_outlined,size: 24,),
-                                    SizedBox(width: 12,),
-                                    Icon(Icons.transfer_within_a_station_outlined,size: 20,),
-                                    SizedBox(width: 12,),
-                                    Icon(Icons.menu_sharp,size: 24,),
-                                    SizedBox(width: 6,),
+                                    Icon(
+                                      Icons.search_outlined,
+                                      size: 24,
+                                    ),
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    Icon(
+                                      Icons.transfer_within_a_station_outlined,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    Icon(
+                                      Icons.menu_sharp,
+                                      size: 24,
+                                    ),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
                                   ],
                                 ),
                               ],
                             ),
-                            SizedBox(height: 12,),
+                            SizedBox(
+                              height: 12,
+                            ),
                             Container(
                               height: 30,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey,width: 0.6)
-                              ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                      color: Colors.grey, width: 0.6)),
                               child: Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text("Issued"),
-                                    SizedBox(width: 6,),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
                                     Container(
                                       width: 1,
                                       color: Colors.grey,
                                     ),
-                                    SizedBox(width: 6,),
+                                    SizedBox(
+                                      width: 6,
+                                    ),
                                     Text("Uploaded"),
                                   ],
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8,),
+                            SizedBox(
+                              height: 8,
+                            ),
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: [
-                                  _buildTab(Icons.file_copy_sharp,"All Documents"),
-                                  _buildTab(Icons.person_outline_outlined,"Personal"),
-                                  _buildTab(Icons.local_post_office_outlined,"Professional"),
-                                  _buildTab(Icons.padding_outlined,"Legal"),
-                                  _buildTab(Icons.home_work_outlined,"Property"),
+                                  _buildTab(
+                                      Icons.file_copy_sharp, "All Documents"),
+                                  _buildTab(Icons.person_outline_outlined,
+                                      "Personal"),
+                                  _buildTab(Icons.local_post_office_outlined,
+                                      "Professional"),
+                                  _buildTab(Icons.padding_outlined, "Legal"),
+                                  _buildTab(
+                                      Icons.home_work_outlined, "Property"),
                                 ],
                               ),
                             ),
-                            SizedBox(height: 4,),
-                            Text("7 issued documents under 'All Documents'",style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.black54),),
-                            SizedBox(height: 8,),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "7 issued documents under 'All Documents'",
+                              style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black54),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
                             Expanded(
                               child: ListView.builder(
                                 physics: const AlwaysScrollableScrollPhysics(),
@@ -184,7 +236,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 },
                               ),
                             ),
-                            _buildFooter( context: context, text: 'Request a document', onTap: () {  }, )
+                            _buildFooter(
+                              context: context,
+                              text: 'Request a document',
+                              onTap: () {},
+                            )
                           ],
                         ),
                       ),
@@ -197,8 +253,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       children: [
                         // Block interaction
                         ModalBarrier(
-                            dismissible: false,
-                            color: Colors.transparent),
+                            dismissible: false, color: Colors.transparent),
                         // Loader indicator
                         Center(
                           child: CircularProgressIndicator(),
@@ -213,60 +268,72 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     );
   }
 
-  Widget _buildTab(IconData icon, String text){
+  Widget _buildTab(IconData icon, String text) {
     return Container(
-      margin: EdgeInsets.only(right: 4,top: 2,bottom: 2),
-      padding: EdgeInsets.symmetric(horizontal: 6,vertical: 5),
+      margin: EdgeInsets.only(right: 4, top: 2, bottom: 2),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.grey,
-          width: 0.6
-        )
-      ),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey, width: 0.6)),
       child: Row(
         children: [
-          Icon(icon,size: 16,),
-          SizedBox(width: 2,),
-          Text("$text",style: TextStyle(fontSize: 11),)
+          Icon(
+            icon,
+            size: 16,
+          ),
+          SizedBox(
+            width: 2,
+          ),
+          Text(
+            "$text",
+            style: TextStyle(fontSize: 11),
+          )
         ],
       ),
     );
   }
-  
-  Widget _buildCard(String text){
+
+  Widget _buildCard(String text) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 5,horizontal: 4),
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 4),
       elevation: 4,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 14,horizontal: 12),
-        child: 
-        Row(
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Valid until 10 Dec 2026",style: TextStyle(fontSize: 10,color: AppColor.PRIMARY),),
-                SizedBox(height: 1,),
-                Text("$text",style: TextStyle(fontSize: 13)),
-                Text("Ministry of Interior",style: TextStyle(fontSize: 10,color: Colors.black45,fontWeight: FontWeight.bold)),
+                Text(
+                  "Valid until 10 Dec 2026",
+                  style: TextStyle(fontSize: 10, color: AppColor.PRIMARY),
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text("$text", style: TextStyle(fontSize: 13)),
+                Text("Ministry of Interior",
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.black45,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
-            Icon(Icons.keyboard_control_outlined,)
+            Icon(
+              Icons.keyboard_control_outlined,
+            )
           ],
         ),
       ),
     );
   }
 
-
-
   Widget _buildFooter(
       {required BuildContext context,
-        required String text,
-        required VoidCallback onTap}) {
+      required String text,
+      required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -280,14 +347,13 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(
-                 fontSize: 13, color: Colors.white),
+            style: TextStyle(fontSize: 13, color: Colors.white),
           ),
         ),
       ),
     );
   }
-  
+
   Future<void> _fetchData(String userSelected) async {
     //_isValidInput();
     const maxDuration = Duration(seconds: 2);
@@ -314,11 +380,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       } else {
         String user = userSelected;
 
-          phoneNo = null;
-          username = user;
+        phoneNo = null;
+        username = user;
         CheckCustomerRequest request =
             CheckCustomerRequest(username: username, phoneNo: phoneNo);
-  /*      await Provider.of<MainViewModel>(context, listen: false)
+        /*      await Provider.of<MainViewModel>(context, listen: false)
             .checkCustomerByUsername(
                 "api/v1/app/customers/check_customer_by_username", request);*/
         ApiResponse apiResponse =
@@ -332,5 +398,4 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       ));
     }
   }
-
 }

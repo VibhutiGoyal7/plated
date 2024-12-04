@@ -14,7 +14,7 @@ class AppTheme {
             letterSpacing: 0.5),
         actionsIconTheme: const IconThemeData(color: AppColor.BLACK),
         iconTheme: const IconThemeData(color: AppColor.BLACK),
-        backgroundColor: AppColor.WHITE,
+        backgroundColor: AppColor.BG_COLOR,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: AppColor.WHITE4,
