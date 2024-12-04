@@ -328,7 +328,10 @@ class _CameraViewState extends State<CameraView> {
                 Image.file(File(picture.path)), // Display the captured image
                 TextButton(
                   onPressed: () {
+                    _stopLiveFeed();
+                    _faceDetector.close();
                     Navigator.of(context).pop(); // Close the dialog
+                    Navigator.pushNamed(context, "/PhoneVerificationScreen");
                   },
                   child: Text('Close'),
                 ),
