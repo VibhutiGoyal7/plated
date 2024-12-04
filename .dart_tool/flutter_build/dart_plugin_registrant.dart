@@ -6,7 +6,7 @@
 // @dart = 2.12
 
 import 'dart:io'; // flutter_ignore: dart_io_import.
-import 'package:flutter_image_compress_common/flutter_image_compress_common.dart';
+import 'package:camera_android_camerax/camera_android_camerax.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:local_auth_android/local_auth_android.dart';
@@ -15,7 +15,7 @@ import 'package:shared_preferences_android/shared_preferences_android.dart';
 import 'package:sqflite_android/sqflite_android.dart';
 import 'package:video_player_android/video_player_android.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'package:flutter_image_compress_common/flutter_image_compress_common.dart';
+import 'package:camera_avfoundation/camera_avfoundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker_ios/image_picker_ios.dart';
 import 'package:local_auth_darwin/local_auth_darwin.dart';
@@ -35,7 +35,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences_linux/shared_preferences_linux.dart';
 import 'package:url_launcher_linux/url_launcher_linux.dart';
 import 'package:file_selector_macos/file_selector_macos.dart';
-import 'package:flutter_image_compress_macos/flutter_image_compress_macos.dart';
 import 'package:flutter_keyboard_visibility_macos/flutter_keyboard_visibility_macos.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker_macos/image_picker_macos.dart';
@@ -62,10 +61,10 @@ class _PluginRegistrant {
   static void register() {
     if (Platform.isAndroid) {
       try {
-        FlutterImageCompressCommon.registerWith();
+        AndroidCameraCameraX.registerWith();
       } catch (err) {
         print(
-          '`flutter_image_compress_common` threw an error: $err. '
+          '`camera_android_camerax` threw an error: $err. '
           'The app may not function as expected until you remove this plugin from pubspec.yaml'
         );
       }
@@ -144,10 +143,10 @@ class _PluginRegistrant {
 
     } else if (Platform.isIOS) {
       try {
-        FlutterImageCompressCommon.registerWith();
+        AVFoundationCamera.registerWith();
       } catch (err) {
         print(
-          '`flutter_image_compress_common` threw an error: $err. '
+          '`camera_avfoundation` threw an error: $err. '
           'The app may not function as expected until you remove this plugin from pubspec.yaml'
         );
       }
@@ -321,15 +320,6 @@ class _PluginRegistrant {
       } catch (err) {
         print(
           '`file_selector_macos` threw an error: $err. '
-          'The app may not function as expected until you remove this plugin from pubspec.yaml'
-        );
-      }
-
-      try {
-        FlutterImageCompressMacos.registerWith();
-      } catch (err) {
-        print(
-          '`flutter_image_compress_macos` threw an error: $err. '
           'The app may not function as expected until you remove this plugin from pubspec.yaml'
         );
       }

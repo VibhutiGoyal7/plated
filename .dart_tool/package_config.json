@@ -104,6 +104,36 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "camera",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/camera-0.11.0+2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "camera_android_camerax",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/camera_android_camerax-0.6.10",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "camera_avfoundation",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/camera_avfoundation-0.9.17+5",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "camera_platform_interface",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/camera_platform_interface-2.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "camera_web",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/camera_web-0.3.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "carousel_slider",
       "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/carousel_slider-4.2.1",
       "packageUri": "lib/",
@@ -470,6 +500,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "flutter_mrz_scanner",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/flutter_mrz_scanner-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter_plugin_android_lifecycle",
       "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.23",
       "packageUri": "lib/",
@@ -522,6 +558,18 @@
       "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/google_fonts-4.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
+    },
+    {
+      "name": "google_mlkit_commons",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "google_mlkit_text_recognition",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/google_mlkit_text_recognition-0.14.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
     },
     {
       "name": "graphs",
@@ -734,6 +782,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "mrz_parser",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/mrz_parser-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "nested",
       "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/nested-1.0.0",
       "packageUri": "lib/",
@@ -873,7 +927,7 @@
     },
     {
       "name": "process_run",
-      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/process_run-1.2.2",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/process_run-1.2.2+1",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -1293,7 +1347,7 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/win32-5.8.0",
+      "rootUri": "file:///Users/akashsingh/.pub-cache/hosted/pub.dev/win32-5.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
@@ -1328,7 +1382,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2024-11-28T14:19:06.038699Z",
+  "generated": "2024-12-02T13:40:34.254350Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///Users/akashsingh/StudioProjects/flutter",
