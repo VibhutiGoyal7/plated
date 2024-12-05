@@ -46,9 +46,9 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
     // Sample list
     final List<ListItem> items = [
       ListItem(Icons.house_sharp, Languages.of(context)!.labelCitizenOrResident,
-          "Individual holding ID issued by BD Government"),
+          "${Languages.of(context)?.labelHoldingIdIssuedByGovernment}"),
       ListItem(Icons.shopping_bag_outlined, Languages.of(context)!.labelVisitor,
-          "Individual holding ID or passport issued countries other than BD."),
+          "${Languages.of(context)?.labelHoldingIdOrPassportIssuedByOtherCountries}"),
     ];
 
     return Scaffold(
@@ -71,7 +71,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
             ),
             centerTitle: false,
             collapseMode: CollapseMode.parallax,
-            title: Text("Proceed As",
+            title: Text("${Languages.of(context)?.labelProceedAs}",
                 style: TextStyle(
                   color: AppColor.TEXT_COLOR,
                   fontWeight: FontWeight.bold,

@@ -140,7 +140,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     setState(() {
                       isInstruction = false;
                     });
-                    Navigator.pushNamed(context, "/ProceedAsScreen");
+                    Navigator.pushNamed(context, "/TermsConditionsScreen");
                   },
                   child: InstructionScreen())
               : SizedBox(),

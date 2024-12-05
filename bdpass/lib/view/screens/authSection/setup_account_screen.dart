@@ -149,20 +149,20 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                 height: 15,
                               ),
                               _buildLabelText(
-                                  context, "Confirm Details", 24, true),
+                                  context, "${Languages.of(context)?.labelConfirmDetails}", 24, true),
                               SizedBox(height: 4),
                               _buildLabelText(
                                   context,
-                                  "Please review and confirm details",
+                                  "${Languages.of(context)?.labelPleaseReviewAndConfirm}",
                                   13,
                                   false),
                               SizedBox(height: 25),
                               _buildLabelText(
-                                  context, "Personal Details", 14, false),
+                                  context, "${Languages.of(context)?.labelPersonalDetails}", 14, false),
                               SizedBox(height: 4),
                               _buildPhoneInput(
                                   context,
-                                  "ID Number",
+                                  "${Languages.of(context)?.labelIDNumber}",
                                   _nameController,
                                   Icon(
                                     Icons.person,
@@ -174,7 +174,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               SizedBox(height: 5),
                               _buildPhoneInput(
                                   context,
-                                  "First Name",
+                                  "${Languages.of(context)?.labelFirstName}",
                                   _nameController,
                                   Icon(
                                     Icons.person,
@@ -210,7 +210,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               SizedBox(height: 5),
                               _buildPhoneInput(
                                   context,
-                                  "Nationality",
+                                  "${Languages.of(context)?.labelNationality}",
                                   _emailController,
                                   Icon(
                                     Icons.mail,
@@ -222,7 +222,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               SizedBox(height: 5),
                               _buildPhoneInput(
                                   context,
-                                  "Gender",
+                                  "${Languages.of(context)?.labelGender}",
                                   _passwordController,
                                   Icon(
                                     Icons.mail,
@@ -234,7 +234,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               SizedBox(height: 5),
                               _buildPhoneInput(
                                   context,
-                                  "Expiry Date",
+                                  "${Languages.of(context)?.labelExpiryDate}",
                                   _confirmPasswordController,
                                   Icon(
                                     Icons.mail,

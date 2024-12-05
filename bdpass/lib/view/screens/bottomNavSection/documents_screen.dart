@@ -49,7 +49,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   void initState() {
     super.initState();
     setState(() {
-      selected = "${Languages.of(context)?.labelAllDocuments}";
+      selected = "All Documents";
     });
   }
 

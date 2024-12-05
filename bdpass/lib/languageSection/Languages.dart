@@ -678,25 +678,51 @@ abstract class Languages {
 
   String get labelSendAgain;
 
-/*  String get label;
+  String get labelProvideMobileNoAndEmail;
 
-  String get label;
+  String get labelHoldingIdIssuedByGovernment;
 
-  String get label;
+  String get labelHoldingIdOrPassportIssuedByOtherCountries;
 
-  String get label;
+  String get labelProceedAs;
 
-  String get label;
+  String get labelMobileBasedSecureSignIn;
 
-  String get label;
+  String get labelLoginAndSignupToDigital;
 
-  String get label;
+  String get labelDigitalSignature;
 
-  String get label;
+  String get labelSignAndVerifyDigitally;
 
-  String get label;
+  String get labelDocumentSharing;
 
-  String get label;
+  String get labelRequestAndShareOfficialDocs;
 
-  String get label;*/
+  String get labelFirstNationalDigitalId;
+
+  String get labelFirstDigitalID;
+
+  String get labelScanBDID;
+
+  String get labelUseDeviceCamToScan;
+
+  String get labelScanNow;
+
+  String get labelNationalIdentityForAll;
+
+  String get labelEnglish;
+
+  String get labelBangladesh;
+
+  String get labelTermAndCondition;
+
+  String get labelBDPassTermsOfUse;
+
+  String get labelVersion;
+
+  String get labelWelcomeToBDPass;
+
+  String get labelReadAllTermsConditions;
+
+  String get labelAccept;
 }

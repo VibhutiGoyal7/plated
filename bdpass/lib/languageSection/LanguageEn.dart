@@ -908,7 +908,7 @@ class LanguageEn extends Languages {
   String get labelVerifiedAccount => "Verified Account";
 
   @override
-  String get labelVerifySignature => "Verify/n Signature";
+  String get labelVerifySignature => "Verify\nSignature";
 
   @override
   String get labelAccountBenefits => "Account Benefits";
@@ -1020,6 +1020,78 @@ class LanguageEn extends Languages {
 
   @override
   String get labelVerifyYourMobileNumber => "Verify Your Mobile Number";
-  //
+
+  @override
+  String get labelHoldingIdIssuedByGovernment => "Individual holding ID issued by BD Government";
+
+  @override
+  String get labelHoldingIdOrPassportIssuedByOtherCountries => "Individual holding ID or passport issued by countries other than BD.";
+
+  @override
+  String get labelLoginAndSignupToDigital => "Login and Sign up to many digital services with one account";
+
+  @override
+  String get labelMobileBasedSecureSignIn => "Mobile Based Secure Sign In";
+
+  @override
+  String get labelProceedAs => "Proceed As";
+
+  @override
+  String get labelProvideMobileNoAndEmail => "Please provide your mobile number and email address to proceed";
+
+  @override
+  String get labelBangladesh => "Bangladesh";
+
+  @override
+  String get labelDigitalSignature => "Digital Signature";
+
+  @override 
+  String get labelDocumentSharing => "Document Sharing";
+
+  @override 
+  String get labelEnglish => "English";
+
+  @override 
+  String get labelFirstDigitalID => "The First digital identity of BD";
+
+  @override 
+  String get labelFirstNationalDigitalId => "The first national digital identity of BD.";
+
+  @override 
+  String get labelNationalIdentityForAll => "The National Digital Identity for all citizens, residents and visitors in Bangladesh.";
+
+  @override 
+  String get labelRequestAndShareOfficialDocs => "Request and share official documents";
+
+  @override 
+  String get labelScanBDID => "Scan Your BD ID";
+
+  @override 
+  String get labelScanNow => "Scan Now";
+
+  @override 
+  String get labelSignAndVerifyDigitally => "Sign and verify document digitally";
+
+  @override 
+  String get labelUseDeviceCamToScan => "Use your device's camera to scan your BD ID";
+//
+  @override
+  String get labelAccept => "Accept";
+
+  @override
+  String get labelBDPassTermsOfUse => "BD Pass Terms of Use";
+
+  @override
+  String get labelReadAllTermsConditions => "I have read all the terms & conditions";
+
+  @override
+  String get labelTermAndCondition => "Terms & Conditions";
+
+  @override
+  String get labelVersion => "Version";
+
+  @override
+  String get labelWelcomeToBDPass => "Welcome to BD Pass";
+
 
 }

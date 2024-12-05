@@ -18,6 +18,7 @@ import 'package:BDPass/view/screens/authSection/proceed_as_screen.dart';
 import 'package:BDPass/view/screens/authSection/signin_screen.dart';
 import 'package:BDPass/view/screens/authSection/slider_screen.dart';
 import 'package:BDPass/view/screens/authSection/splash_screen.dart';
+import 'package:BDPass/view/screens/authSection/terms_conditions_screen.dart';
 import 'package:BDPass/view/screens/authSection/verification_screen.dart';
 import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/account_benefit_screen.dart';
@@ -208,6 +209,9 @@ class _MyAppState extends State<MyApp> {
             },
             '/CreateAccountScreen': (context) {
               return CreateAccountScreen();
+            },
+            '/TermsConditionsScreen': (context) {
+              return TermsConditionsScreen();
             },
             '/ProceedAsScreen': (context) {
               return ProceedAsScreen();

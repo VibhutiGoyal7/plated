@@ -84,23 +84,23 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                   children: [
                     InstructionStep(
                         icon: Icons.document_scanner_rounded,
-                        title: "Step 1",
+                        title: "${Languages.of(context)?.labelStep} 1",
                         isActive: true,
                         iconColor: Colors.green.shade900),
                     InstructionStep(
                         icon: Icons.person_sharp,
-                        title: "Step 2",
+                        title: "${Languages.of(context)?.labelStep} 2",
                         isActive: true,
                         iconColor: Colors.green.shade900),
                     InstructionStep(
                         icon: Icons.lock_sharp,
-                        title: "Step 3",
+                        title: "${Languages.of(context)?.labelStep} 3",
                         isActive: false,
                         iconColor: Colors.green.shade900),
                   ],
                 ),
                 Text(
-                  "Please provide your mobile number and email address to proceed",
+                  "${Languages.of(context)?.labelProvideMobileNoAndEmail}",
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
@@ -220,7 +220,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                             size: 20,
                             color: isDarkMode ? Colors.white : Colors.black,
                           ),
-                          0.68),
+                          0.66),
                     ],
                   ),
                 ),
@@ -237,7 +237,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 Spacer(),
                 Center(
                     child: CustomButtonComponent(
-                        text: "Continue",
+                        text: "${Languages.of(context)?.labelContinue}",
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
                         onTap: () {

@@ -94,7 +94,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 height: 8,
                               ),
                               Text(
-                                "The National Digital Identity for all citizens, residents and visitors in Bangladesh.",
+                                "${Languages.of(context)?.labelNationalDigitalIdentityForAllCitizens}",
                                 style: TextStyle(
                                     fontSize: 12, color: AppColor.WHITE),
                               ),
@@ -143,7 +143,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: ElevatedButton(
               onPressed: onTap,
               child: Text(
-                "English",
+                "${Languages.of(context)?.labelEnglish}",
                 style: TextStyle(
                     color: AppColor.PRIMARY, fontWeight: FontWeight.bold),
               ),
@@ -163,7 +163,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: ElevatedButton(
               onPressed: onTap,
               child: Text(
-                "Bangladesh",
+                "${Languages.of(context)?.labelBangladesh}",
                 style: TextStyle(
                     color: AppColor.PRIMARY, fontWeight: FontWeight.bold),
               ),

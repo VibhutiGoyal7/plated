@@ -88,7 +88,7 @@ class _SliderScreenState extends State<SliderScreen> {
               Spacer(),
               _buildFooter(
                   context: context,
-                  text: "Continue",
+                  text: "${Languages.of(context)?.labelContinue}",
                   onTap: () {
                     Navigator.pushNamed(context, '/CreateAccountScreen');
                   }),
@@ -127,7 +127,7 @@ class _SliderScreenState extends State<SliderScreen> {
           height: 6,
         ),
         Text(
-          "Mobile Based Secure Sign In",
+          "${Languages.of(context)?.labelMobileBasedSecureSignIn}",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -137,7 +137,7 @@ class _SliderScreenState extends State<SliderScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "Login and Sign up to many digital services with one account",
+            "${Languages.of(context)?.labelLoginAndSignupToDigital}",
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -162,7 +162,7 @@ class _SliderScreenState extends State<SliderScreen> {
           height: 2,
         ),
         Text(
-          "Digital Signature",
+          "${Languages.of(context)?.labelDigitalSignature}",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -172,7 +172,7 @@ class _SliderScreenState extends State<SliderScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "Sign and verify document digitally",
+            "${Languages.of(context)?.labelSignAndVerifyDigitally}",
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -197,7 +197,7 @@ class _SliderScreenState extends State<SliderScreen> {
           height: 2,
         ),
         Text(
-          "Document Sharing",
+          "${Languages.of(context)?.labelDocumentSharing}",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -207,7 +207,7 @@ class _SliderScreenState extends State<SliderScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "Request and share  official documents",
+            "${Languages.of(context)?.labelRequestAndShareOfficialDocs}",
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -232,7 +232,7 @@ class _SliderScreenState extends State<SliderScreen> {
           height: 2,
         ),
         Text(
-          "The first national digital identity of UAE.",
+          "${Languages.of(context)?.labelFirstNationalDigitalId}",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -242,7 +242,7 @@ class _SliderScreenState extends State<SliderScreen> {
           width: screenWidth * 0.9,
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            "The First digital identity of BD",
+            "${Languages.of(context)?.labelFirstDigitalID}",
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),

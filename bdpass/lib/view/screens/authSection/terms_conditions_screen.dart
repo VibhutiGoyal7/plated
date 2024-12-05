@@ -1,33 +1,37 @@
 import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/utils/Helper.dart';
-import 'package:BDPass/view/component/custom_button_component.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_button_component.dart';
 import '../../component/instruction_step.dart';
 
-class VerificationScreen extends StatefulWidget {
+class TermsConditionsScreen extends StatefulWidget {
   @override
-  _VerificationScreenState createState() => _VerificationScreenState();
+  _TermsConditionsScreenState createState() =>
+      _TermsConditionsScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
+class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
   String token = "";
   late double screenWidth;
   late double screenHeight;
-  PageController _pageController = PageController();
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
-  List<CountryData> countryList = [];
-  File? docImg;
+  bool isDarkMode = false;
+  bool isChecked = false;
+  bool _isToggled = false;
 
   @override
   void initState() {
@@ -37,7 +41,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -51,66 +55,77 @@ class _VerificationScreenState extends State<VerificationScreen> {
       body: SafeArea(
         child: Stack(children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14),
+            padding: const EdgeInsets.symmetric( horizontal: 14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  "${Languages.of(context)?.labelTermAndCondition}",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8,),
+                Text(
+                  "${Languages.of(context)?.labelBDPassTermsOfUse}",
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${Languages.of(context)?.labelVersion} 1.0",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4,),
+                Text(
+                  "${Languages.of(context)?.labelWelcomeToBDPass}",
+                  style: TextStyle(fontSize: 12,),
+                ),
                 SizedBox(
-                  height: 8,
+                  height: 5,
                 ),
-                Image(
-                  height: screenHeight * 0.06,
-                  image: AssetImage(isDarkMode
-                      ? "assets/app_logo_dark.png"
-                      : "assets/app_logo.png"),
-                  fit: BoxFit.cover,
+                SingleChildScrollView(
+                  child: Container(
+                    height: screenHeight*0.61,
+                    child: Column(
+                      children: [
+                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consequat ligula vel ante efficitur, eu auctor urna fermentum. Aenean hendrerit placerat justo et lobortis. Nulla mauris lectus, congue non libero vel",
+                        style: TextStyle(fontSize: 11),),
+                        Padding(
+                          padding: const EdgeInsets.only(top : 8.0,left: 18),
+                          child: Text("1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\n2.Fusce volutpat felis eget sollicitudin dictum.\n\n3.Maecenas rhoncus nulla non nisl finibus, sit amet ultrices dolor fringilla.\n\n4.Pellentesque scelerisque velit et vestibulum tempor.\n\n5.Phasellus lobortis lacus non purus dignissim, nec tincidunt urna volutpat.\n\n6.Nunc mollis purus quis odio accumsan imperdiet.",
+                            style: TextStyle(fontSize: 11),),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-                /*Text(
-                  "BD ID",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),*/
+                SizedBox(height: 5,),
                 Row(
                   children: [
-                    InstructionStep(
-                        icon: Icons.document_scanner_rounded,
-                        title: "${Languages.of(context)?.labelStep} 1",
-                        isActive: true,
-                        iconColor: Colors.green.shade900),
-                    InstructionStep(
-                        icon: Icons.person_sharp,
-                        title: "${Languages.of(context)?.labelStep} 2",
-                        isActive: false,
-                        iconColor: Colors.green.shade900),
-                    InstructionStep(
-                        icon: Icons.lock_sharp,
-                        title: "${Languages.of(context)?.labelStep} 3",
-                        isActive: false,
-                        iconColor: Colors.green.shade900),
+                    Switch(
+                      value: _isToggled,
+                      activeColor:AppColor.PRIMARY ,
+                      inactiveTrackColor: Colors.red,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _isToggled = value;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 8,),
+                    Text("${Languages.of(context)?.labelReadAllTermsConditions}",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),)
                   ],
                 ),
-                Text(
-                  "${Languages.of(context)?.labelScanBDID}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${Languages.of(context)?.labelUseDeviceCamToScan}",
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                ),
-                Image(
-                  //alignment: Alignment.topLeft,
-                  width: screenWidth,
-                  height: screenHeight * 0.5,
-                  image: AssetImage("assets/slide_1.png"),
-                ),
-                Spacer(),
-                CustomButtonComponent(text: "${Languages.of(context)?.labelScanNow}",
-                    isDarkMode: isDarkMode,
-                    screenWidth: screenWidth, onTap: () {
-                  Navigator.pushNamed(context, "/PhoneVerificationScreen");
-                  //Navigator.pushNamed(context, "/FaceDetectorView");
-                }),
                 SizedBox(
-                  height: 35,
+                  height: 2,
+                ),
+                Center(
+                    child: CustomButtonComponent(
+                        text: "${Languages.of(context)?.labelAccept}",
+                        screenWidth: screenWidth,
+                        isDarkMode: isDarkMode,
+                        onTap: () {
+                          Navigator.pushNamed(context, "/ProceedAsScreen");
+                        })),
+                SizedBox(
+                  height: 20,
                 )
               ],
             ),
@@ -130,21 +145,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
         ]),
       ),
     );
-  }
-
-  void onPressedFrontImage() async {
-    List<String> pictures;
-    try {
-      pictures = await CunningDocumentScanner.getPictures(noOfPages: 1) ?? [];
-      if (!mounted) return;
-      setState(() {
-        print("Front Image: ${pictures}");
-        docImg = File(pictures.first);
-        print("Front Image: $docImg");
-      });
-    } catch (exception) {
-      // Handle exception here
-    }
   }
 
   void _fetchData() async {
@@ -188,17 +188,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 
-        countryList = countryListResponse!.countries!;
-        Helper.saveCountryList(countryList);
-        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        print("countriess ${countryList}");
         return Center(
           child: Text('Please try again later!!!'),
         );

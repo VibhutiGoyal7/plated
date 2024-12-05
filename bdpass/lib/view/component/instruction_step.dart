@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../languageSection/Languages.dart';
+
 class InstructionStep extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -19,7 +21,7 @@ class InstructionStep extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.08,
       child: Row(
         children: [
-          title == "Step 1"
+          title == "${Languages.of(context)?.labelStep} 1"
               ? SizedBox(
                 )
               : Container(
@@ -33,7 +35,7 @@ class InstructionStep extends StatelessWidget {
                 : Colors.grey,
             child: Icon(icon, color: isActive ? Colors.white : Colors.white),
           ),
-          title == "Step 3"
+          title == "${Languages.of(context)?.labelStep} 3"
               ? SizedBox()
               : Container(
                 width: MediaQuery.of(context).size.height*0.047,
