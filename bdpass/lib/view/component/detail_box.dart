@@ -14,7 +14,7 @@ class DetailBox extends StatelessWidget  {
        {
         bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
       return Padding(
-        padding: const EdgeInsets.symmetric( vertical: 2.0),
+        padding: const EdgeInsets.symmetric( vertical: 1.0),
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Container(

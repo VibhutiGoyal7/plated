@@ -76,7 +76,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                   height: 8,
                 ),
                 Text(
-                  "Verification Details",
+                  Languages.of(context)!.labelVerificationDetails,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Row(
@@ -115,7 +115,6 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         onTap: () {
                           showCountryPicker(
                             useSafeArea: true,
-
                             context: context,
                             showPhoneCode: true,
                             // Show phone code next to country
@@ -211,14 +210,14 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                       ),
                       _buildPhoneInput(
                           context,
-                          "Mobile Number",
+                          Languages.of(context)!.labelMobileNumber,
                           _phoneNoController,
                           Icon(
                             Icons.person,
                             size: 20,
                             color: isDarkMode ? Colors.white : Colors.black,
                           ),
-                          0.65),
+                          0.68),
                     ],
                   ),
                 ),
@@ -235,7 +234,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 Spacer(),
                 _buildFooter(
                     context: context,
-                    text: "Continue",
+                    text: Languages.of(context)!.labelContinue,
                     onTap: () {
                       //onPressedFrontImage();
                       Navigator.pushNamed(context, "/OtpVerificationScreen");

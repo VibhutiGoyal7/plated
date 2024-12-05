@@ -783,4 +783,19 @@ class LanguageAr extends Languages {
   @override
   String get labelWithdrawOtp => "Withdraw Otp";
 
+  @override
+  String get labelCitizenOrResident => "Citizen or Resident";
+
+  @override
+  String get labelVisitor => "Visitor";
+
+  @override
+  String get labelMobileNumber => "Mobile Number";
+
+  @override
+  String get labelContinue => "Continue";
+
+  @override
+  String get labelVerificationDetails => "Verification Details";
+
 }
