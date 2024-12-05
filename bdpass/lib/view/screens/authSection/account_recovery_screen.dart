@@ -144,7 +144,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                                   onTap: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Icon(Icons.arrow_back)),
+                                  child: Icon(Icons.arrow_back_ios)),
                               SizedBox(
                                 height: 15,
                               ),

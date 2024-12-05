@@ -64,7 +64,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back)),
+            child: Icon(Icons.arrow_back_ios)),
       ),
       body: SafeArea(
         child: Stack(children: [
@@ -78,7 +78,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 ),
                 Text(
                   Languages.of(context)!.labelVerificationDetails,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [

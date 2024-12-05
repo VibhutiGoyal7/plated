@@ -57,7 +57,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back)),
+            child: Icon(Icons.arrow_back_ios)),
       ),*/
         body: CustomScrollView(
       slivers: <Widget>[
@@ -70,16 +70,18 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
               color: AppColor.BG_COLOR,
             ),
             centerTitle: false,
+            collapseMode: CollapseMode.parallax,
             title: Text("Proceed As",
                 style: TextStyle(
                   color: AppColor.TEXT_COLOR,
+                  fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ) //TextStyle
                 ), //Text
           ),
           //FlexibleSpaceBar
           expandedHeight: 100,
-          backgroundColor: AppColor.BG_COLOR,
+           backgroundColor: AppColor.BG_COLOR,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,

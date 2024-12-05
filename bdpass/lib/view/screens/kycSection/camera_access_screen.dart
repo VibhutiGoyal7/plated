@@ -28,7 +28,7 @@ class _CameraAccessScreenState extends State<CameraAccessScreen> {
     return Scaffold(
         appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
               Navigator.pop(context);
             },

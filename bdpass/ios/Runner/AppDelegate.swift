@@ -1,5 +1,4 @@
 import UIKit
-import Jumio
 import Flutter
 //import Firebase
 
@@ -20,9 +19,9 @@ import Flutter
   }
 
   override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
-          guard Jumio.SDK.handleDeeplinkURL(url) else {
+        /*  guard Jumio.SDK.handleDeeplinkURL(url) else {
               return false
-          }
+          }*/
           return true
       }
 }
