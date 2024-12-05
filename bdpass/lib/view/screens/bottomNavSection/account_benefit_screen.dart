@@ -99,7 +99,7 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
                   Navigator.pop(context);
                 },
                 child: Icon(Icons.arrow_back)),
-            title: Text("Account Benefits"),
+            title: Text("${Languages.of(context)?.labelAccountBenefits}"),
           ),
           body: Stack(children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
@@ -114,7 +114,7 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
                     child: Column(
                       children: [
                         Text(
-                          "These are benefits if Basic Account and Verified Account.",
+                          "${Languages.of(context)?.labelBenefitsOfBasicAccount}",
                           style: TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold),
                         ),
@@ -142,7 +142,7 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
                                       height: 4,
                                     ),
                                     Text(
-                                      "Verified Account",
+                                      "${Languages.of(context)?.labelVerifiedAccount}",
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold),
@@ -151,15 +151,15 @@ class _AccountBenefitScreenState extends State<AccountBenefitScreen> {
                                       height: 6,
                                     ),
                                     _buildRow(
-                                        "Access all available Government Services"),
-                                    _buildRow("Advanced Signature"),
+                                        "${Languages.of(context)?.labelAccessGovtServices}"),
+                                    _buildRow("${Languages.of(context)?.labelAdvancedSignatures}"),
                                     _buildRow(
-                                        "Verify BD Pass signed documents"),
-                                    _buildRow("Qualified signatures"),
+                                        "${Languages.of(context)?.labelVerifyBdPassSignedSignatures}"),
+                                    _buildRow("${Languages.of(context)?.labelQualifiedSignatures}"),
                                     _buildRow(
-                                        "Request and add documents from issuers"),
-                                    _buildRow("Sharing digital documents"),
-                                    _buildRow("Managing digital documents"),
+                                        "${Languages.of(context)?.labelRequestAndAddDocuments}"),
+                                    _buildRow("${Languages.of(context)?.labelSharingDigitalDocuments}"),
+                                    _buildRow("${Languages.of(context)?.labelManagingDigitalDocuments}"),
                                   ],
                                 )
                               ],

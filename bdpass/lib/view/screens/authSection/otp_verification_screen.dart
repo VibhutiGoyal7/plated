@@ -116,30 +116,30 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   height: 8,
                 ),
                 Text(
-                  "Verify Your Mobile Number",
+                  "${Languages.of(context)?.labelVerifyYourMobileNumber}",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
                     InstructionStep(
                         icon: Icons.document_scanner_rounded,
-                        title: "Step 1",
+                        title: "${Languages.of(context)?.labelStep} 1",
                         isActive: true,
                         iconColor: Colors.green.shade900),
                     InstructionStep(
                         icon: Icons.person_sharp,
-                        title: "Step 2",
+                        title: "${Languages.of(context)?.labelStep} 2",
                         isActive: true,
                         iconColor: Colors.green.shade900),
                     InstructionStep(
                         icon: Icons.lock_sharp,
-                        title: "Step 3",
+                        title: "${Languages.of(context)?.labelStep} 3",
                         isActive: false,
                         iconColor: Colors.green.shade900),
                   ],
                 ),
                 Text(
-                  "Please enter the OTP (One Time Password) sent via SMS to mobile 971557403260",
+                  "${Languages.of(context)?.labelPleaseEnterOtp} 971557403260",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
@@ -158,7 +158,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildLabelText(
-                          context, "Didn't receive the OTP yet?", 11, true),
+                          context, "${Languages.of(context)?.labelDidntReceiveOtp}", 11, true),
                       SizedBox(
                         height: 8,
                       ),
@@ -271,7 +271,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return GestureDetector(
         onTap: () async {},
         child: Text(
-          "Send Again",
+          "${Languages.of(context)?.labelSendAgain}",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.black87,

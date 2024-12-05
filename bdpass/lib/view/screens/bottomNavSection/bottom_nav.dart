@@ -175,7 +175,7 @@ class _BottomNavState extends State<BottomNav>
                           size: 24,
                         ),
                         Text(
-                          "Documents",
+                          "${Languages.of(context)?.labelDocuments}",
                           style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                         )
                       ],
@@ -204,7 +204,7 @@ class _BottomNavState extends State<BottomNav>
                           size: 24,
                         ),
                         Text(
-                          "Notifications",
+                          "${Languages.of(context)?.labelNotification}",
                           style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                         )
                       ],
@@ -233,7 +233,7 @@ class _BottomNavState extends State<BottomNav>
                           size: 26,
                         ),
                         Text(
-                          "History",
+                          "${Languages.of(context)?.labelHistory}",
                           style: TextStyle(color: AppColor.WHITE, fontSize: 10),
                         )
                       ],
@@ -264,7 +264,7 @@ class _BottomNavState extends State<BottomNav>
                               size: 26,
                             ),
                             Text(
-                              "Profile",
+                              "${Languages.of(context)?.labelProfile}",
                               style: TextStyle(
                                   color: AppColor.WHITE, fontSize: 10),
                             ),

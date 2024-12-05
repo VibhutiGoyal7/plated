@@ -529,4 +529,174 @@ abstract class Languages {
   String get labelContinue;
 
   String get labelVerificationDetails;
+
+  String get labelHistory;
+
+  String get labelNoData;
+
+  String get labelAllDocuments;
+
+  String get labelIssued;
+
+  String get labelUploaded;
+
+  String get labelPersonal;
+
+  String get labelProfessional;
+
+  String get labelLegal;
+
+  String get labelProperty;
+
+  String get labelIssuedDocumentsUnder;
+
+  String get labelRequestADocument;
+
+  String get labelValidUntil;
+
+  String get labelNoNotifications;
+
+  String get labelAccount;
+
+  String get labelShowProfile;
+
+  String get labelChangePIN;
+
+  String get labelManageDevices;
+
+  String get labelResetSigninPassword;
+
+  String get labelBiometrics;
+
+  String get labelAccessibility;
+
+  String get labelAboutBDPass;
+
+  String get labelWalkthrough;
+
+  String get labelAreYouSureYouWantToLogout;
+
+  String get labelNO;
+
+  String get labelYes;
+
+  String get labelDocuments;
+
+  String get labelVerifiedAccount;
+
+  String get labelSignature;
+
+  String get labelQualified;
+
+  String get labelAvailable;
+
+  String get labelSignDocuments;
+
+  String get labelVerifySignature;
+
+  String get labelAddDocuments;
+
+  String get labelRequestOfficialDocuments;
+
+  String get labelScanQRCode;
+
+  String get labelUseYourCamera;
+
+  String get labelReceiveMoney;
+
+  String get labelAccountBenefits;
+
+  String get labelBenefitsOfBasicAccount;
+
+  String get labelAccessGovtServices;
+
+  String get labelAdvancedSignatures;
+
+  String get labelVerifyBdPassSignedSignatures;
+
+  String get labelQualifiedSignatures;
+
+  String get labelRequestAndAddDocuments;
+
+  String get labelSharingDigitalDocuments;
+
+  String get labelManagingDigitalDocuments;
+
+  String get labelAccountRecovery;
+
+  String get labelPleaseEnterMobileEmailEmirateID;
+
+  String get labelEmailMobileEmiratesId;
+
+  String get labelMobileNoEg;
+
+  String get labelConfirmDetails;
+
+  String get labelPleaseReviewAndConfirm;
+
+  String get labelPersonalDetails;
+
+  String get labelIDNumber;
+
+  String get labelFirstName;
+
+  String get labelNationality;
+
+  String get labelGender;
+
+  String get labelExpiryDate;
+
+  String get labelEnterAllDetails;
+
+  String get labelEnterValidEmail;
+
+  String get labelCreateBDPassAccount;
+
+  String get labelNationalDigitalIdentityAndSignatureSol;
+
+  String get labelCreateNewAccount;
+
+  String get labelHaveAnExistingAccount;
+
+  String get labelStep;
+
+  String get labelSignUpInEasySteps;
+
+  String get labelNationalDigitalIdentityForAllCitizens;
+
+  String get labelScanYourID;
+
+  String get labelVerifyDetails;
+
+  String get labelSecureAccount;
+
+  String get labelVerifyYourMobileNumber;
+
+  String get labelPleaseEnterOtp;
+
+  String get labelDidntReceiveOtp;
+
+  String get labelSendAgain;
+
+/*  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;
+
+  String get label;*/
 }

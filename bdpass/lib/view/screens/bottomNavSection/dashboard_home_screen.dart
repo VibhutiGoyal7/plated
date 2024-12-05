@@ -48,6 +48,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isLoading = false;
   bool isApiLoading = false;
   bool isInternetConnected = true;
+  bool isDarkMode = false;
   late double screenHeight;
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -102,7 +103,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     _shortcutCardsList = getShortCutList(context);
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
@@ -190,7 +191,11 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 30),
                                       child: Card(
-                                        color: Color(0xFFE2FFDE),
+                                        color:isDarkMode? Color(0xF0B5DCB5)  :
+                                        Color(0xFFE2FFDE),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(13)
+                                        ),
                                         child: Container(
                                           width: screenWidth,
                                           child: Column(
@@ -229,7 +234,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                               color: Colors.black),
                                                         ),
                                                         Text(
-                                                          "Verified Account",
+                                                          "${Languages.of(context)?.labelVerifiedAccount}",
                                                           style: TextStyle(
                                                               fontSize: 10,
                                                               fontWeight:
@@ -256,13 +261,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                   size: 16,
                                                                 ),
                                                                 Text(
-                                                                    "Signature: ",
+                                                                    "${Languages.of(context)?.labelSignature}: ",
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             10,
                                                                         color: Colors.black)),
                                                                 Text(
-                                                                  "Qualified",
+                                                                  "${Languages.of(context)?.labelQualified}",
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           10,
@@ -280,13 +285,13 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                                   size: 16,
                                                                 ),
                                                                 Text(
-                                                                    "Documents: ",
+                                                                    "${Languages.of(context)?.labelDocuments}: ",
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             10,
                                                                         color: Colors.black)),
                                                                 Text(
-                                                                  "Available",
+                                                                  "${Languages.of(context)?.labelAvailable}",
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           10,
@@ -312,7 +317,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               ),
                                               Container(
                                                 decoration: BoxDecoration(
-                                                    color: Colors.white,
+                                                    color:isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
                                                     borderRadius: BorderRadius
                                                         .only(
                                                             bottomLeft:
@@ -337,7 +342,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                             width: 4,
                                                           ),
                                                           Text(
-                                                              "Sign\ndocuments",
+                                                              "${Languages.of(context)?.labelSignDocuments}",
                                                               style: TextStyle(
                                                                 fontSize: 12.5,
                                                               )
@@ -352,7 +357,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                             width: 4,
                                                           ),
                                                           Text(
-                                                              "Verify\nSignature",
+                                                              "${Languages.of(context)?.labelVerifySignature}",
                                                               style: TextStyle(
                                                                 fontSize: 12.5,
                                                               ))
@@ -371,6 +376,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         top: 0,
                                         left: 18,
                                         child: Card(
+                                          color: Colors.white,
                                           shape: CircleBorder(
                                               side: BorderSide(
                                                   color: AppColor.PRIMARY,
@@ -387,12 +393,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 SizedBox(
                                   height: 300,
                                 ),
-                                _buildCard(Icons.file_open, "Add Documents",
-                                    "Request official documents from an official"),
+                                _buildCard(Icons.file_open, "${Languages.of(context)?.labelAddDocuments}",
+                                    "${Languages.of(context)?.labelRequestOfficialDocuments}"),
                                 _buildCard(
                                     Icons.qr_code_scanner_rounded,
-                                    "Scan QR Code",
-                                    "Use your camera to start sharing documents"),
+                                    "${Languages.of(context)?.labelScanQRCode}",
+                                    "${Languages.of(context)?.labelUseYourCamera}"),
                               ],
                             ),
                           ),
@@ -436,7 +442,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black54)),
+                      color:isDarkMode ? Colors.grey : Colors.black54)),
             ]),
             Spacer(),
             Icon(
@@ -561,7 +567,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     ),
                   ),
                 ),
-                Text("Receive money",
+                Text("${Languages.of(context)?.labelReceiveMoney}",
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 SizedBox(
@@ -940,7 +946,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                     Container(
                       width: screenWidth * 0.6,
                       child: TextButton(
-                        child: Text('Yes'),
+                        child: Text('${Languages.of(context)?.labelYes}'),
                         onPressed: () async {
                           /*Helper.clearAllSharedPreferences();
                           database.personDao.clearAllCustomerDetails();

@@ -222,7 +222,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Notification",
+                          "${Languages.of(context)?.labelNotification}",
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         //Icon(Icons.menu)
@@ -302,7 +302,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 )
               : Center(
                   child: Text(
-                    "No Notifications",
+                    "${Languages.of(context)?.labelNoNotifications}",
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 )
@@ -320,7 +320,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.grey[100],
+        color:isDarkMode ? AppColor.DARK_CARD_COLOR :  Colors.grey[100],
       ),
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: TextField(
@@ -338,7 +338,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: "Search",
+          hintText: Languages.of(context)?.labelSearch,
           icon: Icon(Icons.search),
         ),
       ),
@@ -365,7 +365,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         width: screenWidth,
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         decoration: BoxDecoration(
-          color: index % 2 == 0 ? Colors.white : Colors.grey[100],
+          color: index % 2 == 0 ? isDarkMode ? AppColor.DARK_CARD_COLOR  : Colors.white : isDarkMode ? Colors.black38 : Colors.grey[100],
           border: Border(
             bottom: BorderSide(
                 color: isDarkMode ? Colors.grey.shade700 : Colors.black,
@@ -388,7 +388,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   ),
                   Text("${data.detail}",
-                      style: TextStyle(fontSize: 11, color: Colors.black54)),
+                      style: TextStyle(fontSize: 11, color:isDarkMode? Colors.grey : Colors.black54)),
                   Text(
                     "${data.date}",
                     style: TextStyle(fontSize: 11, color: Colors.grey),

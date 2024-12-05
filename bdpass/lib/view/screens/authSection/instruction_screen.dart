@@ -53,7 +53,7 @@ class _InstructionScreenState extends State<InstructionScreen> {
                       height: 50,
                     ),
                     Text(
-                      "Create BD Pass Account",
+                      "${Languages.of(context)?.labelCreateBDPassAccount}",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -64,17 +64,17 @@ class _InstructionScreenState extends State<InstructionScreen> {
                       children: [
                         InstructionStep(
                             icon: Icons.document_scanner_rounded,
-                            title: "Step 1",
+                            title: "${Languages.of(context)?.labelStep} 1",
                             isActive: true,
                             iconColor: Colors.green.shade900),
                         InstructionStep(
                             icon: Icons.person_sharp,
-                            title: "Step 2",
+                            title: "${Languages.of(context)?.labelStep} 2",
                             isActive: true,
                             iconColor: Colors.green.shade900),
                         InstructionStep(
                             icon: Icons.lock_sharp,
-                            title: "Step 3",
+                            title: "${Languages.of(context)?.labelStep} 3",
                             isActive: true,
                             iconColor: Colors.green.shade900),
                       ],
@@ -83,7 +83,7 @@ class _InstructionScreenState extends State<InstructionScreen> {
                       height: 10,
                     ),
                     Text(
-                      "Sign up in 3 easy steps",
+                      "${Languages.of(context)?.labelSignUpInEasySteps}",
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -93,7 +93,7 @@ class _InstructionScreenState extends State<InstructionScreen> {
                       height: 4,
                     ),
                     Text(
-                      "The National Digital Identity for all citizens, residents and visitors.",
+                      "${Languages.of(context)?.labelNationalDigitalIdentityForAllCitizens}",
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -103,15 +103,15 @@ class _InstructionScreenState extends State<InstructionScreen> {
                       height: 4,
                     ),
                     Text(
-                      "1. Scan your ID",
+                      "1. ${Languages.of(context)?.labelScanYourID}",
                       style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
                     Text(
-                      "2. Verify your details",
+                      "2. ${Languages.of(context)?.labelVerifyDetails}",
                       style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
                     Text(
-                      "3. Secure your account",
+                      "3. ${Languages.of(context)?.labelSecureAccount}",
                       style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
                   ],

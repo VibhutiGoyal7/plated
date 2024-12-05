@@ -223,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 12,
                             ),
                             Text(
-                              "Account",
+                              "${Languages.of(context)?.labelAccount}",
                               style: TextStyle(
                                   fontSize: 22, fontWeight: FontWeight.bold),
                             ),
@@ -260,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               fontSize: 15),
                                         ),
                                         Text(
-                                          "Show Profile",
+                                          "${Languages.of(context)?.labelShowProfile}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 9,
@@ -294,7 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: isTablet ? 0 : 10.0),
-                                        Text("Account",
+                                        Text("${Languages.of(context)?.labelAccount}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         GestureDetector(
@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Change PIN",
+                                              heading: "${Languages.of(context)?.labelChangePIN}",
                                               icon: Icons.key,
                                               headingTextSize: 14,
                                             )),
@@ -315,7 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Manage Devices",
+                                              heading: "${Languages.of(context)?.labelManageDevices}",
                                               icon: Icons.phone_android,
                                               headingTextSize: 14,
                                             )),
@@ -327,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       "${Languages.of(context)!.labelAddedCard}");
                                             },
                                             child: DetailBox(
-                                              heading: "Reset Signing Password",
+                                              heading: "${Languages.of(context)?.labelResetSigninPassword}",
                                               icon: Icons.password,
                                               headingTextSize: 14,
                                             )),
@@ -338,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Biometrics",
+                                              heading: "${Languages.of(context)?.labelBiometrics}",
                                               icon: Icons.border_inner_outlined,
                                               headingTextSize: 14,
                                             )),
@@ -349,7 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Language",
+                                              heading: "${Languages.of(context)?.labelLanguage}",
                                               icon: Icons.abc_outlined,
                                               headingTextSize: 14,
                                             )),
@@ -360,11 +360,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Accessibility",
+                                              heading: "${Languages.of(context)?.labelAccessibility}",
                                               icon: Icons.accessibility,
                                               headingTextSize: 14,
                                             )),
-                                        Text("More",
+                                        Text("${Languages.of(context)?.labelMore}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         GestureDetector(
@@ -374,7 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "About BD Pass",
+                                              heading: "${Languages.of(context)?.labelAboutBDPass}",
                                               icon: Icons.fingerprint,
                                               headingTextSize: 14,
                                             )),
@@ -385,7 +385,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Walkthrough",
+                                              heading: "${Languages.of(context)?.labelWalkthrough}",
                                               icon: Icons.play_arrow_rounded,
                                               headingTextSize: 14,
                                             )),
@@ -395,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                             child: _buildCard(
                                                 context,
-                                                "Logout",
+                                                "${Languages.of(context)?.labelLogout}",
                                                 isDarkMode,
                                                 Icon(
                                                   Icons.logout,
@@ -500,7 +500,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontWeight: FontWeight.bold),
           title: Center(
               child: Text(
-            "Logout",
+            "${Languages.of(context)?.labelLogout}",
             style: TextStyle(fontSize: 20),
           )),
           content: IntrinsicHeight(
@@ -532,7 +532,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Center(
                           child: Text(
-                        "Are you sure you want to logout?",
+                        "${Languages.of(context)?.labelAreYouSureYouWantToLogout}",
                         textAlign: TextAlign.center,
                       )),
                     ],
@@ -550,7 +550,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundColor:
                                 WidgetStatePropertyAll(Colors.redAccent),
                           ),
-                          child: Text("NO"),
+                          child: Text("${Languages.of(context)?.labelNO}"),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -562,7 +562,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         width: screenWidth * 0.33,
                         child: TextButton(
-                          child: Text("Yes"),
+                          child: Text("${Languages.of(context)?.labelYes}"),
                           onPressed: () {
                             Helper.clearAllSharedPreferences();
                             database.personDao.clearAllCustomerDetails();

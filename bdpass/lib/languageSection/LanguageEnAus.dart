@@ -803,4 +803,227 @@ class LanguageEnAus extends Languages {
 
   @override
   String get labelVerificationDetails => "Verification Details";
+
+
+  @override
+  String get labelAboutBDPass => "About BD Pass";
+
+  @override
+  String get labelAccessibility => "Accessibility";
+
+  @override
+  String get labelAccount => "Account";
+
+  @override
+  String get labelAllDocuments => "All Documents";
+
+  @override
+  String get labelAreYouSureYouWantToLogout => "Are you sure you want to logout?";
+
+  @override
+  String get labelBiometrics => "Biometrics";
+
+  @override
+  String get labelChangePIN => "Change PIN";
+
+  @override
+  String get labelHistory => "History";
+
+  @override
+  String get labelIssued => "Issued";
+
+  @override
+  String get labelIssuedDocumentsUnder => " issued documents under";
+
+  @override
+  String get labelLegal => "Legal";
+
+  @override
+  String get labelManageDevices => "Manage Devices";
+
+  @override
+  String get labelNO => "NO";
+
+  @override
+  String get labelNoData => "No Data";
+
+  @override
+  String get labelNoNotifications => "No Notifications";
+
+  @override
+  String get labelPersonal => "Personal";
+
+  @override
+  String get labelProfessional => "Professional";
+
+  @override
+  String get labelProperty => "Property";
+
+  @override
+  String get labelRequestADocument => "Request a Document";
+
+  @override
+  String get labelResetSigninPassword => "Reset Signin Password";
+
+  @override
+  String get labelShowProfile => "Show Profile";
+
+  @override
+  String get labelUploaded => "Uploaded";
+
+  @override
+  String get labelValidUntil => "Valid until ";
+
+  @override
+  String get labelWalkthrough => "Walkthrough";
+
+  @override
+  String get labelYes => "Yes";
+
+  @override
+  String get labelAddDocuments => "Add Documents";
+
+  @override
+  String get labelAvailable => "Available";
+
+  @override
+  String get labelDocuments => "Documents";
+
+  @override
+  String get labelQualified => "Qualified";
+
+  @override
+  String get labelReceiveMoney => "Receive Money";
+
+  @override
+  String get labelRequestOfficialDocuments => "Request official documents from an official";
+
+  @override
+  String get labelScanQRCode => "Scan QR Code";
+
+  @override
+  String get labelSignDocuments => "Sign\nDocuments";
+
+  @override
+  String get labelSignature => "Signature";
+
+  @override
+  String get labelUseYourCamera => "Use your camera to start sharing documents";
+
+  @override
+  String get labelVerifiedAccount => "Verified Account";
+
+  @override
+  String get labelVerifySignature => "Verify/n Signature";
+
+  @override
+  String get labelAccountBenefits => "Account Benefits";
+
+  @override
+  String get labelAccessGovtServices => "Access all available Government Services";
+
+  @override
+  String get labelAdvancedSignatures => "Advanced Signature";
+
+  @override
+  String get labelBenefitsOfBasicAccount => "These are benefits if Basic Account and Verified Account.";
+
+  @override
+  String get labelManagingDigitalDocuments => "Managing digital documents";
+
+  @override
+  String get labelQualifiedSignatures => "Qualified signatures";
+
+  @override
+  String get labelRequestAndAddDocuments => "Request and add documents from issuers";
+
+  @override
+  String get labelSharingDigitalDocuments => "Sharing digital documents";
+
+  @override
+  String get labelVerifyBdPassSignedSignatures => "Verify BD Pass signed documents";
+
+  @override
+  String get labelAccountRecovery => "Account Recovery";
+
+  @override
+  String get labelEmailMobileEmiratesId => "Email/Mobile/Emirates ID";
+
+  @override
+  String get labelMobileNoEg => "Mobile Number e.g.: 971500000000";
+
+  @override
+  String get labelPleaseEnterMobileEmailEmirateID => "To initiate the account recovery process, please enter the email/mobile/emirates ID registered with your BD PASS account.";
+
+  @override
+  String get labelConfirmDetails => "Confirm Details";
+
+  @override
+  String get labelCreateBDPassAccount => "Create BD Pass Account";
+
+  @override
+  String get labelCreateNewAccount => "Create New Account";
+
+  @override
+  String get labelEnterAllDetails => "Please enter all the details";
+
+  @override
+  String get labelEnterValidEmail => "Enter valid email address.";
+
+  @override
+  String get labelExpiryDate => "Expiry Date";
+
+  @override
+  String get labelFirstName => "First Name";
+
+  @override
+  String get labelGender => "Gender";
+
+  @override
+  String get labelHaveAnExistingAccount => "I have an Existing Account";
+
+  @override
+  String get labelIDNumber => "ID Number";
+
+  @override
+  String get labelNationalDigitalIdentityAndSignatureSol => "The national digital identity and signature solution.";
+
+  @override
+  String get labelNationalDigitalIdentityForAllCitizens => "The National Digital Identity for all citizens, residents and visitors.";
+
+  @override
+  String get labelNationality => "Nationality";
+
+  @override
+  String get labelPersonalDetails => "Personal Details";
+
+  @override
+  String get labelPleaseReviewAndConfirm => "Please review and confirm details";
+
+  @override
+  String get labelScanYourID => "Scan Your ID";
+
+  @override
+  String get labelSecureAccount => "Secure your Account";
+
+  @override
+  String get labelSignUpInEasySteps => "Sign up in 3 easy steps";
+
+  @override
+  String get labelStep => "Step";
+
+  @override
+  String get labelVerifyDetails => "Verify your details";
+
+  @override
+  String get labelDidntReceiveOtp => "Didn't receive the OTP yet?";
+
+  @override
+  String get labelPleaseEnterOtp => "Please enter the OTP (One Time Password) sent via SMS to mobile";
+
+  @override
+  String get labelSendAgain => "Send Again";
+
+  @override
+  String get labelVerifyYourMobileNumber => "Verify Your Mobile Number";
 }

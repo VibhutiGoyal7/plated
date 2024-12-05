@@ -1,5 +1,6 @@
 import 'package:BDPass/model/response/checkCustomerReponse.dart';
 import 'package:BDPass/theme/AppColor.dart';
+import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   bool isLoading = false;
   bool inputValid = false;
   String? phoneNo;
-  String? selected = "All Documents";
+  String? selected = "";
   bool isIssued = false;
   bool isSearch = false;
   String? username;
@@ -47,6 +48,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      selected = "${Languages.of(context)?.labelAllDocuments}";
+    });
   }
 
   Future<Widget> initiateCheckCustomerResponse(
@@ -114,7 +118,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Documents",
+                              "${Languages.of(context)?.labelDocuments}",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
@@ -201,7 +205,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                       ),
                                       child: Center(
                                           child: Text(
-                                        "Issued",
+                                            "${Languages.of(context)?.labelIssued}",
                                         style: TextStyle(
                                             color: isIssued
                                                 ? Colors.white
@@ -233,7 +237,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                                   : Colors.white,
                                             ),
                                             child: Center(
-                                                child: Text("Uploaded",
+                                                child: Text("${Languages.of(context)?.labelUploaded}",
                                                     style: TextStyle(
                                                         color: !isIssued
                                                             ? Colors.white
@@ -251,14 +255,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           child: Row(
                             children: [
                               _buildTab(
-                                  Icons.file_copy_sharp, "All Documents"),
+                                  Icons.file_copy_sharp, "${Languages.of(context)?.labelAllDocuments}"),
                               _buildTab(Icons.person_outline_outlined,
-                                  "Personal"),
+                                  "${Languages.of(context)?.labelPersonal}"),
                               _buildTab(Icons.local_post_office_outlined,
-                                  "Professional"),
-                              _buildTab(Icons.padding_outlined, "Legal"),
+                                  "${Languages.of(context)?.labelProfessional}"),
+                              _buildTab(Icons.padding_outlined, "${Languages.of(context)?.labelLegal}"),
                               _buildTab(
-                                  Icons.home_work_outlined, "Property"),
+                                  Icons.home_work_outlined, "${Languages.of(context)?.labelProperty}"),
                             ],
                           ),
                         ),
@@ -266,7 +270,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           height: 4,
                         ),
                         Text(
-                          "7 issued documents under 'All Documents'",
+                          "7${Languages.of(context)?.labelIssuedDocumentsUnder}'All Documents'",
                           style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
@@ -276,7 +280,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           height: 8,
                         ),
                         Container(
-                          height: isSearch ? screenHeight*0.56 :screenHeight*  0.62,
+                          height: isSearch ? screenHeight*0.55 :screenHeight*  0.61,
                           child: ListView.builder(
                             physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
@@ -288,11 +292,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             },
                           ),
                         ),
-                        _buildFooter(
-                          context: context,
-                          text: 'Request a document',
-                          onTap: () {},
-                        )
+                        CustomButtonComponent(text: '${Languages.of(context)?.labelRequestADocument}', screenWidth: screenWidth, isDarkMode: isDarkMode, onTap: (){
+
+                        })
                       ],
                     ),
                   ),
@@ -366,7 +368,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Valid until 10 Dec 2026",
+                  "${Languages.of(context)?.labelValidUntil}10 Dec 2026",
                   style: TextStyle(fontSize: 10, color:isDarkMode ? Colors.grey[300] : AppColor.PRIMARY),
                 ),
                 SizedBox(
@@ -396,7 +398,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.grey[100],
+        color:isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
       ),
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: TextField(
@@ -414,32 +416,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: "Search",
+          hintText: Languages.of(context)?.labelSearch,
           icon: Icon(Icons.search),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: screenWidth * 0.94,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.8),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.black),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 13, color: Colors.white),
-          ),
         ),
       ),
     );

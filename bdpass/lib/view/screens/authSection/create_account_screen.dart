@@ -89,14 +89,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   height: 6,
                 ),
                 Text(
-                  "Create BD Pass Account",
+                  "${Languages.of(context)?.labelCreateBDPassAccount}",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 3,
                 ),
                 Text(
-                  "The national digital identity and signature solution.",
+                  "${Languages.of(context)?.labelNationalDigitalIdentityAndSignatureSol}",
                   style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                 ),
                 /*Image(
@@ -111,7 +111,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 Center(
                     child: CustomButtonComponent(
-                        text: "Create New Account",
+                        text: "${Languages.of(context)?.labelCreateNewAccount}",
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
                         onTap: () {
@@ -123,7 +123,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   child: _buildExistingAccFooter(
                     isDarkMode: isDarkMode,
                       context: context,
-                      text: "I have an existing account",
+                      text: "${Languages.of(context)?.labelHaveAnExistingAccount}",
                       onTap: () {
                         // Navigator.pushNamed(context, '/SliderScreen');
                       }),

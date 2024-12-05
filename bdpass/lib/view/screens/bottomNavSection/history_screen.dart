@@ -219,7 +219,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "History",
+                        "${Languages.of(context)?.labelHistory}",
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       Icon(Icons.filter_alt_outlined),
@@ -299,7 +299,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       )
           : Center(
         child: Text(
-          "No Notifications",
+          "${Languages.of(context)?.labelNoData}",
           style: TextStyle(fontSize: 15, color: Colors.grey),
         ),
       )
@@ -330,7 +330,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         margin: EdgeInsets.symmetric(horizontal: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 0,
-        color: Colors.grey[100],
+        color:isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
         child: Container(
           width: screenWidth,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),

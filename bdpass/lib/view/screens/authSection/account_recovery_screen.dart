@@ -1,3 +1,4 @@
+import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/apis/api_response.dart';
 import 'package:BDPass/utils/Util.dart';
 import 'package:BDPass/view/component/custom_button_component.dart';
@@ -147,19 +148,19 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              _buildLabelText(context, "Account Recovery", 22,
+                              _buildLabelText(context, "${Languages.of(context)?.labelAccountRecovery}", 22,
                                   true, AppColor.TEXT_COLOR),
                               SizedBox(height: 4),
                               _buildLabelText(
                                   context,
-                                  "To initiate the account recovery process, please enter the email/mobile/emirates ID registered with your BD PASS account.",
+                                  "${Languages.of(context)?.labelPleaseEnterMobileEmailEmirateID}",
                                   11,
                                   false,
                                   AppColor.TEXT_COLOR),
                               SizedBox(height: 25),
                               _buildPhoneInput(
                                   context,
-                                  "Email/Mobile/Emirates ID",
+                                  "${Languages.of(context)?.labelEmailMobileEmiratesId}",
                                   _nameController,
                                   Icon(
                                     Icons.person,
@@ -176,7 +177,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                                   ),
                                   _buildLabelText(
                                       context,
-                                      "Mobile Number e.g.: 971500000000",
+                                      "${Languages.of(context)?.labelMobileNoEg}",
                                       11,
                                       false,
                                       Colors.grey),
@@ -187,7 +188,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 28.0),
-                            child: CustomButtonComponent(text: "Continue",
+                            child: CustomButtonComponent(text: "${Languages.of(context)?.labelContinue}",
                                 isDarkMode: isDarkMode,
                                 screenWidth: screenWidth,
                                 onTap: () {
