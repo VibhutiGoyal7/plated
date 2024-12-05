@@ -130,7 +130,7 @@ class _NewPassForgotPassScreenState extends State<NewPassForgotPassScreen> {
         appBar: AppBar(
           toolbarHeight: 65,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
               Navigator.pop(context);
             },

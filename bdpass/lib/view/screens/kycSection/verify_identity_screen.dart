@@ -16,7 +16,7 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
     return Scaffold(
         appBar: AppBar(toolbarHeight: 65,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
               Navigator.pop(context);
             },

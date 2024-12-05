@@ -205,7 +205,7 @@ class _ChooseDocScreenState extends State<ChooseDocScreen> {
           appBar: AppBar(
             toolbarHeight: 65,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.pushNamed(context, '/BottomNav', arguments: 0);
               },

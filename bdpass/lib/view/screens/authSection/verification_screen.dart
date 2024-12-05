@@ -46,7 +46,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back)),
+            child: Icon(Icons.arrow_back_ios)),
       ),
       body: SafeArea(
         child: Stack(children: [
