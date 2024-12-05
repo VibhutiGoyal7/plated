@@ -14,6 +14,14 @@ class ProceedAsScreen extends StatefulWidget {
   _ProceedAsScreenState createState() => _ProceedAsScreenState();
 }
 
+class ListItem {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  ListItem(this.icon, this.title, this.subtitle);
+}
+
 class _ProceedAsScreenState extends State<ProceedAsScreen> {
   String token = "";
   late double screenWidth;
@@ -35,15 +43,74 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+    // Sample list
+    final List<ListItem> items = [
+      ListItem(Icons.house_sharp, Languages.of(context)!.labelCitizenOrResident,
+          "Individual holding ID issued by BD Government"),
+      ListItem(Icons.shopping_bag_outlined, Languages.of(context)!.labelVisitor,
+          "Individual holding ID or passport issued countries other than BD."),
+    ];
+
     return Scaffold(
-      appBar: AppBar(
+        /* appBar: AppBar(
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back)),
-      ),
-      body: SafeArea(
+      ),*/
+        body: CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          snap: false,
+          pinned: true,
+          floating: false,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Container(
+              color: AppColor.BG_COLOR,
+            ),
+            centerTitle: false,
+            title: Text("Proceed As",
+                style: TextStyle(
+                  color: AppColor.TEXT_COLOR,
+                  fontSize: 16.0,
+                ) //TextStyle
+                ), //Text
+          ),
+          //FlexibleSpaceBar
+          expandedHeight: 100,
+          backgroundColor: AppColor.BG_COLOR,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: AppColor.TEXT_COLOR,
+            ),
+            tooltip: 'Back',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ), //IconButton
+        ), //SliverAppBar
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final item = items[index];
+              return GestureDetector(
+                onTap: () {
+                  if (index == 0) {
+                    Navigator.pushNamed(context, "/VerificationScreen");
+                  }
+                },
+                child: _buildCard(item.icon, item.title, item.subtitle),
+              );
+              _buildCard(item.icon, item.title, item.subtitle);
+            },
+            childCount: items.length,
+          ),
+        ) //SliverList
+      ], //<Widget>[]
+    )
+        /* SafeArea(
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14),
@@ -57,7 +124,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     "Proceed As",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 GestureDetector(
@@ -85,40 +152,50 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
                 )
               : SizedBox()
         ]),
-      ),
-    );
+      )*/
+        );
   }
 
   Widget _buildCard(IconData icon, String heading, String detail) {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Row(
-          children: [
-            Icon(icon,color: AppColor.PRIMARY,),
-            SizedBox(
-              width: 8,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  heading,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                Container(
-                    width: screenWidth * 0.66,
-                    child: Text(
-                      detail,
-                      style: TextStyle(fontSize: 9),
-                      overflow: TextOverflow.visible,
-                    )),
-              ],
-            ),
-            Spacer(),
-            Icon(Icons.arrow_forward_ios_sharp,color: AppColor.PRIMARY,)
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Colors.brown,
+                size: 28,
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    heading,
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                      width: screenWidth * 0.66,
+                      child: Text(
+                        detail,
+                        style: TextStyle(fontSize: 12),
+                        overflow: TextOverflow.visible,
+                      )),
+                ],
+              ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_sharp,
+                size: 18,
+              )
+            ],
+          ),
         ),
       ),
     );

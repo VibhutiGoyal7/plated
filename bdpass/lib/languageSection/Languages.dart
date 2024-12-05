@@ -425,7 +425,7 @@ abstract class Languages {
 
   String get labelAt;
 
-  String get labelTransactionId ;
+  String get labelTransactionId;
 
   String get labelShareScreenshot;
 
@@ -519,6 +519,14 @@ abstract class Languages {
 
   String get labelWithdrawOtp;
 
+  //Add Nnew
+  String get labelVisitor;
 
+  String get labelCitizenOrResident;
 
+  String get labelMobileNumber;
+
+  String get labelContinue;
+
+  String get labelVerificationDetails;
 }

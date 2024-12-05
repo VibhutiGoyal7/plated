@@ -68,12 +68,12 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
-  Future<Widget> getSetUpAccountWidget(BuildContext context,
-      ApiResponse apiResponse) async {
+  Future<Widget> getSetUpAccountWidget(
+      BuildContext context, ApiResponse apiResponse) async {
     SetUpAccountResponse? setUpAccountResponse =
-    apiResponse.data as SetUpAccountResponse?;
+        apiResponse.data as SetUpAccountResponse?;
     String? message = apiResponse.message.toString();
     setState(() {
       isLoading = false;
@@ -113,20 +113,10 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    isDarkMode = Theme
-        .of(context)
-        .brightness == Brightness.dark;
-    screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    ApiResponse apiResponse = Provider
-        .of<MainViewModel>(context)
-        .response;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
@@ -140,7 +130,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                   constraints: BoxConstraints(minHeight: screenHeight * 0.95),
                   child: Padding(
                       padding:
-                      const EdgeInsets.only(left: 16.0, right: 16, top: 12),
+                          const EdgeInsets.only(left: 16.0, right: 16, top: 12),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,13 +147,13 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              _buildLabelText(context, "Account Recovery", 24,
+                              _buildLabelText(context, "Account Recovery", 22,
                                   true, AppColor.TEXT_COLOR),
                               SizedBox(height: 4),
                               _buildLabelText(
                                   context,
                                   "To initiate the account recovery process, please enter the email/mobile/emirates ID registered with your BD PASS account.",
-                                  12,
+                                  11,
                                   false,
                                   AppColor.TEXT_COLOR),
                               SizedBox(height: 25),
@@ -187,7 +177,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                                   _buildLabelText(
                                       context,
                                       "Mobile Number e.g.: 971500000000",
-                                      12,
+                                      11,
                                       false,
                                       Colors.grey),
                                 ],
@@ -211,16 +201,16 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
               ),
               isLoading
                   ? Stack(
-                children: [
-                  // Block interaction
-                  ModalBarrier(
-                      dismissible: false, color: Colors.transparent),
-                  // Loader indicator
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
-              )
+                      children: [
+                        // Block interaction
+                        ModalBarrier(
+                            dismissible: false, color: Colors.transparent),
+                        // Loader indicator
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    )
                   : SizedBox()
             ],
           ),
@@ -229,8 +219,8 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
     );
   }
 
-  _buildLabelText(BuildContext context, String text, int size, bool isBold,
-      Color grey) {
+  _buildLabelText(
+      BuildContext context, String text, int size, bool isBold, Color grey) {
     return Text(
       text,
       style: TextStyle(
@@ -256,7 +246,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
             Expanded(
               child: TextField(
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 12.0,
                 ),
                 obscureText: false,
                 obscuringCharacter: "*",
@@ -274,10 +264,11 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                   FilteringTextInputFormatter.deny(RegExp(r'\s')),
                 ],
                 decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  //icon: icon,
-                ),
+                    border: InputBorder.none,
+                    hintText: text,
+                    hintStyle: TextStyle(fontSize: 12, color: Colors.grey)
+                    //icon: icon,
+                    ),
               ),
             ),
           ],

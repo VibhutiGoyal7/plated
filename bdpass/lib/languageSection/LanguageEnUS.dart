@@ -788,4 +788,20 @@ class LanguageEnUS extends Languages {
   @override
   String get labelWithdrawOtp => "Withdraw Otp";
 
+  //Added New
+  @override
+  String get labelCitizenOrResident => "Citizen or Resident";
+
+  @override
+  String get labelVisitor => "Visitor";
+
+  @override
+  String get labelMobileNumber => "Mobile Number";
+
+  @override
+  String get labelContinue => "Continue";
+
+  @override
+  String get labelVerificationDetails => "Verification Details";
+
 }

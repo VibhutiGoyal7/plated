@@ -36,7 +36,7 @@ class _InstructionScreenState extends State<InstructionScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.black38,
+      backgroundColor: Colors.black54,
       body: SafeArea(
         child: GestureDetector(
           onTap: () {},
@@ -93,7 +93,7 @@ class _InstructionScreenState extends State<InstructionScreen> {
                       height: 4,
                     ),
                     Text(
-                      "The national digital identity for all citizens, residents and visitors.",
+                      "The National Digital Identity for all citizens, residents and visitors.",
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
