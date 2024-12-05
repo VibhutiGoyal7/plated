@@ -803,4 +803,13 @@ class LanguageEnCand extends Languages {
 
   @override
   String get labelVerificationDetails => "Verification Details";
+
+  @override
+  String get labelChangePIN => "Change IN";
+
+  @override
+  String get labelManageDevices => "Manage Devices";
+
+  @override
+  String get labelResetSigningPassword => "Reset Signing Password";
 }

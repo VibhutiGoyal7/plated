@@ -86,32 +86,36 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   await availableCameras();
   // Handle background messages
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Setup interaction with notifications
   //await PushNotificationService().setupInteractedMessage();
 
   // Request notification permissions
+/*
   final permissionStatus = await Permission.notification.status;
   if (permissionStatus.isDenied) {
     await Permission.notification.request();
   }
+*/
 
+/*
   // Get initial message
   RemoteMessage? initialMessage =
       await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: $initialMessage");
   }
+*/
 
   // Set preferred orientations and run app
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  runApp(MyApp(initialMessage: initialMessage));
+  runApp(MyApp(initialMessage: null));
 }
 
 class MyApp extends StatefulWidget {

@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Change PIN",
+                                              heading: Languages.of(context)!.labelChangePIN,
                                               icon: Icons.key,
                                               headingTextSize: 14,
                                             )),
@@ -315,7 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "Manage Devices",
+                                              heading: Languages.of(context)!.labelManageDevices,
                                               icon: Icons.phone_android,
                                               headingTextSize: 14,
                                             )),
@@ -327,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       "${Languages.of(context)!.labelAddedCard}");
                                             },
                                             child: DetailBox(
-                                              heading: "Reset Signing Password",
+                                              heading: Languages.of(context)!.labelResetSigningPassword,
                                               icon: Icons.password,
                                               headingTextSize: 14,
                                             )),

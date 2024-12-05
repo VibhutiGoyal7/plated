@@ -529,4 +529,10 @@ abstract class Languages {
   String get labelContinue;
 
   String get labelVerificationDetails;
+
+  String get labelChangePIN;
+
+  String get labelManageDevices;
+
+  String get labelResetSigningPassword;
 }
