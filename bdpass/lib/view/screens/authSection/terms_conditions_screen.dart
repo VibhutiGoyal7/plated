@@ -1,12 +1,6 @@
-import 'dart:io';
-
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/theme/AppColor.dart';
-import 'package:BDPass/utils/Helper.dart';
-import 'package:country_picker/country_picker.dart';
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
@@ -14,12 +8,10 @@ import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
-import '../../component/instruction_step.dart';
 
 class TermsConditionsScreen extends StatefulWidget {
   @override
-  _TermsConditionsScreenState createState() =>
-      _TermsConditionsScreenState();
+  _TermsConditionsScreenState createState() => _TermsConditionsScreenState();
 }
 
 class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
@@ -45,14 +37,118 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios)),
-      ),
-      body: SafeArea(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 100.0,
+            backgroundColor: AppColor.WHITE,
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              collapseMode: CollapseMode.parallax,
+              title: const Text(
+                'Terms and Conditions',
+                style: TextStyle(fontSize: 16),
+              ),
+              background: Container(
+                color: AppColor.BG_COLOR, // Matches the dynamic app bar color
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                // Example Terms and Conditions items
+                final terms = [
+                  'Introduction',
+                  'Acceptance of Terms',
+                  'Changes to Terms',
+                  'User Responsibilities',
+                  'Limitation of Liability',
+                  'Termination',
+                  'Governing Law',
+                  'Contact Information'
+                ];
+                final termsSubHeading = [
+                  'Introduction',
+                  'Acceptance of Terms',
+                  'Changes to Terms',
+                  'User Responsibilities',
+                  'Limitation of Liability',
+                  'Termination',
+                  'Governing Law',
+                  'Contact Information'
+                ];
+                return ListTile(
+                  title: Text(
+                    terms[index],
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Detailed explanation about ${terms[index].toLowerCase()} will be listed here.',
+                    style: const TextStyle(fontSize: 12, color: Colors.black54),
+                  ),
+                  leading: const Icon(Icons.info_outline, color: Colors.blue),
+                );
+              },
+              childCount: 8, // Number of terms
+            ),
+          ),
+          // SliverToBoxAdapter for the custom button at the bottom
+          SliverToBoxAdapter(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 15,
+                ),
+                Switch(
+                  value: _isToggled,
+                  activeColor: AppColor.PRIMARY,
+                  inactiveTrackColor: Colors.red,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _isToggled = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "${Languages.of(context)?.labelReadAllTermsConditions}",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CustomButtonComponent(
+                  isClickable: _isToggled == true ? true : false,
+                  text: "Accept",
+                  screenWidth: screenWidth,
+                  isDarkMode: isDarkMode,
+                  onTap: () {
+                    Navigator.pushNamed(context, "/ProceedAsScreen");
+                  },
+                ),
+              ),
+            ),
+          ),
+
+          // Spacer at the bottom for better UX
+          SliverToBoxAdapter(
+            child: const SizedBox(height: 20),
+          ),
+        ],
+      ), /* SafeArea(
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.symmetric( horizontal: 14),
@@ -143,7 +239,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                 )
               : SizedBox()
         ]),
-      ),
+      )*/
     );
   }
 
