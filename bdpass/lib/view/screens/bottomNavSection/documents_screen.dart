@@ -99,7 +99,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       child: GestureDetector(
         onTap: () => hideKeyBoard(),
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
               AnnotatedRegion<SystemUiOverlayStyle>(
@@ -121,18 +120,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             Text(
                               "${Languages.of(context)?.labelDocuments}",
                               style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 GestureDetector(
-                                  onTap:(){
+                                  onTap: () {
                                     setState(() {
                                       isSearch = !isSearch;
                                     });
-                                    },
+                                  },
                                   child: Icon(
                                     Icons.search_outlined,
                                     size: 24,
@@ -160,7 +158,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           ],
                         ),
                         SizedBox(
-                          height:isSearch ? 5 : 12,
+                          height: isSearch ? 5 : 12,
                         ),
                         isSearch ?
                         Row(
@@ -182,8 +180,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           height: 30,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                  color: Colors.grey, width: 0.6)),
+                              border:
+                                  Border.all(color: Colors.grey, width: 0.6)),
                           child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -207,7 +205,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                       ),
                                       child: Center(
                                           child: Text(
-                                            "${Languages.of(context)?.labelIssued}",
+                                        "${Languages.of(context)?.labelIssued}",
                                         style: TextStyle(
                                             color: isIssued
                                                 ? Colors.white
@@ -227,19 +225,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                         },
                                         child: Container(
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.only(
-                                                topRight:
-                                                    Radius.circular(8),
-                                                bottomRight:
-                                                    Radius.circular(8),
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(8),
+                                                bottomRight: Radius.circular(8),
                                               ),
                                               color: !isIssued
                                                   ? AppColor.PRIMARY
                                                   : Colors.white,
                                             ),
                                             child: Center(
-                                                child: Text("${Languages.of(context)?.labelUploaded}",
+                                                child: Text(
+                                                    "${Languages.of(context)?.labelUploaded}",
                                                     style: TextStyle(
                                                         color: !isIssued
                                                             ? Colors.white
@@ -256,20 +252,18 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              _buildTab(
-                                  Icons.file_copy_sharp, "${Languages.of(context)?.labelAllDocuments}"),
+                              _buildTab(Icons.file_copy_sharp,
+                                  "${Languages.of(context)?.labelAllDocuments}"),
                               _buildTab(Icons.person_outline_outlined,
                                   "${Languages.of(context)?.labelPersonal}"),
                               _buildTab(Icons.local_post_office_outlined,
                                   "${Languages.of(context)?.labelProfessional}"),
-                              _buildTab(Icons.padding_outlined, "${Languages.of(context)?.labelLegal}"),
-                              _buildTab(
-                                  Icons.home_work_outlined, "${Languages.of(context)?.labelProperty}"),
+                              _buildTab(Icons.padding_outlined,
+                                  "${Languages.of(context)?.labelLegal}"),
+                              _buildTab(Icons.home_work_outlined,
+                                  "${Languages.of(context)?.labelProperty}"),
                             ],
                           ),
-                        ),
-                        SizedBox(
-                          height: 4,
                         ),
                         Text(
                           "7${Languages.of(context)?.labelIssuedDocumentsUnder}'All Documents'",
@@ -279,24 +273,29 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               color: Colors.black54),
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 4,
                         ),
                         Container(
-                          height: isSearch ? screenHeight*0.55 :screenHeight*  0.61,
+                          height: isSearch
+                              ? screenHeight * 0.52
+                              : screenHeight * 0.58,
                           child: ListView.builder(
                             physics: const AlwaysScrollableScrollPhysics(),
                             controller: _scrollController,
                             itemCount: list.length,
                             shrinkWrap: true,
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 5),
                             itemBuilder: (BuildContext context, int index) {
                               return _buildCard(list[index]);
                             },
                           ),
                         ),
-                        CustomButtonComponent(text: '${Languages.of(context)?.labelRequestADocument}', screenWidth: screenWidth, isDarkMode: isDarkMode, onTap: (){
-
-                        })
+                        CustomButtonComponent(
+                            text:
+                                '${Languages.of(context)?.labelRequestADocument}',
+                            screenWidth: screenWidth,
+                            isDarkMode: isDarkMode,
+                            onTap: () {})
                       ],
                     ),
                   ),
@@ -371,7 +370,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               children: [
                 Text(
                   "${Languages.of(context)?.labelValidUntil}10 Dec 2026",
-                  style: TextStyle(fontSize: 10, color:isDarkMode ? Colors.grey[300] : AppColor.PRIMARY),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: isDarkMode ? Colors.grey[300] : AppColor.PRIMARY),
                 ),
                 SizedBox(
                   height: 1,
@@ -380,7 +381,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 Text("Ministry of Interior",
                     style: TextStyle(
                         fontSize: 10,
-                        color:isDarkMode ? Colors.grey : Colors.black45,
+                        color: isDarkMode ? Colors.grey : Colors.black45,
                         fontWeight: FontWeight.bold)),
               ],
             ),

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:BDPass/model/db/dao.dart';
 import 'package:BDPass/theme/AppColor.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +29,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   late BDPassDatabase database;
   late NotificationDao notificationDao;
   final TextEditingController _searchController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<NotificationDetails> generalNotificationList = [
     NotificationDetails(
         status: "Expired",
@@ -81,6 +86,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   bool isInternetConnected = true;
+  late Timer _showDialogTimer;
+  bool _dialogVisible = false;
 
   void initState() {
     super.initState();
@@ -89,6 +96,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
     _scrollController.addListener(_generalLoadMore);
 
     _fetchDataFuture = _fetchData(_currentPage, false);
+  }
+
+  void _showDialog(BuildContext context, NotificationDetails data) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${data.heading}",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${data.date}",
+                  style: TextStyle(fontSize: 11),
+                ),
+              ],
+            ),
+            content: Text(
+              "${data.detail}",
+              style: TextStyle(fontSize: 13),
+            ));
+      },
+    );
   }
 
   runApi(int? index) {
@@ -205,13 +241,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: Stack(
-          children: [
-            AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: SystemUiOverlayStyle(
+      children: [
+        AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               statusBarIconBrightness:
                   isDarkMode ? Brightness.light : Brightness.dark),
-                  child: SafeArea(
+          child: SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,17 +260,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       children: [
                         Text(
                           "${Languages.of(context)?.labelNotification}",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         //Icon(Icons.menu)
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: SearchComponent(width: 1, screenWidth: screenWidth, isDarkMode: isDarkMode,
-                        searchController: _searchController, onChanged: (){}),
-                  ),
+                  _buildSearch(),
                   SizedBox(
                     height: 4,
                   ),
@@ -242,10 +275,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ],
               ),
             ),
-                  ),
-                ),
-          ],
-        ));
+          ),
+        ),
+      ],
+    ));
   }
 
   Widget generalNotification() {
@@ -333,46 +366,63 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   Widget generalNotificationItem(NotificationDetails data, int index) {
-    return Center(
-      child: Container(
-        width: screenWidth,
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        decoration: BoxDecoration(
-          color: index % 2 == 0 ? isDarkMode ? AppColor.DARK_CARD_COLOR  : Colors.white : isDarkMode ? Colors.black38 : Colors.grey[100],
-          border: Border(
-            bottom: BorderSide(
-                color: isDarkMode ? Colors.grey.shade700 : Colors.black,
-                width: 0.22),
+    return GestureDetector(
+      onLongPress: () => _showDialog(context, data),
+      onLongPressUp: () {
+        // Close the dialog when the user lifts their finger
+       // ToastComponent.showToast(context: _scaffoldKey.currentContext!, message: "message");
+        Navigator.of(_scaffoldKey.currentContext!, rootNavigator: true).pop();
+      },
+      child: Center(
+        child: Container(
+          width: screenWidth,
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          decoration: BoxDecoration(
+            color: index % 2 == 0
+                ? isDarkMode
+                    ? AppColor.DARK_CARD_COLOR
+                    : Colors.white
+                : isDarkMode
+                    ? Colors.black38
+                    : Colors.grey[100],
+            border: Border(
+              bottom: BorderSide(
+                  color: isDarkMode ? Colors.grey.shade700 : Colors.black,
+                  width: 0.22),
+            ),
           ),
-        ),
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${data.status}",
-                    style: TextStyle(fontSize: 10, color: AppColor.PRIMARY),
-                  ),
-                  Text(
-                    "${data.heading}",
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                  ),
-                  Text("${data.detail}",
-                      style: TextStyle(fontSize: 11, color:isDarkMode? Colors.grey : Colors.black54)),
-                  Text(
-                    "${data.date}",
-                    style: TextStyle(fontSize: 11, color: Colors.grey),
-                  ),
-                ],
-              ),
-              Icon(
-                Icons.arrow_forward_ios_sharp,
-                size: 15,
-              )
-            ],
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${data.status}",
+                      style: TextStyle(fontSize: 10, color: AppColor.PRIMARY),
+                    ),
+                    Text(
+                      "${data.heading}",
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
+                    Text("${data.detail}",
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: isDarkMode ? Colors.grey : Colors.black54)),
+                    Text(
+                      "${data.date}",
+                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_sharp,
+                  size: 15,
+                )
+              ],
+            ),
           ),
         ),
       ),
