@@ -151,16 +151,26 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
             SliverToBoxAdapter(
                 child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: _buildPhoneInput(
-                  context,
-                  "${Languages.of(context)?.labelEmailMobileEmiratesId}",
-                  _nameController,
-                  Icon(
+              child: TextfieldComponent(width: 1,
+                  isPhone:false,
+                  textController: _nameController,
+                  icon:Icon(
                     Icons.person,
-                    size: 15,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  )),
-            )),
+                    size: 20,
+                    color: isDarkMode
+                        ? Colors.white
+                        : Colors.black,
+                  ) ,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z0-9@._]'),
+                    ),
+                  ],
+                  text: "${Languages.of(context)?.labelEmailMobileEmiratesId}",
+                  onChanged: (){}),
+            )
+            ),
             SliverToBoxAdapter(
               child: Row(
                 children: [
