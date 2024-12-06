@@ -1,7 +1,5 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/apis/api_response.dart';
-import 'package:BDPass/utils/Util.dart';
-import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +9,9 @@ import 'package:provider/provider.dart';
 import '../../../model/response/setUpAccountResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_button_component.dart';
 import '../../component/textfield_component.dart';
 import '../../component/toastMessage.dart';
 
@@ -120,46 +120,124 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
     return Scaffold(
-      body: SafeArea(
+        resizeToAvoidBottomInset: true,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: 100.0,
+              centerTitle: false,
+              backgroundColor: AppColor.WHITE,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  "${Languages.of(context)!.labelAccountRecovery}",
+                  style: TextStyle(fontSize: 16),
+                ),
+                background: Container(
+                  color: AppColor.BG_COLOR, // Matches the dynamic app bar color
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+                child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: _buildLabelText(
+                  context,
+                  "${Languages.of(context)?.labelPleaseEnterMobileEmailEmirateID}",
+                  11,
+                  false,
+                  AppColor.TEXT_COLOR),
+            )),
+            SliverToBoxAdapter(
+                child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: _buildPhoneInput(
+                  context,
+                  "${Languages.of(context)?.labelEmailMobileEmiratesId}",
+                  _nameController,
+                  Icon(
+                    Icons.person,
+                    size: 15,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  )),
+            )),
+            SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 25,
+                  ),
+                  _buildLabelText(
+                      context,
+                      "${Languages.of(context)?.labelMobileNoEg}",
+                      11,
+                      false,
+                      Colors.grey),
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                height: screenHeight * 0.5,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 28.0),
+                  child: CustomButtonComponent(
+                      text: "${Languages.of(context)?.labelContinue}",
+                      isDarkMode: isDarkMode,
+                      screenWidth: screenWidth,
+                      onTap: () {
+                        hideKeyBoard();
+                        Navigator.pushNamed(context, "/BottomNav");
+                      }),
+                ),
+              ),
+            ),
+          ],
+        )
+        /*SafeArea(
         child: GestureDetector(
           onTap: () {
             hideKeyBoard();
           },
           child: Stack(
             children: [
-              SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: screenHeight * 0.95),
-                  child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 16.0, right: 16, top: 12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 12),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Icon(Icons.arrow_back_ios)),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              _buildLabelText(context, "${Languages.of(context)?.labelAccountRecovery}", 22,
-                                  true, AppColor.TEXT_COLOR),
-                              SizedBox(height: 4),
-                              _buildLabelText(
-                                  context,
-                                  "${Languages.of(context)?.labelPleaseEnterMobileEmailEmirateID}",
-                                  11,
-                                  false,
-                                  AppColor.TEXT_COLOR),
-                              SizedBox(height: 25),
-                              TextfieldComponent(width: 1,
+              ConstrainedBox(
+                constraints: BoxConstraints(minHeight: screenHeight * 0.95),
+                child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16.0, right: 16, top: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 12),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Icon(Icons.arrow_back_ios)),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            _buildLabelText(context, "${Languages.of(context)?.labelAccountRecovery}", 22,
+                                true, AppColor.TEXT_COLOR),
+                            SizedBox(height: 4),
+                            _buildLabelText(
+                                context,
+                                "${Languages.of(context)?.labelPleaseEnterMobileEmailEmirateID}",
+                                11,
+                                false,
+                                AppColor.TEXT_COLOR),
+                            SizedBox(height: 25),
+                            TextfieldComponent(width: 1,
                                   isPhone:false,
                                   textController: _nameController,
                                   icon:Icon(
@@ -177,36 +255,35 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                                   ],
                                   text: "${Languages.of(context)?.labelEmailMobileEmiratesId}",
                                   onChanged: (){}),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  _buildLabelText(
-                                      context,
-                                      "${Languages.of(context)?.labelMobileNoEg}",
-                                      11,
-                                      false,
-                                      Colors.grey),
-                                ],
-                              ),
-                              SizedBox(height: 4),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 28.0),
-                            child: CustomButtonComponent(text: "${Languages.of(context)?.labelContinue}",
-                                isDarkMode: isDarkMode,
-                                screenWidth: screenWidth,
-                                onTap: () {
-                                  hideKeyBoard();
-                                  Navigator.pushNamed(context, "/BottomNav");
-                                }),
-                          ),
-                        ],
-                      )),
-                ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                _buildLabelText(
+                                    context,
+                                    "${Languages.of(context)?.labelMobileNoEg}",
+                                    11,
+                                    false,
+                                    Colors.grey),
+                              ],
+                            ),
+                            SizedBox(height: 4),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 28.0),
+                          child: CustomButtonComponent(text: "${Languages.of(context)?.labelContinue}",
+                              isDarkMode: isDarkMode,
+                              screenWidth: screenWidth,
+                              onTap: () {
+                                hideKeyBoard();
+                                Navigator.pushNamed(context, "/BottomNav");
+                              }),
+                        ),
+                      ],
+                    )),
               ),
               isLoading
                   ? Stack(
@@ -224,8 +301,8 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
             ],
           ),
         ),
-      ),
-    );
+      ),*/
+        );
   }
 
   _buildLabelText(
