@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/view/component/textfield_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +56,17 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
+    isDarkMode = Theme
+        .of(context)
+        .brightness == Brightness.dark;
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
@@ -84,23 +93,31 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                   children: [
                     InstructionStep(
                         icon: Icons.document_scanner_rounded,
-                        title: "${Languages.of(context)?.labelStep} 1",
+                        title: "${Languages
+                            .of(context)
+                            ?.labelStep} 1",
                         isActive: true,
                         iconColor: Colors.green.shade900),
                     InstructionStep(
                         icon: Icons.person_sharp,
-                        title: "${Languages.of(context)?.labelStep} 2",
+                        title: "${Languages
+                            .of(context)
+                            ?.labelStep} 2",
                         isActive: true,
                         iconColor: Colors.green.shade900),
                     InstructionStep(
                         icon: Icons.lock_sharp,
-                        title: "${Languages.of(context)?.labelStep} 3",
+                        title: "${Languages
+                            .of(context)
+                            ?.labelStep} 3",
                         isActive: false,
                         iconColor: Colors.green.shade900),
                   ],
                 ),
                 Text(
-                  "${Languages.of(context)?.labelProvideMobileNoAndEmail}",
+                  "${Languages
+                      .of(context)
+                      ?.labelProvideMobileNoAndEmail}",
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
@@ -126,7 +143,8 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                                 selectedCountry == null;
                               });
                               print(
-                                  'Selected country flag: ${country.flagEmoji}');
+                                  'Selected country flag: ${country
+                                      .flagEmoji}');
                               print('Phone code: ${country.phoneCode}');
                               print('Country code: ${country.countryCode}');
                             },
@@ -166,82 +184,91 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                               children: [
                                 selectedItem.isEmpty
                                     ? IntrinsicWidth(
-                                        child: Row(
-                                          children: [
-                                            SizedBox(width: 2),
-                                            Text(
-                                              selectedCountry != null
-                                                  ? "${selectedCountry?.flagEmoji}"
-                                                  : "",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              selectedCountry != null
-                                                  ? "+${selectedCountry?.phoneCode}"
-                                                  : "+",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : IntrinsicWidth(
-                                        child: Row(
-                                          children: [
-                                            SizedBox(width: 2),
-                                            Text(
-                                              "$selectedCountryFlag",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              "+$selectedItem",
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: 2),
+                                      Text(
+                                        selectedCountry != null
+                                            ? "${selectedCountry?.flagEmoji}"
+                                            : "",
+                                        style: TextStyle(fontSize: 20),
                                       ),
+                                      SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        selectedCountry != null
+                                            ? "+${selectedCountry?.phoneCode}"
+                                            : "+",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                    : IntrinsicWidth(
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: 2),
+                                      Text(
+                                        "$selectedCountryFlag",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        "+$selectedItem",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 Icon(Icons.keyboard_arrow_down_sharp),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      _buildPhoneInput(
-                          context,
-                          Languages.of(context)!.labelMobileNumber,
-                          _phoneNoController,
-                          Icon(
+                      TextfieldComponent(width: 0.66,
+                          isPhone : true ,
+                          textController: _phoneNoController,
+                          icon:Icon(
                             Icons.person,
                             size: 20,
                             color: isDarkMode ? Colors.white : Colors.black,
-                          ),
-                          0.66),
+                          ) ,
+                          inputFormatters:  [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          text: Languages.of(context)!.labelMobileNumber,
+                          onChanged: (){}),
                     ],
                   ),
                 ),
-                _buildEmailInput(
-                    context,
-                    Languages.of(context)!.labelEmail,
-                    _emailController,
-                    Icon(
+                TextfieldComponent(width: 1,
+                    isPhone:false,
+                    textController: _emailController,
+                    icon:Icon(
                       Icons.mail,
                       size: 18,
                       color: isDarkMode ? Colors.white : Colors.black,
-                    ),
-                    1.0),
+                    ) ,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
+                    text: Languages.of(context)!.labelEmail,
+                    onChanged: (){}),
                 Spacer(),
                 Center(
                     child: CustomButtonComponent(
-                        text: "${Languages.of(context)?.labelContinue}",
+                        text: "${Languages
+                            .of(context)
+                            ?.labelContinue}",
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
                         onTap: () {
-                          Navigator.pushNamed(context, "/OtpVerificationScreen");
+                          Navigator.pushNamed(
+                              context, "/OtpVerificationScreen");
                         })),
                 SizedBox(
                   height: 35,
@@ -251,15 +278,15 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
           ),
           isLoading
               ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(dismissible: false, color: Colors.transparent),
-                    // Loader indicator
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
+            children: [
+              // Block interaction
+              ModalBarrier(dismissible: false, color: Colors.transparent),
+              // Loader indicator
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          )
               : SizedBox()
         ]),
       ),
@@ -274,35 +301,6 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
       //selectedCountryCode = "${newValue?.phoneCode}";
       ///selectedItem = "${newValue?.flagImageUrl}";
     });
-  }
-
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return Center(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          width: screenWidth * 0.8,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.8),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.black),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: Colors.white),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   void onPressedFrontImage() async {
@@ -332,7 +330,9 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            Text('${Languages
+                .of(context)
+                ?.labelNoInternetConnection}'),
             duration: maxDuration,
           ),
         );
@@ -342,137 +342,16 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
       await Provider.of<MainViewModel>(context, listen: false)
           .fetchCountryList("api/v1/app/customers/country_list");
       ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
+          Provider
+              .of<MainViewModel>(context, listen: false)
+              .response;
       getCountryList(context, apiResponse);
     }
   }
 
-  Widget _buildPhoneInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon, double height) {
-    //nameController.text = widget.data as String;
-    return Card(
-      child: Container(
-        //height: 60,
-        width: screenWidth * height,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border(
-              top: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54,
-                  width: 0.4)),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 14.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  //_isValidInput();
-                },
-                maxLength: 10,
-                textAlignVertical: TextAlignVertical.top,
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  alignLabelWithHint: true,
-                  counterText: "",
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmailInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon, double height) {
-    //nameController.text = widget.data as String;
-    return Card(
-      child: Container(
-        //height: 60,
-        width: screenWidth * height,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border(
-              top: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54,
-                  width: 0.4)),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 14.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  //_isValidInput();
-                },
-                textAlignVertical: TextAlignVertical.top,
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.done,
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                ],
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  alignLabelWithHint: true,
-                  counterText: "",
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
     CountryListResponse? countryListResponse =
-        apiResponse.data as CountryListResponse?;
+    apiResponse.data as CountryListResponse?;
     var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {

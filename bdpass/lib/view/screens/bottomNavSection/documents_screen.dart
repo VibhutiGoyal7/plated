@@ -1,6 +1,7 @@
 import 'package:BDPass/model/response/checkCustomerReponse.dart';
 import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/view/component/custom_button_component.dart';
+import 'package:BDPass/view/component/search_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -164,7 +165,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                         isSearch ?
                         Row(
                           children: [
-                            _buildSearch(),
+                            SearchComponent(width: 0.8, screenWidth: screenWidth, isDarkMode: isDarkMode,
+                                searchController: _searchController, onChanged: (){}),
                             GestureDetector(onTap:(){
                               setState(() {
                                 isSearch = false;
@@ -386,38 +388,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               Icons.keyboard_control_outlined,
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearch() {
-    return Container(
-      height: 43,
-      width: screenWidth*0.8,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color:isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: TextField(
-        style: TextStyle(
-          fontSize: 14.0,
-        ),
-        obscureText: false,
-        obscuringCharacter: "*",
-        controller: _searchController,
-        onChanged: (value) {
-          //_isValidInput();
-        },
-        onSubmitted: (value) {},
-        keyboardType: TextInputType.visiblePassword,
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: Languages.of(context)?.labelSearch,
-          icon: Icon(Icons.search),
         ),
       ),
     );

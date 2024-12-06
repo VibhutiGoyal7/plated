@@ -12,6 +12,7 @@ import '../../../model/response/setUpAccountResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/textfield_component.dart';
 import '../../component/toastMessage.dart';
 
 class AccountRecoveryScreen extends StatefulWidget {
@@ -158,17 +159,24 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                                   false,
                                   AppColor.TEXT_COLOR),
                               SizedBox(height: 25),
-                              _buildPhoneInput(
-                                  context,
-                                  "${Languages.of(context)?.labelEmailMobileEmiratesId}",
-                                  _nameController,
-                                  Icon(
+                              TextfieldComponent(width: 1,
+                                  isPhone:false,
+                                  textController: _nameController,
+                                  icon:Icon(
                                     Icons.person,
                                     size: 20,
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  ) ,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[a-zA-Z0-9@._]'),
+                                    ),
+                                  ],
+                                  text: "${Languages.of(context)?.labelEmailMobileEmiratesId}",
+                                  onChanged: (){}),
                               SizedBox(height: 5),
                               Row(
                                 children: [
@@ -227,53 +235,6 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
       style: TextStyle(
         fontSize: size.toDouble(),
         fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
-      ),
-    );
-  }
-
-  Widget _buildPhoneInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon) {
-    return Card(
-      elevation: 0,
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 4.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(width: 0.2, color: Colors.grey)),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 12.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                    RegExp(r'[a-zA-Z0-9@._]'),
-                  ),
-                  FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                ],
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: text,
-                    hintStyle: TextStyle(fontSize: 12, color: Colors.grey)
-                    //icon: icon,
-                    ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

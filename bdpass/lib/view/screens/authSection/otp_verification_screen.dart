@@ -281,35 +281,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         ));
   }
 
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return Center(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          width: screenWidth * 0.8,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.8),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.black),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: Colors.white),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void onPressedFrontImage() async {
     List<String> pictures;
     try {
@@ -350,68 +321,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           Provider.of<MainViewModel>(context, listen: false).response;
       getCountryList(context, apiResponse);
     }
-  }
-
-  Widget _buildPhoneInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon, double height) {
-    //nameController.text = widget.data as String;
-    return Card(
-      child: Container(
-        //height: 60,
-        width: screenWidth * height,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border(
-              top: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54,
-                  width: 0.4)),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 14.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  //_isValidInput();
-                },
-                maxLength: 12,
-                textAlignVertical: TextAlignVertical.top,
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  alignLabelWithHint: true,
-                  counterText: "",
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget getCountryList(BuildContext context, ApiResponse apiResponse) {

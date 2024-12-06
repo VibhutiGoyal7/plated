@@ -11,6 +11,7 @@ import '../../../model/response/notificationListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/search_component.dart';
 import 'history_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -229,7 +230,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ],
                     ),
                   ),
-                  _buildSearch(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: SearchComponent(width: 1, screenWidth: screenWidth, isDarkMode: isDarkMode,
+                        searchController: _searchController, onChanged: (){}),
+                  ),
                   SizedBox(
                     height: 4,
                   ),
@@ -310,38 +315,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 18),
               child: ShimmerList(itemCount: 2),
             ),
-    );
-  }
-
-  Widget _buildSearch() {
-    return Container(
-      height: 43,
-      width: screenWidth,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color:isDarkMode ? AppColor.DARK_CARD_COLOR :  Colors.grey[100],
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: TextField(
-        style: TextStyle(
-          fontSize: 14.0,
-        ),
-        obscureText: false,
-        obscuringCharacter: "*",
-        controller: _searchController,
-        onChanged: (value) {
-          //_isValidInput();
-        },
-        onSubmitted: (value) {},
-        keyboardType: TextInputType.visiblePassword,
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: Languages.of(context)?.labelSearch,
-          icon: Icon(Icons.search),
-        ),
-      ),
     );
   }
 

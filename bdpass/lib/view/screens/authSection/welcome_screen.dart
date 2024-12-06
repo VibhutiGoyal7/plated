@@ -1,5 +1,6 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -100,9 +101,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               ),
                             ],
                           ),
-                          _buildFooter(
-                              context: context,
+                          CustomButtonComponent(
                               text: Languages.of(context)!.labelContinue,
+                              screenWidth: screenWidth,
+                              isDarkMode: isDarkMode,
                               onTap: () {
                                 Navigator.pushNamed(context, '/SliderScreen');
                               }),
@@ -125,57 +127,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 : SizedBox()
           ]),
         ),
-      ),
-    );
-  }
-
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: screenWidth * 0.43,
-            child: ElevatedButton(
-              onPressed: onTap,
-              child: Text(
-                "${Languages.of(context)?.labelEnglish}",
-                style: TextStyle(
-                    color: AppColor.PRIMARY, fontWeight: FontWeight.bold),
-              ),
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: AppColor.WHITE,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8))),
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Container(
-            width: screenWidth * 0.43,
-            child: ElevatedButton(
-              onPressed: onTap,
-              child: Text(
-                "${Languages.of(context)?.labelBangladesh}",
-                style: TextStyle(
-                    color: AppColor.PRIMARY, fontWeight: FontWeight.bold),
-              ),
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: AppColor.WHITE,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8))),
-            ),
-          ),
-        ],
       ),
     );
   }

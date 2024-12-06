@@ -1,18 +1,18 @@
 import 'package:BDPass/model/apis/api_response.dart';
-import 'package:BDPass/model/request/setUpAccountRequest.dart';
 import 'package:BDPass/utils/Util.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/response/setUpAccountResponse.dart';
-import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
+import '../../component/textfield_component.dart';
 import '../../component/toastMessage.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
@@ -64,8 +64,12 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     }
   }
 
+  final TextEditingController _idNoController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _nationalityController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _expiryDateController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -150,7 +154,10 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                 height: 15,
                               ),
                               _buildLabelText(
-                                  context, "${Languages.of(context)?.labelConfirmDetails}", 24, true),
+                                  context,
+                                  "${Languages.of(context)?.labelConfirmDetails}",
+                                  24,
+                                  true),
                               SizedBox(height: 4),
                               _buildLabelText(
                                   context,
@@ -159,21 +166,54 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                   false),
                               SizedBox(height: 25),
                               _buildLabelText(
-                                  context, "${Languages.of(context)?.labelPersonalDetails}", 14, false),
+                                  context,
+                                  "${Languages.of(context)?.labelPersonalDetails}",
+                                  14,
+                                  false),
                               SizedBox(height: 4),
-                              _buildPhoneInput(
+                              TextfieldComponent(width: 1,
+                                  isPhone : false ,
+                                  textController: _idNoController,
+                                  icon:Icon(
+                                    Icons.person,
+                                    size: 20,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ) ,
+                                  inputFormatters:  [
+                                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                  ],
+                                  text: Languages.of(context)!.labelIDNumber,
+                                  onChanged: (){}),
+                             /* _buildPhoneInput(
                                   context,
                                   "${Languages.of(context)?.labelIDNumber}",
-                                  _nameController,
+                                  _idNoController,
                                   Icon(
                                     Icons.person,
                                     size: 20,
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  )),*/
                               SizedBox(height: 5),
-                              _buildPhoneInput(
+                              TextfieldComponent(width: 1,
+                                  isPhone : false ,
+                                  textController: _nameController,
+                                  icon:Icon(
+                                    Icons.person,
+                                    size: 20,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ) ,
+                                  inputFormatters:  [
+                                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                  ],
+                                  text: Languages.of(context)!.labelFirstName,
+                                  onChanged: (){}),
+                              /*_buildPhoneInput(
                                   context,
                                   "${Languages.of(context)?.labelFirstName}",
                                   _nameController,
@@ -183,19 +223,23 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  )),*/
                               SizedBox(height: 10),
-                              _buildPhoneInput(
-                                  context,
-                                  Languages.of(context)!.labelLastname,
-                                  _lastNameController,
-                                  Icon(
+                              TextfieldComponent(width: 1,
+                                  isPhone : false ,
+                                  textController: _lastNameController,
+                                  icon:Icon(
                                     Icons.person,
                                     size: 20,
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  ) ,
+                                  inputFormatters:  [
+                                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                  ],
+                                  text: Languages.of(context)!.labelLastname,
+                                  onChanged: (){}),
                               SizedBox(height: 5),
                               _buildDOBInput(
                                   context,
@@ -209,49 +253,60 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                                         : Colors.black,
                                   )),
                               SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "${Languages.of(context)?.labelNationality}",
-                                  _emailController,
-                                  Icon(
-                                    Icons.mail,
-                                    size: 18,
+                              TextfieldComponent(width: 1,
+                                  isPhone : false ,
+                                  textController: _nationalityController,
+                                  icon:Icon(
+                                    Icons.place_sharp,
+                                    size: 20,
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  ) ,
+                                  inputFormatters:  [
+                                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                  ],
+                                  text: Languages.of(context)!.labelNationality,
+                                  onChanged: (){}),
                               SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "${Languages.of(context)?.labelGender}",
-                                  _passwordController,
-                                  Icon(
-                                    Icons.mail,
-                                    size: 18,
+                              TextfieldComponent(width: 1,
+                                  isPhone : false ,
+                                  textController: _genderController,
+                                  icon:Icon(
+                                    Icons.person,
+                                    size: 20,
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  ) ,
+                                  inputFormatters:  [
+                                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                  ],
+                                  text: Languages.of(context)!.labelGender,
+                                  onChanged: (){}),
                               SizedBox(height: 5),
-                              _buildPhoneInput(
-                                  context,
-                                  "${Languages.of(context)?.labelExpiryDate}",
-                                  _confirmPasswordController,
-                                  Icon(
-                                    Icons.mail,
-                                    size: 18,
+                              TextfieldComponent(width: 1,
+                                  isPhone : false ,
+                                  textController: _expiryDateController,
+                                  icon:Icon(
+                                    Icons.date_range_outlined,
+                                    size: 20,
                                     color: isDarkMode
                                         ? Colors.white
                                         : Colors.black,
-                                  )),
+                                  ) ,
+                                  inputFormatters:  [
+                                  ],
+                                  text: Languages.of(context)!.labelExpiryDate,
+                                  onChanged: (){}),
+
                             ],
                           ),
-                          CustomButtonComponent(text: Languages.of(context)!.labelConfirm,
+                          CustomButtonComponent(
+                              text: Languages.of(context)!.labelConfirm,
                               isDarkMode: isDarkMode,
                               screenWidth: screenWidth,
-                              onTap: () {
-
-                              }),
+                              onTap: () {}),
                         ],
                       )),
                 ),
@@ -282,46 +337,6 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
       style: TextStyle(
         fontSize: size.toDouble(),
         fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
-      ),
-    );
-  }
-
-  Widget _buildPhoneInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon) {
-    return Card(
-      elevation: 0,
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(width: 0.2, color: Colors.grey)),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  //icon: icon,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -386,233 +401,9 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                         _dateController.text =
                             formattedDate; //set output date to TextField value.
                       });
-                                        })),
+                    })),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildEmailInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon) {
-    return Card(
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  icon: icon,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPasswordInput(
-    BuildContext context,
-    String text,
-    TextEditingController nameController,
-    Icon icon,
-    bool passwordVisibles,
-    bool isDarkMode,
-  ) {
-    return Card(
-      child: Container(
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                textAlignVertical: TextAlignVertical.center,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-                obscureText: passwordVisibles,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  icon: icon,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      passwordVisibles
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      size: 20,
-                      color: isDarkMode ? Colors.white60 : Colors.black45,
-                    ),
-                    onPressed: () {
-                      setState(
-                        () {
-                          if (text ==
-                              "${Languages.of(context)?.labelPassword}") {
-                            passwordVisible = !passwordVisible;
-                          } else {
-                            confirmPasswordVisible = !confirmPasswordVisible;
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFooter(BuildContext context, ApiResponse apiResponse) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: screenWidth * 0.8,
-            child: ElevatedButton(
-              onPressed: () async {
-                hideKeyBoard();
-                _isValidInput();
-                const maxDuration = Duration(seconds: 2);
-                print(_nameController.text);
-                if (inputValid) {
-                  setState(() {
-                    isLoading = true;
-                  });
-
-                  bool isConnected = await _connectivityService.isConnected();
-                  if (!isConnected) {
-                    setState(() {
-                      isLoading = false;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              '${Languages.of(context)?.labelNoInternetConnection}'),
-                          duration: maxDuration,
-                        ),
-                      );
-                    });
-                  } else {
-                    SetUpAccountRequest request = SetUpAccountRequest(
-                        customer: CustomerDetail(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                      firstName: _nameController.text,
-                      lastName: _lastNameController.text,
-                      dob: _dateController.text,
-                    ));
-                    await Provider.of<MainViewModel>(context, listen: false)
-                        .fetchSetUpScreenData(
-                            "/api/v1/app/customers/update_customer", request);
-                    //Navigator.pushNamed(context, '/BottomNav');
-
-                    ApiResponse apiResponse =
-                        Provider.of<MainViewModel>(context, listen: false)
-                            .response;
-                    getSetUpAccountWidget(context, apiResponse);
-                  }
-                } else {
-                  if (_emailController.text.isEmpty &&
-                      _nameController.text.isEmpty &&
-                      _lastNameController.text.isEmpty &&
-                      _passwordController.text.isEmpty &&
-                      _dateController.text.isEmpty &&
-                      _confirmPasswordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Please enter all the details'),
-                        duration: maxDuration,
-                      ),
-                    );
-                  } else if (!EmailValidator.validate(_emailController.text)) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Enter valid email address.'),
-                        duration: maxDuration,
-                      ),
-                    );
-                  } else if (_passwordController.text.length < 8) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            '${Languages.of(context)?.labelPasswordAlert}'),
-                        duration: maxDuration,
-                      ),
-                    );
-                  } else if (_passwordController.text !=
-                      _confirmPasswordController.text) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            "${Languages.of(context)?.labelPasswordDoesntMatch}"),
-                        duration: maxDuration,
-                      ),
-                    );
-                  }
-                }
-              },
-              child: Text(
-                Languages.of(context)!.labelConfirm,
-                style: TextStyle(
-                    color: inputValid ? Colors.white : AppColor.PRIMARY),
-              ),
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
-                  elevation: 3,
-                  shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.circular(5))),
-            ),
-          ),
-          /*   Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Do you need any help?",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[400],
-              ),
-            ),
-          ),*/
-        ],
       ),
     );
   }

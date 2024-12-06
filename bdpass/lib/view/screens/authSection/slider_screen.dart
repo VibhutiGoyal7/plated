@@ -1,12 +1,12 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
-import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
@@ -81,14 +81,15 @@ class _SliderScreenState extends State<SliderScreen> {
                     dotWidth: 6.0,
                     spacing: 10.0,
                     dotColor: Colors.grey,
-                    activeDotColor:isDarkMode? Colors.white : Colors.black,
+                    activeDotColor: isDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
               ),
               Spacer(),
-              _buildFooter(
-                  context: context,
+              CustomButtonComponent(
                   text: "${Languages.of(context)?.labelContinue}",
+                  screenWidth: screenWidth,
+                  isDarkMode: isDarkMode,
                   onTap: () {
                     Navigator.pushNamed(context, '/CreateAccountScreen');
                   }),
@@ -251,35 +252,6 @@ class _SliderScreenState extends State<SliderScreen> {
           height: 10,
         ),
       ],
-    );
-  }
-
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onTap,
-              child: Text(
-                text,
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
-                  backgroundColor: AppColor.PRIMARY,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8))),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

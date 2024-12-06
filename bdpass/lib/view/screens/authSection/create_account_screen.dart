@@ -121,9 +121,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         })),
                 Center(
                   child: _buildExistingAccFooter(
-                    isDarkMode: isDarkMode,
+                      isDarkMode: isDarkMode,
                       context: context,
-                      text: "${Languages.of(context)?.labelHaveAnExistingAccount}",
+                      text:
+                          "${Languages.of(context)?.labelHaveAnExistingAccount}",
                       onTap: () {
                         // Navigator.pushNamed(context, '/SliderScreen');
                       }),
@@ -161,31 +162,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     );
   }
 
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: screenWidth * 0.94,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.8),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.black),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildExistingAccFooter(
       {required BuildContext context,
       required String text,
@@ -198,7 +174,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-            border: Border.all(color: isDarkMode ? Colors.white : Colors.black, width: 0.8),
+            border: Border.all(
+                color: isDarkMode ? Colors.white : Colors.black, width: 0.8),
             borderRadius: BorderRadius.circular(8)),
         child: Center(
           child: Text(

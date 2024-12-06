@@ -68,6 +68,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                   "${Languages.of(context)?.labelBDPassTermsOfUse}",
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 4,),
                 Text(
                   "${Languages.of(context)?.labelVersion} 1.0",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -82,7 +83,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                 ),
                 SingleChildScrollView(
                   child: Container(
-                    height: screenHeight*0.61,
+                    height: screenHeight*0.6,
                     child: Column(
                       children: [
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consequat ligula vel ante efficitur, eu auctor urna fermentum. Aenean hendrerit placerat justo et lobortis. Nulla mauris lectus, congue non libero vel",
