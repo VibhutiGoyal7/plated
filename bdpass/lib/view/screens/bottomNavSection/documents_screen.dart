@@ -12,6 +12,7 @@ import '../../../model/request/checkCustomerRequest.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/fixed_header_delegate.dart';
 import '../../component/toastMessage.dart';
 
 class DocumentsScreen extends StatefulWidget {
@@ -28,6 +29,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   String? selected = "";
   bool isIssued = false;
   bool isSearch = false;
+  String selectedHeading = "Issued";
+  List<String> heading = ["Issued","Uploaded"];
   String? username;
   bool isRecentDataEmpty = true;
   final TextEditingController _searchController = TextEditingController();
@@ -106,7 +109,210 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     statusBarColor: Colors.transparent,
                     statusBarIconBrightness:
                         isDarkMode ? Brightness.light : Brightness.dark),
-                child: SafeArea(
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverAppBar(
+                      snap: false,
+                      pinned: true,
+                      floating: false,
+                      expandedHeight: 90.0, // Adjust the expanded height
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Container(
+                          color: AppColor.BG_COLOR,
+                        ),
+                        centerTitle: true,
+                        collapseMode: CollapseMode.parallax,
+                        title: Text(
+                          "${Languages.of(context)?.labelDocuments}",
+                          style: TextStyle(
+                            color: AppColor.TEXT_COLOR,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                      backgroundColor: AppColor.BG_COLOR,
+                      foregroundColor: AppColor.BG_COLOR,
+                      leading: SizedBox(),
+                      actions: [GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSearch = !isSearch;
+                          });
+                        },
+                        child: Icon(
+                          Icons.search_outlined,
+                          size: 24,
+                        ),
+                      ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Icon(
+                          Icons.transfer_within_a_station_outlined,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Icon(
+                          Icons.menu_sharp,
+                          size: 24,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),],
+                    ),
+
+                    // Your Fixed Header - SliverPersistentHeader
+
+                    SliverPersistentHeader(
+                      pinned: isSearch ?true :false, // Keeps the header fixed at the top when scrolling
+                      delegate: FixedHeaderDelegate(
+                        child: Container(
+                          color: AppColor.BG_COLOR, // Background color for the fixed header
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: 6),
+                          child: SearchComponent(width: 1, screenWidth: screenWidth, isDarkMode: isDarkMode,
+                              searchController: _searchController, onChanged: (){}),
+                        ),
+                      ),
+                    ) ,
+
+                    SliverToBoxAdapter(
+                      child: Container(
+                       /* decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                            Border.all(color: Colors.grey, width: 0.6)),*/
+                        child: Center(
+                          child: SegmentedButton(
+                            style: SegmentedButton.styleFrom(
+                              fixedSize: Size(screenWidth, 30),
+                              side: BorderSide(color:isDarkMode? Colors.white : Colors.black,width: 0.4),
+                              padding: EdgeInsets.symmetric(horizontal: 24,vertical: 0),
+                              foregroundColor: isDarkMode ? Colors.white:Colors.black,
+                              selectedForegroundColor: Colors.white,
+                              selectedBackgroundColor: AppColor.PRIMARY,
+                            ),
+                            segments: [
+                              for (int i = 0; i < heading.length; i++)
+                                ButtonSegment<String>(
+                                  value: heading[i],
+                                  label: Text(heading[i]),
+                                ),
+                            ],
+                            selected: {selectedHeading}, // Set of selected values
+                              onSelectionChanged: (Set<String> selected) {
+                                setState(() {
+                                  // Get the first selected value from the set (assuming only one selection)
+                                  selectedHeading = selected.first;
+                                });
+                              },)
+
+
+
+                          /*Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isIssued = true;
+                                      });
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            bottomLeft: Radius.circular(8),
+                                          ),
+                                          color: isIssued
+                                              ? AppColor.PRIMARY
+                                              : Colors.white,
+                                        ),
+                                        child: Center(
+                                            child: Text(
+                                              "${Languages.of(context)?.labelIssued}",
+                                              style: TextStyle(
+                                                  color: isIssued
+                                                      ? Colors.white
+                                                      : AppColor.PRIMARY),
+                                            ))),
+                                  )),
+                              Container(
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                              Expanded(
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isIssued = false;
+                                        });
+                                      },
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(8),
+                                              bottomRight: Radius.circular(8),
+                                            ),
+                                            color: !isIssued
+                                                ? AppColor.PRIMARY
+                                                : Colors.white,
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                                  "${Languages.of(context)?.labelUploaded}",
+                                                  style: TextStyle(
+                                                      color: !isIssued
+                                                          ? Colors.white
+                                                          : AppColor
+                                                          .PRIMARY)))))),
+                            ],
+                          )*/,
+                        ),
+                      ),
+                    ),
+
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              _buildTab(Icons.file_copy_sharp,
+                                  "${Languages.of(context)?.labelAllDocuments}"),
+                              _buildTab(Icons.person_outline_outlined,
+                                  "${Languages.of(context)?.labelPersonal}"),
+                              _buildTab(Icons.local_post_office_outlined,
+                                  "${Languages.of(context)?.labelProfessional}"),
+                              _buildTab(Icons.padding_outlined,
+                                  "${Languages.of(context)?.labelLegal}"),
+                              _buildTab(Icons.home_work_outlined,
+                                  "${Languages.of(context)?.labelProperty}"),
+                            ],
+                          ),
+                        ),
+                      ) ,
+                    ),
+
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                          return _buildCard(list[index]);
+                        },
+                        childCount: list.length,
+                      ),
+                    ),
+                  ],
+                ),
+
+
+                /*SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12.0, vertical: 12.0),
@@ -266,7 +472,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           ),
                         ),
                         Text(
-                          "7${Languages.of(context)?.labelIssuedDocumentsUnder}'All Documents'",
+                          "7${Languages.of(context)?.labelIssuedDocumentsUnder} 'All Documents'",
                           style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
@@ -299,7 +505,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       ],
                     ),
                   ),
-                ),
+                ),*/
               ),
               isLoading
                   ? Stack(
@@ -315,6 +521,16 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     )
                   : SizedBox(),
             ],
+          ),
+          bottomNavigationBar: Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 60),
+            child: CustomButtonComponent(
+                text:
+                '${Languages.of(context)?.labelRequestADocument}',
+                screenWidth: screenWidth,
+                isDarkMode: isDarkMode,
+                onTap: () {}),
           ),
         ),
       ),

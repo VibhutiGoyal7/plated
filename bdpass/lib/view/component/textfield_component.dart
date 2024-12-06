@@ -45,32 +45,29 @@ class TextfieldComponent extends StatelessWidget {
                   width: 0.4)),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: Expanded(
-          flex: 1,
-          child: TextField(
-            style: TextStyle(
-              fontSize: 14.0,
-            ),
-            obscureText: false,
-            obscuringCharacter: "*",
-            controller: textController,
-            onChanged: (value) {
-              //_isValidInput();
-            },
-            maxLength: isPhone ? 10: 100   ,
-            textAlignVertical: TextAlignVertical.top,
-            scrollPadding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            onSubmitted: (value) {},
-            keyboardType:isPhone ? TextInputType.phone : TextInputType.emailAddress,
-            textInputAction: TextInputAction.done,
-            inputFormatters: inputFormatters,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: text,
-              alignLabelWithHint: true,
-              counterText: "",
-            ),
+        child: TextField(
+          style: TextStyle(
+            fontSize: 14.0,
+          ),
+          obscureText: false,
+          obscuringCharacter: "*",
+          controller: textController,
+          onChanged: (value) {
+            //_isValidInput();
+          },
+          maxLength: isPhone ? 10: 100   ,
+          textAlignVertical: TextAlignVertical.top,
+          scrollPadding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          onSubmitted: (value) {},
+          keyboardType:isPhone ? TextInputType.phone : TextInputType.emailAddress,
+          textInputAction: TextInputAction.done,
+          inputFormatters: inputFormatters,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: text,
+            alignLabelWithHint: true,
+            counterText: "",
           ),
         ),
       ),

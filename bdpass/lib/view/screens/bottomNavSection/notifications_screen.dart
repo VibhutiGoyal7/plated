@@ -13,6 +13,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/notificationListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
+import '../../component/fixed_header_delegate.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/search_component.dart';
 import 'history_screen.dart';
@@ -82,6 +83,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   static const maxDuration = Duration(seconds: 2);
 
   late bool isDarkMode;
+   bool isSearch = false;
 
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -247,38 +249,126 @@ class _NotificationScreenState extends State<NotificationScreen> {
               statusBarColor: Colors.transparent,
               statusBarIconBrightness:
                   isDarkMode ? Brightness.light : Brightness.dark),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10.0, top: 10, bottom: 5, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${Languages.of(context)?.labelNotification}",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        //Icon(Icons.menu)
-                      ],
-                    ),
+                  child: FutureBuilder(
+                    future: _fetchDataFuture,
+                    builder: (context, AsyncSnapshot<void> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      if (snapshot.hasError) {
+                        return Center(child: Text("Error loading data"));
+                      }
+
+                      // Group notifications by date
+                      Map<String, List<NotificationDetails>> groupedNotifications =
+                      groupNotificationsByDate(generalNotificationList);
+                      List<String> dates = groupedNotifications.keys.toList();
+                      int i = 0;
+
+                      return CustomScrollView(
+                        controller: _scrollController,
+                        slivers: [
+                          SliverAppBar(
+                            snap: false,
+                            pinned: true,
+                            floating: false,
+                            expandedHeight: 90.0, // Adjust the expanded height
+                            flexibleSpace: FlexibleSpaceBar(
+                              background: Container(
+                                color: AppColor.BG_COLOR,
+                              ),
+                              centerTitle: true,
+                              collapseMode: CollapseMode.parallax,
+                              title: Text(
+                                "${Languages.of(context)?.labelNotification}",
+                                style: TextStyle(
+                                  color: AppColor.TEXT_COLOR,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            backgroundColor: AppColor.BG_COLOR,
+                            foregroundColor: AppColor.BG_COLOR,
+                            leading: SizedBox(),
+                            actions: [Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                              child: GestureDetector(
+                                  onTap: (){
+                                    setState(() {
+                                      isSearch = !isSearch;
+                                    });
+                                    },
+                                  child: Icon(Icons.search,color: AppColor.PRIMARY,)),
+                            )],
+                          ),
+
+                          // Your Fixed Header - SliverPersistentHeader
+
+                          SliverPersistentHeader(
+                            pinned: isSearch ?true :false, // Keeps the header fixed at the top when scrolling
+                            delegate: FixedHeaderDelegate(
+                              child: Container(
+                                color: AppColor.BG_COLOR, // Background color for the fixed header
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                child: SearchComponent(width: 1, screenWidth: screenWidth, isDarkMode: isDarkMode,
+                                    searchController: _searchController, onChanged: (){}),
+                              ),
+                            ),
+                          ) ,
+
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                String date = dates[index];
+                                List<NotificationDetails> notificationsForDate =
+                                groupedNotifications[date]!;
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 0.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      /*Text(
+                                        date,
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),*/
+                                      ...notificationsForDate
+                                          .asMap()
+                                          .entries
+                                          .map((notification) {
+                                        i++;
+                                        return generalNotificationItem(
+                                            notification.value,
+                                            i /*notification.key*/);
+                                      }).toList(),
+                                    ],
+                                  ),
+                                );
+                              },
+                              childCount: dates.length,
+                            ),
+                          ),
+                          if (_isLoadingMore)
+                            SliverToBoxAdapter(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Center(child: CircularProgressIndicator()),
+                              ),
+                            ),
+
+                          SliverToBoxAdapter(
+                            child: SizedBox(height: 65,),
+                          )
+                        ],
+                      );
+                    },
                   ),
-                  _buildSearch(),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  generalNotification(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ));
+                ),
+          ],
+        ));
   }
 
   Widget generalNotification() {
