@@ -21,7 +21,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   String token = "";
   late double screenWidth;
   late double screenHeight;
-  PageController _pageController = PageController();
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);

@@ -52,9 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness:
-          Brightness.light, // Light icons for the status bar
-      //statusBarBrightness: Brightness.dark,       // Status bar brightness (for iOS)
+      statusBarIconBrightness: Brightness.light,
     ));
     customerName = "";
     userName = "";
@@ -294,28 +292,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: isTablet ? 0 : 10.0),
-                                        Text("${Languages.of(context)?.labelAccount}",
+                                        Text(
+                                            "${Languages.of(context)?.labelAccount}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(context,
-                                                  '/AccountDetailScreen',
+                                              Navigator.pushNamed(
+                                                  context, '/ChangePinScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelChangePIN}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelChangePIN}",
                                               icon: Icons.key,
                                               headingTextSize: 14,
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(context,
-                                                  '/PersonalInfoScreen',
+                                              Navigator.pushNamed(
+                                                  context, '/ChangePinScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelManageDevices}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelManageDevices}",
                                               icon: Icons.phone_android,
                                               headingTextSize: 14,
                                             )),
@@ -327,10 +328,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       "${Languages.of(context)!.labelAddedCard}");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelResetSigninPassword}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelResetSigninPassword}",
                                               icon: Icons.password,
                                               headingTextSize: 14,
                                             )),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 1.0),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical: 12.0),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.border_inner_outlined,
+                                                    size: 22,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Text(
+                                                    "${Languages.of(context)?.labelBiometrics}",
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      //fontWeight: FontWeight.w600,
+                                                      //color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Container(
+                                                    height: 25,
+                                                    child: Switch(
+                                                      value: isBiometricEnable,
+                                                      activeColor:
+                                                          AppColor.PRIMARY,
+                                                      inactiveTrackColor:
+                                                          Colors.red,
+                                                      onChanged: (bool value) {
+                                                        setState(() {
+                                                          isBiometricEnable =
+                                                              value;
+                                                        });
+                                                        Helper.saveBiometric(
+                                                            isBiometricEnable);
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -338,18 +399,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelBiometrics}",
-                                              icon: Icons.border_inner_outlined,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/SettingScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelLanguage}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelLanguage}",
                                               icon: Icons.abc_outlined,
                                               headingTextSize: 14,
                                             )),
@@ -360,11 +411,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelAccessibility}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelAccessibility}",
                                               icon: Icons.accessibility,
                                               headingTextSize: 14,
                                             )),
-                                        Text("${Languages.of(context)?.labelMore}",
+                                        Text(
+                                            "${Languages.of(context)?.labelMore}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)),
                                         GestureDetector(
@@ -374,7 +427,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelAboutBDPass}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelAboutBDPass}",
                                               icon: Icons.fingerprint,
                                               headingTextSize: 14,
                                             )),
@@ -385,7 +439,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   arguments: "");
                                             },
                                             child: DetailBox(
-                                              heading: "${Languages.of(context)?.labelWalkthrough}",
+                                              heading:
+                                                  "${Languages.of(context)?.labelWalkthrough}",
                                               icon: Icons.play_arrow_rounded,
                                               headingTextSize: 14,
                                             )),

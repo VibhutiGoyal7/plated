@@ -170,7 +170,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ),
                         SafeArea(
                           child: Container(
-                            height: screenHeight * 0.9,
+                            height: screenHeight * 0.88,
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 12),
@@ -221,7 +221,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             "${Languages.of(context)?.labelRequestOfficialDocuments}"),
                                         GestureDetector(
                                           onTap: () {
-                                            ToastComponent.showToast(context: context, message: "message");
+                                            ToastComponent.showToast(
+                                                context: context,
+                                                message: "message");
                                             CustomLoader();
                                           },
                                           child: _buildCard(
@@ -317,9 +319,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(
+                /* Expanded(
                   child: Container(
-                    height: screenHeight * 0.12,
+                    height: screenHeight * 0.1,
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
                       controller: _scrollController,
@@ -336,25 +338,25 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                 Navigator.pop(context);
                                 calledShortCut =
                                     Languages.of(context)!.labelAddMoney;
-                                /* if (checkKYCStatus()) {
+                                */ /* if (checkKYCStatus()) {
                                   Navigator.pushNamed(
                                       context, '/PaymentMethodScreen');
                                 } else {
                                   Navigator.pushNamed(
                                       context, '/ChooseDocScreen');
-                                }*/
+                                }*/ /*
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelWithdraw) {
                                 Navigator.pop(context);
                                 calledShortCut =
                                     Languages.of(context)!.labelWithdraw;
-                                /* if (checkKYCStatus()) {
+                                */ /* if (checkKYCStatus()) {
                                   Navigator.pushNamed(
                                       context, '/WithdrawMethodScreen');
                                 } else {
                                   Navigator.pushNamed(
                                       context, '/ChooseDocScreen');
-                                }*/
+                                }*/ /*
                                 //_getKycStatus();
                               } else if (_shortcutCardsList[index].title ==
                                   Languages.of(context)?.labelTransfer) {
@@ -401,7 +403,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                       },
                     ),
                   ),
-                ),
+                ),*/
                 Text("${Languages.of(context)?.labelReceiveMoney}",
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),

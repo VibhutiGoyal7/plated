@@ -10,7 +10,6 @@ import '../../model/response/notificationOtpResponse.dart';
 import '../../utils/Helper.dart';
 
 class CustomBiometricScreen extends StatefulWidget {
-
   final NotificationOtpResponse? data; // Define the 'data' parameter here
 
   CustomBiometricScreen({Key? key, this.data}) : super(key: key);
@@ -20,7 +19,6 @@ class CustomBiometricScreen extends StatefulWidget {
 }
 
 class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
-
   final LocalAuthentication auth = LocalAuthentication();
   bool _isAuthenticated = false;
   bool _authOnResume = false;
@@ -53,12 +51,11 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
     if (authenticated) {
       await Helper.saveUserAuthenticated(true);
       print("User authenticated successfully.");
-      if(notificationOtpResponse?.otp?.isNotEmpty == true){
+      if (notificationOtpResponse?.otp?.isNotEmpty == true) {
         //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
         return;
-      }else
-      {
-        Navigator.pushReplacementNamed(context, "/BottomNav");
+      } else {
+        Navigator.pushReplacementNamed(context, "/WelcomeScreen");
       }
     } else {
       await Helper.saveUserAuthenticated(false);
@@ -95,8 +92,8 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
             // Background image or color
             Container(
               decoration: BoxDecoration(
-                  color: isDarkMode ? AppColor.BG_COLOR : AppColor.DARK_BG_COLOR
-              ),
+                  color:
+                      isDarkMode ? AppColor.BG_COLOR : AppColor.DARK_BG_COLOR),
             ),
 
             // Blurred effect

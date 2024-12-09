@@ -6,8 +6,10 @@ import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/authSection/account_recovery_screen.dart';
 import 'package:BDPass/view/screens/authSection/confirm_detail_screen.dart';
 import 'package:BDPass/view/screens/authSection/create_account_screen.dart';
+import 'package:BDPass/view/screens/authSection/enter_pin_screen.dart';
 import 'package:BDPass/view/screens/authSection/forgot_password_screen.dart';
 import 'package:BDPass/view/screens/authSection/instruction_screen.dart';
+import 'package:BDPass/view/screens/authSection/login_alert_screen.dart';
 import 'package:BDPass/view/screens/authSection/new_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_verification_screen.dart';
@@ -23,9 +25,14 @@ import 'package:BDPass/view/screens/authSection/verification_screen.dart';
 import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/account_benefit_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:BDPass/view/screens/bottomNavSection/pinSection/pin_create_screen.dart';
 import 'package:BDPass/view/screens/change_password_screen.dart';
 import 'package:BDPass/view/screens/coming_soon_screen.dart';
 import 'package:BDPass/view/screens/ml_kit/face_detector_view.dart';
+import 'package:BDPass/view/screens/profileSection/changePinSection/change_pin_screen.dart';
+import 'package:BDPass/view/screens/profileSection/changePinSection/new_pin_screen.dart';
+import 'package:BDPass/view/screens/profileSection/changePinSection/verify_email_screen.dart';
+import 'package:BDPass/view/screens/profileSection/changePinSection/verify_phone_screen.dart';
 import 'package:BDPass/view/screens/scan_camera_text.dart';
 import 'package:BDPass/view/screens/web_view_screen.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
@@ -36,7 +43,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
@@ -221,6 +227,27 @@ class _MyAppState extends State<MyApp> {
             },
             '/PhoneVerificationScreen': (context) {
               return PhoneVerificationScreen();
+            },
+            '/PinCreateScreen': (context) {
+              return PinCreateScreen();
+            },
+            '/ChangePinScreen': (context) {
+              return ChangePinScreen();
+            },
+            '/EnterPinScreen': (context) {
+              return EnterPinScreen();
+            },
+            '/NewPinScreen': (context) {
+              return NewPinScreen();
+            },
+            '/LoginAlertScreen': (context) {
+              return LoginAlertScreen();
+            },
+            '/VerifyPhoneScreen': (context) {
+              return VerifyPhoneScreen();
+            },
+            '/VerifyEmailScreen': (context) {
+              return VerifyEmailScreen();
             },
             '/BottomNav': (context) {
               return BottomNav();

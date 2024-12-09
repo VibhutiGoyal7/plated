@@ -98,7 +98,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
         print("password: ${password}");
         await Helper.getUserDetails();
 
-        Navigator.pushReplacementNamed(context, '/BottomNav');
+        Navigator.pushReplacementNamed(context, '/PinCreateScreen');
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         ToastComponent.showToast(context: context, message: message);
@@ -151,16 +151,15 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
             SliverToBoxAdapter(
                 child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextfieldComponent(width: 1,
-                  isPhone:false,
+              child: TextfieldComponent(
+                  width: 1,
+                  isPhone: false,
                   textController: _nameController,
-                  icon:Icon(
+                  icon: Icon(
                     Icons.person,
                     size: 20,
-                    color: isDarkMode
-                        ? Colors.white
-                        : Colors.black,
-                  ) ,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'\s')),
                     FilteringTextInputFormatter.allow(
@@ -168,9 +167,8 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                     ),
                   ],
                   text: "${Languages.of(context)?.labelEmailMobileEmiratesId}",
-                  onChanged: (){}),
-            )
-            ),
+                  onChanged: () {}),
+            )),
             SliverToBoxAdapter(
               child: Row(
                 children: [
@@ -202,7 +200,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                       screenWidth: screenWidth,
                       onTap: () {
                         hideKeyBoard();
-                        Navigator.pushNamed(context, "/BottomNav");
+                        Navigator.pushNamed(context, "/PinCreateScreen");
                       }),
                 ),
               ),
