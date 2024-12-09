@@ -5,6 +5,7 @@ import 'package:BDPass/model/response/dashboardResponse.dart';
 import 'package:BDPass/model/response/kycStatusResponse.dart';
 import 'package:BDPass/model/response/transactionListReponse.dart';
 import 'package:BDPass/utils/Util.dart';
+import 'package:BDPass/view/component/dashboard/dashBoard_card.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 import '../../component/session_expired_dialog.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
@@ -164,242 +166,75 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         Container(
                           height: screenHeight * 0.3,
                           color: AppColor.PRIMARY,
-                          /*child: Image(
-                            height: screenHeight * 0.28,
-                            image: AssetImage(isDarkMode
-                                ? "assets/header_night.png"
-                                : "assets/header_day.png"),
-                            fit: isDarkMode ? BoxFit.cover : BoxFit.cover,
-                            opacity: isDarkMode
-                                ? const AlwaysStoppedAnimation(.5)
-                                : const AlwaysStoppedAnimation(.55),
-                          ),*/
                           alignment: AlignmentDirectional.center,
                         ),
                         SafeArea(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 0.0, horizontal: 12),
-                            child: Column(
-                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  height: 32,
-                                ),
-                                Stack(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 30),
-                                      child: Card(
-                                        color:isDarkMode? Color(0xF0B5DCB5)  :
-                                        Color(0xFFE2FFDE),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(13)
-                                        ),
-                                        child: Container(
-                                          width: screenWidth,
-                                          child: Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 8,
-                                                    horizontal: 10),
-                                                child: Stack(
-                                                  children: [
-                                                    Align(
-                                                        alignment:
-                                                            Alignment.topRight,
-                                                        child: Image(
-                                                          image: AssetImage(
-                                                              "assets/app_logo.png"),
-                                                          height: 35,
-                                                          width: 50,
-                                                          fit: BoxFit.fitHeight,
-                                                        )),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 28,
-                                                        ),
-                                                        Text(
-                                                          "Full Name",
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors.black),
-                                                        ),
-                                                        Text(
-                                                          "${Languages.of(context)?.labelVerifiedAccount}",
-                                                          style: TextStyle(
-                                                              fontSize: 10,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: AppColor
-                                                                  .PRIMARY),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 34,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .check_circle,
-                                                                  color: AppColor
-                                                                      .PRIMARY,
-                                                                  size: 16,
-                                                                ),
-                                                                Text(
-                                                                    "${Languages.of(context)?.labelSignature}: ",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            10,
-                                                                        color: Colors.black)),
-                                                                Text(
-                                                                  "${Languages.of(context)?.labelQualified}",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Colors.black),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .check_circle,
-                                                                  color: AppColor
-                                                                      .PRIMARY,
-                                                                  size: 16,
-                                                                ),
-                                                                Text(
-                                                                    "${Languages.of(context)?.labelDocuments}: ",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            10,
-                                                                        color: Colors.black)),
-                                                                Text(
-                                                                  "${Languages.of(context)?.labelAvailable}",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Colors.black),
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .arrow_forward,
-                                                                  size: 15,
-                                                                    color: AppColor.PRIMARY
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 2,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    color:isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
-                                                    borderRadius: BorderRadius
-                                                        .only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    12.5),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    12.5))),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Icon(Icons
-                                                              .edit_outlined),
-                                                          SizedBox(
-                                                            width: 4,
-                                                          ),
-                                                          Text(
-                                                              "${Languages.of(context)?.labelSignDocuments}",
-                                                              style: TextStyle(
-                                                                fontSize: 12.5,
-                                                              )
-                                                          )
-                                                        ],
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Icon(Icons
-                                                              .check_circle_outline_outlined),
-                                                          SizedBox(
-                                                            width: 4,
-                                                          ),
-                                                          Text(
-                                                              "${Languages.of(context)?.labelVerifySignature}",
-                                                              style: TextStyle(
-                                                                fontSize: 12.5,
-                                                              ))
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                        top: 0,
-                                        left: 18,
+                          child: Container(
+                            height: screenHeight * 0.9,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 30),
                                         child: Card(
-                                          color: Colors.white,
-                                          shape: CircleBorder(
-                                              side: BorderSide(
-                                                  color: AppColor.PRIMARY,
-                                                  width: 3)),
-                                          child: Image(
-                                            image: AssetImage(
-                                                "assets/profile_user.png"),
-                                            height: 62,
-                                            width: 62,
-                                          ),
-                                        ))
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 300,
-                                ),
-                                _buildCard(Icons.file_open, "${Languages.of(context)?.labelAddDocuments}",
-                                    "${Languages.of(context)?.labelRequestOfficialDocuments}"),
-                                _buildCard(
-                                    Icons.qr_code_scanner_rounded,
-                                    "${Languages.of(context)?.labelScanQRCode}",
-                                    "${Languages.of(context)?.labelUseYourCamera}"),
-                              ],
+                                            color: isDarkMode
+                                                ? Color(0xF0B5DCB5)
+                                                : Color(0xFFE2FFDE),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(13)),
+                                            child: DashboardCard()),
+                                      ),
+                                      Positioned(
+                                          top: 0,
+                                          left: 18,
+                                          child: Card(
+                                            color: Colors.white,
+                                            shape: CircleBorder(
+                                                side: BorderSide(
+                                                    color: AppColor.PRIMARY,
+                                                    width: 3)),
+                                            child: Image(
+                                              image: AssetImage(
+                                                  "assets/profile_user.png"),
+                                              height: 62,
+                                              width: 62,
+                                            ),
+                                          ))
+                                    ],
+                                  ),
+                                  SizedBox(),
+                                  SizedBox(),
+                                  Align(
+                                    alignment: FractionalOffset.bottomCenter,
+                                    child: Column(
+                                      children: [
+                                        _buildCard(
+                                            Icons.file_open,
+                                            "${Languages.of(context)?.labelAddDocuments}",
+                                            "${Languages.of(context)?.labelRequestOfficialDocuments}"),
+                                        GestureDetector(
+                                          onTap: () {
+                                            ToastComponent.showToast(context: context, message: "message");
+                                            CustomLoader();
+                                          },
+                                          child: _buildCard(
+                                              Icons.qr_code_scanner_rounded,
+                                              "${Languages.of(context)?.labelScanQRCode}",
+                                              "${Languages.of(context)?.labelUseYourCamera}"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -417,7 +252,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           dismissible: false, color: Colors.transparent),
                       // Loader indicator
                       Center(
-                        child: CircularProgressIndicator(),
+                        child: CustomLoader(),
                       ),
                     ],
                   )
@@ -431,7 +266,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget _buildCard(IconData icon, String heading, String detail) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10),
         child: Row(
           children: [
             Icon(icon),
@@ -442,12 +277,12 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
-                      color:isDarkMode ? Colors.grey : Colors.black54)),
+                      color: isDarkMode ? Colors.grey : Colors.black54)),
             ]),
             Spacer(),
             Icon(
               Icons.arrow_forward_ios,
-              size: 18,
+              size: 16,
             )
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomLoader extends StatefulWidget {
   @override
@@ -45,17 +46,12 @@ class _CustomLoaderState extends State<CustomLoader>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AnimatedBuilder(
-                animation: _colorAnimation,
-                builder: (context, child) {
-                  return Icon(
-                    Icons.fingerprint,
-                    color: _colorAnimation.value,
-                    size: 40,
-                  );
-                },
-              ),
-               SizedBox(height: 6),
+              SvgPicture.asset("assets/progress_svg.svg",
+                  height: 80,
+                  width: 80,
+                  /*colorFilter: ColorFilter.mode(
+              AppColor.PRIMARY_PURPLE, BlendMode.srcIn),*/
+                  semanticsLabel: 'A red up arrow'),
                Text(
                 "Loading please wait...",
                 style: TextStyle(fontSize: 9),
