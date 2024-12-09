@@ -104,7 +104,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 value: SystemUiOverlayStyle(
                     statusBarColor: Colors.transparent,
                     statusBarIconBrightness:
-                        isDarkMode ? Brightness.light : Brightness.dark),
+                        isDarkMode ? Brightness.light : Brightness.dark,
+                  statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

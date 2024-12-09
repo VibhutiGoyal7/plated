@@ -12,57 +12,22 @@ import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
 
-class HistoryScreen extends StatefulWidget {
+class ManageDevicesScreen extends StatefulWidget {
   @override
-  _HistoryScreenState createState() => _HistoryScreenState();
+  _ManageDevicesScreenState createState() => _ManageDevicesScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
   var imageUrl;
   late double screenWidth;
   late double screenHeight;
   late BDPassDatabase database;
   late NotificationDao notificationDao;
   bool isDataAvail = false;
-  List<NotificationDetails> generalNotificationList = [
+  List<NotificationDetails> getLoginDeviceList = [
     NotificationDetails(
         status: "Expired",
         date: "18 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Shared",
-        date: "19 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Expired",
-        date: "20 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Shared",
-        date: "21 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Shared",
-        date: "22 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Expired",
-        date: "23 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Shared",
-        date: "24 Oct 2024",
-        detail: "Emirate Telecommunication Corporation",
-        heading: "Login Transactions"),
-    NotificationDetails(
-        status: "Expired",
-        date: "25 Oct 2024",
         detail: "Emirate Telecommunication Corporation",
         heading: "Login Transactions"),
   ];
@@ -206,8 +171,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness:
-              isDarkMode ? Brightness.light : Brightness.dark,
-        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
+              isDarkMode ? Brightness.light : Brightness.dark),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,21 +179,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Padding(
               padding: const EdgeInsets.only(
                   left: 15.0, top: 20, bottom: 5, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "${Languages.of(context)?.labelHistory}",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                  GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 8.0),
+                      child: Icon(Icons.arrow_back_ios),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  Icon(Icons.filter_alt_outlined, color: AppColor.PRIMARY,),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        "${Languages.of(context)?.labelManageDevices}",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 8,
-            ),
-            !isDataAvail ? _buildNoDataScreen() : generalHistory(),
+            isDataAvail ? _buildNoDataScreen() : generalLoginDeviceList(),
           ],
         ),
       ),
@@ -249,7 +228,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               height: 25,
             ),
             Icon(
-              Icons.history,
+              Icons.devices,
               size: 45,
               color: AppColor.PRIMARY,
             ),
@@ -267,11 +246,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Widget generalHistory() {
+  Widget generalLoginDeviceList() {
     return Container(
-      height: screenHeight * 0.78,
+      height: screenHeight * 0.75,
+      margin: EdgeInsets.symmetric(vertical: 10),
       child: isInternetConnected && !isLoading
-          ? checkListEmpty(generalNotificationList)
+          ? checkListEmpty(getLoginDeviceList)
               ? FutureBuilder(
                   future: _fetchDataFuture,
                   builder:
@@ -282,7 +262,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       // Group transactions by date
                       Map<String, List<NotificationDetails>>
                           groupedNotifications =
-                          groupNotificationsByDate(generalNotificationList);
+                          groupNotificationsByDate(getLoginDeviceList);
                       List<String> dates = groupedNotifications.keys.toList();
 
                       return ListView.builder(
@@ -306,20 +286,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    date,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 11),
-                                  ),
-                                ),
                                 ...notificationsForDate
                                     .asMap()
                                     .entries
                                     .map((notification) {
-                                  return generalNotificationItem(
+                                  return generalLoginDeviceItem(
                                       notification.value, notification.key);
                                 }).toList(),
                               ],
@@ -357,10 +328,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return groupedNotifications;
   }
 
-  Widget generalNotificationItem(NotificationDetails data, int index) {
+  Widget generalLoginDeviceItem(NotificationDetails data, int index) {
     return Center(
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 10),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 0,
         color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
@@ -376,21 +347,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.lock),
-                SizedBox(
-                  width: 8,
+                Row(
+                  children: [
+                    Icon(Icons.phone_iphone),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Iphone",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          "Recently Logged in @07:26pm",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(
-                  "${data.heading}",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_sharp,
-                  size: 13,
-                )
               ],
             ),
           ),

@@ -27,7 +27,8 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
           ),
           systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
             statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light, // Change icon brightness
+            statusBarIconBrightness: Brightness.light,
+            // Change icon brightness
           ),
         ),
         //backgroundColor: Theme.of(context).backgroundColor,

@@ -409,7 +409,7 @@ class LanguageEnUS extends Languages {
   String get labelIssuingCountry => "ISSUING COUNTRY";
 
   @override
-  String get labelSearch => "Search...";
+  String get labelSearch => "Search";
 
   @override
   String get labelSuggestedCountry => "Suggested Country";

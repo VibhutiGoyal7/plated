@@ -7,6 +7,7 @@ import 'package:BDPass/model/response/transactionListReponse.dart';
 import 'package:BDPass/utils/Util.dart';
 import 'package:BDPass/view/component/dashboard/dashBoard_card.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,6 +62,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     ],
   );
   final ScrollController _scrollController = ScrollController();
+  FilePickerResult? result;
+  String? _pdfPath;
 
   @override
   void initState() {
@@ -170,7 +173,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                         ),
                         SafeArea(
                           child: Container(
-                            height: screenHeight * 0.9,
+                            height: screenHeight * 0.85,
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 12),
@@ -215,13 +218,20 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     alignment: FractionalOffset.bottomCenter,
                                     child: Column(
                                       children: [
-                                        _buildCard(
-                                            Icons.file_open,
-                                            "${Languages.of(context)?.labelAddDocuments}",
-                                            "${Languages.of(context)?.labelRequestOfficialDocuments}"),
                                         GestureDetector(
                                           onTap: () {
-                                            ToastComponent.showToast(context: context, message: "message");
+                                            pickPdfFile();
+                                          },
+                                          child: _buildCard(
+                                              Icons.file_open,
+                                              "${Languages.of(context)?.labelAddDocuments}",
+                                              "${Languages.of(context)?.labelRequestOfficialDocuments}"),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            ToastComponent.showToast(
+                                                context: context,
+                                                message: "message");
                                             CustomLoader();
                                           },
                                           child: _buildCard(
@@ -261,6 +271,25 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> pickPdfFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'], // Restrict to PDF files
+      );
+
+      if (result != null) {
+        setState(() {
+          _pdfPath = result.files.single.path;
+        });
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      print("Error picking PDF file: $e");
+    }
   }
 
   Widget _buildCard(IconData icon, String heading, String detail) {

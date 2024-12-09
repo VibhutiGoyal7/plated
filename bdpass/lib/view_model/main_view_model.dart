@@ -10,6 +10,7 @@ import 'package:BDPass/model/response/kycStatusResponse.dart';
 import 'package:BDPass/model/response/phoneVerifyResponse.dart';
 import 'package:BDPass/model/response/profileResponse.dart';
 import 'package:BDPass/model/response/setUpAccountResponse.dart';
+import 'package:BDPass/model/response/signUpResponse.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
@@ -17,6 +18,7 @@ import '../model/request/createOtpChangePass.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateTpinRequest.dart';
 import '../model/request/signInRequest.dart';
+import '../model/request/signUpRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
@@ -132,20 +134,20 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signInWithPass(String value, SignInRequest signInRequest) async {
+  Future<void> signUpUsingMobileApi(String value, SignUpRequest signUpRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
-    print("Yess" + signInRequest.customer.phoneNumber);
+    print("Yess" + signUpRequest.customer.phoneNumber);
     notifyListeners();
     try {
       //print(signInRequest.customer.phoneNumber);
-      ProfileResponse signInResponse =
-          await MainRepository().signInWithPass(value, signInRequest);
-      print("Yess" + signInResponse.username.toString());
+      SignUpResponse signUpResponse =
+          await MainRepository().signUpUsingMobileApi(value, signUpRequest);
+      print("Yess" + signUpResponse.message.toString());
       //_apiResponse = ApiResponse.completed(signInResponse);
-      if (signInResponse.status  == 200 || signInResponse.status == 201) {
-        _apiResponse = ApiResponse.completed(signInResponse);
+      if (signUpResponse.status  == 200 || signUpResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(signUpResponse);
       } else {
-        _apiResponse = ApiResponse.error(signInResponse.message);
+        _apiResponse = ApiResponse.error(signUpResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

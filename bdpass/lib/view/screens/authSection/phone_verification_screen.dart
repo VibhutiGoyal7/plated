@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
-import 'package:BDPass/utils/Helper.dart';
+import 'package:BDPass/model/request/signUpRequest.dart';
+import 'package:BDPass/model/response/signUpResponse.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
@@ -241,7 +242,9 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
                         onTap: () {
-                          Navigator.pushNamed(context, "/OtpVerificationScreen");
+                          //_hitSignUpApi();
+                          Navigator.pushNamed(
+                              context, "/OtpVerificationScreen");
                         })),
                 SizedBox(
                   height: 35,
@@ -276,35 +279,6 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     });
   }
 
-  Widget _buildFooter(
-      {required BuildContext context,
-      required String text,
-      required VoidCallback onTap}) {
-    return Center(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          width: screenWidth * 0.8,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.8),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.black),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: Colors.white),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void onPressedFrontImage() async {
     List<String> pictures;
     try {
@@ -320,7 +294,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     }
   }
 
-  void _fetchData() async {
+  void _hitSignUpApi() async {
     setState(() {
       isLoading = true;
     });
@@ -338,12 +312,17 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         );
       });
     } else {
+      SignUpRequest signUpRequest = SignUpRequest(
+          customer: CustomerSignUp(
+              email: "${_emailController.text.toString()}",
+              phoneNumber: '${_phoneNoController.text.toString()}'));
       await Future.delayed(Duration(milliseconds: 2));
       await Provider.of<MainViewModel>(context, listen: false)
-          .fetchCountryList("api/v1/app/customers/country_list");
+          .signUpUsingMobileApi(
+              "api/v1/mobile_app/customers/create_account", signUpRequest);
       ApiResponse apiResponse =
           Provider.of<MainViewModel>(context, listen: false).response;
-      getCountryList(context, apiResponse);
+      signUpUsingMobile(context, apiResponse);
     }
   }
 
@@ -470,9 +449,8 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     );
   }
 
-  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
-    CountryListResponse? countryListResponse =
-        apiResponse.data as CountryListResponse?;
+  Widget signUpUsingMobile(BuildContext context, ApiResponse apiResponse) {
+    SignUpResponse? signUpResponse = apiResponse.data as SignUpResponse?;
     var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
@@ -482,19 +460,15 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[1].name}");
-
-        countryList = countryListResponse!.countries!;
-        Helper.saveCountryList(countryList);
-        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
+        print(
+            "SignUpUsingMobile ${signUpResponse?.email} || ${signUpResponse?.phone_number}");
+        Navigator.pushNamed(context, "/OtpVerificationScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        print("countriess ${countryList}");
+        print("SignUpUsingMobile ERROR");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+        //ToastComponent.showToast(context: context, message: message);
         return Center(
           child: Text('Please try again later!!!'),
         );

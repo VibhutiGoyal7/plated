@@ -4,7 +4,6 @@ import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:BDPass/model/db/dao.dart';
 import 'package:BDPass/theme/AppColor.dart';
-import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -83,6 +82,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   late bool isDarkMode;
 
   bool isLoading = false;
+  bool isDataAvail = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   bool isInternetConnected = true;
   late Timer _showDialogTimer;
@@ -245,32 +245,36 @@ class _NotificationScreenState extends State<NotificationScreen> {
           value: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               statusBarIconBrightness:
-                  isDarkMode ? Brightness.light : Brightness.dark),
+                  isDarkMode ? Brightness.light : Brightness.dark,
+            statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
           child: SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 10.0, top: 10, bottom: 5, right: 10),
+                        left: 15.0, top: 20, bottom: 5, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "${Languages.of(context)?.labelNotification}",
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 26, fontWeight: FontWeight.w700),
                         ),
                         //Icon(Icons.menu)
                       ],
                     ),
                   ),
-                  _buildSearch(),
+
+                  !isDataAvail ? _buildNoDataScreen() : _buildSearch(),
+                  !isDataAvail ? SizedBox() : generalNotification(),
                   SizedBox(
                     height: 4,
                   ),
-                  generalNotification(),
+                  //,
                 ],
               ),
             ),
@@ -278,6 +282,44 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
       ],
     ));
+  }
+
+  Widget _buildNoDataScreen() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(vertical: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 25,
+            ),
+            Icon(
+              Icons.notification_important_outlined,
+              size: 40,
+              color: AppColor.PRIMARY,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              "No notifications yet",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "You have no notification right now, please come back later.",
+              style: TextStyle(),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget generalNotification() {
@@ -401,7 +443,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       onLongPress: () => _showDialog(context, data),
       onLongPressUp: () {
         // Close the dialog when the user lifts their finger
-       // ToastComponent.showToast(context: _scaffoldKey.currentContext!, message: "message");
+        // ToastComponent.showToast(context: _scaffoldKey.currentContext!, message: "message");
         Navigator.of(_scaffoldKey.currentContext!, rootNavigator: true).pop();
       },
       child: Center(
