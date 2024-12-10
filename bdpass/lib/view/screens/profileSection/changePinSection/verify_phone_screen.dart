@@ -81,7 +81,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Verify Your Phone',
+                  'Verify Your Phone Number',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),

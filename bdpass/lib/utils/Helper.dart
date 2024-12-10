@@ -24,6 +24,10 @@ class Helper {
   static String passwordPref = 'Password';
   static String recentP2PPref = 'RecentP2P';
   static String countryList = 'CountryList';
+  static String phoneNoPref = 'PhoneNo';
+  static String emailPref = 'Email';
+  static String namePref = 'Name';
+  static String pinPref = 'PIN';
   static String profileDetailPref = 'ProfileDetail';
   static const String prefSelectedLanguageCode = "SelectedLanguageCode";
   static const String prefRecentDocument = "RecentDocument";
@@ -50,6 +54,50 @@ class Helper {
   static Future<String?> getDeviceToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(pref_device_token);
+  }
+
+  static Future<bool> savePhoneNo(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(phoneNoPref, token);
+  }
+
+  // Read Data
+  static Future<String?> getPhoneNo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(phoneNoPref);
+  }
+
+  static Future<bool> saveEmail(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(emailPref, token);
+  }
+
+  // Read Data
+  static Future<String?> getEmail() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(emailPref);
+  }
+
+  static Future<bool> saveName(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(namePref, token);
+  }
+
+  // Read Data
+  static Future<String?> getName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(namePref);
+  }
+
+  static Future<bool> savePin(token) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return await sharedPreferences.setString(pinPref, token);
+  }
+
+  // Read Data
+  static Future<String?> getPin() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString(pinPref);
   }
 
   // Write DATA

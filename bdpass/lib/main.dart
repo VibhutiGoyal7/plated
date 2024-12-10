@@ -7,22 +7,18 @@ import 'package:BDPass/view/screens/authSection/account_recovery_screen.dart';
 import 'package:BDPass/view/screens/authSection/confirm_detail_screen.dart';
 import 'package:BDPass/view/screens/authSection/create_account_screen.dart';
 import 'package:BDPass/view/screens/authSection/enter_pin_screen.dart';
-import 'package:BDPass/view/screens/authSection/forgot_password_screen.dart';
-import 'package:BDPass/view/screens/authSection/instruction_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcomeSection/instruction_screen.dart';
 import 'package:BDPass/view/screens/authSection/login_alert_screen.dart';
-import 'package:BDPass/view/screens/authSection/new_forgot_pass_screen.dart';
-import 'package:BDPass/view/screens/authSection/otp_forgot_pass_screen.dart';
 import 'package:BDPass/view/screens/authSection/otp_verification_screen.dart';
-import 'package:BDPass/view/screens/authSection/otp_verify_screen.dart';
 import 'package:BDPass/view/screens/authSection/phone_verification_screen.dart';
-import 'package:BDPass/view/screens/authSection/phone_verify_screen.dart';
 import 'package:BDPass/view/screens/authSection/proceed_as_screen.dart';
 import 'package:BDPass/view/screens/authSection/signin_screen.dart';
-import 'package:BDPass/view/screens/authSection/slider_screen.dart';
-import 'package:BDPass/view/screens/authSection/splash_screen.dart';
-import 'package:BDPass/view/screens/authSection/terms_conditions_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcomeSection/slider_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcomeSection/splash_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcomeSection/terms_conditions_screen.dart';
 import 'package:BDPass/view/screens/authSection/verification_screen.dart';
-import 'package:BDPass/view/screens/authSection/welcome_screen.dart';
+import 'package:BDPass/view/screens/authSection/visitor_name_screen.dart';
+import 'package:BDPass/view/screens/authSection/welcomeSection/welcome_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/account_benefit_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:BDPass/view/screens/bottomNavSection/manage_devices_screen.dart';
@@ -227,7 +223,9 @@ class _MyAppState extends State<MyApp> {
               return VerificationScreen();
             },
             '/PhoneVerificationScreen': (context) {
-              return PhoneVerificationScreen();
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return PhoneVerificationScreen(data: args,);
             },
             '/PinCreateScreen': (context) {
               return PinCreateScreen();
@@ -236,7 +234,9 @@ class _MyAppState extends State<MyApp> {
               return ChangePinScreen();
             },
             '/EnterPinScreen': (context) {
-              return EnterPinScreen();
+              final args =
+              ModalRoute.of(context)!.settings.arguments as Function();
+              return EnterPinScreen(onSuccess: args,);
             },
             '/NewPinScreen': (context) {
               return NewPinScreen();
@@ -254,21 +254,15 @@ class _MyAppState extends State<MyApp> {
               return BottomNav();
             },
             '/OtpVerificationScreen': (context) {
-              return OtpVerificationScreen();
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return OtpVerificationScreen(data: args,);
             },
             '/AccountRecoveryScreen': (context) {
               return AccountRecoveryScreen();
             },
             '/AccountBenefitScreen': (context) {
               return AccountBenefitScreen();
-            },
-            '/PhoneVerifyScreen': (context) {
-              return PhoneVerifyScreen();
-            },
-            '/OtpVerify': (context) {
-              final args =
-                  ModalRoute.of(context)!.settings.arguments as String?;
-              return OTPVerifyScreen(data: args);
             },
             '/SetUpAccount': (context) {
               final args =
@@ -280,8 +274,8 @@ class _MyAppState extends State<MyApp> {
                   ModalRoute.of(context)!.settings.arguments as String?;
               return SigninScreen(data: args);
             },
-            '/BottomNav': (context) {
-              return BottomNav();
+            '/VisitorNameScreen': (context) {
+              return VisitorNameScreen();
             },
             '/WebViewScreen': (context) {
               final args =
@@ -290,19 +284,6 @@ class _MyAppState extends State<MyApp> {
             },
             '/ChangePasswordScreen': (context) {
               return ChangePasswordScreen();
-            },
-            '/ForgotPasswordScreen': (context) {
-              return ForgotPasswordScreen();
-            },
-            '/OtpForgotPassScreen': (context) {
-              final args = ModalRoute.of(context)!.settings.arguments
-                  as CustomerVerifyOtpPass?;
-              return OtpForgotPassScreen(data: args);
-            },
-            '/NewPassForgotPassScreen': (context) {
-              final args = ModalRoute.of(context)!.settings.arguments
-                  as CustomerVerifyOtpPass?;
-              return NewPassForgotPassScreen(data: args);
             },
             '/ComingSoonScreen': (context) {
               return ComingSoonScreen();

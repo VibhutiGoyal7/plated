@@ -17,8 +17,12 @@ import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
 import '../../component/instruction_step.dart';
+import '../../component/toastMessage.dart';
 
 class PhoneVerificationScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
+
+  PhoneVerificationScreen({Key? key, this.data}) : super(key: key);
   @override
   _PhoneVerificationScreenState createState() =>
       _PhoneVerificationScreenState();
@@ -270,8 +274,13 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         isDarkMode: isDarkMode,
                         onTap: () {
                           //_hitSignUpApi();
-                          Navigator.pushNamed(
-                              context, "/OtpVerificationScreen");
+                          if(_emailController.text.isNotEmpty && _phoneNoController.text.isNotEmpty){
+                            Helper.saveEmail(_emailController.text);
+                            Helper.savePhoneNo(_phoneNoController.text);
+                            Navigator.pushNamed(context, "/OtpVerificationScreen",arguments: "mobile");
+                          }else{
+                            ToastComponent.showToast(context: context, message: "Enter all the details.");
+                          }
                         })),
                 SizedBox(
                   height: 35,

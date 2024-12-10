@@ -100,7 +100,10 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
               return GestureDetector(
                 onTap: () {
                   if (index == 0) {
-                    Navigator.pushNamed(context, "/VerificationScreen");
+                      Navigator.pushNamed(context, "/VerificationScreen");
+
+                  }else{
+                    Navigator.pushNamed(context, "/VisitorNameScreen");
                   }
                 },
                 child: _buildCard(item.icon, item.title, item.subtitle),

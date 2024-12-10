@@ -4,10 +4,10 @@ import 'package:BDPass/view/component/instruction_step.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/apis/api_response.dart';
-import '../../../model/response/countryListResponse.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../model/response/countryListResponse.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/connectivity_service.dart';
 
 class InstructionScreen extends StatefulWidget {
   @override

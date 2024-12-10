@@ -1,8 +1,12 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/custom_button_component.dart';
+import 'package:BDPass/view/component/textfield_component.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/authSection/welcomeSection/instruction_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -11,12 +15,12 @@ import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 
-class CreateAccountScreen extends StatefulWidget {
+class VisitorNameScreen extends StatefulWidget {
   @override
-  _CreateAccountScreenState createState() => _CreateAccountScreenState();
+  _VisitorNameScreenState createState() => _VisitorNameScreenState();
 }
 
-class _CreateAccountScreenState extends State<CreateAccountScreen> {
+class _VisitorNameScreenState extends State<VisitorNameScreen> {
   String token = "";
   late double screenWidth;
   late double screenHeight;
@@ -27,20 +31,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   static const maxDuration = Duration(seconds: 2);
   List<CountryData> countryList = [];
   late VideoPlayerController _controller;
+  TextEditingController firtNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    /* _controller = VideoPlayerController.asset(
-      'assets/video.mp4',
-    )
-      ..initialize().then((_) {
-        // Ensure the first frame is shown
-        setState(() {
-          _controller.setLooping(true); // Enable seamless looping
-          _controller.play(); // Start playing immediately
-        });
-      });*/
     //_fetchData();
   }
 
@@ -56,95 +52,77 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back_ios_new)),
+      ),
       body: SafeArea(
         child: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*_controller.value.isInitialized
-                    ? SizedBox(
-                  height: screenHeight*0.5,
-                  child: FittedBox(
-                    fit: BoxFit.cover, // Make the video fill the screen
-                    child: SizedBox(
-                      width: _controller.value.size.width,
-                      height: _controller.value.size.height,
-                      child: VideoPlayer(_controller),
-                    ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Confirm Details",
+                    style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),
                   ),
-                )
-                    : SizedBox(),*/
-                Image(
-                  height: screenHeight * 0.08,
-                  image: AssetImage(isDarkMode
-                      ? "assets/app_logo_dark.png"
-                      : "assets/app_logo.png"),
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  "${Languages.of(context)?.labelCreateBDPassAccount}",
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 3,
-                ),
-                Text(
-                  "${Languages.of(context)?.labelNationalDigitalIdentityAndSignatureSol}",
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                ),
-                /*Image(
-                  //height: screenHeight * 0.35,
-                  image: AssetImage(isDarkMode
-                      ? "assets/app_logo_dark.png"
-                      : "assets/app_logo.png"),
-                  fit: BoxFit.cover,
-                ),*/
-                SizedBox(
-                  height: 70,
-                ),
-                Center(
-                    child: CustomButtonComponent(
-                        text: "${Languages.of(context)?.labelCreateNewAccount}",
-                        screenWidth: screenWidth,
-                        isDarkMode: isDarkMode,
-                        onTap: () {
-                          setState(() {
-                            isInstruction = true;
-                          });
-                        })),
-                Center(
-                  child: _buildExistingAccFooter(
-                      isDarkMode: isDarkMode,
-                      context: context,
-                      text:
-                          "${Languages.of(context)?.labelHaveAnExistingAccount}",
-                      onTap: () {
-                         //
+                  SizedBox(height: 14,),
+                  Text(
+                    "Enter your first and last name",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  TextfieldComponent(width: 1, isPhone: false, text: "First Name",
+                      icon: Icon(Icons.person), inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      ],
+                      textController: firtNameController, onChanged: (){
+
                       }),
-                ),
-                SizedBox(
-                  height: 52,
-                )
-              ],
+                  TextfieldComponent(width: 1, isPhone: false, text: "Last Name",
+                      icon: Icon(Icons.person), inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      ],
+                      textController: lastNameController, onChanged: (){
+
+                      }),
+
+                  SizedBox(
+                    height: 52,
+                  ),
+                  Center(
+                      child: CustomButtonComponent(
+                          text: "${Languages.of(context)?.labelProceed}",
+                          screenWidth: screenWidth,
+                          isDarkMode: isDarkMode,
+                          onTap: () {
+                            if(firtNameController.text.isNotEmpty && lastNameController.text.isNotEmpty){
+                              Helper.saveName("${firtNameController.text} ${lastNameController.text}");
+                              Navigator.pushNamed(context, "/PhoneVerificationScreen",arguments: "");
+                            }else{
+                              ToastComponent.showToast(context: context, message: "Enter your name");
+                            }
+                          })),
+
+                  SizedBox(
+                    height: 52,
+                  )
+                ],
+              ),
             ),
           ),
-          isInstruction
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isInstruction = false;
-                    });
-                    Navigator.pushNamed(context, "/TermsConditionsScreen");
-                  },
-                  child: InstructionScreen())
-              : SizedBox(),
           isLoading
               ? Stack(
                   children: [

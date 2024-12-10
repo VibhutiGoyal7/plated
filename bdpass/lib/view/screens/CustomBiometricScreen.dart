@@ -55,7 +55,7 @@ class _CustomBiometricScreenState extends State<CustomBiometricScreen> {
         //Navigator.pushReplacementNamed(context, "/NotificationOtpScreen", arguments: notificationOtpResponse);
         return;
       } else {
-        Navigator.pushReplacementNamed(context, "/WelcomeScreen");
+        Navigator.pushReplacementNamed(context, "/BottomNav");
       }
     } else {
       await Helper.saveUserAuthenticated(false);

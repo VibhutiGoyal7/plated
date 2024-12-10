@@ -1,5 +1,6 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/apis/api_response.dart';
+import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
@@ -202,7 +203,9 @@ class _PinCreateScreenState extends State<PinCreateScreen> {
                 screenWidth: screenWidth,
                 onTap: () {
                   hideKeyBoard();
-
+                  if(pin == confirmPin){
+                    Helper.savePin(pin);
+                  }
                   print("newPin: $pin :: confirmPin: $confirmPin");
                   Navigator.pushNamed(context, "/BottomNav");
                 }),
