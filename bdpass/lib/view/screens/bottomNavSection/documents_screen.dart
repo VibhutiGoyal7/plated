@@ -110,8 +110,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     statusBarIconBrightness:
                         isDarkMode ? Brightness.light : Brightness.dark,
                   statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
-                child: SafeArea(
-                        isDarkMode ? Brightness.light : Brightness.dark),
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: [

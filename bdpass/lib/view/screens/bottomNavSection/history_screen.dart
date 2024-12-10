@@ -268,7 +268,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     )],
                   ),
 
+                  SliverToBoxAdapter(
+                    child:!isDataAvail ?  _buildNoDataScreen() : SizedBox(),
+                  ),
 
+                  !isDataAvail ?
+                  SliverToBoxAdapter(child: SizedBox(),):
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                           (context, index) {

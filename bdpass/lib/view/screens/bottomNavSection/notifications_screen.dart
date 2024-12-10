@@ -320,6 +320,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ),
                           ) ,
 
+                              SliverToBoxAdapter(
+                                child:!isDataAvail ?  _buildNoDataScreen() : SizedBox(),
+                              ),
+
+                          !isDataAvail ?
+                              SliverToBoxAdapter(child: SizedBox(),):
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
                                   (context, index) {
