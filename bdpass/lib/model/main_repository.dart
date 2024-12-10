@@ -7,6 +7,7 @@ import 'package:BDPass/model/request/generateTpinRequest.dart';
 import 'package:BDPass/model/request/setUpAccountRequest.dart';
 import 'package:BDPass/model/request/signInRequest.dart';
 import 'package:BDPass/model/request/signInWithPhoneNumber.dart';
+import 'package:BDPass/model/request/signUpRequest.dart';
 import 'package:BDPass/model/request/verifyOtpChangePass.dart';
 import 'package:BDPass/model/response/countryListResponse.dart';
 import 'package:BDPass/model/response/createOtpChangePassResponse.dart';
@@ -18,6 +19,7 @@ import 'package:BDPass/model/response/kycStatusResponse.dart';
 import 'package:BDPass/model/response/phoneVerifyResponse.dart';
 import 'package:BDPass/model/response/profileResponse.dart';
 import 'package:BDPass/model/response/setUpAccountResponse.dart';
+import 'package:BDPass/model/response/signUpResponse.dart';
 import 'package:BDPass/model/services/base_service.dart';
 import 'package:BDPass/model/services/bd_pass_service.dart';
 
@@ -82,6 +84,17 @@ class MainRepository {
     return mediaList;
   }
 
+  Future<SignUpResponse> signUpUsingMobileApi(
+      String value, SignUpRequest signUpRequest) async {
+    print(signUpRequest);
+    dynamic response = await _BDPassService.postResponse(value, signUpRequest);
+    print(value);
+    final jsonData = response;
+    print(" ${jsonData}");
+    SignUpResponse mediaList = SignUpResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
   Future<SetUpAccountResponse> fetchSetUpScreenData(
       String value, SetUpAccountRequest setUpAccountRequest) async {
     print(setUpAccountRequest);
@@ -94,16 +107,16 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<ProfileResponse> putMultiFormResponse(String value, File file,String firstName,String lastName,String dob) async {
-    dynamic response = await _BDPassService.putMultiFormResponse(value, file, firstName, lastName, dob);
+  Future<ProfileResponse> putMultiFormResponse(String value, File file,
+      String firstName, String lastName, String dob) async {
+    dynamic response = await _BDPassService.putMultiFormResponse(
+        value, file, firstName, lastName, dob);
     print(value);
     final jsonData = response;
     print(jsonData);
     ProfileResponse mediaList = ProfileResponse.fromJson(jsonData);
     return mediaList;
   }
-
-
 
   Future<GenerateTpinResponse> ChangeWithOldPasswordData(
       String value, ChangeOldPassRequest changeOldPassRequest) async {

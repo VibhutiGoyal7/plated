@@ -108,6 +108,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 value: SystemUiOverlayStyle(
                     statusBarColor: Colors.transparent,
                     statusBarIconBrightness:
+                        isDarkMode ? Brightness.light : Brightness.dark,
+                  statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
+                child: SafeArea(
                         isDarkMode ? Brightness.light : Brightness.dark),
                 child: CustomScrollView(
                   controller: _scrollController,

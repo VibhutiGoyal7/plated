@@ -131,7 +131,8 @@ class _VideoKycScreenState extends State<VideoKycScreen> {
               systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
                 statusBarColor: AppColor.PRIMARY,
                 statusBarIconBrightness:
-                    Brightness.light, // Change icon brightness
+                    Brightness.light,
+                statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,// Change icon brightness
               ),
             ),
             body: Stack(

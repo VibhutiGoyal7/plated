@@ -45,14 +45,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late BDPassDatabase database;
   static const maxDuration = Duration(seconds: 2);
   bool isTablet = false;
-
+  final TextEditingController _searchController = TextEditingController();
   final ConnectivityService _connectivityService = ConnectivityService();
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
+      statusBarIconBrightness:
+          Brightness.light,
+      statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,// Light icons for the status bar
+      //statusBarBrightness: Brightness.dark,       // Status bar brightness (for iOS)
     ));
     customerName = "";
     userName = "";
@@ -205,8 +208,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           body: Stack(children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
-                  statusBarColor: AppColor.PRIMARY,
-                  statusBarIconBrightness: Brightness.light),
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness:
+                      isDarkMode ? Brightness.light : Brightness.dark,
+                statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
@@ -218,55 +223,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              height: 12,
+                              height: 20,
                             ),
                             Text(
                               "${Languages.of(context)?.labelAccount}",
                               style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold),
+                                  fontSize: 26, fontWeight: FontWeight.bold),
                             ),
+                            _buildSearch(),
                             SizedBox(
-                              height: 14,
+                              height: 8,
                             ),
                             Card(
                               child: Container(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 10),
+                                    horizontal: 8, vertical: 12),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    CircularProfileImage(
-                                      size: 50,
-                                      imageUrl: imageUrl,
-                                      name: customerName,
-                                      needTextLetter: true,
-                                      placeholderImage: "",
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Row(
                                       children: [
-                                        Text(
-                                          "Full Name",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15),
+                                        CircularProfileImage(
+                                          size: 50,
+                                          imageUrl: imageUrl,
+                                          name: customerName,
+                                          needTextLetter: true,
+                                          placeholderImage: "",
                                         ),
-                                        Text(
-                                          "${Languages.of(context)?.labelShowProfile}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 9,
-                                              color: Colors.black54),
-                                        )
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Akash Singh",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            Text(
+                                              "${Languages.of(context)?.labelShowProfile}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 9,
+                                                  color: Colors.black54),
+                                            )
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                    Spacer(),
                                     Icon(
                                       Icons.arrow_forward_ios,
                                       size: 18,
@@ -279,10 +288,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Container(
-                        //decoration: BoxDecoration(color: AppColor.BG_COLOR),
                         child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: isTablet ? 0 : 5.0),
+                                horizontal: 10.0, vertical: isTablet ? 0 : 1.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Column(
@@ -291,11 +299,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(height: isTablet ? 0 : 10.0),
+                                        SizedBox(height: isTablet ? 0 : 5.0),
                                         Text(
                                             "${Languages.of(context)?.labelAccount}",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
+                                                fontWeight: FontWeight.normal)),
+                                        SizedBox(height: isTablet ? 0 : 5.0),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -310,58 +319,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/ChangePinScreen',
+                                              Navigator.pushNamed(context,
+                                                  '/ManageDevicesScreen',
                                                   arguments: "");
                                             },
                                             child: DetailBox(
                                               heading:
                                                   "${Languages.of(context)?.labelManageDevices}",
-                                              icon: Icons.phone_android,
+                                              icon: Icons.phone_iphone,
                                               headingTextSize: 14,
                                             )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/CardListScreen',
-                                                  arguments:
-                                                      "${Languages.of(context)!.labelAddedCard}");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelResetSigninPassword}",
-                                              icon: Icons.password,
-                                              headingTextSize: 14,
-                                            )),
+                                        Platform.isAndroid
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  Navigator.pushNamed(context,
+                                                      '/CardListScreen',
+                                                      arguments:
+                                                          "${Languages.of(context)!.labelAddedCard}");
+                                                },
+                                                child: DetailBox(
+                                                  heading:
+                                                      "${Languages.of(context)?.labelResetSigninPassword}",
+                                                  icon: Icons.password,
+                                                  headingTextSize: 14,
+                                                ))
+                                            : SizedBox(),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 1.0),
                                           child: Card(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(8)),
+                                                BorderRadius.circular(8)),
                                             child: Container(
                                               padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                      vertical: 12.0),
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 8.0,
+                                                  vertical: 12.0),
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8.0),
                                               ),
                                               child: Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                CrossAxisAlignment.center,
                                                 children: [
                                                   Icon(
-                                                    Icons.border_inner_outlined,
+                                                    Platform.isIOS
+                                                        ? Icons.face
+                                                        : Icons.fingerprint,
                                                     size: 22,
                                                   ),
                                                   SizedBox(
                                                     width: 8,
                                                   ),
                                                   Text(
-                                                    "${Languages.of(context)?.labelBiometrics}",
+                                                    Platform.isIOS
+                                                        ? "Face ID "
+                                                        : "${Languages.of(context)?.labelBiometrics}",
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       //fontWeight: FontWeight.w600,
@@ -374,9 +389,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     child: Switch(
                                                       value: isBiometricEnable,
                                                       activeColor:
-                                                          AppColor.PRIMARY,
+                                                      AppColor.PRIMARY,
                                                       inactiveTrackColor:
-                                                          Colors.red,
+                                                      Colors.red,
                                                       onChanged: (bool value) {
                                                         setState(() {
                                                           isBiometricEnable =
@@ -475,6 +490,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )
           ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearch() {
+    return Container(
+      height: 43,
+      width: screenWidth,
+      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: TextField(
+        style: TextStyle(
+          fontSize: 14.0,
+        ),
+        obscureText: false,
+        obscuringCharacter: "*",
+        controller: _searchController,
+        onChanged: (value) {
+          //_isValidInput();
+        },
+        onSubmitted: (value) {},
+        keyboardType: TextInputType.visiblePassword,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: Languages.of(context)?.labelSearch,
+          icon: Icon(Icons.search),
         ),
       ),
     );

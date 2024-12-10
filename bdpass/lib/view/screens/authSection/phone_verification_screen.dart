@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/textfield_component.dart';
+import 'package:BDPass/model/request/signUpRequest.dart';
+import 'package:BDPass/model/response/signUpResponse.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
@@ -267,6 +269,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
                         onTap: () {
+                          //_hitSignUpApi();
                           Navigator.pushNamed(
                               context, "/OtpVerificationScreen");
                         })),
@@ -318,7 +321,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     }
   }
 
-  void _fetchData() async {
+  void _hitSignUpApi() async {
     setState(() {
       isLoading = true;
     });
@@ -338,20 +341,145 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         );
       });
     } else {
+      SignUpRequest signUpRequest = SignUpRequest(
+          customer: CustomerSignUp(
+              email: "${_emailController.text.toString()}",
+              phoneNumber: '${_phoneNoController.text.toString()}'));
       await Future.delayed(Duration(milliseconds: 2));
       await Provider.of<MainViewModel>(context, listen: false)
-          .fetchCountryList("api/v1/app/customers/country_list");
+          .signUpUsingMobileApi(
+              "api/v1/mobile_app/customers/create_account", signUpRequest);
       ApiResponse apiResponse =
-          Provider
-              .of<MainViewModel>(context, listen: false)
-              .response;
-      getCountryList(context, apiResponse);
+          Provider.of<MainViewModel>(context, listen: false).response;
+      signUpUsingMobile(context, apiResponse);
     }
   }
 
-  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
-    CountryListResponse? countryListResponse =
-    apiResponse.data as CountryListResponse?;
+  Widget _buildPhoneInput(BuildContext context, String text,
+      TextEditingController nameController, Icon icon, double height) {
+    //nameController.text = widget.data as String;
+    return Card(
+      child: Container(
+        //height: 60,
+        width: screenWidth * height,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border(
+              top: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54,
+                  width: 0.4)),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 14.0,
+                ),
+                obscureText: false,
+                obscuringCharacter: "*",
+                controller: nameController,
+                onChanged: (value) {
+                  //_isValidInput();
+                },
+                maxLength: 10,
+                textAlignVertical: TextAlignVertical.top,
+                scrollPadding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: text,
+                  alignLabelWithHint: true,
+                  counterText: "",
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmailInput(BuildContext context, String text,
+      TextEditingController nameController, Icon icon, double height) {
+    //nameController.text = widget.data as String;
+    return Card(
+      child: Container(
+        //height: 60,
+        width: screenWidth * height,
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border(
+              top: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              bottom: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              right: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
+              left: BorderSide(
+                  color: isDarkMode ? Colors.grey : Colors.black54,
+                  width: 0.4)),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: TextField(
+                style: TextStyle(
+                  fontSize: 14.0,
+                ),
+                obscureText: false,
+                obscuringCharacter: "*",
+                controller: nameController,
+                onChanged: (value) {
+                  //_isValidInput();
+                },
+                textAlignVertical: TextAlignVertical.top,
+                scrollPadding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                onSubmitted: (value) {},
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.done,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                ],
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: text,
+                  alignLabelWithHint: true,
+                  counterText: "",
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget signUpUsingMobile(BuildContext context, ApiResponse apiResponse) {
+    SignUpResponse? signUpResponse = apiResponse.data as SignUpResponse?;
     var message = apiResponse.message.toString();
     print("message ${message}");
     setState(() {
@@ -361,19 +489,15 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
       case Status.LOADING:
         return Center(child: CircularProgressIndicator());
       case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[1].name}");
-
-        countryList = countryListResponse!.countries!;
-        Helper.saveCountryList(countryList);
-        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
+        print(
+            "SignUpUsingMobile ${signUpResponse?.email} || ${signUpResponse?.phone_number}");
+        Navigator.pushNamed(context, "/OtpVerificationScreen");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
-        print("countriess ${countryList}");
+        print("SignUpUsingMobile ERROR");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+        //ToastComponent.showToast(context: context, message: message);
         return Center(
           child: Text('Please try again later!!!'),
         );

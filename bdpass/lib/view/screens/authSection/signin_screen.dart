@@ -543,9 +543,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       );
                     });
                   } else {
-                    await Provider.of<MainViewModel>(context, listen: false)
-                        .signInWithPass(
-                            "api/v1/app/customers/sign_in", request);
+                    //await Provider.of<MainViewModel>(context, listen: false).signInWithPass("api/v1/app/customers/sign_in", request);
                     //Navigator.pushNamed(context, '/BottomNav');
 
                     ApiResponse apiResponse =

@@ -152,7 +152,8 @@ class _DocImageScreenState extends State<DocImageScreen> {
             ),
             systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
               statusBarColor: AppColor.PRIMARY,
-              statusBarIconBrightness: Brightness.light, // Change icon brightness
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,// Change icon brightness
             ),
           ),
           body: Stack(
@@ -452,7 +453,8 @@ class _DocImageScreenState extends State<DocImageScreen> {
           title: Text("Captured widget screenshot"),
           systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
             statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light, // Change icon brightness
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,// Change icon brightness
           ),
         ),
         body: Center(child: Image.memory(capturedImage)),

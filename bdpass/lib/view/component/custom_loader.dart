@@ -46,12 +46,11 @@ class _CustomLoaderState extends State<CustomLoader>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset("assets/progress_svg.svg",
-                  height: 80,
-                  width: 80,
+              Image.asset("assets/loading.gif",
+                  height: 60,
+                  width: 60,
                   /*colorFilter: ColorFilter.mode(
-              AppColor.PRIMARY_PURPLE, BlendMode.srcIn),*/
-                  semanticsLabel: 'A red up arrow'),
+              AppColor.PRIMARY_PURPLE, BlendMode.srcIn),*/),
                Text(
                 "Loading please wait...",
                 style: TextStyle(fontSize: 9),

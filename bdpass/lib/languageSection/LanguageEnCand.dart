@@ -409,7 +409,7 @@ class LanguageEnCand extends Languages {
   String get labelIssuingCountry => "ISSUING COUNTRY";
 
   @override
-  String get labelSearch => "Search...";
+  String get labelSearch => "Search";
 
   @override
   String get labelSuggestedCountry => "Suggested Country";
@@ -476,7 +476,7 @@ class LanguageEnCand extends Languages {
   String get labelUnlockWith => "Unlock with ";
 
   @override
-  String get labelNotification => 'Notification';
+  String get labelNotification => 'Notifications';
 
   @override
   String get labelEnterValidPhone => "Enter valid Phone No";
