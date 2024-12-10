@@ -9,20 +9,21 @@ import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 
-class ProceedAsScreen extends StatefulWidget {
+class UpgradeAccountScreen extends StatefulWidget {
   @override
-  _ProceedAsScreenState createState() => _ProceedAsScreenState();
+  _UpgradeAccountScreenState createState() => _UpgradeAccountScreenState();
 }
 
 class ListItem {
   final IconData icon;
+  final String instruction;
   final String title;
   final String subtitle;
 
-  ListItem(this.icon, this.title, this.subtitle);
+  ListItem(this.icon, this.instruction, this.title, this.subtitle);
 }
 
-class _ProceedAsScreenState extends State<ProceedAsScreen> {
+class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
   String token = "";
   late double screenWidth;
   late double screenHeight;
@@ -45,10 +46,16 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     // Sample list
     final List<ListItem> items = [
-      ListItem(Icons.house_sharp, Languages.of(context)!.labelCitizenOrResident,
-          "${Languages.of(context)?.labelHoldingIdIssuedByGovernment}"),
-      ListItem(Icons.shopping_bag_outlined, Languages.of(context)!.labelVisitor,
-          "${Languages.of(context)?.labelHoldingIdOrPassportIssuedByOtherCountries}"),
+      ListItem(
+          Icons.photo_camera_front_outlined,
+          "Directly through device",
+          "Face Verification",
+          "Utilizing biometric face recognition to verify a person's identity."),
+      ListItem(
+          Icons.edit_location_alt_rounded,
+          "Kiosk Visit Required",
+          "Physical Kiosk",
+          "Identity verification using Emirates ID and fingerprint biometrics"),
     ];
 
     return Scaffold(
@@ -71,7 +78,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
             ),
             centerTitle: false,
             collapseMode: CollapseMode.parallax,
-            title: Text("${Languages.of(context)?.labelProceedAs}",
+            title: Text("Upgrade Account",
                 style: TextStyle(
                   color: AppColor.TEXT_COLOR,
                   fontWeight: FontWeight.bold,
@@ -91,8 +98,33 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-          ), //IconButton
-        ), //SliverAppBar
+          ),
+          //IconButton
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14.0),
+              child: GestureDetector(
+                  onTap: () {
+                    setState(() {});
+                  },
+                  child: Text(
+                    "Later",
+                    style: TextStyle(
+                        color: AppColor.PRIMARY,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  )),
+            )
+          ],
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "Choose one of the following to upgrade your account",
+                style: TextStyle(fontSize: 14),
+              )),
+        ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -103,9 +135,10 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
                     Navigator.pushNamed(context, "/VerificationScreen");
                   }
                 },
-                child: _buildCard(item.icon, item.title, item.subtitle),
+                child: _buildCard(item.icon, item.title, item.subtitle,
+                    item.instruction, index),
               );
-              _buildCard(item.icon, item.title, item.subtitle);
+              //_buildCard(item.icon, item.title, item.subtitle);
             },
             childCount: items.length,
           ),
@@ -158,47 +191,90 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
         );
   }
 
-  Widget _buildCard(IconData icon, String heading, String detail) {
+  Widget _buildCard(IconData icon, String heading, String detail,
+      String instruction, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: Colors.brown,
-                size: 28,
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Column(
+      child: Column(
+        children: [
+          Card(
+            margin: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    heading,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  Icon(
+                    icon,
+                    color: Colors.brown,
+                    size: 28,
                   ),
-                  Container(
-                      width: screenWidth * 0.66,
-                      child: Text(
-                        detail,
-                        style: TextStyle(fontSize: 12),
-                        overflow: TextOverflow.visible,
-                      )),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        instruction,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.PRIMARY),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        heading,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                          width: screenWidth * 0.66,
+                          child: Text(
+                            detail,
+                            style: TextStyle(fontSize: 12),
+                            overflow: TextOverflow.visible,
+                          )),
+                    ],
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 18,
+                  )
+
                 ],
               ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_sharp,
-                size: 18,
-              )
-            ],
+            ),
           ),
-        ),
+          index == 0
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: screenWidth * 0.35,
+                      height: 1,
+                      color: AppColor.BLACK.withOpacity(0.2),
+                    ),
+                    Container(
+                      child: Text(
+                        "OR",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    Container(
+                      width: screenWidth * 0.35,
+                      height: 1,
+                      color: AppColor.BLACK.withOpacity(0.2),
+                    ),
+                  ],
+                )
+              : SizedBox()
+        ],
       ),
     );
   }

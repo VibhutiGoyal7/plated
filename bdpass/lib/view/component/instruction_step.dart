@@ -20,28 +20,27 @@ class InstructionStep extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.08,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           title == "${Languages.of(context)?.labelStep} 1"
-              ? SizedBox(
-                )
+              ? SizedBox()
               : Container(
                   width: MediaQuery.of(context).size.height * 0.016,
                   height: 2,
                   color: Colors.grey.shade300,
                 ),
           CircleAvatar(
-            backgroundColor: isActive
-                ? iconColor
-                : Colors.grey,
-            child: Icon(icon, color: isActive ? Colors.white : Colors.white),
+            backgroundColor: isActive ? iconColor : Colors.grey,
+            child: Icon(icon, color: isActive ? Colors.white : Colors.white, size: 24,),
           ),
           title == "${Languages.of(context)?.labelStep} 3"
               ? SizedBox()
               : Container(
-                width: MediaQuery.of(context).size.height*0.047,
-                height: 2,
-                color: Colors.grey.shade300,
-              ),
+                  width: MediaQuery.of(context).size.height * 0.047,
+                  height: 2,
+                  color: Colors.grey.shade300,
+                ),
         ],
       ),
     );

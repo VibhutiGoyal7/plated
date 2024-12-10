@@ -11,6 +11,7 @@ class DashboardCard extends StatelessWidget {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
+    var isVerified = false;
 
     return Container(
       width: screenWidth,
@@ -72,18 +73,22 @@ class DashboardCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.check_circle,
-                              color: AppColor.PRIMARY,
+                              isVerified ? Icons.check_circle : Icons.cancel,
+                              color: isVerified
+                                  ? AppColor.PRIMARY
+                                  : AppColor.TEXT_RED,
                               size: 16,
                             ),
                             SizedBox(width: 2),
                             Text("${Languages.of(context)?.labelSignature}: ",
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black)),
+                                    fontSize: 11, color: Colors.black)),
                             Text(
-                              "${Languages.of(context)?.labelQualified}",
+                              isVerified
+                                  ? "${Languages.of(context)?.labelQualified}"
+                                  : "N/A",
                               style:
-                                  TextStyle(fontSize: 10, color: Colors.black),
+                                  TextStyle(fontSize: 11, color: Colors.black),
                             )
                           ],
                         ),
@@ -92,18 +97,24 @@ class DashboardCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.check_circle,
-                              color: AppColor.PRIMARY,
+                              false ? Icons.check_circle : Icons.cancel,
+                              color:
+                                  false ? AppColor.PRIMARY : AppColor.TEXT_RED,
                               size: 16,
                             ),
                             SizedBox(width: 2),
                             Text("${Languages.of(context)?.labelDocuments}: ",
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black)),
+                                    fontSize: 11, color: Colors.black)),
                             Text(
-                              "${Languages.of(context)?.labelAvailable}",
+                              isVerified
+                                  ? "${Languages.of(context)?.labelAvailable}"
+                                  : "N/A",
                               style:
-                                  TextStyle(fontSize: 10, color: Colors.black),
+                                  TextStyle(fontSize: 11, color: Colors.black),
+                            ),
+                            SizedBox(
+                              width: 2,
                             ),
                             Icon(Icons.arrow_forward_ios,
                                 size: 12, color: AppColor.PRIMARY)
@@ -120,6 +131,7 @@ class DashboardCard extends StatelessWidget {
             ),
           ),
           Container(
+            padding: EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
                 color: isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.WHITE,
                 borderRadius: BorderRadius.only(
@@ -130,34 +142,53 @@ class DashboardCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset("assets/sign_document_icon.svg",
-                          height: 20,
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              AppColor.PRIMARY, BlendMode.srcIn),
-                          semanticsLabel: 'A red up arrow'),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text("${Languages.of(context)?.labelSignDocuments}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12.5,
-                          ))
-                    ],
+                  GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        SvgPicture.asset("assets/sign_document_icon.svg",
+                            height: 28,
+                            width: 28,
+                            colorFilter: ColorFilter.mode(
+                                isDarkMode
+                                    ? isVerified
+                                        ? AppColor.WHITE
+                                        : Colors.white30
+                                    : isVerified
+                                        ? AppColor.TEXT_COLOR
+                                        : Colors.black38,
+                                BlendMode.srcIn),
+                            semanticsLabel: 'A red up arrow'),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text("${Languages.of(context)?.labelSignDocuments}",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: isDarkMode
+                                    ? isVerified
+                                        ? AppColor.WHITE
+                                        : Colors.white30
+                                    : isVerified
+                                        ? AppColor.TEXT_COLOR
+                                        : Colors.black38))
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
-                      Icon(Icons.check_circle_outline_outlined),
+                      Icon(
+                        Icons.check_circle_outline_outlined,
+                        size: 28,
+                      ),
                       SizedBox(
-                        width: 4,
+                        width: 8,
                       ),
                       Text("${Languages.of(context)?.labelVerifySignature}",
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontSize: 12.5,
+                            fontSize: 14,
                           ))
                     ],
                   ),
@@ -168,5 +199,7 @@ class DashboardCard extends StatelessWidget {
         ],
       ),
     );
+
   }
+
 }

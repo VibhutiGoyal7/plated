@@ -1,4 +1,5 @@
 import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/instruction_step.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,23 @@ class _InstructionScreenState extends State<InstructionScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 50,
+                      height: 10,
+                    ),
+                    Align(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushReplacementNamed("/CreateAccountScreen");
+                        },
+                        child: Icon(
+                          Icons.cancel_outlined,
+                          color: AppColor.WHITE,
+                        ),
+                      ),
+                      alignment: Alignment.topRight,
+                    ),
+                    SizedBox(
+                      height: 40,
                     ),
                     Text(
                       "${Languages.of(context)?.labelCreateBDPassAccount}",

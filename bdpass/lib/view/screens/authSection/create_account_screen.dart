@@ -126,7 +126,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       text:
                           "${Languages.of(context)?.labelHaveAnExistingAccount}",
                       onTap: () {
-                        // Navigator.pushNamed(context, '/SliderScreen');
+                        // Navigator.pushNamed(context, '/AccountRegisteredScreen');
                       }),
                 ),
                 SizedBox(

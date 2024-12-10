@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:BDPass/model/db/BDPassDatabase.dart';
+import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,9 +53,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness:
-          Brightness.light,
-      statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,// Light icons for the status bar
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: isDarkMode
+          ? Brightness.dark
+          : Brightness.light, // Light icons for the status bar
       //statusBarBrightness: Brightness.dark,       // Status bar brightness (for iOS)
     ));
     customerName = "";
@@ -208,10 +210,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           body: Stack(children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  statusBarIconBrightness:
-                      isDarkMode ? Brightness.light : Brightness.dark,
-                statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness:
+                    isDarkMode ? Brightness.light : Brightness.dark,
+                statusBarBrightness:
+                    isDarkMode ? Brightness.dark : Brightness.light,
+              ),
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
@@ -269,7 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               "${Languages.of(context)?.labelShowProfile}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 9,
+                                                  fontSize: 11,
                                                   color: Colors.black54),
                                             )
                                           ],
@@ -350,19 +354,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           child: Card(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(8)),
+                                                    BorderRadius.circular(8)),
                                             child: Container(
                                               padding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 8.0,
-                                                  vertical: 12.0),
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical: 12.0),
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: Row(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Icon(
                                                     Platform.isIOS
@@ -389,9 +393,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     child: Switch(
                                                       value: isBiometricEnable,
                                                       activeColor:
-                                                      AppColor.PRIMARY,
+                                                          AppColor.PRIMARY,
                                                       inactiveTrackColor:
-                                                      Colors.red,
+                                                          Colors.red,
                                                       onChanged: (bool value) {
                                                         setState(() {
                                                           isBiometricEnable =
@@ -457,6 +461,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               heading:
                                                   "${Languages.of(context)?.labelWalkthrough}",
                                               icon: Icons.play_arrow_rounded,
+                                              headingTextSize: 14,
+                                            )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              ToastComponent.showToast(
+                                                  context: context,
+                                                  message:
+                                                      "Kiosks Nearby Clicked");
+                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                            },
+                                            child: DetailBox(
+                                              heading: "Kiosks Nearby",
+                                              icon: Icons.near_me_outlined,
+                                              headingTextSize: 14,
+                                            )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              ToastComponent.showToast(
+                                                  context: context,
+                                                  message:
+                                                      "Privacy Policy Clicked");
+                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                            },
+                                            child: DetailBox(
+                                              heading: "Privacy Policy",
+                                              icon: Icons.privacy_tip_outlined,
+                                              headingTextSize: 14,
+                                            )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              ToastComponent.showToast(
+                                                  context: context,
+                                                  message: "FAQS Clicked");
+                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                            },
+                                            child: DetailBox(
+                                              heading: "FAQS",
+                                              icon:
+                                                  Icons.question_mark_outlined,
+                                              headingTextSize: 14,
+                                            )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              ToastComponent.showToast(
+                                                  context: context,
+                                                  message: "Support Clicked");
+                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                            },
+                                            child: DetailBox(
+                                              heading: "Support",
+                                              icon: Icons.support,
+                                              headingTextSize: 14,
+                                            )),
+                                        GestureDetector(
+                                            onTap: () {
+                                              ToastComponent.showToast(
+                                                  context: context,
+                                                  message:
+                                                      "Contact Us Clicked");
+                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                            },
+                                            child: DetailBox(
+                                              heading: "Contact Us",
+                                              icon: Icons.mail,
                                               headingTextSize: 14,
                                             )),
                                         GestureDetector(

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:BDPass/languageSection/Languages.dart';
+import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 
@@ -108,7 +108,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       body: SafeArea(
         child: Stack(children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -117,7 +117,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
                 Text(
                   "${Languages.of(context)?.labelVerifyYourMobileNumber}",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
@@ -138,9 +138,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         iconColor: Colors.green.shade900),
                   ],
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+
                 Text(
                   "${Languages.of(context)?.labelPleaseEnterOtp} 971557403260",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
                   height: 20,
@@ -149,7 +153,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 //OTP Boxes
                 _buildOtpInput(context, screenWidth, isDarkMode),
 
-                SizedBox(height: 12),
+                SizedBox(height: 25),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
@@ -158,15 +162,19 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildLabelText(
-                          context, "${Languages.of(context)?.labelDidntReceiveOtp}", 11, true),
+                        context,
+                        "${Languages.of(context)?.labelDidntReceiveOtp}",
+                        14,
+                        true,
+                        color: Colors.black54,
+                      ),
                       SizedBox(
-                        height: 8,
+                        height: 12,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           _countdownTimer(),
-                          //Spacer(),
                           SizedBox(
                             width: 5,
                           ),
@@ -211,12 +219,20 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget _countdownTimer() {
     return Row(
       children: [
+        Icon(
+          Icons.timelapse_rounded,
+          color: Colors.black54,
+        ),
+        SizedBox(
+          width: 3,
+        ),
         TimerCountdown(
           endTime: endTime,
           format: CountDownTimerFormat.minutesSeconds,
           enableDescriptions: false,
           spacerWidth: 1,
-          timeTextStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+          timeTextStyle: TextStyle(
+              fontWeight: FontWeight.w700, fontSize: 16, color: Colors.black54),
           onEnd: () {
             setState(() {
               resendOtp = true;
@@ -227,11 +243,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     );
   }
 
-  _buildLabelText(BuildContext context, String text, int size, bool isBold) {
+  _buildLabelText(BuildContext context, String text, int size, bool isBold,
+      {required Color color}) {
     return Text(
       text,
       textAlign: TextAlign.center,
       style: TextStyle(
+        color: color,
         fontSize: size.toDouble(),
         fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
       ),
@@ -245,20 +263,24 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-          (index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              borderRadius: BorderRadius.circular(100),
-            ),
-            width: screenWidth / 8.1,
-            height: 52.0,
-            child: Center(
-              child: Text(
-                _inputValues[index],
-                style: TextStyle(fontSize: 20),
+          (index) => Card(
+            elevation: 5,
+            shadowColor: AppColor.PRIMARY,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(
+                    color: isDarkMode ? Colors.grey : Colors.black54,
+                    width: 0.4),
+                borderRadius: BorderRadius.circular(20.0)),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 3),
+              alignment: Alignment.center,
+              width: screenWidth / 9,
+              height: 52.0,
+              child: Center(
+                child: Text(
+                  _inputValues[index],
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ),
           ),
@@ -273,11 +295,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         child: Text(
           "${Languages.of(context)?.labelSendAgain}",
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-            fontSize: 12,
-            decoration: TextDecoration.underline,
-          ),
+              fontWeight: FontWeight.bold,
+              color: isDarkMode ? AppColor.WHITE : Colors.black54,
+              fontSize: 13,
+              decoration: TextDecoration.underline,
+              decorationColor: isDarkMode ? AppColor.WHITE : Colors.black54),
         ));
   }
 

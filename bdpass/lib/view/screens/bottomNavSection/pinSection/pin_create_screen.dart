@@ -202,9 +202,9 @@ class _PinCreateScreenState extends State<PinCreateScreen> {
                 screenWidth: screenWidth,
                 onTap: () {
                   hideKeyBoard();
-
                   print("newPin: $pin :: confirmPin: $confirmPin");
-                  Navigator.pushNamed(context, "/BottomNav");
+                  //Navigator.pushNamed(context, "/BottomNav");
+                  Navigator.pushNamed(context, "/AccountRegisteredScreen");
                 }),
             SizedBox(
               height: 25,

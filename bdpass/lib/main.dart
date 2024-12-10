@@ -4,6 +4,7 @@ import 'package:BDPass/theme/AppTheme.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/authSection/account_recovery_screen.dart';
+import 'package:BDPass/view/screens/authSection/account_registered_screen.dart';
 import 'package:BDPass/view/screens/authSection/confirm_detail_screen.dart';
 import 'package:BDPass/view/screens/authSection/create_account_screen.dart';
 import 'package:BDPass/view/screens/authSection/enter_pin_screen.dart';
@@ -27,6 +28,7 @@ import 'package:BDPass/view/screens/bottomNavSection/account_benefit_screen.dart
 import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:BDPass/view/screens/bottomNavSection/manage_devices_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/pinSection/pin_create_screen.dart';
+import 'package:BDPass/view/screens/bottomNavSection/upgrade_account_screen.dart';
 import 'package:BDPass/view/screens/change_password_screen.dart';
 import 'package:BDPass/view/screens/coming_soon_screen.dart';
 import 'package:BDPass/view/screens/ml_kit/face_detector_view.dart';
@@ -315,6 +317,12 @@ class _MyAppState extends State<MyApp> {
             },
             '/ManageDevicesScreen': (context) {
               return ManageDevicesScreen();
+            },
+            '/AccountRegisteredScreen': (context) {
+              return AccountRegisteredScreen();
+            },
+            '/UpgradeAccountScreen': (context) {
+              return UpgradeAccountScreen();
             },
           }),
     );

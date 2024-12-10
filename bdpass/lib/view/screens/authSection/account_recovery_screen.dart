@@ -1,5 +1,6 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/apis/api_response.dart';
+import 'package:BDPass/view/component/email_textfield_component.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import '../../../utils/Helper.dart';
 import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
-import '../../component/textfield_component.dart';
 import '../../component/toastMessage.dart';
 
 class AccountRecoveryScreen extends StatefulWidget {
@@ -129,6 +129,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
               centerTitle: false,
               backgroundColor: AppColor.WHITE,
               flexibleSpace: FlexibleSpaceBar(
+                centerTitle: false,
                 title: Text(
                   "${Languages.of(context)!.labelAccountRecovery}",
                   style: TextStyle(fontSize: 16),
@@ -151,7 +152,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
             SliverToBoxAdapter(
                 child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextfieldComponent(
+              child: EmailTextFieldComponent(
                   width: 1,
                   isPhone: false,
                   textController: _nameController,
@@ -173,7 +174,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 25,
+                    width: 28,
                   ),
                   _buildLabelText(
                       context,

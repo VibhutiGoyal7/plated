@@ -20,9 +20,10 @@ class CustomButtonComponent extends StatelessWidget {
     return GestureDetector(
       onTap: isClickable ? onTap : null,
       child: Container(
+        alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: screenWidth * 0.94,
+        width: screenWidth,
         decoration: BoxDecoration(
             border: Border.all(
                 color: isDarkMode
@@ -46,7 +47,7 @@ class CustomButtonComponent extends StatelessWidget {
             text,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 12,
                 color: isDarkMode ? Colors.black : Colors.white),
           ),
         ),

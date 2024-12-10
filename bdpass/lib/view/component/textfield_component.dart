@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../languageSection/Languages.dart';
-import '../../theme/AppColor.dart';
-
 class TextfieldComponent extends StatelessWidget {
   late final double width;
   late final bool isPhone;
@@ -26,49 +23,39 @@ class TextfieldComponent extends StatelessWidget {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Card(
-      child: Container(
-        //height: 60,
-        width: screenWidth * width,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border(
-              top: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54,
-                  width: 0.4)),
-          borderRadius: BorderRadius.circular(10.0),
+    return Container(
+      width: screenWidth * width,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(10.0),
+            topRight: Radius.circular(10.0)),
+      ),
+      child: TextField(
+        style: TextStyle(
+          fontSize: 14.0,
         ),
-        child: TextField(
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-          obscureText: false,
-          obscuringCharacter: "*",
-          controller: textController,
-          onChanged: (value) {
-            //_isValidInput();
-          },
-          maxLength: isPhone ? 10: 100   ,
-          textAlignVertical: TextAlignVertical.top,
-          scrollPadding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom),
-          onSubmitted: (value) {},
-          keyboardType:isPhone ? TextInputType.phone : TextInputType.emailAddress,
-          textInputAction: TextInputAction.done,
-          inputFormatters: inputFormatters,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: text,
-            alignLabelWithHint: true,
-            counterText: "",
-          ),
+        obscureText: false,
+        obscuringCharacter: "*",
+        controller: textController,
+        onChanged: (value) {
+          //_isValidInput();
+        },
+        maxLength: isPhone ? 10 : 100,
+        textAlignVertical: TextAlignVertical.top,
+        scrollPadding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        onSubmitted: (value) {},
+        keyboardType:
+            isPhone ? TextInputType.phone : TextInputType.emailAddress,
+        textInputAction: TextInputAction.done,
+        inputFormatters: inputFormatters,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: text,
+          alignLabelWithHint: true,
+          counterText: "",
         ),
       ),
     );

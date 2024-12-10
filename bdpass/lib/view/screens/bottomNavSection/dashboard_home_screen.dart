@@ -22,6 +22,7 @@ import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_button_component.dart';
 import '../../component/custom_loader.dart';
 import '../../component/session_expired_dialog.dart';
 
@@ -52,6 +53,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   bool isApiLoading = false;
   bool isInternetConnected = true;
   bool isDarkMode = false;
+  var isVerified = false;
   late double screenHeight;
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -164,91 +166,274 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                   value: SystemUiOverlayStyle.light,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.0),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          height: screenHeight * 0.3,
-                          color: AppColor.PRIMARY,
-                          alignment: AlignmentDirectional.center,
-                        ),
-                        SafeArea(
-                          child: Container(
-                            height: screenHeight * 0.85,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 30),
-                                        child: Card(
-                                            color: isDarkMode
-                                                ? Color(0xF0B5DCB5)
-                                                : Color(0xFFE2FFDE),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(13)),
-                                            child: DashboardCard()),
-                                      ),
-                                      Positioned(
-                                          top: 0,
-                                          left: 18,
-                                          child: Card(
-                                            color: Colors.white,
-                                            shape: CircleBorder(
-                                                side: BorderSide(
-                                                    color: AppColor.PRIMARY,
-                                                    width: 3)),
-                                            child: Image(
-                                              image: AssetImage(
-                                                  "assets/profile_user.png"),
-                                              height: 62,
-                                              width: 62,
-                                            ),
-                                          ))
-                                    ],
-                                  ),
-                                  SizedBox(),
-                                  SizedBox(),
-                                  Align(
-                                    alignment: FractionalOffset.bottomCenter,
-                                    child: Column(
+                    child: SingleChildScrollView(
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            height: screenHeight * 0.3,
+                            alignment: AlignmentDirectional.center,
+                            decoration: BoxDecoration(
+                                color: AppColor.PRIMARY,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(25.0),
+                                    bottomRight: Radius.circular(25.0))),
+                          ),
+                          SafeArea(
+                            child: Container(
+                              height: screenHeight * 0.85,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Stack(
                                       children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            pickPdfFile();
-                                          },
-                                          child: _buildCard(
-                                              Icons.file_open,
-                                              "${Languages.of(context)?.labelAddDocuments}",
-                                              "${Languages.of(context)?.labelRequestOfficialDocuments}"),
+                                        //Dash Card UI
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 30),
+                                          child: Card(
+                                              color: isDarkMode
+                                                  ? Color(0xF0B5DCB5)
+                                                  : Color(0xFFE2FFDE),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          13)),
+                                              child: DashboardCard()),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            ToastComponent.showToast(
-                                                context: context,
-                                                message: "message");
-                                            CustomLoader();
-                                          },
-                                          child: _buildCard(
-                                              Icons.qr_code_scanner_rounded,
-                                              "${Languages.of(context)?.labelScanQRCode}",
-                                              "${Languages.of(context)?.labelUseYourCamera}"),
-                                        ),
+                                        Positioned(
+                                            top: 0,
+                                            left: 18,
+                                            child: Card(
+                                              color: Colors.white,
+                                              shape: CircleBorder(
+                                                  side: BorderSide(
+                                                      color: AppColor.PRIMARY,
+                                                      width: 3)),
+                                              child: Image(
+                                                image: AssetImage(
+                                                    "assets/profile_user.png"),
+                                                height: 72,
+                                                width: 72,
+                                              ),
+                                            ))
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(),
-                                ],
+                                    SizedBox(),
+                                    SizedBox(),
+                                    Align(
+                                      alignment: FractionalOffset.bottomCenter,
+                                      child: Column(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              pickPdfFile();
+                                            },
+                                            child: _buildCard(
+                                                Icons.file_open,
+                                                "${Languages.of(context)?.labelAddDocuments}",
+                                                "${Languages.of(context)?.labelRequestOfficialDocuments}"),
+                                          ),
+                                          /*GestureDetector(
+                                            onTap: () {
+                                              _showPicker(context: context);
+                                              ToastComponent.showToast(
+                                                  context: context,
+                                                  message: "message");
+                                              CustomLoader();
+                                            },
+                                            child: _buildCard(
+                                                Icons.qr_code_scanner_rounded,
+                                                "${Languages.of(context)?.labelScanQRCode}",
+                                                "${Languages.of(context)?.labelUseYourCamera}"),
+                                          ),*/
+                                          Card(
+                                            child: Container(
+                                              width: screenWidth,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 15, horizontal: 6),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 12.0,
+                                                            top: 8.0,
+                                                            bottom: 8.0),
+                                                    child: Text(
+                                                      "Verify your account to:",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Container(
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          width: screenWidth *
+                                                              0.85,
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.check,
+                                                                color: AppColor
+                                                                    .PRIMARY,
+                                                                size: 26,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Text(
+                                                                "Access many digital services",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        13),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 15),
+                                                          width: screenWidth *
+                                                              0.85,
+                                                          height: 0.4,
+                                                          color: Colors.black45,
+                                                        ),
+                                                        Container(
+                                                          width: screenWidth *
+                                                              0.85,
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.check,
+                                                                color: AppColor
+                                                                    .PRIMARY,
+                                                                size: 26,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Text(
+                                                                "Sign documents digitally",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        13),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 15),
+                                                          width: screenWidth *
+                                                              0.85,
+                                                          height: 0.4,
+                                                          color: Colors.black45,
+                                                        ),
+                                                        Container(
+                                                          width: screenWidth *
+                                                              0.85,
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.check,
+                                                                color: AppColor
+                                                                    .PRIMARY,
+                                                                size: 26,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Text(
+                                                                "Request and share your official documents",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        13),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  CustomButtonComponent(
+                                                      text:
+                                                          "Verify your account now",
+                                                      screenWidth:
+                                                          screenWidth * 0.8,
+                                                      isDarkMode: isDarkMode,
+                                                      onTap: () {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            '/UpgradeAccountScreen');
+                                                      }),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(),
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      width: screenWidth * 0.55,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(40.0))),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.rate_review,
+                                            color: AppColor.PRIMARY,
+                                            size: 24,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Rate your Experience",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColor.PRIMARY),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -294,24 +479,62 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
 
   Widget _buildCard(IconData icon, String heading, String detail) {
     return Card(
+      elevation: isVerified ? 1 : 0,
+      color: isDarkMode
+          ? isVerified
+              ? AppColor.WHITE
+              : Colors.white30
+          : isVerified
+              ? AppColor.WHITE
+              : AppColor.WHITE.withOpacity(0.2),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10),
         child: Row(
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              size: 28,
+              color: isDarkMode
+                  ? isVerified
+                      ? AppColor.WHITE
+                      : Colors.white30
+                  : isVerified
+                      ? AppColor.TEXT_COLOR
+                      : Colors.black38,
+            ),
             SizedBox(width: 6),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(heading, style: TextStyle(fontSize: 14)),
-              Text(detail,
+              Text(heading,
                   style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.grey : Colors.black54)),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  )),
+              Container(
+                width: screenWidth * 0.7,
+                child: Text(detail,
+                    style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode
+                            ? isVerified
+                                ? AppColor.WHITE
+                                : Colors.white30
+                            : isVerified
+                                ? AppColor.TEXT_COLOR
+                                : Colors.black38)),
+              ),
             ]),
             Spacer(),
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
+              color: isDarkMode
+                  ? isVerified
+                      ? AppColor.WHITE
+                      : Colors.white30
+                  : isVerified
+                      ? AppColor.TEXT_COLOR
+                      : Colors.black38,
             )
           ],
         ),
@@ -323,236 +546,128 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     showModalBottomSheet(
       shape: ContinuousRectangleBorder(),
+      constraints: BoxConstraints(
+        maxHeight: double.infinity,
+      ),
+      scrollControlDisabledMaxHeightRatio: 0.9,
       context: context,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  Languages.of(context)!.labelQuickAction,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  Languages.of(context)!.labelMostFrequent,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                /* Expanded(
-                  child: Container(
-                    height: screenHeight * 0.1,
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      controller: _scrollController,
-                      itemCount: _shortcutCardsList.length,
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(bottom: 0),
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index <= 1) {
-                          return GestureDetector(
-                            onTap: () {
-                              if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)!.labelAddMoney) {
-                                Navigator.pop(context);
-                                calledShortCut =
-                                    Languages.of(context)!.labelAddMoney;
-                                */ /* if (checkKYCStatus()) {
-                                  Navigator.pushNamed(
-                                      context, '/PaymentMethodScreen');
-                                } else {
-                                  Navigator.pushNamed(
-                                      context, '/ChooseDocScreen');
-                                }*/ /*
-                              } else if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)?.labelWithdraw) {
-                                Navigator.pop(context);
-                                calledShortCut =
-                                    Languages.of(context)!.labelWithdraw;
-                                */ /* if (checkKYCStatus()) {
-                                  Navigator.pushNamed(
-                                      context, '/WithdrawMethodScreen');
-                                } else {
-                                  Navigator.pushNamed(
-                                      context, '/ChooseDocScreen');
-                                }*/ /*
-                                //_getKycStatus();
-                              } else if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)?.labelTransfer) {
-                                Navigator.pop(context);
-                                // Navigator.pushNamed(context, '/TransferScreen');
-                              } else if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)?.labelRequestQR) {
-                                calledShortCut =
-                                    Languages.of(context)!.labelWithdraw;
-                                Navigator.pop(context);
-                                //Navigator.pushNamed(context, '/RequestQrScreen');
-                              } else {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
-                                    context, '/ComingSoonScreen');
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColor.PRIMARY),
-                                    child: Icon(
-                                      _shortcutCardsList[index].icon,
-                                      color: AppColor.WHITE,
-                                    ),
-                                  ),
-                                  Text(
-                                    _shortcutCardsList[index].title,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else
-                          return Container();
-                      },
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            child: Container(
+              width: screenWidth,
+              decoration: BoxDecoration(
+                  //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 35,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      //color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                ),*/
-                Text("${Languages.of(context)?.labelReceiveMoney}",
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  //height: screenSize.height/2,
-                  child: Container(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      controller: _scrollController,
-                      itemCount: _shortcutCardsList.length,
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(bottom: 0),
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index == 2) {
-                          return GestureDetector(
-                            onTap: () {
-                              if (_shortcutCardsList[index].title ==
-                                  Languages.of(context)?.labelRequestQR) {
-                                calledShortCut =
-                                    Languages.of(context)!.labelWithdraw;
-                                Navigator.pop(context);
-                                //Navigator.pushNamed(context, '/RequestQrScreen');
-                              } else {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
-                                    context, '/ComingSoonScreen');
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColor.PRIMARY),
-                                    child: Icon(
-                                      _shortcutCardsList[index].icon,
-                                      color: AppColor.WHITE,
-                                    ),
-                                  ),
-                                  Text(
-                                    _shortcutCardsList[index].title,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else
-                          return Container();
-                      },
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Account Verification",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SlideView(),
+                  Spacer(),
+                  CustomButtonComponent(
+                      text: "Start Now",
+                      screenWidth: screenWidth * 0.8,
+                      isDarkMode: isDarkMode,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      }),
+                  SizedBox(
+                    height: 18,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Not Now",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColor.PRIMARY),
                     ),
                   ),
-                ),
-                Text(
-                  Languages.of(context)!.labelPay,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  //height: screenSize.height/2,
-                  child: Container(
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      controller: _scrollController,
-                      itemCount: _shortcutCardsList.length,
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(bottom: 0),
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index == 3) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pushNamed(context, '/ComingSoonScreen');
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColor.PRIMARY),
-                                    child: Icon(
-                                      _shortcutCardsList[index].icon,
-                                      color: AppColor.WHITE,
-                                    ),
-                                  ),
-                                  Text(
-                                    _shortcutCardsList[index].title,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else
-                          return Container();
-                      },
-                    ),
-                  ),
-                ),
-              ],
+                  SizedBox(
+                    height: 52,
+                  )
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget SlideView() {
+    return Column(
+      children: [
+        Image(
+          //alignment: Alignment.topLeft,
+          width: screenWidth * 0.6,
+          height: screenHeight * 0.3,
+          image: AssetImage("assets/slide_1.png"),
+        ),
+        SizedBox(
+          height: 6,
+        ),
+        Container(
+          width: screenWidth * 0.6,
+          child: Text(
+            "Verify with Facial Recognition",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: screenWidth * 0.7,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            "You can now verify your account using facial recognition on the app.",
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 
