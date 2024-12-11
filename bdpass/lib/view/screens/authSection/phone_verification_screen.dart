@@ -250,6 +250,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         text: "${Languages.of(context)?.labelContinue}",
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
+                        verticalPadding: 10,
                         onTap: () {
                           //_hitSignUpApi();
                           if (_emailController.text.isNotEmpty &&

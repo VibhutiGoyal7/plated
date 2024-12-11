@@ -104,6 +104,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               text: Languages.of(context)!.labelContinue,
                               screenWidth: screenWidth,
                               isDarkMode: isDarkMode,
+                              verticalPadding: 10,
                               onTap: () {
                                 Navigator.pushNamed(context, '/SliderScreen');
                               }),

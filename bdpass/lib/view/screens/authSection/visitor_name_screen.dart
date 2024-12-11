@@ -107,6 +107,7 @@ class _VisitorNameScreenState extends State<VisitorNameScreen> {
                           text: "${Languages.of(context)?.labelProceed}",
                           screenWidth: screenWidth,
                           isDarkMode: isDarkMode,
+                          verticalPadding: 10,
                           onTap: () {
                             if(firtNameController.text.isNotEmpty && lastNameController.text.isNotEmpty){
                               Helper.saveName("${firtNameController.text} ${lastNameController.text}");

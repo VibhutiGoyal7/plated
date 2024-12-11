@@ -5,6 +5,7 @@ class CustomButtonComponent extends StatelessWidget {
   late final String text;
   late final bool isDarkMode;
   late final double screenWidth;
+  late final double verticalPadding;
   final Function() onTap;
 
   CustomButtonComponent(
@@ -12,6 +13,7 @@ class CustomButtonComponent extends StatelessWidget {
       required this.text,
       required this.screenWidth,
       required this.isDarkMode,
+      required this.verticalPadding,
       required this.onTap});
 
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class CustomButtonComponent extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding),
         width: screenWidth,
         decoration: BoxDecoration(
             border: Border.all(

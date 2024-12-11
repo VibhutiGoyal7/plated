@@ -201,6 +201,7 @@ class _PinCreateScreenState extends State<PinCreateScreen> {
                 text: "${Languages.of(context)?.labelContinue}",
                 isDarkMode: isDarkMode,
                 screenWidth: screenWidth,
+                verticalPadding: 10,
                 onTap: () {
                   hideKeyBoard();
                   if(pin == confirmPin){

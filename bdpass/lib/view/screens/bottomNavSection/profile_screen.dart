@@ -412,61 +412,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                         ),
-
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 1.0),
                                           child: Card(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(8)),
+                                                    BorderRadius.circular(8)),
                                             child: Container(
                                               padding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 8.0,
-                                                  vertical: 12.0),
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical: 12.0),
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: Row(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Icon( Icons.abc,
-                                                    size: 22,
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.abc,
+                                                        size: 22,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Text(
+                                                        "${Languages.of(context)?.labelLanguage}",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          //fontWeight: FontWeight.w600,
+                                                          //color: isDarkMode ? Colors.white : Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text("${Languages.of(context)?.labelLanguage}",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      //fontWeight: FontWeight.w600,
-                                                      //color: isDarkMode ? Colors.white : Colors.black,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
                                                   Container(
-                                                    height: 25,
+                                                    height: 30,
                                                     child: ToggleSwitch(
                                                       minWidth: 60.0,
-                                                      customWidths: [50,70],
+                                                      customWidths: [50, 70],
                                                       cornerRadius: 10.0,
-                                                      activeBgColors: [ [Colors.green[800]!]],
-                                                        activeFgColor: Colors.black,
-                                                      inactiveBgColor: Colors.white,
-                                                      inactiveFgColor: Colors.white,
+                                                      activeBgColors: [
+                                                        [Colors.green[800]!]
+                                                      ],
+                                                      activeFgColor:
+                                                          Colors.white,
+                                                      inactiveBgColor:
+                                                          Colors.grey,
+                                                      inactiveFgColor:
+                                                          Colors.white,
                                                       radiusStyle: true,
                                                       animate: true,
-                                                      curve: Curves.easeInOutCubicEmphasized,
+                                                      curve: Curves
+                                                          .easeInOutCubicEmphasized,
                                                       animationDuration: 100,
                                                       initialLabelIndex: 0,
                                                       totalSwitches: 2,
-                                                      customTextStyles: [TextStyle(fontSize: 8)],
-                                                      labels: ['English', 'Bangladesh'],
+                                                      customTextStyles: [
+                                                        TextStyle(fontSize: 8)
+                                                      ],
+                                                      labels: [
+                                                        'English',
+                                                        'Bangladesh'
+                                                      ],
                                                       onToggle: (index) {
-                                                        print('switched to: $index');
+                                                        print(
+                                                            'switched to: $index');
                                                       },
                                                     ),
                                                   ),
@@ -475,18 +494,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                         ),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/SettingScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelLanguage}",
-                                              icon: Icons.abc_outlined,
-                                              headingTextSize: 14,
-                                            )),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -592,37 +599,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               headingTextSize: 14,
                                             )),
                                         GestureDetector(
-                                            onTap: () {
-                                              Helper.saveName("");
-                                              Helper.savePin("");
-                                              Helper.saveEmail("");
-                                              Helper.savePhoneNo("");
-                                              Navigator.pushNamed(context, "/WelcomeScreen");
-                                            },
-                                            child: _buildCard(
-                                                context,
-                                                "Clear Data",
-                                                isDarkMode,
-                                                Icon(
-                                                  Icons.logout,
-                                                  size: 22,
-                                                )),
-
-                                            ),
+                                          onTap: () {
+                                            Helper.saveName("");
+                                            Helper.savePin("");
+                                            Helper.saveEmail("");
+                                            Helper.savePhoneNo("");
+                                            Navigator.pushNamed(
+                                                context, "/WelcomeScreen");
+                                          },
+                                          child: _buildCard(
+                                              context,
+                                              "Clear Data",
+                                              isDarkMode,
+                                              Icon(
+                                                Icons.logout,
+                                                size: 22,
+                                              )),
+                                        ),
                                         GestureDetector(
-                                            onTap: () {
-                                              _showLogOutDialog();
-                                            },
-                                            child: _buildCard(
-                                                context,
-                                                "${Languages.of(context)?.labelLogout}",
-                                                isDarkMode,
-                                                Icon(
-                                                  Icons.logout,
-                                                  size: 22,
-                                                )),
-
-                                            ),
+                                          onTap: () {
+                                            _showLogOutDialog();
+                                          },
+                                          child: _buildCard(
+                                              context,
+                                              "${Languages.of(context)?.labelLogout}",
+                                              isDarkMode,
+                                              Icon(
+                                                Icons.logout,
+                                                size: 22,
+                                              )),
+                                        ),
                                       ]),
                                 ],
                               ),

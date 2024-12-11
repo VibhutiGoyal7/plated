@@ -85,7 +85,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
    bool isSearch = false;
 
   bool isLoading = false;
-  bool isDataAvail = false;
+  bool isDataAvail = true;
   final ConnectivityService _connectivityService = ConnectivityService();
   bool isInternetConnected = true;
   late Timer _showDialogTimer;
@@ -279,7 +279,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               background: Container(
                                 color: AppColor.BG_COLOR,
                               ),
-                              centerTitle: true,
+                              centerTitle: false,
+                              titlePadding: EdgeInsets.all(20),
                               collapseMode: CollapseMode.parallax,
                               title: Text(
                                 "${Languages.of(context)?.labelNotification}",

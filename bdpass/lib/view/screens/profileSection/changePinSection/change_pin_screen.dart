@@ -144,6 +144,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                 text: "${Languages.of(context)?.labelContinue}",
                 isDarkMode: isDarkMode,
                 screenWidth: screenWidth,
+                verticalPadding: 10,
                 onTap: () {
                   hideKeyBoard();
                   print(

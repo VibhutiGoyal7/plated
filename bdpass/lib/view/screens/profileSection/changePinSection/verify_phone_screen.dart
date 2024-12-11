@@ -146,6 +146,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 text: "${Languages.of(context)?.labelContinue}",
                 isDarkMode: isDarkMode,
                 screenWidth: screenWidth,
+                verticalPadding: 10,
                 onTap: () {
                   hideKeyBoard();
                   print(

@@ -90,6 +90,7 @@ class _SliderScreenState extends State<SliderScreen> {
                   text: "${Languages.of(context)?.labelContinue}",
                   screenWidth: screenWidth,
                   isDarkMode: isDarkMode,
+                  verticalPadding: 10,
                   onTap: () {
                     Navigator.pushNamed(context, '/CreateAccountScreen');
                   }),
