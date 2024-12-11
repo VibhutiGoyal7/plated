@@ -251,6 +251,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         text: "${Languages.of(context)?.labelContinue}",
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
+                        verticalPadding: 10,
                         onTap: () {
                           hideKeyBoard();
                           Future.delayed(Duration(milliseconds: 20));

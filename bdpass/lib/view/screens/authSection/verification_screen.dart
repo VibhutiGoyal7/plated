@@ -105,6 +105,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 Spacer(),
                 CustomButtonComponent(text: "${Languages.of(context)?.labelScanNow}",
                     isDarkMode: isDarkMode,
+                    verticalPadding: 10,
                     screenWidth: screenWidth, onTap: () {
                   Navigator.pushNamed(context, "/PhoneVerificationScreen");
                   //Navigator.pushNamed(context, "/FaceDetectorView");

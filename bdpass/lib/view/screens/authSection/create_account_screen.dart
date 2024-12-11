@@ -114,6 +114,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         text: "${Languages.of(context)?.labelCreateNewAccount}",
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
+                        verticalPadding: 10,
                         onTap: () {
                           setState(() {
                             isInstruction = true;

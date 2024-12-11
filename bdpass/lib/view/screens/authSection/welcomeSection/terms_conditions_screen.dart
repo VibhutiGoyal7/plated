@@ -135,6 +135,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                   text: "Accept",
                   screenWidth: screenWidth,
                   isDarkMode: isDarkMode,
+                  verticalPadding: 10,
                   onTap: () {
                     Navigator.pushNamed(context, "/ProceedAsScreen");
                   },

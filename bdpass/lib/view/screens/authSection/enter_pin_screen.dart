@@ -89,92 +89,97 @@ class _EnterPinScreenState extends State<EnterPinScreen> {
           statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
         ),
         child: SafeArea(
+          bottom: false,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 16),
-                  child: GestureDetector(
-                      onTap: () async {
-                        hideKeyBoard();
-                        await Future.delayed(Duration(milliseconds: 2));
-                        Navigator.pushNamed(context, "/BottomNav");
-                      },
-                      child: Icon(Icons.cancel_rounded)),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Enter PIN',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16),
+                      child: GestureDetector(
+                          onTap: () async {
+                            hideKeyBoard();
+                            await Future.delayed(Duration(milliseconds: 2));
+                            Navigator.pushNamed(context, "/BottomNav");
+                          },
+                          child: Icon(Icons.cancel_rounded)),
+                    ),
                   ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text(
-                      "Enter your BD Pass PIN to proceed",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(height: 50),
-                    Center(
-                      child: Container(
-                        width: screenWidth * 0.6,
-                        child: OtpPinField(
-                          onSubmit: (String otp) {
-                            setState(() {
-                              oldPin = otp;
-                            });
-                            print("Entered OTP: $otp");
-                            // Handle the OTP submission
-                          },
-                          maxLength: 4,
-                          otpPinFieldInputType: OtpPinFieldInputType.password,
-                          otpPinFieldDecoration:
-                              OtpPinFieldDecoration.roundedPinBoxDecoration,
-                          otpPinFieldStyle: OtpPinFieldStyle(
-                              defaultFieldBorderColor: AppColor.PRIMARY,
-                              activeFieldBorderColor: Colors.grey,
-                              filledFieldBackgroundColor: AppColor.PRIMARY,
-                              fieldBorderRadius: 14,
-                              fieldBorderWidth: 1.5,
-                              textStyle: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)
-                              //borderRadius: BorderRadius.circular(10),
-                              ),
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          fieldWidth: 22,
-                          fieldHeight: 22,
-                          cursorColor: Colors.black,
-                          showCursor: false,
-                          onChange: (String value) {
-                            print("Current input: $value");
-                          },
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Enter PIN',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Text(
+                          "Enter your BD Pass PIN to proceed",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(height: 50),
+                        Center(
+                          child: Container(
+                            width: screenWidth * 0.6,
+                            child: OtpPinField(
+                              onSubmit: (String otp) {
+                                setState(() {
+                                  oldPin = otp;
+                                });
+                                print("Entered OTP: $otp");
+                                // Handle the OTP submission
+                              },
+                              maxLength: 4,
+                              otpPinFieldInputType: OtpPinFieldInputType.password,
+                              otpPinFieldDecoration:
+                              OtpPinFieldDecoration.roundedPinBoxDecoration,
+                              otpPinFieldStyle: OtpPinFieldStyle(
+                                  defaultFieldBorderColor: AppColor.PRIMARY,
+                                  activeFieldBorderColor: Colors.grey,
+                                  filledFieldBackgroundColor: AppColor.PRIMARY,
+                                  fieldBorderRadius: 14,
+                                  fieldBorderWidth: 1.5,
+                                  textStyle: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)
+                                //borderRadius: BorderRadius.circular(10),
+                              ),
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              fieldWidth: 22,
+                              fieldHeight: 22,
+                              cursorColor: Colors.black,
+                              showCursor: false,
+                              onChange: (String value) {
+                                print("Current input: $value");
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Spacer(),
+
+              //Spacer(),
               Center(
                   child: GestureDetector(
                       onTap: () {
@@ -203,7 +208,8 @@ class _EnterPinScreenState extends State<EnterPinScreen> {
               CustomButtonComponent(
                   text: "${Languages.of(context)?.labelContinue}",
                   isDarkMode: isDarkMode,
-                  screenWidth: screenWidth,
+                  screenWidth: screenWidth * 0.8,
+                  verticalPadding : 14,
                   onTap: widget.data != null
                       ? widget.onSuccess
                       : () {
@@ -212,9 +218,6 @@ class _EnterPinScreenState extends State<EnterPinScreen> {
                               "oldPin: $oldPin :: newPin: $newPin :: confirmPin: $confirmPin");
                           Navigator.pushNamed(context, "/VerifyPhoneScreen");
                         }),
-              SizedBox(
-                height: 25,
-              )
             ],
           ),
         ),

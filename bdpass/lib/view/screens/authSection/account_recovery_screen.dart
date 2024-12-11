@@ -199,6 +199,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                       text: "${Languages.of(context)?.labelContinue}",
                       isDarkMode: isDarkMode,
                       screenWidth: screenWidth,
+                      verticalPadding: 10,
                       onTap: () {
                         hideKeyBoard();
                         Navigator.pushNamed(context, "/PinCreateScreen");

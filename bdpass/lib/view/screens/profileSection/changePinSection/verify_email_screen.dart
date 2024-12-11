@@ -144,6 +144,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 text: "${Languages.of(context)?.labelContinue}",
                 isDarkMode: isDarkMode,
                 screenWidth: screenWidth,
+                verticalPadding: 10,
                 onTap: () {
                   hideKeyBoard();
                   print(

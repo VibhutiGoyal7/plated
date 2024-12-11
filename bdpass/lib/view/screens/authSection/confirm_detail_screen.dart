@@ -306,6 +306,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                               text: Languages.of(context)!.labelConfirm,
                               isDarkMode: isDarkMode,
                               screenWidth: screenWidth,
+                              verticalPadding: 10,
                               onTap: () {}),
                         ],
                       )),

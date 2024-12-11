@@ -61,7 +61,7 @@ class _AccountRegisteredScreenState extends State<AccountRegisteredScreen> {
                 CustomButtonComponent(
                     text: "${Languages.of(context)?.labelDone}",
                     screenWidth: screenWidth * 0.8,
-
+                    verticalPadding: 10,
                     isDarkMode: isDarkMode,
                     onTap: () {
                       Navigator.pushNamed(context, '/BottomNav');
