@@ -3,11 +3,11 @@ import 'package:BDPass/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../model/apis/api_response.dart';
-import '../../../model/response/countryListResponse.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/custom_button_component.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../model/response/countryListResponse.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/custom_button_component.dart';
 
 class TermsConditionsScreen extends StatefulWidget {
   @override

@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:BDPass/utils/Helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
-import '../../../model/response/notificationOtpResponse.dart';
-import '../CustomBiometricScreen.dart';
+import '../../../../model/response/notificationOtpResponse.dart';
+import '../../CustomBiometricScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   final NotificationOtpResponse? data; // Define the 'data' parameter here
@@ -24,6 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _isAuthenticated = false;
   bool _authenticationAttempted = false; // Add this flag
   String _authorized = 'Not Authorized';
+  String name = "";
+  String email = "";
+  String phone = "";
+  String pin = "";
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool _authOnResume = false;
@@ -37,6 +42,18 @@ class _SplashScreenState extends State<SplashScreen> {
     notificationOtpResponse = widget.data;
     Helper.getUserAuthenticated().then((onValue) {
       isUserAuthenticated = onValue;
+    });
+    Helper.getName().then((onValue){
+      name = "$onValue";
+    });
+    Helper.getPhoneNo().then((onValue){
+      phone = "$onValue";
+    });
+    Helper.getEmail().then((onValue){
+      email = "$onValue";
+    });
+    Helper.getPin().then((onValue){
+      pin = "$onValue";
     });
     Timer(Duration(seconds: 2), () {
       _navigation();
@@ -119,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigation() {
     print("token:::${widget.data}");
     //ToastComponent.showToast(context: context, message: "token:::${notificationOtpResponse?.otp}");
-    if (token == null || token?.isEmpty == true) {
+   /* if (token == null || token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/WelcomeScreen");
     } else {
       if (isUserAuthenticated != true) {
@@ -132,6 +149,19 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacementNamed(context, "/BottomNav");
         }
       }
+    }*/
+
+    if(email.isNotEmpty && phone.isNotEmpty && name.isNotEmpty && pin.isNotEmpty ){
+      if (isUserAuthenticated != true) {
+        print("isUserAuthenticated :: $isUserAuthenticated");
+        _initializeBiometrics();
+      } else {
+          Navigator.pushReplacementNamed(context, "/BottomNav");
+      }
+    }else if(email.isEmpty || phone.isEmpty || name.isEmpty ){
+      Navigator.pushReplacementNamed(context, "/WelcomeScreen");
+    }else if(pin.isEmpty){
+      Navigator.pushReplacementNamed(context, "/PinCreateScreen");
     }
   }
 }

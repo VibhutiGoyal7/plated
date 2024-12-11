@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../model/apis/api_response.dart';
-import '../../../model/response/countryListResponse.dart';
-import '../../../view_model/main_view_model.dart';
-import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../../../model/apis/api_response.dart';
+import '../../../../model/response/countryListResponse.dart';
+import '../../../../view_model/main_view_model.dart';
+import '../../../component/connectivity_service.dart';
+import '../../../component/custom_loader.dart';
 
 class SliderScreen extends StatefulWidget {
   @override

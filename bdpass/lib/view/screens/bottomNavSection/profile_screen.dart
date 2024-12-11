@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
@@ -411,6 +412,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                         ),
+
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 1.0),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(8)),
+                                            child: Container(
+                                              padding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 8.0,
+                                                  vertical: 12.0),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(8.0),
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  Icon( Icons.abc,
+                                                    size: 22,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Text("${Languages.of(context)?.labelLanguage}",
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      //fontWeight: FontWeight.w600,
+                                                      //color: isDarkMode ? Colors.white : Colors.black,
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Container(
+                                                    height: 25,
+                                                    child: ToggleSwitch(
+                                                      minWidth: 60.0,
+                                                      customWidths: [50,70],
+                                                      cornerRadius: 10.0,
+                                                      activeBgColors: [ [Colors.green[800]!]],
+                                                        activeFgColor: Colors.black,
+                                                      inactiveBgColor: Colors.white,
+                                                      inactiveFgColor: Colors.white,
+                                                      radiusStyle: true,
+                                                      animate: true,
+                                                      curve: Curves.easeInOutCubicEmphasized,
+                                                      animationDuration: 100,
+                                                      initialLabelIndex: 0,
+                                                      totalSwitches: 2,
+                                                      customTextStyles: [TextStyle(fontSize: 8)],
+                                                      labels: ['English', 'Bangladesh'],
+                                                      onToggle: (index) {
+                                                        print('switched to: $index');
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(
@@ -529,6 +593,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             )),
                                         GestureDetector(
                                             onTap: () {
+                                              Helper.saveName("");
+                                              Helper.savePin("");
+                                              Helper.saveEmail("");
+                                              Helper.savePhoneNo("");
+                                              Navigator.pushNamed(context, "/WelcomeScreen");
+                                            },
+                                            child: _buildCard(
+                                                context,
+                                                "Clear Data",
+                                                isDarkMode,
+                                                Icon(
+                                                  Icons.logout,
+                                                  size: 22,
+                                                )),
+
+                                            ),
+                                        GestureDetector(
+                                            onTap: () {
                                               _showLogOutDialog();
                                             },
                                             child: _buildCard(
@@ -538,13 +620,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 Icon(
                                                   Icons.logout,
                                                   size: 22,
-                                                ))
-                                            /* DetailBox(heading: "Logout",
-                                              subHeading: "",
-                                              icon:
-                                              Icons.logout,
-                                              headingTextSize: 16,
-                                              subHeadingTextSize: 12)*/
+                                                )),
 
                                             ),
                                       ]),

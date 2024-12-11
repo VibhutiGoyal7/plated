@@ -16,6 +16,9 @@ import '../../component/customNumberKeyboard.dart';
 import '../../component/instruction_step.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
+  final String? data; // Define the 'data' parameter here
+
+  OtpVerificationScreen({Key? key, this.data}) : super(key: key);
   @override
   _OtpVerificationScreenState createState() => _OtpVerificationScreenState();
 }
@@ -116,8 +119,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   height: 8,
                 ),
                 Text(
-                  "${Languages.of(context)?.labelVerifyYourMobileNumber}",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                 widget.data == "mobile" ? "${Languages.of(context)?.labelVerifyYourMobileNumber}" :"Verify Your Email Address",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
@@ -143,8 +146,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
 
                 Text(
-                  "${Languages.of(context)?.labelPleaseEnterOtp} 971557403260",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                  widget.data == "mobile" ?"${Languages.of(context)?.labelPleaseEnterOtp} 9715574260" : "Please enter the OTP (One Time Password) sent via SMS to  abc@gmail.com",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(
                   height: 20,
@@ -189,9 +192,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   if (value == "clear") {
                     _handleBackspace();
                   } else if (value == "submit") {
-                    String otp =
-                        _inputValues.map((controller) => controller).join();
-                    Navigator.pushNamed(context, "/AccountRecoveryScreen");
+                    if(widget.data == "mobile"){
+                      Navigator.pushNamed(context, "/OtpVerificationScreen",arguments: "email");
+                    }else{
+                      Navigator.pushNamed(context, "/PinCreateScreen");
+
+                    }
                   } else {
                     _handleKeyTap(value);
                   }

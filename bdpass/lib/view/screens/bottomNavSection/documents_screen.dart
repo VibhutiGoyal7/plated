@@ -14,6 +14,7 @@ import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/fixed_header_delegate.dart';
 import '../../component/toastMessage.dart';
+import '../authSection/enter_pin_screen.dart';
 
 class DocumentsScreen extends StatefulWidget {
   @override
@@ -29,6 +30,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   String? selected = "";
   bool isIssued = false;
   bool isSearch = false;
+  bool isPinVerified = false;
   String selectedHeading = "Issued";
   List<String> heading = ["Issued","Uploaded"];
   String? username;
@@ -102,7 +104,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       child: GestureDetector(
         onTap: () => hideKeyBoard(),
         child: Scaffold(
-          body: Stack(
+          body:!isPinVerified
+              ? EnterPinScreen(
+            onSuccess: () {
+              hideKeyBoard();
+              setState(() {
+                isPinVerified = true;
+              });
+            },
+            data: "document",
+          )
+              : Stack(
             children: [
               AnnotatedRegion<SystemUiOverlayStyle>(
                 value: SystemUiOverlayStyle(
@@ -523,7 +535,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                   : SizedBox(),
             ],
           ),
-          bottomNavigationBar: Container(
+          bottomNavigationBar:!isPinVerified
+              ? Container(height: 60,)
+          : Container(
             height: 50,
             margin: EdgeInsets.only(bottom: 60),
             child: CustomButtonComponent(
