@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/request/signUpRequest.dart';
 import 'package:BDPass/model/response/signUpResponse.dart';
+import 'package:BDPass/utils/Util.dart';
 import 'package:BDPass/view/component/textfield_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
@@ -210,7 +211,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                               ),
                             ),
                             TextfieldComponent(
-                                width: 0.7,
+                                width: 0.66,
                                 isPhone: true,
                                 textController: _phoneNoController,
                                 icon: Icon(
@@ -251,6 +252,8 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                         screenWidth: screenWidth,
                         isDarkMode: isDarkMode,
                         onTap: () {
+                          hideKeyBoard();
+                          Future.delayed(Duration(milliseconds: 20));
                           //_hitSignUpApi();
                           if (_emailController.text.isNotEmpty &&
                               _phoneNoController.text.isNotEmpty) {

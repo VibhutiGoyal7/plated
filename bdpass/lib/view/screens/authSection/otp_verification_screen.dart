@@ -111,7 +111,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       body: SafeArea(
         child: Stack(children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -146,7 +146,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
 
                 Text(
-                  widget.data == "mobile" ?"${Languages.of(context)?.labelPleaseEnterOtp} 9715574260" : "Please enter the OTP (One Time Password) sent via SMS to  abc@gmail.com",
+                  widget.data == "mobile" ?"${Languages.of(context)?.labelPleaseEnterOtp} 9715574260" : "Please enter the OTP (One Time Password) sent via SMS to abc@gmail.com",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(

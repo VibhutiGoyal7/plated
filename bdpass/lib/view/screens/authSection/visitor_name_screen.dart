@@ -1,6 +1,7 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/custom_button_component.dart';
+import 'package:BDPass/view/component/email_textfield_component.dart';
 import 'package:BDPass/view/component/textfield_component.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/authSection/welcomeSection/instruction_screen.dart';
@@ -84,14 +85,14 @@ class _VisitorNameScreenState extends State<VisitorNameScreen> {
                   SizedBox(
                     height: 50,
                   ),
-                  TextfieldComponent(width: 1, isPhone: false, text: "First Name",
+                  EmailTextFieldComponent(width: 1, isPhone: false, text: "First Name",
                       icon: Icon(Icons.person), inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
                       ],
                       textController: firtNameController, onChanged: (){
 
                       }),
-                  TextfieldComponent(width: 1, isPhone: false, text: "Last Name",
+                  EmailTextFieldComponent(width: 1, isPhone: false, text: "Last Name",
                       icon: Icon(Icons.person), inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
                       ],

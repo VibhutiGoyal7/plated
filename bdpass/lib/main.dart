@@ -22,6 +22,7 @@ import 'package:BDPass/view/screens/authSection/visitor_name_screen.dart';
 import 'package:BDPass/view/screens/authSection/welcomeSection/welcome_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/account_benefit_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/bottom_nav.dart';
+import 'package:BDPass/view/screens/bottomNavSection/login_transaction_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/manage_devices_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/pinSection/pin_create_screen.dart';
 import 'package:BDPass/view/screens/bottomNavSection/upgrade_account_screen.dart';
@@ -242,6 +243,9 @@ class _MyAppState extends State<MyApp> {
             },
             '/NewPinScreen': (context) {
               return NewPinScreen();
+            },
+            '/LoginTransactionScreen': (context) {
+              return LoginTransactionScreen();
             },
             '/LoginAlertScreen': (context) {
               return LoginAlertScreen();
