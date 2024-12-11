@@ -8,6 +8,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 
 class ProceedAsScreen extends StatefulWidget {
   @override
@@ -243,7 +244,7 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 

@@ -8,6 +8,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 
 class UpgradeAccountScreen extends StatefulWidget {
   @override
@@ -316,7 +317,7 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 

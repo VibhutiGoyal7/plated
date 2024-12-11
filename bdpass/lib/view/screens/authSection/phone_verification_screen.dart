@@ -16,6 +16,7 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
+import '../../component/custom_loader.dart';
 import '../../component/email_textfield_component.dart';
 import '../../component/instruction_step.dart';
 import '../../component/toastMessage.dart';
@@ -279,7 +280,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                     ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
-                      child: CircularProgressIndicator(),
+                      child: CustomLoader(),
                     ),
                   ],
                 )
@@ -478,7 +479,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print(
             "SignUpUsingMobile ${signUpResponse?.email} || ${signUpResponse?.phone_number}");

@@ -842,7 +842,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("GetDashboardData : ${dashboardResponse?.customerData?.email}");
         updateCustomerDashBoardDetails(dashboardResponse);
@@ -894,7 +894,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;

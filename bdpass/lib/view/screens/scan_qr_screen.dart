@@ -12,6 +12,7 @@ import '../../languageSection/Languages.dart';
 import '../../model/apis/api_response.dart';
 import '../../view_model/main_view_model.dart';
 import '../component/connectivity_service.dart';
+import '../component/custom_loader.dart';
 import '../component/toastMessage.dart';
 
 class ScanQrScreen extends StatefulWidget {
@@ -113,7 +114,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
           ),
           isLoading
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: CustomLoader(),
                 )
               : SizedBox()
         ],
@@ -187,7 +188,7 @@ class _ScanQrScreenState extends State<ScanQrScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("pushNamed $userName");
         checkCustomerResponse?.amount =amount;

@@ -132,6 +132,7 @@ flutter:
       - assets/verify_signature_icon.svg
       - assets/video.mp4
       - assets/progress_svg.svg
+      - assets/loading.gif
   fonts:
     - family: CustomFont
       fonts:

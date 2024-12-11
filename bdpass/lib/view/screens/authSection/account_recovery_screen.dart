@@ -13,6 +13,7 @@ import '../../../utils/Helper.dart';
 import '../../../utils/Util.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
+import '../../component/custom_loader.dart';
 import '../../component/toastMessage.dart';
 
 class AccountRecoveryScreen extends StatefulWidget {
@@ -82,7 +83,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("GetSetUpAccountWidget : ${setUpAccountResponse?.firstName}");
         await Helper.saveProfileDetails(setUpAccountResponse);

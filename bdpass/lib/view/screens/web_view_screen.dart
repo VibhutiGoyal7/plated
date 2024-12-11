@@ -15,6 +15,7 @@ import '../../theme/AppColor.dart';
 import '../../utils/Util.dart';
 import '../../view_model/main_view_model.dart';
 import '../component/connectivity_service.dart';
+import '../component/custom_loader.dart';
 import '../component/session_expired_dialog.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -133,7 +134,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
        // Navigator.pushReplacementNamed(context, "/BottomNav");
         return Container(); // Return an empty container as you'll navigate away

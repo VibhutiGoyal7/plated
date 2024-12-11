@@ -4,6 +4,8 @@ import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/db/BDPassDatabase.dart';
 import 'package:BDPass/model/db/dao.dart';
 import 'package:BDPass/theme/AppColor.dart';
+import 'package:BDPass/view/component/custom_loader.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +14,8 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/notificationListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
-import '../../component/fixed_header_delegate.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/fixed_header_delegate.dart';
 import '../../component/search_component.dart';
 import 'history_screen.dart';
 
@@ -74,7 +76,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         heading: "Request for sharing"),
   ];
 
-  final _scrollController = ScrollController();
+  late ScrollController _scrollController;
   int _currentPage = 1;
   bool _isLoadingMore = false;
   final _numberOfPostsPerRequest = 20;
@@ -82,8 +84,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   static const maxDuration = Duration(seconds: 2);
 
   late bool isDarkMode;
-   bool isSearch = false;
-
+  bool isSearch = false;
+  bool _isCollapsed = false;
   bool isLoading = false;
   bool isDataAvail = true;
   final ConnectivityService _connectivityService = ConnectivityService();
@@ -95,8 +97,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
     imageUrl = "";
     intializeDatabase();
+    _scrollController = ScrollController();
     _scrollController.addListener(_generalLoadMore);
-
+/*    _scrollController.addListener(() {
+      final isCollapsed = _scrollController.offset > 100; // Adjust threshold
+      if (isCollapsed != _isCollapsed) {
+        setState(() {
+          _isCollapsed = isCollapsed;
+        });
+      }
+    });*/
     _fetchDataFuture = _fetchData(_currentPage, false);
   }
 
@@ -218,6 +228,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
+  void _toggleCollapse() {
+    if (_isCollapsed) {
+      // Scroll to the top to expand
+      _scrollController.animateTo(
+        0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Scroll to the collapse threshold
+      _scrollController.animateTo(
+        200.0, // Expanded height
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
 /*
 
   Future<void> _fetchPaginatedNotifications(String type, int pageKey) async {
@@ -246,31 +274,65 @@ class _NotificationScreenState extends State<NotificationScreen> {
       children: [
         AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
-              statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
+              statusBarBrightness:
+                  isDarkMode ? Brightness.dark : Brightness.light,
               statusBarColor: Colors.transparent,
               statusBarIconBrightness:
                   isDarkMode ? Brightness.light : Brightness.dark),
-                  child: FutureBuilder(
-                    future: _fetchDataFuture,
-                    builder: (context, AsyncSnapshot<void> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
+          child: FutureBuilder(
+            future: _fetchDataFuture,
+            builder: (context, AsyncSnapshot<void> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CustomLoader());
+              }
 
-                      if (snapshot.hasError) {
-                        return Center(child: Text("Error loading data"));
-                      }
+              if (snapshot.hasError) {
+                return Center(child: Text("Error loading data"));
+              }
 
-                      // Group notifications by date
-                      Map<String, List<NotificationDetails>> groupedNotifications =
-                      groupNotificationsByDate(generalNotificationList);
-                      List<String> dates = groupedNotifications.keys.toList();
-                      int i = 0;
+              // Group notifications by date
+              Map<String, List<NotificationDetails>> groupedNotifications =
+                  groupNotificationsByDate(generalNotificationList);
+              List<String> dates = groupedNotifications.keys.toList();
+              int i = 0;
 
-                      return CustomScrollView(
-                        controller: _scrollController,
-                        slivers: [
-                          SliverAppBar(
+              return CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  CupertinoSliverNavigationBar(
+                    largeTitle: Text(
+                      "${Languages.of(context)?.labelNotification}",
+                      style: TextStyle(
+                        color: AppColor.TEXT_COLOR,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    middle: Text(
+                      "${Languages.of(context)?.labelNotification}",
+                      style: TextStyle(fontSize: 22),
+                    ),
+                    backgroundColor: AppColor.BG_COLOR,
+                    // Control the color
+                    /*trailing: _isCollapsed
+                        ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                      child: GestureDetector(
+                          onTap: () {
+                           // _toggleCollapse();
+                            setState(() {
+                              isSearch = !isSearch;
+                              _isCollapsed = false;
+                            });
+                          },
+                          child: Icon(
+                            Icons.search,
+                            color: AppColor.PRIMARY,
+                          )),
+                    ): null,*/
+                    alwaysShowMiddle: false,
+                    border: Border.all(width: 0, color: AppColor.WHITE),
+                  ),
+                  /*      SliverAppBar(
                             snap: false,
                             pinned: true,
                             floating: false,
@@ -280,14 +342,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 color: AppColor.BG_COLOR,
                               ),
                               centerTitle: false,
-                              titlePadding: EdgeInsets.all(20),
+                              titlePadding: EdgeInsets.all(18),
                               collapseMode: CollapseMode.parallax,
                               title: Text(
                                 "${Languages.of(context)?.labelNotification}",
                                 style: TextStyle(
                                   color: AppColor.TEXT_COLOR,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
+                                  fontSize: 18.0,
                                 ),
                               ),
                             ),
@@ -304,79 +366,90 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     },
                                   child: Icon(Icons.search,color: AppColor.PRIMARY,)),
                             )],
-                          ),
+                          ),*/
 
-                          // Your Fixed Header - SliverPersistentHeader
+                  // Your Fixed Header - SliverPersistentHeader
 
-                          SliverPersistentHeader(
-                            pinned: isSearch ?true :false, // Keeps the header fixed at the top when scrolling
-                            delegate: FixedHeaderDelegate(
-                              child: Container(
-                                color: AppColor.BG_COLOR, // Background color for the fixed header
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(horizontal: 6),
-                                child: SearchComponent(width: 1, screenWidth: screenWidth, isDarkMode: isDarkMode,
-                                    searchController: _searchController, onChanged: (){}),
-                              ),
-                            ),
-                          ) ,
+                  SliverPersistentHeader(
+                    pinned: isSearch ? true : false,
+                    // Keeps the header fixed at the top when scrolling
+                    delegate: FixedHeaderDelegate(
+                      child: Container(
+                        color: AppColor.BG_COLOR,
+                        // Background color for the fixed header
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(horizontal: 6),
+                        child: SearchComponent(
+                            width: 1,
+                            screenWidth: screenWidth,
+                            isDarkMode: isDarkMode,
+                            searchController: _searchController,
+                            onChanged: () {}),
+                      ),
+                    ),
+                  ),
 
-                              SliverToBoxAdapter(
-                                child:!isDataAvail ?  _buildNoDataScreen() : SizedBox(),
-                              ),
+                  SliverToBoxAdapter(
+                    child: !isDataAvail ? _buildNoDataScreen() : SizedBox(),
+                  ),
 
-                          !isDataAvail ?
-                              SliverToBoxAdapter(child: SizedBox(),):
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                String date = dates[index];
-                                List<NotificationDetails> notificationsForDate =
-                                groupedNotifications[date]!;
+                  !isDataAvail
+                      ? SliverToBoxAdapter(
+                          child: SizedBox(),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              String date = dates[index];
+                              List<NotificationDetails> notificationsForDate =
+                                  groupedNotifications[date]!;
 
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 0.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      /*Text(
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 0.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    /*Text(
                                         date,
                                         style: TextStyle(fontWeight: FontWeight.bold),
                                       ),*/
-                                      ...notificationsForDate
-                                          .asMap()
-                                          .entries
-                                          .map((notification) {
-                                        i++;
-                                        return generalNotificationItem(
-                                            notification.value,
-                                            i /*notification.key*/);
-                                      }).toList(),
-                                    ],
-                                  ),
-                                );
-                              },
-                              childCount: dates.length,
-                            ),
+                                    ...notificationsForDate
+                                        .asMap()
+                                        .entries
+                                        .map((notification) {
+                                      i++;
+                                      return generalNotificationItem(
+                                          notification.value,
+                                          i /*notification.key*/);
+                                    }).toList(),
+                                  ],
+                                ),
+                              );
+                            },
+                            childCount: dates.length,
                           ),
-                          if (_isLoadingMore)
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Center(child: CircularProgressIndicator()),
-                              ),
-                            ),
+                        ),
+                  if (_isLoadingMore)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: CustomLoader()),
+                      ),
+                    ),
 
-                          SliverToBoxAdapter(
-                            child: SizedBox(height: 65,),
-                          )
-                        ],
-                      );
-                    },
-                  ),
-                ),
-          ],
-        ));
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 65,
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    ));
   }
 
   Widget _buildNoDataScreen() {
@@ -441,12 +514,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         itemCount: dates.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
                           if (index == dates.length) {
-                            return Center(
-                                child: CircularProgressIndicator(
-                              color: isDarkMode
-                                  ? AppColor.WHITE
-                                  : AppColor.PRIMARY,
-                            ));
+                            return Center(child: CustomLoader());
                           }
                           String date = dates[index];
                           List<NotificationDetails> notificationsForDate =

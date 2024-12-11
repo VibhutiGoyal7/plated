@@ -4,6 +4,7 @@ import 'package:BDPass/model/db/dao.dart';
 import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/utils/Util.dart';
 import 'package:BDPass/view/screens/authSection/enter_pin_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ import '../../../model/response/notificationListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -25,7 +27,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   late double screenHeight;
   late BDPassDatabase database;
   late NotificationDao notificationDao;
-  bool isDataAvail = false;
+  bool isDataAvail = true;
   bool isPinVerified = false;
   List<NotificationDetails> generalNotificationList = [
     NotificationDetails(
@@ -240,64 +242,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       },
                       data: "history",
                     )
-                  : Stack(
-                  children: [ AnnotatedRegion<SystemUiOverlayStyle>(
-                        value: SystemUiOverlayStyle(
-                          statusBarColor: Colors.transparent,
-                          statusBarIconBrightness:
-                              isDarkMode ? Brightness.light : Brightness.dark,
-                          statusBarBrightness:
-                              isDarkMode ? Brightness.dark : Brightness.light,
-                        ),
-                        child: FutureBuilder(
-                          future: _fetchDataFuture,
-                          builder: (context, AsyncSnapshot<void> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-          
-                            if (snapshot.hasError) {
-                              return Center(child: Text("Error loading data"));
-                            }
-          
-                            // Group notifications by date
-                            Map<String, List<NotificationDetails>>
-                                groupedNotifications =
-                                groupNotificationsByDate(generalNotificationList);
-                            List<String> dates = groupedNotifications.keys.toList();
-                            int i = 0;
-          
-                            return CustomScrollView(
-                              controller: _scrollController,
-                              slivers: [
-                                SliverAppBar(
-                                  snap: false,
-                                  pinned: true,
-                                  floating: false,
-                                  expandedHeight: 90.0,
-                                  // Adjust the expanded height
-                                  flexibleSpace: FlexibleSpaceBar(
-                                    background: Container(
-                                      color: AppColor.BG_COLOR,
-                                    ),
-                                    centerTitle: false,
-                                    titlePadding: EdgeInsets.all(20),
-                                    collapseMode: CollapseMode.parallax,
-                                    title: Text(
+                  : Stack(children: [
+                      AnnotatedRegion<SystemUiOverlayStyle>(
+                          value: SystemUiOverlayStyle(
+                            statusBarColor: Colors.transparent,
+                            statusBarIconBrightness:
+                                isDarkMode ? Brightness.light : Brightness.dark,
+                            statusBarBrightness:
+                                isDarkMode ? Brightness.dark : Brightness.light,
+                          ),
+                          child: FutureBuilder(
+                            future: _fetchDataFuture,
+                            builder: (context, AsyncSnapshot<void> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(child: CustomLoader());
+                              }
+
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error loading data"));
+                              }
+
+                              // Group notifications by date
+                              Map<String, List<NotificationDetails>>
+                                  groupedNotifications =
+                                  groupNotificationsByDate(
+                                      generalNotificationList);
+                              List<String> dates =
+                                  groupedNotifications.keys.toList();
+                              int i = 0;
+
+                              return CustomScrollView(
+                                controller: _scrollController,
+                                slivers: [
+                                  CupertinoSliverNavigationBar(
+                                    largeTitle: Text(
                                       "${Languages.of(context)?.labelHistory}",
                                       style: TextStyle(
                                         color: AppColor.TEXT_COLOR,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16.0,
                                       ),
                                     ),
-                                  ),
-                                  backgroundColor: AppColor.BG_COLOR,
-                                  foregroundColor: AppColor.BG_COLOR,
-                                  leading: SizedBox(),
-                                  actions: [
-                                    Padding(
+                                    middle: Text("${Languages.of(context)?.labelHistory}",style: TextStyle(
+                                      fontSize: 22
+                                    ),),
+                                    backgroundColor: AppColor.BG_COLOR,
+                                    // Control the color
+                                    trailing: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 14.0),
                                       child: GestureDetector(
@@ -307,80 +299,135 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           child: Icon(
                                             Icons.filter_alt_outlined,
                                             color: AppColor.PRIMARY,
+                                            size: 26,
                                           )),
-                                    )
-                                  ],
-                                ),
-                                SliverToBoxAdapter(
-                                  child: !isDataAvail
-                                      ? _buildNoDataScreen()
-                                      : SizedBox(),
-                                ),
-                                !isDataAvail
-                                    ? SliverToBoxAdapter(
-                                        child: SizedBox(),
-                                      )
-                                    : SliverList(
-                                        delegate: SliverChildBuilderDelegate(
-                                          (context, index) {
-                                            String date = dates[index];
-                                            List<NotificationDetails>
-                                                notificationsForDate =
-                                                groupedNotifications[date]!;
-          
-                                            return Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 0.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(8.0),
-                                                    child: Text(
-                                                      date,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 11),
-                                                    ),
-                                                  ),
-                                                  ...notificationsForDate
-                                                      .asMap()
-                                                      .entries
-                                                      .map((notification) {
-                                                    i++;
-                                                    return generalNotificationItem(
-                                                        notification.value,
-                                                        i /*notification.key*/);
-                                                  }).toList(),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          childCount: dates.length,
+                                    ),
+                                    alwaysShowMiddle: false,
+                                    border: Border.all(
+                                        width: 0, color: AppColor.WHITE),
+                                  ),
+                                  /*  SliverLayoutBuilder(
+                                builder: (BuildContext context, constraints) {
+                                  final scrolled = constraints.scrollOffset > 0;
+                                  return SliverAppBar(
+                                    snap: false,
+                                    pinned: true,
+                                    floating: false,
+                                    expandedHeight: 90.0,
+                                    // Adjust the expanded height
+                                    flexibleSpace: FlexibleSpaceBar(
+                                      background: Container(
+                                        color: AppColor.BG_COLOR,
+                                      ),
+                                      centerTitle: false,
+                                      titlePadding: EdgeInsets.all(16),
+                                      collapseMode: CollapseMode.parallax,
+                                      title: Text(
+                                        "${Languages.of(context)?.labelHistory}",
+                                        style: TextStyle(
+                                          color: AppColor.TEXT_COLOR,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18.0,
                                         ),
                                       ),
-                                if (_isLoadingMore)
-                                  SliverToBoxAdapter(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Center(
-                                          child: CircularProgressIndicator()),
                                     ),
+                                    backgroundColor: AppColor.WHITE,
+                                    //foregroundColor: AppColor.BG_COLOR,
+                                    systemOverlayStyle: SystemUiOverlayStyle(
+                                      statusBarColor: Colors.red, // Transparent status bar
+                                      statusBarBrightness: Brightness.dark, // Text color in status bar (dark/light)
+                                      statusBarIconBrightness: Brightness.light, // Status bar icons color
+                                    ),
+                                    leading: SizedBox(),
+                                    actions: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 14.0),
+                                        child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {});
+                                            },
+                                            child: Icon(
+                                              Icons.filter_alt_outlined,
+                                              color: AppColor.PRIMARY,
+                                            )),
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),*/
+
+                                  SliverToBoxAdapter(
+                                    child: !isDataAvail
+                                        ? _buildNoDataScreen()
+                                        : SizedBox(),
                                   ),
-                                SliverToBoxAdapter(
-                                  child: SizedBox(
-                                    height: 65,
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        )
-          
-                        /*SafeArea(
+                                  !isDataAvail
+                                      ? SliverToBoxAdapter(
+                                          child: SizedBox(),
+                                        )
+                                      : SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                            (context, index) {
+                                              String date = dates[index];
+                                              List<NotificationDetails>
+                                                  notificationsForDate =
+                                                  groupedNotifications[date]!;
+
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 0.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        date,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 11),
+                                                      ),
+                                                    ),
+                                                    ...notificationsForDate
+                                                        .asMap()
+                                                        .entries
+                                                        .map((notification) {
+                                                      i++;
+                                                      return generalNotificationItem(
+                                                          notification.value,
+                                                          i /*notification.key*/);
+                                                    }).toList(),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            childCount: dates.length,
+                                          ),
+                                        ),
+                                  if (_isLoadingMore)
+                                    SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Center(child: CustomLoader()),
+                                      ),
+                                    ),
+                                  SliverToBoxAdapter(
+                                    child: SizedBox(
+                                      height: 65,
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          )
+
+                          /*SafeArea(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -402,8 +449,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ],
                     ),
                                   ),*/
-                        ) ,
-                  ])),
+                          ),
+                    ])),
         ),
       ),
     );
@@ -463,12 +510,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         itemCount: dates.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
                           if (index == dates.length) {
-                            return Center(
-                                child: CircularProgressIndicator(
-                              color: isDarkMode
-                                  ? AppColor.WHITE
-                                  : AppColor.PRIMARY,
-                            ));
+                            return Center(child: CustomLoader());
                           }
                           String date = dates[index];
                           List<NotificationDetails> notificationsForDate =

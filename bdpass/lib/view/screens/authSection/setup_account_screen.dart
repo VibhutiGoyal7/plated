@@ -12,6 +12,7 @@ import '../../../model/response/setUpAccountResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 import '../../component/toastMessage.dart';
 
 class SetUpAccountScreen extends StatefulWidget {
@@ -81,7 +82,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("GetSetUpAccountWidget : ${setUpAccountResponse?.firstName}");
         await Helper.saveProfileDetails(setUpAccountResponse);
@@ -258,7 +259,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             dismissible: false, color: Colors.transparent),
                         // Loader indicator
                         Center(
-                          child: CircularProgressIndicator(),
+                          child: CustomLoader(),
                         ),
                       ],
                     )

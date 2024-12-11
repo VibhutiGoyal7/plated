@@ -9,6 +9,7 @@ import '../../theme/AppColor.dart';
 import '../../utils/Util.dart';
 import '../../view_model/main_view_model.dart';
 import '../component/connectivity_service.dart';
+import '../component/custom_loader.dart';
 import '../component/session_expired_dialog.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("response: ${apiResponse}");
 
@@ -183,7 +184,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   color: Colors.transparent),
               // Loader indicator
               Center(
-                child: CircularProgressIndicator(),
+                child: CustomLoader(),
               ),
             ],
           )

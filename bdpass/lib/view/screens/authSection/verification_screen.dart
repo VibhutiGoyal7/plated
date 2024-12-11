@@ -11,6 +11,7 @@ import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 import '../../component/instruction_step.dart';
 
 class VerificationScreen extends StatefulWidget {
@@ -123,7 +124,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
-                      child: CircularProgressIndicator(),
+                      child: CustomLoader(),
                     ),
                   ],
                 )
@@ -185,7 +186,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 

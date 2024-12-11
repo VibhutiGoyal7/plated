@@ -1,7 +1,7 @@
 import 'package:BDPass/model/response/checkCustomerReponse.dart';
 import 'package:BDPass/theme/AppColor.dart';
-import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:BDPass/view/component/search_component.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +12,7 @@ import '../../../model/request/checkCustomerRequest.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 import '../../component/fixed_header_delegate.dart';
 import '../../component/toastMessage.dart';
 import '../authSection/enter_pin_screen.dart';
@@ -69,7 +70,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("pushNamed ${checkCustomerResponse?.username}");
         Navigator.pushNamed(context, '/TransferScreen',
@@ -130,66 +131,44 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                         child: CustomScrollView(
                           controller: _scrollController,
                           slivers: [
-                            SliverAppBar(
-                              snap: false,
-                              pinned: true,
-                              floating: false,
-                              expandedHeight: 85.0,
-                              leadingWidth: 0,
-                              // Adjust the expanded height
-                              flexibleSpace: FlexibleSpaceBar(
-                                background: Container(
-                                  color: AppColor.BG_COLOR,
-                                ),
-                                centerTitle: false,
-                                titlePadding: EdgeInsets.all(20),
-                                collapseMode: CollapseMode.parallax,
-                                title: Text(
-                                  "${Languages.of(context)?.labelDocuments}",
-                                  style: TextStyle(
-                                    color: AppColor.TEXT_COLOR,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                  ),
+                            CupertinoSliverNavigationBar(
+                              largeTitle: Text(
+                                "${Languages.of(context)?.labelDocuments}",
+                                style: TextStyle(
+                                  color: AppColor.TEXT_COLOR,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              middle: Text(
+                                "${Languages.of(context)?.labelDocuments}",
+                                style: TextStyle(fontSize: 22),
+                              ),
                               backgroundColor: AppColor.BG_COLOR,
-                              foregroundColor: AppColor.BG_COLOR,
-                              leading: SizedBox(),
-                              actions: [
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isSearch = !isSearch;
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.search_outlined,
-                                    size: 24,
-                                  ),
+                              // Control the color
+                              trailing: Container(
+                                width: screenWidth * 0.3,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.transfer_within_a_station_outlined,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(
+                                      Icons.menu_sharp,
+                                      size: 24,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(
-                                  Icons.transfer_within_a_station_outlined,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(
-                                  Icons.menu_sharp,
-                                  size: 24,
-                                ),
-                                SizedBox(
-                                  width: 6,
-                                ),
-                              ],
+                              ),
+                              alwaysShowMiddle: false,
+                              border:
+                                  Border.all(width: 0, color: AppColor.WHITE),
                             ),
-          
-                            // Your Fixed Header - SliverPersistentHeader
-          
                             SliverPersistentHeader(
                               pinned: isSearch ? true : false,
                               // Keeps the header fixed at the top when scrolling
@@ -208,7 +187,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 ),
                               ),
                             ),
-          
                             SliverToBoxAdapter(
                               child: Container(
                                 /* decoration: BoxDecoration(
@@ -248,7 +226,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                       });
                                     },
                                   )
-          
+
                                   /*Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -313,7 +291,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 ),
                               ),
                             ),
-          
                             SliverToBoxAdapter(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -326,7 +303,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                           "${Languages.of(context)?.labelAllDocuments}"),
                                       _buildTab(Icons.person_outline_outlined,
                                           "${Languages.of(context)?.labelPersonal}"),
-                                      _buildTab(Icons.local_post_office_outlined,
+                                      _buildTab(
+                                          Icons.local_post_office_outlined,
                                           "${Languages.of(context)?.labelProfessional}"),
                                       _buildTab(Icons.padding_outlined,
                                           "${Languages.of(context)?.labelLegal}"),
@@ -337,7 +315,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 ),
                               ),
                             ),
-          
                             SliverList(
                               delegate: SliverChildBuilderDelegate(
                                 (context, index) {
@@ -348,7 +325,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             ),
                           ],
                         ),
-          
+
                         /*SafeArea(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -553,14 +530,13 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                     color: Colors.transparent),
                                 // Loader indicator
                                 Center(
-                                  child: CircularProgressIndicator(),
+                                  child: CustomLoader(),
                                 ),
                               ],
                             )
                           : SizedBox(),
                     ],
                   ),
-          
           ),
         ),
       ),

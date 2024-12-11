@@ -12,6 +12,7 @@ import '../../../model/response/profileResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_loader.dart';
 import '../../component/toastMessage.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -83,7 +84,7 @@ class _SigninScreenState extends State<SigninScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("GetSignInResponse : ${mediaList?.firstName}");
         /* ProfileResponse data = ProfileResponse(firstName: mediaList?.firstName, lastName: mediaList?.lastName,
@@ -324,7 +325,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
-                      child: CircularProgressIndicator(),
+                      child: CustomLoader(),
                     ),
                   ],
                 ),

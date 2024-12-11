@@ -168,7 +168,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 
