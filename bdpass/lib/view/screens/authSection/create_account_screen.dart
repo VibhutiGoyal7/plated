@@ -3,11 +3,13 @@ import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/custom_button_component.dart';
 import 'package:BDPass/view/screens/authSection/welcomeSection/instruction_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
@@ -79,12 +81,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 )
                     : SizedBox(),*/
-                Image(
-                  height: screenHeight * 0.08,
-                  image: AssetImage(isDarkMode
-                      ? "assets/app_logo_dark.png"
-                      : "assets/app_logo.png"),
-                  fit: BoxFit.cover,
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Image(
+                    height: screenHeight * 0.08,
+                    image: AssetImage(isDarkMode
+                        ? "assets/app_logo_dark.png"
+                        : "assets/app_logo.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(
                   height: 6,

@@ -135,7 +135,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               largeTitle: Text(
                                 "${Languages.of(context)?.labelDocuments}",
                                 style: TextStyle(
-                                  color: AppColor.TEXT_COLOR,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -174,7 +173,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               // Keeps the header fixed at the top when scrolling
                               delegate: FixedHeaderDelegate(
                                 child: Container(
-                                  color: AppColor.BG_COLOR,
+                                  color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                                   // Background color for the fixed header
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.symmetric(horizontal: 6),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/model/request/signUpRequest.dart';
 import 'package:BDPass/model/response/signUpResponse.dart';
+import 'package:BDPass/utils/Util.dart';
 import 'package:BDPass/view/component/textfield_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
@@ -69,14 +71,260 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios)),
-      ),
-      body: SafeArea(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            snap: false,
+            pinned: true,
+            floating: false,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+              ),
+              centerTitle: false,
+              collapseMode: CollapseMode.parallax,
+              title: Text("${Languages.of(context)?.labelVerificationDetails}",
+                  style: TextStyle(
+                    color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ) //TextStyle
+              ), //Text
+            ),
+            //FlexibleSpaceBar
+            expandedHeight: 100,
+            backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
+              ),
+              tooltip: 'Back',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 8),
+              child: Row(
+                children: [
+                  InstructionStep(
+                      icon: Icons.document_scanner_rounded,
+                      title: "${Languages.of(context)?.labelStep} 1",
+                      isActive: true,
+                      iconColor: Colors.green.shade900),
+                  InstructionStep(
+                      icon: Icons.person_sharp,
+                      title: "${Languages.of(context)?.labelStep} 2",
+                      isActive: true,
+                      iconColor: Colors.green.shade900),
+                  InstructionStep(
+                      icon: Icons.lock_sharp,
+                      title: "${Languages.of(context)?.labelStep} 3",
+                      isActive: false,
+                      iconColor: Colors.green.shade900),
+                ],
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child:Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                "${Languages.of(context)?.labelProvideMobileNoAndEmail}",
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
+              ),
+            ) ,
+          ),
+
+          SliverToBoxAdapter(
+            child:
+            SizedBox(
+              height: 10,
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child:  Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Card(
+                elevation: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, bottom: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showCountryPicker(
+                                useSafeArea: true,
+                                context: context,
+                                showPhoneCode: true,
+                                // Show phone code next to country
+                                onSelect: (Country country) {
+                                  setState(() {
+                                    selectedItem = country.phoneCode;
+                                    selectedCountryFlag = country.flagEmoji;
+                                    selectedCountry == null;
+                                  });
+                                  print(
+                                      'Selected country flag: ${country.flagEmoji}');
+                                  print('Phone code: ${country.phoneCode}');
+                                  print(
+                                      'Country code: ${country.countryCode}');
+                                },
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0)),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  selectedItem.isEmpty
+                                      ? IntrinsicWidth(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 2),
+                                        Text(
+                                          selectedCountry != null
+                                              ? "${selectedCountry?.flagEmoji}"
+                                              : "",
+                                          style:
+                                          TextStyle(fontSize: 20),
+                                        ),
+                                        SizedBox(
+                                          width: 3,
+                                        ),
+                                        Text(
+                                          selectedCountry != null
+                                              ? "+${selectedCountry?.phoneCode}"
+                                              : "+",
+                                          style:
+                                          TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                      : IntrinsicWidth(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 2),
+                                        Text(
+                                          "$selectedCountryFlag",
+                                          style:
+                                          TextStyle(fontSize: 20),
+                                        ),
+                                        SizedBox(
+                                          width: 3,
+                                        ),
+                                        Text(
+                                          "+$selectedItem",
+                                          style:
+                                          TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(Icons.keyboard_arrow_down_sharp),
+                                ],
+                              ),
+                            ),
+                          ),
+                          TextfieldComponent(
+                              width: 0.66,
+                              isPhone: true,
+                              textController: _phoneNoController,
+                              icon: Icon(
+                                Icons.person,
+                                size: 20,
+                                color:
+                                isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              text: Languages.of(context)!.labelMobileNumber,
+                              onChanged: () {}),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: EmailTextFieldComponent(
+                  width: 1,
+                  isPhone: false,
+                  textController: _emailController,
+                  icon: Icon(
+                    Icons.mail,
+                    size: 18,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
+                  text: Languages.of(context)!.labelEmail,
+                  onChanged: () {}),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 350,),
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Center(
+                  child: CustomButtonComponent(
+                      text: "${Languages.of(context)?.labelContinue}",
+                      screenWidth: screenWidth,
+                      isDarkMode: isDarkMode,
+                      verticalPadding: 10,
+                      onTap: () {
+                        hideKeyBoard();
+                        Future.delayed(Duration(milliseconds: 20));
+                        //_hitSignUpApi();
+                        if (_emailController.text.isNotEmpty &&
+                            _phoneNoController.text.isNotEmpty) {
+                          Helper.saveEmail(_emailController.text);
+                          Helper.savePhoneNo(_phoneNoController.text);
+                          Navigator.pushNamed(
+                              context, "/OtpVerificationScreen",
+                              arguments: "mobile");
+                        } else {
+                          ToastComponent.showToast(
+                              context: context,
+                              message: "Enter all the details.");
+                        }
+                      })),
+            ) ,
+          ),
+        ], //<Widget>[]
+      )
+
+
+      /*SafeArea(
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14),
@@ -116,121 +364,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Card(
-                  elevation: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                showCountryPicker(
-                                  useSafeArea: true,
-                                  context: context,
-                                  showPhoneCode: true,
-                                  // Show phone code next to country
-                                  onSelect: (Country country) {
-                                    setState(() {
-                                      selectedItem = country.phoneCode;
-                                      selectedCountryFlag = country.flagEmoji;
-                                      selectedCountry == null;
-                                    });
-                                    print(
-                                        'Selected country flag: ${country.flagEmoji}');
-                                    print('Phone code: ${country.phoneCode}');
-                                    print(
-                                        'Country code: ${country.countryCode}');
-                                  },
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10.0),
-                                      bottomLeft: Radius.circular(10.0)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    selectedItem.isEmpty
-                                        ? IntrinsicWidth(
-                                            child: Row(
-                                              children: [
-                                                SizedBox(width: 2),
-                                                Text(
-                                                  selectedCountry != null
-                                                      ? "${selectedCountry?.flagEmoji}"
-                                                      : "",
-                                                  style:
-                                                      TextStyle(fontSize: 20),
-                                                ),
-                                                SizedBox(
-                                                  width: 3,
-                                                ),
-                                                Text(
-                                                  selectedCountry != null
-                                                      ? "+${selectedCountry?.phoneCode}"
-                                                      : "+",
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : IntrinsicWidth(
-                                            child: Row(
-                                              children: [
-                                                SizedBox(width: 2),
-                                                Text(
-                                                  "$selectedCountryFlag",
-                                                  style:
-                                                      TextStyle(fontSize: 20),
-                                                ),
-                                                SizedBox(
-                                                  width: 3,
-                                                ),
-                                                Text(
-                                                  "+$selectedItem",
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                    Icon(Icons.keyboard_arrow_down_sharp),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            TextfieldComponent(
-                                width: 0.7,
-                                isPhone: true,
-                                textController: _phoneNoController,
-                                icon: Icon(
-                                  Icons.person,
-                                  size: 20,
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                text: Languages.of(context)!.labelMobileNumber,
-                                onChanged: () {}),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
                 EmailTextFieldComponent(
                     width: 1,
                     isPhone: false,
@@ -246,27 +380,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                     text: Languages.of(context)!.labelEmail,
                     onChanged: () {}),
                 Spacer(),
-                Center(
-                    child: CustomButtonComponent(
-                        text: "${Languages.of(context)?.labelContinue}",
-                        screenWidth: screenWidth,
-                        isDarkMode: isDarkMode,
-                        verticalPadding: 10,
-                        onTap: () {
-                          //_hitSignUpApi();
-                          if (_emailController.text.isNotEmpty &&
-                              _phoneNoController.text.isNotEmpty) {
-                            Helper.saveEmail(_emailController.text);
-                            Helper.savePhoneNo(_phoneNoController.text);
-                            Navigator.pushNamed(
-                                context, "/OtpVerificationScreen",
-                                arguments: "mobile");
-                          } else {
-                            ToastComponent.showToast(
-                                context: context,
-                                message: "Enter all the details.");
-                          }
-                        })),
+
                 SizedBox(
                   height: 35,
                 )
@@ -286,7 +400,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
                 )
               : SizedBox()
         ]),
-      ),
+      ),*/
     );
   }
 

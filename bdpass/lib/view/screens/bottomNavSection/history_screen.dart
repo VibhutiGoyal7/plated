@@ -205,11 +205,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 */
-  void _updatePinStatus() {
-    setState(() {
-      isPinVerified = true;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +275,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     largeTitle: Text(
                                       "${Languages.of(context)?.labelHistory}",
                                       style: TextStyle(
-                                        color: AppColor.TEXT_COLOR,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -371,7 +365,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                             (context, index) {
                                               String date = dates[index];
                                               List<NotificationDetails>
-                                                  notificationsForDate =
+                                              historyForDate =
                                                   groupedNotifications[date]!;
 
                                               return Padding(
@@ -394,13 +388,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                                             fontSize: 11),
                                                       ),
                                                     ),
-                                                    ...notificationsForDate
+                                                    ...historyForDate
                                                         .asMap()
                                                         .entries
-                                                        .map((notification) {
+                                                        .map((history) {
                                                       i++;
-                                                      return generalNotificationItem(
-                                                          notification.value,
+                                                      return historyItem(
+                                                          history.value,
                                                           i /*notification.key*/);
                                                     }).toList(),
                                                   ],
@@ -513,7 +507,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             return Center(child: CustomLoader());
                           }
                           String date = dates[index];
-                          List<NotificationDetails> notificationsForDate =
+                          List<NotificationDetails> historyForDate =
                               groupedNotifications[date]!;
 
                           return Padding(
@@ -530,12 +524,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         fontSize: 11),
                                   ),
                                 ),
-                                ...notificationsForDate
+                                ...historyForDate
                                     .asMap()
                                     .entries
-                                    .map((notification) {
-                                  return generalNotificationItem(
-                                      notification.value, notification.key);
+                                    .map((history) {
+                                  return historyItem(
+                                      history.value, history.key);
                                 }).toList(),
                               ],
                             ),
@@ -559,54 +553,59 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Map<String, List<NotificationDetails>> groupNotificationsByDate(
-      List<NotificationDetails> notifications) {
+      List<NotificationDetails> history) {
     Map<String, List<NotificationDetails>> groupedNotifications = {};
 
-    for (var notification in notifications) {
-      String date = "${notification.date}";
+    for (var item in history) {
+      String date = "${item.date}";
       if (!groupedNotifications.containsKey(date)) {
         groupedNotifications[date] = [];
       }
-      groupedNotifications[date]!.add(notification);
+      groupedNotifications[date]!.add(item);
     }
     return groupedNotifications;
   }
 
-  Widget generalNotificationItem(NotificationDetails data, int index) {
+  Widget historyItem(NotificationDetails data, int index) {
     return Center(
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        elevation: 0,
-        color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
-        child: Container(
-          width: screenWidth,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          decoration: BoxDecoration(
-              /*color: index % 2 == 0
-                ? Colors.white
-                : Colors.grey[100],*/
-              ),
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Icons.lock),
-                SizedBox(
-                  width: 8,
+      child: GestureDetector(
+        onTap: (){
+          Navigator.pushNamed(context, "/LoginTransactionScreen");
+        },
+        child: Card(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          elevation: 0,
+          color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey[100],
+          child: Container(
+            width: screenWidth,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            decoration: BoxDecoration(
+                /*color: index % 2 == 0
+                  ? Colors.white
+                  : Colors.grey[100],*/
                 ),
-                Text(
-                  "${data.heading}",
-                  style: TextStyle(
-                    fontSize: 14,
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(Icons.lock),
+                  SizedBox(
+                    width: 8,
                   ),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_sharp,
-                  size: 13,
-                )
-              ],
+                  Text(
+                    "${data.heading}",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 13,
+                  )
+                ],
+              ),
             ),
           ),
         ),

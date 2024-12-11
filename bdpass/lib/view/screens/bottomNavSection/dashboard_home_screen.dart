@@ -271,7 +271,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         padding: EdgeInsets.all(8),
                                         width: screenWidth * 0.55,
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color:isDarkMode? Colors.white70 : Colors.white,
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(40.0))),
                                         child: Row(

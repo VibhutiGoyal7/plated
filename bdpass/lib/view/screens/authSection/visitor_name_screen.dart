@@ -1,6 +1,7 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/utils/Helper.dart';
 import 'package:BDPass/view/component/custom_button_component.dart';
+import 'package:BDPass/view/component/email_textfield_component.dart';
 import 'package:BDPass/view/component/textfield_component.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/authSection/welcomeSection/instruction_screen.dart';
@@ -12,6 +13,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
+import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
@@ -53,14 +55,105 @@ class _VisitorNameScreenState extends State<VisitorNameScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios_new)),
-      ),
-      body: SafeArea(
+      body:
+
+      CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            snap: false,
+            pinned: true,
+            floating: false,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+              ),
+              centerTitle: false,
+              collapseMode: CollapseMode.parallax,
+              title: Text("Confirm Details",
+                  style: TextStyle(
+                    color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ) //TextStyle
+              ), //Text
+            ),
+            //FlexibleSpaceBar
+            expandedHeight: 100,
+            backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
+              ),
+              tooltip: 'Back',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child:Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 8),
+              child: Text(
+                "Enter your first and last name",
+                style: TextStyle(fontSize: 15),
+              ),
+            ) ,
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15.0,right: 15,top: 20),
+              child: EmailTextFieldComponent(width: 1, isPhone: false, text: "First Name",
+                  icon: Icon(Icons.person), inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
+                  textController: firtNameController, onChanged: (){
+
+                  }),
+            ) ,
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15.0,right: 15,bottom: 35),
+              child: EmailTextFieldComponent(width: 1, isPhone: false, text: "Last Name",
+                  icon: Icon(Icons.person), inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
+                  textController: lastNameController, onChanged: (){
+
+                  }),
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: SizedBox(height: 380,),
+          ),
+
+          SliverToBoxAdapter(
+            child:Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: CustomButtonComponent(
+                  text: "${Languages.of(context)?.labelProceed}",
+                  screenWidth: screenWidth,
+                  isDarkMode: isDarkMode,
+                  verticalPadding: 10,
+                  onTap: () {
+                    if(firtNameController.text.isNotEmpty && lastNameController.text.isNotEmpty){
+                      Helper.saveName("${firtNameController.text} ${lastNameController.text}");
+                      Navigator.pushNamed(context, "/PhoneVerificationScreen",arguments: "");
+                    }else{
+                      ToastComponent.showToast(context: context, message: "Enter your name");
+                    }
+                  }),
+            )) ,
+        ],
+      )
+
+
+      /*SafeArea(
         child: Stack(children: [
           SingleChildScrollView(
             child: Padding(
@@ -85,14 +178,14 @@ class _VisitorNameScreenState extends State<VisitorNameScreen> {
                   SizedBox(
                     height: 50,
                   ),
-                  TextfieldComponent(width: 1, isPhone: false, text: "First Name",
+                  EmailTextFieldComponent(width: 1, isPhone: false, text: "First Name",
                       icon: Icon(Icons.person), inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
                       ],
                       textController: firtNameController, onChanged: (){
 
                       }),
-                  TextfieldComponent(width: 1, isPhone: false, text: "Last Name",
+                  EmailTextFieldComponent(width: 1, isPhone: false, text: "Last Name",
                       icon: Icon(Icons.person), inputFormatters: [
                         FilteringTextInputFormatter.deny(RegExp(r'\s')),
                       ],
@@ -138,7 +231,7 @@ class _VisitorNameScreenState extends State<VisitorNameScreen> {
                 )
               : SizedBox()
         ]),
-      ),
+      ),*/
     );
   }
 

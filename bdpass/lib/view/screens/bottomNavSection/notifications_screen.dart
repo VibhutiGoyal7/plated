@@ -332,41 +332,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     alwaysShowMiddle: false,
                     border: Border.all(width: 0, color: AppColor.WHITE),
                   ),
-                  /*      SliverAppBar(
-                            snap: false,
-                            pinned: true,
-                            floating: false,
-                            expandedHeight: 90.0, // Adjust the expanded height
-                            flexibleSpace: FlexibleSpaceBar(
-                              background: Container(
-                                color: AppColor.BG_COLOR,
-                              ),
-                              centerTitle: false,
-                              titlePadding: EdgeInsets.all(18),
-                              collapseMode: CollapseMode.parallax,
-                              title: Text(
-                                "${Languages.of(context)?.labelNotification}",
-                                style: TextStyle(
-                                  color: AppColor.TEXT_COLOR,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            backgroundColor: AppColor.BG_COLOR,
-                            foregroundColor: AppColor.BG_COLOR,
-                            leading: SizedBox(),
-                            actions: [Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                              child: GestureDetector(
-                                  onTap: (){
-                                    setState(() {
-                                      isSearch = !isSearch;
-                                    });
-                                    },
-                                  child: Icon(Icons.search,color: AppColor.PRIMARY,)),
-                            )],
-                          ),*/
 
                   // Your Fixed Header - SliverPersistentHeader
 
@@ -375,7 +340,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     // Keeps the header fixed at the top when scrolling
                     delegate: FixedHeaderDelegate(
                       child: Container(
-                        color: AppColor.BG_COLOR,
+                        color: isDarkMode
+                            ? AppColor.DARK_BG_COLOR
+                            : AppColor.BG_COLOR,
+                        // Background color for the fixed header
                         // Background color for the fixed header
                         alignment: Alignment.center,
                         padding: EdgeInsets.symmetric(horizontal: 6),
