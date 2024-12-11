@@ -136,13 +136,15 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 "${Languages.of(context)?.labelDocuments}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
+                                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
                                 ),
                               ),
                               middle: Text(
                                 "${Languages.of(context)?.labelDocuments}",
-                                style: TextStyle(fontSize: 22),
+                                style: TextStyle(fontSize: 22,
+                                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
                               ),
-                              backgroundColor: AppColor.BG_COLOR,
+                              backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                               // Control the color
                               trailing: Container(
                                 width: screenWidth * 0.3,
@@ -165,8 +167,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 ),
                               ),
                               alwaysShowMiddle: false,
-                              border:
-                                  Border.all(width: 0, color: AppColor.WHITE),
+                              leading: SizedBox(),
                             ),
                             SliverPersistentHeader(
                               pinned: isSearch ? true : false,

@@ -276,12 +276,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       "${Languages.of(context)?.labelHistory}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
+                                          color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
                                       ),
                                     ),
                                     middle: Text("${Languages.of(context)?.labelHistory}",style: TextStyle(
-                                      fontSize: 22
+                                      fontSize: 22,
+                                        color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
                                     ),),
-                                    backgroundColor: AppColor.BG_COLOR,
+                                    backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                                     // Control the color
                                     trailing: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -297,8 +299,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           )),
                                     ),
                                     alwaysShowMiddle: false,
-                                    border: Border.all(
-                                        width: 0, color: AppColor.WHITE),
+                                    leading: SizedBox(),
                                   ),
                                   /*  SliverLayoutBuilder(
                                 builder: (BuildContext context, constraints) {
@@ -408,7 +409,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     SliverToBoxAdapter(
                                       child: Padding(
                                         padding: const EdgeInsets.all(16.0),
-                                        child: Center(child: CustomLoader()),
+                                        child: Center(child: CircularProgressIndicator()),
                                       ),
                                     ),
                                   SliverToBoxAdapter(

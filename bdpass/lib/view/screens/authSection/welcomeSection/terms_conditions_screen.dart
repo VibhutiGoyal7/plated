@@ -1,5 +1,6 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/theme/AppColor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,21 +41,30 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 100.0,
-            backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.WHITE,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              collapseMode: CollapseMode.parallax,
-              title: const Text(
-                'Terms and Conditions',
-                style: TextStyle(fontSize: 16),
-              ),
-              background: Container(
-                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR, // Matches the dynamic app bar color
+          CupertinoSliverNavigationBar(
+            largeTitle: Text(
+              "Terms and Conditions",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
               ),
             ),
+            middle: Text(
+              "Terms and Conditions",
+              style: TextStyle(fontSize: 22,
+                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
+            ),
+            backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 24,
+              ),
+            ),
+            alwaysShowMiddle: false,
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(

@@ -1,6 +1,7 @@
 import 'package:BDPass/languageSection/Languages.dart';
 import 'package:BDPass/theme/AppColor.dart';
 import 'package:BDPass/utils/Helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -69,54 +70,30 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
       ),*/
         body: CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar(
-          snap: false,
-          pinned: true,
-          floating: false,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Container(
-              color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+        CupertinoSliverNavigationBar(
+          largeTitle: Text(
+            "Upgrade Account",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
             ),
-            centerTitle: false,
-            collapseMode: CollapseMode.parallax,
-            title: Text("Upgrade Account",
-                style: TextStyle(
-                  color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ) //TextStyle
-                ), //Text
           ),
-          //FlexibleSpaceBar
-          expandedHeight: 100,
-          backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
-            ),
-            tooltip: 'Back',
-            onPressed: () {
+          middle: Text(
+            "Upgrade Account",
+            style: TextStyle(fontSize: 22,
+                color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
+          ),
+          backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+          leading: GestureDetector(
+            onTap: () {
               Navigator.pop(context);
             },
+            child: Icon(
+              Icons.arrow_back_ios_new,
+              size: 24,
+            ),
           ),
-          //IconButton
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: GestureDetector(
-                  onTap: () {
-                    setState(() {});
-                  },
-                  child: Text(
-                    "Later",
-                    style: TextStyle(
-                        color: AppColor.PRIMARY,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  )),
-            )
-          ],
+          alwaysShowMiddle: false,
         ),
         SliverToBoxAdapter(
           child: Container(

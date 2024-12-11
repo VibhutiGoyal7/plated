@@ -1,5 +1,6 @@
 import 'package:BDPass/model/response/checkCustomerReponse.dart';
 import 'package:BDPass/theme/AppColor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
   final ConnectivityService _connectivityService = ConnectivityService();
   final ScrollController _scrollController = ScrollController();
   late bool isDarkMode;
-  List<bool> isClicked = [];
+  int? expandedIndex ;
   List<String> list = [
     "Successful",
     "Failure",
@@ -37,7 +38,6 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
   @override
   void initState() {
     super.initState();
-    isClicked = List.generate(list.length, (_) => false);
     setState(() {
       selected = "All Entries";
     });
@@ -89,7 +89,32 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
             child: CustomScrollView(
               controller: _scrollController,
               slivers: [
-                SliverAppBar(
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    "Login Transactions",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                        color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
+                    ),
+                  ),
+                  middle: Text(
+                    "Login Transactions",
+                    style: TextStyle(fontSize: 22,
+                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
+                  ),
+                  backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                  leading: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 24,
+                    ),
+                  ),
+                  alwaysShowMiddle: false,
+                ),
+              /*  SliverAppBar(
                   snap: false,
                   pinned: true,
                   floating: false,
@@ -120,11 +145,11 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
                       size: 24,
                     ),
                   ),
-                ),
+                ),*/
 
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 5),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -198,7 +223,11 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          isClicked[index] = !isClicked[index];
+          if(expandedIndex == index){
+            expandedIndex = null;
+          }else {
+            expandedIndex = index;
+          }
         });
       },
       child: Card(
@@ -229,12 +258,12 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
                                 fontWeight: FontWeight.bold)),
                       ),
                       SizedBox(width: 5,),
-                      Icon(isClicked[index] ? Icons.keyboard_arrow_up  :Icons.keyboard_arrow_down_outlined)
+                      Icon(expandedIndex == index ? Icons.keyboard_arrow_up  :Icons.keyboard_arrow_down_outlined)
                     ],
                   ),
                 ],
               ),
-              isClicked[index] ?
+              expandedIndex == index ?
               Column(
                 children: [
                   SizedBox(height: 6,),

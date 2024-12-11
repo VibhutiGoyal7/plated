@@ -303,34 +303,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     largeTitle: Text(
                       "${Languages.of(context)?.labelNotification}",
                       style: TextStyle(
-                        color: AppColor.TEXT_COLOR,
+                        color: isDarkMode? Colors.white : AppColor.TEXT_COLOR,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     middle: Text(
                       "${Languages.of(context)?.labelNotification}",
-                      style: TextStyle(fontSize: 22),
+                      style: TextStyle(fontSize: 22,
+                          color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
                     ),
-                    backgroundColor: AppColor.BG_COLOR,
-                    // Control the color
-                    /*trailing: _isCollapsed
-                        ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                      child: GestureDetector(
-                          onTap: () {
-                           // _toggleCollapse();
-                            setState(() {
-                              isSearch = !isSearch;
-                              _isCollapsed = false;
-                            });
-                          },
-                          child: Icon(
-                            Icons.search,
-                            color: AppColor.PRIMARY,
-                          )),
-                    ): null,*/
+                    backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                     alwaysShowMiddle: false,
-                    border: Border.all(width: 0, color: AppColor.WHITE),
+                    leading: SizedBox(),
                   ),
 
                   // Your Fixed Header - SliverPersistentHeader
@@ -402,7 +386,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Center(child: CustomLoader()),
+                        child: Center(child: CircularProgressIndicator()),
                       ),
                     ),
 

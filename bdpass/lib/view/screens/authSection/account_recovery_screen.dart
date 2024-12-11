@@ -3,6 +3,7 @@ import 'package:BDPass/model/apis/api_response.dart';
 import 'package:BDPass/view/component/email_textfield_component.dart';
 import 'package:BDPass/view_model/main_view_model.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -124,21 +125,30 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
         resizeToAvoidBottomInset: true,
         body: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: 100.0,
-              centerTitle: false,
-              backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.WHITE,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                title: Text(
-                  "${Languages.of(context)!.labelAccountRecovery}",
-                  style: TextStyle(fontSize: 16),
-                ),
-                background: Container(
-                  color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR, // Matches the dynamic app bar color
+            CupertinoSliverNavigationBar(
+              largeTitle: Text(
+                "${Languages.of(context)!.labelAccountRecovery}",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
                 ),
               ),
+              middle: Text(
+                "${Languages.of(context)!.labelAccountRecovery}",
+                style: TextStyle(fontSize: 22,
+                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
+              ),
+              backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 24,
+                ),
+              ),
+              alwaysShowMiddle: false,
             ),
             SliverToBoxAdapter(
                 child: Padding(

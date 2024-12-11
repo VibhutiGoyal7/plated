@@ -5,6 +5,7 @@ import 'package:BDPass/view/component/email_textfield_component.dart';
 import 'package:BDPass/view/component/textfield_component.dart';
 import 'package:BDPass/view/component/toastMessage.dart';
 import 'package:BDPass/view/screens/authSection/welcomeSection/instruction_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -59,37 +60,30 @@ class _VisitorNameScreenState extends State<VisitorNameScreen> {
 
       CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
-            snap: false,
-            pinned: true,
-            floating: false,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+          CupertinoSliverNavigationBar(
+            largeTitle: Text(
+              "Confirm Details",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
               ),
-              centerTitle: false,
-              collapseMode: CollapseMode.parallax,
-              title: Text("Confirm Details",
-                  style: TextStyle(
-                    color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  ) //TextStyle
-              ), //Text
             ),
-            //FlexibleSpaceBar
-            expandedHeight: 100,
-            backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
-              ),
-              tooltip: 'Back',
-              onPressed: () {
+            middle: Text(
+              "Confirm Details",
+              style: TextStyle(fontSize: 22,
+                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
+            ),
+            backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+            leading: GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
               },
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                size: 24,
+              ),
             ),
+            alwaysShowMiddle: false,
           ),
 
           SliverToBoxAdapter(
