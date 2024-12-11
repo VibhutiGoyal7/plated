@@ -42,7 +42,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
           SliverAppBar(
             pinned: true,
             expandedHeight: 100.0,
-            backgroundColor: AppColor.WHITE,
+            backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.WHITE,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               collapseMode: CollapseMode.parallax,
@@ -51,7 +51,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                 style: TextStyle(fontSize: 16),
               ),
               background: Container(
-                color: AppColor.BG_COLOR, // Matches the dynamic app bar color
+                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR, // Matches the dynamic app bar color
               ),
             ),
           ),

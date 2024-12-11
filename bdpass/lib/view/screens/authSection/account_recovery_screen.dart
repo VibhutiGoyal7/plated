@@ -127,7 +127,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
               pinned: true,
               expandedHeight: 100.0,
               centerTitle: false,
-              backgroundColor: AppColor.WHITE,
+              backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.WHITE,
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: false,
                 title: Text(
@@ -135,7 +135,7 @@ class _AccountRecoveryScreenState extends State<AccountRecoveryScreen> {
                   style: TextStyle(fontSize: 16),
                 ),
                 background: Container(
-                  color: AppColor.BG_COLOR, // Matches the dynamic app bar color
+                  color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR, // Matches the dynamic app bar color
                 ),
               ),
             ),

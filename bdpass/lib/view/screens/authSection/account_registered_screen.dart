@@ -19,6 +19,7 @@ class AccountRegisteredScreen extends StatefulWidget {
 class _AccountRegisteredScreenState extends State<AccountRegisteredScreen> {
   String token = "";
   late double screenWidth;
+  late bool isDarkMode;
   late double screenHeight;
   PageController _pageController = PageController();
   bool isLoading = false;
@@ -34,7 +35,7 @@ class _AccountRegisteredScreenState extends State<AccountRegisteredScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -123,7 +124,7 @@ class _AccountRegisteredScreenState extends State<AccountRegisteredScreen> {
             style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87),
+                color:isDarkMode? Colors.grey : Colors.black87),
             textAlign: TextAlign.center,
           ),
         ),

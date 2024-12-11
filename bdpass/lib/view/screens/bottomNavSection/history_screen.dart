@@ -274,7 +274,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   // Adjust the expanded height
                                   flexibleSpace: FlexibleSpaceBar(
                                     background: Container(
-                                      color: AppColor.BG_COLOR,
+                                      color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                                     ),
                                     centerTitle: false,
                                     titlePadding: EdgeInsets.all(20),
@@ -282,14 +282,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     title: Text(
                                       "${Languages.of(context)?.labelHistory}",
                                       style: TextStyle(
-                                        color: AppColor.TEXT_COLOR,
+                                        color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16.0,
                                       ),
                                     ),
                                   ),
-                                  backgroundColor: AppColor.BG_COLOR,
-                                  foregroundColor: AppColor.BG_COLOR,
+                                  backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                                  foregroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                                   leading: SizedBox(),
                                   actions: [
                                     Padding(

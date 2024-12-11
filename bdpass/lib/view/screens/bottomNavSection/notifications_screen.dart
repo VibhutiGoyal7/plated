@@ -277,7 +277,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             expandedHeight: 90.0, // Adjust the expanded height
                             flexibleSpace: FlexibleSpaceBar(
                               background: Container(
-                                color: AppColor.BG_COLOR,
+                                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                               ),
                               centerTitle: false,
                               titlePadding: EdgeInsets.all(20),
@@ -285,14 +285,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               title: Text(
                                 "${Languages.of(context)?.labelNotification}",
                                 style: TextStyle(
-                                  color: AppColor.TEXT_COLOR,
+                                  color: isDarkMode ? AppColor.WHITE :AppColor.TEXT_COLOR,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                 ),
                               ),
                             ),
-                            backgroundColor: AppColor.BG_COLOR,
-                            foregroundColor: AppColor.BG_COLOR,
+                            backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                            foregroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                             leading: SizedBox(),
                             actions: [Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 14.0),
@@ -312,7 +312,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             pinned: isSearch ?true :false, // Keeps the header fixed at the top when scrolling
                             delegate: FixedHeaderDelegate(
                               child: Container(
-                                color: AppColor.BG_COLOR, // Background color for the fixed header
+                                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR, // Background color for the fixed header
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(horizontal: 6),
                                 child: SearchComponent(width: 1, screenWidth: screenWidth, isDarkMode: isDarkMode,

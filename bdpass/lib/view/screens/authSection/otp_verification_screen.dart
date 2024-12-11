@@ -169,7 +169,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         "${Languages.of(context)?.labelDidntReceiveOtp}",
                         14,
                         true,
-                        color: Colors.black54,
+                        color:isDarkMode? Colors.grey : Colors.black54,
                       ),
                       SizedBox(
                         height: 12,
@@ -179,7 +179,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         children: [
                           _countdownTimer(),
                           SizedBox(
-                            width: 5,
+                            width: 15,
                           ),
                           if (resendOtp) _resendOtpButton(context)
                         ],
@@ -227,7 +227,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       children: [
         Icon(
           Icons.timelapse_rounded,
-          color: Colors.black54,
+          color:isDarkMode? Colors.grey : Colors.black54,
         ),
         SizedBox(
           width: 3,
@@ -238,7 +238,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           enableDescriptions: false,
           spacerWidth: 1,
           timeTextStyle: TextStyle(
-              fontWeight: FontWeight.w700, fontSize: 16, color: Colors.black54),
+              fontWeight: FontWeight.w700, fontSize: 16, color:isDarkMode? Colors.grey : Colors.black54),
           onEnd: () {
             setState(() {
               resendOtp = true;

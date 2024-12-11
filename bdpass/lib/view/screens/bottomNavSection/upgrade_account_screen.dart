@@ -74,13 +74,13 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
           floating: false,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              color: AppColor.BG_COLOR,
+              color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
             ),
             centerTitle: false,
             collapseMode: CollapseMode.parallax,
             title: Text("Upgrade Account",
                 style: TextStyle(
-                  color: AppColor.TEXT_COLOR,
+                  color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ) //TextStyle
@@ -88,11 +88,11 @@ class _UpgradeAccountScreenState extends State<UpgradeAccountScreen> {
           ),
           //FlexibleSpaceBar
           expandedHeight: 100,
-          backgroundColor: AppColor.BG_COLOR,
+          backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: AppColor.TEXT_COLOR,
+              color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
             ),
             tooltip: 'Back',
             onPressed: () {

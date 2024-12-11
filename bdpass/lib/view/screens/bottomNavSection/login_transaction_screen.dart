@@ -85,7 +85,7 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
                 statusBarColor: Colors.transparent,
                 statusBarIconBrightness:
                     isDarkMode ? Brightness.light : Brightness.dark,
-              statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,),
+              statusBarBrightness: isDarkMode ? Brightness.light : Brightness.dark,),
             child: CustomScrollView(
               controller: _scrollController,
               slivers: [
@@ -96,21 +96,21 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
                   expandedHeight: 90.0, // Adjust the expanded height
                   flexibleSpace: FlexibleSpaceBar(
                     background: Container(
-                      color: AppColor.BG_COLOR,
+                      color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                     ),
                     centerTitle: true,
                     collapseMode: CollapseMode.parallax,
                     title: Text(
                       "Login Transactions",
                       style: TextStyle(
-                        color: AppColor.TEXT_COLOR,
+                        color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
                       ),
                     ),
                   ),
-                  backgroundColor: AppColor.BG_COLOR,
-                  foregroundColor: AppColor.BG_COLOR,
+                  backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                  foregroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                   leading: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -225,7 +225,7 @@ class _LoginTransactionScreenState extends State<LoginTransactionScreen> {
                         child: Text("$text",
                             style: TextStyle(
                                 fontSize: 10,
-                                color: text == "Failure" ? Colors.red : AppColor.PRIMARY,
+                                color: text == "Failure" ? Colors.red : Colors.green,
                                 fontWeight: FontWeight.bold)),
                       ),
                       SizedBox(width: 5,),

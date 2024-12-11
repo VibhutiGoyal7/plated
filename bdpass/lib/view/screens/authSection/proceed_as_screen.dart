@@ -52,13 +52,6 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
     ];
 
     return Scaffold(
-        /* appBar: AppBar(
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios)),
-      ),*/
         body: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -67,13 +60,13 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
           floating: false,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              color: AppColor.BG_COLOR,
+              color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
             ),
             centerTitle: false,
             collapseMode: CollapseMode.parallax,
             title: Text("${Languages.of(context)?.labelProceedAs}",
                 style: TextStyle(
-                  color: AppColor.TEXT_COLOR,
+                  color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ) //TextStyle
@@ -81,18 +74,18 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
           ),
           //FlexibleSpaceBar
           expandedHeight: 100,
-          backgroundColor: AppColor.BG_COLOR,
+          backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: AppColor.TEXT_COLOR,
+              color:isDarkMode? Colors.white : AppColor.TEXT_COLOR,
             ),
             tooltip: 'Back',
             onPressed: () {
               Navigator.pop(context);
             },
-          ), //IconButton
-        ), //SliverAppBar
+          ),
+        ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -115,49 +108,6 @@ class _ProceedAsScreenState extends State<ProceedAsScreen> {
         ) //SliverList
       ], //<Widget>[]
     )
-        /* SafeArea(
-        child: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Proceed As",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/VerificationScreen");
-                  },
-                  child: _buildCard(Icons.house_sharp, "Citizen or Resident",
-                      "Individual holding ID issued by BD Government"),
-                ),
-                _buildCard(Icons.shopping_bag_outlined, "Visitor",
-                    "Individual holding ID or passport issued countries other than BD"),
-              ],
-            ),
-          ),
-          isLoading
-              ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(dismissible: false, color: Colors.transparent),
-                    // Loader indicator
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
-              : SizedBox()
-        ]),
-      )*/
         );
   }
 

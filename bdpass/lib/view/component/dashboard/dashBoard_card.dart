@@ -24,7 +24,9 @@ class DashboardCard extends StatelessWidget {
                 Align(
                     alignment: Alignment.topRight,
                     child: Image(
-                      image: AssetImage("assets/app_logo.png"),
+                      image: AssetImage(isDarkMode
+                          ? "assets/app_logo_dark.png"
+                          :"assets/app_logo.png"),
                       height: 35,
                       width: 50,
                       fit: BoxFit.fitHeight,

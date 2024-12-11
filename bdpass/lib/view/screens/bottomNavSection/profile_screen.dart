@@ -275,7 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 11,
-                                                  color: Colors.black54),
+                                                  color:isDarkMode? Colors.grey :  Colors.black54),
                                             )
                                           ],
                                         ),
@@ -359,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             child: Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
+                                                      horizontal: 15.0,
                                                       vertical: 12.0),
                                               decoration: BoxDecoration(
                                                 borderRadius:
@@ -373,7 +373,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     Platform.isIOS
                                                         ? Icons.face
                                                         : Icons.fingerprint,
-                                                    size: 22,
+                                                    size: 28,
+                                                    color: Colors.brown,
                                                   ),
                                                   SizedBox(
                                                     width: 8,
@@ -422,7 +423,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             child: Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
+                                                      horizontal: 15.0,
                                                       vertical: 12.0),
                                               decoration: BoxDecoration(
                                                 borderRadius:
@@ -439,7 +440,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     children: [
                                                       Icon(
                                                         Icons.abc,
-                                                        size: 22,
+                                                        size: 28,
+                                                        color: Colors.brown,
                                                       ),
                                                       SizedBox(
                                                         width: 8,
@@ -460,9 +462,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       minWidth: 60.0,
                                                       customWidths: [50, 70],
                                                       cornerRadius: 10.0,
-                                                      activeBgColors: [
-                                                        [Colors.green[800]!]
-                                                      ],
+                                                      activeBgColor: [Colors.green[800]!],
                                                       activeFgColor:
                                                           Colors.white,
                                                       inactiveBgColor:

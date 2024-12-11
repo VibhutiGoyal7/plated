@@ -139,7 +139,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               // Adjust the expanded height
                               flexibleSpace: FlexibleSpaceBar(
                                 background: Container(
-                                  color: AppColor.BG_COLOR,
+                                  color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                                 ),
                                 centerTitle: false,
                                 titlePadding: EdgeInsets.all(20),
@@ -147,14 +147,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                 title: Text(
                                   "${Languages.of(context)?.labelDocuments}",
                                   style: TextStyle(
-                                    color: AppColor.TEXT_COLOR,
+                                    color:isDarkMode? AppColor.WHITE : AppColor.TEXT_COLOR,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0,
                                   ),
                                 ),
                               ),
-                              backgroundColor: AppColor.BG_COLOR,
-                              foregroundColor: AppColor.BG_COLOR,
+                              backgroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                              foregroundColor:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                               leading: SizedBox(),
                               actions: [
                                 GestureDetector(
@@ -195,7 +195,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               // Keeps the header fixed at the top when scrolling
                               delegate: FixedHeaderDelegate(
                                 child: Container(
-                                  color: AppColor.BG_COLOR,
+                                  color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                                   // Background color for the fixed header
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.symmetric(horizontal: 6),

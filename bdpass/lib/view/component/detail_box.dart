@@ -44,7 +44,7 @@ class DetailBox extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
-                color: Colors.black,
+                color:isDarkMode? Colors.white : Colors.black,
               )
             ],
           ),

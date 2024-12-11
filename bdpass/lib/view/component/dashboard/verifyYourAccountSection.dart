@@ -100,9 +100,12 @@ class VerifyYourAccountSection extends StatelessWidget {
                         SizedBox(
                           width: 5,
                         ),
-                        Text(
-                          "Request and share your official documents",
-                          style: TextStyle(fontSize: 13),
+                        Expanded(
+                          child: Text(
+                            "Request and share your official documents",
+                            style: TextStyle(fontSize: 13),
+                            overflow: TextOverflow.visible,
+                          ),
                         ),
                       ],
                     ),
