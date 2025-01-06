@@ -1,0 +1,220 @@
+import 'package:json_annotation/json_annotation.dart';
+
+import 'AddressDetails.dart';
+
+@JsonSerializable()
+class ProfileResponse {
+  final String? firstName;
+  final String? lastName;
+  final int? userId;
+  final String? imageUrl;
+  final String? email;
+  final AddressDetails? address;
+  final String? dob;
+  final int? status;
+  final String? phoneNumber;
+  final String? message;
+  final String? username;
+  final String? balance;
+  final String? kycStatus;
+  final int? activityPts;
+  final String? vipLevel;
+  final int? countryId;
+  final String? countryName;
+  final String? countryPhoneCode;
+  final String? createdAt;
+  final bool? isProfileSetupDone;
+  final int? activityPoints;
+  final bool? isEmailVerified;
+  final String? countryCurrencySymbol;
+  final String? tpin;
+  final String? token;
+  final String? dataStatus;
+  final DocumentDetail? documentDetail;
+
+  ProfileResponse({
+    this.firstName,
+    this.lastName,
+    this.userId,
+    this.imageUrl,
+    this.email,
+    this.address,
+    this.dob,
+    this.status,
+    this.phoneNumber,
+    this.isEmailVerified,
+    this.message,
+    this.username,
+    this.createdAt,
+    this.countryPhoneCode,
+    this.countryName,
+    this.countryId,
+    this.vipLevel,
+    this.activityPts,
+    this.kycStatus,
+    this.balance,
+    this.countryCurrencySymbol,
+    this.tpin,
+    this.activityPoints,
+    this.isProfileSetupDone,
+    this.dataStatus,
+    this.token,
+    this.documentDetail,
+  });
+
+  factory ProfileResponse.fromJson(Map<String, dynamic> json) {
+    return ProfileResponse(
+      message: json['message'] as String?,
+      status: json['status'] as int?,
+      firstName: json['data']?['first_name'] as String?,
+      lastName: json['data']?['last_name'] as String?,
+      userId: json['data']?['id'] as int?,
+      imageUrl: json['data']?['image_url'] as String?,
+      phoneNumber: json['data']?['phone_number'] as String?,
+      email: json['data']?['email'] as String?,
+      address: json['data']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['address'])
+          : null,
+      dob: json['data']?['dob'] as String?,
+      isEmailVerified: json['data']?['is_email_verified'] as bool?,
+      username: json['data']?['username'] as String?,
+      balance: json['data']?['balance'] as String?,
+      kycStatus: json['data']?['kyc_status'] as String?,
+      activityPts: json['data']?['activity_points'] as int?,
+      vipLevel: json['data']?['vip_level'] as String?,
+      countryId: json['data']?['country_id'] as int?,
+      countryName: json['data']?['country_name'] as String?,
+      countryPhoneCode: json['data']?['country_phone_code'] as String?,
+      createdAt: json['data']?['created_at'] as String?,
+      tpin: json['data']?['customer']?['tpin'] as String?,
+      countryCurrencySymbol:
+          json['data']?['country_currency_symbol'] as String?,
+      token: json['data']?['token'] as String?,
+      documentDetail: json['data']?['recent_kyc_documents_id_number'] != null
+          ? DocumentDetail.fromJson(
+              json['data']?['recent_kyc_documents_id_number'])
+          : null,
+    );
+  }
+
+  factory ProfileResponse.fromSignIn(Map<String, dynamic> json) {
+    return ProfileResponse(
+      message: json['message'] as String?,
+      status: json['status'] as int?,
+      firstName: json['data']?['customer']?['first_name'] as String?,
+      lastName: json['data']?['customer']?['last_name'] as String?,
+      userId: json['data']?['customer']?['id'] as int?,
+      phoneNumber: json['data']?['customer']?['phone_number'] as String?,
+      createdAt: json['data']?['customer']?['created_at'] as String?,
+      email: json['data']?['customer']?['email'] as String?,
+      countryName: json['data']?['customer']?['country_name'] as String?,
+      address: json['data']?['customer']?['address'] != null
+          ? AddressDetails.fromJson(json['data']?['customer']?['address'])
+          : null,
+      dob: json['data']?['customer']?['dob'] as String?,
+      isEmailVerified: json['data']?['customer']?['is_email_verified'] as bool?,
+      kycStatus: json['data']?['customer']?['kyc_status'] as String?,
+      vipLevel: json['data']?['customer']?['vip_level'] as String?,
+      balance: json['data']?['customer']?['balance'] as String?,
+      username: json['data']?['customer']?['username'] as String?,
+      countryCurrencySymbol:
+          json['data']?['customer']?['country_currency_symbol'] as String?,
+      countryPhoneCode: json['data']?['country_phone_code'] as String?,
+      tpin: json['data']?['customer']?['tpin'] as String?,
+      countryId: json['data']?['customer']?['country_id'] as int?,
+      isProfileSetupDone:
+          json['data']?['customer']?['is_profile_setup_done'] as bool?,
+      activityPoints: json['data']?['customer']?['activity_points'] as int?,
+      token: json['data']?['token'] as String?,
+      documentDetail:
+          json['data']?['customer']?['recent_kyc_documents_id_number'] != null
+              ? DocumentDetail.fromJson(
+                  json['data']?['customer']?['recent_kyc_documents_id_number'])
+              : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['id'] = this.userId;
+    data['image_url'] = this.imageUrl;
+    data['phone_number'] = this.phoneNumber;
+    data['email'] = this.email;
+    data['address'] = this.address;
+    data['dob'] = this.dob;
+    data['is_email_verified'] = this.isEmailVerified;
+    data['message'] = this.message;
+    data['username'] = this.username;
+    data['created_at'] = this.createdAt;
+    data['kyc_status'] = this.kycStatus;
+    data['vip_level'] = this.vipLevel;
+    data['balance'] = this.balance;
+    data['country_id'] = this.countryId;
+    data['country_name'] = this.countryName;
+    data['country_phone_code'] = this.countryPhoneCode;
+    data['activity_points'] = this.activityPts;
+    data['tpin'] = this.tpin;
+    data['country_currency_symbol'] = this.countryCurrencySymbol;
+    data['recent_kyc_documents_id_number'] = this.documentDetail?.toJson();
+    return data;
+  }
+
+  factory ProfileResponse.fromPref(Map<String, dynamic> json) {
+    return ProfileResponse(
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      userId: json['id'] as int?,
+      imageUrl: json['image_url'] as String?,
+      phoneNumber: json['phone_number'] as String?,
+      email: json['email'] as String?,
+      address: json['address'] != null
+          ? AddressDetails.fromJson(json['address'])
+          : null,
+      dob: json['dob'] as String?,
+      username: json['username'] as String?,
+      balance: json['balance'] as String?,
+      kycStatus: json['kyc_status'] as String?,
+      activityPts: json['activity_points'] as int?,
+      vipLevel: json['vip_level'] as String?,
+      countryId: json['country_id'] as int?,
+      countryName: json['country_name'] as String?,
+      countryPhoneCode: json['country_phone_code'] as String?,
+      createdAt: json['created_at'] as String?,
+      isEmailVerified: json['is_email_verified'] as bool?,
+      tpin: json['tpin'] as String?,
+      countryCurrencySymbol: json['country_currency_symbol'] as String?,
+      documentDetail: json['recent_kyc_documents_id_number'] != null
+          ? DocumentDetail.fromJson(json['recent_kyc_documents_id_number'])
+          : null,
+    );
+  }
+}
+
+
+
+class DocumentDetail {
+  String? recentKycDocumentsName;
+  String? recentKycDocumentsIdNumber;
+
+  DocumentDetail({
+    this.recentKycDocumentsName,
+    this.recentKycDocumentsIdNumber,
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data['name'] = this.recentKycDocumentsName;
+    data['id_number'] = this.recentKycDocumentsIdNumber;
+    return data;
+  }
+
+  factory DocumentDetail.fromJson(Map<String, dynamic> json) {
+    return DocumentDetail(
+      recentKycDocumentsName: json["name"] as String?,
+      recentKycDocumentsIdNumber: json["id_number"] as String?,
+    );
+  }
+}
