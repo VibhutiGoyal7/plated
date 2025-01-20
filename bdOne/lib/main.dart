@@ -24,7 +24,6 @@ import 'package:BDOne/view/screens/bottomNavSection/manage_devices_screen.dart';
 import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
-import 'package:BDOne/view/screens/ml_kit/face_detector_view.dart';
 import 'package:BDOne/view/screens/scan_camera_text.dart';
 import 'package:BDOne/view/screens/transportationBottomNavSection/transportation_bottom_nav.dart';
 import 'package:BDOne/view/screens/travelBottomNavSection/travel_bottom_nav.dart';
@@ -284,9 +283,6 @@ class _MyAppState extends State<MyApp> {
             },
             '/ScanCameraTextScreen': (context) {
               return ScanCameraTextScreen();
-            },
-            '/FaceDetectorView': (context) {
-              return FaceDetectorView();
             },
             '/ManageDevicesScreen': (context) {
               return ManageDevicesScreen();

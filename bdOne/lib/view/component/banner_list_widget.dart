@@ -13,12 +13,12 @@ class BannerListWidget extends StatefulWidget {
   late final bool isLoading;
   late final bool isDarkMode;
 
-  BannerListWidget(
-      {required this.data,
-      required this.isInternetConnected,
-      required this.isLoading,
-      required this.isDarkMode,
-      });
+  BannerListWidget({
+    required this.data,
+    required this.isInternetConnected,
+    required this.isLoading,
+    required this.isDarkMode,
+  });
 
   @override
   _BannerListWidgetState createState() => _BannerListWidgetState();
@@ -62,142 +62,151 @@ class _BannerListWidgetState extends State<BannerListWidget> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return widget.isInternetConnected && !widget.isLoading
-        ?widget.data.isNotEmpty ?
-       Stack(
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 5, top: 12),
-                width: screenWidth,
-                height: screenHeight * 0.28,
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (int page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
-                  },
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: widget.data.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      width: screenWidth ,
-                      child: Center(
-                          child: Card(
-                        color: Colors.white.withOpacity(0.8),
-                        /*shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(17))*/
-                        margin: EdgeInsets.zero,
-                        child: Stack(
-                          children: [
-                            widget.data[index] == ""
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        // borderRadius: BorderRadius.circular(15),
-                                        color: AppColor.PRIMARY),
-                                    child: ClipRRect(
-                                      // borderRadius: BorderRadius.circular(15),
-                                      child: Image.asset(
-                                        "assets/travel_img.jpg",
-                                        width: screenWidth,
-                                        height: screenHeight * 0.28,
-                                        fit: BoxFit.cover,
+        ? widget.data.isNotEmpty
+            ? Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                    width: screenWidth,
+                    height: screenHeight * 0.2,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (int page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: widget.data.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          width: screenWidth,
+                          margin: EdgeInsets.symmetric(horizontal : 5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                              child: Stack(
+                            children: [
+                              widget.data[index] == ""
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: AppColor.PRIMARY),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.asset(
+                                          "assets/travel_img.jpg",
+                                          width: screenWidth,
+                                          height: screenHeight * 0.28,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                          color: Theme.of(context).cardColor,
-                                          width: 0.3),
-                                      color: widget.isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        "${widget.data[index]}",
-                                        width: screenWidth,
-                                        height: screenHeight * 0.28,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context,
-                                            Object exception,
-                                            StackTrace? stackTrace) {
-                                          return Container(
-                                            child: Image.asset(
-                                              "assets/travel_img.jpg",
-                                              width: screenWidth * 0.85,
-                                              height: screenHeight * 0.2,
-                                              fit: BoxFit.none,
-                                            ),
-                                          );
-                                        },
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.white38,
-                                              highlightColor:  widget.isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color:  widget.isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            0)),
-                                                width: screenWidth,
-                                                height: screenHeight * 0.25,
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                            color: Theme.of(context).cardColor,
+                                            width: 0.3),
+                                        color: widget.isDarkMode
+                                            ? AppColor.DARK_CARD_COLOR
+                                            : Colors.white,
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.network(
+                                          "${widget.data[index]}",
+                                          width: screenWidth,
+                                          height: screenHeight * 0.28,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (BuildContext context,
+                                              Object exception,
+                                              StackTrace? stackTrace) {
+                                            return Container(
+                                              child: Image.asset(
+                                                "assets/travel_img.jpg",
+                                                width: screenWidth * 0.85,
+                                                height: screenHeight * 0.2,
+                                                fit: BoxFit.none,
                                               ),
                                             );
-                                          }
-                                        },
+                                          },
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent?
+                                                  loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return Shimmer.fromColors(
+                                                baseColor: Colors.white38,
+                                                highlightColor: widget
+                                                        .isDarkMode
+                                                    ? AppColor.DARK_CARD_COLOR
+                                                    : Colors.grey,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: widget.isDarkMode
+                                                          ? AppColor
+                                                              .DARK_CARD_COLOR
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              0)),
+                                                  width: screenWidth,
+                                                  height: screenHeight * 0.25,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                          ],
-                        ),
-                      )),
-                    );
-                    // I omit the part to build card items from the list
-                  },
-                ),
-              ),
-              Container(
-                width: screenWidth*0.66,
-                height: screenHeight * 0.28,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 22.0, vertical: 0),
-                    child: Container(
-
-                      padding:
-                      const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black54,
-                      ),
-                      child: SmoothPageIndicator(
-                        controller: _pageController,
-                        count: widget.data.length,
-                        effect: WormEffect(
-                          dotHeight: 6.0,
-                          dotWidth: 6.0,
-                          spacing: 6.0,
-                          dotColor: Colors.white70,
-                          activeDotColor: Colors.white,
-                          type: WormType.thin
+                            ],
+                          )),
+                        );
+                        // I omit the part to build card items from the list
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: screenWidth,
+                    height: screenHeight * 0.24,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 0),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.transparent,
+                          ),
+                          child: SmoothPageIndicator(
+                            controller: _pageController,
+                            count: widget.data.length,
+                            effect: WormEffect(
+                                dotHeight: 6.0,
+                                dotWidth: 6.0,
+                                spacing: 6.0,
+                                dotColor: Colors.black12,
+                                activeDotColor: Colors.black,
+                                type: WormType.thin),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ): SizedBox(height: 8,)
+                ],
+              )
+            : SizedBox(
+                height: 8,
+              )
         : ShimmerBoxes();
   }
 }

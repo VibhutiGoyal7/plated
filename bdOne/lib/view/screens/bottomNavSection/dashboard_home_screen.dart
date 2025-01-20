@@ -15,16 +15,14 @@ import 'package:shimmer/shimmer.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/db/dao.dart';
+import '../../../model/response/ServiceTypeResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/banner_list_widget.dart';
-import '../../component/circluar_profile_image.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
 import '../../component/dashboard_category_component.dart';
-import '../../component/dropdown_widget.dart';
-import '../../component/search_component.dart';
 import '../../component/session_expired_dialog.dart';
 
 class DashboardHomeScreen extends StatefulWidget {
@@ -56,15 +54,27 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
   TextEditingController _searchController = TextEditingController();
-  List<String?> categories = [
-    "groceries",
-    "food",
-    "groceries",
-    "food",
-    "groceries",
-    "food",
-    "groceries",
-    "food",
+  List<ServiceTypeResponse?> categories = [
+    ServiceTypeResponse(
+        serviceName: 'BD Mart',
+        icon: 'assets/mart_icon.svg',
+        iconBgColor: Colors.red.shade50),
+    ServiceTypeResponse(
+        serviceName: 'Cab Booking',
+        icon: 'assets/cab_icon.svg',
+        iconBgColor: Colors.yellow.shade50),
+    ServiceTypeResponse(
+        serviceName: 'Foods',
+        icon: 'assets/food_icon.svg',
+        iconBgColor: Colors.green.shade50),
+    ServiceTypeResponse(
+        serviceName: 'Shopping',
+        icon: 'assets/shopping_icon.svg',
+        iconBgColor: Colors.blue.shade50),
+    ServiceTypeResponse(
+        serviceName: 'More',
+        icon: 'assets/more_icon.svg',
+        iconBgColor: Colors.black12),
   ];
   List<String> bannerList = ["", "", "", ""];
   List<String> brandsList = ["Kellogs", "Amul", "Amul", "Kellogs"];
@@ -204,7 +214,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Align(
+                                      /* Align(
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -229,27 +239,97 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             },
                                           ),
                                         ),
+                                      ),*/
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.support_agent,
+                                              size: 28,
+                                            ),
+                                            onPressed: () => {},
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.notifications,
+                                              size: 26,
+                                            ),
+                                            onPressed: () => {},
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
                                         height: 2,
                                       ),
-                                      SearchComponent(
+                                      /* SearchComponent(
                                           width: 1,
                                           screenWidth: screenWidth,
                                           isDarkMode: isDarkMode,
                                           searchController: _searchController,
-                                          onChanged: () {}),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 0),
-                                        child: BannerListWidget(
-                                            data: bannerList,
-                                            isInternetConnected:
-                                                isInternetConnected,
-                                            isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode),
+                                          onChanged: () {}),*/
+                                      Container(
+                                        width: screenWidth,
+                                        constraints: BoxConstraints(
+                                            minHeight: screenHeight * 0.1,
+                                            maxHeight: screenHeight * 0.1),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 6),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.PRIMARY_GREEN,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Color.fromRGBO(0, 0, 0, 0.1),
+                                              offset: Offset(0, 0),
+                                              blurRadius: 10,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Hello ALI".toUpperCase(),
+                                                  style: TextStyle(
+                                                      letterSpacing: 0.2,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black45),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Icon(
+                                                  Icons.waving_hand,
+                                                  size: 14,
+                                                  color: Colors.orangeAccent,
+                                                )
+                                              ],
+                                            ),
+                                            Text(
+                                              "What you are looking for today",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  letterSpacing: 0.2,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      SingleChildScrollView(
+
+                                      /*SingleChildScrollView(
                                         scrollDirection: Axis.horizontal,
                                         child: Row(
                                           children: [
@@ -335,132 +415,141 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             ),
                                           ],
                                         ),
-                                      ),
+                                      ),*/
                                       categories.length > 0
-                                          ? Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 6, vertical: 10),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 4.0,
-                                                                vertical: 4),
-                                                        child: Text(
-                                                          "Categories",
-                                                          style: TextStyle(
-                                                              fontSize: 20),
-                                                        ),
-                                                      )),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      /*
-                                                VendorData? data =
-                                                    vendorData;
-                                                data?.detailType =
-                                                "category";
-                                                Navigator.pushNamed(
-                                                    context, "/MenuScreen",
-                                                    arguments: data);*/
-                                                    },
-                                                    child: Row(
+                                          ? IntrinsicHeight(
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 10),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 6,
+                                                    vertical: 10),
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.WHITE,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color.fromRGBO(
+                                                          0, 0, 0, 0.1),
+                                                      offset: Offset(0, 0),
+                                                      blurRadius: 10,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
+                                                              .spaceBetween,
                                                       children: [
-                                                        Text(
-                                                          "View All",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.blue),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      4.0,
+                                                                  vertical: 4),
+                                                          child: Text(
+                                                            "Services",
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
                                                         ),
-                                                        Icon(
-                                                            Icons
-                                                                .arrow_forward_ios,
-                                                            size: 12,
-                                                            color: Colors.blue)
                                                       ],
                                                     ),
-                                                  )
-                                                ],
+                                                    IntrinsicHeight(
+                                                      child: Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      12),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          constraints: BoxConstraints(
+                                                              maxWidth: screenWidth,
+                                                              maxHeight: isCategoryLoading
+                                                                  ? screenHeight * 0.13
+                                                                  : categories.isEmpty
+                                                                      ? 0
+                                                                      : 80),
+                                                          child: isCategoryLoading
+                                                              ? Container(
+                                                                  child: ListView
+                                                                      .builder(
+                                                                          itemCount:
+                                                                              3,
+                                                                          scrollDirection: Axis
+                                                                              .horizontal,
+                                                                          padding: EdgeInsets.symmetric(
+                                                                              horizontal:
+                                                                                  8,
+                                                                              vertical:
+                                                                                  2),
+                                                                          itemBuilder:
+                                                                              (context, index) {
+                                                                            return Shimmer.fromColors(
+                                                                              baseColor: Colors.white38,
+                                                                              highlightColor: Colors.grey,
+                                                                              child: Container(
+                                                                                margin: EdgeInsets.all(6),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.white,
+                                                                                  borderRadius: BorderRadius.circular(80),
+                                                                                ),
+                                                                                height: 50,
+                                                                                width: 60,
+                                                                              ),
+                                                                            );
+                                                                          }),
+                                                                )
+                                                              : categories.isEmpty
+                                                                  ? SizedBox()
+                                                                  : DashboardCategoryComponent(
+                                                                      categories:
+                                                                          categories,
+                                                                      screenWidth:
+                                                                          screenWidth,
+                                                                      screenHeight:
+                                                                          screenHeight,
+                                                                      isDarkMode:
+                                                                          isDarkMode,
+                                                                      primaryColor:
+                                                                          AppColor
+                                                                              .PRIMARY,
+                                                                    )),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             )
                                           : SizedBox(),
-                                      Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          alignment: Alignment.center,
-                                          constraints: BoxConstraints(
-                                              maxWidth: screenWidth,
-                                              maxHeight: isCategoryLoading
-                                                  ? screenHeight * 0.13
-                                                  : categories.isEmpty
-                                                      ? 0
-                                                      : 100),
-                                          child: isCategoryLoading
-                                              ? Container(
-                                                  child: ListView.builder(
-                                                      itemCount: 3,
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 9,
-                                                              vertical: 2),
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Shimmer
-                                                            .fromColors(
-                                                          baseColor:
-                                                              Colors.white38,
-                                                          highlightColor:
-                                                              Colors.grey,
-                                                          child: Container(
-                                                            margin:
-                                                                EdgeInsets.all(
-                                                                    6),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          80),
-                                                            ),
-                                                            height: 50,
-                                                            width: 60,
-                                                          ),
-                                                        );
-                                                      }),
-                                                )
-                                              : categories.isEmpty
-                                                  ? SizedBox()
-                                                  : DashboardCategoryComponent(
-                                                      categories: categories,
-                                                      screenWidth: screenWidth,
-                                                      screenHeight:
-                                                          screenHeight,
-                                                      isDarkMode: isDarkMode,
-                                                      primaryColor:
-                                                          AppColor.PRIMARY,
-                                                    )),
-                                      Align(
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 0),
+                                        child: BannerListWidget(
+                                            data: bannerList,
+                                            isInternetConnected:
+                                                isInternetConnected,
+                                            isLoading: isBannerLoading,
+                                            isDarkMode: isDarkMode),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 0),
+                                        child: BannerListWidget(
+                                            data: bannerList,
+                                            isInternetConnected:
+                                                isInternetConnected,
+                                            isLoading: isBannerLoading,
+                                            isDarkMode: isDarkMode),
+                                      ),
+                                      /*  Align(
                                           alignment: Alignment.centerLeft,
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -485,7 +574,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               (result) {
                                                 var currentCategoryName =
                                                     result;
-                                                return _brandYouLoveCard(currentCategoryName);
+                                                return _brandYouLoveCard(
+                                                    currentCategoryName);
                                               },
                                             ).toList(),
                                           ),
@@ -521,14 +611,16 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               (result) {
                                                 var currentCategoryName =
                                                     result;
-                                                return _brandOfferCard(currentCategoryName);
+                                                return _brandOfferCard(
+                                                    currentCategoryName);
                                               },
                                             ).toList(),
                                           ),
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(bottom: 5, top: 12),
+                                        margin:
+                                            EdgeInsets.only(bottom: 5, top: 12),
                                         width: screenWidth,
                                         height: screenHeight * 0.16,
                                         child: PageView.builder(
@@ -538,94 +630,145 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                               _currentPage = page;
                                             });
                                           },
-                                          physics: const AlwaysScrollableScrollPhysics(),
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
                                           itemCount: bannerList.length,
                                           scrollDirection: Axis.horizontal,
-                                          itemBuilder: (BuildContext context, int index) {
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
                                             return Container(
-                                              width: screenWidth*0.85,
+                                              width: screenWidth * 0.85,
                                               child: Center(
                                                   child: Card(
-                                                    color: Colors.white.withOpacity(0.8),
-                                                    /*shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.cir  cular(17))*/
-                                                    margin: EdgeInsets.zero,
-                                                    child: Stack(
-                                                      children: [
-                                                        bannerList[index] == ""
-                                                            ? Container(
-                                                          decoration: BoxDecoration(
-                                                            // borderRadius: BorderRadius.circular(15),
-                                                              color: AppColor.PRIMARY),
-                                                          child: ClipRRect(
-                                                            // borderRadius: BorderRadius.circular(15),
-                                                            child: Image.asset(
-                                                              "assets/travel_img.jpg",
-                                                              width: screenWidth*0.85,
-                                                              height: screenHeight * 0.28,
-                                                              fit: BoxFit.cover,
+                                                color: Colors.white
+                                                    .withOpacity(0.8),
+                                                */ /*shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.cir  cular(17))*/ /*
+                                                margin: EdgeInsets.zero,
+                                                child: Stack(
+                                                  children: [
+                                                    bannerList[index] == ""
+                                                        ? Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    // borderRadius: BorderRadius.circular(15),
+                                                                    color: AppColor
+                                                                        .PRIMARY),
+                                                            child: ClipRRect(
+                                                              // borderRadius: BorderRadius.circular(15),
+                                                              child:
+                                                                  Image.asset(
+                                                                "assets/travel_img.jpg",
+                                                                width:
+                                                                    screenWidth *
+                                                                        0.85,
+                                                                height:
+                                                                    screenHeight *
+                                                                        0.28,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                             ),
-                                                          ),
-                                                        )
-                                                            : Container(
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(15),
-                                                            border: Border.all(
-                                                                color: Theme.of(context).cardColor,
-                                                                width: 0.3),
-                                                            color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white,
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(15),
-                                                            child: Image.network(
-                                                              "${bannerList[index]}",
-                                                              width: screenWidth,
-                                                              height: screenHeight * 0.28,
-                                                              fit: BoxFit.cover,
-                                                              errorBuilder: (BuildContext context,
-                                                                  Object exception,
-                                                                  StackTrace? stackTrace) {
-                                                                return Container(
-                                                                  child: Image.asset(
-                                                                    "assets/travel_img.jpg",
-                                                                    width: screenWidth * 0.85,
-                                                                    height: screenHeight * 0.2,
-                                                                    fit: BoxFit.none,
-                                                                  ),
-                                                                );
-                                                              },
-                                                              loadingBuilder: (BuildContext context,
-                                                                  Widget child,
-                                                                  ImageChunkEvent? loadingProgress) {
-                                                                if (loadingProgress == null) {
-                                                                  return child;
-                                                                } else {
-                                                                  return Shimmer.fromColors(
-                                                                    baseColor: Colors.white38,
-                                                                    highlightColor:  isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.grey,
-                                                                    child: Container(
-                                                                      decoration: BoxDecoration(
-                                                                          color:  isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white,
-                                                                          borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              0)),
-                                                                      width: screenWidth,
-                                                                      height: screenHeight * 0.25,
+                                                          )
+                                                        : Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              border: Border.all(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                  width: 0.3),
+                                                              color: isDarkMode
+                                                                  ? AppColor
+                                                                      .DARK_CARD_COLOR
+                                                                  : Colors
+                                                                      .white,
+                                                            ),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              child:
+                                                                  Image.network(
+                                                                "${bannerList[index]}",
+                                                                width:
+                                                                    screenWidth,
+                                                                height:
+                                                                    screenHeight *
+                                                                        0.28,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                errorBuilder: (BuildContext
+                                                                        context,
+                                                                    Object
+                                                                        exception,
+                                                                    StackTrace?
+                                                                        stackTrace) {
+                                                                  return Container(
+                                                                    child: Image
+                                                                        .asset(
+                                                                      "assets/travel_img.jpg",
+                                                                      width: screenWidth *
+                                                                          0.85,
+                                                                      height:
+                                                                          screenHeight *
+                                                                              0.2,
+                                                                      fit: BoxFit
+                                                                          .none,
                                                                     ),
                                                                   );
-                                                                }
-                                                              },
+                                                                },
+                                                                loadingBuilder: (BuildContext
+                                                                        context,
+                                                                    Widget
+                                                                        child,
+                                                                    ImageChunkEvent?
+                                                                        loadingProgress) {
+                                                                  if (loadingProgress ==
+                                                                      null) {
+                                                                    return child;
+                                                                  } else {
+                                                                    return Shimmer
+                                                                        .fromColors(
+                                                                      baseColor:
+                                                                          Colors
+                                                                              .white38,
+                                                                      highlightColor: isDarkMode
+                                                                          ? AppColor
+                                                                              .DARK_CARD_COLOR
+                                                                          : Colors
+                                                                              .grey,
+                                                                      child:
+                                                                          Container(
+                                                                        decoration: BoxDecoration(
+                                                                            color: isDarkMode
+                                                                                ? AppColor.DARK_CARD_COLOR
+                                                                                : Colors.white,
+                                                                            borderRadius: BorderRadius.circular(0)),
+                                                                        width:
+                                                                            screenWidth,
+                                                                        height: screenHeight *
+                                                                            0.25,
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                },
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )),
+                                                  ],
+                                                ),
+                                              )),
                                             );
                                             // I omit the part to build card items from the list
                                           },
                                         ),
-                                      ),
+                                      ),*/
                                     ],
                                   ),
                                 ),
@@ -658,86 +801,48 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Widget _brandOfferCard(String currentCategoryName){
+  Widget _brandOfferCard(String currentCategoryName) {
     return Padding(
-      padding: const EdgeInsets
-          .symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: GestureDetector(
         onTap: () {
           // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
         },
         child: Container(
           decoration: BoxDecoration(
-              borderRadius:
-              BorderRadius
-                  .circular(4),
-              border: Border.all(
-                  color:
-                  Colors.grey,
-                  width: 0.3),
-              color: isDarkMode
-                  ? AppColor
-                  .DARK_CARD_COLOR
-                  : Colors.white),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.grey, width: 0.3),
+              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
           width: screenWidth * 0.48,
           child: Column(
-            mainAxisAlignment:
-            MainAxisAlignment
-                .start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius
-                          .circular(
-                          4),
-                      topRight: Radius
-                          .circular(
-                          4)),
-                  child:
-                  Image.asset(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4)),
+                  child: Image.asset(
                     "assets/pizza_image.jpg",
-                    height:
-                    screenHeight *
-                        0.23,
-                    width:
-                    screenWidth *
-                        0.48,
-                    fit: BoxFit
-                        .cover,
+                    height: screenHeight * 0.23,
+                    width: screenWidth * 0.48,
+                    fit: BoxFit.cover,
                   )),
               Container(
-                width: screenWidth *
-                    0.48,
+                width: screenWidth * 0.48,
                 decoration: BoxDecoration(
-                    color: Colors
-                        .grey
-                        .shade200,
+                    color: Colors.grey.shade200,
                     borderRadius: BorderRadius.only(
-                        bottomRight:
-                        Radius.circular(
-                            4),
-                        bottomLeft:
-                        Radius.circular(
-                            4))),
+                        bottomRight: Radius.circular(4),
+                        bottomLeft: Radius.circular(4))),
                 child: Padding(
                   padding:
-                  const EdgeInsets
-                      .symmetric(
-                      horizontal:
-                      2,
-                      vertical:
-                      10),
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                   child: Center(
                     child: Text(
-                      capitalizeFirstLetter(
-                          "${currentCategoryName}"),
-                      overflow:
-                      TextOverflow
-                          .ellipsis,
-                      style:
-                      TextStyle(
-                        fontSize:
-                        15,
+                      capitalizeFirstLetter("${currentCategoryName}"),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -750,62 +855,38 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     );
   }
 
-  Widget _brandYouLoveCard(String currentCategoryName){
+  Widget _brandYouLoveCard(String currentCategoryName) {
     return Padding(
-      padding: const EdgeInsets
-          .symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: GestureDetector(
         onTap: () {
           // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
         },
         child: Container(
           decoration: BoxDecoration(
-              borderRadius:
-              BorderRadius
-                  .circular(4),
-              border: Border.all(
-                  color:
-                  Colors.grey,
-                  width: 0.3),
-              color: isDarkMode
-                  ? AppColor
-                  .DARK_CARD_COLOR
-                  : Colors.white),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.grey, width: 0.3),
+              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
           width: screenWidth * 0.3,
-          padding:
-          EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 18),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
           child: Column(
-            mainAxisAlignment:
-            MainAxisAlignment
-                .start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               ClipRRect(
-                // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
-                  child:
-                  Image.asset(
-                    "assets/pizza_image.jpg",
-                    height:
-                    screenHeight *
-                        0.1,
-                    fit: BoxFit.cover,
-                  )),
+                  // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
+                  child: Image.asset(
+                "assets/pizza_image.jpg",
+                height: screenHeight * 0.1,
+                fit: BoxFit.cover,
+              )),
               SizedBox(
                 height: 8,
               ),
               Padding(
-                padding:
-                const EdgeInsets
-                    .symmetric(
-                    horizontal:
-                    2),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(
-                  capitalizeFirstLetter(
-                      "${currentCategoryName}"),
-                  overflow:
-                  TextOverflow
-                      .ellipsis,
+                  capitalizeFirstLetter("${currentCategoryName}"),
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 13,
                   ),

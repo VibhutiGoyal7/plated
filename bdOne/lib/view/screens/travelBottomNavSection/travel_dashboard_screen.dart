@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:BDOne/model/db/BDOneDatabase.dart';
+import 'package:BDOne/model/response/ServiceTypeResponse.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/utils/Util.dart';
@@ -55,15 +56,14 @@ class _TravelDashboardScreenState extends State<TravelDashboardScreen> {
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
   TextEditingController _searchController = TextEditingController();
-  List<String?> categories = [
-    "groceries",
-    "food",
-    "groceries",
-    "food",
-    "groceries",
-    "food",
-    "groceries",
-    "food",
+  List<ServiceTypeResponse?> categories = [
+    ServiceTypeResponse(serviceName: 'BD Mart', icon: 'assets/mart_icon.svg', iconBgColor: Colors.red.shade50),
+    ServiceTypeResponse(
+        serviceName: 'Cab Booking', icon: 'assets/cab_icon.svg',iconBgColor: Colors.yellow.shade50),
+    ServiceTypeResponse(serviceName: 'Foods', icon: 'assets/food_icon.svg', iconBgColor: Colors.green.shade50),
+    ServiceTypeResponse(
+        serviceName: 'Shopping', icon: 'assets/shopping_icon.svg',iconBgColor: Colors.blue.shade50),
+    ServiceTypeResponse(serviceName: 'More', icon: 'assets/more_icon.svg', iconBgColor: Colors.purple.shade50),
   ];
   List<String> bannerList = ["", "", "", ""];
   List<String> brandsList = ["Kellogs", "Amul", "Amul", "Kellogs"];

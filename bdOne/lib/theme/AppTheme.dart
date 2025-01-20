@@ -45,7 +45,7 @@ class AppTheme {
       cardTheme: const CardTheme(color: AppColor.WHITE),
       primaryColor: AppColor.PRIMARY,
       highlightColor: AppColor.PRIMARY,
-      scaffoldBackgroundColor: AppColor.BG_COLOR,
+      scaffoldBackgroundColor: AppColor.WHITE,
       textTheme: TextTheme(
         displayLarge: GoogleFonts.getFont(
           'Poppins',

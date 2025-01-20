@@ -1,15 +1,14 @@
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
 import 'package:BDOne/view/screens/bottomNavSection/documents_screen.dart';
-import 'package:BDOne/view/screens/bottomNavSection/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
-import 'dashboard_home_screen.dart';
-import 'notifications_screen.dart';
+import '../transportationBottomNavSection/history_screen.dart';
 import 'accountSection/profile_screen.dart';
+import 'dashboard_home_screen.dart';
 
 class BottomNav extends StatefulWidget {
   @override
@@ -30,9 +29,11 @@ class _BottomNavState extends State<BottomNav>
   bool? isUserAuthenticated;
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
-    DocumentsScreen(),/*
+    DocumentsScreen(),
+    /*
     NotificationScreen(),
-    HistoryScreen(),*/
+    ,*/
+    HistoryScreen(),
     ProfileScreen(),
   ];
 
@@ -86,12 +87,14 @@ class _BottomNavState extends State<BottomNav>
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    bool _isExpanded = false;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
+      backgroundColor: Colors.white,
       /* floatingActionButton: FloatingActionButton(
         backgroundColor: AppColor.WHITE,
         shape: CircleBorder(
@@ -107,15 +110,15 @@ class _BottomNavState extends State<BottomNav>
       ),*/
       //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
               color: Colors.black26,
-              blurRadius: 10,
-              offset: Offset(0, 5),
+              blurRadius: 1,
+              offset: Offset(0, 0.5),
             ),
           ],
         ),
@@ -124,9 +127,7 @@ class _BottomNavState extends State<BottomNav>
           child: BottomAppBar(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: 54,
-            color: AppColor.BODY_COLOR,
-            
-            
+            color: AppColor.WHITE,
             /* shape: const CircularNotchedRectangle(),
             notchMargin: 6,*/
             child: Row(
@@ -141,31 +142,35 @@ class _BottomNavState extends State<BottomNav>
                       SizedBox(width: 8),
                       _selectedIndex == 0
                           ? Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
-                              child: Row(
+                                  color: Colors.transparent),
+                              child: Column(
                                 children: [
                                   Icon(
                                     Icons.home,
                                     size: 22,
-                                    color: AppColor.PRIMARY,
+                                    color: AppColor.PRIMARY_ACCENT,
                                   ),
-                                  SizedBox(width: 4,),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
                                   Text(
                                     "${Languages.of(context)?.labelHome}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY, fontSize: 10),
+                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                    fontWeight: FontWeight.w600),
                                   )
                                 ],
                               ),
                             )
                           : Icon(
-                            Icons.home,
-                            color: AppColor.WHITE,
-                            size: 24,
-                          ),
+                              Icons.home,
+                              color: AppColor.BLACK,
+                              size: 24,
+                            ),
                     ],
                   ),
                 ),
@@ -173,30 +178,35 @@ class _BottomNavState extends State<BottomNav>
                   onTap: () => {_onItemTapped(1)},
                   child: _selectedIndex == 1
                       ? Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(60),
                               color: Colors.white),
-                          child: Row(
+                          child: Column(
                             children: [
                               Icon(
-                                Icons.delivery_dining_sharp,
+                                Icons.search_rounded,
                                 size: 22,
-                                color: AppColor.PRIMARY,
+                                color: AppColor.PRIMARY_ACCENT,
                               ),
-                              SizedBox(width: 4,),
+                              SizedBox(
+                                width: 4,
+                              ),
                               Text(
                                 "Cart",
-                                style: TextStyle(color: AppColor.PRIMARY, fontSize: 10),
+                                style: TextStyle(
+                                    color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                    fontWeight: FontWeight.w600),
                               )
                             ],
                           ),
                         )
                       : Icon(
-                        Icons.delivery_dining_sharp,
-                        color: AppColor.WHITE,
-                        size: 24,
-                      ),
+                          Icons.search_rounded,
+                          color: AppColor.BLACK,
+                          size: 24,
+                        ),
                 ),
                 GestureDetector(
                   onTap: () => {_onItemTapped(2)},
@@ -204,31 +214,74 @@ class _BottomNavState extends State<BottomNav>
                     children: [
                       _selectedIndex == 2
                           ? Container(
-                              padding: EdgeInsets.symmetric(horizontal:8,vertical: 5),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
                                   color: Colors.white),
-                              child: Row(
+                              child: Column(
                                 children: [
                                   Icon(
-                                    Icons.person,
+                                    Icons.wallet,
                                     size: 22,
-                                    color: AppColor.PRIMARY,
+                                    color: AppColor.PRIMARY_ACCENT,
                                   ),
-                                  SizedBox(width: 4,),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
                                   Text(
-                                    "${Languages.of(context)?.labelProfile}",
+                                    "${Languages.of(context)?.labelWallet}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY, fontSize: 10),
+                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
                             )
                           : Icon(
-                            Icons.person,
-                            color: AppColor.WHITE,
-                            size: 24,
-                          ),
+                              Icons.wallet,
+                              color: AppColor.BLACK,
+                              size: 24,
+                            ),
+                      SizedBox(width: 8),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => {_onItemTapped(3)},
+                  child: Row(
+                    children: [
+                      _selectedIndex == 3
+                          ? Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(60),
+                                  color: Colors.white),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    size: 22,
+                                    color: AppColor.PRIMARY_ACCENT,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    "${Languages.of(context)?.labelProfile}",
+                                    style: TextStyle(
+                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Icon(
+                              Icons.person,
+                              color: AppColor.BLACK,
+                              size: 24,
+                            ),
                       SizedBox(width: 8),
                     ],
                   ),

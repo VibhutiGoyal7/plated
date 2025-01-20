@@ -27,6 +27,9 @@ class LanguageAr extends Languages {
   String get labelAdd => "Add";
 
   @override
+  String get labelWallet => "Wallet";
+
+  @override
   String get labelDashboard => "Dashboard";
 
   @override

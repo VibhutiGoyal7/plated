@@ -23,6 +23,9 @@ class LanguageEn extends Languages {
   String get labelAddMoney => "Add Money";
 
   @override
+  String get labelWallet => "Wallet";
+
+  @override
   String get labelAddedCard => "Added Cards";
 
   @override

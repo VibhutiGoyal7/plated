@@ -1,14 +1,16 @@
+import 'package:BDOne/model/response/ServiceTypeResponse.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../utils/Util.dart';
-import 'circluar_profile_image.dart';
 
-class DashboardCategoryComponent extends StatelessWidget {
-  final List<String?> categories;
+class DashboardCategoryComponent extends StatefulWidget {
+  final List<ServiceTypeResponse?> categories;
   final double screenWidth;
   final double screenHeight;
   final Color primaryColor;
   final bool isDarkMode;
+
 
   const DashboardCategoryComponent({
     Key? key,
@@ -18,70 +20,85 @@ class DashboardCategoryComponent extends StatelessWidget {
     required this.primaryColor,
     required this.isDarkMode,
   }) : super(key: key);
+  @override
+  _DashboardCategoryState createState() => _DashboardCategoryState();
+}
+
+class _DashboardCategoryState extends State<DashboardCategoryComponent> {
+
+  bool _isExpanded = false;
+  int initialItemCount = 5;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      width: screenWidth,
-      alignment: Alignment.topLeft,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Wrap(
-          spacing: 6,
-          alignment: WrapAlignment.start,
-          // Horizontal space between items
-          runSpacing: 8,
-          // Vertical space between lines
-          children: categories.map((result) {
-              var currentItem = result;
-              var currentCategoryName = result;
-              var currentCategoryImage = "";
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2.0),
-                child: GestureDetector(
-                  onTap: () {
-                   /* VendorData? data = vendorData;
-                    data?.detailType = "menu";
-                    data?.selectedCategoryId = currentItem?.id;*/
-                    // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-                  },
-                  child: Container(
-                    // decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(30),
-                    //     color:
-                    //         isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-                     width: 50,
-                    padding: EdgeInsets.only(bottom: 8, top: 2, left: 2, right: 2),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CircularProfileImage(
-                            size: 48,
-                            imageUrl: currentCategoryImage,
-                            name: "${currentCategoryName}",
-                            needTextLetter: true,
-                            placeholderImage: ""),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
-                          child: Text(
-                            capitalizeFirstLetter("${currentCategoryName}"),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    return IntrinsicHeight(
+      child: Column(
+        children: [
+          Container(
+            width: screenWidth,
+            alignment: Alignment.center,
+            child: Wrap(
+              spacing: 5,
+              alignment: WrapAlignment.start,
+              runSpacing: 8,
+              children: widget.categories.map((result) {
+                var currentItem = result;
+                var currentCategoryName = currentItem?.serviceName;
+                var currentIcon = currentItem?.icon;
+                var currentIconBdColor = currentItem?.iconBgColor;
+                return _buildServiceItem(
+                    currentCategoryName, currentIcon, currentIconBdColor);
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceItem(String? currentCategoryName, String? currentIcon,
+      Color? currentIconBdColor)
+  {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Container(
+        padding: EdgeInsets.only(bottom: 4, top: 2, left: 2, right: 2),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              height: 48,
+              width: 48,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: currentIconBdColor),
+              child: SvgPicture.asset(
+                "$currentIcon",
+                colorFilter: ColorFilter.mode(
+                  Colors.transparent,
+                  // Use a contrasting color to test visibility
+                  BlendMode.dst,
                 ),
-              );
-            },
-          ).toList(),
+              ),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Text(
+                capitalizeFirstLetter("${currentCategoryName}"),
+                overflow: TextOverflow.fade,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

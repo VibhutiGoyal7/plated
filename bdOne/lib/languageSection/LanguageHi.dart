@@ -23,6 +23,9 @@ class LanguageHi extends Languages {
   String get labelAddMoney => "पैसे जोड़ें";
 
   @override
+  String get labelWallet => "Wallet";
+
+  @override
   String get labelAddedCard => "जोड़े गए कार्ड";
 
   @override

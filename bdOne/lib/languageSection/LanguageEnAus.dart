@@ -24,6 +24,9 @@ class LanguageEnAus extends Languages {
   String get labelRecents => "Recents";
 
   @override
+  String get labelWallet => "Wallet";
+
+  @override
   String get labelAdd => "Add";
 
   @override

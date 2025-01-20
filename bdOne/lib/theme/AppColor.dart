@@ -7,6 +7,8 @@ class AppColor {
   static const WHITE4 = Color(0xF0FDFDFC);
 
   static const PRIMARY_SILVER = Color(0xff373737);
+  static const PRIMARY_ACCENT = Color(0xff00B34C);
+  static const PRIMARY_GREEN = Color(0xffC7F4C2);
   static const PRIMARY_GOLD = Color(0xffc6a700);
   static const BOTTOM_NAV_COLOR = Color(0xF2F0F1F3);
   static const TEXT_RED = Color(0xFFF90B1B);

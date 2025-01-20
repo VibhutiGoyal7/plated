@@ -91,6 +91,8 @@ abstract class Languages {
 
   String get labelProfile;
 
+  String get labelWallet;
+
   String get labelAccountDetails;
 
   String get labelPersonalInfo;
