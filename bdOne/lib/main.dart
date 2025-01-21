@@ -4,8 +4,10 @@ import 'package:BDOne/utils/Helper.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:BDOne/view/screens/authSection/confirm_detail_screen.dart';
 import 'package:BDOne/view/screens/authSection/create_account_screen.dart';
+import 'package:BDOne/view/screens/authSection/forgot_password_screen.dart';
 import 'package:BDOne/view/screens/authSection/otp_verification_screen.dart';
 import 'package:BDOne/view/screens/authSection/phone_verification_screen.dart';
+import 'package:BDOne/view/screens/authSection/sign_up_screen.dart';
 import 'package:BDOne/view/screens/authSection/signin_screen.dart';
 import 'package:BDOne/view/screens/authSection/welcomeSection/instruction_screen.dart';
 import 'package:BDOne/view/screens/authSection/welcomeSection/slider_screen.dart';
@@ -137,7 +139,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    //_fetchData();
   }
 
   void setLocale(Locale locale) {
@@ -286,6 +288,12 @@ class _MyAppState extends State<MyApp> {
             },
             '/ManageDevicesScreen': (context) {
               return ManageDevicesScreen();
+            },
+            '/ForgotPasswordScreen': (context) {
+              return ForgotPasswordScreen();
+            },
+            '/SignUpScreen': (context) {
+              return SignUpScreen();
             },
           }),
     );

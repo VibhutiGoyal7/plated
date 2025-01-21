@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
-import 'LanguageAr.dart';
 import 'LanguageEn.dart';
-import 'LanguageHi.dart';
 import 'Languages.dart';
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<Languages> {
-
   const AppLocalizationsDelegate();
 
   @override
@@ -20,10 +17,6 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<Languages> {
     switch (locale.languageCode) {
       case 'en':
         return LanguageEn();
-      case 'ar':
-        return LanguageAr();
-      case 'hi':
-        return LanguageHi();
       default:
         return LanguageEn();
     }
@@ -31,5 +24,4 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<Languages> {
 
   @override
   bool shouldReload(LocalizationsDelegate<Languages> old) => false;
-
 }

@@ -139,6 +139,14 @@ flutter:
       - assets/shopping_icon.svg
       - assets/wallet_icon.svg
       - assets/more_icon.svg
+      - assets/forgot_pass_icon.svg
+      - assets/pets_icon.svg
+      - assets/home_care_icon.svg
+      - assets/health_icon.svg
+      - assets/nursery_icon.svg
+      - assets/auction_icon.svg
+      - assets/add_1.png
+      - assets/add_2.png
 
   fonts:
     - family: CustomFont

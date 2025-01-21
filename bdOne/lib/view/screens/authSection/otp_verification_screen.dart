@@ -5,21 +5,22 @@ import 'package:BDOne/theme/AppColor.dart';
 import 'package:BDOne/utils/Helper.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/countryListResponse.dart';
+import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/customNumberKeyboard.dart';
 import '../../component/custom_loader.dart';
-import '../../component/instruction_step.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
 
   OtpVerificationScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _OtpVerificationScreenState createState() => _OtpVerificationScreenState();
 }
@@ -52,6 +53,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     isValid = false;
     resendOtp = false;
     endTime = DateTime.now().add(const Duration(minutes: 1, seconds: 0));
+
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -61,6 +63,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         }
       });
     }
+    _handleBackspaceKey();
   }
 
   void _handleKeyTap(String value) {
@@ -103,30 +106,54 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColor.BG_COLOR,
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back_ios)),
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                 widget.data == "mobile" ? "${Languages.of(context)?.labelVerifyYourMobileNumber}" :"Verify Your Email Address",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  widget.data == "mobile"
+                      ? "${Languages.of(context)?.labelVerifyYourMobileNumber}"
+                      : "Verify Your Email Address",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 20,
                 ),
 
+                SvgPicture.asset(
+                  "assets/forgot_pass_icon.svg",
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
-                  widget.data == "mobile" ?"${Languages.of(context)?.labelPleaseEnterOtp} 9715574260" : "Please enter the OTP (One Time Password) sent via SMS to abc@gmail.com",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                  "Verification Code",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Please enter the 6 digit code sent to your email address ********r@gmail.com",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -138,7 +165,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 SizedBox(height: 25),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,10 +175,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         "${Languages.of(context)?.labelDidntReceiveOtp}",
                         14,
                         true,
-                        color:isDarkMode? Colors.grey : Colors.black54,
+                        color: isDarkMode ? Colors.grey : Colors.black54,
                       ),
                       SizedBox(
-                        height: 12,
+                        height: 6,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -166,19 +193,78 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     ],
                   ),
                 ),
-                Spacer(),
-                CustomNumberKeyboard(onKeyTap: (value) async {
+                SizedBox(height: 15),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: screenWidth * 0.8,
+                    height: 50,
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: !isValid
+                            ? WidgetStateProperty.all(
+                                Theme.of(context).highlightColor)
+                            : WidgetStateProperty.all(AppColor.PRIMARY_ACCENT),
+                      ),
+                      onPressed: () async {
+                        hideKeyBoard();
+                        Navigator.pushNamed(context, "/OtpVerificationScreen");
+                        /*   if (phoneNumberValid &&
+                                  countryCode > 0 &&
+                                  phoneCode != "") {
+                                print(_phoneNumberController.text);
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                var phoneNumber =
+                                    "${_phoneNumberController.text}";
+                                CreateOtpChangePassRequest request =
+                                    CreateOtpChangePassRequest(
+                                        customer: CustomerGetOtpPassDetail(
+                                            phoneNumber: phoneNumber,
+                                            countryCode: countryCode));
+
+                                await _viewModel.CreateOtpChangePass(
+                                    "", request);
+                                apiResponse = _viewModel.response;
+                                generateOtpResponse(context);
+                              } else if (countryCode == 0 && phoneCode == "") {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(Languages.of(context)!
+                                      .labelSelectCountryCode),
+                                ));
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(Languages.of(context)!
+                                      .labelEnterValidPhone),
+                                ));
+                              }*/
+                      },
+                      child: Text(
+                        Languages.of(context)!.labelConfirmOtp,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                //Spacer(),
+                /*CustomNumberKeyboard(onKeyTap: (value) async {
                   if (value == "clear") {
                     _handleBackspace();
                   } else if (value == "submit") {
-                    String otp = _inputValues
-                        .map((controller) => controller)
-                        .join();
-                      Navigator.pushNamed(context, "/SelectServiceScreen");
+                    String otp =
+                        _inputValues.map((controller) => controller).join();
+                    Navigator.pushNamed(context, "/SelectServiceScreen");
                   } else {
                     _handleKeyTap(value);
                   }
-                }),
+                }),*/
               ],
             ),
           ),
@@ -203,8 +289,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return Row(
       children: [
         Icon(
-          Icons.timelapse_rounded,
-          color:isDarkMode? Colors.grey : Colors.black54,
+          Icons.timer,
+          size: 18,
+          color: isDarkMode ? Colors.grey : Colors.black54,
         ),
         SizedBox(
           width: 3,
@@ -215,7 +302,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           enableDescriptions: false,
           spacerWidth: 1,
           timeTextStyle: TextStyle(
-              fontWeight: FontWeight.w700, fontSize: 16, color:isDarkMode? Colors.grey : Colors.black54),
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: isDarkMode ? Colors.grey : Colors.black54),
           onEnd: () {
             setState(() {
               resendOtp = true;
@@ -246,30 +335,50 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
           6,
-          (index) => Card(
-            elevation: 5,
-            shadowColor: AppColor.PRIMARY,
-            shape: RoundedRectangleBorder(
-                side: BorderSide(
-                    color: isDarkMode ? Colors.grey : Colors.black54,
-                    width: 0.4),
-                borderRadius: BorderRadius.circular(20.0)),
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 3),
-              alignment: Alignment.center,
-              width: screenWidth / 9,
-              height: 52.0,
-              child: Center(
-                child: Text(
-                  _inputValues[index],
-                  style: TextStyle(fontSize: 20),
-                ),
+          (index) => Container(
+            margin: EdgeInsets.symmetric(horizontal: 3),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+              color: AppColor.WHITE,
+              border: Border.all(width: 0.2, color: AppColor.GREY_TEXT_COLOR),
+            ),
+            width: screenWidth / 8,
+            height: 50.0,
+            child: TextField(
+              controller: _controllers[index],
+              focusNode: _focusNodes[index],
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              maxLength: 1,
+              style: TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                counterText: '',
+                border: InputBorder.none,
               ),
+              onChanged: (value) {
+                if (value.isNotEmpty && index < 5) {
+                  FocusScope.of(context).nextFocus();
+                }
+              },
+              onSubmitted: (_) {
+                FocusScope.of(context).unfocus();
+              },
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _handleBackspaceKey() {
+    for (int i = 0; i < _focusNodes.length; i++) {
+      _focusNodes[i].addListener(() {
+        if (!_focusNodes[i].hasFocus && _controllers[i].text.isEmpty && i > 0) {
+          FocusScope.of(context).previousFocus();
+        }
+      });
+    }
   }
 
   Widget _resendOtpButton(BuildContext context) {

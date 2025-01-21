@@ -246,7 +246,8 @@ class _TravelDashboardScreenState extends State<TravelDashboardScreen> {
                                             isInternetConnected:
                                             isInternetConnected,
                                             isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode),
+                                            isDarkMode: isDarkMode,
+                                            dummy : "assets/add_1.png"),
                                       ),
                                       categories.length > 0
                                           ? Padding(

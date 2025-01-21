@@ -17,7 +17,22 @@ class LanguageEn extends Languages {
   String get enterPhoneNumber => "Phone number";
 
   @override
+  String get enterYourMobileNumber => "Your Mobile number";
+
+  @override
+  String get labelGender => "Gender";
+
+  @override
   String get labelAccountDetails => "Account Details";
+
+  @override
+  String get labelSendOtp => "Send OTP";
+
+  @override
+  String get labelConfirmOtp => "Confirm OTP";
+
+  @override
+  String get labelYourName => "Your Name";
 
   @override
   String get labelAddMoney => "Add Money";
@@ -39,6 +54,9 @@ class LanguageEn extends Languages {
 
   @override
   String get labelEmail => "Email";
+
+  @override
+  String get labelEmailAddress => "Email Address";
 
   @override
   String get labelDOB => "D.O.B";
@@ -197,7 +215,7 @@ class LanguageEn extends Languages {
       "Your Email has been successfully verified.";
 
   @override
-  String get labelForgotPass => "Forgot Password";
+  String get labelForgotPass => "Forgot Password?";
 
   @override
   String get labelIndia => "India";
@@ -568,13 +586,13 @@ class LanguageEn extends Languages {
   String get labelEnterDateInValidRange => "Enter date in valid range";
 
   @override
-  String get labelWelcomeBack => "Welcome Back!";
+  String get labelAccessToAccount => "Access to your account";
 
   @override
   String get labelWeMissedYou => "We missed you";
 
   @override
-  String get labelNeedAcc => "Need account? ";
+  String get labelNeedAcc => "Don’t have an account?";
 
   @override
   String get labelSignupHere => "SignUp here.";
@@ -974,9 +992,6 @@ class LanguageEn extends Languages {
   String get labelFirstName => "First Name";
 
   @override 
-  String get labelGender => "Gender";
-
-  @override 
   String get labelHaveAnExistingAccount => "I have an Existing Account";
 
   @override 
@@ -1095,6 +1110,5 @@ class LanguageEn extends Languages {
 
   @override
   String get labelWelcomeToBDOne => "Welcome to BD One";
-
 
 }

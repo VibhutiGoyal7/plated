@@ -417,8 +417,23 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                         ),
                                       ),*/
                                       categories.length > 0
-                                          ? IntrinsicHeight(
+                                          ? DashboardCategoryComponent(
+                                        categories:
+                                        categories,
+                                        screenWidth:
+                                        screenWidth,
+                                        screenHeight:
+                                        screenHeight,
+                                        isDarkMode:
+                                        isDarkMode,
+                                        primaryColor:
+                                        AppColor
+                                            .PRIMARY,
+                                      )
+
+                                      /*IntrinsicHeight(
                                               child: Container(
+
                                                 margin: EdgeInsets.symmetric(
                                                     horizontal: 10,
                                                     vertical: 10),
@@ -527,7 +542,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                                   ],
                                                 ),
                                               ),
-                                            )
+                                            )*/
                                           : SizedBox(),
                                       Padding(
                                         padding:
@@ -537,7 +552,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             isInternetConnected:
                                                 isInternetConnected,
                                             isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode),
+                                            isDarkMode: isDarkMode,
+                                            dummy: "assets/add_1.png"),
                                       ),
                                       Padding(
                                         padding:
@@ -547,7 +563,8 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                                             isInternetConnected:
                                                 isInternetConnected,
                                             isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode),
+                                            isDarkMode: isDarkMode,
+                                            dummy : "assets/add_2.png"),
                                       ),
                                       /*  Align(
                                           alignment: Alignment.centerLeft,

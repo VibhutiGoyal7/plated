@@ -154,167 +154,125 @@ class _SigninScreenState extends State<SigninScreen> {
         child: SafeArea(
           child: Stack(
             children: [
-              Container(
-                height: screenHeight,
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: screenHeight -
-                          MediaQuery.of(context).viewInsets.bottom,
-                    ),
-                    child: IntrinsicHeight(
+              SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight:
+                        screenHeight - MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: screenWidth * 0.9,
+                      //alignment: Alignment.center,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: <Widget>[
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: screenHeight * 0.25,
-                                  child: Image(
-                                    alignment: Alignment.topLeft,
-                                    width: screenWidth * 0.54,
-                                    height: screenHeight * 0.3,
-                                    image: AssetImage("assets/sign-in.png"),
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                  alignment: AlignmentDirectional.center,
-                                ),
-                              ),
-                            ],
+                          _buildLabelText(
+                              context,
+                              "${Languages.of(context)?.labelLogin}",
+                              26,
+                              true,
+                              false),
+                          SizedBox(height: 6),
+                          _buildLabelText(
+                              context,
+                              "${Languages.of(context)?.labelAccessToAccount}",
+                              18,
+                              false,
+                              true),
+                          SizedBox(height: 25),
+                          _buildLabelText(
+                              context,
+                              "${Languages.of(context)?.labelEmailAddress}",
+                              15,
+                              true,
+                              true),
+                          _buildPhoneInput(
+                            context,
+                            "${Languages.of(context)?.labelEmail}",
+                            _phoneNoController,
+                            Icon(
+                              Icons.person,
+                              size: 20,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
                           ),
-                          Flexible(
-                            child: Container(
-                              width: screenWidth,
-                              padding: EdgeInsets.zero,
-                              child: Card(
-                                elevation: 20,
-                                margin: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(40),
-                                        topRight: Radius.circular(40))),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0, vertical: 20),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: 20),
-                                      _buildLabelText(
-                                          context,
-                                          "${Languages.of(context)?.labelWelcomeBack}",
-                                          26,
-                                          true),
-                                      _buildLabelText(
-                                          context,
-                                          "${Languages.of(context)?.labelWeMissedYou}",
-                                          14,
-                                          false),
-                                      SizedBox(height: 25),
-                                      _buildPhoneInput(
-                                        context,
-                                        "${Languages.of(context)?.labelPhoneNumber}",
-                                        _phoneNoController,
-                                        Icon(
-                                          Icons.person,
-                                          size: 20,
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                      SizedBox(height: 15),
-                                      _buildPasswordInput(
-                                          context,
-                                          Languages.of(context)!.labelPassword,
-                                          _passwordController,
-                                          Icon(
-                                            Icons.password,
-                                            size: 18,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                          passwordVisible,
-                                          isDarkMode),
-                                      SizedBox(height: 8),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 32.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context,
-                                                '/ForgotPasswordScreen');
-                                          },
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: Text(
-                                              "${Languages.of(context)?.labelForgotPass}",
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.blue,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 15),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0),
-                                        child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              _buildFooter(
-                                                  context, apiResponse),
-                                            ]),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "${Languages.of(context)?.labelNeedAcc} ",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[400],
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.pushNamed(context,
-                                                    '/PhoneVerifyScreen');
-                                              },
-                                              child: Text(
-                                                "${Languages.of(context)?.labelRegisterHere}",
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.blue,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                          SizedBox(height: 15),
+                          _buildLabelText(
+                              context,
+                              "${Languages.of(context)?.labelPassword}",
+                              15,
+                              true,
+                              true),
+                          _buildPasswordInput(
+                              context,
+                              Languages.of(context)!.labelPassword,
+                              _passwordController,
+                              Icon(
+                                Icons.password,
+                                size: 18,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              passwordVisible,
+                              isDarkMode),
+                          SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/ForgotPasswordScreen');
+                              },
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  "${Languages.of(context)?.labelForgotPass}",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),
                           ),
+                          SizedBox(height: 15),
+                          _buildFooter(context, apiResponse),
+                          SizedBox(height: 8),
                         ],
                       ),
                     ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  margin: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${Languages.of(context)?.labelNeedAcc} ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacementNamed(context, '/SignUpScreen');
+                        },
+                        child: Text(
+                          "${Languages.of(context)?.labelSignup}",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: AppColor.PRIMARY_ACCENT,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -336,94 +294,86 @@ class _SigninScreenState extends State<SigninScreen> {
     );
   }
 
-  _buildLabelText(BuildContext context, String text, double size, bool isBold) {
+  _buildLabelText(BuildContext context, String text, double size, bool isBold,
+      bool isSubHeading) {
     return Text(
       text,
       style: TextStyle(
           fontSize: size,
-          fontWeight: isBold ? FontWeight.w600 : FontWeight.normal),
+          fontWeight: isBold ? FontWeight.w400 : FontWeight.normal,
+          color: isSubHeading
+              ? Theme.of(context).highlightColor
+              : Theme.of(context).focusColor),
     );
   }
 
   Widget _buildPhoneInput(BuildContext context, String text,
-      TextEditingController nameController, Icon icon) {
+      TextEditingController nameController, Icon icon)
+  {
     //nameController.text = widget.data as String;
-    return Card(
-      child: Container(
-        //height: 60,
-        width: screenWidth * 0.8,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border(
-              top: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54,
-                  width: 0.4)),
-          borderRadius: BorderRadius.circular(10.0),
+    return Container(
+      width: screenWidth,
+      alignment: Alignment.center,
+      padding: EdgeInsets.only(left: 12.0, right: 8.0, top: 2, bottom: 2),
+      margin: EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        border: Border(
+            top: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2),
+            bottom: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2),
+            right: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2),
+            left: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2)),
+        borderRadius: BorderRadius.circular(6.0),
+      ),
+      child: TextField(
+        style: TextStyle(
+          fontSize: 16.0,
         ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                style: TextStyle(
-                  fontSize: 14.0,
+        //obscureText: false,
+        controller: nameController,
+        onChanged: (value) {
+          _isValidInput();
+        },
+        maxLength: 20,
+        //scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        onSubmitted: (value) {},
+        keyboardType: TextInputType.emailAddress,
+        inputFormatters: [
+          FilteringTextInputFormatter.singleLineFormatter,
+        ],
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: text,
+          //alignLabelWithHint: true,
+          counterText: "",
+          //icon: icon,
+          /*suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "${Languages.of(context)?.labelSaveId}",
+                  style: TextStyle(fontSize: 10),
                 ),
-                obscureText: false,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                maxLength: 12,
-                textAlignVertical: TextAlignVertical.center,
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: text,
-                    alignLabelWithHint: true,
-                    counterText: "",
-                    icon: icon,
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "${Languages.of(context)?.labelSaveId}",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        Checkbox(
-                          checkColor: Colors.white,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          semanticLabel:
-                              "${Languages.of(context)?.labelSaveId}",
-                          side: BorderSide(
-                              color: isDarkMode ? Colors.white : Colors.black),
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
-                        ),
-                      ],
-                    )),
-              ),
-            ),
-          ],
+                Checkbox(
+                  checkColor: Colors.white,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  semanticLabel: "${Languages.of(context)?.labelSaveId}",
+                  side: BorderSide(
+                      color: isDarkMode ? Colors.white : Colors.black),
+                  value: isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isChecked = value!;
+                    });
+                  },
+                ),
+              ],
+            )*/
         ),
       ),
     );
@@ -437,144 +387,133 @@ class _SigninScreenState extends State<SigninScreen> {
     bool passwordVisibles,
     bool isDarkMode,
   ) {
-    return Card(
-      child: Container(
-        width: screenWidth * 0.8,
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          border: Border(
-              top: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              bottom: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              right: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54, width: 0.4),
-              left: BorderSide(
-                  color: isDarkMode ? Colors.grey : Colors.black54,
-                  width: 0.4)),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                textAlignVertical: TextAlignVertical.center,
-                style: TextStyle(fontSize: 14.0),
-                obscureText: passwordVisibles,
-                obscuringCharacter: "*",
-                controller: nameController,
-                onChanged: (value) {
-                  _isValidInput();
-                },
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                onSubmitted: (value) {},
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: text,
-                  alignLabelWithHint: true,
-                  icon: icon,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      passwordVisibles
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      size: 20,
-                      color: isDarkMode ? Colors.white60 : Colors.black45,
-                    ),
-                    onPressed: () {
-                      setState(
-                        () {
-                          passwordVisible = !passwordVisible;
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
+    return Container(
+      width: screenWidth,
+      padding: EdgeInsets.only(left: 12.0, right: 8.0, top: 2, bottom: 2),
+      margin: EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        border: Border(
+            top: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2),
+            bottom: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2),
+            right: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2),
+            left: BorderSide(
+                color: isDarkMode ? Colors.grey : Colors.black54, width: 0.2)),
+        borderRadius: BorderRadius.circular(6.0),
+      ),
+      child: TextField(
+        textAlignVertical: TextAlignVertical.center,
+        style: TextStyle(fontSize: 16.0),
+        obscureText: passwordVisibles,
+        obscuringCharacter: "*",
+        controller: nameController,
+        onChanged: (value) {
+          _isValidInput();
+        },
+        //scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        onSubmitted: (value) {},
+        keyboardType: TextInputType.visiblePassword,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: text,
+          //alignLabelWithHint: true,
+          //icon: icon,
+          suffixIcon: IconButton(
+            icon: Icon(
+              passwordVisibles
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
+              size: 24,
+              color: isDarkMode ? Colors.white60 : Colors.black87,
             ),
-          ],
+            onPressed: () {
+              setState(
+                () {
+                  passwordVisible = !passwordVisible;
+                },
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
   Widget _buildFooter(BuildContext context, ApiResponse apiResponse) {
-    return Column(
-      children: [
-        SizedBox(
-          width: screenWidth * 0.7,
-          height: 45,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-            ),
-            child: ElevatedButton(
-              onPressed: () async {
-                hideKeyBoard();
-                _isValidInput();
-                const maxDuration = Duration(seconds: 2);
-                if (inputValid) {
-                  SignInRequest request = SignInRequest(
-                      customer: CustomerSignIn(
-                          phoneNumber: _phoneNoController.text,
-                          password: _passwordController.text,
-                          deviceToken: deviceToken));
-
-                  setState(() {
-                    isLoading = true;
-                  });
-
-                  bool isConnected = await _connectivityService.isConnected();
-                  if (!isConnected) {
-                    setState(() {
-                      isLoading = false;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              '${Languages.of(context)?.labelNoInternetConnection}'),
-                          duration: maxDuration,
-                        ),
-                      );
-                    });
-                  } else {
-                    //await Provider.of<MainViewModel>(context, listen: false).signInWithPass("api/v1/app/customers/sign_in", request);
-                    //Navigator.pushNamed(context, '/BottomNav');
-
-                    ApiResponse apiResponse =
-                        Provider.of<MainViewModel>(context, listen: false)
-                            .response;
-                    getSignInResponse(context, apiResponse);
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        '${Languages.of(context)?.labelPleaseEnterAllDetails}'),
-                    duration: maxDuration,
-                  ));
-                }
-              },
-              child: Text(
-                Languages.of(context)!.labelLogin,
-                style: TextStyle(
-                    color: inputValid ? Colors.white : AppColor.PRIMARY),
-              ),
-              style: ElevatedButton.styleFrom(
-                  //padding: EdgeInsets.symmetric(vertical: 10.0),
-                  backgroundColor: inputValid ? AppColor.PRIMARY : Colors.white,
-                  elevation: 3,
-                  shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.circular(2))),
-            ),
+    return Container(
+      width: screenWidth,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: inputValid ? AppColor.PRIMARY_ACCENT : Colors.grey.shade300,
+        borderRadius: BorderRadius.all(Radius.circular(6)),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.1),
+            offset: Offset(0, 2),
+            blurRadius: 3,
           ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 14.0,
+      ),
+      child: MaterialButton(
+        onPressed: () async {
+          hideKeyBoard();
+          Navigator.pushNamed(context, '/BottomNav');
+          _isValidInput();
+          const maxDuration = Duration(seconds: 2);
+          if (inputValid) {
+            SignInRequest request = SignInRequest(
+                customer: CustomerSignIn(
+                    phoneNumber: _phoneNoController.text,
+                    password: _passwordController.text,
+                    deviceToken: deviceToken));
+
+            setState(() {
+              isLoading = true;
+            });
+
+            bool isConnected = await _connectivityService.isConnected();
+            if (!isConnected) {
+              setState(() {
+                isLoading = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        '${Languages.of(context)?.labelNoInternetConnection}'),
+                    duration: maxDuration,
+                  ),
+                );
+              });
+            } else {
+              //await Provider.of<MainViewModel>(context, listen: false).signInWithPass("api/v1/app/customers/sign_in", request);
+              //Navigator.pushNamed(context, '/BottomNav');
+
+              ApiResponse apiResponse =
+                  Provider.of<MainViewModel>(context, listen: false).response;
+              getSignInResponse(context, apiResponse);
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content:
+                  Text('${Languages.of(context)?.labelPleaseEnterAllDetails}'),
+              duration: maxDuration,
+            ));
+          }
+        },
+        child: Text(
+          Languages.of(context)!.labelLogin,
+          style: TextStyle(
+              color: inputValid ? Colors.white : AppColor.PRIMARY,
+              fontSize: 16),
         ),
-      ],
+      ),
     );
   }
 

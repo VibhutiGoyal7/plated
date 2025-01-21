@@ -17,11 +17,17 @@ abstract class Languages {
 
   String get labelSubmit;
 
+  String get labelSendOtp;
+
+  String get labelConfirmOtp;
+
   String get labelNeedHelp;
 
   String get labelEnterCode;
 
   String get labelSentCode;
+
+  String get labelAccessToAccount;
 
   String get labelResendCode;
 
@@ -41,11 +47,17 @@ abstract class Languages {
 
   String get labelName;
 
+  String get labelYourName;
+
+  String get enterYourMobileNumber;
+
   String get labelLastname;
 
   String get labelUsername;
 
   String get labelEmail;
+
+  String get labelEmailAddress;
 
   String get labelDOB;
 
@@ -374,10 +386,6 @@ abstract class Languages {
   String get labelEnterValidDate;
 
   String get labelEnterDateInValidRange;
-
-  String get labelWelcomeBack;
-
-  String get labelWeMissedYou;
 
   String get labelNeedAcc;
 

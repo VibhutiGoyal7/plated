@@ -12,12 +12,14 @@ class BannerListWidget extends StatefulWidget {
   late final bool isInternetConnected;
   late final bool isLoading;
   late final bool isDarkMode;
+  late final String dummy;
 
   BannerListWidget({
     required this.data,
     required this.isInternetConnected,
     required this.isLoading,
     required this.isDarkMode,
+    required this.dummy,
   });
 
   @override
@@ -66,7 +68,7 @@ class _BannerListWidgetState extends State<BannerListWidget> {
             ? Stack(
                 children: [
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     width: screenWidth,
                     height: screenHeight * 0.2,
                     decoration:
@@ -94,12 +96,12 @@ class _BannerListWidgetState extends State<BannerListWidget> {
                                   ? Container(
                                       decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: AppColor.PRIMARY),
+                                              BorderRadius.circular(18),
+                                          color: Colors.transparent),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
                                         child: Image.asset(
-                                          "assets/travel_img.jpg",
+                                          "${widget.dummy}",
                                           width: screenWidth,
                                           height: screenHeight * 0.28,
                                           fit: BoxFit.cover,
@@ -128,7 +130,7 @@ class _BannerListWidgetState extends State<BannerListWidget> {
                                               StackTrace? stackTrace) {
                                             return Container(
                                               child: Image.asset(
-                                                "assets/travel_img.jpg",
+                                                "assets/add_2.png",
                                                 width: screenWidth * 0.85,
                                                 height: screenHeight * 0.2,
                                                 fit: BoxFit.none,

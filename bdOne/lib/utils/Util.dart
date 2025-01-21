@@ -492,3 +492,18 @@ Future<String> getAssetPath(String asset) async {
 Future<String> getLocalPath(String path) async {
   return '${(await getApplicationSupportDirectory()).path}/$path';
 }
+
+void showSnackBar(BuildContext context, String message, double width) {
+  final snackBar = SnackBar(
+    content: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('$message'),
+      ],
+    ),
+    backgroundColor: Colors.teal,
+    behavior: SnackBarBehavior.floating,
+    width: width,
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

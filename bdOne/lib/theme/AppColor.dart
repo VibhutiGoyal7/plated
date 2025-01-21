@@ -23,4 +23,5 @@ class AppColor {
   static const SHORTCUT_CARD_LIGHT_COLOR = Color(0xffEEF7FB);
   static const SHORTCUT_CARD_DARK_COLOR = Color(0xffEEF7FB);
   static const LIGHT_CARD_COLOR = Color(0xffF3F8FF);
+  static const GREY_TEXT_COLOR = Color(0xff6C6C70);
 }
