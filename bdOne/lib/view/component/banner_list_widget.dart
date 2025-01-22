@@ -86,7 +86,7 @@ class _BannerListWidgetState extends State<BannerListWidget> {
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
                           width: screenWidth,
-                          margin: EdgeInsets.symmetric(horizontal : 5),
+                          margin: EdgeInsets.symmetric(horizontal: 5),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20)),
                           child: Center(

@@ -145,8 +145,14 @@ flutter:
       - assets/health_icon.svg
       - assets/nursery_icon.svg
       - assets/auction_icon.svg
+      - assets/auto_icon.svg
+      - assets/bike_icon.svg
+      - assets/car_icon.svg
+      - assets/truck_icon.svg
       - assets/add_1.png
       - assets/add_2.png
+      - assets/cab_add_1.png
+      - assets/cab_add_2.png
 
   fonts:
     - family: CustomFont

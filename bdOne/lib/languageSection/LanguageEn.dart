@@ -1111,4 +1111,16 @@ class LanguageEn extends Languages {
   @override
   String get labelWelcomeToBDOne => "Welcome to BD One";
 
+  @override
+  String get labelBookCab => "Book Cab";
+
+  @override
+  String get labelRideAccount => "Account";
+
+  @override
+  String get labelRideHistory => "Ride History";
+
+  @override
+  String get labelServices => "Services";
+
 }

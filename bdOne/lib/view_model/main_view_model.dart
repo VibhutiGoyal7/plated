@@ -17,6 +17,7 @@ import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateTpinRequest.dart';
+import '../model/request/rideRequest.dart';
 import '../model/request/signInRequest.dart';
 import '../model/request/signUpRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
@@ -24,6 +25,7 @@ import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
+import '../model/response/initiateRideResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
 
 class MainViewModel with ChangeNotifier {
@@ -89,21 +91,21 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchOtpVerifyData(
-      String value, PhoneRequest phoneRequest) async {
+  Future<void> createRideRequestApi(
+      String value, RideRequest rideRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
     //print("Yess" + phoneRequest.customer.mobileOtp);
     notifyListeners();
     try {
       //print(phoneRequest.customer.phoneNumber);
-      OtpVerifyResponse otpVerifyResponse =
-          await MainRepository().fetchOtpVerifyData(value, phoneRequest);
+      InitiateRideResponse response =
+          await MainRepository().createRideRequestApi(value, rideRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       //_apiResponse = ApiResponse.completed(otpVerifyResponse);
-      if (otpVerifyResponse.status == 200 || otpVerifyResponse.status == 201) {
-        _apiResponse = ApiResponse.completed(otpVerifyResponse);
+      if (response.status == 200 || response.status == 201) {
+        _apiResponse = ApiResponse.completed(response);
       } else {
-        _apiResponse = ApiResponse.error(otpVerifyResponse.message);
+        _apiResponse = ApiResponse.error(response.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

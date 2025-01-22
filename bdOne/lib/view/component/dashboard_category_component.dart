@@ -35,6 +35,18 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 10, left: 12),
+              child: Text(
+                "Services",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
         AnimatedContainer(
           width: screenWidth,
           duration: Duration(milliseconds: 300),
@@ -55,20 +67,6 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10.0, right: 2.0, bottom: 6.0),
-                    child: Text(
-                      "Services",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
               Expanded(
                 child: GridView.count(
                   shrinkWrap: true,
@@ -159,6 +157,8 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           setState(() {
             _isExpanded = !_isExpanded;
           });
+        } else if (currentCategoryName == "Cab Booking") {
+          Navigator.pushNamed(context, "/RideBottomNav");
         }
       },
       child: IntrinsicHeight(

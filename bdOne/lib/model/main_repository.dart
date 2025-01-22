@@ -4,6 +4,7 @@ import 'package:BDOne/model/request/changeOldPasswordRequest.dart';
 import 'package:BDOne/model/request/createOtpChangePass.dart';
 import 'package:BDOne/model/request/exustingUserRequest.dart';
 import 'package:BDOne/model/request/generateTpinRequest.dart';
+import 'package:BDOne/model/request/rideRequest.dart';
 import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInRequest.dart';
 import 'package:BDOne/model/request/signInWithPhoneNumber.dart';
@@ -15,6 +16,7 @@ import 'package:BDOne/model/response/dashboardResponse.dart';
 import 'package:BDOne/model/response/existingUserResponse.dart';
 import 'package:BDOne/model/response/fetchKycDocResponse.dart';
 import 'package:BDOne/model/response/generateTpinResponse.dart';
+import 'package:BDOne/model/response/initiateRideResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/model/response/phoneVerifyResponse.dart';
 import 'package:BDOne/model/response/profileResponse.dart';
@@ -49,14 +51,14 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<OtpVerifyResponse> fetchOtpVerifyData(
-      String value, PhoneRequest phoneRequest) async {
-    print(phoneRequest);
-    dynamic response = await _BDOneService.postResponse(value, phoneRequest);
+  Future<InitiateRideResponse> createRideRequestApi(
+      String value, RideRequest rideRequest) async {
+    print(rideRequest);
+    dynamic response = await _BDOneService.postResponse(value, rideRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
-    OtpVerifyResponse mediaList = OtpVerifyResponse.fromJson(jsonData);
+    InitiateRideResponse mediaList = InitiateRideResponse.fromJson(jsonData);
     return mediaList;
   }
 

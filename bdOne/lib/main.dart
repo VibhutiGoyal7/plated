@@ -26,6 +26,10 @@ import 'package:BDOne/view/screens/bottomNavSection/manage_devices_screen.dart';
 import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
+import 'package:BDOne/view/screens/rideSection/book_ride_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_bottom_nav.dart';
+import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
 import 'package:BDOne/view/screens/scan_camera_text.dart';
 import 'package:BDOne/view/screens/transportationBottomNavSection/transportation_bottom_nav.dart';
 import 'package:BDOne/view/screens/travelBottomNavSection/travel_bottom_nav.dart';
@@ -294,6 +298,23 @@ class _MyAppState extends State<MyApp> {
             },
             '/SignUpScreen': (context) {
               return SignUpScreen();
+            },
+            '/_RideHomeScreenState': (context) {
+              return RideHomeScreen();
+            },
+
+            //Ride Section
+            '/RideHomeScreen': (context) {
+              return RideHomeScreen();
+            },
+            '/RideBottomNav': (context) {
+              return RideBottomNav();
+            },
+            '/RideServicesScreen': (context) {
+              return RideServicesScreen();
+            },
+            '/BookRideScreen': (context) {
+              return BookRideScreen();
             },
           }),
     );

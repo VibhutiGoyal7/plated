@@ -1,21 +1,22 @@
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
 import 'package:BDOne/view/screens/bottomNavSection/documents_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
+import '../bottomNavSection/accountSection/profile_screen.dart';
 import '../transportationBottomNavSection/history_screen.dart';
-import 'accountSection/profile_screen.dart';
-import 'dashboard_home_screen.dart';
 
-class BottomNav extends StatefulWidget {
+class RideBottomNav extends StatefulWidget {
   @override
-  _BottomNavState createState() => _BottomNavState();
+  _RideBottomNavState createState() => _RideBottomNavState();
 }
 
-class _BottomNavState extends State<BottomNav>
+class _RideBottomNavState extends State<RideBottomNav>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _selectedIndex = 0;
   final LocalAuthentication auth = LocalAuthentication();
@@ -28,11 +29,8 @@ class _BottomNavState extends State<BottomNav>
   bool _authOnResume = false;
   bool? isUserAuthenticated;
   static List<Widget> _widgetOptions = <Widget>[
-    DashboardHomeScreen(),
-    DocumentsScreen(),
-    /*
-    NotificationScreen(),
-    ,*/
+    RideHomeScreen(),
+    RideServicesScreen(),
     HistoryScreen(),
     ProfileScreen(),
   ];
@@ -143,10 +141,11 @@ class _BottomNavState extends State<BottomNav>
                                     width: 4,
                                   ),
                                   Text(
-                                    "${Languages.of(context)?.labelHome}",
+                                    "${Languages.of(context)?.labelBookCab}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
-                                    fontWeight: FontWeight.w600),
+                                        color: AppColor.PRIMARY_ACCENT,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600),
                                   )
                                 ],
                               ),
@@ -171,7 +170,7 @@ class _BottomNavState extends State<BottomNav>
                           child: Column(
                             children: [
                               Icon(
-                                Icons.search_rounded,
+                                Icons.menu,
                                 size: 22,
                                 color: AppColor.PRIMARY_ACCENT,
                               ),
@@ -179,16 +178,17 @@ class _BottomNavState extends State<BottomNav>
                                 width: 4,
                               ),
                               Text(
-                                "Cart",
+                                "${Languages.of(context)?.labelServices}",
                                 style: TextStyle(
-                                    color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                    color: AppColor.PRIMARY_ACCENT,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w600),
                               )
                             ],
                           ),
                         )
                       : Icon(
-                          Icons.search_rounded,
+                          Icons.menu,
                           color: AppColor.BLACK,
                           size: 24,
                         ),
@@ -215,9 +215,10 @@ class _BottomNavState extends State<BottomNav>
                                     width: 4,
                                   ),
                                   Text(
-                                    "${Languages.of(context)?.labelWallet}",
+                                    "${Languages.of(context)?.labelRideHistory}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                        color: AppColor.PRIMARY_ACCENT,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ],
@@ -254,9 +255,10 @@ class _BottomNavState extends State<BottomNav>
                                     width: 4,
                                   ),
                                   Text(
-                                    "${Languages.of(context)?.labelProfile}",
+                                    "${Languages.of(context)?.labelAccount}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                        color: AppColor.PRIMARY_ACCENT,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ],
