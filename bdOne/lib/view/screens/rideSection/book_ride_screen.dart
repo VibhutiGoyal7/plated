@@ -8,6 +8,10 @@ import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
+import 'package:flutter_location_search/flutter_location_search.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -18,7 +22,6 @@ import '../../../model/response/initiateRideResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
-import '../../component/banner_list_widget.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
 import '../../component/session_expired_dialog.dart';
@@ -41,7 +44,12 @@ class _BookRideScreenState extends State<BookRideScreen> {
   late DashboardTransactionDao dashboardTransactionDao;
   late CustomerDataDao customerDataDao;
   static const maxDuration = Duration(seconds: 2);
+  LatLng? currentLocation;
+  LatLng? finalLocation = LatLng(0, 0);
+  LocationData? pickUpLocation = null;
+  LocationData? destinationLocation = null;
   bool isLoading = false;
+  bool inputValid = false;
   bool isCategoryLoading = false;
   bool isBannerLoading = false;
   bool isApiLoading = false;
@@ -189,12 +197,24 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                           ),
                                           SizedBox(width: 10),
                                           GestureDetector(
-                                            onTap: (){
-                                              Navigator.pushNamed(context, "/SelectLocationScreen");
+                                            onTap: () {
+                                              _getCurrentLocation(true);
+                                              //Navigator.pushNamed(context, "/SelectLocationScreen");
                                             },
-                                            child: Text(
-                                              "Pick up location",
-                                              style: TextStyle(fontSize: 16),
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  minWidth: screenWidth / 2,
+                                                  maxWidth: screenWidth * 0.7),
+                                              child: Text(
+                                                pickUpLocation == null
+                                                    ? "Pick up location"
+                                                    : "${pickUpLocation?.address}",
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                              ),
                                             ),
                                           )
                                         ],
@@ -215,56 +235,69 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                             size: 18,
                                           ),
                                           SizedBox(width: 10),
-                                          Text(
-                                            "Destination",
-                                            style: TextStyle(fontSize: 16),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _getCurrentLocation(false);
+                                              //Navigator.pushNamed(context, "/SelectLocationScreen");
+                                            },
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  minWidth: screenWidth / 2,
+                                                  maxWidth: screenWidth * 0.7),
+                                              child: Text(
+                                                destinationLocation == null
+                                                    ? "Destination"
+                                                    : "${destinationLocation?.address}",
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
                                           )
                                         ],
                                       )
                                     ],
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () => {bookRideApi()},
-                                  child: IntrinsicWidth(
-                                    child: Container(
-                                      //width: 120,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 8),
-                                      margin: EdgeInsets.only(
-                                          top: 8.0, left: 12.0, right: 12.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        color: isDarkMode
-                                            ? AppColor.BLACK
-                                            : Colors.grey.shade300,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Icon(
-                                            Icons.location_on,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Select Location on map",
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                          SizedBox(width: 5),
-                                        ],
-                                      ),
+                                IntrinsicWidth(
+                                  child: Container(
+                                    //width: 120,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 8),
+                                    margin: EdgeInsets.only(
+                                        top: 8.0, left: 12.0, right: 12.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      color: isDarkMode
+                                          ? AppColor.BLACK
+                                          : Colors.grey.shade300,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Icon(
+                                          Icons.location_on,
+                                          size: 20,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          "Select Location on map",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        SizedBox(width: 5),
+                                      ],
                                     ),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                _buildFooter(context)
                               ],
                             ),
                           ),
@@ -273,7 +306,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                     ),
                   ),
                 ),
-              /*  Align(
+                /*  Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -327,50 +360,44 @@ class _BookRideScreenState extends State<BookRideScreen> {
           ),
         ),
         IntrinsicWidth(
-          child: GestureDetector(
-            onTap: () => {
-              bookRideApi()
-              //_showDatePicker()
-            },
-            child: Container(
-              width: 120,
-              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
-              margin: EdgeInsets.only(top: 8.0, left: 12.0, right: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: isDarkMode ? AppColor.BLACK : Colors.grey.shade300,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 2,
-                  ),
-                ],
-              ),
-              child: Row(
-                key: _buttonKey,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Icon(
-                    Icons.account_circle_rounded,
-                    size: 20,
-                  ),
-                  selectedGender?.isEmpty == true
-                      ? Container(
-                          child: Text("Select $labelText"),
-                        )
-                      : Text(
-                          "${selectedGender}".isEmpty
-                              ? '$labelText'
-                              : capitalizeFirstLetter("${selectedGender}"),
-                          style: TextStyle(fontSize: 15),
-                        ),
-                  //SizedBox(width: 5),
-                  Icon(
-                    Icons.keyboard_arrow_down_sharp,
-                    size: 20,
-                  ),
-                ],
-              ),
+          child: Container(
+            width: 120,
+            padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
+            margin: EdgeInsets.only(top: 8.0, left: 12.0, right: 12.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: isDarkMode ? AppColor.BLACK : Colors.grey.shade300,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade300,
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+            child: Row(
+              key: _buttonKey,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Icon(
+                  Icons.account_circle_rounded,
+                  size: 20,
+                ),
+                selectedGender?.isEmpty == true
+                    ? Container(
+                        child: Text("Select $labelText"),
+                      )
+                    : Text(
+                        "${selectedGender}".isEmpty
+                            ? '$labelText'
+                            : capitalizeFirstLetter("${selectedGender}"),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                //SizedBox(width: 5),
+                Icon(
+                  Icons.keyboard_arrow_down_sharp,
+                  size: 20,
+                ),
+              ],
             ),
           ),
         ),
@@ -378,7 +405,52 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  void _showDatePicker() {
+  Widget _buildFooter(BuildContext context) {
+    return Center(
+      child: MaterialButton(
+        minWidth: screenWidth * 0.85,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+        color: inputValid ? AppColor.PRIMARY_ACCENT : AppColor.GREY_TEXT_COLOR,
+        height: 50,
+        onPressed: () async {
+          hideKeyBoard();
+          //Navigator.pushNamed(context, '/SignInScreen');
+          _isValidInput();
+          //bookRideApi();
+          _showDatePicker(InitiateRideResponse(
+              id: 31,
+              customer_name: "Vibhuti",
+              cust_phone: "97765456336",
+              customer_email: "simran5@cust.com",
+              service_type: "rides",
+              intStatus: "initiated",
+              pickup_latitude: "30.691873",
+              pickup_longitude: "76.694864",
+              destination_latitude: "30.703051",
+              destination_longitude: "76.804272",
+              notification_sent: false,
+              createdAt: "2025-01-17T12:26:35.262Z",
+              updatedAt: "2025-01-17T12:26:35.262Z",
+              auto_cancel_at: null,
+              unique_id: "F5A96D2439414108",
+              fare: "100.0",
+              driver_id: null,
+              pickup_address:
+                  "Sector 76, Sector 89, Lakhnaur, Sahibzada Ajit Singh Nagar, Punjab, 160071, India",
+              destination_address:
+                  "Phase 1, Ward 20, Chandigarh, 160028, India"));
+        },
+        child: Text(
+          Languages.of(context)!.labelConfirm,
+          style: TextStyle(
+              color: inputValid ? Colors.white : AppColor.PRIMARY,
+              fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  void _showDatePicker(InitiateRideResponse? response) {
     showModalBottomSheet(
       enableDrag: false,
       backgroundColor:
@@ -392,9 +464,29 @@ class _BookRideScreenState extends State<BookRideScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                width: 15,
+                height: 15,
               ),
-              Text("Switch Ride"),
+              Text(
+                "Confirm Ride",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              Container(
+                height: 100,
+                width: 100,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    // borderRadius: BorderRadius.circular(100),
+                    //color: currentIconBdColor,
+                    ),
+                child: SvgPicture.asset(
+                  "assets/car_icon.svg",
+                  colorFilter: ColorFilter.mode(
+                    Colors.transparent,
+                    // Use a contrasting color to test visibility
+                    BlendMode.dst,
+                  ),
+                ),
+              ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -432,11 +524,22 @@ class _BookRideScreenState extends State<BookRideScreen> {
                   ],
                 ),
               ),
-              TextButton(
-                onPressed: () => Navigator.pop(context), // Close on cancel
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.white),
+              MaterialButton(
+                minWidth: screenWidth * 0.85,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                color: AppColor.PRIMARY_ACCENT,
+                height: 50,
+                onPressed: () => Navigator.pop(context),
+                // Close on cancel
+                child: Container(
+                  width: screenWidth * 0.8,
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Confirm Ride',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               SizedBox(
@@ -551,12 +654,17 @@ class _BookRideScreenState extends State<BookRideScreen> {
   void bookRideApi() async {
     bool isConnected = await _connectivityService.isConnected();
     print(("isConnected - ${isConnected}"));
-    ToastComponent.showToast(context: context, message: "::Clicked", duration: maxDuration);
+    if (inputValid) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    ToastComponent.showToast(
+        context: context, message: "::Clicked", duration: maxDuration);
     if (!isConnected) {
       setState(() {
         isApiLoading = false;
         isInternetConnected = false;
-        receiver.stop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(Languages.of(context)!.labelNoInternetConnection),
@@ -574,11 +682,11 @@ class _BookRideScreenState extends State<BookRideScreen> {
             customerEmail: "simran5@cust.com",
             customerName: "Vibhuti",
             custPhone: "97765456336",
-            destinationLatitude: "30.7030512",
-            destinationLongitude: "76.8042724",
+            destinationLatitude: "${destinationLocation?.latitude}",
+            destinationLongitude: "${destinationLocation?.longitude}",
             fare: "100.00",
-            pickupLatitude: "0.30691873e2",
-            pickupLongitude: "0.76694864e2",
+            pickupLatitude: "${pickUpLocation?.latitude}",
+            pickupLongitude: "${pickUpLocation?.longitude}",
             serviceType: "rides");
         await Provider.of<MainViewModel>(context, listen: false)
             .createRideRequestApi(
@@ -672,15 +780,6 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  Future<void> intializeDatabase() async {
-    database = await $FloorBDOneDatabase
-        .databaseBuilder('bd_pass_database.db')
-        .build();
-
-    dashboardTransactionDao = database.dashboardTransactionDao;
-    customerDataDao = database.personDao;
-  }
-
   Future<Widget> getDashboardData(
       BuildContext context, ApiResponse apiResponse) async {
     InitiateRideResponse? response = apiResponse.data as InitiateRideResponse?;
@@ -694,7 +793,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
         return Center(child: CustomLoader());
       case Status.COMPLETED:
         print("GetDashboardData : ${response?.customer_name}");
-
+        _showDatePicker(response);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") ==
@@ -762,5 +861,82 @@ class _BookRideScreenState extends State<BookRideScreen> {
           child: Text('Loading...'),
         );
     }
+  }
+
+  void _getCurrentLocation(bool isPickUp) async {
+    try {
+      Position position = await _determinePosition();
+      print('Current location: ${position.latitude}, ${position.longitude}');
+      setState(() {
+        currentLocation = LatLng(position.latitude, position.longitude);
+      });
+
+      LocationData? locationData =
+          await LocationSearch.show(context: context, mode: Mode.fullscreen);
+      ToastComponent.showToast(
+          context: context,
+          message: "${locationData?.address}",
+          duration: maxDuration);
+      print("Locations: : : ${locationData?.address}");
+      setState(() {
+        inputValid = true;
+        isPickUp == true
+            ? pickUpLocation = locationData
+            : destinationLocation = locationData;
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void _isValidInput() {
+    //print(input);
+    if (pickUpLocation != null && destinationLocation != null) {
+      setState(() {
+        inputValid = true;
+      });
+    } else {
+      setState(() {
+        inputValid = false;
+      });
+    }
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      throw Exception('Location services are disabled.');
+    }
+
+    // Check for location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        // Permissions are denied, show an error
+        throw Exception('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      // Permissions are denied forever, handle accordingly
+      throw Exception('Location permissions are permanently denied.');
+    }
+
+    // Retrieve the current location
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
 }

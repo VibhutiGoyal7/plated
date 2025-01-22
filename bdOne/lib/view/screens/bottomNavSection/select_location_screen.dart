@@ -9,10 +9,10 @@ import 'package:BDOne/view/component/custom_button_component.dart';
 import 'package:BDOne/view/component/listComponents/wrap_component.dart';
 import 'package:BDOne/view/component/text_component.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
+import 'package:flutter_location_search/flutter_location_search.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -48,11 +48,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   late double screenWidth;
   bool isDarkMode = false;
   final ConnectivityService _connectivityService = ConnectivityService();
-  BroadcastReceiver receiver = BroadcastReceiver(
-    names: <String>[
-      "de.kevlatus.flutter_broadcasts_example.demo_action",
-    ],
-  );
   late MainViewModel _viewModel;
   late ApiResponse apiResponse;
   List<LatLng> routePoints = [];
@@ -72,16 +67,11 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
     ));
     _viewModel = Provider.of<MainViewModel>(context, listen: false);
     _getCurrentLocation();
-    receiver.start();
-    receiver.messages.listen((message) {
-      print("BroadCast");
-    });
+
   }
 
   @override
   void dispose() {
-    receiver.stop();
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -105,7 +95,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
             children: [
               CustomScrollView(
                 slivers: [
-                  SliverToBoxAdapter(child: driverStatusWidget()),
+                  SliverToBoxAdapter(child: locationSearch()
+                  //driverStatusWidget()
+                  ),
                   SliverToBoxAdapter(
                     child: Stack(
                       children: [
@@ -427,6 +419,13 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
         currentLocation = LatLng(position.latitude, position.longitude);
       });
 
+      LocationData? locationData = await LocationSearch.show(
+          context: context,
+          mode: Mode.fullscreen
+      );
+      ToastComponent.showToast(context: context, message: "${locationData?.address}", duration: maxDuration);
+      print("Locations: : : ${locationData?.address}");
+
     } catch (e) {
       print('Error: $e');
     }
@@ -543,15 +542,16 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
 
   @override
   Widget locationSearch() {
-    return Scaffold(
-      appBar: AppBar(title: Text('OSM Search')),
-      body: Column(
+    return Container(
+      height: 200,
+      child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
               onSubmitted: _searchLocation,
+              onChanged: _searchLocation,
               decoration: InputDecoration(
                 hintText: 'Search location...',
                 border: OutlineInputBorder(),
@@ -568,6 +568,16 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                   subtitle: Text(
                       'Lat: ${result['lat']}, Lon: ${result['lon']}'),
                   onTap: () {
+                    setState(() {
+                      currentLocation = LatLng(double.parse(result['lat']), double.parse(result['lon']));
+                    });
+                    Future.delayed(
+                      Duration(milliseconds: 100),
+                          () {
+                        _mapController.move(
+                            currentLocation!, 13.0);
+                      },
+                    );
                     print('Selected: ${result['display_name']}');
                   },
                 );

@@ -89,6 +89,7 @@ dependencies:
   geolocator: ^12.0.0
   maps_launcher: ^2.2.1
   geocoding: ^2.0.4
+  flutter_location_search: ^1.2.0
 
 dev_dependencies:
   flutter_test:

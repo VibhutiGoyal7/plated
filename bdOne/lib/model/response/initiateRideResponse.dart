@@ -18,8 +18,9 @@ class InitiateRideResponse {
   final String? driver_id;
   final String? pickup_address;
   final String? message;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? destination_address;
 
   InitiateRideResponse(
       {this.customer_name,
@@ -41,6 +42,7 @@ class InitiateRideResponse {
       this.pickup_latitude,
       this.message,
       this.pickup_longitude,
+      this.destination_address,
       this.service_type});
 
   factory InitiateRideResponse.fromJson(Map<String, dynamic> json) {
@@ -51,12 +53,8 @@ class InitiateRideResponse {
       pickup_longitude: json['data']?['pickup_longitude'] as String?,
       id: json['data']?['id'] as int?,
       intStatus: json['data']?['status'] as String?,
-      createdAt: json['data']?['created_at'] != null
-          ? DateTime.parse(json['data']?['created_at'] as String)
-          : null,
-      updatedAt: json['data']?['updated_at'] != null
-          ? DateTime.parse(json['data']?['updated_at'] as String)
-          : null,
+      createdAt: json['data']?['created_at'] as String?,
+      updatedAt: json['data']?['updated_at'] as String?,
       pickup_latitude: json['data']?['pickup_latitude'] as String?,
       pickup_address: json['data']?['pickup_address'] as String?,
       notification_sent: json['data']?['notification_sent'] as bool?,
@@ -70,6 +68,7 @@ class InitiateRideResponse {
       cust_phone: json['data']?['cust_phone'] as String?,
       customer_name: json['data']?['customer_name'] as String?,
       unique_id: json['data']?['unique_id'] as String?,
+      destination_address: json['data']?['destination_address'] as String?,
     );
   }
 }
