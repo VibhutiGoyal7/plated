@@ -23,6 +23,7 @@ import 'package:BDOne/view/screens/bottomNavSection/accountSection/privacy_polic
 import 'package:BDOne/view/screens/bottomNavSection/accountSection/support_screen.dart';
 import 'package:BDOne/view/screens/bottomNavSection/bottom_nav.dart';
 import 'package:BDOne/view/screens/bottomNavSection/manage_devices_screen.dart';
+import 'package:BDOne/view/screens/bottomNavSection/select_location_screen.dart';
 import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
@@ -302,7 +303,9 @@ class _MyAppState extends State<MyApp> {
             '/_RideHomeScreenState': (context) {
               return RideHomeScreen();
             },
-
+            '/SelectLocationScreen': (context) {
+              return SelectLocationScreen();
+            },
             //Ride Section
             '/RideHomeScreen': (context) {
               return RideHomeScreen();

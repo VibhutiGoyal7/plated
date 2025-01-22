@@ -188,9 +188,14 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                             size: 18,
                                           ),
                                           SizedBox(width: 10),
-                                          Text(
-                                            "Pick up location",
-                                            style: TextStyle(fontSize: 16),
+                                          GestureDetector(
+                                            onTap: (){
+                                              Navigator.pushNamed(context, "/SelectLocationScreen");
+                                            },
+                                            child: Text(
+                                              "Pick up location",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
                                           )
                                         ],
                                       ),
