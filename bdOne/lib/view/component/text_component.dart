@@ -5,14 +5,12 @@ class TextComponent extends StatefulWidget {
   final String text;
   final double fontSize;
   final bool isBold;
-  final List<Widget> wrapItems;
 
   const TextComponent({
     Key? key,
     required this.text,
     required this.fontSize,
     required this.isBold,
-    required this.wrapItems,
   }) : super(key: key);
 
   @override

@@ -2,7 +2,8 @@ import 'dart:io';
 
 
 abstract class BaseService {
-  final String BaseUrl = "https://trnsapi.bd-one.net/";
+  //final String BaseUrl = "https://trnsapi.bd-one.net/";
+  final String BaseUrl = "http://192.168.1.93:3000/";
 
   String getFullUrl(String endpoint) {
     return "$BaseUrl$endpoint";

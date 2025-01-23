@@ -7,6 +7,7 @@ class RideRequest {
   String? pickupLongitude;
   String? destinationLatitude;
   String? destinationLongitude;
+  int? vehicleCategoryId;
   String? fare;
 
   RideRequest({
@@ -17,6 +18,7 @@ class RideRequest {
     required this.pickupLatitude,
     required this.pickupLongitude,
     required this.destinationLatitude,
+    required this.vehicleCategoryId,
     required this.destinationLongitude,
     required this.fare,
   });
@@ -29,6 +31,7 @@ class RideRequest {
       'service_type': serviceType,
       'pickup_latitude': pickupLatitude,
       'pickup_longitude': pickupLongitude,
+      'vehicle_category_id': vehicleCategoryId,
       'destination_latitude': destinationLatitude,
       'destination_longitude': destinationLongitude,
       'fare': fare,

@@ -28,6 +28,7 @@ import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
 import 'package:BDOne/view/screens/rideSection/book_ride_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_booked_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_bottom_nav.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
@@ -305,6 +306,9 @@ class _MyAppState extends State<MyApp> {
             },
             '/SelectLocationScreen': (context) {
               return SelectLocationScreen();
+            },
+            '/RideBookedScreen': (context) {
+              return RideBookedScreen();
             },
             //Ride Section
             '/RideHomeScreen': (context) {
