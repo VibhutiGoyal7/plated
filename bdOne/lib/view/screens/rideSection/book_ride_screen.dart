@@ -31,7 +31,8 @@ import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/session_expired_dialog.dart';
 
 class BookRideScreen extends StatefulWidget {
@@ -151,7 +152,6 @@ class _BookRideScreenState extends State<BookRideScreen> {
         .of(context)
         .size
         .height;
-    DateTime? lastBackPressed;
     return Scaffold(
       appBar: AppBar(
         /*leading: GestureDetector(
@@ -346,7 +346,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                         dismissible: false, color: Colors.black54),
                     // Loader indicator
                     Center(
-                      child: CustomLoader(),
+                      child: CustomCircularProgress(),
                     ),
                   ],
                 )
@@ -448,32 +448,132 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  void _showVehicleTypes(List<VehicleDetails>? response) {
+  void _showVehicleTypes(VehicleListResponse? response) {
     var selected = vehicleList.first;
     showModalBottomSheet(
       enableDrag: false,
       backgroundColor:
       isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.LIGHT_CARD_COLOR,
       context: context,
-      shape: Border(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25),)),
       builder: (BuildContext context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
               return Container(
-                height: screenHeight * 0.65,
+                height: screenHeight * 0.7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 15,
+                      height: 25,
                     ),
-                    Text(
-                      "Select your preferred ride",
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-
                     Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 15),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              width: 0.2, color: Colors.black54)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                size: 18,
+                              ),
+                              SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  _getCurrentLocation(true);
+                                  //Navigator.pushNamed(context, "/SelectLocationScreen");
+                                },
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: screenWidth / 2,
+                                      maxWidth: screenWidth * 0.8),
+                                  child: Text(
+                                    pickUpLocation == null
+                                        ? "Pick up location"
+                                        : "${pickUpLocation
+                                        ?.address}",
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        overflow:
+                                        TextOverflow.ellipsis),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Container(
+                            height: 18,
+                            width: 1,
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 0),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.my_location,
+                                size: 18,
+                              ),
+                              SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  _getCurrentLocation(false);
+                                  //Navigator.pushNamed(context, "/SelectLocationScreen");
+                                },
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: screenWidth / 2,
+                                      maxWidth: screenWidth * 0.8),
+                                  child: Text(
+                                    destinationLocation == null
+                                        ? "Destination"
+                                        : "${destinationLocation
+                                        ?.address}",
+                                    maxLines: 1,
+                                    style: TextStyle(fontSize: 16),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 14),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Select your preferred ride",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Row(
+                            children: [
+                              Text("Distance: "),
+                              Text("${response?.estimatedDist}"),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    /*Container(
                       height: 100,
                       width: 100,
                       padding: EdgeInsets.all(8),
@@ -489,8 +589,8 @@ class _BookRideScreenState extends State<BookRideScreen> {
                           BlendMode.dst,
                         ),
                       ),
-                    ),
-                    WrapComponent(height: screenHeight * 0.4,
+                    ),*/
+                    WrapComponent(height: screenHeight * 0.38,
                         width: screenWidth,
                         isHorizontal: false,
                         wrapItems: vehicleList.map((result) {
@@ -566,6 +666,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                           );
                         },
                         ).toList()),
+                    SizedBox(height: 15,),
 
                     MaterialButton(
                       minWidth: screenWidth * 0.85,
@@ -574,9 +675,6 @@ class _BookRideScreenState extends State<BookRideScreen> {
                       color: AppColor.PRIMARY_ACCENT,
                       height: 50,
                       onPressed: () {
-                        Navigator.pop(context);
-                        // Navigator.pushNamed(context, "/RideBookedScreen");
-                        // _showLoaderDialog(response);
                         bookRideApi(selected);
                       },
                       // Close on cancel
@@ -606,79 +704,75 @@ class _BookRideScreenState extends State<BookRideScreen> {
   void _showLoaderDialog() {
     showModalBottomSheet(
       enableDrag: false,
+      isDismissible: false,
       backgroundColor:
       isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.LIGHT_CARD_COLOR,
       context: context,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25), topRight: Radius.circular(25))),
       builder: (BuildContext context) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, "/RideBookedScreen");
-          },
-          child: Container(
-            height: screenHeight * 0.65,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Column(
-                  children: [
-                    SizedBox(height: 55,),
-                    LinearLoader(),
-                    SizedBox(height: 25,),
-                    TextComponent(text: "Please wait while we contact drivers.",
-                        fontSize: 16,
-                        isBold: false),
-                    SizedBox(height: 30,),
+        return Container(
+          height: screenHeight * 0.65,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Column(
+                children: [
+                  SizedBox(height: 55,),
+                  LinearLoader(),
+                  SizedBox(height: 25,),
+                  TextComponent(text: "Please wait while we contact drivers.",
+                      fontSize: 16,
+                      isBold: false),
+                  SizedBox(height: 30,),
 
-                    Container(
-                      height: 160,
-                      width: 160,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        // borderRadius: BorderRadius.circular(100),
-                        //color: currentIconBdColor,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/car_icon.svg",
-                        colorFilter: ColorFilter.mode(
-                          Colors.transparent,
-                          // Use a contrasting color to test visibility
-                          BlendMode.dst,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                GestureDetector(
-                  onTap: () {
-
-                  },
-                  child: Container(
-                    width: screenWidth * 0.7,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 40),
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 12.5, vertical: 12),
+                  Container(
+                    height: 160,
+                    width: 160,
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                        border:
-                        Border.all(color: AppColor.TEXT_RED, width: 0.5),
-                        borderRadius: BorderRadius.circular(8),
-                        color: isDarkMode ? Colors.white : Colors.white),
-                    child: Text(
-                      "CANCEL REQUEST",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color:
-                          isDarkMode ? Colors.white : AppColor.TEXT_RED),
+                      // borderRadius: BorderRadius.circular(100),
+                      //color: currentIconBdColor,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/car_icon.svg",
+                      colorFilter: ColorFilter.mode(
+                        Colors.transparent,
+                        // Use a contrasting color to test visibility
+                        BlendMode.dst,
+                      ),
                     ),
                   ),
+                ],
+              ),
+
+              GestureDetector(
+                onTap: () {
+
+                },
+                child: Container(
+                  width: screenWidth * 0.7,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 40),
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 12.5, vertical: 12),
+                  decoration: BoxDecoration(
+                      border:
+                      Border.all(color: AppColor.TEXT_RED, width: 0.5),
+                      borderRadius: BorderRadius.circular(8),
+                      color: isDarkMode ? Colors.white : Colors.white),
+                  child: Text(
+                    "CANCEL REQUEST",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color:
+                        isDarkMode ? Colors.white : AppColor.TEXT_RED),
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -792,8 +886,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
         isLoading = true;
       });
     }
-    ToastComponent.showToast(
-        context: context, message: "::Clicked", duration: maxDuration);
+
     if (!isConnected) {
       setState(() {
         isApiLoading = false;
@@ -846,8 +939,9 @@ class _BookRideScreenState extends State<BookRideScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
+        Navigator.pop(context);
         print("GetDashboardData : ${response?.customer_name}");
         _showLoaderDialog();
         setState(() {
@@ -888,8 +982,6 @@ class _BookRideScreenState extends State<BookRideScreen> {
         isLoading = true;
       });
     }
-    ToastComponent.showToast(
-        context: context, message: "::Clicked", duration: maxDuration);
     if (!isConnected) {
       setState(() {
         isApiLoading = false;
@@ -935,13 +1027,13 @@ class _BookRideScreenState extends State<BookRideScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("vehicle list : ${response?.destination_latitude}");
         setState(() {
           vehicleList = response?.vehicles ?? [];
         });
-        _showVehicleTypes(response?.vehicles);
+        _showVehicleTypes(response);
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") ==
@@ -969,8 +1061,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
   void rideStatusApi(String uniqueId) async {
     bool isConnected = await _connectivityService.isConnected();
     print(("isConnected - ${isConnected}"));
-    ToastComponent.showToast(
-        context: context, message: "::Clicked", duration: maxDuration);
+
     if (!isConnected) {
       setState(() {
         isApiLoading = false;
@@ -985,7 +1076,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
     } else {
       if (mounted) {
         setState(() {
-          isApiLoading = true;
+          isApiLoading = false;
         });
         DriverCurrentLocRequest request = DriverCurrentLocRequest(uniqueId: "$uniqueId");
         await Provider.of<MainViewModel>(context, listen: false)
@@ -1012,11 +1103,13 @@ class _BookRideScreenState extends State<BookRideScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         if (response?.rideStatus == "accepted") {
-          Navigator.pushNamed(context, "/RideBookedScreen");
+          Navigator.pop(context);
+          Navigator.pushNamed(context, "/RideBookedScreen", arguments: response);
         } else {
+          await Future.delayed(Duration(seconds: 2));
           rideStatusApi("$uniqueId");
         }
         return Container(); // Return an empty container as you'll navigate away
@@ -1139,7 +1232,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
         return Container(); // Return an empty container as you'll navigate away

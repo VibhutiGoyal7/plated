@@ -13,7 +13,7 @@ import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/textfield_component.dart';
 import '../../component/toastMessage.dart';
 
@@ -88,7 +88,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetSetUpAccountWidget : ${setUpAccountResponse?.firstName}");
         await Helper.saveProfileDetails(setUpAccountResponse);
@@ -324,7 +324,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
                             dismissible: false, color: Colors.transparent),
                         // Loader indicator
                         Center(
-                          child: CustomLoader(),
+                          child: CustomCircularProgress(),
                         ),
                       ],
                     )

@@ -5,7 +5,7 @@ class VehicleListResponse {
   final String? pickup_longitude;
   final String? destination_latitude;
   final String? destination_longitude;
-  final String? estimated_distance;
+  final String? estimatedDist;
   final String? fare;
   final String? pickup_address;
   final String? message;
@@ -17,10 +17,10 @@ class VehicleListResponse {
       this.destination_latitude,
       this.status,
       this.destination_longitude,
-      this.estimated_distance,
       this.fare,
       this.pickup_address,
       this.pickup_latitude,
+      this.estimatedDist,
       this.message,
       this.pickup_longitude,
       this.vehicles,
@@ -36,6 +36,7 @@ class VehicleListResponse {
       pickup_longitude: json['data']?['pickup_longitude'] as String?,
       pickup_latitude: json['data']?['pickup_latitude'] as String?,
       pickup_address: json['data']?['pickup_address'] as String?,
+      estimatedDist: json['data']?['estimated_distance'] as String?,
       fare: json['data']?['fare'] as String?,
       destination_longitude: json['data']?['destination_longitude'] as String?,
       destination_latitude: json['data']?['destination_latitude'] as String?,

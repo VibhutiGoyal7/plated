@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/notificationListResponse.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/shimmerComponents/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -242,7 +243,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             builder: (context, AsyncSnapshot<void> snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return Center(child: CustomLoader());
+                                return Center(child: CustomCircularProgress());
                               }
 
                               if (snapshot.hasError) {
@@ -483,7 +484,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         itemCount: dates.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
                           if (index == dates.length) {
-                            return Center(child: CustomLoader());
+                            return Center(child: CustomCircularProgress());
                           }
                           String date = dates[index];
                           List<NotificationDetails> historyForDate =

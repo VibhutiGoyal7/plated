@@ -6,7 +6,8 @@ import '../../../../model/apis/api_response.dart';
 import '../../../../model/response/countryListResponse.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
-import '../../../component/custom_loader.dart';
+import '../../../component/custom_circular_progress.dart';
+import '../../../component/custom_circular_progress.dart';
 
 class AboutBDOneScreen extends StatefulWidget {
   @override
@@ -150,7 +151,7 @@ class _AboutBDOneScreenState extends State<AboutBDOneScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
         return Container(); // Return an empty container as you'll navigate away

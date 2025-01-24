@@ -13,7 +13,7 @@ import '../../../../theme/AppColor.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/circluar_profile_image.dart';
 import '../../../component/connectivity_service.dart';
-import '../../../component/custom_loader.dart';
+import '../../../component/custom_circular_progress.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -242,7 +242,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print(
             "SignUpUsingMobile ${signUpResponse?.email} || ${signUpResponse?.phone_number}");

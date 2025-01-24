@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
+import '../../component/custom_circular_progress.dart';
 
 class SelectServiceScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -108,7 +109,7 @@ class _VendorLocationScreenState extends State<SelectServiceScreen> {
                     ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
-                      child: CustomLoader(),
+                      child: CustomCircularProgress(),
                     ),
                   ],
                 )

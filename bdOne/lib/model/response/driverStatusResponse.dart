@@ -2,6 +2,7 @@
 class DriverStatusResponse {
   final int? status;
   final String? pickup_latitude;
+  final String? uniqueId;
   final String? pickup_longitude;
   final String? destination_latitude;
   final String? destination_longitude;
@@ -23,6 +24,7 @@ class DriverStatusResponse {
       this.status,
       this.destination_longitude,
       this.estimatedDistance,
+      this.uniqueId,
       this.estimatedFare,
       this.pickup_address,
       this.pickup_latitude,
@@ -44,6 +46,7 @@ class DriverStatusResponse {
       pickup_longitude: json['data']?['pickup_longitude'] as String?,
       pickup_latitude: json['data']?['pickup_latitude'] as String?,
       pickup_address: json['data']?['pickup_address'] as String?,
+      uniqueId: json['data']?['unique_id'] as String?,
       estimatedFare: json['data']?['estimated_fare'] as String?,
       rideStatus: json['data']?['status'] as String?,
       firstName: json['data']?['first_name'] as String?,

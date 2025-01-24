@@ -21,15 +21,18 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../model/apis/api_response.dart';
 import '../../../../theme/AppColor.dart';
 import '../../../../view_model/main_view_model.dart';
-import '../../../model/response/initiateRideResponse.dart';
+import '../../../languageSection/Languages.dart';
+import '../../../model/request/driverCurrentLocRequest.dart';
 import '../../component/accepted_request_widget.dart';
 import '../../component/connectivity_service.dart';
+import '../../component/custom_circular_progress.dart';
+import '../../component/session_expired_dialog.dart';
 
 class RideBookedScreen extends StatefulWidget {
-
   final DriverStatusResponse? data;
 
   RideBookedScreen({Key? key, this.data}) : super(key: key);
+
   @override
   _RideBookedScreenState createState() => _RideBookedScreenState();
 }
@@ -40,6 +43,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
   LatLng? currentLocation;
   bool? dashBoardKycStatus = true;
   LatLng pickupLocation = LatLng(30.699135, 76.723666);
+  LatLng driverLocation = LatLng(0, 0);
   LatLng finalLocation = LatLng(30.72589, 76.75787);
   DriverStatusResponse acceptedRide = DriverStatusResponse();
 
@@ -49,6 +53,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
   bool isLoading = false;
   bool isApiLoading = false;
   bool isInternetConnected = true;
+  bool isRideStarted = false;
   late double screenHeight;
   late double screenWidth;
   bool isDarkMode = false;
@@ -58,11 +63,9 @@ class _RideBookedScreenState extends State<RideBookedScreen>
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
   );
-  late MainViewModel _viewModel;
   late ApiResponse apiResponse;
   List<LatLng> routePoints = [];
   String _locationMessage = "Fetching Route...";
-  static const platform = MethodChannel('app.channel.pip');
   bool isPipMode = false;
 
   @override
@@ -70,22 +73,32 @@ class _RideBookedScreenState extends State<RideBookedScreen>
     super.initState();
     setState(() {
       acceptedRide = widget.data ?? DriverStatusResponse();
-
-      pickupLocation = LatLng(double.parse("${acceptedRide?.pickup_latitude}"), double.parse("${acceptedRide?.destination_longitude}"));
-      finalLocation = LatLng(double.parse("${acceptedRide?.destination_latitude}"), double.parse("${acceptedRide?.destination_longitude}"));
+      pickupLocation = LatLng(double.parse("${acceptedRide.pickup_latitude}"),
+          double.parse("${acceptedRide.pickup_longitude}"));
+      finalLocation = LatLng(
+          double.parse("${acceptedRide.destination_latitude}"),
+          double.parse("${acceptedRide.destination_longitude}"));
+      if (acceptedRide.driverCurrentLong != null) {
+        driverLocation = LatLng(
+            double.parse("${acceptedRide.driverCurrentLat}"),
+            double.parse("${acceptedRide.driverCurrentLong}"));
+      }
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarIconBrightness:
           Brightness.light, // Light icons for the status bar
       //statusBarBrightness: Brightness.light,       // Status bar brightness (for iOS)
     ));
-    _viewModel = Provider.of<MainViewModel>(context, listen: false);
     _getCurrentLocation(null);
     //getDashBoardData();
     receiver.start();
     receiver.messages.listen((message) {
       print("BroadCast");
     });
+    if(driverLocation != LatLng(0,0)) {
+      _fetchRoute(driverLocation, pickupLocation);
+    }
+    rideStatusApi();
   }
 
   @override
@@ -99,300 +112,242 @@ class _RideBookedScreenState extends State<RideBookedScreen>
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    DateTime? lastBackPressed;
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool didPop) {
-        print("DashBoard $didPop");
-        if (didPop) {
-          return;
-        }
-        if (kDebugMode) {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            showExitDialog(context, screenWidth, screenHeight, database);
-          } else {
-            SystemNavigator.pop();
-          }
-        } else {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            showExitDialog(context, screenWidth, screenHeight, database);
-          } else {
-            SystemNavigator.pop();
-          }
-        }
-      },
-      child: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (Platform.isIOS) {
-            if (details.velocity.pixelsPerSecond.dx > 50) {
-              if (isKeyboardOpen(context)) {
-                hideKeyBoard();
-              } else {
-                final now = DateTime.now();
-                const maxDuration = Duration(seconds: 2);
-                final isWarning = lastBackPressed == null ||
-                    now.difference(lastBackPressed!) > maxDuration;
-
-                if (isWarning) {
-                  lastBackPressed = DateTime.now();
-                  showExitDialog(context, screenWidth, screenHeight, database);
-                } else {
-                  SystemNavigator.pop();
-                }
-              }
-            }
-          }
-        },
-        child: Scaffold(
-          body: isPipMode
-              ? currentLocation != null
-                  ? FlutterMap(
-                      mapController: _mapController,
-                      options: MapOptions(
-                        onTap: (tapPosition, point) => {},
-                        onMapReady: () {
-                          Future.delayed(
-                            Duration(milliseconds: 100),
-                            () {
-                                adjustMapView();
-
-                            },
-                          );
+    return Scaffold(
+      body: isPipMode
+          ? currentLocation != null && !isRideStarted
+              ? FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    onTap: (tapPosition, point) => {},
+                    onMapReady: () {
+                      Future.delayed(
+                        Duration(milliseconds: 100),
+                        () {
+                          adjustMapView();
                         },
-                      ),
-                      children: [
-                        TileLayer(
-                          urlTemplate:
-                              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-                          retinaMode: true,
-                          subdomains: ['a', 'b', 'c'],
-                          additionalOptions: {
-                            'attribution':
-                                '© OpenStreetMap contributors, © CARTO',
-                          },
+                      );
+                    },
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                      retinaMode: true,
+                      subdomains: ['a', 'b', 'c'],
+                      additionalOptions: {
+                        'attribution':
+                            '© OpenStreetMap contributors, © CARTO',
+                      },
+                    ),
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: routePoints,
+                          strokeWidth: 2,
+                          color: Colors.blue,
                         ),
-                        PolylineLayer(
-                          polylines: [
-                              Polyline(
-                                points: routePoints,
-                                strokeWidth: 2,
-                                color: Colors.blue,
-                              ),
-                            // Line from pickup location to drop location
-                            if (requestStatus == "accepted")
-                              Polyline(
-                                  points: [pickupLocation, finalLocation],
-                                  strokeWidth: 1,
-                                  color: Colors.black,
-                                  pattern:
-                                      StrokePattern.dashed(segments: [5, 3])),
-                          ],
-                        ),
-                        MarkerLayer(
-                          markers: [
-                            Marker(
-                              point: currentLocation ?? LatLng(0, 0),
-                              child: Icon(
-                                Icons.local_taxi_rounded,
-                                color: Colors.blue,
-                                size: 25.0,
-                              ),
-                            ),
-                            Marker(
-                              point: pickupLocation,
-                              child:Icon(
-                                      Icons.location_on_outlined,
-                                      color: Colors.red,
-                                      size: 30.0,
-                                    )
-                            ),
-                            Marker(
-                              point: finalLocation,
-                              child: Icon(
-                                      Icons.location_on,
-                                      color: Colors.green,
-                                      size: 30.0,
-                                    )
-                            ),
-                          ],
-                        ),
+                        // Line from pickup location to drop location
+                        if (requestStatus == "accepted")
+                          Polyline(
+                              points: [pickupLocation, finalLocation],
+                              strokeWidth: 1,
+                              color: Colors.black,
+                              pattern:
+                                  StrokePattern.dashed(segments: [5, 3])),
                       ],
-                    )
-                  : SizedBox()
-              : RefreshIndicator(
-                  color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY_GREEN,
-                  onRefresh: () {
-                    print("Refresh");
-                    return Future.delayed(Duration(seconds: 2), () {
-                      //_fetchDashboardData();
-                    });
-                  },
-                  child: Stack(
-                    children: [
-                      CustomScrollView(
-                        slivers: [
-                          SliverToBoxAdapter(
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: screenHeight ,
-                                  child: currentLocation != null
-                                      ? FlutterMap(
-                                          mapController: _mapController,
-                                          options: MapOptions(
-                                            onTap: (tapPosition, point) => {},
-                                            onMapReady: () {
-                                              Future.delayed(
-                                                Duration(milliseconds: 100),
-                                                () {
-                                                    adjustMapView();
-                                                   /* _mapController.move(
-                                                        currentLocation!,
-                                                        13.0);*/
-
-                                                },
-                                              );
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: currentLocation ?? LatLng(0, 0),
+                          child: Icon(
+                            Icons.my_location_rounded,
+                            color: Colors.black,
+                            size: 25.0,
+                          ),
+                        ),
+                        Marker(
+                          point: driverLocation ?? LatLng(0, 0),
+                          child: Icon(
+                            Icons.local_taxi_rounded,
+                            color: Colors.blue,
+                            size: 25.0,
+                          ),
+                        ),
+                        Marker(
+                            point: pickupLocation,
+                            child: Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.red,
+                              size: 30.0,
+                            )),
+                        Marker(
+                            point: finalLocation,
+                            child: Icon(
+                              Icons.location_on,
+                              color: Colors.green,
+                              size: 30.0,
+                            )),
+                      ],
+                    ),
+                  ],
+                )
+              : SizedBox()
+          : RefreshIndicator(
+              color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY_GREEN,
+              onRefresh: () {
+                print("Refresh");
+                return Future.delayed(Duration(seconds: 2), () {
+                  //_fetchDashboardData();
+                });
+              },
+              child: Stack(
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: screenHeight,
+                              child: currentLocation != null && !isRideStarted
+                                  ? FlutterMap(
+                                      mapController: _mapController,
+                                      options: MapOptions(
+                                        onTap: (tapPosition, point) => {},
+                                        onMapReady: () {
+                                          Future.delayed(
+                                            Duration(milliseconds: 100),
+                                            () {
+                                              adjustMapView();
+                                              /* _mapController.move(
+                                                    currentLocation!,
+                                                    13.0);*/
                                             },
-                                          ),
-                                          children: [
-                                            TileLayer(
-                                              urlTemplate:
-                                                  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-                                              retinaMode: true,
-                                              subdomains: ['a', 'b', 'c'],
-                                              additionalOptions: {
-                                                'attribution':
-                                                    '© OpenStreetMap contributors, © CARTO',
-                                              },
+                                          );
+                                        },
+                                      ),
+                                      children: [
+                                        TileLayer(
+                                          urlTemplate:
+                                              "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                                          retinaMode: true,
+                                          subdomains: ['a', 'b', 'c'],
+                                          additionalOptions: {
+                                            'attribution':
+                                                '© OpenStreetMap contributors, © CARTO',
+                                          },
+                                        ),
+                                        PolylineLayer(
+                                          polylines: [
+                                            Polyline(
+                                              points: routePoints,
+                                              strokeWidth: 2,
+                                              color: Colors.blue,
                                             ),
-                                            PolylineLayer(
-                                              polylines: [
-                                                  Polyline(
-                                                    points: routePoints,
-                                                    strokeWidth: 2,
-                                                    color: Colors.blue,
-                                                  ),
-                                                // Line from pickup location to drop location
-                                                if (
-                                                    requestStatus ==
-                                                        "accepted")
-                                                  Polyline(
-                                                      points: [
-                                                        pickupLocation,
-                                                        finalLocation
-                                                      ],
-                                                      strokeWidth: 1,
-                                                      color: Colors.black,
-                                                      pattern: StrokePattern
-                                                          .dashed(segments: [
+                                            // Line from pickup location to drop location
+                                            if (requestStatus == "accepted")
+                                              Polyline(
+                                                  points: [
+                                                    pickupLocation,
+                                                    finalLocation
+                                                  ],
+                                                  strokeWidth: 1,
+                                                  color: Colors.black,
+                                                  pattern:
+                                                      StrokePattern.dashed(
+                                                          segments: [
                                                         5,
                                                         3
                                                       ])),
-                                              ],
-                                            ),
-                                            MarkerLayer(
-                                              markers: [
-                                                Marker(
-                                                  point: currentLocation ??
-                                                      LatLng(0, 0),
-                                                  child: Icon(
-                                                    Icons.local_taxi_rounded,
-                                                    color: Colors.blue,
-                                                    size: 25.0,
-                                                  ),
-                                                ),
-                                                Marker(
-                                                  point: pickupLocation,
-                                                  child: Icon(
-                                                          Icons
-                                                              .location_on_outlined,
-                                                          color: Colors.red,
-                                                          size: 30.0,
-                                                        )
-                                                ),
-                                                Marker(
-                                                  point: finalLocation,
-                                                  child:  Icon(
-                                                          Icons.location_on,
-                                                          color: Colors.green,
-                                                          size: 30.0,
-                                                        )
-                                                ),
-                                              ],
-                                            ),
                                           ],
-                                        )
-                                      : SizedBox(),
-                                ),Container(
-                                        height: screenHeight,
-                                        child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: AcceptedRequestWidget(
-                                              data: acceptedRide ??
-                                                  DriverStatusResponse(),
-                                              onCancelTap:
-                                                  () {
-                                                RequestCancelDialog();
-                                              },
-                                              requestStatus:
-                                                  "${requestStatus}",
-                                              onPhoneTap: () {
-                                                _launchPhoneDialer(
-                                                    acceptedRide
-                                                        .phoneNumber ??
-                                                        "");
-                                              },)
                                         ),
-                                      ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 35),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      GestureDetector(
-                                          onTap: (){
-                                            Navigator.pop(context);
-                                          },
-                                          child: Icon(Icons.arrow_back)),
-                                      FloatingActionButton(
-                                        backgroundColor: AppColor.SECONDARY,
-                                        mini: true,
-                                        onPressed: () {
-                                          _getCurrentLocation(null);
-                                        },
-                                        child: Icon(
-                                          Icons.location_searching_outlined,
-                                          size: 20,
+                                        MarkerLayer(
+                                          markers: [
+                                            Marker(
+                                              point: currentLocation ??
+                                                  LatLng(0, 0),
+                                              child: Icon(
+                                                Icons.local_taxi_rounded,
+                                                color: Colors.blue,
+                                                size: 25.0,
+                                              ),
+                                            ),
+                                            Marker(
+                                                point: pickupLocation,
+                                                child: Icon(
+                                                  Icons
+                                                      .location_on_outlined,
+                                                  color: Colors.red,
+                                                  size: 30.0,
+                                                )),
+                                            Marker(
+                                                point: finalLocation,
+                                                child: Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.green,
+                                                  size: 30.0,
+                                                )),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                      ],
+                                    )
+                                  : SizedBox(),
                             ),
-                          ),
-                        ],
+                            Container(
+                              height: screenHeight,
+                              child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: AcceptedRequestWidget(
+                                    isRideStarted: isRideStarted,
+                                    data: acceptedRide ??
+                                        DriverStatusResponse(),
+                                    onCancelTap: () {
+                                      RequestCancelDialog();
+                                    },
+                                    requestStatus: "${requestStatus}",
+                                    onPhoneTap: () {
+                                      _launchPhoneDialer(
+                                          acceptedRide.phoneNumber ?? "");
+                                    },
+                                  )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 35),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Icon(Icons.arrow_back)),
+                                  FloatingActionButton(
+                                    backgroundColor: AppColor.SECONDARY,
+                                    mini: true,
+                                    onPressed: () {
+                                      _getCurrentLocation(null);
+                                    },
+                                    child: Icon(
+                                      Icons.location_searching_outlined,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                     // isLoading ? CustomCircularProgress() : SizedBox(),
                     ],
                   ),
-                ),
-        ),
-      ),
+                  // isLoading ? CustomCircularProgress() : SizedBox(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -442,7 +397,6 @@ class _RideBookedScreenState extends State<RideBookedScreen>
                     verticalPadding: 10,
                     borderRadius: 6,
                     onTap: () {
-
                       Navigator.pop(context);
                     }),
               ],
@@ -451,6 +405,85 @@ class _RideBookedScreenState extends State<RideBookedScreen>
         );
       },
     );
+  }
+
+  void rideStatusApi() async {
+    bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
+
+    if (!isConnected) {
+      setState(() {
+        isApiLoading = false;
+        isInternetConnected = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          isApiLoading = false;
+        });
+        DriverCurrentLocRequest request =
+            DriverCurrentLocRequest(uniqueId: "${widget.data?.uniqueId}");
+        await Provider.of<MainViewModel>(context, listen: false)
+            .getDriverStatus(
+                "/api/v1/customer_app/service_requests/get_driver_location",
+                request);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        getRideStatusResponse(context, apiResponse);
+      }
+    }
+  }
+
+  Future<Widget> getRideStatusResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    DriverStatusResponse? response = apiResponse.data as DriverStatusResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${response?.message}");
+    setState(() {
+      isApiLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CustomCircularProgress());
+      case Status.COMPLETED:
+        if (response?.rideStatus == "ride_start") {
+          setState(() {
+            isRideStarted = true;
+          });
+        } else {
+          driverLocation = LatLng(
+              double.parse("${acceptedRide.driverCurrentLat}"),
+              double.parse("${acceptedRide.driverCurrentLong}"));
+          _fetchRoute(driverLocation, pickupLocation);
+          await Future.delayed(Duration(seconds: 10));
+          rideStatusApi();
+        }
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
+          print(apiResponse.message);
+          if (receiver.isListening) {
+            receiver.stop();
+          }
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {}
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
   }
 
   void _launchPhoneDialer(String phoneNumber) async {

@@ -48,6 +48,7 @@ import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/response/driverStatusResponse.dart';
 import 'model/response/notificationOtpResponse.dart';
 
 //GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -308,7 +309,9 @@ class _MyAppState extends State<MyApp> {
               return SelectLocationScreen();
             },
             '/RideBookedScreen': (context) {
-              return RideBookedScreen();
+              final args =
+              ModalRoute.of(context)!.settings.arguments as DriverStatusResponse?;
+              return RideBookedScreen(data: args,);
             },
             //Ride Section
             '/RideHomeScreen': (context) {

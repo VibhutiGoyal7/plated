@@ -10,7 +10,7 @@ import '../../../../model/response/countryListResponse.dart';
 import '../../../../theme/AppColor.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
-import '../../../component/custom_loader.dart';
+import '../../../component/custom_circular_progress.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -129,7 +129,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ModalBarrier(dismissible: false, color: Colors.white38),
                     // Loader indicator
                     Center(
-                      child: CustomLoader(),
+                      child: CustomCircularProgress(),
                     ),
                   ],
                 )
@@ -176,7 +176,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 

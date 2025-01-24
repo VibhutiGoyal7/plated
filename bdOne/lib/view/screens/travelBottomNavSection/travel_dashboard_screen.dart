@@ -21,7 +21,7 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/banner_list_widget.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/dashboard_category_component.dart';
 import '../../component/dropdown_widget.dart';
 import '../../component/search_component.dart';
@@ -557,7 +557,7 @@ class _TravelDashboardScreenState extends State<TravelDashboardScreen> {
                           dismissible: false, color: Colors.transparent),
                       // Loader indicator
                       Center(
-                        child: CustomLoader(),
+                        child: CustomCircularProgress(),
                       ),
                     ],
                   )
@@ -856,7 +856,7 @@ class _TravelDashboardScreenState extends State<TravelDashboardScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetDashboardData : ${dashboardResponse?.customerData?.email}");
 
@@ -905,7 +905,7 @@ class _TravelDashboardScreenState extends State<TravelDashboardScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
         return Container(); // Return an empty container as you'll navigate away

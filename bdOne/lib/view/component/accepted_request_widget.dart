@@ -11,12 +11,14 @@ import 'location_stop_widget.dart';
 class AcceptedRequestWidget extends StatefulWidget {
   late final String requestStatus ;
   late final DriverStatusResponse data;
+  late final bool isRideStarted;
   final Function() onCancelTap;
   final Function() onPhoneTap;
 
   AcceptedRequestWidget(
       {
       required this.data,
+      required this.isRideStarted,
       required this.onCancelTap,
       required this.requestStatus,
       required this.onPhoneTap,});
@@ -84,8 +86,8 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                         TextComponent(
                             text: capitalizeFirstLetter(
                                 "${widget.data.lastName}"),
-                            fontSize: 12,
-                            isBold: false),
+                            fontSize: 15,
+                            isBold: true),
                       ],
                     )
                   ],
