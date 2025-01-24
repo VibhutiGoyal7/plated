@@ -39,7 +39,7 @@ class _WrapComponentState extends State<WrapComponent> {
         child: Wrap(
           spacing: 6,
           alignment: WrapAlignment.start,
-          runSpacing: 8,
+          runSpacing: 0,
           children: widget.wrapItems /*widget.list.map((result) {
               return widget.component;
             },

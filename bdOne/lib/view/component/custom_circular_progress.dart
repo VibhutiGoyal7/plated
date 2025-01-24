@@ -14,7 +14,7 @@ class CustomCircularProgress extends StatelessWidget {
             dismissible: false, color: Colors.transparent),
         // Loader indicator
         Center(
-          child: CircularProgressIndicator(color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY_GREEN,),
+          child: CircularProgressIndicator(color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY_ACCENT,),
         ),
       ],
     );

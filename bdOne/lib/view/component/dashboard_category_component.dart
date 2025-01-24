@@ -51,7 +51,7 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           width: screenWidth,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          height: _isExpanded ? 300 : 140,
+          height: _isExpanded ? 300 : 130,
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           decoration: BoxDecoration(
@@ -71,7 +71,7 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
                 child: GridView.count(
                   shrinkWrap: true,
                   crossAxisCount: 5,
-                  mainAxisSpacing: 10,
+                  mainAxisSpacing: 20,
                   padding: EdgeInsets.symmetric(vertical: 4),
                   children: [
                     _buildServiceItem(
@@ -184,17 +184,14 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
               ),
             ),
             SizedBox(
-              height: 2,
+              height: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Text(
-                capitalizeFirstLetter("${currentCategoryName}"),
-                overflow: TextOverflow.fade,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11,
-                ),
+            Text(
+              capitalizeFirstLetter("${currentCategoryName}"),
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10,
               ),
             ),
           ],

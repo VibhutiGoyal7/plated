@@ -55,7 +55,7 @@ class _RideDashboardServiceComponentState
           width: screenWidth,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          height: _isExpanded ? 250 : 140,
+          height: _isExpanded ? 250 : 250,
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
           child: Column(
@@ -63,7 +63,7 @@ class _RideDashboardServiceComponentState
               Expanded(
                 child: GridView.count(
                   shrinkWrap: true,
-                  crossAxisCount: 4,
+                  crossAxisCount: 3,
                   mainAxisSpacing: 10,
                   padding: EdgeInsets.symmetric(vertical: 4),
                   children: [
@@ -174,13 +174,13 @@ class _RideDashboardServiceComponentState
                 height: 2,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
                   capitalizeFirstLetter("${currentCategoryName}"),
                   overflow: TextOverflow.fade,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 10,
                   ),
                 ),
               ),

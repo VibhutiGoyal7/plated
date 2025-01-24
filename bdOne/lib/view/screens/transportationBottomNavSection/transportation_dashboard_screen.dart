@@ -294,12 +294,6 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
   Widget SlideView() {
     return Column(
       children: [
-        Image(
-          //alignment: Alignment.topLeft,
-          width: screenWidth * 0.6,
-          height: screenHeight * 0.3,
-          image: AssetImage("assets/slide_1.png"),
-        ),
         SizedBox(
           height: 6,
         ),

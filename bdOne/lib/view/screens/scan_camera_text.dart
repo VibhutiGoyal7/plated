@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../component/custom_circular_progress.dart';
 
@@ -40,19 +39,19 @@ class _ScanCameraTextScreenState extends State<ScanCameraTextScreen> {
       final image = await _cameraController.takePicture();
 
       if (image.path.isNotEmpty) {
-        final text = await _extractTextFromImage(image.path);
-        Navigator.of(context).push(
+        ///final text = await _extractTextFromImage(image.path);
+      /*  Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => TextDisplayScreen(text: text),
           ),
-        );
+        );*/
       }
     } catch (e) {
       print(e);
     }
   }
 
-  Future<String> _extractTextFromImage(String imagePath) async {
+ /* Future<String> _extractTextFromImage(String imagePath) async {
     final inputImage = InputImage.fromFilePath(imagePath);
     final textRecognizer = TextRecognizer();
     final RecognizedText recognizedText =
@@ -60,7 +59,7 @@ class _ScanCameraTextScreenState extends State<ScanCameraTextScreen> {
     await textRecognizer.close();
 
     return recognizedText.text;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

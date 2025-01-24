@@ -125,11 +125,11 @@ class _SliderScreenState extends State<SliderScreen> {
   Widget firstSlide() {
     return Column(
       children: [
-        Image(
+     /*   Image(
           width: screenWidth * 0.9,
           height: screenHeight * 0.33,
           image: AssetImage("assets/slide_1.png"),
-        ),
+        ),*/
         SizedBox(
           height: 6,
         ),

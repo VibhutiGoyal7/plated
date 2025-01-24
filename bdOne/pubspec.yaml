@@ -73,7 +73,7 @@ dependencies:
   flutter_broadcasts: ^0.4.0
   fluttertoast: ^8.2.1
   flutter_svg: ^2.0.0
-  google_mlkit_text_recognition: ^0.14.0
+  #google_mlkit_text_recognition: ^0.14.0
   camera: ^0.10.6
   flutter_mrz_scanner: ^2.1.0
   meta: any
@@ -111,7 +111,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/ml/
       - assets/profile_user.png
       - assets/payment_image.png
       - assets/money_safe.png
@@ -124,17 +123,11 @@ flutter:
       - assets/address.png
       - assets/app_logo.png
       - assets/app_logo_dark.png
-      - assets/slide_1.png
       - assets/slide_2.png
       - assets/slide_3.png
       - assets/sign_document_icon.svg
       - assets/verify_signature_icon.svg
-      - assets/video.mp4
       - assets/progress_svg.svg
-      - assets/loading.gif
-      - assets/food_img.jpg
-      - assets/transportation_img.jpg
-      - assets/travel_img.jpg
       - assets/pizza_image.jpg
       - assets/auction_icon.svg
       - assets/billing_icon.svg
