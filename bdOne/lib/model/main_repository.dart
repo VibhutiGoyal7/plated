@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:BDOne/model/request/changeOldPasswordRequest.dart';
 import 'package:BDOne/model/request/createOtpChangePass.dart';
+import 'package:BDOne/model/request/driverCurrentLocRequest.dart';
 import 'package:BDOne/model/request/exustingUserRequest.dart';
 import 'package:BDOne/model/request/generateTpinRequest.dart';
 import 'package:BDOne/model/request/rideRequest.dart';
@@ -9,10 +10,12 @@ import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInRequest.dart';
 import 'package:BDOne/model/request/signInWithPhoneNumber.dart';
 import 'package:BDOne/model/request/signUpRequest.dart';
+import 'package:BDOne/model/request/vehicleListRequest.dart';
 import 'package:BDOne/model/request/verifyOtpChangePass.dart';
 import 'package:BDOne/model/response/countryListResponse.dart';
 import 'package:BDOne/model/response/createOtpChangePassResponse.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
+import 'package:BDOne/model/response/driverStatusResponse.dart';
 import 'package:BDOne/model/response/existingUserResponse.dart';
 import 'package:BDOne/model/response/fetchKycDocResponse.dart';
 import 'package:BDOne/model/response/generateTpinResponse.dart';
@@ -22,6 +25,7 @@ import 'package:BDOne/model/response/phoneVerifyResponse.dart';
 import 'package:BDOne/model/response/profileResponse.dart';
 import 'package:BDOne/model/response/setUpAccountResponse.dart';
 import 'package:BDOne/model/response/signUpResponse.dart';
+import 'package:BDOne/model/response/vehicleListResponse.dart';
 import 'package:BDOne/model/services/base_service.dart';
 import 'package:BDOne/model/services/bd_pass_service.dart';
 
@@ -51,6 +55,17 @@ class MainRepository {
     return mediaList;
   }
 
+  Future<VehicleListResponse> getVehicleFareListData(
+      String value, VehicleListRequest vehicleListRequest) async {
+    print(vehicleListRequest);
+    dynamic response = await _BDOneService.postResponse(value, vehicleListRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    VehicleListResponse mediaList = VehicleListResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
   Future<InitiateRideResponse> createRideRequestApi(
       String value, RideRequest rideRequest) async {
     print(rideRequest);
@@ -59,6 +74,17 @@ class MainRepository {
     final jsonData = response;
     print(jsonData);
     InitiateRideResponse mediaList = InitiateRideResponse.fromJson(jsonData);
+    return mediaList;
+  }
+
+  Future<DriverStatusResponse> getDriverStatus(
+      String value, DriverCurrentLocRequest driverCurrentLocRequest) async {
+    print(driverCurrentLocRequest);
+    dynamic response = await _BDOneService.postResponse(value, driverCurrentLocRequest);
+    print(value);
+    final jsonData = response;
+    print(jsonData);
+    DriverStatusResponse mediaList = DriverStatusResponse.fromJson(jsonData);
     return mediaList;
   }
 

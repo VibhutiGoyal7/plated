@@ -30,6 +30,7 @@ import 'package:BDOne/view/screens/coming_soon_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_bottom_nav.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/book_ride_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_booked_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_bottom_nav.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
@@ -49,6 +50,7 @@ import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/response/driverStatusResponse.dart';
 import 'model/response/notificationOtpResponse.dart';
 
 //GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -307,6 +309,11 @@ class _MyAppState extends State<MyApp> {
             },
             '/SelectLocationScreen': (context) {
               return SelectLocationScreen();
+            },
+            '/RideBookedScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as DriverStatusResponse?;
+              return RideBookedScreen(data: args,);
             },
             //Ride Section
             '/RideHomeScreen': (context) {

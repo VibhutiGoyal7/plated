@@ -4,7 +4,7 @@ import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/db/dao.dart';
 import 'package:BDOne/theme/AppColor.dart';
-import 'package:BDOne/view/component/custom_loader.dart';
+import 'package:BDOne/view/component/custom_circular_progress.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/response/notificationListResponse.dart';
 import '../../../view_model/main_view_model.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/shimmerComponents/ShimmerList.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/fixed_header_delegate.dart';
@@ -283,7 +284,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             future: _fetchDataFuture,
             builder: (context, AsyncSnapshot<void> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CustomLoader());
+                return Center(child: CustomCircularProgress());
               }
 
               if (snapshot.hasError) {
@@ -475,7 +476,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         itemCount: dates.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
                           if (index == dates.length) {
-                            return Center(child: CustomLoader());
+                            return Center(child: CustomCircularProgress());
                           }
                           String date = dates[index];
                           List<NotificationDetails> notificationsForDate =

@@ -23,7 +23,7 @@ import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_button_component.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/dashboard/verifyYourAccountSection.dart';
 import '../../component/dropdown_widget.dart';
 import '../../component/session_expired_dialog.dart';
@@ -277,7 +277,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
                           dismissible: false, color: Colors.transparent),
                       // Loader indicator
                       Center(
-                        child: CustomLoader(),
+                        child: CustomCircularProgress(),
                       ),
                     ],
                   )
@@ -563,7 +563,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetDashboardData : ${dashboardResponse?.customerData?.email}");
         updateCustomerDashBoardDetails(dashboardResponse);
@@ -617,7 +617,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
         kycStatusApi = kycStatusResponse!.kycStatus!;

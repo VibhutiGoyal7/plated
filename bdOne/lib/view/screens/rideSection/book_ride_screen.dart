@@ -2,8 +2,15 @@ import 'dart:async';
 
 import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/request/rideRequest.dart';
+import 'package:BDOne/model/request/vehicleListRequest.dart';
+import 'package:BDOne/model/response/driverStatusResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
+import 'package:BDOne/model/response/vehicleListResponse.dart';
 import 'package:BDOne/utils/Util.dart';
+import 'package:BDOne/view/component/image_view_components.dart';
+import 'package:BDOne/view/component/linear_loader.dart';
+import 'package:BDOne/view/component/listComponents/wrap_component.dart';
+import 'package:BDOne/view/component/text_component.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,13 +24,15 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/db/dao.dart';
+import '../../../model/request/driverCurrentLocRequest.dart';
 import '../../../model/response/ServiceTypeResponse.dart';
 import '../../../model/response/initiateRideResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/session_expired_dialog.dart';
 
 class BookRideScreen extends StatefulWidget {
@@ -93,6 +102,8 @@ class _BookRideScreenState extends State<BookRideScreen> {
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
   );
+  List<VehicleDetails> vehicleList = [];
+  String uniqueId ="";
 
   @override
   void initState() {
@@ -130,10 +141,17 @@ class _BookRideScreenState extends State<BookRideScreen> {
 
   @override
   Widget build(BuildContext context) {
-    isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
-    DateTime? lastBackPressed;
+    isDarkMode = Theme
+        .of(context)
+        .brightness == Brightness.dark;
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     return Scaffold(
       appBar: AppBar(
         /*leading: GestureDetector(
@@ -187,7 +205,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -208,12 +226,13 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                               child: Text(
                                                 pickUpLocation == null
                                                     ? "Pick up location"
-                                                    : "${pickUpLocation?.address}",
+                                                    : "${pickUpLocation
+                                                    ?.address}",
                                                 maxLines: 2,
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     overflow:
-                                                        TextOverflow.ellipsis),
+                                                    TextOverflow.ellipsis),
                                               ),
                                             ),
                                           )
@@ -247,7 +266,8 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                               child: Text(
                                                 destinationLocation == null
                                                     ? "Destination"
-                                                    : "${destinationLocation?.address}",
+                                                    : "${destinationLocation
+                                                    ?.address}",
                                                 style: TextStyle(fontSize: 16),
                                               ),
                                             ),
@@ -278,7 +298,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                       children: [
                                         Icon(
                                           Icons.location_on,
@@ -320,16 +340,16 @@ class _BookRideScreenState extends State<BookRideScreen> {
                 ),*/
                 isApiLoading
                     ? Stack(
-                        children: [
-                          // Block interaction
-                          ModalBarrier(
-                              dismissible: false, color: Colors.black54),
-                          // Loader indicator
-                          Center(
-                            child: CustomLoader(),
-                          ),
-                        ],
-                      )
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false, color: Colors.black54),
+                    // Loader indicator
+                    Center(
+                      child: CustomCircularProgress(),
+                    ),
+                  ],
+                )
                     : SizedBox(),
               ],
             ),
@@ -339,8 +359,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  Widget _buildRideOptionWidget(
-      BuildContext context,
+  Widget _buildRideOptionWidget(BuildContext context,
       String text,
       TextEditingController nameController,
       Icon icon,
@@ -384,14 +403,14 @@ class _BookRideScreenState extends State<BookRideScreen> {
                 ),
                 selectedGender?.isEmpty == true
                     ? Container(
-                        child: Text("Select $labelText"),
-                      )
+                  child: Text("Select $labelText"),
+                )
                     : Text(
-                        "${selectedGender}".isEmpty
-                            ? '$labelText'
-                            : capitalizeFirstLetter("${selectedGender}"),
-                        style: TextStyle(fontSize: 15),
-                      ),
+                  "${selectedGender}".isEmpty
+                      ? '$labelText'
+                      : capitalizeFirstLetter("${selectedGender}"),
+                  style: TextStyle(fontSize: 15),
+                ),
                 //SizedBox(width: 5),
                 Icon(
                   Icons.keyboard_arrow_down_sharp,
@@ -416,29 +435,8 @@ class _BookRideScreenState extends State<BookRideScreen> {
           hideKeyBoard();
           //Navigator.pushNamed(context, '/SignInScreen');
           _isValidInput();
-          //bookRideApi();
-          _showDatePicker(InitiateRideResponse(
-              id: 31,
-              customer_name: "Vibhuti",
-              cust_phone: "97765456336",
-              customer_email: "simran5@cust.com",
-              service_type: "rides",
-              intStatus: "initiated",
-              pickup_latitude: "30.691873",
-              pickup_longitude: "76.694864",
-              destination_latitude: "30.703051",
-              destination_longitude: "76.804272",
-              notification_sent: false,
-              createdAt: "2025-01-17T12:26:35.262Z",
-              updatedAt: "2025-01-17T12:26:35.262Z",
-              auto_cancel_at: null,
-              unique_id: "F5A96D2439414108",
-              fare: "100.0",
-              driver_id: null,
-              pickup_address:
-                  "Sector 76, Sector 89, Lakhnaur, Sahibzada Ajit Singh Nagar, Punjab, 160071, India",
-              destination_address:
-                  "Phase 1, Ward 20, Chandigarh, 160028, India"));
+          getVehicleFareList();
+          //_showVehicleTypes([]);
         },
         child: Text(
           Languages.of(context)!.labelConfirm,
@@ -450,100 +448,329 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  void _showDatePicker(InitiateRideResponse? response) {
+  void _showVehicleTypes(VehicleListResponse? response) {
+    var selected = vehicleList.first;
     showModalBottomSheet(
       enableDrag: false,
       backgroundColor:
-          isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.LIGHT_CARD_COLOR,
+      isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.LIGHT_CARD_COLOR,
       context: context,
-      shape: Border(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25),)),
       builder: (BuildContext context) {
-        return Container(
-          height: screenHeight / 2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                "Confirm Ride",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              Container(
-                height: 100,
-                width: 100,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    // borderRadius: BorderRadius.circular(100),
-                    //color: currentIconBdColor,
-                    ),
-                child: SvgPicture.asset(
-                  "assets/car_icon.svg",
-                  colorFilter: ColorFilter.mode(
-                    Colors.transparent,
-                    // Use a contrasting color to test visibility
-                    BlendMode.dst,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                          width: 0.2,
-                          color: AppColor.BLACK,
-                          style: BorderStyle.solid)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+              return Container(
+                height: screenHeight * 0.7,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Icon(Icons.account_circle),
-                        Text("Switch Ride"),
-                      ],
+                    SizedBox(
+                      height: 25,
                     ),
-                    Checkbox(
-                      checkColor: AppColor.PRIMARY_ACCENT,
-                      mouseCursor: MouseCursor.uncontrolled,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      semanticLabel: "${Languages.of(context)?.labelSaveId}",
-                      shape: CircleBorder(),
-                      side: BorderSide(
-                          color: isDarkMode ? Colors.white : Colors.black),
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value!;
-                        });
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 15),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              width: 0.2, color: Colors.black54)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                size: 18,
+                              ),
+                              SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  _getCurrentLocation(true);
+                                  //Navigator.pushNamed(context, "/SelectLocationScreen");
+                                },
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: screenWidth / 2,
+                                      maxWidth: screenWidth * 0.8),
+                                  child: Text(
+                                    pickUpLocation == null
+                                        ? "Pick up location"
+                                        : "${pickUpLocation
+                                        ?.address}",
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        overflow:
+                                        TextOverflow.ellipsis),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Container(
+                            height: 18,
+                            width: 1,
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 0),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.my_location,
+                                size: 18,
+                              ),
+                              SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  _getCurrentLocation(false);
+                                  //Navigator.pushNamed(context, "/SelectLocationScreen");
+                                },
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: screenWidth / 2,
+                                      maxWidth: screenWidth * 0.8),
+                                  child: Text(
+                                    destinationLocation == null
+                                        ? "Destination"
+                                        : "${destinationLocation
+                                        ?.address}",
+                                    maxLines: 1,
+                                    style: TextStyle(fontSize: 16),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 14),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Select your preferred ride",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Row(
+                            children: [
+                              Text("Distance: "),
+                              Text("${response?.estimatedDist}"),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    /*Container(
+                      height: 100,
+                      width: 100,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.circular(100),
+                        //color: currentIconBdColor,
+                      ),
+                      child: SvgPicture.asset(
+                        "assets/car_icon.svg",
+                        colorFilter: ColorFilter.mode(
+                          Colors.transparent,
+                          // Use a contrasting color to test visibility
+                          BlendMode.dst,
+                        ),
+                      ),
+                    ),*/
+                    WrapComponent(height: screenHeight * 0.38,
+                        width: screenWidth,
+                        isHorizontal: false,
+                        wrapItems: vehicleList.map((result) {
+                          return GestureDetector(
+                            onTap: () {
+                              setModalState(() {
+                                selected = result;
+                              });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      selected == result ? 12 : 0),
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        width: 0.2,
+                                        color: selected == result ? AppColor
+                                            .PRIMARY_GREEN : AppColor.BLACK),),
+                                  color: selected == result ? AppColor
+                                      .PRIMARY_GREEN : isDarkMode ? AppColor
+                                      .DARK_CARD_COLOR : AppColor
+                                      .LIGHT_CARD_COLOR
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      ImageViewComponent(imageUrl: result.vehicleIcon,
+                                          placeholderImage: "assets/cab_add_1.png",
+                                          width: 30,
+                                          height: 35,
+                                          borderRadius: BorderRadius.zero,
+                                          isDarkMode: isDarkMode),
+                                      //,Icon(Icons.account_circle, size: 28,),
+                                      SizedBox(width: 12,),
+                                      TextComponent(
+                                          text: "${result.categoryName}",
+                                          fontSize: 16,
+                                          isBold: false)
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      TextComponent(
+                                          text: "৳${result.estimatedFare}",
+                                          fontSize: 16,
+                                          isBold: false),
+                                      /* Checkbox(
+                                  checkColor: AppColor.PRIMARY_ACCENT,
+                                  mouseCursor: MouseCursor.uncontrolled,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  semanticLabel: "${Languages.of(context)?.labelSaveId}",
+                                  shape: CircleBorder(),
+                                  side: BorderSide(
+                                      color: isDarkMode ? Colors.white : Colors.black),
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      isChecked = value!;
+                                    });
+                                  },
+                                ),*/
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        ).toList()),
+                    SizedBox(height: 15,),
+
+                    MaterialButton(
+                      minWidth: screenWidth * 0.85,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                      color: AppColor.PRIMARY_ACCENT,
+                      height: 50,
+                      onPressed: () {
+                        bookRideApi(selected);
                       },
+                      // Close on cancel
+                      child: Container(
+                        width: screenWidth * 0.8,
+                        height: 50,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Confirm Ride',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
                     ),
                   ],
                 ),
+              );
+            }
+        );
+      },
+      isScrollControlled: true, // Makes the bottom sheet full height
+    );
+  }
+
+  void _showLoaderDialog() {
+    showModalBottomSheet(
+      enableDrag: false,
+      isDismissible: false,
+      backgroundColor:
+      isDarkMode ? AppColor.DARK_CARD_COLOR : AppColor.LIGHT_CARD_COLOR,
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      builder: (BuildContext context) {
+        return Container(
+          height: screenHeight * 0.65,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Column(
+                children: [
+                  SizedBox(height: 55,),
+                  LinearLoader(),
+                  SizedBox(height: 25,),
+                  TextComponent(text: "Please wait while we contact drivers.",
+                      fontSize: 16,
+                      isBold: false),
+                  SizedBox(height: 30,),
+
+                  Container(
+                    height: 160,
+                    width: 160,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      // borderRadius: BorderRadius.circular(100),
+                      //color: currentIconBdColor,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/car_icon.svg",
+                      colorFilter: ColorFilter.mode(
+                        Colors.transparent,
+                        // Use a contrasting color to test visibility
+                        BlendMode.dst,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              MaterialButton(
-                minWidth: screenWidth * 0.85,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-                color: AppColor.PRIMARY_ACCENT,
-                height: 50,
-                onPressed: () => Navigator.pop(context),
-                // Close on cancel
+
+              GestureDetector(
+                onTap: () {
+
+                },
                 child: Container(
-                  width: screenWidth * 0.8,
-                  height: 50,
+                  width: screenWidth * 0.7,
                   alignment: Alignment.center,
+                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 40),
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 12.5, vertical: 12),
+                  decoration: BoxDecoration(
+                      border:
+                      Border.all(color: AppColor.TEXT_RED, width: 0.5),
+                      borderRadius: BorderRadius.circular(8),
+                      color: isDarkMode ? Colors.white : Colors.white),
                   child: Text(
-                    'Confirm Ride',
-                    style: TextStyle(color: Colors.white),
+                    "CANCEL REQUEST",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color:
+                        isDarkMode ? Colors.white : AppColor.TEXT_RED),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 15,
               ),
             ],
           ),
@@ -588,7 +815,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                         bottomLeft: Radius.circular(4))),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
                   child: Center(
                     child: Text(
                       capitalizeFirstLetter("${currentCategoryName}"),
@@ -625,12 +852,12 @@ class _BookRideScreenState extends State<BookRideScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               ClipRRect(
-                  // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
+                // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
                   child: Image.asset(
-                "assets/pizza_image.jpg",
-                height: screenHeight * 0.1,
-                fit: BoxFit.cover,
-              )),
+                    "assets/pizza_image.jpg",
+                    height: screenHeight * 0.1,
+                    fit: BoxFit.cover,
+                  )),
               SizedBox(
                 height: 8,
               ),
@@ -651,7 +878,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  void bookRideApi() async {
+  void bookRideApi(VehicleDetails vehicle) async {
     bool isConnected = await _connectivityService.isConnected();
     print(("isConnected - ${isConnected}"));
     if (inputValid) {
@@ -659,8 +886,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
         isLoading = true;
       });
     }
-    ToastComponent.showToast(
-        context: context, message: "::Clicked", duration: maxDuration);
+
     if (!isConnected) {
       setState(() {
         isApiLoading = false;
@@ -687,15 +913,226 @@ class _BookRideScreenState extends State<BookRideScreen> {
             fare: "100.00",
             pickupLatitude: "${pickUpLocation?.latitude}",
             pickupLongitude: "${pickUpLocation?.longitude}",
+            vehicleCategoryId: vehicle.id,
             serviceType: "rides");
         await Provider.of<MainViewModel>(context, listen: false)
             .createRideRequestApi(
-                "/api/v1/customer_app/service_requests/create_service_request",
-                request);
+            "/api/v1/customer_app/service_requests/create_service_request",
+            request);
         ApiResponse apiResponse =
-            Provider.of<MainViewModel>(context, listen: false).response;
-        getDashboardData(context, apiResponse);
+            Provider
+                .of<MainViewModel>(context, listen: false)
+                .response;
+        getBookRideResponse(context, apiResponse);
       }
+    }
+  }
+
+
+  Future<Widget> getBookRideResponse(BuildContext context,
+      ApiResponse apiResponse) async {
+    InitiateRideResponse? response = apiResponse.data as InitiateRideResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${response?.message}");
+    setState(() {
+      isApiLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CustomCircularProgress());
+      case Status.COMPLETED:
+        Navigator.pop(context);
+        print("GetDashboardData : ${response?.customer_name}");
+        _showLoaderDialog();
+        setState(() {
+          uniqueId = "${response?.unique_id}";
+        });
+        rideStatusApi("${response?.unique_id}");
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages
+                    .of(context)
+                    ?.labelInvalidAccessToken}")) {
+          print(apiResponse.message);
+          if (receiver.isListening) {
+            receiver.stop();
+          }
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {
+
+        }
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  void getVehicleFareList() async {
+    bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
+    if (inputValid) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    if (!isConnected) {
+      setState(() {
+        isApiLoading = false;
+        isInternetConnected = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          isApiLoading = true;
+        });
+        VehicleListRequest request = VehicleListRequest(
+            pickupLatitude: "${pickUpLocation?.latitude}",
+            pickupLongitude: "${pickUpLocation?.longitude}",
+            destinationLatitude: "${destinationLocation?.latitude}",
+            destinationLongitude: "${destinationLocation?.longitude}");
+        await Provider.of<MainViewModel>(context, listen: false)
+            .getVehicleFareListData(
+            "api/v1/customer_app/vehicle_categories/calculate_estimated_fare",
+            request);
+        ApiResponse apiResponse =
+            Provider
+                .of<MainViewModel>(context, listen: false)
+                .response;
+        getVehicleFareListResponse(context, apiResponse);
+      }
+    }
+  }
+
+
+  Future<Widget> getVehicleFareListResponse(BuildContext context,
+      ApiResponse apiResponse) async {
+    VehicleListResponse? response = apiResponse.data as VehicleListResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${response?.message}");
+    setState(() {
+      isApiLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CustomCircularProgress());
+      case Status.COMPLETED:
+        print("vehicle list : ${response?.destination_latitude}");
+        setState(() {
+          vehicleList = response?.vehicles ?? [];
+        });
+        _showVehicleTypes(response);
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages
+                    .of(context)
+                    ?.labelInvalidAccessToken}")) {
+          print(apiResponse.message);
+          if (receiver.isListening) {
+            receiver.stop();
+          }
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {}
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
+    }
+  }
+
+  void rideStatusApi(String uniqueId) async {
+    bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
+
+    if (!isConnected) {
+      setState(() {
+        isApiLoading = false;
+        isInternetConnected = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          isApiLoading = false;
+        });
+        DriverCurrentLocRequest request = DriverCurrentLocRequest(uniqueId: "$uniqueId");
+        await Provider.of<MainViewModel>(context, listen: false)
+            .getDriverStatus(
+            "/api/v1/customer_app/service_requests/get_driver_location",
+            request);
+        ApiResponse apiResponse =
+            Provider
+                .of<MainViewModel>(context, listen: false)
+                .response;
+        getRideStatusResponse(context, apiResponse);
+      }
+    }
+  }
+
+
+  Future<Widget> getRideStatusResponse(BuildContext context,
+      ApiResponse apiResponse) async {
+    DriverStatusResponse? response = apiResponse.data as DriverStatusResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${response?.message}");
+    setState(() {
+      isApiLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(child: CustomCircularProgress());
+      case Status.COMPLETED:
+        if (response?.rideStatus == "accepted") {
+          Navigator.pop(context);
+          Navigator.pushNamed(context, "/RideBookedScreen", arguments: response);
+        } else {
+          await Future.delayed(Duration(seconds: 2));
+          rideStatusApi("$uniqueId");
+        }
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages
+                    .of(context)
+                    ?.labelInvalidAccessToken}")) {
+          print(apiResponse.message);
+          if (receiver.isListening) {
+            receiver.stop();
+          }
+          SessionExpiredDialog.showDialogBox(context: context);
+        } else {}
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search for the song by Artist'),
+        );
     }
   }
 
@@ -708,9 +1145,11 @@ class _BookRideScreenState extends State<BookRideScreen> {
           shape: Border.all(),
           title: Center(
               child: Text(
-            "${Languages.of(context)?.labelExit}",
-            style: TextStyle(fontSize: 20),
-          )),
+                "${Languages
+                    .of(context)
+                    ?.labelExit}",
+                style: TextStyle(fontSize: 20),
+              )),
           content: Container(
             height: screenHeight * 0.3,
             child: Column(
@@ -738,9 +1177,9 @@ class _BookRideScreenState extends State<BookRideScreen> {
                     ),
                     Center(
                         child: Text(
-                      Languages.of(context)!.labelPressBackToExit,
-                      textAlign: TextAlign.center,
-                    )),
+                          Languages.of(context)!.labelPressBackToExit,
+                          textAlign: TextAlign.center,
+                        )),
                   ],
                 ),
                 Column(
@@ -757,7 +1196,9 @@ class _BookRideScreenState extends State<BookRideScreen> {
                     Container(
                       width: screenWidth * 0.6,
                       child: TextButton(
-                        child: Text('${Languages.of(context)?.labelYes}'),
+                        child: Text('${Languages
+                            .of(context)
+                            ?.labelYes}'),
                         onPressed: () async {
                           /*Helper.clearAllSharedPreferences();
                           database.personDao.clearAllCustomerDetails();
@@ -780,58 +1221,10 @@ class _BookRideScreenState extends State<BookRideScreen> {
     );
   }
 
-  Future<Widget> getDashboardData(
-      BuildContext context, ApiResponse apiResponse) async {
-    InitiateRideResponse? response = apiResponse.data as InitiateRideResponse?;
-    var message = apiResponse.message.toString();
-    print("message ${response?.message}");
-    setState(() {
-      isApiLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CustomLoader());
-      case Status.COMPLETED:
-        print("GetDashboardData : ${response?.customer_name}");
-        _showDatePicker(response);
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        if (nonCapitalizeString("${apiResponse.message}") ==
-            nonCapitalizeString(
-                "${Languages.of(context)?.labelInvalidAccessToken}")) {
-          print(apiResponse.message);
-          if (receiver.isListening) {
-            receiver.stop();
-          }
-          SessionExpiredDialog.showDialogBox(context: context);
-        } else {
-          Helper.getProfileDetails().then((userDetails) {
-            setState(() {
-              print("userDetails?.imageUrl${userDetails?.imageUrl}");
-              name = userDetails?.firstName == null
-                  ? Languages.of(context)!.labelName
-                  : userDetails?.firstName;
-              imageUrl =
-                  userDetails?.imageUrl == null ? "" : userDetails?.imageUrl;
-              print("imageUrl${imageUrl}");
-            });
-            Helper.saveUserId("${userDetails?.userId}");
-          });
-        }
-        return Center(
-          child: Text('Please try again later!!!'),
-        );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text('Search for the song by Artist'),
-        );
-    }
-  }
 
   Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
     KycStatusResponse? kycStatusResponse =
-        apiResponse.data as KycStatusResponse?;
+    apiResponse.data as KycStatusResponse?;
     var message = apiResponse.message.toString();
     setState(() {
       isApiLoading = false;
@@ -839,14 +1232,16 @@ class _BookRideScreenState extends State<BookRideScreen> {
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
-                "${Languages.of(context)?.labelInvalidAccessToken}")) {
+                "${Languages
+                    .of(context)
+                    ?.labelInvalidAccessToken}")) {
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           ToastComponent.showToast(
@@ -872,7 +1267,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
       });
 
       LocationData? locationData =
-          await LocationSearch.show(context: context, mode: Mode.fullscreen);
+      await LocationSearch.show(context: context, mode: Mode.fullscreen);
       ToastComponent.showToast(
           context: context,
           message: "${locationData?.address}",

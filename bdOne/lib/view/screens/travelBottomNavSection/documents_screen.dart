@@ -12,7 +12,7 @@ import '../../../model/request/checkCustomerRequest.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 import '../../component/fixed_header_delegate.dart';
 import '../../component/toastMessage.dart';
 
@@ -69,7 +69,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("pushNamed ${checkCustomerResponse?.username}");
         Navigator.pushNamed(context, '/TransferScreen',
@@ -519,7 +519,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                     color: Colors.transparent),
                                 // Loader indicator
                                 Center(
-                                  child: CustomLoader(),
+                                  child: CustomCircularProgress(),
                                 ),
                               ],
                             )

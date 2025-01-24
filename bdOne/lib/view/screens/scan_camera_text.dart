@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
-import '../component/custom_loader.dart';
+import '../component/custom_circular_progress.dart';
 
 class ScanCameraTextScreen extends StatefulWidget {
   @override
@@ -72,7 +72,7 @@ class _ScanCameraTextScreenState extends State<ScanCameraTextScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             return CameraPreview(_cameraController);
           } else {
-            return Center(child: CustomLoader());
+            return Center(child: CustomCircularProgress());
           }
         },
       ),

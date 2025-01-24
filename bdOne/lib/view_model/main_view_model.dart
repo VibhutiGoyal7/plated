@@ -15,18 +15,22 @@ import 'package:flutter/cupertino.dart';
 
 import '../model/request/changeOldPasswordRequest.dart';
 import '../model/request/createOtpChangePass.dart';
+import '../model/request/driverCurrentLocRequest.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateTpinRequest.dart';
 import '../model/request/rideRequest.dart';
 import '../model/request/signInRequest.dart';
 import '../model/request/signUpRequest.dart';
+import '../model/request/vehicleListRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/response/countryListResponse.dart';
 import '../model/response/createOtpChangePassResponse.dart';
+import '../model/response/driverStatusResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
 import '../model/response/initiateRideResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
+import '../model/response/vehicleListResponse.dart';
 
 class MainViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
@@ -91,6 +95,25 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getVehicleFareListData(
+      String value, VehicleListRequest vehicleListRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      VehicleListResponse vehicleListResponse =
+          await MainRepository().getVehicleFareListData(value, vehicleListRequest);
+      if (vehicleListResponse.status == 200 || vehicleListResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(vehicleListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(vehicleListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
   Future<void> createRideRequestApi(
       String value, RideRequest rideRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
@@ -106,6 +129,29 @@ class MainViewModel with ChangeNotifier {
         _apiResponse = ApiResponse.completed(response);
       } else {
         _apiResponse = ApiResponse.error(response.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getDriverStatus(
+      String value, DriverCurrentLocRequest driverCurrentLocRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    //print("Yess" + phoneRequest.customer.mobileOtp);
+    notifyListeners();
+    try {
+      //print(phoneRequest.customer.phoneNumber);
+      DriverStatusResponse driverStatusResponse =
+          await MainRepository().getDriverStatus(value, driverCurrentLocRequest);
+      //print("Yess"+ otpVerifyResponse.token.toString());
+      //_apiResponse = ApiResponse.completed(otpVerifyResponse);
+      if (driverStatusResponse.status == 200 || driverStatusResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(driverStatusResponse);
+      } else {
+        _apiResponse = ApiResponse.error(driverStatusResponse.message);
       }
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());

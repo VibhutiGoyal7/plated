@@ -12,7 +12,7 @@ import '../../../model/response/countryListResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   @override
@@ -138,7 +138,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
-                      child: CustomLoader(),
+                      child: CustomCircularProgress(),
                     ),
                   ],
                 )
@@ -210,7 +210,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 

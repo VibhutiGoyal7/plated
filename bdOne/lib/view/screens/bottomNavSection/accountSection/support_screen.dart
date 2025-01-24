@@ -9,7 +9,7 @@ import '../../../../model/apis/api_response.dart';
 import '../../../../model/response/countryListResponse.dart';
 import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
-import '../../../component/custom_loader.dart';
+import '../../../component/custom_circular_progress.dart';
 
 
 class SupportScreen extends StatefulWidget {
@@ -192,7 +192,7 @@ class _SupportScreenState extends State<SupportScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 

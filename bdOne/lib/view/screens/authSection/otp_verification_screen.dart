@@ -14,7 +14,7 @@ import '../../../model/response/countryListResponse.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_loader.dart';
+import '../../component/custom_circular_progress.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -275,7 +275,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
-                      child: CustomLoader(),
+                      child: CustomCircularProgress(),
                     ),
                   ],
                 )
@@ -447,7 +447,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     });
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomLoader());
+        return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
         print("rwrwr ${countryListResponse?.countries?[1].name}");
 
