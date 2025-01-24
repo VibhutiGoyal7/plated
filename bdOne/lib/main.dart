@@ -27,6 +27,8 @@ import 'package:BDOne/view/screens/bottomNavSection/select_location_screen.dart'
 import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_bottom_nav.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/book_ride_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_bottom_nav.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
@@ -318,6 +320,12 @@ class _MyAppState extends State<MyApp> {
             },
             '/BookRideScreen': (context) {
               return BookRideScreen();
+            },
+            '/RestaurantBottomNav': (context) {
+              return RestaurantBottomNav();
+            },
+            '/RestaurantHomeScreen': (context) {
+              return RestaurantHomeScreen();
             },
           }),
     );

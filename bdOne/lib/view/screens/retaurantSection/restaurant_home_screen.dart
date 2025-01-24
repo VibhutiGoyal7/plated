@@ -4,11 +4,11 @@ import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/utils/Util.dart';
+import 'package:BDOne/view/component/restaurant/restaurant_banner_list_widget.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -22,15 +22,16 @@ import '../../component/banner_list_widget.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
 import '../../component/dashboard_search_component.dart';
-import '../../component/ride_dashboard_service_component.dart';
+import '../../component/image_view_components.dart';
+import '../../component/restaurant/restaurant_dashboard_component.dart';
 import '../../component/session_expired_dialog.dart';
 
-class RideHomeScreen extends StatefulWidget {
+class RestaurantHomeScreen extends StatefulWidget {
   @override
-  _RideHomeScreenState createState() => _RideHomeScreenState();
+  _RestaurantHomeScreenState createState() => _RestaurantHomeScreenState();
 }
 
-class _RideHomeScreenState extends State<RideHomeScreen> {
+class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
   String? country;
   String calledShortCut = "";
   String? name = "";
@@ -56,42 +57,55 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
   TextEditingController _searchController = TextEditingController();
   List<ServiceTypeResponse?> categories = [
     ServiceTypeResponse(
-        serviceName: 'BD Mart',
-        icon: 'assets/mart_icon.svg',
+        serviceName: 'Fruits',
+        icon: 'assets/address.png',
         iconBgColor: Colors.red.shade50),
     ServiceTypeResponse(
-        serviceName: 'Cab Booking',
-        icon: 'assets/cab_icon.svg',
+        serviceName: 'Vegetables',
+        icon: 'assets/address.png',
         iconBgColor: Colors.yellow.shade50),
     ServiceTypeResponse(
-        serviceName: 'Foods',
-        icon: 'assets/food_icon.svg',
+        serviceName: 'Dairy',
+        icon: 'assets/address.png',
         iconBgColor: Colors.green.shade50),
     ServiceTypeResponse(
-        serviceName: 'Shopping',
-        icon: 'assets/shopping_icon.svg',
+        serviceName: 'Spices',
+        icon: 'assets/address.png',
         iconBgColor: Colors.blue.shade50),
     ServiceTypeResponse(
-        serviceName: 'More',
-        icon: 'assets/more_icon.svg',
+        serviceName: 'Pulses',
+        icon: 'assets/address.png',
+        iconBgColor: Colors.black12),
+    ServiceTypeResponse(
+        serviceName: 'Seeds',
+        icon: 'assets/address.png',
+        iconBgColor: Colors.black12),
+    ServiceTypeResponse(
+        serviceName: 'Nuts',
+        icon: 'assets/address.png',
+        iconBgColor: Colors.black12),
+    ServiceTypeResponse(
+        serviceName: 'Bakery & Biscuits',
+        icon: 'assets/address.png',
         iconBgColor: Colors.black12),
   ];
   List<String> bannerList = ["", "", "", ""];
   List<String> brandsList = ["Kellogs", "Amul", "Amul", "Kellogs"];
-  BroadcastReceiver receiver = BroadcastReceiver(
+
+/*  BroadcastReceiver receiver = BroadcastReceiver(
     names: <String>[
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
-  );
+  );*/
 
   @override
   void initState() {
     super.initState();
     imageUrl = "";
-    receiver.start();
-    receiver.messages.listen((message) {
+    //receiver.start();
+    /*  receiver.messages.listen((message) {
       print("BroadCast");
-    });
+    });*/
 
     Helper.getProfileDetails().then((profile) {
       setState(() {
@@ -128,7 +142,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
 
   @override
   void dispose() {
-    receiver.stop();
+    //receiver.stop();
     _timer.cancel();
     super.dispose();
   }
@@ -206,7 +220,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                         bottomRight: Radius.circular(25.0))),
                               ),*/
                               Container(
-                                margin: EdgeInsets.only(top: 2),
+                                margin: EdgeInsets.only(top: 10),
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(horizontal: 0),
@@ -214,32 +228,6 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      /* Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0, vertical: 6),
-                                          child: CustomDropdown(
-                                            title: "Food",
-                                            items: [
-                                              "Food",
-                                              "Travel",
-                                              "Transportation",
-                                            ], // List of options
-                                            onItemSelected: (value) {
-                                              if (value == "Transportation") {
-                                                Navigator.pushReplacementNamed(
-                                                    context,
-                                                    "/TransportationBottomNav");
-                                              } else if (value == "Travel") {
-                                                Navigator.pushReplacementNamed(
-                                                    context,
-                                                    "/TravelBottomNav");
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),*/
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -247,7 +235,29 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                           IconButton(
                                             icon: Icon(
                                               Icons.arrow_back_ios,
-                                              size: 24,
+                                              size: 22,
+                                            ),
+                                            onPressed: () => {
+                                              Navigator.pushReplacementNamed(
+                                                  context, '/BottomNav',
+                                                  arguments: 0)
+                                            },
+                                          ),
+                                          DashboardSearchComponent(
+                                            onTap: () => {},
+                                            screenHeight: 50,
+                                            primaryColor:
+                                                AppColor.PRIMARY_ACCENT,
+                                            hintText:
+                                                "What are u looking for ?",
+                                            queryController: _searchController,
+                                            screenWidth: screenWidth * 0.6,
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.shopping_cart,
+                                              size: 26,
+                                              color: AppColor.PRIMARY_ACCENT,
                                             ),
                                             onPressed: () => {
                                               Navigator.pushReplacementNamed(
@@ -258,18 +268,17 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 2,
+                                        height: 10,
                                       ),
-                                      DashboardSearchComponent(
-                                        onTap: () => {},
-                                        screenHeight: 50,
-                                        primaryColor: AppColor.PRIMARY_ACCENT,
-                                        hintText: "Where are you going?",
-                                        queryController: _searchController,
-                                        screenWidth: screenWidth,
-                                      ),
+                                      RestaurantBannerListWidget(
+                                          data: bannerList,
+                                          isInternetConnected:
+                                              isInternetConnected,
+                                          isLoading: isBannerLoading,
+                                          isDarkMode: isDarkMode,
+                                          dummy: "assets/cab_add_1.png"),
                                       categories.length > 0
-                                          ? RideDashboardServiceComponent(
+                                          ? RestaurantDashboardComponent(
                                               categories: categories,
                                               screenWidth: screenWidth,
                                               screenHeight: screenHeight,
@@ -278,16 +287,203 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                               heading: "Services",
                                             )
                                           : SizedBox(),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 0),
-                                        child: BannerListWidget(
-                                            data: bannerList,
-                                            isInternetConnected:
-                                                isInternetConnected,
-                                            isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode,
-                                            dummy: "assets/cab_add_1.png"),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10, left: 12),
+                                                child: Text(
+                                                  "Daily Products",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          AnimatedContainer(
+                                              width: screenWidth,
+                                              height: 220,
+                                              duration:
+                                                  Duration(milliseconds: 300),
+                                              curve: Curves.easeInOut,
+                                              // Expandable height control
+                                              child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                // Fit grid inside list
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                // Disable grid scrolling
+                                                padding: EdgeInsets.all(4),
+                                                itemCount: categories.length,
+                                                itemBuilder:
+                                                    (context, subIndex) {
+                                                  if (subIndex <
+                                                      categories.length) {
+                                                    var subCategory =
+                                                        categories[subIndex];
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          showSnackBar(
+                                                            context,
+                                                            "${subCategory?.serviceName}",
+                                                            screenWidth * 0.5,
+                                                          );
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        height: 200,
+                                                        width: screenWidth / 2.6,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: isDarkMode
+                                                              ? Colors.black
+                                                              : Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          border: Border.all(
+                                                              width: 0.2),
+                                                        ),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 2,
+                                                                horizontal: 1),
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 4),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(bottom: 18.0),
+                                                              child: ImageViewComponent(
+                                                                height: 95,
+                                                                width: 95,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .all(Radius
+                                                                            .circular(
+                                                                                0)),
+                                                                imageUrl:
+                                                                    subCategory
+                                                                        ?.icon,
+                                                                isDarkMode: false,
+                                                                placeholderImage:
+                                                                    "assets/milk_image.png",
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          10),
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                          "480",
+                                                                        style: TextStyle(
+                                                                           fontSize: 18,
+                                                                          color: AppColor.TEXT_RED,
+                                                                          fontWeight: FontWeight.bold
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                          height:
+                                                                              22,
+                                                                          width:
+                                                                              22,
+                                                                          alignment: Alignment
+                                                                              .center,
+                                                                          decoration: BoxDecoration(
+                                                                              color: AppColor.PRIMARY_ACCENT,
+                                                                              borderRadius: BorderRadius.all(Radius.circular(100))),
+                                                                          child: Icon(
+                                                                            Icons.add,
+                                                                            size:
+                                                                                16,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ))
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                          "480",
+                                                                          style: TextStyle(
+                                                                              fontSize: 13,
+                                                                            color: Colors.black87
+                                                                          )),
+                                                                      SizedBox(width: 5),
+                                                                      Text(
+                                                                          "52% Off", style: TextStyle(
+                                                                        fontSize: 10,color: AppColor.PRIMARY_ACCENT,
+                                                                        fontWeight: FontWeight.w600
+                                                                      ),),
+                                                                    ],
+                                                                  ),
+                                                                  Text(
+                                                                    "${capitalizeFirstLetter("${subCategory?.serviceName}")}",
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    maxLines: 2,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: isDarkMode
+                                                                          ? AppColor
+                                                                              .WHITE
+                                                                          : AppColor
+                                                                              .BLACK,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return SizedBox(); // Prevents index errors
+                                                  }
+                                                },
+                                              ))
+                                        ],
                                       ),
                                       Padding(
                                         padding:
@@ -300,226 +496,6 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                             isDarkMode: isDarkMode,
                                             dummy: "assets/cab_add_2.png"),
                                       ),
-                                      /*  Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Text(
-                                              "Brands you love!",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Wrap(
-                                            spacing: 6,
-                                            alignment: WrapAlignment.start,
-                                            runSpacing: 8,
-                                            children: brandsList.map(
-                                              (result) {
-                                                var currentCategoryName =
-                                                    result;
-                                                return _brandYouLoveCard(
-                                                    currentCategoryName);
-                                              },
-                                            ).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Text(
-                                              "Brand Offers",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Wrap(
-                                            spacing: 6,
-                                            alignment: WrapAlignment.start,
-                                            // Horizontal space between items
-                                            runSpacing: 8,
-                                            // Vertical space between lines
-                                            children: brandsList.map(
-                                              (result) {
-                                                var currentCategoryName =
-                                                    result;
-                                                return _brandOfferCard(
-                                                    currentCategoryName);
-                                              },
-                                            ).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin:
-                                            EdgeInsets.only(bottom: 5, top: 12),
-                                        width: screenWidth,
-                                        height: screenHeight * 0.16,
-                                        child: PageView.builder(
-                                          controller: _pageController,
-                                          onPageChanged: (int page) {
-                                            setState(() {
-                                              _currentPage = page;
-                                            });
-                                          },
-                                          physics:
-                                              const AlwaysScrollableScrollPhysics(),
-                                          itemCount: bannerList.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Container(
-                                              width: screenWidth * 0.85,
-                                              child: Center(
-                                                  child: Card(
-                                                color: Colors.white
-                                                    .withOpacity(0.8),
-                                                */ /*shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.cir  cular(17))*/ /*
-                                                margin: EdgeInsets.zero,
-                                                child: Stack(
-                                                  children: [
-                                                    bannerList[index] == ""
-                                                        ? Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    // borderRadius: BorderRadius.circular(15),
-                                                                    color: AppColor
-                                                                        .PRIMARY),
-                                                            child: ClipRRect(
-                                                              // borderRadius: BorderRadius.circular(15),
-                                                              child:
-                                                                  Image.asset(
-                                                                "assets/travel_img.jpg",
-                                                                width:
-                                                                    screenWidth *
-                                                                        0.85,
-                                                                height:
-                                                                    screenHeight *
-                                                                        0.28,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              border: Border.all(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .cardColor,
-                                                                  width: 0.3),
-                                                              color: isDarkMode
-                                                                  ? AppColor
-                                                                      .DARK_CARD_COLOR
-                                                                  : Colors
-                                                                      .white,
-                                                            ),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              child:
-                                                                  Image.network(
-                                                                "${bannerList[index]}",
-                                                                width:
-                                                                    screenWidth,
-                                                                height:
-                                                                    screenHeight *
-                                                                        0.28,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                errorBuilder: (BuildContext
-                                                                        context,
-                                                                    Object
-                                                                        exception,
-                                                                    StackTrace?
-                                                                        stackTrace) {
-                                                                  return Container(
-                                                                    child: Image
-                                                                        .asset(
-                                                                      "assets/travel_img.jpg",
-                                                                      width: screenWidth *
-                                                                          0.85,
-                                                                      height:
-                                                                          screenHeight *
-                                                                              0.2,
-                                                                      fit: BoxFit
-                                                                          .none,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                loadingBuilder: (BuildContext
-                                                                        context,
-                                                                    Widget
-                                                                        child,
-                                                                    ImageChunkEvent?
-                                                                        loadingProgress) {
-                                                                  if (loadingProgress ==
-                                                                      null) {
-                                                                    return child;
-                                                                  } else {
-                                                                    return Shimmer
-                                                                        .fromColors(
-                                                                      baseColor:
-                                                                          Colors
-                                                                              .white38,
-                                                                      highlightColor: isDarkMode
-                                                                          ? AppColor
-                                                                              .DARK_CARD_COLOR
-                                                                          : Colors
-                                                                              .grey,
-                                                                      child:
-                                                                          Container(
-                                                                        decoration: BoxDecoration(
-                                                                            color: isDarkMode
-                                                                                ? AppColor.DARK_CARD_COLOR
-                                                                                : Colors.white,
-                                                                            borderRadius: BorderRadius.circular(0)),
-                                                                        width:
-                                                                            screenWidth,
-                                                                        height: screenHeight *
-                                                                            0.25,
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                  ],
-                                                ),
-                                              )),
-                                            );
-                                            // I omit the part to build card items from the list
-                                          },
-                                        ),
-                                      ),*/
                                     ],
                                   ),
                                 ),
@@ -657,7 +633,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
       setState(() {
         isLoading = false;
         isInternetConnected = false;
-        receiver.stop();
+        //receiver.stop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(Languages.of(context)!.labelNoInternetConnection),
@@ -785,9 +761,9 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           print(apiResponse.message);
-          if (receiver.isListening) {
+          /* if (receiver.isListening) {
             receiver.stop();
-          }
+          }*/
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           Helper.getProfileDetails().then((userDetails) {

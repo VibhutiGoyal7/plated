@@ -159,6 +159,8 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           });
         } else if (currentCategoryName == "Cab Booking") {
           Navigator.pushNamed(context, "/RideBottomNav");
+        }else if (currentCategoryName == "Foods") {
+          Navigator.pushNamed(context, "/RestaurantBottomNav");
         }
       },
       child: IntrinsicHeight(

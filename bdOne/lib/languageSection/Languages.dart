@@ -93,6 +93,12 @@ abstract class Languages {
 
   String get labelHome;
 
+  String get labelShop;
+
+  String get labelCart;
+
+  String get labelFavourite;
+
   String get labelBookCab;
 
   String get labelServices;

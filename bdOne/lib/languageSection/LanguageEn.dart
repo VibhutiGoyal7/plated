@@ -1123,4 +1123,13 @@ class LanguageEn extends Languages {
   @override
   String get labelServices => "Services";
 
+  @override
+  String get labelShop => "Shop";
+
+  @override
+  String get labelCart => "Cart";
+
+  @override
+  String get labelFavourite => "Favourite";
+
 }

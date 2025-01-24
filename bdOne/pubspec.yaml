@@ -121,6 +121,7 @@ flutter:
       - assets/header_day.png
       - assets/header_night.png
       - assets/fingerprint.png
+      - assets/address.png
       - assets/app_logo.png
       - assets/app_logo_dark.png
       - assets/slide_1.png
@@ -159,6 +160,8 @@ flutter:
       - assets/add_2.png
       - assets/cab_add_1.png
       - assets/cab_add_2.png
+      - assets/category_image.png
+      - assets/milk_image.png
 
   fonts:
     - family: CustomFont

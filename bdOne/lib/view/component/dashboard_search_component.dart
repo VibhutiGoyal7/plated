@@ -7,6 +7,7 @@ class DashboardSearchComponent extends StatelessWidget {
   final double screenWidth;
   final double screenHeight;
   final Color primaryColor;
+  final String hintText;
   final Function() onTap;
 
   const DashboardSearchComponent({
@@ -14,6 +15,7 @@ class DashboardSearchComponent extends StatelessWidget {
     required this.queryController,
     required this.screenWidth,
     required this.screenHeight,
+    required this.hintText,
     required this.onTap,
     required this.primaryColor,
   }) : super(key: key);
@@ -37,7 +39,7 @@ class DashboardSearchComponent extends StatelessWidget {
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 1,
-                    offset: Offset(0, 0.5),
+                    offset: Offset(0, 0.3),
                   ),
                 ],
               ),
@@ -60,7 +62,7 @@ class DashboardSearchComponent extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
                           color: Colors.transparent, width: 0.7)),
-                  hintText: "Where are you going?",
+                  hintText: "$hintText",
                   hintStyle: TextStyle(
                     color: AppColor.GREY_TEXT_COLOR,
                     fontSize: 14,
@@ -69,7 +71,8 @@ class DashboardSearchComponent extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                   prefixIcon: Icon(
                     Icons.search_outlined,
-                    color: AppColor.PRIMARY,
+                    size: 20,
+                    color: AppColor.PRIMARY_ACCENT,
                   ),
                 ),
               ),
