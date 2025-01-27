@@ -40,10 +40,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       backgroundColor: AppColor.PRIMARY,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness:
-                isDarkMode ? Brightness.light : Brightness.dark),
+        value:  SystemUiOverlayStyle(
+            statusBarBrightness:
+            isDarkMode ? Brightness.dark : Brightness.light,
+            statusBarColor: AppColor.PRIMARY,
+            statusBarIconBrightness: Brightness.light),
         child: Stack(children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

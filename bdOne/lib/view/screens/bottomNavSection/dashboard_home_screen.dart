@@ -176,9 +176,9 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
         }
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
+        value:  SystemUiOverlayStyle(
             statusBarBrightness:
-                isDarkMode ? Brightness.dark : Brightness.light,
+            isDarkMode ? Brightness.dark : Brightness.light,
             statusBarColor: AppColor.PRIMARY,
             statusBarIconBrightness: Brightness.light),
         child: Scaffold(

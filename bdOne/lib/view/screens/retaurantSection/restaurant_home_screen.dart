@@ -58,35 +58,35 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
   List<ServiceTypeResponse?> categories = [
     ServiceTypeResponse(
         serviceName: 'Fruits',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.red.shade50),
     ServiceTypeResponse(
         serviceName: 'Vegetables',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.yellow.shade50),
     ServiceTypeResponse(
         serviceName: 'Dairy',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.green.shade50),
     ServiceTypeResponse(
         serviceName: 'Spices',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.blue.shade50),
     ServiceTypeResponse(
         serviceName: 'Pulses',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.black12),
     ServiceTypeResponse(
         serviceName: 'Seeds',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.black12),
     ServiceTypeResponse(
         serviceName: 'Nuts',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.black12),
     ServiceTypeResponse(
         serviceName: 'Bakery & Biscuits',
-        icon: 'assets/address.png',
+        icon: '',
         iconBgColor: Colors.black12),
   ];
   List<String> bannerList = ["", "", "", ""];
@@ -103,6 +103,13 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
     super.initState();
     imageUrl = "";
     //receiver.start();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: isDarkMode
+          ? Brightness.light
+          : Brightness
+              .light, // Light ico      // Status bar brightness (for iOS)
+    ));
     /*  receiver.messages.listen((message) {
       print("BroadCast");
     });*/
@@ -190,8 +197,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-            statusBarBrightness:
-                isDarkMode ? Brightness.dark : Brightness.light,
+            statusBarBrightness: Brightness.light,
             statusBarColor: AppColor.PRIMARY,
             statusBarIconBrightness: Brightness.light),
         child: Scaffold(
@@ -248,10 +254,9 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                             screenHeight: 50,
                                             primaryColor:
                                                 AppColor.PRIMARY_ACCENT,
-                                            hintText:
-                                                "What are u looking for ?",
+                                            hintText: "What are u looking for?",
                                             queryController: _searchController,
-                                            screenWidth: screenWidth * 0.6,
+                                            screenWidth: screenWidth * 0.65,
                                           ),
                                           IconButton(
                                             icon: Icon(
@@ -284,7 +289,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                               screenHeight: screenHeight,
                                               isDarkMode: isDarkMode,
                                               primaryColor: AppColor.PRIMARY,
-                                              heading: "Services",
+                                              heading: "Categories",
                                             )
                                           : SizedBox(),
                                       Column(
@@ -295,13 +300,31 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                             children: [
                                               Container(
                                                 padding: const EdgeInsets.only(
-                                                    top: 10, left: 12),
+                                                    top: 10, left: 14),
                                                 child: Text(
                                                   "Daily Products",
                                                   style: TextStyle(
-                                                      fontSize: 14,
+                                                      fontSize: 15,
                                                       fontWeight:
                                                           FontWeight.w500),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10, right: 14),
+                                                child: GestureDetector(
+                                                  onTap: ()=>{
+                                                    Navigator.of(context).pushNamed("/RestaurantProductsScreen")
+                                                  },
+                                                  child: Text(
+                                                    "See all",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 12,
+                                                        color: AppColor
+                                                            .PRIMARY_ACCENT),
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -309,6 +332,8 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                           AnimatedContainer(
                                               width: screenWidth,
                                               height: 220,
+                                              padding: const EdgeInsets.only(
+                                                  top: 6, left: 10),
                                               duration:
                                                   Duration(milliseconds: 300),
                                               curve: Curves.easeInOut,
@@ -317,8 +342,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                 scrollDirection:
                                                     Axis.horizontal,
                                                 // Fit grid inside list
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
+                                                //physics: NeverScrollableScrollPhysics(),
                                                 // Disable grid scrolling
                                                 padding: EdgeInsets.all(4),
                                                 itemCount: categories.length,
@@ -340,7 +364,8 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                       },
                                                       child: Container(
                                                         height: 200,
-                                                        width: screenWidth / 2.6,
+                                                        width:
+                                                            screenWidth / 2.4,
                                                         decoration:
                                                             BoxDecoration(
                                                           color: isDarkMode
@@ -348,9 +373,8 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                               : Colors.white,
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(20),
-                                                          border: Border.all(
-                                                              width: 0.2),
+                                                                  .circular(14),
+                                                              border: Border.all(width: 0.1, color: Colors.black54),
                                                         ),
                                                         padding: EdgeInsets
                                                             .symmetric(
@@ -368,19 +392,24 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                                   .center,
                                                           children: [
                                                             Padding(
-                                                              padding: const EdgeInsets.only(bottom: 18.0),
-                                                              child: ImageViewComponent(
-                                                                height: 95,
-                                                                width: 95,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .all(Radius
-                                                                            .circular(
-                                                                                0)),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      bottom:
+                                                                          18.0),
+                                                              child:
+                                                                  ImageViewComponent(
+                                                                height: 90,
+                                                                width: 90,
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            0)),
                                                                 imageUrl:
                                                                     subCategory
                                                                         ?.icon,
-                                                                isDarkMode: false,
+                                                                isDarkMode:
+                                                                    false,
                                                                 placeholderImage:
                                                                     "assets/milk_image.png",
                                                               ),
@@ -394,8 +423,12 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                                       horizontal:
                                                                           10),
                                                               child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
                                                                   Row(
                                                                     mainAxisAlignment:
@@ -403,18 +436,19 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                                             .spaceBetween,
                                                                     children: [
                                                                       Text(
-                                                                          "480",
+                                                                        " ৳480",
                                                                         style: TextStyle(
-                                                                           fontSize: 18,
-                                                                          color: AppColor.TEXT_RED,
-                                                                          fontWeight: FontWeight.bold
-                                                                        ),
+                                                                            fontSize:
+                                                                                16,
+                                                                            color:
+                                                                                AppColor.TEXT_RED,
+                                                                            fontWeight: FontWeight.bold),
                                                                       ),
                                                                       Container(
                                                                           height:
-                                                                              22,
+                                                                              24,
                                                                           width:
-                                                                              22,
+                                                                              24,
                                                                           alignment: Alignment
                                                                               .center,
                                                                           decoration: BoxDecoration(
@@ -423,7 +457,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                                           child: Icon(
                                                                             Icons.add,
                                                                             size:
-                                                                                16,
+                                                                                18,
                                                                             color:
                                                                                 Colors.white,
                                                                           ))
@@ -435,17 +469,30 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                          "480",
-                                                                          style: TextStyle(
-                                                                              fontSize: 13,
-                                                                            color: Colors.black87
+                                                                          " ৳680",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                11,
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            decoration:
+                                                                                TextDecoration.lineThrough,
+                                                                            decorationColor:
+                                                                                Colors.black54,
                                                                           )),
-                                                                      SizedBox(width: 5),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              5),
                                                                       Text(
-                                                                          "52% Off", style: TextStyle(
-                                                                        fontSize: 10,color: AppColor.PRIMARY_ACCENT,
-                                                                        fontWeight: FontWeight.w600
-                                                                      ),),
+                                                                        "52% Off",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                9,
+                                                                            color:
+                                                                                AppColor.PRIMARY_ACCENT,
+                                                                            fontWeight: FontWeight.w600),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                   Text(
@@ -456,11 +503,11 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                                     maxLines: 2,
                                                                     textAlign:
                                                                         TextAlign
-                                                                            .center,
+                                                                            .start,
                                                                     style:
                                                                         TextStyle(
                                                                       fontSize:
-                                                                          16,
+                                                                          12,
                                                                       color: isDarkMode
                                                                           ? AppColor
                                                                               .WHITE

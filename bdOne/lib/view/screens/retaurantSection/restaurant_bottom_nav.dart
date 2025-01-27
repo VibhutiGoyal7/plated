@@ -1,6 +1,7 @@
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
 import 'package:BDOne/view/screens/bottomNavSection/documents_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_cart_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
@@ -32,7 +33,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
   static List<Widget> _widgetOptions = <Widget>[
     RestaurantHomeScreen(),
     RideServicesScreen(),
-    HistoryScreen(),
+    RestaurantCartScreen(),
     ProfileScreen(),
   ];
 

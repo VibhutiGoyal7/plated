@@ -29,7 +29,7 @@ class DashboardSearchComponent extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              width: screenWidth ,
+              width: screenWidth,
               height: 45,
               margin: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
               decoration: BoxDecoration(
@@ -45,8 +45,9 @@ class DashboardSearchComponent extends StatelessWidget {
               ),
               child: TextField(
                 style: TextStyle(
-                  fontSize: 16.0,
-                ),/*
+                  fontSize: 14.0,
+                ),
+                /*
                 controller: queryController,*/
                 readOnly: true,
                 onSubmitted: (value) {},
@@ -56,16 +57,16 @@ class DashboardSearchComponent extends StatelessWidget {
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                          color: Colors.transparent, width: 0.8)),
+                      borderSide:
+                          BorderSide(color: Colors.transparent, width: 0.8)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                          color: Colors.transparent, width: 0.7)),
+                      borderSide:
+                          BorderSide(color: Colors.transparent, width: 0.7)),
                   hintText: "$hintText",
                   hintStyle: TextStyle(
                     color: AppColor.GREY_TEXT_COLOR,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 6, vertical: 6),

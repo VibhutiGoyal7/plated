@@ -51,7 +51,7 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           width: screenWidth,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          height: _isExpanded ? 300 : 130,
+          height: _isExpanded ? 300 : 100,
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           decoration: BoxDecoration(
@@ -159,7 +159,7 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           });
         } else if (currentCategoryName == "Cab Booking") {
           Navigator.pushNamed(context, "/RideBottomNav");
-        }else if (currentCategoryName == "Foods") {
+        } else if (currentCategoryName == "Foods") {
           Navigator.pushNamed(context, "/RestaurantBottomNav");
         }
       },
@@ -186,12 +186,14 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
             SizedBox(
               height: 1,
             ),
-            Text(
-              capitalizeFirstLetter("${currentCategoryName}"),
-              overflow: TextOverflow.fade,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 10,
+            Container(
+              child: Text(
+                capitalizeFirstLetter("${currentCategoryName}"),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                ),
               ),
             ),
           ],

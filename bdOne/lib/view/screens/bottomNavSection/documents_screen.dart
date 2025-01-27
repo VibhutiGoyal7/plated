@@ -111,13 +111,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             body:  Stack(
                     children: [
                       AnnotatedRegion<SystemUiOverlayStyle>(
-                        value: SystemUiOverlayStyle(
-                          statusBarColor: Colors.transparent,
-                          statusBarIconBrightness:
-                              isDarkMode ? Brightness.light : Brightness.dark,
-                          statusBarBrightness:
-                              isDarkMode ? Brightness.dark : Brightness.light,
-                        ),
+                        value:  SystemUiOverlayStyle(
+                            statusBarBrightness:
+                            isDarkMode ? Brightness.dark : Brightness.light,
+                            statusBarColor: AppColor.PRIMARY,
+                            statusBarIconBrightness: Brightness.light),
                         child: CustomScrollView(
                           controller: _scrollController,
                           slivers: [

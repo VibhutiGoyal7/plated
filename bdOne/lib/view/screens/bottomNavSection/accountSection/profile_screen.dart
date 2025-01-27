@@ -53,13 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: isDarkMode
-          ? Brightness.dark
-          : Brightness.light, // Light icons for the status bar
-      //statusBarBrightness: Brightness.dark,       // Status bar brightness (for iOS)
-    ));
+    SystemChrome.setSystemUIOverlayStyle( SystemUiOverlayStyle(
+        statusBarBrightness:
+        isDarkMode ? Brightness.dark : Brightness.light,
+        statusBarColor: AppColor.PRIMARY,
+        statusBarIconBrightness: Brightness.light),);
     customerName = "";
     userName = "";
     imageUrl = "";
@@ -210,13 +208,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Scaffold(
           body: Stack(children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness:
-                    isDarkMode ? Brightness.light : Brightness.dark,
-                statusBarBrightness:
-                    isDarkMode ? Brightness.dark : Brightness.light,
-              ),
+              value:  SystemUiOverlayStyle(
+                  statusBarBrightness:
+                  isDarkMode ? Brightness.dark : Brightness.light,
+                  statusBarColor: AppColor.PRIMARY,
+                  statusBarIconBrightness: Brightness.light),
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(

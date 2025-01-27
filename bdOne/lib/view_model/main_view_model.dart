@@ -19,7 +19,6 @@ import '../model/request/driverCurrentLocRequest.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateTpinRequest.dart';
 import '../model/request/rideRequest.dart';
-import '../model/request/signInRequest.dart';
 import '../model/request/signUpRequest.dart';
 import '../model/request/vehicleListRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
@@ -29,13 +28,14 @@ import '../model/response/driverStatusResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
 import '../model/response/initiateRideResponse.dart';
-import '../model/response/otpVerifyResponse.dart';
 import '../model/response/vehicleListResponse.dart';
 
 class MainViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
 
   PhoneVerifyResponse? _media;
+
+  String currencySymbol = "৳";
 
   ApiResponse get response {
     return _apiResponse;
@@ -57,7 +57,8 @@ class MainViewModel with ChangeNotifier {
       PhoneVerifyResponse phoneVerifyResponse =
           await MainRepository().fetchPhoneVerifyResponse(value, phoneRequest);
       print("Yess" + phoneVerifyResponse.mobileOtp.toString());
-      if (phoneVerifyResponse.status == 200 || phoneVerifyResponse.status == 201) {
+      if (phoneVerifyResponse.status == 200 ||
+          phoneVerifyResponse.status == 201) {
         _apiResponse = ApiResponse.completed(phoneVerifyResponse);
       } else {
         print("viewmodel ${phoneVerifyResponse.message}");
@@ -82,7 +83,8 @@ class MainViewModel with ChangeNotifier {
           await MainRepository().existingUserData(value, existingUserRequest);
       print("Yess" + existingUserResponse.userFound.toString());
       //_apiResponse = ApiResponse.completed(existingUserResponse);
-      if (existingUserResponse.status == 200 || existingUserResponse.status == 201) {
+      if (existingUserResponse.status == 200 ||
+          existingUserResponse.status == 201) {
         _apiResponse = ApiResponse.completed(existingUserResponse);
       } else {
         print("viewmodel ${existingUserResponse.message}");
@@ -100,9 +102,10 @@ class MainViewModel with ChangeNotifier {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      VehicleListResponse vehicleListResponse =
-          await MainRepository().getVehicleFareListData(value, vehicleListRequest);
-      if (vehicleListResponse.status == 200 || vehicleListResponse.status == 201) {
+      VehicleListResponse vehicleListResponse = await MainRepository()
+          .getVehicleFareListData(value, vehicleListRequest);
+      if (vehicleListResponse.status == 200 ||
+          vehicleListResponse.status == 201) {
         _apiResponse = ApiResponse.completed(vehicleListResponse);
       } else {
         _apiResponse = ApiResponse.error(vehicleListResponse.message);
@@ -144,11 +147,12 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
     try {
       //print(phoneRequest.customer.phoneNumber);
-      DriverStatusResponse driverStatusResponse =
-          await MainRepository().getDriverStatus(value, driverCurrentLocRequest);
+      DriverStatusResponse driverStatusResponse = await MainRepository()
+          .getDriverStatus(value, driverCurrentLocRequest);
       //print("Yess"+ otpVerifyResponse.token.toString());
       //_apiResponse = ApiResponse.completed(otpVerifyResponse);
-      if (driverStatusResponse.status == 200 || driverStatusResponse.status == 201) {
+      if (driverStatusResponse.status == 200 ||
+          driverStatusResponse.status == 201) {
         _apiResponse = ApiResponse.completed(driverStatusResponse);
       } else {
         _apiResponse = ApiResponse.error(driverStatusResponse.message);
@@ -170,7 +174,8 @@ class MainViewModel with ChangeNotifier {
           .generateTpinrequestData(value, generateTpinrequest);
       print("Yess" + generateTpinResponse.message.toString());
       //_apiResponse = ApiResponse.completed(otpVerifyResponse);
-      if (generateTpinResponse.status  == 200 || generateTpinResponse.status == 20) {
+      if (generateTpinResponse.status == 200 ||
+          generateTpinResponse.status == 20) {
         _apiResponse = ApiResponse.completed(generateTpinResponse);
       } else {
         _apiResponse = ApiResponse.error(generateTpinResponse.message);
@@ -182,7 +187,8 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signUpUsingMobileApi(String value, SignUpRequest signUpRequest) async {
+  Future<void> signUpUsingMobileApi(
+      String value, SignUpRequest signUpRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
     print("Yess" + signUpRequest.customer.phoneNumber);
     notifyListeners();
@@ -192,7 +198,7 @@ class MainViewModel with ChangeNotifier {
           await MainRepository().signUpUsingMobileApi(value, signUpRequest);
       print("Yess" + signUpResponse.message.toString());
       //_apiResponse = ApiResponse.completed(signInResponse);
-      if (signUpResponse.status  == 200 || signUpResponse.status == 201) {
+      if (signUpResponse.status == 200 || signUpResponse.status == 201) {
         _apiResponse = ApiResponse.completed(signUpResponse);
       } else {
         _apiResponse = ApiResponse.error(signUpResponse.message);
@@ -215,7 +221,8 @@ class MainViewModel with ChangeNotifier {
           .fetchSetUpScreenData(value, setUpAccountRequest);
       print("Yess" + setUpAccountResponse.email.toString());
       //_apiResponse = ApiResponse.completed(setUpAccountResponse);
-      if (setUpAccountResponse.status  == 200 || setUpAccountResponse.status == 201) {
+      if (setUpAccountResponse.status == 200 ||
+          setUpAccountResponse.status == 201) {
         _apiResponse = ApiResponse.completed(setUpAccountResponse);
       } else {
         print("viewmodel ${setUpAccountResponse.message}");
@@ -228,15 +235,15 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future<void> putMultiFormResponse(String value, File file ,String firstName,String lastName,String dob) async {
+  Future<void> putMultiFormResponse(String value, File file, String firstName,
+      String lastName, String dob) async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      ProfileResponse profileResponse =
-          await MainRepository().putMultiFormResponse(value, file ,firstName, lastName, dob);
+      ProfileResponse profileResponse = await MainRepository()
+          .putMultiFormResponse(value, file, firstName, lastName, dob);
       print("Yess" + profileResponse.message.toString());
-      if (profileResponse.status  == 200 || profileResponse.status == 201) {
+      if (profileResponse.status == 200 || profileResponse.status == 201) {
         _apiResponse = ApiResponse.completed(profileResponse);
       } else {
         _apiResponse = ApiResponse.error(profileResponse.message);
@@ -254,16 +261,15 @@ class MainViewModel with ChangeNotifier {
     //print("Yess"+ changeOldPassRequest.customer.email);
     notifyListeners();
     try {
-      GenerateTpinResponse generateTpinResponse =
-      await MainRepository()
+      GenerateTpinResponse generateTpinResponse = await MainRepository()
           .ChangeWithOldPasswordData(value, changeOldPassRequest);
 
-      if (generateTpinResponse.status == 200 || generateTpinResponse.status == 201) {
+      if (generateTpinResponse.status == 200 ||
+          generateTpinResponse.status == 201) {
         _apiResponse = ApiResponse.completed(generateTpinResponse);
       } else {
         _apiResponse = ApiResponse.error(generateTpinResponse.message);
       }
-
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(e);
@@ -347,7 +353,8 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + countryListResponse.message.toString());
 
       //_apiResponse = ApiResponse.completed(countryListResponse);
-      if (countryListResponse.status  == 200 || countryListResponse.status == 201) {
+      if (countryListResponse.status == 200 ||
+          countryListResponse.status == 201) {
         _apiResponse = ApiResponse.completed(countryListResponse);
       } else {
         _apiResponse = ApiResponse.error(countryListResponse.message);
@@ -368,7 +375,7 @@ class MainViewModel with ChangeNotifier {
       print("Yess" + kycStatusResponse.message.toString());
 
       //_apiResponse = ApiResponse.completed(kycStatusResponse);
-      if (kycStatusResponse.status  == 200 || kycStatusResponse.status == 201) {
+      if (kycStatusResponse.status == 200 || kycStatusResponse.status == 201) {
         _apiResponse = ApiResponse.completed(kycStatusResponse);
       } else {
         _apiResponse = ApiResponse.error(kycStatusResponse.message);

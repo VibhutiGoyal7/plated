@@ -28,7 +28,10 @@ import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_bottom_nav.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_cart_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_home_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_item_view_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_products_screen.dart';
 import 'package:BDOne/view/screens/rideSection/book_ride_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_booked_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_bottom_nav.dart';
@@ -50,6 +53,7 @@ import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/response/ServiceTypeResponse.dart';
 import 'model/response/driverStatusResponse.dart';
 import 'model/response/notificationOtpResponse.dart';
 
@@ -333,6 +337,17 @@ class _MyAppState extends State<MyApp> {
             },
             '/RestaurantHomeScreen': (context) {
               return RestaurantHomeScreen();
+            },
+            '/RestaurantProductsScreen': (context) {
+              return RestaurantProductsScreen();
+            },
+            '/RestaurantCartScreen': (context) {
+              return RestaurantCartScreen();
+            },
+            '/RestaurantItemViewScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as ServiceTypeResponse?;
+              return RestaurantItemViewScreen(data:  args,);
             },
           }),
     );

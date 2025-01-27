@@ -1,7 +1,6 @@
 import 'package:BDOne/model/response/ServiceTypeResponse.dart';
 import 'package:BDOne/theme/AppColor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../utils/Util.dart';
 import '../image_view_components.dart';
@@ -48,10 +47,20 @@ class _RestaurantDashboardComponentState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 10, left: 12),
+              padding: const EdgeInsets.only(top: 10, left: 14),
               child: Text(
                 "${widget.heading}",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, right: 14),
+              child: Text(
+                "See all",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    color: AppColor.PRIMARY_ACCENT),
               ),
             ),
           ],
@@ -60,6 +69,18 @@ class _RestaurantDashboardComponentState
             width: screenWidth,
             duration: Duration(milliseconds: 300),
             curve: Curves.easeInOut,
+            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColor.WHITE,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.1),
+                  offset: Offset(0, 0),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
             // Expandable height control
             child: GridView.builder(
               shrinkWrap: true,
@@ -68,8 +89,8 @@ class _RestaurantDashboardComponentState
               // Disable grid scrolling
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4, // 4 items per row
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 4,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 0,
                 childAspectRatio: 0.9,
               ),
               padding: EdgeInsets.all(4),
@@ -88,42 +109,35 @@ class _RestaurantDashboardComponentState
                       });
                     },
                     child: Container(
-                      height: 54,
-                      width: 40,
                       decoration: BoxDecoration(
                         color: isDarkMode ? Colors.black : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: EdgeInsets.symmetric(vertical: 2, horizontal: 1),
-                      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 1),
+                      margin: EdgeInsets.symmetric(horizontal: 1),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           ImageViewComponent(
-                            height: 60,
-                            width: 60,
+                            height: 48,
+                            width: 48,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100)),
                             imageUrl: subCategory?.icon,
                             isDarkMode: false,
                             placeholderImage: "assets/category_image.png",
                           ),
-                          Container(
-                            //width: 58,
-                            alignment: Alignment.center,
-                            child: Text(
-                              "${capitalizeFirstLetter("${subCategory?.serviceName}")}",
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: isDarkMode
-                                    ? AppColor.WHITE
-                                    : AppColor.BLACK,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          Text(
+                            "${capitalizeFirstLetter("${subCategory?.serviceName}")}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color:
+                                  isDarkMode ? AppColor.WHITE : AppColor.BLACK,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -137,6 +151,5 @@ class _RestaurantDashboardComponentState
             ))
       ],
     );
-
   }
 }
