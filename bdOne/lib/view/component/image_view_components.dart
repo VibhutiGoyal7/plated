@@ -41,7 +41,7 @@ class _ImageViewComponentState extends State<ImageViewComponent> {
                 "${widget.placeholderImage}",
                 width: widget.width,
                 height: widget.height,
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
               ),
             ),
           )
@@ -59,7 +59,7 @@ class _ImageViewComponentState extends State<ImageViewComponent> {
                 "${widget.imageUrl}",
                 width: widget.width,
                 height: widget.height,
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
                   return Container(

@@ -110,292 +110,110 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           child: Scaffold(
             body:  Stack(
                     children: [
-                      AnnotatedRegion<SystemUiOverlayStyle>(
-                        value:  SystemUiOverlayStyle(
-                            statusBarBrightness:
-                            isDarkMode ? Brightness.dark : Brightness.light,
-                            statusBarColor: AppColor.PRIMARY,
-                            statusBarIconBrightness: Brightness.light),
-                        child: CustomScrollView(
-                          controller: _scrollController,
-                          slivers: [
-                            CupertinoSliverNavigationBar(
-                              largeTitle: Text(
-                                "${Languages.of(context)?.labelDocuments}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
-                                ),
-                              ),
-                              middle: Text(
-                                "${Languages.of(context)?.labelDocuments}",
-                                style: TextStyle(fontSize: 22,
-                                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
-                              ),
-                              backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-                              // Control the color
-                              trailing: Container(
-                                width: screenWidth * 0.3,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.transfer_within_a_station_outlined,
-                                      size: 20,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Icon(
-                                      Icons.menu_sharp,
-                                      size: 24,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              alwaysShowMiddle: false,
-                              leading: SizedBox(),
-                            ),
-                            SliverPersistentHeader(
-                              pinned: isSearch ? true : false,
-                              // Keeps the header fixed at the top when scrolling
-                              delegate: FixedHeaderDelegate(
-                                child: Container(
-                                  color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-                                  // Background color for the fixed header
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(horizontal: 6),
-                                  child: SearchComponent(
-                                      width: 1,
-                                      screenWidth: screenWidth,
-                                      isDarkMode: isDarkMode,
-                                      searchController: _searchController,
-                                      onChanged: () {}),
-                                ),
+                      CustomScrollView(
+                        controller: _scrollController,
+                        slivers: [
+                          CupertinoSliverNavigationBar(
+                            largeTitle: Text(
+                              "${Languages.of(context)?.labelDocuments}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
                               ),
                             ),
-                            SliverToBoxAdapter(
-                              child: Container(
-                                /* decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border:
-                              Border.all(color: Colors.grey, width: 0.6)),*/
-                                child: Center(
-                                  child: SegmentedButton(
-                                    style: SegmentedButton.styleFrom(
-                                      fixedSize: Size(screenWidth, 30),
-                                      side: BorderSide(
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                          width: 0.4),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 24, vertical: 0),
-                                      foregroundColor: isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      selectedForegroundColor: Colors.white,
-                                      selectedBackgroundColor: AppColor.PRIMARY,
-                                    ),
-                                    segments: [
-                                      for (int i = 0; i < heading.length; i++)
-                                        ButtonSegment<String>(
-                                          value: heading[i],
-                                          label: Text(heading[i]),
-                                        ),
-                                    ],
-                                    selected: {selectedHeading},
-                                    // Set of selected values
-                                    onSelectionChanged: (Set<String> selected) {
-                                      setState(() {
-                                        // Get the first selected value from the set (assuming only one selection)
-                                        selectedHeading = selected.first;
-                                      });
-                                    },
-                                  )
-
-                                  /*Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isIssued = true;
-                                        });
-                                      },
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(8),
-                                              bottomLeft: Radius.circular(8),
-                                            ),
-                                            color: isIssued
-                                                ? AppColor.PRIMARY
-                                                : Colors.white,
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                                "${Languages.of(context)?.labelIssued}",
-                                                style: TextStyle(
-                                                    color: isIssued
-                                                        ? Colors.white
-                                                        : AppColor.PRIMARY),
-                                              ))),
-                                    )),
-                                Container(
-                                  width: 1,
-                                  color: Colors.grey,
-                                ),
-                                Expanded(
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isIssued = false;
-                                          });
-                                        },
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(8),
-                                                bottomRight: Radius.circular(8),
-                                              ),
-                                              color: !isIssued
-                                                  ? AppColor.PRIMARY
-                                                  : Colors.white,
-                                            ),
-                                            child: Center(
-                                                child: Text(
-                                                    "${Languages.of(context)?.labelUploaded}",
-                                                    style: TextStyle(
-                                                        color: !isIssued
-                                                            ? Colors.white
-                                                            : AppColor
-                                                            .PRIMARY)))))),
-                              ],
-                            )*/
-                                  ,
-                                ),
-                              ),
+                            middle: Text(
+                              "${Languages.of(context)?.labelDocuments}",
+                              style: TextStyle(fontSize: 22,
+                                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
                             ),
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0, vertical: 4),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      _buildTab(Icons.file_copy_sharp,
-                                          "${Languages.of(context)?.labelAllDocuments}"),
-                                      _buildTab(Icons.person_outline_outlined,
-                                          "${Languages.of(context)?.labelPersonal}"),
-                                      _buildTab(
-                                          Icons.local_post_office_outlined,
-                                          "${Languages.of(context)?.labelProfessional}"),
-                                      _buildTab(Icons.padding_outlined,
-                                          "${Languages.of(context)?.labelLegal}"),
-                                      _buildTab(Icons.home_work_outlined,
-                                          "${Languages.of(context)?.labelProperty}"),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (context, index) {
-                                  return _buildCard(list[index]);
-                                },
-                                childCount: list.length,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        /*SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical: 12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${Languages.of(context)?.labelDocuments}",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              Row(
+                            backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                            // Control the color
+                            trailing: Container(
+                              width: screenWidth * 0.3,
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isSearch = !isSearch;
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.search_outlined,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
                                   Icon(
                                     Icons.transfer_within_a_station_outlined,
                                     size: 20,
                                   ),
                                   SizedBox(
-                                    width: 12,
+                                    width: 10,
                                   ),
                                   Icon(
                                     Icons.menu_sharp,
                                     size: 24,
                                   ),
-                                  SizedBox(
-                                    width: 6,
-                                  ),
                                 ],
                               ),
-                            ],
+                            ),
+                            alwaysShowMiddle: false,
+                            leading: SizedBox(),
                           ),
-                          SizedBox(
-                            height: isSearch ? 5 : 12,
+                          SliverPersistentHeader(
+                            pinned: isSearch ? true : false,
+                            // Keeps the header fixed at the top when scrolling
+                            delegate: FixedHeaderDelegate(
+                              child: Container(
+                                color:isDarkMode? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                                // Background color for the fixed header
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                child: SearchComponent(
+                                    width: 1,
+                                    screenWidth: screenWidth,
+                                    isDarkMode: isDarkMode,
+                                    searchController: _searchController,
+                                    onChanged: () {}),
+                              ),
+                            ),
                           ),
-                          isSearch ?
-                          Row(
+                          SliverToBoxAdapter(
+                            child: Container(
+                              /* decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                            Border.all(color: Colors.grey, width: 0.6)),*/
+                              child: Center(
+                                child: SegmentedButton(
+                                  style: SegmentedButton.styleFrom(
+                                    fixedSize: Size(screenWidth, 30),
+                                    side: BorderSide(
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        width: 0.4),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 0),
+                                    foregroundColor: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                    selectedForegroundColor: Colors.white,
+                                    selectedBackgroundColor: AppColor.PRIMARY,
+                                  ),
+                                  segments: [
+                                    for (int i = 0; i < heading.length; i++)
+                                      ButtonSegment<String>(
+                                        value: heading[i],
+                                        label: Text(heading[i]),
+                                      ),
+                                  ],
+                                  selected: {selectedHeading},
+                                  // Set of selected values
+                                  onSelectionChanged: (Set<String> selected) {
+                                    setState(() {
+                                      // Get the first selected value from the set (assuming only one selection)
+                                      selectedHeading = selected.first;
+                                    });
+                                  },
+                                )
+
+                                /*Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SearchComponent(width: 0.8, screenWidth: screenWidth, isDarkMode: isDarkMode,
-                                  searchController: _searchController, onChanged: (){}),
-                              GestureDetector(onTap:(){
-                                setState(() {
-                                  isSearch = false;
-                                });
-                              },
-                                  child: Icon(Icons.cancel_outlined,color: Colors.grey,))
-                            ],
-                          ) :SizedBox(),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border:
-                                    Border.all(color: Colors.grey, width: 0.6)),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                      child: GestureDetector(
+                              Expanded(
+                                  child: GestureDetector(
                                     onTap: () {
                                       setState(() {
                                         isIssued = true;
@@ -413,101 +231,81 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                         ),
                                         child: Center(
                                             child: Text(
-                                          "${Languages.of(context)?.labelIssued}",
-                                          style: TextStyle(
-                                              color: isIssued
-                                                  ? Colors.white
-                                                  : AppColor.PRIMARY),
-                                        ))),
+                                              "${Languages.of(context)?.labelIssued}",
+                                              style: TextStyle(
+                                                  color: isIssued
+                                                      ? Colors.white
+                                                      : AppColor.PRIMARY),
+                                            ))),
                                   )),
-                                  Container(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Expanded(
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isIssued = false;
-                                            });
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(8),
-                                                  bottomRight: Radius.circular(8),
-                                                ),
-                                                color: !isIssued
-                                                    ? AppColor.PRIMARY
-                                                    : Colors.white,
-                                              ),
-                                              child: Center(
-                                                  child: Text(
-                                                      "${Languages.of(context)?.labelUploaded}",
-                                                      style: TextStyle(
-                                                          color: !isIssued
-                                                              ? Colors.white
-                                                              : AppColor
-                                                                  .PRIMARY)))))),
-                                ],
+                              Container(
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                              Expanded(
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isIssued = false;
+                                        });
+                                      },
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(8),
+                                              bottomRight: Radius.circular(8),
+                                            ),
+                                            color: !isIssued
+                                                ? AppColor.PRIMARY
+                                                : Colors.white,
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                                  "${Languages.of(context)?.labelUploaded}",
+                                                  style: TextStyle(
+                                                      color: !isIssued
+                                                          ? Colors.white
+                                                          : AppColor
+                                                          .PRIMARY)))))),
+                            ],
+                          )*/
+                                ,
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                _buildTab(Icons.file_copy_sharp,
-                                    "${Languages.of(context)?.labelAllDocuments}"),
-                                _buildTab(Icons.person_outline_outlined,
-                                    "${Languages.of(context)?.labelPersonal}"),
-                                _buildTab(Icons.local_post_office_outlined,
-                                    "${Languages.of(context)?.labelProfessional}"),
-                                _buildTab(Icons.padding_outlined,
-                                    "${Languages.of(context)?.labelLegal}"),
-                                _buildTab(Icons.home_work_outlined,
-                                    "${Languages.of(context)?.labelProperty}"),
-                              ],
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    _buildTab(Icons.file_copy_sharp,
+                                        "${Languages.of(context)?.labelAllDocuments}"),
+                                    _buildTab(Icons.person_outline_outlined,
+                                        "${Languages.of(context)?.labelPersonal}"),
+                                    _buildTab(
+                                        Icons.local_post_office_outlined,
+                                        "${Languages.of(context)?.labelProfessional}"),
+                                    _buildTab(Icons.padding_outlined,
+                                        "${Languages.of(context)?.labelLegal}"),
+                                    _buildTab(Icons.home_work_outlined,
+                                        "${Languages.of(context)?.labelProperty}"),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                          Text(
-                            "7${Languages.of(context)?.labelIssuedDocumentsUnder} 'All Documents'",
-                            style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black54),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Container(
-                            height: isSearch
-                                ? screenHeight * 0.52
-                                : screenHeight * 0.58,
-                            child: ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              controller: _scrollController,
-                              itemCount: list.length,
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.only(bottom: 5),
-                              itemBuilder: (BuildContext context, int index) {
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
                                 return _buildCard(list[index]);
                               },
+                              childCount: list.length,
                             ),
                           ),
-                          CustomButtonComponent(
-                              text:
-                                  '${Languages.of(context)?.labelRequestADocument}',
-                              screenWidth: screenWidth,
-                              isDarkMode: isDarkMode,
-                              onTap: () {})
                         ],
-                      ),
-                    ),
-                  ),*/
                       ),
                       isLoading
                           ? Stack(

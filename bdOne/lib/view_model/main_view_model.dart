@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:BDOne/model/apis/api_response.dart';
 import 'package:BDOne/model/main_repository.dart';
+import 'package:BDOne/model/request/productListRequest.dart';
 import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInWithPhoneNumber.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
@@ -19,6 +20,7 @@ import '../model/request/driverCurrentLocRequest.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateTpinRequest.dart';
 import '../model/request/rideRequest.dart';
+import '../model/request/signInRequest.dart';
 import '../model/request/signUpRequest.dart';
 import '../model/request/vehicleListRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
@@ -28,6 +30,10 @@ import '../model/response/driverStatusResponse.dart';
 import '../model/response/existingUserResponse.dart';
 import '../model/response/generateTpinResponse.dart';
 import '../model/response/initiateRideResponse.dart';
+import '../model/response/otpVerifyResponse.dart';
+import '../model/response/productsListReponse.dart';
+import '../model/response/signInResponse.dart';
+import '../model/response/transactionListReponse.dart';
 import '../model/response/vehicleListResponse.dart';
 
 class MainViewModel with ChangeNotifier {
@@ -45,9 +51,8 @@ class MainViewModel with ChangeNotifier {
     return _media;
   }
 
-  /// Call the media service and gets the data of requested media data of
-  /// an artist.
-  Future<void> PhoneVerifyData(String value, PhoneRequest phoneRequest) async {
+  //Authentication
+  Future<void> PhoneVerifyData(PhoneRequest phoneRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
     //String requestAsString = phoneRequestToString(request);
     notifyListeners();
@@ -55,13 +60,11 @@ class MainViewModel with ChangeNotifier {
       print(phoneRequest.customer.phoneNumber);
 
       PhoneVerifyResponse phoneVerifyResponse =
-          await MainRepository().fetchPhoneVerifyResponse(value, phoneRequest);
-      print("Yess" + phoneVerifyResponse.mobileOtp.toString());
+          await MainRepository().fetchPhoneVerifyResponse(phoneRequest);
       if (phoneVerifyResponse.status == 200 ||
           phoneVerifyResponse.status == 201) {
         _apiResponse = ApiResponse.completed(phoneVerifyResponse);
       } else {
-        print("viewmodel ${phoneVerifyResponse.message}");
         _apiResponse = ApiResponse.error(phoneVerifyResponse.message);
       }
     } catch (e) {
@@ -71,8 +74,52 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> existingUserData(
-      String value, ExistingUserRequest existingUserRequest) async {
+  Future<void> signInWithPass(SignInRequest signInRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("Yess" + signInRequest.customer.phoneNumber);
+    notifyListeners();
+    try {
+      print(signInRequest.customer.phoneNumber);
+      SignInResponse signInResponse =
+          await MainRepository().signInWithPass(signInRequest);
+      print("ApiResponse ${signInResponse.status}");
+      //_apiResponse = ApiResponse.completed(signInResponse);
+      if (signInResponse.status == 200 || signInResponse.status == 201) {
+        print("ApiResponse ${signInResponse.countryName}");
+        _apiResponse = ApiResponse.completed(signInResponse);
+      } else {
+        _apiResponse = ApiResponse.error(signInResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("signInResponse $e");
+    }
+    notifyListeners();
+  }
+
+  Future<void> fetchOtpVerifyData(PhoneRequest phoneRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    //print("Yess" + phoneRequest.customer.mobileOtp);
+    notifyListeners();
+    try {
+      //print(phoneRequest.customer.phoneNumber);
+      OtpVerifyResponse otpVerifyResponse =
+          await MainRepository().fetchOtpVerifyData(phoneRequest);
+      //print("Yess"+ otpVerifyResponse.token.toString());
+      //_apiResponse = ApiResponse.completed(otpVerifyResponse);
+      if (otpVerifyResponse.status == 200 || otpVerifyResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(otpVerifyResponse);
+      } else {
+        _apiResponse = ApiResponse.error(otpVerifyResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> existingUserData(ExistingUserRequest existingUserRequest) async {
     _apiResponse = ApiResponse.loading('Loading');
     //String requestAsString = phoneRequestToString(request);
     notifyListeners();
@@ -80,9 +127,7 @@ class MainViewModel with ChangeNotifier {
       print(existingUserRequest.customer.phoneNumber);
 
       ExistingUserResponse? existingUserResponse =
-          await MainRepository().existingUserData(value, existingUserRequest);
-      print("Yess" + existingUserResponse.userFound.toString());
-      //_apiResponse = ApiResponse.completed(existingUserResponse);
+          await MainRepository().existingUserData(existingUserRequest);
       if (existingUserResponse.status == 200 ||
           existingUserResponse.status == 201) {
         _apiResponse = ApiResponse.completed(existingUserResponse);
@@ -211,14 +256,14 @@ class MainViewModel with ChangeNotifier {
   }
 
   Future<void> fetchSetUpScreenData(
-      String value, SetUpAccountRequest setUpAccountRequest) async {
+      SetUpAccountRequest setUpAccountRequest, String token) async {
     _apiResponse = ApiResponse.loading('Loading');
     print("Yess" + setUpAccountRequest.customer.email);
     notifyListeners();
     try {
-      print(setUpAccountRequest.customer.email);
+      //print(setUpAccountRequest.customer.email);
       SetUpAccountResponse setUpAccountResponse = await MainRepository()
-          .fetchSetUpScreenData(value, setUpAccountRequest);
+          .fetchSetUpScreenData(setUpAccountRequest, token);
       print("Yess" + setUpAccountResponse.email.toString());
       //_apiResponse = ApiResponse.completed(setUpAccountResponse);
       if (setUpAccountResponse.status == 200 ||
@@ -344,12 +389,13 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchCountryList(String value) async {
+  Future<void> fetchCategoryListApi() async {
+
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
-      CountryListResponse countryListResponse =
-          await MainRepository().fetchCountryList(value);
+      CategoryListResponse countryListResponse =
+          await MainRepository().fetchCategoryListApi();
       print("Yess" + countryListResponse.message.toString());
 
       //_apiResponse = ApiResponse.completed(countryListResponse);
@@ -362,27 +408,6 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print(" catch ${e}");
-    }
-    notifyListeners();
-  }
-
-  Future<void> kycStatusData(String value) async {
-    _apiResponse = ApiResponse.loading('Loading');
-    notifyListeners();
-    try {
-      KycStatusResponse kycStatusResponse =
-          await MainRepository().kycStatusData(value);
-      print("Yess" + kycStatusResponse.message.toString());
-
-      //_apiResponse = ApiResponse.completed(kycStatusResponse);
-      if (kycStatusResponse.status == 200 || kycStatusResponse.status == 201) {
-        _apiResponse = ApiResponse.completed(kycStatusResponse);
-      } else {
-        _apiResponse = ApiResponse.error(kycStatusResponse.message);
-      }
-    } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
-      print(e);
     }
     notifyListeners();
   }
@@ -402,6 +427,28 @@ class MainViewModel with ChangeNotifier {
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
       print("Catch $e");
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> getProductsFromCategoryApi(
+      String value, ProductListRequest request) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("TransactionListData ${request.foodCategoryId}");
+    notifyListeners();
+    try {
+      ProductsListResponse transactionListResponse = await MainRepository()
+          .getProductsFromCategoryApi(value, request);
+      if (transactionListResponse.status == 200 ||
+          transactionListResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(transactionListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(transactionListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
     }
     notifyListeners();
   }

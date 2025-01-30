@@ -1,12 +1,15 @@
+import 'package:BDOne/model/response/countryListResponse.dart';
+import 'package:BDOne/model/response/productsListReponse.dart';
 import 'package:BDOne/model/webviewData.dart';
+import 'package:BDOne/theme/AppColor.dart';
 import 'package:BDOne/theme/AppTheme.dart';
 import 'package:BDOne/utils/Helper.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
-import 'package:BDOne/view/screens/authSection/confirm_detail_screen.dart';
 import 'package:BDOne/view/screens/authSection/create_account_screen.dart';
 import 'package:BDOne/view/screens/authSection/forgot_password_screen.dart';
 import 'package:BDOne/view/screens/authSection/otp_verification_screen.dart';
 import 'package:BDOne/view/screens/authSection/phone_verification_screen.dart';
+import 'package:BDOne/view/screens/authSection/setup_account_screen.dart';
 import 'package:BDOne/view/screens/authSection/sign_up_screen.dart';
 import 'package:BDOne/view/screens/authSection/signin_screen.dart';
 import 'package:BDOne/view/screens/authSection/welcomeSection/instruction_screen.dart';
@@ -29,12 +32,18 @@ import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_bottom_nav.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_cart_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_favourite_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_home_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_item_view_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_products_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_shop_screen.dart';
 import 'package:BDOne/view/screens/rideSection/book_ride_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_account_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_booked_detail_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_booked_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_bottom_nav.dart';
+import 'package:BDOne/view/screens/rideSection/ride_driver_detail_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_history_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
 import 'package:BDOne/view/screens/scan_camera_text.dart';
@@ -49,6 +58,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
@@ -56,8 +66,7 @@ import 'languageSection/L10n.dart';
 import 'model/response/ServiceTypeResponse.dart';
 import 'model/response/driverStatusResponse.dart';
 import 'model/response/notificationOtpResponse.dart';
-
-//GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+import 'model/services/firebase/PushNotificationService.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -101,36 +110,32 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
   await availableCameras();
   // Handle background messages
-  //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Setup interaction with notifications
-  //await PushNotificationService().setupInteractedMessage();
+  await PushNotificationService().setupInteractedMessage();
 
   // Request notification permissions
-/*
   final permissionStatus = await Permission.notification.status;
   if (permissionStatus.isDenied) {
     await Permission.notification.request();
   }
-*/
 
-/*
   // Get initial message
   RemoteMessage? initialMessage =
       await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     print("FirebaseMessaging:: $initialMessage");
   }
-*/
 
   // Set preferred orientations and run app
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  runApp(MyApp(initialMessage: null));
+  runApp(MyApp(initialMessage: initialMessage));
 }
 
 class MyApp extends StatefulWidget {
@@ -179,6 +184,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: !isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+      statusBarIconBrightness: !isDarkMode ? Brightness.light : Brightness.dark,
+      statusBarBrightness: isDarkMode
+          ? Brightness.light
+          : Brightness
+              .light, // Light ico      // Status bar brightness (for iOS)
+    ));
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: MainViewModel()),
@@ -199,9 +213,8 @@ class _MyAppState extends State<MyApp> {
           ],
           supportedLocales: L10n.all,
           theme: AppTheme.getAppTheme(),
-          /*
           darkTheme: AppTheme.getDarkTheme(),
-          themeMode: ThemeMode.system,*/
+          themeMode: ThemeMode.system,
           initialRoute: '/',
           routes: {
             '/': (context) {
@@ -231,12 +244,10 @@ class _MyAppState extends State<MyApp> {
             '/TermsConditionsScreen': (context) {
               return TermsConditionsScreen();
             },
-            '/PhoneVerificationScreen': (context) {
+            '/PhoneVerifyScreen': (context) {
               final args =
                   ModalRoute.of(context)!.settings.arguments as String?;
-              return PhoneVerificationScreen(
-                data: args,
-              );
+              return PhoneVerifyScreen();
             },
             '/BottomNav': (context) {
               return BottomNav();
@@ -315,9 +326,11 @@ class _MyAppState extends State<MyApp> {
               return SelectLocationScreen();
             },
             '/RideBookedScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as DriverStatusResponse?;
-              return RideBookedScreen(data: args,);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as DriverStatusResponse?;
+              return RideBookedScreen(
+                data: args,
+              );
             },
             //Ride Section
             '/RideHomeScreen': (context) {
@@ -333,21 +346,46 @@ class _MyAppState extends State<MyApp> {
               return BookRideScreen();
             },
             '/RestaurantBottomNav': (context) {
-              return RestaurantBottomNav();
+              final args = ModalRoute.of(context)!.settings.arguments as int?;
+              return RestaurantBottomNav(
+                data: args,
+              );
             },
             '/RestaurantHomeScreen': (context) {
               return RestaurantHomeScreen();
             },
             '/RestaurantProductsScreen': (context) {
-              return RestaurantProductsScreen();
+              final args = ModalRoute.of(context)!.settings.arguments
+              as CategoryData?;
+              return RestaurantProductsScreen(data: args);
             },
             '/RestaurantCartScreen': (context) {
               return RestaurantCartScreen();
             },
+            '/RideHistoryScreen': (context) {
+              return RideHistoryScreen();
+            },
+            '/RestaurantShopScreen': (context) {
+              return RestaurantShopScreen();
+            },
+            '/RestaurantFavouriteScreen': (context) {
+              return RestaurantFavouriteScreen();
+            },
+            '/RideAccountScreen': (context) {
+              return RideAccountScreen();
+            },
+            '/RideBookedDetailScreen': (context) {
+              return RideBookedDetailScreen();
+            },
+            '/RideDriverDetailScreen': (context) {
+              return RideDriverDetailScreen();
+            },
             '/RestaurantItemViewScreen': (context) {
-              final args =
-              ModalRoute.of(context)!.settings.arguments as ServiceTypeResponse?;
-              return RestaurantItemViewScreen(data:  args,);
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as ProductDetails?;
+              return RestaurantItemViewScreen(
+                data: args,
+              );
             },
           }),
     );

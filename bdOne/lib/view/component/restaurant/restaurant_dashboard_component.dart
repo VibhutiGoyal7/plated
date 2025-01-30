@@ -1,4 +1,5 @@
 import 'package:BDOne/model/response/ServiceTypeResponse.dart';
+import 'package:BDOne/model/response/countryListResponse.dart';
 import 'package:BDOne/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ import '../../../utils/Util.dart';
 import '../image_view_components.dart';
 
 class RestaurantDashboardComponent extends StatefulWidget {
-  final List<ServiceTypeResponse?> categories;
+  final List<CategoryData?> categories;
   final double screenWidth;
   final double screenHeight;
   final Color primaryColor;
@@ -71,7 +72,7 @@ class _RestaurantDashboardComponentState
             curve: Curves.easeInOut,
             margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColor.WHITE,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -101,16 +102,13 @@ class _RestaurantDashboardComponentState
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        showSnackBar(
-                          context,
-                          "${subCategory?.serviceName}",
-                          screenWidth * 0.5,
-                        );
+                        Navigator.of(context).pushNamed(
+                            "/RestaurantProductsScreen", arguments: subCategory);
                       });
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isDarkMode ? Colors.black : Colors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: EdgeInsets.symmetric(vertical: 2, horizontal: 1),
@@ -120,16 +118,16 @@ class _RestaurantDashboardComponentState
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           ImageViewComponent(
-                            height: 48,
-                            width: 48,
+                            height: 50,
+                            width: 50,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100)),
-                            imageUrl: subCategory?.icon,
+                            imageUrl: subCategory?.categoryImage,
                             isDarkMode: false,
                             placeholderImage: "assets/category_image.png",
                           ),
                           Text(
-                            "${capitalizeFirstLetter("${subCategory?.serviceName}")}",
+                            "${capitalizeFirstLetter("${subCategory?.categoryName}")}",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             textAlign: TextAlign.center,

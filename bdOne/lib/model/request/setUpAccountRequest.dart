@@ -16,6 +16,8 @@ class CustomerDetail {
   String firstName;
   String lastName;
   String dob;
+  String latitude;
+  String longitude;
 
   CustomerDetail({
     required this.email,
@@ -23,6 +25,8 @@ class CustomerDetail {
     required this.firstName,
     required this.lastName,
     required this.dob,
+    required this.latitude,
+    required this.longitude,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +36,8 @@ class CustomerDetail {
       'first_name': firstName,
       'last_name': lastName,
       'dob': dob,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 }

@@ -815,7 +815,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: MaterialButton(
         onPressed: () async {
           hideKeyBoard();
-          Navigator.pushNamed(context, '/SignInScreen');
+          Navigator.pushNamed(context, '/PhoneVerifyScreen');
           _isValidInput();
           const maxDuration = Duration(seconds: 2);
           if (inputValid) {

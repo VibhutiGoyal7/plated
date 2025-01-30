@@ -1,19 +1,20 @@
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
-import 'package:BDOne/view/screens/bottomNavSection/documents_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_cart_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_favourite_screen.dart';
+import 'package:BDOne/view/screens/retaurantSection/restaurant_shop_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_home_screen.dart';
-import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
-import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
-import '../bottomNavSection/accountSection/profile_screen.dart';
-import '../transportationBottomNavSection/history_screen.dart';
 
 class RestaurantBottomNav extends StatefulWidget {
+
+  final int? data;
+
+  RestaurantBottomNav({Key? key, required this.data}) : super(key: key);
   @override
   _RestaurantBottomNavState createState() => _RestaurantBottomNavState();
 }
@@ -32,9 +33,9 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
   bool? isUserAuthenticated;
   static List<Widget> _widgetOptions = <Widget>[
     RestaurantHomeScreen(),
-    RideServicesScreen(),
+    RestaurantShopScreen(),
     RestaurantCartScreen(),
-    ProfileScreen(),
+    RestaurantFavouriteScreen(),
   ];
 
   @override
@@ -52,6 +53,14 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
       parent: _animationController,
       curve: Curves.bounceIn,
     );
+
+    if (widget.data != null) {
+      setState(() {
+        _selectedIndex = widget.data!;
+      });
+      // _widgetOptions.elementAt(int.parse("${widget.data}"));
+    }
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -93,7 +102,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
         decoration: BoxDecoration(
@@ -112,7 +121,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
           child: BottomAppBar(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: 54,
-            color: AppColor.WHITE,
+            color: Theme.of(context).cardColor,
             /* shape: const CircularNotchedRectangle(),
             notchMargin: 6,*/
             child: Row(
@@ -154,7 +163,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                             )
                           : Icon(
                               Icons.home,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                     ],
@@ -168,7 +177,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                               EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(60),
-                              color: Colors.white),
+                              color: Colors.transparent),
                           child: Column(
                             children: [
                               Icon(
@@ -191,7 +200,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                         )
                       : Icon(
                           Icons.store_mall_directory_outlined,
-                          color: AppColor.BLACK,
+                          color: Theme.of(context).focusColor,
                           size: 24,
                         ),
                 ),
@@ -205,7 +214,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                                   horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
+                                  color: Colors.transparent),
                               child: Column(
                                 children: [
                                   Icon(
@@ -228,7 +237,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                             )
                           : Icon(
                               Icons.shopping_cart_outlined,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                       SizedBox(width: 8),
@@ -245,7 +254,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                                   horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
+                                  color: Colors.transparent),
                               child: Column(
                                 children: [
                                   Icon(
@@ -268,7 +277,7 @@ class _RestaurantBottomNavState extends State<RestaurantBottomNav>
                             )
                           : Icon(
                               Icons.favorite_border,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                       SizedBox(width: 8),

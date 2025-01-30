@@ -81,71 +81,62 @@ class _FaqScreenState extends State<FaqScreen> {
     return Scaffold(
       body:Stack(
         children: [
-          AnnotatedRegion<SystemUiOverlayStyle>(
-            value:  SystemUiOverlayStyle(
-                statusBarBrightness:
-                isDarkMode ? Brightness.dark : Brightness.light,
-                statusBarColor: AppColor.PRIMARY,
-                statusBarIconBrightness: Brightness.light),
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text(
-                    "FAQs",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                        color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
-                    ),
-                  ),
-                  middle: Text(
-                    "FAQs",
-                    style: TextStyle(fontSize: 22,
-                    color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
-                  ),
-                  backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-                  leading: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 24,
-                    ),
-                  ),
-                  alwaysShowMiddle: false,
-                ),
-
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 5),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _buildTab("Most Popular"),
-                          _buildTab("About BD One"),
-                          _buildTab("Features"),
-                          _buildTab("Registration"),
-                        ],
-                      ),
-                    ),
-                  ) ,
-                ),
-
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          bool isDetailVisible = false;
-                      return _buildCard(list[index],index);
-                    },
-                    childCount: list.length,
+          CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              CupertinoSliverNavigationBar(
+                largeTitle: Text(
+                  "FAQs",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                      color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
                   ),
                 ),
-              ],
-            ),
+                middle: Text(
+                  "FAQs",
+                  style: TextStyle(fontSize: 22,
+                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
+                ),
+                backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 24,
+                  ),
+                ),
+                alwaysShowMiddle: false,
+              ),
 
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 5),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildTab("Most Popular"),
+                        _buildTab("About BD One"),
+                        _buildTab("Features"),
+                        _buildTab("Registration"),
+                      ],
+                    ),
+                  ),
+                ) ,
+              ),
 
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        bool isDetailVisible = false;
+                    return _buildCard(list[index],index);
+                  },
+                  childCount: list.length,
+                ),
+              ),
+            ],
           ),
           isLoading
               ? Stack(

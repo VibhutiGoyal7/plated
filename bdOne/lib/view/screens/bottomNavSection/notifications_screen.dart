@@ -273,142 +273,134 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
         body: Stack(
       children: [
-        AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-              statusBarBrightness:
-                  isDarkMode ? Brightness.dark : Brightness.light,
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness:
-                  isDarkMode ? Brightness.light : Brightness.dark),
-          child: FutureBuilder(
-            future: _fetchDataFuture,
-            builder: (context, AsyncSnapshot<void> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CustomCircularProgress());
-              }
+        FutureBuilder(
+          future: _fetchDataFuture,
+          builder: (context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CustomCircularProgress());
+            }
 
-              if (snapshot.hasError) {
-                return Center(child: Text("Error loading data"));
-              }
+            if (snapshot.hasError) {
+              return Center(child: Text("Error loading data"));
+            }
 
-              // Group notifications by date
-              Map<String, List<NotificationDetails>> groupedNotifications =
-                  groupNotificationsByDate(generalNotificationList);
-              List<String> dates = groupedNotifications.keys.toList();
-              int i = 0;
+            // Group notifications by date
+            Map<String, List<NotificationDetails>> groupedNotifications =
+                groupNotificationsByDate(generalNotificationList);
+            List<String> dates = groupedNotifications.keys.toList();
+            int i = 0;
 
-              return CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  CupertinoSliverNavigationBar(
-                    largeTitle: Text(
-                      "${Languages.of(context)?.labelNotification}",
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.white : AppColor.TEXT_COLOR,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    middle: Text(
-                      "${Languages.of(context)?.labelNotification}",
-                      style: TextStyle(
-                          fontSize: 22,
-                          color:
-                              isDarkMode ? Colors.white : AppColor.TEXT_COLOR),
-                    ),
-                    backgroundColor:
-                        isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-                    alwaysShowMiddle: false,
-                    leading: SizedBox(),
-                    trailing: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, "/ArchiveLibraryScreen");
-                      },
-                      child: Icon(Icons.menu),
+            return CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    "${Languages.of(context)?.labelNotification}",
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : AppColor.TEXT_COLOR,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  middle: Text(
+                    "${Languages.of(context)?.labelNotification}",
+                    style: TextStyle(
+                        fontSize: 22,
+                        color:
+                            isDarkMode ? Colors.white : AppColor.TEXT_COLOR),
+                  ),
+                  backgroundColor:
+                      isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                  alwaysShowMiddle: false,
+                  leading: SizedBox(),
+                  trailing: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, "/ArchiveLibraryScreen");
+                    },
+                    child: Icon(Icons.menu),
+                  ),
+                ),
 
-                  // Your Fixed Header - SliverPersistentHeader
+                // Your Fixed Header - SliverPersistentHeader
 
-                  SliverPersistentHeader(
-                    pinned: isSearch ? true : false,
-                    // Keeps the header fixed at the top when scrolling
-                    delegate: FixedHeaderDelegate(
-                      child: Container(
-                        color: isDarkMode
-                            ? AppColor.DARK_BG_COLOR
-                            : AppColor.BG_COLOR,
-                        // Background color for the fixed header
-                        // Background color for the fixed header
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(horizontal: 6),
-                        child: SearchComponent(
-                            width: 1,
-                            screenWidth: screenWidth,
-                            isDarkMode: isDarkMode,
-                            searchController: _searchController,
-                            onChanged: () {}),
-                      ),
+                SliverPersistentHeader(
+                  pinned: isSearch ? true : false,
+                  // Keeps the header fixed at the top when scrolling
+                  delegate: FixedHeaderDelegate(
+                    child: Container(
+                      color: isDarkMode
+                          ? AppColor.DARK_BG_COLOR
+                          : AppColor.BG_COLOR,
+                      // Background color for the fixed header
+                      // Background color for the fixed header
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 6),
+                      child: SearchComponent(
+                          width: 1,
+                          screenWidth: screenWidth,
+                          isDarkMode: isDarkMode,
+                          searchController: _searchController,
+                          onChanged: () {}),
                     ),
                   ),
+                ),
 
-                  SliverToBoxAdapter(
-                    child: !isDataAvail ? _buildNoDataScreen() : SizedBox(),
-                  ),
+                SliverToBoxAdapter(
+                  child: !isDataAvail ? _buildNoDataScreen() : SizedBox(),
+                ),
 
-                  !isDataAvail
-                      ? SliverToBoxAdapter(
-                          child: SizedBox(),
-                        )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              String date = dates[index];
-                              List<NotificationDetails> notificationsForDate =
-                                  groupedNotifications[date]!;
+                !isDataAvail
+                    ? SliverToBoxAdapter(
+                        child: SizedBox(),
+                      )
+                    : SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            String date = dates[index];
+                            List<NotificationDetails> notificationsForDate =
+                                groupedNotifications[date]!;
 
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 0.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    /*Text(
-                                        date,
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                      ),*/
-                                    ...notificationsForDate
-                                        .asMap()
-                                        .entries
-                                        .map((notification) {
-                                      i++;
-                                      return generalNotificationItem(
-                                          notification.value,
-                                          i /*notification.key*/);
-                                    }).toList(),
-                                  ],
-                                ),
-                              );
-                            },
-                            childCount: dates.length,
-                          ),
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 0.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  /*Text(
+                                      date,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),*/
+                                  ...notificationsForDate
+                                      .asMap()
+                                      .entries
+                                      .map((notification) {
+                                    i++;
+                                    return generalNotificationItem(
+                                        notification.value,
+                                        i /*notification.key*/);
+                                  }).toList(),
+                                ],
+                              ),
+                            );
+                          },
+                          childCount: dates.length,
                         ),
-                  if (_isLoadingMore)
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: CircularProgressIndicator()),
                       ),
-                    ),
-
+                if (_isLoadingMore)
                   SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 65,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
                     ),
-                  )
-                ],
-              );
-            },
-          ),
+                  ),
+
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 65,
+                  ),
+                )
+              ],
+            );
+          },
         ),
       ],
     ));

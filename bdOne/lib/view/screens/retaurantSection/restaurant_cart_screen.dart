@@ -152,292 +152,282 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     DateTime? lastBackPressed;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
-          statusBarColor: AppColor.WHITE,
-          statusBarIconBrightness: Brightness.dark),
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 60,
-          shape: Border(
-              bottom: BorderSide(width: 0.5, color: Colors.grey.shade500)),
-          title: Text(
-            "My Cart",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 55,
+        shape: Border(
+            bottom: BorderSide(width: 0.5, color: Theme.of(context).cardColor)),
+        title: Text(
+          "My Cart",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true,
+        leading: SizedBox(),
+        backgroundColor: isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 15.0, top: 0),
+                child: Column(
+                  children: [
+                    AnimatedContainer(
+                        width: screenWidth,
+                        height: screenHeight * 0.6,
+                        alignment: Alignment.center,
+                        duration: Duration(milliseconds: 300),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          border: Border(
+                              bottom: BorderSide(
+                                  width: 0.2,
+                                  color: AppColor.GREY_TEXT_COLOR)),
+                        ),
+                        curve: Curves.easeInCirc,
+                        child: ListView.builder(
+                            itemCount: categories.length,
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 9, vertical: 2),
+                            itemBuilder: (context, index) {
+                              final currentCategory = categories[index];
+                              return Container(
+                                height: 100,
+                                alignment: Alignment.center,
+                                width: screenWidth / 2.3,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width:
+                                              categories.last == selectedItem
+                                                  ? 0
+                                                  : 0.2,
+                                          color: categories.length ==
+                                                  categories.last
+                                              ? Colors.transparent
+                                              : AppColor.GREY_TEXT_COLOR)),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 5),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 6),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10.0),
+                                          child: ImageViewComponent(
+                                            height: 55,
+                                            width: 45,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(0)),
+                                            imageUrl: currentCategory?.icon,
+                                            isDarkMode: false,
+                                            placeholderImage:
+                                                "assets/milk_image.png",
+                                          ),
+                                        ),
+                                        Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  "${selectedItem.serviceName}", style: TextStyle(
+                                                fontSize: 15
+                                              ),),
+                                              Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () => decrement(),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8)),
+                                                      padding:
+                                                          EdgeInsets.all(2),
+                                                      child: Icon(
+                                                        Icons.remove,
+                                                        size: 22,
+                                                        color: itemCount == 0
+                                                            ? Colors.grey
+                                                            : Theme.of(context).focusColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 40,
+                                                    width: 30,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 3),
+                                                    alignment:
+                                                        Alignment.center,
+                                                    child: Text(
+                                                      "$itemCount",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow: TextOverflow
+                                                          .ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 15),
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () => increment(),
+                                                    child: Container(
+                                                      child: Icon(
+                                                        Icons.add,
+                                                        size: 22,
+                                                        color: AppColor
+                                                            .PRIMARY_ACCENT,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8)),
+                                                      padding:
+                                                          EdgeInsets.all(2),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          margin: EdgeInsets.only(left: 20),
+                                        )
+                                      ],
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          " ৳480",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColor.BLACK,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Icon(
+                                          Icons.close,
+                                          size: 18,
+                                          color: Theme.of(context).focusColor,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            })),
+                    Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Align(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    child: Text(
+                                      "Total",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).focusColor,),
+                                    ),
+                                  ),
+                                  alignment: Alignment.topLeft,
+                                ),
+                                Text(
+                                  "৳500",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).focusColor),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          centerTitle: true,
-          leading: SizedBox(),
-          backgroundColor: AppColor.WHITE,
-        ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 15.0, top: 0),
-                  child: Column(
-                    children: [
-                      AnimatedContainer(
-                          width: screenWidth,
-                          height: screenHeight * 0.6,
-                          alignment: Alignment.center,
-                          duration: Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            color: isDarkMode ? Colors.black : Colors.white,
-                            border: Border(
-                                bottom: BorderSide(
-                                    width: 0.2,
-                                    color: AppColor.GREY_TEXT_COLOR)),
-                          ),
-                          curve: Curves.easeInCirc,
-                          child: ListView.builder(
-                              itemCount: categories.length,
-                              scrollDirection: Axis.vertical,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 9, vertical: 2),
-                              itemBuilder: (context, index) {
-                                final currentCategory = categories[index];
-                                return Container(
-                                  height: 100,
-                                  alignment: Alignment.center,
-                                  width: screenWidth / 2.3,
-                                  decoration: BoxDecoration(
-                                    color: isDarkMode
-                                        ? Colors.black
-                                        : Colors.white,
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            width:
-                                                categories.last == selectedItem
-                                                    ? 0
-                                                    : 0.2,
-                                            color: categories.length ==
-                                                    categories.last
-                                                ? Colors.transparent
-                                                : AppColor.GREY_TEXT_COLOR)),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 2, horizontal: 5),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 4, vertical: 6),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10.0),
-                                            child: ImageViewComponent(
-                                              height: 55,
-                                              width: 55,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(0)),
-                                              imageUrl: currentCategory?.icon,
-                                              isDarkMode: false,
-                                              placeholderImage:
-                                                  "assets/milk_image.png",
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    "${selectedItem.serviceName}", style: TextStyle(
-                                                  fontSize: 16
-                                                ),),
-                                                Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () => decrement(),
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 0.1),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        padding:
-                                                            EdgeInsets.all(2),
-                                                        child: Icon(
-                                                          Icons.remove,
-                                                          size: 22,
-                                                          color: itemCount == 0
-                                                              ? Colors.grey
-                                                              : Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      height: 40,
-                                                      width: 30,
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 3),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        "$itemCount",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 1,
-                                                        style: TextStyle(
-                                                            fontSize: 15),
-                                                      ),
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () => increment(),
-                                                      child: Container(
-                                                        child: Icon(
-                                                          Icons.add,
-                                                          size: 22,
-                                                          color: AppColor
-                                                              .PRIMARY_ACCENT,
-                                                        ),
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 0.1),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        padding:
-                                                            EdgeInsets.all(2),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            margin: EdgeInsets.only(left: 20),
-                                          )
-                                        ],
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            " ৳480",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: AppColor.BLACK,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Icon(
-                                            Icons.close,
-                                            size: 18,
-                                            color: Colors.black,
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              })),
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Align(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
-                                      child: Text(
-                                        "Total",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColor.GREY_TEXT_COLOR
-                                                .withOpacity(0.5)),
-                                      ),
-                                    ),
-                                    alignment: Alignment.topLeft,
-                                  ),
-                                  Text(
-                                    "৳500",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColor.GREY_TEXT_COLOR
-                                            .withOpacity(0.5)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: screenWidth * 0.8,
+              decoration: BoxDecoration(
+                  color: AppColor.PRIMARY_ACCENT,
+                  borderRadius: BorderRadius.circular(15)),
+              padding: EdgeInsets.symmetric(vertical: 12),
+              margin: EdgeInsets.only(bottom: 80),
+              child: Text(
+                "Go to Checkout",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.WHITE,
+                    fontWeight: FontWeight.bold),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: screenWidth * 0.8,
-                decoration: BoxDecoration(
-                    color: AppColor.PRIMARY_ACCENT,
-                    borderRadius: BorderRadius.circular(15)),
-                padding: EdgeInsets.symmetric(vertical: 18),
-                margin: EdgeInsets.only(bottom: 80),
-                child: Text(
-                  "Go to Checkout",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: AppColor.WHITE,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            isApiLoading
-                ? Stack(
-                    children: [
-                      // Block interaction
-                      ModalBarrier(
-                          dismissible: false, color: Colors.transparent),
-                      // Loader indicator
-                      Center(
-                        child: CustomCircularProgress(),
-                      ),
-                    ],
-                  )
-                : SizedBox(),
-          ],
-        ),
+          ),
+          isApiLoading
+              ? Stack(
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false, color: Colors.transparent),
+                    // Loader indicator
+                    Center(
+                      child: CustomCircularProgress(),
+                    ),
+                  ],
+                )
+              : SizedBox(),
+        ],
       ),
     );
   }

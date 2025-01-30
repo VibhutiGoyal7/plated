@@ -55,7 +55,7 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           decoration: BoxDecoration(
-            color: AppColor.WHITE,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
               BoxShadow(

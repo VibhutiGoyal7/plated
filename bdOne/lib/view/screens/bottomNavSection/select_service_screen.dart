@@ -45,79 +45,73 @@ class _VendorLocationScreenState extends State<SelectServiceScreen> {
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.black45,
-        statusBarIconBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-          body: SafeArea(
-        child: Container(
-          /*decoration: BoxDecoration(
-            gradient: RadialGradient (
-              center: Alignment.center,
-              radius: 0.8,
-              focalRadius: 0.4,
-              */ /*
-              begin: Alignment.topLeft,
-              // Start point of the gradient
-              end: Alignment.bottomRight,
-              // End point of the gradient*/ /*
-              colors: [
-                Colors.black45,
-                Colors.black12,
-                Colors.black45,
-              ],
-            ),
-          ),*/
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    width: screenWidth,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 70),
-                          Center(
-                            child: Image(
-                              height: screenHeight * 0.05,
-                              image: AssetImage(isDarkMode
-                                  ? "assets/app_logo_dark.png"
-                                  : "assets/app_logo.png"),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(height: 30),
-                          _buildServiceList(),
-                          SizedBox(height: 18),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              if (isLoading)
-                Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(dismissible: false, color: Colors.transparent),
-                    // Loader indicator
-                    Center(
-                      child: CustomCircularProgress(),
-                    ),
-                  ],
-                )
+    return Scaffold(
+        body: SafeArea(
+      child: Container(
+        /*decoration: BoxDecoration(
+          gradient: RadialGradient (
+            center: Alignment.center,
+            radius: 0.8,
+            focalRadius: 0.4,
+            */ /*
+            begin: Alignment.topLeft,
+            // Start point of the gradient
+            end: Alignment.bottomRight,
+            // End point of the gradient*/ /*
+            colors: [
+              Colors.black45,
+              Colors.black12,
+              Colors.black45,
             ],
           ),
+        ),*/
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Container(
+                  width: screenWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 70),
+                        Center(
+                          child: Image(
+                            height: screenHeight * 0.05,
+                            image: AssetImage(isDarkMode
+                                ? "assets/app_logo_dark.png"
+                                : "assets/app_logo.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        _buildServiceList(),
+                        SizedBox(height: 18),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (isLoading)
+              Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(dismissible: false, color: Colors.transparent),
+                  // Loader indicator
+                  Center(
+                    child: CustomCircularProgress(),
+                  ),
+                ],
+              )
+          ],
         ),
-      )),
-    );
+      ),
+    ));
   }
 
   Widget _buildServiceList() {

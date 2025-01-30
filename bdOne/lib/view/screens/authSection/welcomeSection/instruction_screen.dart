@@ -24,7 +24,6 @@ class _InstructionScreenState extends State<InstructionScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
-  List<CountryData> countryList = [];
 
   @override
   void initState() {
@@ -153,68 +152,5 @@ class _InstructionScreenState extends State<InstructionScreen> {
         ),
       ),
     );
-  }
-
-  void _fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    bool isConnected = await _connectivityService.isConnected();
-    if (!isConnected) {
-      setState(() {
-        isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('${Languages.of(context)?.labelNoInternetConnection}'),
-            duration: maxDuration,
-          ),
-        );
-      });
-    } else {
-      await Future.delayed(Duration(milliseconds: 2));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .fetchCountryList("api/v1/app/customers/country_list");
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getCountryList(context, apiResponse);
-    }
-  }
-
-  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
-    CountryListResponse? countryListResponse =
-        apiResponse.data as CountryListResponse?;
-    var message = apiResponse.message.toString();
-    print("message ${message}");
-    setState(() {
-      isLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CustomCircularProgress());
-      case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[1].name}");
-
-        countryList = countryListResponse!.countries!;
-        Helper.saveCountryList(countryList);
-        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        print("countriess ${countryList}");
-        return Center(
-          child: Text('Please try again later!!!'),
-        );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
-    }
   }
 }

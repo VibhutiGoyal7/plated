@@ -1132,4 +1132,9 @@ class LanguageEn extends Languages {
   @override
   String get labelFavourite => "Favourite";
 
+  @override
+  String get labelPasswordRequirement =>
+      "*Password should have minimum of 8 characters and contain each of special character, digit, lower and uppercase letters.";
+
+
 }

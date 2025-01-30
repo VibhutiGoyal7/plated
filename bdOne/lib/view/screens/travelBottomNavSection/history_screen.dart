@@ -229,200 +229,191 @@ class _HistoryScreenState extends State<HistoryScreen> {
           minimum: EdgeInsets.only(bottom: 70),
           child: Scaffold(
               body: Stack(children: [
-                      AnnotatedRegion<SystemUiOverlayStyle>(
-                          value: SystemUiOverlayStyle(
-                            statusBarColor: Colors.transparent,
-                            statusBarIconBrightness:
-                                isDarkMode ? Brightness.light : Brightness.dark,
-                            statusBarBrightness:
-                                isDarkMode ? Brightness.dark : Brightness.light,
-                          ),
-                          child: FutureBuilder(
-                            future: _fetchDataFuture,
-                            builder: (context, AsyncSnapshot<void> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(child: CustomCircularProgress());
-                              }
+                      FutureBuilder(
+                        future: _fetchDataFuture,
+                        builder: (context, AsyncSnapshot<void> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CustomCircularProgress());
+                          }
 
-                              if (snapshot.hasError) {
-                                return Center(
-                                    child: Text("Error loading data"));
-                              }
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text("Error loading data"));
+                          }
 
-                              // Group notifications by date
-                              Map<String, List<NotificationDetails>>
-                                  groupedNotifications =
-                                  groupHistoryByDate(
-                                      generalNotificationList);
-                              List<String> dates =
-                                  groupedNotifications.keys.toList();
-                              int i = 0;
+                          // Group notifications by date
+                          Map<String, List<NotificationDetails>>
+                              groupedNotifications =
+                              groupHistoryByDate(
+                                  generalNotificationList);
+                          List<String> dates =
+                              groupedNotifications.keys.toList();
+                          int i = 0;
 
-                              return CustomScrollView(
-                                controller: _scrollController,
-                                slivers: [
-                                  CupertinoSliverNavigationBar(
-                                    largeTitle: Text(
-                                      "${Languages.of(context)?.labelHistory}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : AppColor.TEXT_COLOR),
-                                    ),
-                                    middle: Text(
-                                      "${Languages.of(context)?.labelHistory}",
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : AppColor.TEXT_COLOR),
-                                    ),
-                                    backgroundColor: isDarkMode
-                                        ? AppColor.DARK_BG_COLOR
-                                        : AppColor.BG_COLOR,
-                                    // Control the color
-                                    trailing: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 14.0),
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            _showDatePicker();
-                                          },
-                                          child: Icon(
-                                            Icons.filter_alt_outlined,
-                                            color: AppColor.PRIMARY,
-                                            size: 26,
-                                          )),
-                                    ),
-                                    alwaysShowMiddle: false,
-                                    leading: SizedBox(),
-                                    border:
-                                        Border.all(color: Colors.transparent),
+                          return CustomScrollView(
+                            controller: _scrollController,
+                            slivers: [
+                              CupertinoSliverNavigationBar(
+                                largeTitle: Text(
+                                  "${Languages.of(context)?.labelHistory}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : AppColor.TEXT_COLOR),
+                                ),
+                                middle: Text(
+                                  "${Languages.of(context)?.labelHistory}",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : AppColor.TEXT_COLOR),
+                                ),
+                                backgroundColor: isDarkMode
+                                    ? AppColor.DARK_BG_COLOR
+                                    : AppColor.BG_COLOR,
+                                // Control the color
+                                trailing: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14.0),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        _showDatePicker();
+                                      },
+                                      child: Icon(
+                                        Icons.filter_alt_outlined,
+                                        color: AppColor.PRIMARY,
+                                        size: 26,
+                                      )),
+                                ),
+                                alwaysShowMiddle: false,
+                                leading: SizedBox(),
+                                border:
+                                    Border.all(color: Colors.transparent),
+                              ),
+                              /*  SliverLayoutBuilder(
+                            builder: (BuildContext context, constraints) {
+                              final scrolled = constraints.scrollOffset > 0;
+                              return SliverAppBar(
+                                snap: false,
+                                pinned: true,
+                                floating: false,
+                                expandedHeight: 90.0,
+                                // Adjust the expanded height
+                                flexibleSpace: FlexibleSpaceBar(
+                                  background: Container(
+                                    color: AppColor.BG_COLOR,
                                   ),
-                                  /*  SliverLayoutBuilder(
-                                builder: (BuildContext context, constraints) {
-                                  final scrolled = constraints.scrollOffset > 0;
-                                  return SliverAppBar(
-                                    snap: false,
-                                    pinned: true,
-                                    floating: false,
-                                    expandedHeight: 90.0,
-                                    // Adjust the expanded height
-                                    flexibleSpace: FlexibleSpaceBar(
-                                      background: Container(
-                                        color: AppColor.BG_COLOR,
-                                      ),
-                                      centerTitle: false,
-                                      titlePadding: EdgeInsets.all(16),
-                                      collapseMode: CollapseMode.parallax,
-                                      title: Text(
-                                        "${Languages.of(context)?.labelHistory}",
-                                        style: TextStyle(
-                                          color: AppColor.TEXT_COLOR,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
+                                  centerTitle: false,
+                                  titlePadding: EdgeInsets.all(16),
+                                  collapseMode: CollapseMode.parallax,
+                                  title: Text(
+                                    "${Languages.of(context)?.labelHistory}",
+                                    style: TextStyle(
+                                      color: AppColor.TEXT_COLOR,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
                                     ),
-                                    backgroundColor: AppColor.WHITE,
-                                    //foregroundColor: AppColor.BG_COLOR,
-                                    systemOverlayStyle: SystemUiOverlayStyle(
-                                      statusBarColor: Colors.red, // Transparent status bar
-                                      statusBarBrightness: Brightness.dark, // Text color in status bar (dark/light)
-                                      statusBarIconBrightness: Brightness.light, // Status bar icons color
-                                    ),
-                                    leading: SizedBox(),
-                                    actions: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 14.0),
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {});
-                                            },
-                                            child: Icon(
-                                              Icons.filter_alt_outlined,
-                                              color: AppColor.PRIMARY,
-                                            )),
-                                      )
-                                    ],
-                                  );
-                                },
-                              ),*/
-
-                                  SliverToBoxAdapter(
-                                    child: !isDataAvail
-                                        ? _buildNoDataScreen()
-                                        : SizedBox(),
                                   ),
-                                  !isDataAvail
-                                      ? SliverToBoxAdapter(
-                                          child: SizedBox(),
-                                        )
-                                      : SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                            (context, index) {
-                                              String date = dates[index];
-                                              List<NotificationDetails>
-                                                  historyForDate =
-                                                  groupedNotifications[date]!;
-
-                                              return Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 0.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Text(
-                                                        date,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 11),
-                                                      ),
-                                                    ),
-                                                    ...historyForDate
-                                                        .asMap()
-                                                        .entries
-                                                        .map((history) {
-                                                      i++;
-                                                      return historyItem(
-                                                          history.value,
-                                                          i /*notification.key*/);
-                                                    }).toList(),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            childCount: dates.length,
-                                          ),
-                                        ),
-                                  if (_isLoadingMore)
-                                    SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Center(
-                                            child: CircularProgressIndicator()),
-                                      ),
-                                    ),
-                                  SliverToBoxAdapter(
-                                    child: SizedBox(
-                                      height: 65,
-                                    ),
+                                ),
+                                backgroundColor: AppColor.WHITE,
+                                //foregroundColor: AppColor.BG_COLOR,
+                                systemOverlayStyle: SystemUiOverlayStyle(
+                                  statusBarColor: Colors.red, // Transparent status bar
+                                  statusBarBrightness: Brightness.dark, // Text color in status bar (dark/light)
+                                  statusBarIconBrightness: Brightness.light, // Status bar icons color
+                                ),
+                                leading: SizedBox(),
+                                actions: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14.0),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.filter_alt_outlined,
+                                          color: AppColor.PRIMARY,
+                                        )),
                                   )
                                 ],
                               );
                             },
-                          )
-                       ),
+                          ),*/
+
+                              SliverToBoxAdapter(
+                                child: !isDataAvail
+                                    ? _buildNoDataScreen()
+                                    : SizedBox(),
+                              ),
+                              !isDataAvail
+                                  ? SliverToBoxAdapter(
+                                      child: SizedBox(),
+                                    )
+                                  : SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (context, index) {
+                                          String date = dates[index];
+                                          List<NotificationDetails>
+                                              historyForDate =
+                                              groupedNotifications[date]!;
+
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 0.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(
+                                                          8.0),
+                                                  child: Text(
+                                                    date,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 11),
+                                                  ),
+                                                ),
+                                                ...historyForDate
+                                                    .asMap()
+                                                    .entries
+                                                    .map((history) {
+                                                  i++;
+                                                  return historyItem(
+                                                      history.value,
+                                                      i /*notification.key*/);
+                                                }).toList(),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        childCount: dates.length,
+                                      ),
+                                    ),
+                              if (_isLoadingMore)
+                                SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
+                                  ),
+                                ),
+                              SliverToBoxAdapter(
+                                child: SizedBox(
+                                  height: 65,
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      ),
                     ])),
         ),
       ),

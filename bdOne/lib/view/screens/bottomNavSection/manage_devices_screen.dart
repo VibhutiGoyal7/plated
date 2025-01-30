@@ -167,52 +167,46 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              isDarkMode ? Brightness.light : Brightness.dark),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, top: 20, bottom: 5, right: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12.0, horizontal: 8.0),
-                      child: Icon(Icons.arrow_back_ios),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15.0, top: 20, bottom: 5, right: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 8.0),
+                        child: Icon(Icons.arrow_back_ios),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                     ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        "${Languages.of(context)?.labelManageDevices}",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "${Languages.of(context)?.labelManageDevices}",
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            isDataAvail ? _buildNoDataScreen() : generalLoginDeviceList(),
-          ],
-        ),
-      ),
-    ));
+              isDataAvail ? _buildNoDataScreen() : generalLoginDeviceList(),
+            ],
+          ),
+        ));
   }
 
   Widget _buildNoDataScreen() {

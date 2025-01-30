@@ -1,6 +1,7 @@
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
-import 'package:BDOne/view/screens/bottomNavSection/documents_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_account_screen.dart';
+import 'package:BDOne/view/screens/rideSection/ride_history_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
 import '../bottomNavSection/accountSection/profile_screen.dart';
-import '../transportationBottomNavSection/history_screen.dart';
 
 class RideBottomNav extends StatefulWidget {
   @override
@@ -31,8 +31,8 @@ class _RideBottomNavState extends State<RideBottomNav>
   static List<Widget> _widgetOptions = <Widget>[
     RideHomeScreen(),
     RideServicesScreen(),
-    HistoryScreen(),
-    ProfileScreen(),
+    RideHistoryScreen(),
+    RideAccountScreen(),
   ];
 
   @override
@@ -110,7 +110,7 @@ class _RideBottomNavState extends State<RideBottomNav>
           child: BottomAppBar(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: 54,
-            color: AppColor.WHITE,
+            color: Theme.of(context).cardColor,
             /* shape: const CircularNotchedRectangle(),
             notchMargin: 6,*/
             child: Row(
@@ -152,7 +152,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                             )
                           : Icon(
                               Icons.home,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                     ],
@@ -166,7 +166,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                               EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(60),
-                              color: Colors.white),
+                              color: Colors.transparent),
                           child: Column(
                             children: [
                               Icon(
@@ -189,7 +189,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                         )
                       : Icon(
                           Icons.menu,
-                          color: AppColor.BLACK,
+                          color: Theme.of(context).focusColor,
                           size: 24,
                         ),
                 ),
@@ -203,7 +203,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                                   horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
+                                  color: Colors.transparent),
                               child: Column(
                                 children: [
                                   Icon(
@@ -226,7 +226,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                             )
                           : Icon(
                               Icons.wallet,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                       SizedBox(width: 8),
@@ -243,7 +243,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                                   horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
+                                  color: Colors.transparent),
                               child: Column(
                                 children: [
                                   Icon(
@@ -266,7 +266,7 @@ class _RideBottomNavState extends State<RideBottomNav>
                             )
                           : Icon(
                               Icons.person,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                       SizedBox(width: 8),

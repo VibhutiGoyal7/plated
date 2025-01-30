@@ -135,9 +135,17 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
+    isDarkMode = Theme
+        .of(context)
+        .brightness == Brightness.dark;
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     DateTime? lastBackPressed;
     return PopScope(
       canPop: false,
@@ -174,476 +182,119 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
           }
         }
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-            statusBarBrightness:
-                isDarkMode ? Brightness.dark : Brightness.light,
-            statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light),
-        child: Scaffold(
-          body: RefreshIndicator(
-            onRefresh: () {
-              print("Refresh");
-              return Future.delayed(Duration(seconds: 2), () {});
-            },
-            child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  SafeArea(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 15.0),
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              /*Container(
-                                height: screenHeight * 0.28,
-                                alignment: AlignmentDirectional.center,
-                                decoration: BoxDecoration(
-                                    color: AppColor.PRIMARY,
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(25.0),
-                                        bottomRight: Radius.circular(25.0))),
-                              ),*/
-                              Container(
-                                margin: EdgeInsets.only(top: 2),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      /* Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0, vertical: 6),
-                                          child: CustomDropdown(
-                                            title: "Food",
-                                            items: [
-                                              "Food",
-                                              "Travel",
-                                              "Transportation",
-                                            ], // List of options
-                                            onItemSelected: (value) {
-                                              if (value == "Transportation") {
-                                                Navigator.pushReplacementNamed(
-                                                    context,
-                                                    "/TransportationBottomNav");
-                                              } else if (value == "Travel") {
-                                                Navigator.pushReplacementNamed(
-                                                    context,
-                                                    "/TravelBottomNav");
-                                              }
-                                            },
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: () {
+            print("Refresh");
+            return Future.delayed(Duration(seconds: 2), () {});
+          },
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 15.0),
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 2),
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.arrow_back_ios,
+                                            size: 24,
                                           ),
-                                        ),
-                                      ),*/
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 24,
-                                            ),
-                                            onPressed: () => {
-                                              Navigator.pushReplacementNamed(
-                                                  context, '/BottomNav',
-                                                  arguments: 0)
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 2,
-                                      ),
-                                      DashboardSearchComponent(
-                                        onTap: () => {},
-                                        screenHeight: 50,
-                                        primaryColor: AppColor.PRIMARY_ACCENT,
-                                        hintText: "Where are you going?",
-                                        queryController: _searchController,
-                                        screenWidth: screenWidth,
-                                      ),
-                                      categories.length > 0
-                                          ? RideDashboardServiceComponent(
-                                              categories: categories,
-                                              screenWidth: screenWidth,
-                                              screenHeight: screenHeight,
-                                              isDarkMode: isDarkMode,
-                                              primaryColor: AppColor.PRIMARY,
-                                              heading: "Services",
-                                            )
-                                          : SizedBox(),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 0),
-                                        child: BannerListWidget(
-                                            data: bannerList,
-                                            isInternetConnected:
-                                                isInternetConnected,
-                                            isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode,
-                                            dummy: "assets/cab_add_1.png"),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 0),
-                                        child: BannerListWidget(
-                                            data: bannerList,
-                                            isInternetConnected:
-                                                isInternetConnected,
-                                            isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode,
-                                            dummy: "assets/cab_add_2.png"),
-                                      ),
-                                      /*  Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Text(
-                                              "Brands you love!",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Wrap(
-                                            spacing: 6,
-                                            alignment: WrapAlignment.start,
-                                            runSpacing: 8,
-                                            children: brandsList.map(
-                                              (result) {
-                                                var currentCategoryName =
-                                                    result;
-                                                return _brandYouLoveCard(
-                                                    currentCategoryName);
-                                              },
-                                            ).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Text(
-                                              "Brand Offers",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Wrap(
-                                            spacing: 6,
-                                            alignment: WrapAlignment.start,
-                                            // Horizontal space between items
-                                            runSpacing: 8,
-                                            // Vertical space between lines
-                                            children: brandsList.map(
-                                              (result) {
-                                                var currentCategoryName =
-                                                    result;
-                                                return _brandOfferCard(
-                                                    currentCategoryName);
-                                              },
-                                            ).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin:
-                                            EdgeInsets.only(bottom: 5, top: 12),
-                                        width: screenWidth,
-                                        height: screenHeight * 0.16,
-                                        child: PageView.builder(
-                                          controller: _pageController,
-                                          onPageChanged: (int page) {
-                                            setState(() {
-                                              _currentPage = page;
-                                            });
-                                          },
-                                          physics:
-                                              const AlwaysScrollableScrollPhysics(),
-                                          itemCount: bannerList.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Container(
-                                              width: screenWidth * 0.85,
-                                              child: Center(
-                                                  child: Card(
-                                                color: Colors.white
-                                                    .withOpacity(0.8),
-                                                */ /*shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.cir  cular(17))*/ /*
-                                                margin: EdgeInsets.zero,
-                                                child: Stack(
-                                                  children: [
-                                                    bannerList[index] == ""
-                                                        ? Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    // borderRadius: BorderRadius.circular(15),
-                                                                    color: AppColor
-                                                                        .PRIMARY),
-                                                            child: ClipRRect(
-                                                              // borderRadius: BorderRadius.circular(15),
-                                                              child:
-                                                                  Image.asset(
-                                                                "assets/travel_img.jpg",
-                                                                width:
-                                                                    screenWidth *
-                                                                        0.85,
-                                                                height:
-                                                                    screenHeight *
-                                                                        0.28,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              border: Border.all(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .cardColor,
-                                                                  width: 0.3),
-                                                              color: isDarkMode
-                                                                  ? AppColor
-                                                                      .DARK_CARD_COLOR
-                                                                  : Colors
-                                                                      .white,
-                                                            ),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              child:
-                                                                  Image.network(
-                                                                "${bannerList[index]}",
-                                                                width:
-                                                                    screenWidth,
-                                                                height:
-                                                                    screenHeight *
-                                                                        0.28,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                errorBuilder: (BuildContext
-                                                                        context,
-                                                                    Object
-                                                                        exception,
-                                                                    StackTrace?
-                                                                        stackTrace) {
-                                                                  return Container(
-                                                                    child: Image
-                                                                        .asset(
-                                                                      "assets/travel_img.jpg",
-                                                                      width: screenWidth *
-                                                                          0.85,
-                                                                      height:
-                                                                          screenHeight *
-                                                                              0.2,
-                                                                      fit: BoxFit
-                                                                          .none,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                loadingBuilder: (BuildContext
-                                                                        context,
-                                                                    Widget
-                                                                        child,
-                                                                    ImageChunkEvent?
-                                                                        loadingProgress) {
-                                                                  if (loadingProgress ==
-                                                                      null) {
-                                                                    return child;
-                                                                  } else {
-                                                                    return Shimmer
-                                                                        .fromColors(
-                                                                      baseColor:
-                                                                          Colors
-                                                                              .white38,
-                                                                      highlightColor: isDarkMode
-                                                                          ? AppColor
-                                                                              .DARK_CARD_COLOR
-                                                                          : Colors
-                                                                              .grey,
-                                                                      child:
-                                                                          Container(
-                                                                        decoration: BoxDecoration(
-                                                                            color: isDarkMode
-                                                                                ? AppColor.DARK_CARD_COLOR
-                                                                                : Colors.white,
-                                                                            borderRadius: BorderRadius.circular(0)),
-                                                                        width:
-                                                                            screenWidth,
-                                                                        height: screenHeight *
-                                                                            0.25,
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                  ],
-                                                ),
-                                              )),
-                                            );
-                                            // I omit the part to build card items from the list
+                                          onPressed: () =>
+                                          {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/BottomNav',
+                                                arguments: 0)
                                           },
                                         ),
-                                      ),*/
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    DashboardSearchComponent(
+                                      onTap: (value) => {
+
+                                      },
+                                      screenHeight: 50,
+                                      primaryColor: AppColor.PRIMARY_ACCENT,
+                                      hintText: "Where are you going?",
+                                      queryController: _searchController,
+                                      screenWidth: screenWidth,
+                                    ),
+                                    categories.length > 0
+                                        ? RideDashboardServiceComponent(
+                                      categories: categories,
+                                      screenWidth: screenWidth,
+                                      screenHeight: screenHeight,
+                                      isDarkMode: isDarkMode,
+                                      primaryColor: AppColor.PRIMARY,
+                                      heading: "Services",
+                                    )
+                                        : SizedBox(),
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.symmetric(horizontal: 0),
+                                      child: BannerListWidget(
+                                          data: bannerList,
+                                          isInternetConnected:
+                                          isInternetConnected,
+                                          isLoading: isBannerLoading,
+                                          isDarkMode: isDarkMode,
+                                          dummy: "assets/cab_add_1.png"),
+                                    ),
+                                    Padding(
+                                      padding:
+                                      EdgeInsets.symmetric(horizontal: 0),
+                                      child: BannerListWidget(
+                                          data: bannerList,
+                                          isInternetConnected:
+                                          isInternetConnected,
+                                          isLoading: isBannerLoading,
+                                          isDarkMode: isDarkMode,
+                                          dummy: "assets/cab_add_2.png"),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  isApiLoading
-                      ? Stack(
-                          children: [
-                            // Block interaction
-                            ModalBarrier(
-                                dismissible: false, color: Colors.transparent),
-                            // Loader indicator
-                            Center(
-                              child: CustomCircularProgress(),
                             ),
                           ],
-                        )
-                      : SizedBox(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _brandOfferCard(String currentCategoryName) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 0.3),
-              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-          width: screenWidth * 0.48,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4)),
-                  child: Image.asset(
-                    "assets/pizza_image.jpg",
-                    height: screenHeight * 0.23,
-                    width: screenWidth * 0.48,
-                    fit: BoxFit.cover,
-                  )),
-              Container(
-                width: screenWidth * 0.48,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(4),
-                        bottomLeft: Radius.circular(4))),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                  child: Center(
-                    child: Text(
-                      capitalizeFirstLetter("${currentCategoryName}"),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _brandYouLoveCard(String currentCategoryName) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 0.3),
-              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-          width: screenWidth * 0.3,
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
-                  child: Image.asset(
-                "assets/pizza_image.jpg",
-                height: screenHeight * 0.1,
-                fit: BoxFit.cover,
-              )),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text(
-                  capitalizeFirstLetter("${currentCategoryName}"),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
+                isApiLoading
+                    ? Stack(
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false, color: Colors.transparent),
+                    // Loader indicator
+                    Center(
+                      child: CustomCircularProgress(),
+                    ),
+                  ],
+                )
+                    : SizedBox(),
+              ],
+            ),
           ),
         ),
       ),

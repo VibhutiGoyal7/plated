@@ -39,13 +39,13 @@ class RideBookedScreen extends StatefulWidget {
 class _RideBookedScreenState extends State<RideBookedScreen>
     with WidgetsBindingObserver {
   String? requestStatus = "";
-  LatLng? currentLocation;
+
   bool? dashBoardKycStatus = true;
   LatLng pickupLocation = LatLng(30.699135, 76.723666);
   LatLng driverLocation = LatLng(0, 0);
   LatLng finalLocation = LatLng(30.72589, 76.75787);
   DriverStatusResponse acceptedRide = DriverStatusResponse();
-
+  LatLng? currentLocation;
   final MapController _mapController = MapController();
   late BDOneDatabase database;
   static const maxDuration = Duration(seconds: 2);
@@ -83,11 +83,6 @@ class _RideBookedScreenState extends State<RideBookedScreen>
             double.parse("${acceptedRide.driverCurrentLong}"));
       }
     });
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness:
-          Brightness.light, // Light icons for the status bar
-      //statusBarBrightness: Brightness.light,       // Status bar brightness (for iOS)
-    ));
     _getCurrentLocation(null);
     //getDashBoardData();
     receiver.start();
@@ -440,7 +435,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
             DriverCurrentLocRequest(uniqueId: "${widget.data?.uniqueId}");
         await Provider.of<MainViewModel>(context, listen: false)
             .getDriverStatus(
-                "/api/v1/customer_app/service_requests/get_driver_location",
+                "api/v1/app/service_requests/get_driver_location",
                 request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;

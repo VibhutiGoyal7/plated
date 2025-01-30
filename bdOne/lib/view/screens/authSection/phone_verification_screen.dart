@@ -1,355 +1,110 @@
-import 'dart:io';
-
-import 'package:BDOne/languageSection/Languages.dart';
-import 'package:BDOne/model/request/signUpRequest.dart';
-import 'package:BDOne/model/response/signUpResponse.dart';
-import 'package:BDOne/utils/Util.dart';
-import 'package:BDOne/view/component/textfield_component.dart';
-import 'package:country_picker/country_picker.dart';
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
+import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
+import '../../../model/request/exustingUserRequest.dart';
+import '../../../model/request/signInWithPhoneNumber.dart';
 import '../../../model/response/countryListResponse.dart';
+import '../../../model/response/existingUserResponse.dart';
+import '../../../model/response/phoneVerifyResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
+import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
-import '../../component/custom_button_component.dart';
 import '../../component/custom_circular_progress.dart';
-import '../../component/email_textfield_component.dart';
-import '../../component/instruction_step.dart';
 import '../../component/toastMessage.dart';
 
-class PhoneVerificationScreen extends StatefulWidget {
-  final String? data; // Define the 'data' parameter here
-
-  PhoneVerificationScreen({Key? key, this.data}) : super(key: key);
-
+class PhoneVerifyScreen extends StatefulWidget {
   @override
-  _PhoneVerificationScreenState createState() =>
-      _PhoneVerificationScreenState();
+  _PhoneVerifyScreenState createState() => _PhoneVerifyScreenState();
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    var state = context.findAncestorStateOfType<_PhoneVerifyScreenState>();
+    state?.setLocale(newLocale);
+  }
 }
 
-class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
-  String token = "";
-  late double screenWidth;
-  late double screenHeight;
-  PageController _pageController = PageController();
+class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
+  late Locale _locale;
+  final ScrollController _scrollController = ScrollController();
+  String phoneCode = "";
+  String selectedCountryCode = "+880";
+  int countryCode = 0;
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
-  List<CountryData> countryList = [];
-  File? docImg;
+  String dropdownValue = "";
   bool isDarkMode = false;
-  bool isChecked = false;
+  late double screenWidth;
   String selectedItem = "";
-  String selectedCountryFlag = "";
-  Country? selectedCountry;
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNoController = TextEditingController();
+  late MainViewModel _viewModel;
+  late ApiResponse apiResponse;
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  bool phoneNumberValid = false;
 
   @override
   void initState() {
     super.initState();
-    setInitialCountry();
-    //_fetchData();
+    phoneNumberValid = false;
+    //ViewModel
+    _viewModel = Provider.of<MainViewModel>(context, listen: false);
   }
 
-  void setInitialCountry() {
-    // Use a predefined country code to find the Country object
-    final initialCountryCode = 'IN'; // Example: India
-    selectedCountry = Country.tryParse(initialCountryCode);
-  }
+  final TextEditingController _inputController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    screenWidth = MediaQuery.of(context).size.width;
-    screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          CupertinoSliverNavigationBar(
-            largeTitle: Text(
-              "Create Account",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR
-              ),
-            ),
-            middle: Text(
-              "Create Account",
-              style: TextStyle(fontSize: 22,
-                  color: isDarkMode? Colors.white : AppColor.TEXT_COLOR),
-            ),
-            backgroundColor:isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
-            leading: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_back_ios_new,
-                size: 24,
-              ),
-            ),
-            alwaysShowMiddle: false,
-            border:
-            Border.all(color: Colors.transparent),
-          ),
-
-          SliverToBoxAdapter(
-            child:Padding(
-              padding: const EdgeInsets.only(top: 15.0,left:15,right: 15),
-              child: Text(
-                "${Languages.of(context)?.labelProvideMobileNoAndEmail}",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
-              ),
-            ) ,
-          ),
-
-          SliverToBoxAdapter(
-            child:
-            SizedBox(
-              height: 10,
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child:  Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Card(
-                elevation: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, bottom: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showCountryPicker(
-                                useSafeArea: true,
-                                context: context,
-                                showPhoneCode: true,
-                                // Show phone code next to country
-                                onSelect: (Country country) {
-                                  setState(() {
-                                    selectedItem = country.phoneCode;
-                                    selectedCountryFlag = country.flagEmoji;
-                                    selectedCountry == null;
-                                  });
-                                  print(
-                                      'Selected country flag: ${country.flagEmoji}');
-                                  print('Phone code: ${country.phoneCode}');
-                                  print(
-                                      'Country code: ${country.countryCode}');
-                                },
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    bottomLeft: Radius.circular(10.0)),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  selectedItem.isEmpty
-                                      ? IntrinsicWidth(
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: 2),
-                                        Text(
-                                          selectedCountry != null
-                                              ? "${selectedCountry?.flagEmoji}"
-                                              : "",
-                                          style:
-                                          TextStyle(fontSize: 20),
-                                        ),
-                                        SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          selectedCountry != null
-                                              ? "+${selectedCountry?.phoneCode}"
-                                              : "+",
-                                          style:
-                                          TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                      : IntrinsicWidth(
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: 2),
-                                        Text(
-                                          "$selectedCountryFlag",
-                                          style:
-                                          TextStyle(fontSize: 20),
-                                        ),
-                                        SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          "+$selectedItem",
-                                          style:
-                                          TextStyle(fontSize: 12),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Icon(Icons.keyboard_arrow_down_sharp),
-                                ],
-                              ),
-                            ),
-                          ),
-                          TextfieldComponent(
-                              width: 0.64,
-                              isPhone: true,
-                              textController: _phoneNoController,
-                              icon: Icon(
-                                Icons.person,
-                                size: 20,
-                                color:
-                                isDarkMode ? Colors.white : Colors.black,
-                              ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              text: Languages.of(context)!.labelMobileNumber,
-                              onChanged: () {}),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: EmailTextFieldComponent(
-                  width: 1,
-                  isPhone: false,
-                  textController: _emailController,
-                  icon: Icon(
-                    Icons.mail,
-                    size: 18,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                  ],
-                  text: Languages.of(context)!.labelEmail,
-                  onChanged: () {}),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(height: 380,),
-          ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Center(
-                  child: CustomButtonComponent(
-                      text: "${Languages.of(context)?.labelContinue}",
-                      width: screenWidth,
-                      isDarkMode: isDarkMode,
-                      buttonColor: AppColor.PRIMARY,
-                      textColor: Colors.white,
-                      verticalPadding: 10,
-                      onTap: () {
-                        hideKeyBoard();
-                        Future.delayed(Duration(milliseconds: 20));
-                        //_hitSignUpApi();
-                        if (_emailController.text.isNotEmpty &&
-                            _phoneNoController.text.isNotEmpty) {
-                          Helper.saveEmail(_emailController.text);
-                          Helper.savePhoneNo(_phoneNoController.text);
-                          Navigator.pushNamed(
-                              context, "/OtpVerificationScreen",
-                              arguments: "mobile");
-                        } else {
-                          ToastComponent.showToast(
-                              context: context,
-                              message: "Enter all the details.");
-                        }
-                      })),
-            ) ,
-          ),
-        ], //<Widget>[]
-      )
-    );
-  }
-
-  void _hitSignUpApi() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    bool isConnected = await _connectivityService.isConnected();
-    if (!isConnected) {
+  void _isValidPhoneNumber(String input) {
+    print(input);
+    if (input.isNotEmpty && input.length >= 10) {
       setState(() {
-        isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('${Languages.of(context)?.labelNoInternetConnection}'),
-            duration: maxDuration,
-          ),
-        );
+        phoneNumberValid = true;
       });
     } else {
-      SignUpRequest signUpRequest = SignUpRequest(
-          customer: CustomerSignUp(
-              email: "${_emailController.text.toString()}",
-              phoneNumber: '${_phoneNoController.text.toString()}'));
-      await Future.delayed(Duration(milliseconds: 2));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .signUpUsingMobileApi(
-              "api/v1/mobile_app/customers/create_account", signUpRequest);
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      signUpUsingMobile(context, apiResponse);
+      setState(() {
+        phoneNumberValid = false;
+      });
     }
   }
 
-  Widget signUpUsingMobile(BuildContext context, ApiResponse apiResponse) {
-    SignUpResponse? signUpResponse = apiResponse.data as SignUpResponse?;
+  Widget existingUserWidget(BuildContext context) {
+    ExistingUserResponse? mediaList = apiResponse.data as ExistingUserResponse?;
     var message = apiResponse.message.toString();
-    print("message ${message}");
     setState(() {
       isLoading = false;
     });
+
     switch (apiResponse.status) {
       case Status.LOADING:
-        return Center(child: CustomCircularProgress());
+        return Center(
+            child: CircularProgressIndicator(
+          color: isDarkMode ? AppColor.WHITE : Colors.red,
+        ));
       case Status.COMPLETED:
-        print(
-            "SignUpUsingMobile ${signUpResponse?.email} || ${signUpResponse?.phone_number}");
-        Navigator.pushNamed(context, "/OtpVerificationScreen");
-        return Container(); // Return an empty container as you'll navigate away
+        print("userfound: ${mediaList?.userFound}");
+        // Navigate to the new screen after receiving the response
+        if (mediaList?.userFound == true &&
+            mediaList?.isProfileSetupDone == true) {
+          /*Navigator.pushNamed(context, '/SignInScreen',
+              arguments: "${_inputController.text}");*/
+          ToastComponent.showToast(
+              context: context,
+              message: "This number belongs to an existing user, Please login");
+        } else {
+          _phoneVerifyAPI();
+        }
+        return Container();
       case Status.ERROR:
-        print("SignUpUsingMobile ERROR");
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
-        //ToastComponent.showToast(context: context, message: message);
+        _phoneVerifyAPI();
         return Center(
           child: Text('Please try again later!!!'),
         );
@@ -358,6 +113,323 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         return Center(
           child: Text(''),
         );
+    }
+  }
+
+  Future<Widget> getPhoneVerifyResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    var phoneVerifyResponse = apiResponse.data as PhoneVerifyResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${message}");
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(
+            child: CircularProgressIndicator(
+          color: isDarkMode ? AppColor.WHITE : Colors.red,
+        ));
+      case Status.COMPLETED:
+        print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
+        //Call Toast
+
+        // Navigate to the new screen after receiving the response
+        Navigator.pushNamed(
+          context,
+          '/OtpVerificationScreen',
+          arguments:'${_inputController.text.toString()}',
+        );
+        ToastComponent.showToast(context: context, message: message);
+        return Container(); // Return an empty container as yo u'll navigate away
+      case Status.ERROR:
+        ToastComponent.showToast(context: context, message: message);
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final bool keyboardOpen = isKeyboardOpen(context);
+    ApiResponse apiResponse = Provider.of<MainViewModel>(context).response;
+    return Scaffold(
+        //resizeToAvoidBottomInset: false,
+        body: GestureDetector(
+      onTap: () {
+        hideKeyBoard();
+      },
+      child: SafeArea(
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 0.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10),
+                        // Top Image and Header
+                        Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                "assets/phone_globe.svg",
+                                height: keyboardOpen == true
+                                    ? MediaQuery.of(context).size.height / 4
+                                    : MediaQuery.of(context).size.height / 2.5,
+                                width: screenWidth,
+                                semanticsLabel: 'A decorative image',
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        // Input Card
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Card(
+                            margin: EdgeInsets.only(top: 5),
+                            elevation: 0,
+                            color: Theme.of(context).cardColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(12)),
+                            ),
+                            child: Container(
+                              height: screenHeight / 2,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20.0,
+                                  horizontal: 16.0,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                        alignment: Alignment.topLeft,
+                                        child: _buildLabelText(
+                                          context,
+                                          "${Languages.of(context)?.labelEnterPhoneNo}",
+                                          20,
+                                          true,
+                                        )),
+                                    SizedBox(height: 8),
+                                    Align(
+                                        alignment: Alignment.topLeft,
+                                        child: _buildLabelText(
+                                          context,
+                                          "${Languages.of(context)?.labelSendConfirmationCode}",
+                                          12,
+                                          false,
+                                        )),
+                                    SizedBox(height: 16),
+                                    _buildPhoneInput(context, isDarkMode),
+                                    SizedBox(height: 25),
+                                    _buildFooter(context),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (isLoading) CustomCircularProgress(),
+            // Show loading indicator conditionally
+          ],
+        ),
+      ),
+    ));
+  }
+
+  _buildLabelText(BuildContext context, String text, int size, bool isBold) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: size.toDouble(),
+        fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
+      ),
+    );
+  }
+
+  Widget _buildPhoneInput(BuildContext context, bool isDarkMode) {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            child: Row(
+              children: [
+                Container(
+                  constraints: BoxConstraints(maxWidth: screenWidth * 0.9),
+                  height: 50,
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                        width: 0.2,
+                        color: Theme.of(context).cardColor,),
+                    color:
+                        isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 6),
+                      Expanded(
+                        child: TextField(
+                          style: TextStyle(fontSize: 16.0),
+                          controller: _inputController,
+                          onChanged: _isValidPhoneNumber,
+                          maxLength: 11,
+                          keyboardType: TextInputType.phone,
+                          onSubmitted: (value) {
+                            // Implement submit logic if needed
+                          },
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0.8)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0.7)),
+                            counterText: "",
+                            border: InputBorder.none,
+                            hintText: 'Mobile Number',
+                            contentPadding: EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    return Container(
+      width: screenWidth * 0.8,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color:
+            phoneNumberValid ? AppColor.PRIMARY_ACCENT : Colors.grey.shade300,
+        borderRadius: BorderRadius.all(Radius.circular(6)),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.1),
+            offset: Offset(0, 1),
+            blurRadius: 3,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      child: MaterialButton(
+        onPressed: () async {
+          setState(() {
+            isLoading = true;
+          });
+          hideKeyBoard();
+          if (phoneNumberValid) {
+            bool isConnected = await _connectivityService.isConnected();
+            if (!isConnected) {
+              setState(() {
+                isLoading = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        '${Languages.of(context)?.labelNoInternetConnection}'),
+                    duration: maxDuration,
+                  ),
+                );
+              });
+            } else {
+              ExistingUserRequest request = ExistingUserRequest(
+                  customer:
+                      ExistingCustomer(phoneNumber: _inputController.text));
+              await _viewModel.existingUserData(request);
+              apiResponse = _viewModel.response;
+              existingUserWidget(context);
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(Languages.of(context)!.labelEnterValidPhone),
+            ));
+          }
+        },
+        child: Text(
+          Languages.of(context)!.labelSubmit,
+          style: TextStyle(
+              color: phoneNumberValid ? Colors.white : AppColor.PRIMARY,
+              fontSize: 15),
+        ),
+      ),
+    );
+  }
+
+  void _phoneVerifyAPI() async {
+    if (phoneNumberValid) {
+      setState(() {
+        isLoading = true;
+      });
+
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        PhoneRequest phoneRequest = PhoneRequest(
+            customer: Customer(
+                phoneNumber: _inputController.text,
+                mobileOtp: "",
+                countryId: countryCode));
+        await _viewModel.PhoneVerifyData(phoneRequest);
+        apiResponse = _viewModel.response;
+        getPhoneVerifyResponse(context, apiResponse);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
+          duration: maxDuration,
+        ),
+      );
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:BDOne/model/response/dashboardResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/utils/Util.dart';
 import 'package:BDOne/view/component/restaurant/restaurant_banner_list_widget.dart';
+import 'package:BDOne/view/component/shimmerComponents/shimmer_card.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,10 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/db/dao.dart';
+import '../../../model/request/productListRequest.dart';
 import '../../../model/response/ServiceTypeResponse.dart';
+import '../../../model/response/countryListResponse.dart';
+import '../../../model/response/productsListReponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
@@ -22,9 +26,10 @@ import '../../component/banner_list_widget.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_loader.dart';
 import '../../component/dashboard_search_component.dart';
-import '../../component/image_view_components.dart';
 import '../../component/restaurant/restaurant_dashboard_component.dart';
 import '../../component/session_expired_dialog.dart';
+import '../../component/shimmerComponents/ShimmerList.dart';
+import 'component/product_component.dart';
 
 class RestaurantHomeScreen extends StatefulWidget {
   @override
@@ -36,7 +41,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
   String calledShortCut = "";
   String? name = "";
   late PageController _pageController;
-  int _currentPage = 0;
+  int _currentPage = 1;
   late Timer _timer;
   late int? userId;
   var imageUrl;
@@ -57,40 +62,34 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
   TextEditingController _searchController = TextEditingController();
   List<ServiceTypeResponse?> categories = [
     ServiceTypeResponse(
-        serviceName: 'Fruits',
-        icon: '',
-        iconBgColor: Colors.red.shade50),
+        serviceName: 'Fruits', icon: '', iconBgColor: Colors.red.shade50),
     ServiceTypeResponse(
         serviceName: 'Vegetables',
         icon: '',
         iconBgColor: Colors.yellow.shade50),
     ServiceTypeResponse(
-        serviceName: 'Dairy',
-        icon: '',
-        iconBgColor: Colors.green.shade50),
+        serviceName: 'Dairy', icon: '', iconBgColor: Colors.green.shade50),
     ServiceTypeResponse(
-        serviceName: 'Spices',
-        icon: '',
-        iconBgColor: Colors.blue.shade50),
+        serviceName: 'Spices', icon: '', iconBgColor: Colors.blue.shade50),
     ServiceTypeResponse(
-        serviceName: 'Pulses',
-        icon: '',
-        iconBgColor: Colors.black12),
+        serviceName: 'Pulses', icon: '', iconBgColor: Colors.black12),
     ServiceTypeResponse(
-        serviceName: 'Seeds',
-        icon: '',
-        iconBgColor: Colors.black12),
+        serviceName: 'Seeds', icon: '', iconBgColor: Colors.black12),
     ServiceTypeResponse(
-        serviceName: 'Nuts',
-        icon: '',
-        iconBgColor: Colors.black12),
+        serviceName: 'Nuts', icon: '', iconBgColor: Colors.black12),
     ServiceTypeResponse(
         serviceName: 'Bakery & Biscuits',
         icon: '',
         iconBgColor: Colors.black12),
   ];
+  List<ProductDetails?> productsList = [];
   List<String> bannerList = ["", "", "", ""];
+  List<CategoryData> categoryList = [];
   List<String> brandsList = ["Kellogs", "Amul", "Amul", "Kellogs"];
+
+  late MainViewModel _viewModel;
+  late ApiResponse apiResponse;
+  Future<void>? _fetchDataFuture;
 
 /*  BroadcastReceiver receiver = BroadcastReceiver(
     names: <String>[
@@ -103,17 +102,13 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
     super.initState();
     imageUrl = "";
     //receiver.start();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: isDarkMode
-          ? Brightness.light
-          : Brightness
-              .light, // Light ico      // Status bar brightness (for iOS)
-    ));
     /*  receiver.messages.listen((message) {
       print("BroadCast");
     });*/
-
+    //ViewModel
+    _viewModel = Provider.of<MainViewModel>(context, listen: false);
+    _fetchCategoryListData();
+    _fetchDataFuture = _fetchDWData(_currentPage, false, false);
     Helper.getProfileDetails().then((profile) {
       setState(() {
         name = profile?.firstName;
@@ -195,379 +190,278 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
           }
         }
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.light,
-            statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light),
-        child: Scaffold(
-          body: RefreshIndicator(
-            onRefresh: () {
-              print("Refresh");
-              return Future.delayed(Duration(seconds: 2), () {});
-            },
-            child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  SafeArea(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 15.0),
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              /*Container(
-                                height: screenHeight * 0.28,
-                                alignment: AlignmentDirectional.center,
-                                decoration: BoxDecoration(
-                                    color: AppColor.PRIMARY,
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(25.0),
-                                        bottomRight: Radius.circular(25.0))),
-                              ),*/
-                              Container(
-                                margin: EdgeInsets.only(top: 10),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.arrow_back_ios,
-                                              size: 22,
-                                            ),
-                                            onPressed: () => {
-                                              Navigator.pushReplacementNamed(
-                                                  context, '/BottomNav',
-                                                  arguments: 0)
-                                            },
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: () {
+            print("Refresh");
+            return Future.delayed(Duration(seconds: 2), () {});
+          },
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 15.0),
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            /*Container(
+                              height: screenHeight * 0.28,
+                              alignment: AlignmentDirectional.center,
+                              decoration: BoxDecoration(
+                                  color: AppColor.PRIMARY,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(25.0),
+                                      bottomRight: Radius.circular(25.0))),
+                            ),*/
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.arrow_back_ios,
+                                            color: Theme.of(context).focusColor,
+                                            size: 22,
                                           ),
-                                          DashboardSearchComponent(
-                                            onTap: () => {},
-                                            screenHeight: 50,
-                                            primaryColor:
-                                                AppColor.PRIMARY_ACCENT,
-                                            hintText: "What are u looking for?",
-                                            queryController: _searchController,
-                                            screenWidth: screenWidth * 0.65,
+                                          onPressed: () => {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/BottomNav',
+                                                arguments: 0)
+                                          },
+                                        ),
+                                        DashboardSearchComponent(
+                                          onTap: (value) => {},
+                                          screenHeight: 50,
+                                          primaryColor: AppColor.PRIMARY_ACCENT,
+                                          hintText: "What are u looking for?",
+                                          queryController: _searchController,
+                                          screenWidth: screenWidth * 0.65,
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.shopping_cart,
+                                            size: 26,
+                                            color: AppColor.PRIMARY_ACCENT,
                                           ),
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.shopping_cart,
-                                              size: 26,
-                                              color: AppColor.PRIMARY_ACCENT,
-                                            ),
-                                            onPressed: () => {
-                                              Navigator.pushReplacementNamed(
-                                                  context, '/BottomNav',
-                                                  arguments: 0)
-                                            },
-                                          ),
-                                        ],
+                                          onPressed: () => {
+                                            Navigator.pushNamed(
+                                                context, '/RestaurantBottomNav',
+                                                arguments: 2)
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    RestaurantBannerListWidget(
+                                        data: bannerList,
+                                        isInternetConnected:
+                                            isInternetConnected,
+                                        isLoading: isBannerLoading,
+                                        isDarkMode: isDarkMode,
+                                        dummy: "assets/cab_add_1.png"),
+                                    categoryList.length != 0
+                                        ? RestaurantDashboardComponent(
+                                            categories: categoryList,
+                                            screenWidth: screenWidth,
+                                            screenHeight: screenHeight,
+                                            isDarkMode: isDarkMode,
+                                            primaryColor: AppColor.PRIMARY,
+                                            heading: "Categories",
+                                          )
+                                        : isLoading
+                                        ? Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .center,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment
+                                          .center,
+                                      children: [
+                                        SizedBox(height: 25),
+                                        ShimmerCard()
+                                      ],
+                                    )
+                                        : Container(
+                                      height: screenHeight * 0.8,
+                                      child: Align(
+                                        alignment:
+                                        Alignment.center,
+                                        child: Text(
+                                          "No Product Available",
+                                          style: TextStyle(
+                                              color: AppColor
+                                                  .GREY_TEXT_COLOR),
+                                        ),
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      RestaurantBannerListWidget(
+                                    ),
+                                    Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10, left: 14),
+                                              child: Text(
+                                                "Daily Products",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10, right: 14),
+                                              child: GestureDetector(
+                                                onTap: () => {},
+                                                child: Text(
+                                                  "See all",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 12,
+                                                      color: AppColor
+                                                          .PRIMARY_ACCENT),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        productsList.length != 0
+                                            ? AnimatedContainer(
+                                                width: screenWidth,
+                                                height: 250,
+                                                padding: const EdgeInsets.only(
+                                                    top: 6, left: 10),
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                                curve: Curves.easeInOut,
+                                                // Expandable height control
+                                                child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  // Fit grid inside list
+                                                  //physics: NeverScrollableScrollPhysics(),
+                                                  // Disable grid scrolling
+                                                  padding: EdgeInsets.all(4),
+                                                  itemCount:
+                                                      productsList.length,
+                                                  itemBuilder:
+                                                      (context, subIndex) {
+                                                    if (subIndex <
+                                                        productsList.length) {
+                                                      var subCategory =
+                                                          productsList[
+                                                              subIndex];
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            showSnackBar(
+                                                              context,
+                                                              "${subCategory?.name}",
+                                                              screenWidth * 0.5,
+                                                            );
+                                                          });
+                                                        },
+                                                        child: ProductComponent(
+                                                          width:
+                                                              screenWidth / 2.4,
+                                                          height: 250,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(14),
+                                                          placeholderImage: '',
+                                                          isDarkMode:
+                                                              isDarkMode,
+                                                          subCategory:
+                                                              subCategory,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return SizedBox(); // Prevents index errors
+                                                    }
+                                                  },
+                                                ))
+                                            : isLoading
+                                                ? Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(height: 25),
+                                                      ShimmerList(
+                                                        itemCount: 3,
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Container(
+                                                    height: screenHeight * 0.8,
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "No Product Available",
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .GREY_TEXT_COLOR),
+                                                      ),
+                                                    ),
+                                                  ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 0),
+                                      child: BannerListWidget(
                                           data: bannerList,
                                           isInternetConnected:
                                               isInternetConnected,
                                           isLoading: isBannerLoading,
                                           isDarkMode: isDarkMode,
-                                          dummy: "assets/cab_add_1.png"),
-                                      categories.length > 0
-                                          ? RestaurantDashboardComponent(
-                                              categories: categories,
-                                              screenWidth: screenWidth,
-                                              screenHeight: screenHeight,
-                                              isDarkMode: isDarkMode,
-                                              primaryColor: AppColor.PRIMARY,
-                                              heading: "Categories",
-                                            )
-                                          : SizedBox(),
-                                      Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10, left: 14),
-                                                child: Text(
-                                                  "Daily Products",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10, right: 14),
-                                                child: GestureDetector(
-                                                  onTap: ()=>{
-                                                    Navigator.of(context).pushNamed("/RestaurantProductsScreen")
-                                                  },
-                                                  child: Text(
-                                                    "See all",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 12,
-                                                        color: AppColor
-                                                            .PRIMARY_ACCENT),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          AnimatedContainer(
-                                              width: screenWidth,
-                                              height: 220,
-                                              padding: const EdgeInsets.only(
-                                                  top: 6, left: 10),
-                                              duration:
-                                                  Duration(milliseconds: 300),
-                                              curve: Curves.easeInOut,
-                                              // Expandable height control
-                                              child: ListView.builder(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                // Fit grid inside list
-                                                //physics: NeverScrollableScrollPhysics(),
-                                                // Disable grid scrolling
-                                                padding: EdgeInsets.all(4),
-                                                itemCount: categories.length,
-                                                itemBuilder:
-                                                    (context, subIndex) {
-                                                  if (subIndex <
-                                                      categories.length) {
-                                                    var subCategory =
-                                                        categories[subIndex];
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          showSnackBar(
-                                                            context,
-                                                            "${subCategory?.serviceName}",
-                                                            screenWidth * 0.5,
-                                                          );
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        height: 200,
-                                                        width:
-                                                            screenWidth / 2.4,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: isDarkMode
-                                                              ? Colors.black
-                                                              : Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(14),
-                                                              border: Border.all(width: 0.1, color: Colors.black54),
-                                                        ),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                vertical: 2,
-                                                                horizontal: 1),
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 4),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      bottom:
-                                                                          18.0),
-                                                              child:
-                                                                  ImageViewComponent(
-                                                                height: 90,
-                                                                width: 90,
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            0)),
-                                                                imageUrl:
-                                                                    subCategory
-                                                                        ?.icon,
-                                                                isDarkMode:
-                                                                    false,
-                                                                placeholderImage:
-                                                                    "assets/milk_image.png",
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          10),
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        " ৳480",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                16,
-                                                                            color:
-                                                                                AppColor.TEXT_RED,
-                                                                            fontWeight: FontWeight.bold),
-                                                                      ),
-                                                                      Container(
-                                                                          height:
-                                                                              24,
-                                                                          width:
-                                                                              24,
-                                                                          alignment: Alignment
-                                                                              .center,
-                                                                          decoration: BoxDecoration(
-                                                                              color: AppColor.PRIMARY_ACCENT,
-                                                                              borderRadius: BorderRadius.all(Radius.circular(100))),
-                                                                          child: Icon(
-                                                                            Icons.add,
-                                                                            size:
-                                                                                18,
-                                                                            color:
-                                                                                Colors.white,
-                                                                          ))
-                                                                    ],
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Text(
-                                                                          " ৳680",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                11,
-                                                                            color:
-                                                                                Colors.black54,
-                                                                            decoration:
-                                                                                TextDecoration.lineThrough,
-                                                                            decorationColor:
-                                                                                Colors.black54,
-                                                                          )),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              5),
-                                                                      Text(
-                                                                        "52% Off",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                9,
-                                                                            color:
-                                                                                AppColor.PRIMARY_ACCENT,
-                                                                            fontWeight: FontWeight.w600),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Text(
-                                                                    "${capitalizeFirstLetter("${subCategory?.serviceName}")}",
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    maxLines: 2,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .start,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color: isDarkMode
-                                                                          ? AppColor
-                                                                              .WHITE
-                                                                          : AppColor
-                                                                              .BLACK,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    return SizedBox(); // Prevents index errors
-                                                  }
-                                                },
-                                              ))
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 0),
-                                        child: BannerListWidget(
-                                            data: bannerList,
-                                            isInternetConnected:
-                                                isInternetConnected,
-                                            isLoading: isBannerLoading,
-                                            isDarkMode: isDarkMode,
-                                            dummy: "assets/cab_add_2.png"),
-                                      ),
-                                    ],
-                                  ),
+                                          dummy: "assets/cab_add_2.png"),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  isApiLoading
-                      ? Stack(
-                          children: [
-                            // Block interaction
-                            ModalBarrier(
-                                dismissible: false, color: Colors.transparent),
-                            // Loader indicator
-                            Center(
-                              child: CustomLoader(),
                             ),
                           ],
-                        )
-                      : SizedBox(),
-                ],
-              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                isApiLoading
+                    ? Stack(
+                        children: [
+                          // Block interaction
+                          ModalBarrier(
+                              dismissible: false, color: Colors.transparent),
+                          // Loader indicator
+                          Center(
+                            child: CustomLoader(),
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+              ],
             ),
           ),
         ),
@@ -868,6 +762,130 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
         return Center(
           child: Text('Loading...'),
         );
+    }
+  }
+
+  void _fetchCategoryListData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    bool isConnected = await _connectivityService.isConnected();
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('${Languages.of(context)?.labelNoInternetConnection}'),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      await Future.delayed(Duration(milliseconds: 2));
+      await _viewModel.fetchCategoryListApi();
+      apiResponse = _viewModel.response;
+      getCategoryList(context);
+    }
+  }
+
+  Widget getCategoryList(BuildContext context) {
+    CategoryListResponse? categoryListResponse =
+        apiResponse.data as CategoryListResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${message}");
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(
+            child: CircularProgressIndicator(
+          color: isDarkMode ? AppColor.WHITE : Colors.red,
+        ));
+      case Status.COMPLETED:
+        setState(() {
+          categoryListResponse?.categories?.forEach((value) {
+            categoryList.add(value);
+          });
+        });
+        return Container();
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
+  Future<void> _fetchDWData(
+      int pageKey, bool filterApplied, bool isScroll) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      bool isConnected = await _connectivityService.isConnected();
+      if (!isConnected) {
+        setState(() {
+          isLoading = false;
+          isInternetConnected = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text('${Languages.of(context)?.labelNoInternetConnection}'),
+              duration: maxDuration,
+            ),
+          );
+        });
+      } else {
+        ProductListRequest request = ProductListRequest(
+            pageNo: pageKey,
+            pageSize: 5,
+            description: '',
+            foodCategoryId: '2',
+            name: '');
+        await Provider.of<MainViewModel>(context, listen: false)
+            .getProductsFromCategoryApi(
+                "api/v1/app/customers/all_trx_list", request);
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        await getTransactionData(context, apiResponse, pageKey, isScroll);
+      }
+    } catch (error) {
+      print("Error fetching data: $error");
+    }
+  }
+
+  Future<void> getTransactionData(BuildContext context, ApiResponse apiResponse,
+      int pageKey, bool isScroll) async {
+    ProductsListResponse? response = apiResponse.data as ProductsListResponse?;
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return;
+      case Status.COMPLETED:
+        final newItems = response?.productDetails ?? [];
+        setState(() {
+          productsList.addAll(newItems);
+        });
+        return;
+      case Status.ERROR:
+        if (nonCapitalizeString("${apiResponse.message}") ==
+            nonCapitalizeString(
+                "${Languages.of(context)?.labelInvalidAccessToken}")) {
+          SessionExpiredDialog.showDialogBox(context: context);
+        }
+        return;
+      case Status.INITIAL:
+      default:
+        return;
     }
   }
 }

@@ -899,7 +899,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
             serviceType: "rides");
         await Provider.of<MainViewModel>(context, listen: false)
             .createRideRequestApi(
-                "/api/v1/customer_app/service_requests/create_service_request",
+                "api/v1/app/service_requests/create_service_request",
                 request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
@@ -974,7 +974,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
             destinationLongitude: "${destinationLocation?.longitude}");
         await Provider.of<MainViewModel>(context, listen: false)
             .getVehicleFareListData(
-                "api/v1/customer_app/vehicle_categories/calculate_estimated_fare",
+                "api/v1/app/service_requests/calculate_estimated_fare",
                 request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
@@ -1050,7 +1050,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
             DriverCurrentLocRequest(uniqueId: "$uniqueId");
         await Provider.of<MainViewModel>(context, listen: false)
             .getDriverStatus(
-                "/api/v1/customer_app/service_requests/get_driver_location",
+                "api/v1/app/service_requests/get_driver_location",
                 request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;

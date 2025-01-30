@@ -2,19 +2,22 @@ import 'dart:io';
 
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
-import 'package:BDOne/utils/Helper.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../model/apis/api_response.dart';
-import '../../../model/response/countryListResponse.dart';
+import '../../../model/request/signInWithPhoneNumber.dart';
+import '../../../model/response/otpVerifyResponse.dart';
+import '../../../utils/Helper.dart';
 import '../../../utils/Util.dart';
 import '../../../view_model/main_view_model.dart';
 import '../../component/connectivity_service.dart';
 import '../../component/custom_circular_progress.dart';
+import '../../component/toastMessage.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String? data; // Define the 'data' parameter here
@@ -34,7 +37,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
-  List<CountryData> countryList = [];
   File? docImg;
   bool isDarkMode = false;
   bool isChecked = false;
@@ -105,167 +107,170 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColor.BG_COLOR,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios)),
-      ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  widget.data == "mobile"
-                      ? "${Languages.of(context)?.labelVerifyYourMobileNumber}"
-                      : "Verify Your Email Address",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-
-                SvgPicture.asset(
-                  "assets/forgot_pass_icon.svg",
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Verification Code",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
+          Center(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Please enter the 6 digit code sent to your email address ********r@gmail.com",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                  Text(
+                    widget.data == "mobile"
+                        ? "${Languages.of(context)?.labelVerifyYourMobileNumber}"
+                        : "Verify Your Email Address",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-
-                //OTP Boxes
-                _buildOtpInput(context, screenWidth, isDarkMode),
-
-                SizedBox(height: 25),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildLabelText(
-                        context,
-                        "${Languages.of(context)?.labelDidntReceiveOtp}",
-                        14,
-                        true,
-                        color: isDarkMode ? Colors.grey : Colors.black54,
-                      ),
-                      SizedBox(
-                        height: 6,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          _countdownTimer(),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          if (resendOtp) _resendOtpButton(context)
-                        ],
-                      )
-                    ],
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(height: 15),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: screenWidth * 0.8,
-                    height: 50,
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: !isValid
-                            ? WidgetStateProperty.all(
-                                Theme.of(context).highlightColor)
-                            : WidgetStateProperty.all(AppColor.PRIMARY_ACCENT),
-                      ),
-                      onPressed: () async {
-                        hideKeyBoard();
-                        Navigator.pushNamed(context, "/OtpVerificationScreen");
-                        /*   if (phoneNumberValid &&
-                                  countryCode > 0 &&
-                                  phoneCode != "") {
-                                print(_phoneNumberController.text);
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                var phoneNumber =
-                                    "${_phoneNumberController.text}";
-                                CreateOtpChangePassRequest request =
-                                    CreateOtpChangePassRequest(
-                                        customer: CustomerGetOtpPassDetail(
-                                            phoneNumber: phoneNumber,
-                                            countryCode: countryCode));
 
-                                await _viewModel.CreateOtpChangePass(
-                                    "", request);
-                                apiResponse = _viewModel.response;
-                                generateOtpResponse(context);
-                              } else if (countryCode == 0 && phoneCode == "") {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(Languages.of(context)!
-                                      .labelSelectCountryCode),
-                                ));
-                              } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(Languages.of(context)!
-                                      .labelEnterValidPhone),
-                                ));
-                              }*/
-                      },
-                      child: Text(
-                        Languages.of(context)!.labelConfirmOtp,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                  SvgPicture.asset(
+                    "assets/forgot_pass_icon.svg",
+                    height: 120,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Verification Code",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                ),
-                //Spacer(),
-                /*CustomNumberKeyboard(onKeyTap: (value) async {
-                  if (value == "clear") {
-                    _handleBackspace();
-                  } else if (value == "submit") {
-                    String otp =
-                        _inputValues.map((controller) => controller).join();
-                    Navigator.pushNamed(context, "/SelectServiceScreen");
-                  } else {
-                    _handleKeyTap(value);
-                  }
-                }),*/
-              ],
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Please enter the 6 digit code sent to your email address ********r@gmail.com",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  //OTP Boxes
+                  _buildOtpInput(context, screenWidth, isDarkMode),
+
+                  SizedBox(height: 25),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLabelText(
+                          context,
+                          "${Languages.of(context)?.labelDidntReceiveOtp}",
+                          14,
+                          true,
+                          color: isDarkMode ? Colors.grey : Colors.black54,
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            _countdownTimer(),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            if (resendOtp) _resendOtpButton(context)
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  _buildFooter(context),
+                  /*      CustomNumberKeyboard(onKeyTap: (value) async {
+                    if (value == "clear") {
+                      _handleBackspace();
+                    } else if (value == "submit") {
+                      String otp = _inputValues
+                          .map((controller) => controller)
+                          .join();
+                      if (otp.isNotEmpty && otp.length == 6) {
+                        */ /*String otp =
+                                  _controllers.map((controller) => controller.text).join();*/ /*
+                        const maxDuration = Duration(seconds: 2);
+                        if (otp.isNotEmpty && otp.length == 6) {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          bool isConnected =
+                          await _connectivityService.isConnected();
+                          if (!isConnected) {
+                            setState(() {
+                              isLoading = false;
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      '${Languages.of(context)?.labelNoInternetConnection}'),
+                                  duration: maxDuration,
+                                ),
+                              );
+                            });
+                          } else {
+                            PhoneRequest phoneRequest = PhoneRequest(
+                                customer: Customer(
+                                    phoneNumber:
+                                    widget.data.toString(),
+                                    mobileOtp: otp,
+                                    countryId: null));
+                            await Provider.of<MainViewModel>(context,
+                                listen: false)
+                                .fetchOtpVerifyData(phoneRequest);
+
+                            ApiResponse apiResponse =
+                                Provider.of<MainViewModel>(context,
+                                    listen: false)
+                                    .response;
+                            getOtpResponseDataWidget(
+                                context, apiResponse);
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  '${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
+                              duration: maxDuration,
+                            ),
+                          );
+                        }
+                      }
+                    } else {
+                      _handleKeyTap(value);
+                    }
+                  }),*/
+                  //Spacer(),
+                  /*CustomNumberKeyboard(onKeyTap: (value) async {
+                    if (value == "clear") {
+                      _handleBackspace();
+                    } else if (value == "submit") {
+                      String otp =
+                          _inputValues.map((controller) => controller).join();
+                      Navigator.pushNamed(context, "/SelectServiceScreen");
+                    } else {
+                      _handleKeyTap(value);
+                    }
+                  }),*/
+                ],
+              ),
             ),
           ),
           isLoading
@@ -340,7 +345,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(4)),
-              color: AppColor.WHITE,
+              color:Theme.of(context).cardColor,
               border: Border.all(width: 0.2, color: AppColor.GREY_TEXT_COLOR),
             ),
             width: screenWidth / 8,
@@ -359,6 +364,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               onChanged: (value) {
                 if (value.isNotEmpty && index < 5) {
                   FocusScope.of(context).nextFocus();
+                  _handleKeyTap(value);
                 }
               },
               onSubmitted: (_) {
@@ -395,6 +401,121 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         ));
   }
 
+  Future<Widget> getOtpResponseDataWidget(
+      BuildContext context, ApiResponse apiResponse) async {
+    OtpVerifyResponse? otpVerifyResponse =
+        apiResponse.data as OtpVerifyResponse?;
+    var message = apiResponse.message.toString();
+    setState(() {
+      isLoading = false;
+    });
+    switch (apiResponse.status) {
+      case Status.LOADING:
+        return Center(
+            child: CircularProgressIndicator(
+          color: isDarkMode ? AppColor.WHITE : Colors.red,
+        ));
+      case Status.COMPLETED:
+        print("OtpVerify ${otpVerifyResponse?.token}");
+        //Call Toast
+
+        ToastComponent.showToast(context: context, message: message);
+        final prefs = await SharedPreferences.getInstance();
+        String token = "${otpVerifyResponse?.token}";
+        Navigator.pushReplacementNamed(context, '/SetUpAccount');
+        // Save the token
+        bool isSaved = await Helper.saveOtpToken(token);
+
+        // Check if the token was saved successfully
+        if (isSaved) {
+          print('Token saved successfully.');
+        } else {
+          print('Failed to save token.');
+        }
+        Helper.getOtpToken();
+        // Retrieve the token
+        String? retrievedToken = await Helper.getOtpToken();
+        print('Retrieved Token: $retrievedToken');
+
+        Navigator.pushNamed(context, '/SetUpAccount');
+        // Navigate to the new screen after receiving the response
+        return Container(); // Return an empty container as you'll navigate away
+      case Status.ERROR:
+        ToastComponent.showToast(context: context, message: message);
+        return Center(
+          child: Text('Please try again later!!!'),
+        );
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text(''),
+        );
+    }
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    return MaterialButton(
+      onPressed: () async {
+        setState(() {
+          isLoading = false;
+        });
+        hideKeyBoard();
+        String otp = _inputValues.map((controller) => controller).join();
+        if (otp.isNotEmpty && otp.length == 5) {
+          String otp = _controllers.map((controller) => controller.text).join();
+          const maxDuration = Duration(seconds: 2);
+          if (otp.isNotEmpty && otp.length == 6) {
+            setState(() {
+              isLoading = true;
+            });
+
+            bool isConnected = await _connectivityService.isConnected();
+            if (!isConnected) {
+              setState(() {
+                isLoading = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        '${Languages.of(context)?.labelNoInternetConnection}'),
+                    duration: maxDuration,
+                  ),
+                );
+              });
+            } else {
+              PhoneRequest phoneRequest = PhoneRequest(
+                  customer: Customer(
+                      phoneNumber: widget.data.toString(),
+                      mobileOtp: otp,
+                      countryId: null));
+              await Provider.of<MainViewModel>(context, listen: false)
+                  .fetchOtpVerifyData(phoneRequest);
+
+              ApiResponse apiResponse =
+                  Provider.of<MainViewModel>(context, listen: false).response;
+              getOtpResponseDataWidget(context, apiResponse);
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    '${Languages.of(context)?.labelPleaseEnterValidPhoneNo}'),
+                duration: maxDuration,
+              ),
+            );
+          }
+        }
+      },
+      color: AppColor.PRIMARY_ACCENT,
+      minWidth: screenWidth * 0.75,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Text(
+        Languages.of(context)!.labelSubmit,
+        style: TextStyle(color: Colors.white, fontSize: 15),
+      ),
+    );
+  }
+
   void onPressedFrontImage() async {
     List<String> pictures;
     try {
@@ -407,69 +528,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       });
     } catch (exception) {
       // Handle exception here
-    }
-  }
-
-  void _fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    bool isConnected = await _connectivityService.isConnected();
-    if (!isConnected) {
-      setState(() {
-        isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('${Languages.of(context)?.labelNoInternetConnection}'),
-            duration: maxDuration,
-          ),
-        );
-      });
-    } else {
-      await Future.delayed(Duration(milliseconds: 2));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .fetchCountryList("api/v1/app/customers/country_list");
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getCountryList(context, apiResponse);
-    }
-  }
-
-  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
-    CountryListResponse? countryListResponse =
-        apiResponse.data as CountryListResponse?;
-    var message = apiResponse.message.toString();
-    print("message ${message}");
-    setState(() {
-      isLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CustomCircularProgress());
-      case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[1].name}");
-
-        countryList = countryListResponse!.countries!;
-        Helper.saveCountryList(countryList);
-        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        print("countriess ${countryList}");
-        return Center(
-          child: Text('Please try again later!!!'),
-        );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:BDOne/model/request/createOtpChangePass.dart';
 import 'package:BDOne/model/request/driverCurrentLocRequest.dart';
 import 'package:BDOne/model/request/exustingUserRequest.dart';
 import 'package:BDOne/model/request/generateTpinRequest.dart';
+import 'package:BDOne/model/request/productListRequest.dart';
 import 'package:BDOne/model/request/rideRequest.dart';
 import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInRequest.dart';
@@ -21,44 +22,64 @@ import 'package:BDOne/model/response/fetchKycDocResponse.dart';
 import 'package:BDOne/model/response/generateTpinResponse.dart';
 import 'package:BDOne/model/response/initiateRideResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
+import 'package:BDOne/model/response/otpVerifyResponse.dart';
 import 'package:BDOne/model/response/phoneVerifyResponse.dart';
+import 'package:BDOne/model/response/productsListReponse.dart';
 import 'package:BDOne/model/response/profileResponse.dart';
 import 'package:BDOne/model/response/setUpAccountResponse.dart';
+import 'package:BDOne/model/response/signInResponse.dart';
 import 'package:BDOne/model/response/signUpResponse.dart';
 import 'package:BDOne/model/response/vehicleListResponse.dart';
-import 'package:BDOne/model/services/base_service.dart';
-import 'package:BDOne/model/services/bd_pass_service.dart';
-
-import 'response/otpVerifyResponse.dart';
+import 'package:BDOne/model/services/api/base_service.dart';
+import 'package:BDOne/model/services/api/bd_one_api_service.dart';
+import 'package:BDOne/model/services/remote/BdOneApiServicesImpl.dart';
 
 class MainRepository {
-  BaseService _BDOneService = BDOneService();
+  BaseService _BDOneService = BdOneApiService();
+  BdOneApiServicesImpl _ApiServices = BdOneApiServicesImpl();
 
+  //FetchPhoneVerifyResponse
   Future<PhoneVerifyResponse> fetchPhoneVerifyResponse(
-      String value, PhoneRequest phoneRequest) async {
-    print(phoneRequest);
-    dynamic response = await _BDOneService.postResponse(value, phoneRequest);
-    final jsonData = response;
-    print(jsonData);
-    PhoneVerifyResponse mediaList = PhoneVerifyResponse.fromJson(jsonData);
-    return mediaList;
+      PhoneRequest phoneRequest) async {
+    print("Api: FetchPhoneVerifyResponse");
+    dynamic response =
+        await _ApiServices.fetchPhoneVerifyResponseApi(phoneRequest);
+    return response;
   }
 
+
+  //FetchOtpVerifyData
+  Future<OtpVerifyResponse> fetchOtpVerifyData(
+      PhoneRequest phoneRequest) async {
+    print("Api: FetchOtpVerifyData");
+    dynamic response = await _ApiServices.fetchOtpVerifyDataApi(phoneRequest);
+    return response;
+  }
+
+
+  //ExistingUserData
   Future<ExistingUserResponse> existingUserData(
-      String value, ExistingUserRequest existingUserRequest) async {
-    print(existingUserRequest);
+      ExistingUserRequest existingUserRequest) async {
+    print("Api: ExistingUserData");
     dynamic response =
-        await _BDOneService.postResponse(value, existingUserRequest);
-    final jsonData = response;
-    print(jsonData);
-    ExistingUserResponse mediaList = ExistingUserResponse.fromJson(jsonData);
-    return mediaList;
+        await _ApiServices.existingUserDataApi(existingUserRequest);
+    return response;
+  }
+
+  //ProductsListData
+  Future<ProductsListResponse> getProductsFromCategoryApi(
+      String value, ProductListRequest productListRequest) async {
+    print("Api: TransactionListData");
+    dynamic response =
+    await _ApiServices.getProductsFromCategoryApi(productListRequest);
+    return response;
   }
 
   Future<VehicleListResponse> getVehicleFareListData(
       String value, VehicleListRequest vehicleListRequest) async {
     print(vehicleListRequest);
-    dynamic response = await _BDOneService.postResponse(value, vehicleListRequest);
+    dynamic response =
+        await _BDOneService.postResponse(value, vehicleListRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -80,7 +101,8 @@ class MainRepository {
   Future<DriverStatusResponse> getDriverStatus(
       String value, DriverCurrentLocRequest driverCurrentLocRequest) async {
     print(driverCurrentLocRequest);
-    dynamic response = await _BDOneService.postResponse(value, driverCurrentLocRequest);
+    dynamic response =
+        await _BDOneService.postResponse(value, driverCurrentLocRequest);
     print(value);
     final jsonData = response;
     print(jsonData);
@@ -101,15 +123,11 @@ class MainRepository {
     return generateTpinResponse;
   }
 
-  Future<ProfileResponse> signInWithPass(
-      String value, SignInRequest signInRequest) async {
-    print(signInRequest);
-    dynamic response = await _BDOneService.postResponse(value, signInRequest);
-    print(value);
-    final jsonData = response;
-    print(" ${jsonData}");
-    ProfileResponse mediaList = ProfileResponse.fromSignIn(jsonData);
-    return mediaList;
+  //SignInWithPass
+  Future<SignInResponse> signInWithPass(SignInRequest signInRequest) async {
+    print("Api: SignInWithPass");
+    dynamic response = await _ApiServices.signInWithPassApi(signInRequest);
+    return response;
   }
 
   Future<SignUpResponse> signUpUsingMobileApi(
@@ -123,16 +141,14 @@ class MainRepository {
     return mediaList;
   }
 
+  //FetchSetUpScreenData
   Future<SetUpAccountResponse> fetchSetUpScreenData(
-      String value, SetUpAccountRequest setUpAccountRequest) async {
-    print(setUpAccountRequest);
+      SetUpAccountRequest setUpAccountRequest, String token) async {
+    print("Token: $token");
+    print("Api: FetchSetUpScreenData");
     dynamic response =
-        await _BDOneService.putResponse(value, setUpAccountRequest);
-    print(value);
-    final jsonData = response;
-    print(jsonData);
-    SetUpAccountResponse mediaList = SetUpAccountResponse.fromJson(jsonData);
-    return mediaList;
+    await _ApiServices.fetchSetUpScreenDataApi(setUpAccountRequest, token);
+    return response;
   }
 
   Future<ProfileResponse> putMultiFormResponse(String value, File file,
@@ -191,23 +207,11 @@ class MainRepository {
     return mediaList;
   }
 
-  Future<CountryListResponse> fetchCountryList(String value) async {
-    dynamic response = await _BDOneService.getResponse(value);
-    print(value);
-    final jsonData = response;
-    print(jsonData);
-    CountryListResponse mediaList = CountryListResponse.fromJson(jsonData);
-    return mediaList;
-  }
-
-  Future<KycStatusResponse> kycStatusData(String value) async {
-    dynamic response = await _BDOneService.getResponse(value);
-    print(value);
-    final jsonData = response;
-    //print("jsonData $jsonData");
-    KycStatusResponse mediaList = KycStatusResponse.fromJson(jsonData);
-    //print("object ${mediaList.message}");
-    return mediaList;
+  //FetchCountryList
+  Future<CategoryListResponse> fetchCategoryListApi() async {
+    print("Api: FetchCountryList");
+    dynamic response = await _ApiServices.fetchCategoryListApi();
+    return response;
   }
 
   Future<DashboardResponse> dashboardData(String value) async {

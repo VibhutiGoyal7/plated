@@ -160,130 +160,123 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
           }
         }
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-            statusBarBrightness:
-            isDarkMode ? Brightness.dark : Brightness.light,
-            statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light),
-        child: Scaffold(
-          body: RefreshIndicator(
-            onRefresh: () {
-              print("Refresh");
-              return Future.delayed(Duration(seconds: 2), () {
-                _fetchDashboardData();
-              });
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SafeArea(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 15.0),
-                      child: Column(
-                        children: <Widget>[
-                          Stack(
-                            children: [
-                              Container(
-                                height: screenHeight * 0.28,
-                                alignment: AlignmentDirectional.center,
-                                decoration: BoxDecoration(
-                                    color: Colors.green.shade900,
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(25.0),
-                                        bottomRight: Radius.circular(25.0))),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 10),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: Column(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12),
-                                          child: CustomDropdown(
-                                            title: "Transportation",
-                                            items: [
-                                              "Transportation",
-                                              "Travel",
-                                              "Food"
-                                            ], // List of options
-                                            onItemSelected: (value) {
-                                              if (value == "Travel") {
-                                                Navigator.pushReplacementNamed(
-                                                    context,
-                                                    "/TravelBottomNav");
-                                              } else if (value == "Food") {
-                                                Navigator.pushReplacementNamed(
-                                                    context, "/BottomNav");
-                                              }
-                                            },
-                                          ),
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: () {
+            print("Refresh");
+            return Future.delayed(Duration(seconds: 2), () {
+              _fetchDashboardData();
+            });
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 15.0),
+                    child: Column(
+                      children: <Widget>[
+                        Stack(
+                          children: [
+                            Container(
+                              height: screenHeight * 0.28,
+                              alignment: AlignmentDirectional.center,
+                              decoration: BoxDecoration(
+                                  color: Colors.green.shade900,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(25.0),
+                                      bottomRight: Radius.circular(25.0))),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12),
+                                        child: CustomDropdown(
+                                          title: "Transportation",
+                                          items: [
+                                            "Transportation",
+                                            "Travel",
+                                            "Food"
+                                          ], // List of options
+                                          onItemSelected: (value) {
+                                            if (value == "Travel") {
+                                              Navigator.pushReplacementNamed(
+                                                  context,
+                                                  "/TravelBottomNav");
+                                            } else if (value == "Food") {
+                                              Navigator.pushReplacementNamed(
+                                                  context, "/BottomNav");
+                                            }
+                                          },
                                         ),
                                       ),
-                                      SizedBox(height: 20,),
-                                      Stack(
-                                        children: [
-                                          //Dash Card UI
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 30),
+                                    ),
+                                    SizedBox(height: 20,),
+                                    Stack(
+                                      children: [
+                                        //Dash Card UI
+                                        Padding(
+                                          padding:
+                                          const EdgeInsets.only(top: 30),
+                                          child: Card(
+                                              color: isDarkMode
+                                                  ? Color(0xF0B5DCB5)
+                                                  : Color(0xFFE2FFDE),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      13)),
+                                              child: DashboardCard()),
+                                        ),
+                                        Positioned(
+                                            top: 0,
+                                            left: 18,
                                             child: Card(
-                                                color: isDarkMode
-                                                    ? Color(0xF0B5DCB5)
-                                                    : Color(0xFFE2FFDE),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        13)),
-                                                child: DashboardCard()),
-                                          ),
-                                          Positioned(
-                                              top: 0,
-                                              left: 18,
-                                              child: Card(
-                                                color: Colors.white,
-                                                shape: CircleBorder(
-                                                    side: BorderSide(
-                                                        color: Colors.green.shade900,
-                                                        width: 3)),
-                                                child: Image(
-                                                  image: AssetImage(
-                                                      "assets/profile_user.png"),
-                                                  height: 72,
-                                                  width: 72,
-                                                ),
-                                              ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                              color: Colors.white,
+                                              shape: CircleBorder(
+                                                  side: BorderSide(
+                                                      color: Colors.green.shade900,
+                                                      width: 3)),
+                                              child: Image(
+                                                image: AssetImage(
+                                                    "assets/profile_user.png"),
+                                                height: 72,
+                                                width: 72,
+                                              ),
+                                            ))
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  isApiLoading
-                      ? Stack(
-                    children: [
-                      // Block interaction
-                      ModalBarrier(
-                          dismissible: false, color: Colors.transparent),
-                      // Loader indicator
-                      Center(
-                        child: CustomCircularProgress(),
-                      ),
-                    ],
-                  )
-                      : SizedBox(),
-                ],
-              ),
+                ),
+                isApiLoading
+                    ? Stack(
+                  children: [
+                    // Block interaction
+                    ModalBarrier(
+                        dismissible: false, color: Colors.transparent),
+                    // Loader indicator
+                    Center(
+                      child: CustomCircularProgress(),
+                    ),
+                  ],
+                )
+                    : SizedBox(),
+              ],
             ),
           ),
         ),

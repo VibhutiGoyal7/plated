@@ -11,7 +11,7 @@ class SignInResponse {
   final String? dob;
   final String? token;
   final String? kycStatus;
-  final String? status;
+  final int? status;
   final bool? isEmailVerified;
   final String? message;
   final int? activityPoints;
@@ -53,6 +53,7 @@ class SignInResponse {
   factory SignInResponse.fromJson(Map<String, dynamic> json) {
     return SignInResponse(
       message: json['message'] as String?,
+      status: json['status'] as int?,
       firstName: json['data']?['customer']?['first_name'] as String?,
       lastName: json['data']?['customer']?['last_name'] as String?,
       id: json['data']?['customer']?['id'] as int?,
@@ -90,7 +91,7 @@ class SignInResponse {
     data['id'] = this.id;
     data['phone_number'] = this.phoneNumber;
     data['email'] = this.email;
-    data['address'] = this.address;
+    data['address'] = this.address?.toJson();
     data['kyc_status'] = this.kycStatus;
     data['created_at'] = this.createdAt;
     data['status'] = this.status;

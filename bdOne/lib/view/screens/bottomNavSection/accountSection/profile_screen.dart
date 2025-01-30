@@ -53,11 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle( SystemUiOverlayStyle(
-        statusBarBrightness:
-        isDarkMode ? Brightness.dark : Brightness.light,
-        statusBarColor: AppColor.PRIMARY,
-        statusBarIconBrightness: Brightness.light),);
     customerName = "";
     userName = "";
     imageUrl = "";
@@ -207,426 +202,419 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onTap: () => {hideKeyBoard()},
         child: Scaffold(
           body: Stack(children: [
-            AnnotatedRegion<SystemUiOverlayStyle>(
-              value:  SystemUiOverlayStyle(
-                  statusBarBrightness:
-                  isDarkMode ? Brightness.dark : Brightness.light,
-                  statusBarColor: AppColor.PRIMARY,
-                  statusBarIconBrightness: Brightness.light),
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "${Languages.of(context)?.labelAccount}",
-                              style: TextStyle(
-                                  fontSize: 26, fontWeight: FontWeight.bold),
-                            ),
-                            _buildSearch(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            GestureDetector(
-                              onTap: (){
-                                Navigator.pushNamed(context, "/PersonalDetailsScreen");
-                              },
-                              child: Card(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 12),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          CircularProfileImage(
-                                            size: 50,
-                                            imageUrl: imageUrl,
-                                            name: customerName,
-                                            needTextLetter: true,
-                                            placeholderImage: "",
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Akash Singh",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15),
-                                              ),
-                                              Text(
-                                                "${Languages.of(context)?.labelShowProfile}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 11,
-                                                    color:isDarkMode? Colors.grey :  Colors.black54),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 18,
-                                      )
-                                    ],
-                                  ),
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "${Languages.of(context)?.labelAccount}",
+                            style: TextStyle(
+                                fontSize: 26, fontWeight: FontWeight.bold),
+                          ),
+                          _buildSearch(),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pushNamed(context, "/PersonalDetailsScreen");
+                            },
+                            child: Card(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 12),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircularProfileImage(
+                                          size: 50,
+                                          imageUrl: imageUrl,
+                                          name: customerName,
+                                          needTextLetter: true,
+                                          placeholderImage: "",
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Akash Singh",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            Text(
+                                              "${Languages.of(context)?.labelShowProfile}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11,
+                                                  color:isDarkMode? Colors.grey :  Colors.black54),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 18,
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: isTablet ? 0 : 1.0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                children: [
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: isTablet ? 0 : 5.0),
-                                        Text(
-                                            "${Languages.of(context)?.labelAccount}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.normal)),
-                                        SizedBox(height: isTablet ? 0 : 5.0),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/ChangePinScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelChangePIN}",
-                                              icon: Icons.key,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(context,
-                                                  '/ManageDevicesScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelManageDevices}",
-                                              icon: Icons.phone_iphone,
-                                              headingTextSize: 14,
-                                            )),
-                                        Platform.isAndroid
-                                            ? GestureDetector(
-                                                onTap: () {
-                                                  Navigator.pushNamed(context,
-                                                      '/CardListScreen',
-                                                      arguments:
-                                                          "${Languages.of(context)!.labelAddedCard}");
-                                                },
-                                                child: DetailBox(
-                                                  heading:
-                                                      "${Languages.of(context)?.labelResetSigninPassword}",
-                                                  icon: Icons.password,
-                                                  headingTextSize: 14,
-                                                ))
-                                            : SizedBox(),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 1.0),
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 12.0),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Platform.isIOS
-                                                        ? Icons.face
-                                                        : Icons.fingerprint,
-                                                    size: 28,
-                                                    color: Colors.brown,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    Platform.isIOS
-                                                        ? "Face ID "
-                                                        : "${Languages.of(context)?.labelBiometrics}",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      //fontWeight: FontWeight.w600,
-                                                      //color: isDarkMode ? Colors.white : Colors.black,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Container(
-                                                    height: 25,
-                                                    child: Switch(
-                                                      value: isBiometricEnable,
-                                                      activeColor:
-                                                          AppColor.PRIMARY,
-                                                      inactiveTrackColor:
-                                                          Colors.red,
-                                                      onChanged: (bool value) {
-                                                        setState(() {
-                                                          isBiometricEnable =
-                                                              value;
-                                                        });
-                                                        Helper.saveBiometric(
-                                                            isBiometricEnable);
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 1.0),
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 12.0),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.abc,
-                                                        size: 28,
-                                                        color: Colors.brown,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 8,
-                                                      ),
-                                                      Text(
-                                                        "${Languages.of(context)?.labelLanguage}",
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          //fontWeight: FontWeight.w600,
-                                                          //color: isDarkMode ? Colors.white : Colors.black,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    height: 30,
-                                                    child: ToggleSwitch(
-                                                      minWidth: 60.0,
-                                                      customWidths: [50, 70],
-                                                      cornerRadius: 10.0,
-                                                      activeBgColor: [Colors.green[800]!],
-                                                      activeFgColor:
-                                                          Colors.white,
-                                                      inactiveBgColor:
-                                                          Colors.grey,
-                                                      inactiveFgColor:
-                                                          Colors.white,
-                                                      radiusStyle: true,
-                                                      animate: true,
-                                                      curve: Curves
-                                                          .easeInOutCubicEmphasized,
-                                                      animationDuration: 100,
-                                                      initialLabelIndex: 0,
-                                                      totalSwitches: 2,
-                                                      customTextStyles: [
-                                                        TextStyle(fontSize: 8)
-                                                      ],
-                                                      labels: [
-                                                        'English',
-                                                        'Bangladesh'
-                                                      ],
-                                                      onToggle: (index) {
-                                                        print(
-                                                            'switched to: $index');
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/SettingScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelAccessibility}",
-                                              icon: Icons.accessibility,
-                                              headingTextSize: 14,
-                                            )),
-                                        Text(
-                                            "${Languages.of(context)?.labelMore}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(context,
-                                                  '/AboutBDOneScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelAboutBDOne}",
-                                              icon: Icons.fingerprint,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, '/SettingScreen',
-                                                  arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading:
-                                                  "${Languages.of(context)?.labelWalkthrough}",
-                                              icon: Icons.play_arrow_rounded,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              ToastComponent.showToast(
-                                                  context: context,
-                                                  message:
-                                                      "Kiosks Nearby Clicked");
-                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading: "Kiosks Nearby",
-                                              icon: Icons.near_me_outlined,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(context, '/PrivacyPolicyScreen', arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading: "Privacy Policy",
-                                              icon: Icons.privacy_tip_outlined,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(context, '/FaqScreen', arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading: "FAQS",
-                                              icon:
-                                                  Icons.question_mark_outlined,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              Navigator.pushNamed(context, '/SupportScreen', arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading: "Support",
-                                              icon: Icons.support,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
-                                            onTap: () {
-                                              ToastComponent.showToast(
-                                                  context: context,
-                                                  message:
-                                                      "Contact Us Clicked");
-                                              //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
-                                            },
-                                            child: DetailBox(
-                                              heading: "Contact Us",
-                                              icon: Icons.mail,
-                                              headingTextSize: 14,
-                                            )),
-                                        GestureDetector(
+                    ),
+                    Container(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: isTablet ? 0 : 1.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              children: [
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: isTablet ? 0 : 5.0),
+                                      Text(
+                                          "${Languages.of(context)?.labelAccount}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.normal)),
+                                      SizedBox(height: isTablet ? 0 : 5.0),
+                                      GestureDetector(
                                           onTap: () {
-                                            Helper.saveName("");
-                                            Helper.savePin("");
-                                            Helper.saveEmail("");
-                                            Helper.savePhoneNo("");
                                             Navigator.pushNamed(
-                                                context, "/WelcomeScreen");
+                                                context, '/ChangePinScreen',
+                                                arguments: "");
                                           },
-                                          child: _buildCard(
-                                              context,
-                                              "Clear Data",
-                                              isDarkMode,
-                                              Icon(
-                                                Icons.logout,
-                                                size: 22,
-                                              )),
-                                        ),
-                                        GestureDetector(
+                                          child: DetailBox(
+                                            heading:
+                                                "${Languages.of(context)?.labelChangePIN}",
+                                            icon: Icons.key,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
                                           onTap: () {
-                                            _showLogOutDialog();
+                                            Navigator.pushNamed(context,
+                                                '/ManageDevicesScreen',
+                                                arguments: "");
                                           },
-                                          child: _buildCard(
-                                              context,
-                                              "${Languages.of(context)?.labelLogout}",
-                                              isDarkMode,
-                                              Icon(
-                                                Icons.logout,
-                                                size: 22,
-                                              )),
+                                          child: DetailBox(
+                                            heading:
+                                                "${Languages.of(context)?.labelManageDevices}",
+                                            icon: Icons.phone_iphone,
+                                            headingTextSize: 14,
+                                          )),
+                                      Platform.isAndroid
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                Navigator.pushNamed(context,
+                                                    '/CardListScreen',
+                                                    arguments:
+                                                        "${Languages.of(context)!.labelAddedCard}");
+                                              },
+                                              child: DetailBox(
+                                                heading:
+                                                    "${Languages.of(context)?.labelResetSigninPassword}",
+                                                icon: Icons.password,
+                                                headingTextSize: 14,
+                                              ))
+                                          : SizedBox(),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 1.0),
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Container(
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 15.0,
+                                                    vertical: 12.0),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Platform.isIOS
+                                                      ? Icons.face
+                                                      : Icons.fingerprint,
+                                                  size: 28,
+                                                  color: Colors.brown,
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Text(
+                                                  Platform.isIOS
+                                                      ? "Face ID "
+                                                      : "${Languages.of(context)?.labelBiometrics}",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    //fontWeight: FontWeight.w600,
+                                                    //color: isDarkMode ? Colors.white : Colors.black,
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                Container(
+                                                  height: 25,
+                                                  child: Switch(
+                                                    value: isBiometricEnable,
+                                                    activeColor:
+                                                        AppColor.PRIMARY,
+                                                    inactiveTrackColor:
+                                                        Colors.red,
+                                                    onChanged: (bool value) {
+                                                      setState(() {
+                                                        isBiometricEnable =
+                                                            value;
+                                                      });
+                                                      Helper.saveBiometric(
+                                                          isBiometricEnable);
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      ]),
-                                ],
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 1.0),
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Container(
+                                            padding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 15.0,
+                                                    vertical: 12.0),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.abc,
+                                                      size: 28,
+                                                      color: Colors.brown,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      "${Languages.of(context)?.labelLanguage}",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        //fontWeight: FontWeight.w600,
+                                                        //color: isDarkMode ? Colors.white : Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  height: 30,
+                                                  child: ToggleSwitch(
+                                                    minWidth: 60.0,
+                                                    customWidths: [50, 70],
+                                                    cornerRadius: 10.0,
+                                                    activeBgColor: [Colors.green[800]!],
+                                                    activeFgColor:
+                                                        Colors.white,
+                                                    inactiveBgColor:
+                                                        Colors.grey,
+                                                    inactiveFgColor:
+                                                        Colors.white,
+                                                    radiusStyle: true,
+                                                    animate: true,
+                                                    curve: Curves
+                                                        .easeInOutCubicEmphasized,
+                                                    animationDuration: 100,
+                                                    initialLabelIndex: 0,
+                                                    totalSwitches: 2,
+                                                    customTextStyles: [
+                                                      TextStyle(fontSize: 8)
+                                                    ],
+                                                    labels: [
+                                                      'English',
+                                                      'Bangladesh'
+                                                    ],
+                                                    onToggle: (index) {
+                                                      print(
+                                                          'switched to: $index');
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/SettingScreen',
+                                                arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading:
+                                                "${Languages.of(context)?.labelAccessibility}",
+                                            icon: Icons.accessibility,
+                                            headingTextSize: 14,
+                                          )),
+                                      Text(
+                                          "${Languages.of(context)?.labelMore}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(context,
+                                                '/AboutBDOneScreen',
+                                                arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading:
+                                                "${Languages.of(context)?.labelAboutBDOne}",
+                                            icon: Icons.fingerprint,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/SettingScreen',
+                                                arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading:
+                                                "${Languages.of(context)?.labelWalkthrough}",
+                                            icon: Icons.play_arrow_rounded,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                          onTap: () {
+                                            ToastComponent.showToast(
+                                                context: context,
+                                                message:
+                                                    "Kiosks Nearby Clicked");
+                                            //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading: "Kiosks Nearby",
+                                            icon: Icons.near_me_outlined,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(context, '/PrivacyPolicyScreen', arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading: "Privacy Policy",
+                                            icon: Icons.privacy_tip_outlined,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(context, '/FaqScreen', arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading: "FAQS",
+                                            icon:
+                                                Icons.question_mark_outlined,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushNamed(context, '/SupportScreen', arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading: "Support",
+                                            icon: Icons.support,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                          onTap: () {
+                                            ToastComponent.showToast(
+                                                context: context,
+                                                message:
+                                                    "Contact Us Clicked");
+                                            //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
+                                          },
+                                          child: DetailBox(
+                                            heading: "Contact Us",
+                                            icon: Icons.mail,
+                                            headingTextSize: 14,
+                                          )),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Helper.saveName("");
+                                          Helper.savePin("");
+                                          Helper.saveEmail("");
+                                          Helper.savePhoneNo("");
+                                          Navigator.pushNamed(
+                                              context, "/WelcomeScreen");
+                                        },
+                                        child: _buildCard(
+                                            context,
+                                            "Clear Data",
+                                            isDarkMode,
+                                            Icon(
+                                              Icons.logout,
+                                              size: 22,
+                                            )),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          _showLogOutDialog();
+                                        },
+                                        child: _buildCard(
+                                            context,
+                                            "${Languages.of(context)?.labelLogout}",
+                                            isDarkMode,
+                                            Icon(
+                                              Icons.logout,
+                                              size: 22,
+                                            )),
+                                      ),
+                                    ]),
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
               ),
             )

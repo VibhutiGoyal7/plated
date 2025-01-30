@@ -93,7 +93,7 @@ class _BottomNavState extends State<BottomNav>
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       extendBody: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
         decoration: BoxDecoration(
@@ -112,7 +112,7 @@ class _BottomNavState extends State<BottomNav>
           child: BottomAppBar(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: 54,
-            color: AppColor.WHITE,
+            color: Theme.of(context).cardColor,
             /* shape: const CircularNotchedRectangle(),
             notchMargin: 6,*/
             child: Row(
@@ -153,7 +153,7 @@ class _BottomNavState extends State<BottomNav>
                             )
                           : Icon(
                               Icons.home,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                     ],
@@ -167,7 +167,7 @@ class _BottomNavState extends State<BottomNav>
                               EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(60),
-                              color: Colors.white),
+                              color: Colors.transparent),
                           child: Column(
                             children: [
                               Icon(
@@ -189,7 +189,7 @@ class _BottomNavState extends State<BottomNav>
                         )
                       : Icon(
                           Icons.search_rounded,
-                          color: AppColor.BLACK,
+                          color: Theme.of(context).focusColor,
                           size: 24,
                         ),
                 ),
@@ -203,7 +203,7 @@ class _BottomNavState extends State<BottomNav>
                                   horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
+                                  color: Colors.transparent),
                               child: Column(
                                 children: [
                                   Icon(
@@ -225,7 +225,7 @@ class _BottomNavState extends State<BottomNav>
                             )
                           : Icon(
                               Icons.wallet,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                       SizedBox(width: 8),
@@ -242,7 +242,7 @@ class _BottomNavState extends State<BottomNav>
                                   horizontal: 8, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(60),
-                                  color: Colors.white),
+                                  color: Colors.transparent),
                               child: Column(
                                 children: [
                                   Icon(
@@ -264,7 +264,7 @@ class _BottomNavState extends State<BottomNav>
                             )
                           : Icon(
                               Icons.person,
-                              color: AppColor.BLACK,
+                              color: Theme.of(context).focusColor,
                               size: 24,
                             ),
                       SizedBox(width: 8),

@@ -1,78 +1,65 @@
-
 import 'dart:convert';
 
-class CountryListResponse {
-  List<CountryData>? countries;
+class CategoryListResponse {
+  List<CategoryData>? categories;
   String message;
   int status;
 
-  CountryListResponse({
-    required this.countries,
+  CategoryListResponse({
+    required this.categories,
     required this.message,
     required this.status,
   });
 
-  factory CountryListResponse.fromJson(Map<String, dynamic> json) {
-
+  factory CategoryListResponse.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
-    List<CountryData>? countriesList = list.map((i) => CountryData.fromJson(i)).toList();
+    List<CategoryData>? categoryList =
+        list.map((i) => CategoryData.fromJson(i)).toList();
 
-    return CountryListResponse(
-      countries: countriesList,
+    return CategoryListResponse(
+      categories: categoryList,
       message: json["message"] as String,
       status: json["status"] as int,
     );
-
   }
 }
 
-class CountryData {
+class CategoryData {
   int? id;
-  String? name;
-  String? code;
-  String? phoneCode;
-  String? flagImageUrl;
+  String? categoryName;
+  String? categoryImage;
 
-  CountryData({
-     this.id,
-     this.name,
-     this.code,
-     this.phoneCode,
-     this.flagImageUrl,
+  CategoryData({
+    this.id,
+    this.categoryName,
+    this.categoryImage,
   });
 
-  factory CountryData.fromJson(Map<String, dynamic> json) {
-    return CountryData(
+  factory CategoryData.fromJson(Map<String, dynamic> json) {
+    return CategoryData(
       id: json["id"] as int?,
-      name: json["name"] as String?,
-      code: json["code"] as String?,
-      phoneCode: json["phone_code"] as String?,
-      flagImageUrl: json["flag_image_url"] as String?,
+      categoryName: json["name"] as String?,
+      categoryImage: json["category_image"] as String?,
     );
   }
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
 
     data['id'] = this.id;
-    data['name'] = this.name;
-    data['code'] = this.code;
-    data['phone_code'] = this.phoneCode;
-    data['flag_image_url'] = this.flagImageUrl;
+    data['name'] = this.categoryName;
+    data['category_image'] = this.categoryImage;
     return data;
   }
 
   String toJsonString() => json.encode(toJson());
 
-  factory CountryData.fromJsonString(String source) {
+  factory CategoryData.fromJsonString(String source) {
     final Map<String, dynamic> jsonMap = json.decode(source);
-    return CountryData(
+    return CategoryData(
       id: jsonMap["id"] as int?,
-      name: jsonMap["name"] as String?,
-      code: jsonMap["code"] as String?,
-      phoneCode: jsonMap["phone_code"] as String?,
-      flagImageUrl: jsonMap["flag_image_url"] as String?,
+      categoryName: jsonMap["name"] as String?,
+      categoryImage: jsonMap["category_image"] as String?,
     );
   }
 }

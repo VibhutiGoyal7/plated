@@ -52,7 +52,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
-  List<CountryData> countryList = [];
   final TextEditingController _inputController = TextEditingController();
   late MainViewModel _viewModel;
   late ApiResponse apiResponse;
@@ -66,24 +65,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     confirmPasswordVisible = true;
     //ViewModel
     _viewModel = Provider.of<MainViewModel>(context, listen: false);
-    _fetchData();
-    Helper.getCountryList().then((countries) {
-      List<CountryData> list = [];
-      print(countries);
-      countryList = countries!;
-      print(countryList);
-      if (countryList == [] || countryList.isEmpty || countryList == list) {
-        _fetchData();
-      } else {
-        setState(() {
-          countryList = countries;
-          selectedItem = "${countries[0].flagImageUrl}";
-          countryCode = int.parse("${countries[0].id}");
-          phoneCode = "${countries[0].phoneCode}";
-        });
-      }
-    });
-    //_fetchData();
     for (var i = 0; i < _focusNodes.length; i++) {
       _focusNodes[i].addListener(() {
         if (_focusNodes[i].hasFocus && _controllers[i].text.isEmpty) {
@@ -190,46 +171,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         return Center(
             //child: Text('Please try again later!!!'),
             );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
-    }
-  }
-
-  Widget getCountryList(BuildContext context) {
-    CountryListResponse? countryListResponse =
-        apiResponse.data as CountryListResponse?;
-    var message = countryListResponse?.message.toString();
-    print("message ${message}");
-    setState(() {
-      isLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(
-            child: CircularProgressIndicator(
-          color: isDarkMode ? AppColor.WHITE : AppColor.PRIMARY_GREEN,
-        ));
-      case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[0].name}");
-        Helper.saveCountryList(countryListResponse?.countries);
-
-        countryList = countryListResponse!.countries!;
-        selectedItem = "${countryListResponse.countries?[0].flagImageUrl}";
-        countryCode = int.parse("${countryListResponse.countries?[0].id}");
-        phoneCode = "${countryListResponse.countries?[0].phoneCode}";
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        print("countriess ${countryList}");
-        return Center(
-          child: Text('Please try again later!!!'),
-        );
       case Status.INITIAL:
       default:
         return Center(
@@ -504,40 +445,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ? Theme.of(context).highlightColor
               : Theme.of(context).focusColor),
     );
-  }
-
-  void _fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    bool isConnected = await _connectivityService.isConnected();
-    if (!isConnected) {
-      setState(() {
-        isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('${Languages.of(context)?.labelNoInternetConnection}'),
-            duration: maxDuration,
-          ),
-        );
-      });
-    } else {
-      await Future.delayed(Duration(milliseconds: 2));
-      await _viewModel.fetchCountryList("");
-      apiResponse = _viewModel.response;
-      getCountryList(context);
-    }
-  }
-
-  void _changeItem(CountryData newValue) {
-    setState(() {
-      print("${newValue.id}");
-      countryCode = int.parse("${newValue.id}");
-      phoneCode = "${newValue.code}";
-      selectedItem = "${newValue.flagImageUrl}";
-    });
   }
 
   void emailValidate(String email) {

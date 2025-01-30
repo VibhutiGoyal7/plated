@@ -155,6 +155,7 @@ flutter:
       - assets/cab_add_2.png
       - assets/category_image.png
       - assets/milk_image.png
+      - assets/phone_globe.svg
 
   fonts:
     - family: CustomFont

@@ -60,11 +60,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness:
-          Brightness.light, // Light icons for the status bar
-      //statusBarBrightness: Brightness.light,       // Status bar brightness (for iOS)
-    ));
     _viewModel = Provider.of<MainViewModel>(context, listen: false);
     _getCurrentLocation();
 

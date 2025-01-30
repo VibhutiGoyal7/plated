@@ -1,5 +1,4 @@
 import 'package:BDOne/model/response/ServiceTypeResponse.dart';
-import 'package:BDOne/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -46,7 +45,7 @@ class _RideDashboardServiceComponentState
               padding: const EdgeInsets.only(top: 10, left: 12),
               child: Text(
                 "${widget.heading}",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -55,7 +54,7 @@ class _RideDashboardServiceComponentState
           width: screenWidth,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          height: _isExpanded ? 250 : 250,
+          height: _isExpanded ? 280 : 280,
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
           child: Column(
@@ -132,12 +131,15 @@ class _RideDashboardServiceComponentState
           });
         } else if (currentCategoryName == "Car") {
           Navigator.pushNamed(context, "/BookRideScreen");
+        } else {
+          Navigator.pushNamed(context, "/RideBookedDetailScreen");
         }
       },
       child: IntrinsicHeight(
         child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           decoration: BoxDecoration(
-            color: AppColor.WHITE,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
               BoxShadow(

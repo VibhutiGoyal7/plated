@@ -32,7 +32,6 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
-  List<CountryData> countryList = [];
   File? docImg;
   bool isDarkMode = false;
   bool isPinVerified = false;

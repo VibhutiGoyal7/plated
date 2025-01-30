@@ -24,12 +24,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isLoading = false;
   final ConnectivityService _connectivityService = ConnectivityService();
   static const maxDuration = Duration(seconds: 2);
-  List<CountryData> countryList = [];
 
   @override
   void initState() {
     super.initState();
-    //_fetchData();
   }
 
   @override
@@ -39,167 +37,97 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColor.PRIMARY,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value:  SystemUiOverlayStyle(
-            statusBarBrightness:
-            isDarkMode ? Brightness.dark : Brightness.light,
-            statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light),
-        child: Stack(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(children: [
-                  Expanded(
-                    child: Container(
-                      //height: screenHeight,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                            color: AppColor.BG_COLOR,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(28),
-                                bottomRight: Radius.circular(28))),
-                        child:Center(
-                          child: Image(
-                            width:screenWidth ,
-                            image: AssetImage(isDarkMode
-                                ? "assets/app_logo_dark.png"
-                                : "assets/app_logo.png"),
-                            fit: BoxFit.cover,
+      body: Stack(children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(children: [
+                Expanded(
+                  child: Container(
+                    //height: screenHeight,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                          color: AppColor.BG_COLOR,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(28),
+                              bottomRight: Radius.circular(28))),
+                      child:Center(
+                        child: Image(
+                          width:screenWidth ,
+                          image: AssetImage(isDarkMode
+                              ? "assets/app_logo_dark.png"
+                              : "assets/app_logo.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),),
+                ),
+                SizedBox(
+                  height: 80,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Languages.of(context)!.labelWelcome,
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: AppColor.WHITE,
+                                fontWeight: FontWeight.bold),
                           ),
-                        ),),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "The app for food delivery, ride booking, travel planning, and more.",
+                            style: TextStyle(
+                                fontSize: 12, color: AppColor.WHITE),
+                          ),
+                        ],
+                      ),SizedBox(height: 125,),
+                      CustomButtonComponent(
+                          text: Languages.of(context)!.labelContinue,
+                          width: screenWidth,
+                          isDarkMode: isDarkMode,
+                          buttonColor: Colors.white,
+                          textColor: AppColor.PRIMARY,
+                          verticalPadding: 10,
+                          onTap: () {
+                            Navigator.pushNamed(context, '/SliderScreen');
+                          }),
+                    ],
                   ),
-                  SizedBox(
-                    height: 80,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              Languages.of(context)!.labelWelcome,
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  color: AppColor.WHITE,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              "The app for food delivery, ride booking, travel planning, and more.",
-                              style: TextStyle(
-                                  fontSize: 12, color: AppColor.WHITE),
-                            ),
-                          ],
-                        ),SizedBox(height: 125,),
-                        CustomButtonComponent(
-                            text: Languages.of(context)!.labelContinue,
-                            width: screenWidth,
-                            isDarkMode: isDarkMode,
-                            buttonColor: Colors.white,
-                            textColor: AppColor.PRIMARY,
-                            verticalPadding: 10,
-                            onTap: () {
-                              Navigator.pushNamed(context, '/SliderScreen');
-                            }),
-                      ],
-                    ),
-                  )
-
-                ]),
-              ),
-              SizedBox(
-                height: 80,
-              ),
-              //Spacer(),
-
-            ],
-          ),
-          isLoading
-              ? Stack(
-                  children: [
-                    // Block interaction
-                    ModalBarrier(dismissible: false, color: Colors.white38),
-                    // Loader indicator
-                    Center(
-                      child: CustomCircularProgress(),
-                    ),
-                  ],
                 )
-              : SizedBox()
-        ]),
-      ),
+
+              ]),
+            ),
+            SizedBox(
+              height: 80,
+            ),
+            //Spacer(),
+
+          ],
+        ),
+        isLoading
+            ? Stack(
+                children: [
+                  // Block interaction
+                  ModalBarrier(dismissible: false, color: Colors.white38),
+                  // Loader indicator
+                  Center(
+                    child: CustomCircularProgress(),
+                  ),
+                ],
+              )
+            : SizedBox()
+      ]),
     );
-  }
-
-  void _fetchData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    bool isConnected = await _connectivityService.isConnected();
-    if (!isConnected) {
-      setState(() {
-        isLoading = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('${Languages.of(context)?.labelNoInternetConnection}'),
-            duration: maxDuration,
-          ),
-        );
-      });
-    } else {
-      await Future.delayed(Duration(milliseconds: 2));
-      await Provider.of<MainViewModel>(context, listen: false)
-          .fetchCountryList("api/v1/app/customers/country_list");
-      ApiResponse apiResponse =
-          Provider.of<MainViewModel>(context, listen: false).response;
-      getCountryList(context, apiResponse);
-    }
-  }
-
-  Widget getCountryList(BuildContext context, ApiResponse apiResponse) {
-    CountryListResponse? countryListResponse =
-        apiResponse.data as CountryListResponse?;
-    var message = apiResponse.message.toString();
-    print("message ${message}");
-    setState(() {
-      isLoading = false;
-    });
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CustomCircularProgress());
-      case Status.COMPLETED:
-        print("rwrwr ${countryListResponse?.countries?[1].name}");
-
-        countryList = countryListResponse!.countries!;
-        Helper.saveCountryList(countryList);
-        //selectedItem = "${countryListResponse?.countries?[0].flagImageUrl}";
-
-        print("countriess ${countryList}");
-
-        //_showPicker(context: context);
-
-        return Container(); // Return an empty container as you'll navigate away
-      case Status.ERROR:
-        print("countriess ${countryList}");
-        return Center(
-          child: Text('Please try again later!!!'),
-        );
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text(''),
-        );
-    }
   }
 }

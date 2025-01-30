@@ -749,4 +749,6 @@ abstract class Languages {
   String get labelReadAllTermsConditions;
 
   String get labelAccept;
+
+  String get labelPasswordRequirement;
 }

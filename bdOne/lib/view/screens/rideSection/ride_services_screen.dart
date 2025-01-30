@@ -173,103 +173,84 @@ class _RideServicesScreenState extends State<RideServicesScreen> {
           }
         }
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-            statusBarBrightness:
-                isDarkMode ? Brightness.dark : Brightness.light,
-            statusBarColor: AppColor.PRIMARY,
-            statusBarIconBrightness: Brightness.light),
-        child: Scaffold(
-          appBar: AppBar(
-            leading: SizedBox(),
-            backgroundColor: AppColor.WHITE,
-            toolbarHeight: 30,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: SizedBox(),
+          backgroundColor: isDarkMode ? AppColor.BLACK : AppColor.WHITE,
+          title: Text(
+            "Services",
+            style: TextStyle(fontSize: 18),
           ),
-          body: RefreshIndicator(
-            onRefresh: () {
-              print("Refresh");
-              return Future.delayed(Duration(seconds: 2), () {});
-            },
-            child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  SafeArea(
+          centerTitle: true,
+        ),
+        body: RefreshIndicator(
+          onRefresh: () {
+            print("Refresh");
+            return Future.delayed(Duration(seconds: 2), () {});
+          },
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                SafeArea(
+                  child: Container(
+                    height: screenHeight,
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 15.0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Stack(
                             children: [
                               Container(
                                 margin: EdgeInsets.only(top: 2),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.only(
-                                                top: 10, left: 12),
-                                            child: Text(
-                                              "Services",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      categories.length > 0
-                                          ? RideDashboardServiceComponent(
-                                              categories: categories,
-                                              screenWidth: screenWidth,
-                                              screenHeight: screenHeight,
-                                              isDarkMode: isDarkMode,
-                                              primaryColor: AppColor.PRIMARY,
-                                              heading: "Your Ride, Your Way")
-                                          : SizedBox(),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 0),
-                                        child: BannerListWidget(
-                                            data: bannerList,
-                                            isInternetConnected:
-                                                isInternetConnected,
-                                            isLoading: isBannerLoading,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    categories.length > 0
+                                        ? RideDashboardServiceComponent(
+                                            categories: categories,
+                                            screenWidth: screenWidth,
+                                            screenHeight: screenHeight,
                                             isDarkMode: isDarkMode,
-                                            dummy: "assets/cab_add_1.png"),
-                                      ),
-                                    ],
-                                  ),
+                                            primaryColor: AppColor.PRIMARY,
+                                            heading: "Your Ride, Your Way")
+                                        : SizedBox(),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: BannerListWidget(
+                                data: bannerList,
+                                isInternetConnected: isInternetConnected,
+                                isLoading: isBannerLoading,
+                                isDarkMode: isDarkMode,
+                                dummy: "assets/cab_add_1.png"),
+                          ),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ),
-                  isApiLoading
-                      ? Stack(
-                          children: [
-                            // Block interaction
-                            ModalBarrier(
-                                dismissible: false, color: Colors.transparent),
-                            // Loader indicator
-                            Center(
-                              child: CustomCircularProgress(),
-                            ),
-                          ],
-                        )
-                      : SizedBox(),
-                ],
-              ),
+                ),
+                isApiLoading
+                    ? Stack(
+                        children: [
+                          // Block interaction
+                          ModalBarrier(
+                              dismissible: false, color: Colors.transparent),
+                          // Loader indicator
+                          Center(
+                            child: CustomCircularProgress(),
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+              ],
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
+import 'package:BDOne/model/response/productsListReponse.dart';
 import 'package:BDOne/utils/Util.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:provider/provider.dart';
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/db/dao.dart';
-import '../../../model/response/ServiceTypeResponse.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
@@ -23,7 +23,7 @@ import '../../component/image_view_components.dart';
 import '../../component/session_expired_dialog.dart';
 
 class RestaurantItemViewScreen extends StatefulWidget {
-  final ServiceTypeResponse? data; // Define the 'data' parameter here
+  final ProductDetails? data; // Define the 'data' parameter here
 
   RestaurantItemViewScreen({Key? key, this.data}) : super(key: key);
 
@@ -57,84 +57,19 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
   TextEditingController _searchController = TextEditingController();
-  ServiceTypeResponse selectedItem = ServiceTypeResponse(
-      serviceName: 'Fruits',
-      icon: '',
-      iconBgColor: Colors.red.shade50);
-  List<ServiceTypeResponse?> categories = [
-    ServiceTypeResponse(
-        serviceName: 'Fruits',
-        icon: '',
-        iconBgColor: Colors.red.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Vegetables',
-        icon: '',
-        iconBgColor: Colors.yellow.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Dairy',
-        icon: '',
-        iconBgColor: Colors.green.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Spices',
-        icon: '',
-        iconBgColor: Colors.blue.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Pulses',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Seeds',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Nuts',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Bakery & Biscuits',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Bakery & Biscuits',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Bakery & Biscuits',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Bakery & Biscuits',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Bakery & Biscuits',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Bakery & Biscuits',
-        icon: '',
-        iconBgColor: Colors.black12),
-  ];
+  late ProductDetails selectedItem;
+  List<ProductDetails?> categories = [];
   List<String> bannerList = ["", "", "", ""];
   List<String> brandsList = ["Kellogs", "Amul", "Amul", "Kellogs"];
-  BroadcastReceiver receiver = BroadcastReceiver(
-    names: <String>[
-      "de.kevlatus.flutter_broadcasts_example.demo_action",
-    ],
-  );
 
   @override
   void initState() {
     super.initState();
     imageUrl = "";
-    receiver.start();
-    receiver.messages.listen((message) {
-      print("BroadCast");
-    });
     //ServiceTypeResponse
 
     selectedItem = (widget.data ?? categories.first)!;
-    print("SelectedItem :: ${selectedItem?.serviceName}");
+    print("SelectedItem :: ${selectedItem.name}");
     Helper.getProfileDetails().then((profile) {
       setState(() {
         name = profile?.firstName;
@@ -170,7 +105,6 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
 
   @override
   void dispose() {
-    receiver.stop();
     _timer.cancel();
     super.dispose();
   }
@@ -181,398 +115,387 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     DateTime? lastBackPressed;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
-          statusBarColor: AppColor.PRIMARY_ACCENT.withOpacity(0.4),
-          statusBarIconBrightness: Brightness.dark),
-      child: Scaffold(
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 15.0, top: 0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: screenHeight * 0.35,
-                        decoration: BoxDecoration(
-                            color: AppColor.PRIMARY_ACCENT.withOpacity(0.4),
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20))),
-                        child: Column(
-                          children: [
-                            Row(
+    return Scaffold(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 15.0, top: 0),
+                child: Column(
+                  children: [
+                    Container(
+                      height: screenHeight * 0.35,
+                      decoration: BoxDecoration(
+                          color: AppColor.PRIMARY_ACCENT.withOpacity(0.4),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  size: 22,
+                                ),
+                                onPressed: () => {Navigator.pop(context)},
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.favorite_border,
+                                  size: 26,
+                                  color: AppColor.BLACK,
+                                ),
+                                onPressed: () => {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/BottomNav',
+                                      arguments: 0)
+                                },
+                              ),
+                            ],
+                          ),
+                          Image.asset(
+                            "assets/milk_image.png",
+                            width: screenWidth * 0.3,
+                            height: screenHeight * 0.27,
+                            fit: BoxFit.contain,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Align(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              child: Text(
+                                "${widget.data?.name}",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            alignment: Alignment.topLeft,
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 15),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_back_ios,
-                                    size: 22,
-                                  ),
-                                  onPressed: () => {Navigator.pop(context)},
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    size: 26,
-                                    color: AppColor.BLACK,
-                                  ),
-                                  onPressed: () => {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/BottomNav',
-                                        arguments: 0)
-                                  },
-                                ),
-                              ],
-                            ),
-                            Image.asset(
-                              "assets/milk_image.png",
-                              width: screenWidth * 0.3,
-                              height: screenHeight * 0.27,
-                              fit: BoxFit.contain,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Align(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                child: Text(
-                                  "${widget.data?.serviceName}",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              alignment: Alignment.topLeft,
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 15),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => decrement(),
-                                        child: Icon(
-                                          Icons.remove,
-                                          size: 26,
-                                          color: itemCount == 0
-                                              ? Colors.grey
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        width: 40,
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: AppColor.WHITE,
-                                            border: Border.all(
-                                                width: 0.2,
-                                                color:
-                                                    AppColor.GREY_TEXT_COLOR),
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: Text(
-                                          "$itemCount",
-                                          textAlign: TextAlign.center,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => increment(),
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 26,
-                                          color: AppColor.PRIMARY_ACCENT,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Text(
-                                    "৳500",
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        color: AppColor.TEXT_RED,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              color: Colors.grey.shade200,
-                              height: 1,
-                              width: screenWidth * 0.85,
-                              margin: EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
                                   children: [
-                                    Text(
-                                      "Product Detail",
-                                      style: TextStyle(
-                                          fontSize: 15, color: AppColor.BLACK),
+                                    GestureDetector(
+                                      onTap: () => decrement(),
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: 26,
+                                        color: itemCount == 0
+                                            ? Colors.grey
+                                            : Colors.black,
+                                      ),
                                     ),
-                                    Text(
-                                      "${selectedItem.description}",
-                                      style: TextStyle(
-                                          color: AppColor.GREY_TEXT_COLOR
-                                              .withOpacity(0.8),
-                                          fontSize: 12),
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).cardColor,
+                                          border: Border.all(
+                                              width: 0.2,
+                                              color: Theme.of(context).cardColor,),
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Text(
+                                        "$itemCount",
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => increment(),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 26,
+                                        color: AppColor.PRIMARY_ACCENT,
+                                      ),
                                     )
                                   ],
                                 ),
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                Align(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 8, top: 18),
-                                    child: Text(
-                                      "Related Products",
-                                      style: TextStyle(
-                                          fontSize: 15, color: AppColor.BLACK),
-                                    ),
-                                  ),
-                                  alignment: Alignment.topLeft,
-                                ),
-                                AnimatedContainer(
-                                  width: screenWidth,
-                                  //height: screenHeight,
-                                  alignment: Alignment.center,
-                                  duration: Duration(milliseconds: 300),
-                                  curve: Curves.easeInCirc,
-                                  child: Wrap(
-                                    spacing: 4,
-                                    crossAxisAlignment:
-                                        WrapCrossAlignment.center,
-                                    alignment: WrapAlignment.start,
-                                    runSpacing: 0,
-                                    children: categories.getRange(0, 4).map(
-                                      (subCategory) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              showSnackBar(
-                                                context,
-                                                "${subCategory?.serviceName}",
-                                                screenWidth * 0.5,
-                                              );
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 200,
-                                            width: screenWidth / 2.3,
-                                            decoration: BoxDecoration(
-                                              color: isDarkMode
-                                                  ? Colors.black
-                                                  : Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              border: Border.all(
-                                                  width: 0.1,
-                                                  color: Colors.black54),
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 1),
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 4, vertical: 6),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 10.0),
-                                                  child: ImageViewComponent(
-                                                    height: 85,
-                                                    width: 85,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(0)),
-                                                    imageUrl: subCategory?.icon,
-                                                    isDarkMode: false,
-                                                    placeholderImage:
-                                                        "assets/milk_image.png",
-                                                  ),
-                                                ),
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            " ৳480",
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: AppColor
-                                                                    .TEXT_RED,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Container(
-                                                              height: 24,
-                                                              width: 24,
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              decoration: BoxDecoration(
-                                                                  color: AppColor
-                                                                      .PRIMARY_ACCENT,
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              100))),
-                                                              child: Icon(
-                                                                Icons.add,
-                                                                size: 18,
-                                                                color: Colors
-                                                                    .white,
-                                                              ))
-                                                        ],
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(" ৳680",
-                                                              style: TextStyle(
-                                                                fontSize: 11,
-                                                                color: Colors
-                                                                    .black54,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .lineThrough,
-                                                                decorationColor:
-                                                                    Colors
-                                                                        .black54,
-                                                              )),
-                                                          SizedBox(width: 5),
-                                                          Text(
-                                                            "52% Off",
-                                                            style: TextStyle(
-                                                                fontSize: 9,
-                                                                color: AppColor
-                                                                    .PRIMARY_ACCENT,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Text(
-                                                        "${capitalizeFirstLetter("${subCategory?.serviceName}")}",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 2,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: isDarkMode
-                                                              ? AppColor.WHITE
-                                                              : AppColor.BLACK,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                Text(
+                                  "৳${widget.data?.price}",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: AppColor.TEXT_RED,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
-                            )
-                          ],
-                        ),
+                            ),
+                          ),
+                          Container(
+                            color: Theme.of(context).focusColor,
+                            height: 0.5,
+                            width: screenWidth * 0.85,
+                            margin: EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Product Detail",
+                                    style: TextStyle(
+                                        fontSize: 15, color: Theme.of(context).focusColor),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    "${selectedItem.description}",
+                                    style: TextStyle(
+                                        color: AppColor.GREY_TEXT_COLOR
+                                            .withOpacity(0.8),
+                                        fontSize: 12),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              Align(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 8, top: 18),
+                                  child: Text(
+                                    "Related Products",
+                                    style: TextStyle(
+                                        fontSize: 15, color: AppColor.BLACK),
+                                  ),
+                                ),
+                                alignment: Alignment.topLeft,
+                              ),
+                              AnimatedContainer(
+                                width: screenWidth,
+                                //height: screenHeight,
+                                alignment: Alignment.center,
+                                duration: Duration(milliseconds: 300),
+                                margin: EdgeInsets.only(bottom: 20),
+                                curve: Curves.easeInCirc,
+                                child: Wrap(
+                                  spacing: 4,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  alignment: WrapAlignment.start,
+                                  runSpacing: 0,
+                                  children: categories.map(
+                                    (subCategory) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            showSnackBar(
+                                              context,
+                                              "${subCategory?.name}",
+                                              screenWidth * 0.5,
+                                            );
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 200,
+                                          width: screenWidth / 2.3,
+                                          decoration: BoxDecoration(
+                                            color: isDarkMode
+                                                ? Colors.black
+                                                : Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            border: Border.all(
+                                                width: 0.1,
+                                                color: Colors.black54),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2, horizontal: 1),
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 6),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 10.0),
+                                                child: ImageViewComponent(
+                                                  height: 85,
+                                                  width: 85,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(0)),
+                                                  imageUrl: subCategory?.itemImage,
+                                                  isDarkMode: false,
+                                                  placeholderImage:
+                                                      "assets/milk_image.png",
+                                                ),
+                                              ),
+                                              Container(
+                                                alignment: Alignment.center,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          " ৳480",
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: AppColor
+                                                                  .TEXT_RED,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Container(
+                                                            height: 24,
+                                                            width: 24,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration: BoxDecoration(
+                                                                color: AppColor
+                                                                    .PRIMARY_ACCENT,
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            100))),
+                                                            child: Icon(
+                                                              Icons.add,
+                                                              size: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                            ))
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(" ৳680",
+                                                            style: TextStyle(
+                                                              fontSize: 11,
+                                                              color: Colors
+                                                                  .black54,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough,
+                                                              decorationColor:
+                                                                  Colors
+                                                                      .black54,
+                                                            )),
+                                                        SizedBox(width: 5),
+                                                        Text(
+                                                          "52% Off",
+                                                          style: TextStyle(
+                                                              fontSize: 9,
+                                                              color: AppColor
+                                                                  .PRIMARY_ACCENT,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      "${capitalizeFirstLetter("${subCategory?.name}")}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: isDarkMode
+                                                            ? AppColor.WHITE
+                                                            : AppColor.BLACK,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).toList(),
+                                ),
+                              ),
+                              SizedBox(height: 35),
+                            ],
+                          )
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: screenWidth * 0.8,
-                decoration: BoxDecoration(
-                    color: AppColor.PRIMARY_ACCENT,
-                    borderRadius: BorderRadius.circular(15)),
-                padding: EdgeInsets.symmetric(vertical: 18),
-                margin: EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  "Add To Basket",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: AppColor.WHITE,
-                      fontWeight: FontWeight.bold),
-                ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: screenWidth * 0.8,
+              decoration: BoxDecoration(
+                  color:  AppColor.PRIMARY_ACCENT.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(15)),
+              padding: EdgeInsets.symmetric(vertical: 12),
+              margin: EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                "Add To Basket",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.WHITE,
+                    fontWeight: FontWeight.bold),
               ),
             ),
-            isApiLoading
-                ? Stack(
-                    children: [
-                      // Block interaction
-                      ModalBarrier(
-                          dismissible: false, color: Colors.transparent),
-                      // Loader indicator
-                      Center(
-                        child: CustomCircularProgress(),
-                      ),
-                    ],
-                  )
-                : SizedBox(),
-          ],
-        ),
+          ),
+          isApiLoading
+              ? Stack(
+                  children: [
+                    // Block interaction
+                    ModalBarrier(dismissible: false, color: Colors.transparent),
+                    // Loader indicator
+                    Center(
+                      child: CustomCircularProgress(),
+                    ),
+                  ],
+                )
+              : SizedBox(),
+        ],
       ),
     );
   }
@@ -694,7 +617,6 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
       setState(() {
         isLoading = false;
         isInternetConnected = false;
-        receiver.stop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(Languages.of(context)!.labelNoInternetConnection),
@@ -822,9 +744,6 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           print(apiResponse.message);
-          if (receiver.isListening) {
-            receiver.stop();
-          }
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           Helper.getProfileDetails().then((userDetails) {
