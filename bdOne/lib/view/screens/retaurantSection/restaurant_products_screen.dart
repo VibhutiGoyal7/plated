@@ -126,7 +126,7 @@ class _RestaurantProductsScreenState extends State<RestaurantProductsScreen> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
                           icon: Icon(
@@ -144,9 +144,9 @@ class _RestaurantProductsScreenState extends State<RestaurantProductsScreen> {
                           primaryColor: AppColor.PRIMARY_ACCENT,
                           hintText: "What are u looking for?",
                           queryController: _searchController,
-                          screenWidth: screenWidth * 0.65,
+                          screenWidth: screenWidth * 0.75,
                         ),
-                        IconButton(
+                      /*  IconButton(
                           icon: Icon(
                             Icons.shopping_cart,
                             size: 26,
@@ -157,7 +157,7 @@ class _RestaurantProductsScreenState extends State<RestaurantProductsScreen> {
                                 context, '/BottomNav',
                                 arguments: 0)
                           },
-                        ),
+                        ),*/
                       ],
                     ),
                     productsList.length != 0

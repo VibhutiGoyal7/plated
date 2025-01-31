@@ -1,5 +1,7 @@
 import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/countryListResponse.dart';
+import 'package:BDOne/model/response/deleteCartResponse.dart';
+import 'package:BDOne/model/response/emptyResponse.dart';
 
 import '../../request/exustingUserRequest.dart';
 import '../../request/productListRequest.dart';
@@ -47,4 +49,9 @@ abstract class BdOneApiServices {
   Future<DashboardResponse> dashboardDataApi();
 
   Future<CartListResponse> getCartDataListApi();
+
+  Future<EmptyResponse> driverLogoutApi();
+
+  Future<DeleteCartResponse> clearCartApi();
+
 }

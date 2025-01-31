@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/response/driverStatusResponse.dart';
@@ -8,7 +7,6 @@ import 'package:BDOne/utils/Util.dart';
 import 'package:BDOne/view/component/custom_button_component.dart';
 import 'package:BDOne/view/component/text_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -90,7 +88,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
     receiver.messages.listen((message) {
       print("BroadCast");
     });
-    if(driverLocation != LatLng(0,0)) {
+    if (driverLocation != LatLng(0, 0)) {
       _fetchRoute(driverLocation, pickupLocation);
     }
     rideStatusApi();
@@ -259,10 +257,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
                                                     color: Colors.black,
                                                     pattern:
                                                         StrokePattern.dashed(
-                                                            segments: [
-                                                          5,
-                                                          3
-                                                        ])),
+                                                            segments: [5, 3])),
                                             ],
                                           ),
                                           MarkerLayer(
@@ -279,8 +274,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
                                               Marker(
                                                   point: pickupLocation,
                                                   child: Icon(
-                                                    Icons
-                                                        .location_on_outlined,
+                                                    Icons.location_on_outlined,
                                                     color: Colors.red,
                                                     size: 30.0,
                                                   )),
@@ -403,7 +397,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
                     borderRadius: 6,
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.pushReplacementNamed(context,"/RideBottomNav");
+                      Navigator.pushReplacementNamed(context, "/RideBottomNav");
                     }),
               ],
             ),
@@ -437,8 +431,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
             DriverCurrentLocRequest(uniqueId: "${widget.data?.uniqueId}");
         await Provider.of<MainViewModel>(context, listen: false)
             .getDriverStatus(
-                "api/v1/app/service_requests/get_driver_location",
-                request);
+                "api/v1/app/service_requests/get_driver_location", request);
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         getRideStatusResponse(context, apiResponse);
@@ -458,13 +451,14 @@ class _RideBookedScreenState extends State<RideBookedScreen>
       case Status.LOADING:
         return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
-        if(response?.rideStatus == "completed"){
-          Navigator.pushReplacementNamed(context, "/RideBookedDetailScreen",arguments:response );
-        }else {
+        if (response?.rideStatus == "completed") {
+          Navigator.pushReplacementNamed(context, "/RideBookedDetailScreen",
+              arguments: response);
+        } else {
           driverLocation = LatLng(
               double.parse("${acceptedRide.driverCurrentLat}"),
               double.parse("${acceptedRide.driverCurrentLong}"));
-          await Future.delayed(Duration(seconds: 5));
+
           if (response?.rideStatus == "ride_start") {
             setState(() {
               isRideStarted = true;
@@ -476,11 +470,11 @@ class _RideBookedScreenState extends State<RideBookedScreen>
               isDriverReached = true;
             });
             _fetchRoute(driverLocation, pickupLocation);
-          }else{
+          } else {
             _fetchRoute(driverLocation, pickupLocation);
           }
+          await Future.delayed(Duration(seconds: 2));
           rideStatusApi();
-
         }
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:

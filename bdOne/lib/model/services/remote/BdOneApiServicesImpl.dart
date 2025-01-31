@@ -10,6 +10,8 @@ import '../../request/signInRequest.dart';
 import '../../request/signInWithPhoneNumber.dart';
 import '../../request/updateCartRequest.dart';
 import '../../response/dashboardResponse.dart';
+import '../../response/deleteCartResponse.dart';
+import '../../response/emptyResponse.dart';
 import '../../response/existingUserResponse.dart';
 import '../../response/fetchKycDocResponse.dart';
 import '../../response/kycStatusResponse.dart';
@@ -196,5 +198,24 @@ class BdOneApiServicesImpl implements BdOneApiServices {
       fromJson: (json) => DashboardResponse.fromJson(json),
     );
   }
+
+  @override
+  Future<EmptyResponse> driverLogoutApi() async {
+    return _fetchData<EmptyResponse>(
+      'api/v1/app/food_carts/clear_cart',
+      method: DELETE,
+      fromJson: (json) => EmptyResponse.fromJson(json),
+    );
+  }
+
+  @override
+  Future<DeleteCartResponse> clearCartApi() async {
+    return _fetchData<DeleteCartResponse>(
+      'api/v1/app/food_carts/clear_cart',
+      method: DELETE,
+      fromJson: (json) => DeleteCartResponse.fromJson(json),
+    );
+  }
+
 
 }

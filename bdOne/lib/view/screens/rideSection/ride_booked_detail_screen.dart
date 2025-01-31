@@ -144,14 +144,6 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                               MarkerLayer(
                                 markers: [
                                   Marker(
-                                    point: currentLocation ?? LatLng(0, 0),
-                                    child: Icon(
-                                      Icons.local_taxi_rounded,
-                                      color: Colors.blue,
-                                      size: 25.0,
-                                    ),
-                                  ),
-                                  Marker(
                                       point: pickupLocation,
                                       child: Icon(
                                         Icons.location_on_outlined,
@@ -412,7 +404,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
     LatLng adjustedCenter = LatLng(center.latitude, center.longitude);
 
     // Adjust zoom to fit the bounds
-    double fitZoomLevel = 13;
+    double fitZoomLevel = 10;
 
     // Move the map to the adjusted center
     _mapController.move(adjustedCenter, fitZoomLevel);

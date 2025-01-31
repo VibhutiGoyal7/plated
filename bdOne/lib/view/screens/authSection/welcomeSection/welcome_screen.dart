@@ -1,14 +1,8 @@
 import 'package:BDOne/languageSection/Languages.dart';
-import 'package:BDOne/utils/Helper.dart';
 import 'package:BDOne/view/component/custom_button_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
-import '../../../../model/apis/api_response.dart';
-import '../../../../model/response/countryListResponse.dart';
 import '../../../../theme/AppColor.dart';
-import '../../../../view_model/main_view_model.dart';
 import '../../../component/connectivity_service.dart';
 import '../../../component/custom_circular_progress.dart';
 
@@ -36,7 +30,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: AppColor.PRIMARY,
+      //backgroundColor: AppColor.PRIMARY,
       body: Stack(children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,22 +40,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Expanded(
                   child: Container(
                     //height: screenHeight,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(28),
-                              bottomRight: Radius.circular(28))),
-                      child:Center(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        border: Border(bottom: BorderSide(width: 0.2)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.TEXT_YELLOW,
+                            blurRadius: 2,
+                            offset: Offset(0, 0.5),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(28),
+                            bottomRight: Radius.circular(28))),
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
                         child: Image(
-                          width:screenWidth ,
+                          width: screenWidth/2,
                           image: AssetImage(isDarkMode
                               ? "assets/app_logo_dark.png"
                               : "assets/app_logo.png"),
                           fit: BoxFit.cover,
                         ),
-                      ),),
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 80,
@@ -79,7 +85,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Languages.of(context)!.labelWelcome,
                             style: TextStyle(
                                 fontSize: 24,
-                                color: AppColor.WHITE,
+                                color: Theme.of(context).focusColor,
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
@@ -87,17 +93,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ),
                           Text(
                             "The app for food delivery, ride booking, travel planning, and more.",
-                            style: TextStyle(
-                                fontSize: 12, color: AppColor.WHITE),
+                            style:
+                                TextStyle(fontSize: 12, color: Theme.of(context).focusColor),
                           ),
                         ],
-                      ),SizedBox(height: 125,),
+                      ),
+                      SizedBox(
+                        height: 125,
+                      ),
                       CustomButtonComponent(
                           text: Languages.of(context)!.labelContinue,
                           width: screenWidth,
                           isDarkMode: isDarkMode,
-                          buttonColor: Theme.of(context).cardColor,
-                          textColor: Theme.of(context).focusColor,
+                          buttonColor: AppColor.PRIMARY_ACCENT,
+                          textColor: AppColor.WHITE,
                           verticalPadding: 12,
                           onTap: () {
                             Navigator.pushNamed(context, '/SliderScreen');
@@ -105,14 +114,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ],
                   ),
                 )
-
               ]),
             ),
             SizedBox(
               height: 80,
             ),
             //Spacer(),
-
           ],
         ),
         isLoading

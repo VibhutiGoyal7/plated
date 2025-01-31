@@ -18,6 +18,7 @@ import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/countryListResponse.dart';
 import 'package:BDOne/model/response/createOtpChangePassResponse.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
+import 'package:BDOne/model/response/deleteCartResponse.dart';
 import 'package:BDOne/model/response/driverStatusResponse.dart';
 import 'package:BDOne/model/response/existingUserResponse.dart';
 import 'package:BDOne/model/response/fetchKycDocResponse.dart';
@@ -160,6 +161,13 @@ class MainRepository {
     print("Api: FetchSetUpScreenData");
     dynamic response =
     await _ApiServices.fetchSetUpScreenDataApi(setUpAccountRequest, token);
+    return response;
+  }
+
+  //ClearCartApi
+  Future<DeleteCartResponse> clearCartApi() async {
+    print("Api: ClearCartApi");
+    dynamic response = await _ApiServices.clearCartApi();
     return response;
   }
 

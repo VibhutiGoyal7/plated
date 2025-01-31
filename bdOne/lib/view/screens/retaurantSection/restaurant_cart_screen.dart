@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/response/cartListReponse.dart';
+import 'package:BDOne/model/response/deleteCartResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/utils/Util.dart';
 import 'package:BDOne/view/component/shimmerComponents/ShimmerList.dart';
@@ -134,6 +135,23 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
           ),
           centerTitle: true,
           leading: SizedBox(),
+          actions: [
+            GestureDetector(
+              onTap: ()=>{
+                clearCartApi()
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                child: Text(
+                  "Clear Cart",
+                  style: TextStyle(
+                      color: AppColor.TEXT_RED,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
+          ],
           backgroundColor:
               isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR),
       body: Stack(
@@ -201,9 +219,9 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                                 height: 55,
                                                 width: 45,
                                                 borderRadius: BorderRadius.all(
-                                                    Radius.circular(0)),
+                                                    Radius.circular(10)),
                                                 imageUrl: currentCategory
-                                                    ?.foodItemName,
+                                                    ?.itemImage,
                                                 isDarkMode: false,
                                                 placeholderImage:
                                                     "assets/milk_image.png",
@@ -336,54 +354,58 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "No Product Available",
+                                    "Add item to Cart",
                                     style: TextStyle(
                                         color: AppColor.GREY_TEXT_COLOR),
                                   ),
                                 ),
                               ),
                     cartItemsList.length != 0
-                        ?Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ? Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Align(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    child: Text(
-                                      "Total",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).focusColor,
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Align(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 4),
+                                          child: Text(
+                                            "Total",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  Theme.of(context).focusColor,
+                                            ),
+                                          ),
+                                        ),
+                                        alignment: Alignment.topLeft,
                                       ),
-                                    ),
+                                      Text(
+                                        "৳${grandTotal}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Theme.of(context).focusColor),
+                                      ),
+                                    ],
                                   ),
-                                  alignment: Alignment.topLeft,
-                                ),
-                                Text(
-                                  "৳${grandTotal}",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).focusColor),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ) : SizedBox(),
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
@@ -391,24 +413,25 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
           ),
           cartItemsList.length != 0
               ? Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: screenWidth * 0.8,
-              decoration: BoxDecoration(
-                  color: AppColor.PRIMARY_ACCENT,
-                  borderRadius: BorderRadius.circular(15)),
-              padding: EdgeInsets.symmetric(vertical: 12),
-              margin: EdgeInsets.only(bottom: 80),
-              child: Text(
-                "Go to Checkout",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: AppColor.WHITE,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ) : SizedBox(),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: screenWidth * 0.8,
+                    decoration: BoxDecoration(
+                        color: AppColor.PRIMARY_ACCENT,
+                        borderRadius: BorderRadius.circular(15)),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    margin: EdgeInsets.only(bottom: 80),
+                    child: Text(
+                      "Go to Checkout",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: AppColor.WHITE,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : SizedBox(),
           isApiLoading
               ? Stack(
                   children: [
@@ -436,60 +459,6 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
     setState(() {
       itemCount > 0 ? itemCount -= 1 : itemCount = 0;
     });
-  }
-
-  Widget _brandOfferCard(String currentCategoryName) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 0.3),
-              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-          width: screenWidth * 0.48,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4)),
-                  child: Image.asset(
-                    "assets/pizza_image.jpg",
-                    height: screenHeight * 0.23,
-                    width: screenWidth * 0.48,
-                    fit: BoxFit.cover,
-                  )),
-              Container(
-                width: screenWidth * 0.48,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(4),
-                        bottomLeft: Radius.circular(4))),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                  child: Center(
-                    child: Text(
-                      capitalizeFirstLetter("${currentCategoryName}"),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   void getCartDataListDataApi() async {
@@ -544,7 +513,7 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
       case Status.COMPLETED:
         print("GetDashboardData : ${response?.data?.items?.length}");
         setState(() {
-          grandTotal = response?.data?.grandTotal ?? "0";
+          grandTotal = "${response?.data?.grandTotal}" ?? "0";
           response?.data?.items?.forEach((value) {
             cartItemsList.add(value);
           });
@@ -581,36 +550,62 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
     }
   }
 
-  Widget getKycStatus(BuildContext context, ApiResponse apiResponse) {
-    KycStatusResponse? kycStatusResponse =
-        apiResponse.data as KycStatusResponse?;
-    var message = apiResponse.message.toString();
+  void clearCartApi() async {
     setState(() {
-      isApiLoading = false;
+      isLoading = true;
     });
-    print("message ${message}");
+    bool isConnected = await _connectivityService.isConnected();
+    print(("isConnected - ${isConnected}"));
+    if (!isConnected) {
+      setState(() {
+        isLoading = false;
+        isInternetConnected = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(Languages.of(context)!.labelNoInternetConnection),
+            duration: maxDuration,
+          ),
+        );
+      });
+    } else {
+      if (mounted) {
+        await Provider.of<MainViewModel>(context, listen: false).clearCartApi();
+        ApiResponse apiResponse =
+            Provider.of<MainViewModel>(context, listen: false).response;
+        clearCartApiResponse(context, apiResponse);
+      }
+    }
+  }
+
+  Future<Widget> clearCartApiResponse(
+      BuildContext context, ApiResponse apiResponse) async {
+    DeleteCartResponse? response = apiResponse.data as DeleteCartResponse?;
+    var message = apiResponse.message.toString();
+    print("message ${response?.message}");
+
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
-        print("GetKycStatus : ${kycStatusResponse?.kycStatus}");
+        getCartDataListDataApi();
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
+        setState(() {
+          isLoading = false;
+        });
         if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
+          print(apiResponse.message);
           SessionExpiredDialog.showDialogBox(context: context);
-        } else {
-          ToastComponent.showToast(
-              context: context, message: apiResponse.message);
-        }
+        } else {}
         return Center(
           child: Text('Please try again later!!!'),
         );
       case Status.INITIAL:
       default:
         return Center(
-          child: Text('Loading...'),
+          child: Text('Search for the song by Artist'),
         );
     }
   }

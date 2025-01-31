@@ -207,15 +207,15 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                 arguments: 0)
                                           },
                                         ),
-                                        DashboardSearchComponent(
+                                      /*  DashboardSearchComponent(
                                           onTap: (value) => {},
                                           screenHeight: 50,
                                           primaryColor: AppColor.PRIMARY_ACCENT,
                                           hintText: "What are u looking for?",
                                           queryController: _searchController,
-                                          screenWidth: screenWidth * 0.65,
-                                        ),
-                                        IconButton(
+                                          screenWidth: screenWidth * 0.75,
+                                        ),*/
+                                      /*  IconButton(
                                           icon: Icon(
                                             Icons.shopping_cart,
                                             size: 26,
@@ -226,7 +226,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                 context, '/RestaurantBottomNav',
                                                 arguments: 2)
                                           },
-                                        ),
+                                        ),*/
                                       ],
                                     ),
                                     SizedBox(

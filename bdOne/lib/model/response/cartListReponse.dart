@@ -26,9 +26,7 @@ class CartData {
     return CartData(
       cartId: json['cart_id'] as int?,
       customerId: json['customer_id'] as int?,
-      items: (json['items'] as List?)
-          ?.map((item) => CartItem.fromJson(item))
-          .toList(),
+      items: (json['items'] as List?)?.map((item) => CartItem.fromJson(item)).toList(),
       grandTotal: json['grand_total'] as String?,
     );
   }
@@ -38,6 +36,7 @@ class CartItem {
   final int? foodCartItemId;
   final int? foodItemId;
   final String? foodItemName;
+  final String? itemImage;
   final String? price;
   final int? quantity;
   final String? totalPrice;
@@ -46,6 +45,7 @@ class CartItem {
     this.foodCartItemId,
     this.foodItemId,
     this.foodItemName,
+    this.itemImage,
     this.price,
     this.quantity,
     this.totalPrice,
@@ -56,6 +56,7 @@ class CartItem {
       foodCartItemId: json['food_cart_item_id'] as int?,
       foodItemId: json['food_item_id'] as int?,
       foodItemName: json['food_item_name'] as String?,
+      itemImage: json['item_image'] as String?,
       price: json['price'] as String?,
       quantity: json['quantity'] as int?,
       totalPrice: json['total_price'] as String?,
