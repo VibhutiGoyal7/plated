@@ -52,7 +52,8 @@ class _RideBookedScreenState extends State<RideBookedScreen>
   bool isLoading = false;
   bool isApiLoading = false;
   bool isInternetConnected = true;
-  bool isRideStarted = true;
+  bool isRideStarted = false;
+  bool isDriverReached = false;
   late double screenHeight;
   late double screenWidth;
   bool isDarkMode = false;
@@ -302,6 +303,7 @@ class _RideBookedScreenState extends State<RideBookedScreen>
                                     alignment: Alignment.bottomCenter,
                                     child: AcceptedRequestWidget(
                                       isRideStarted: isRideStarted,
+                                      isDriverReached: isDriverReached,
                                       data: acceptedRide ??
                                           DriverStatusResponse(),
                                       onCancelTap: () {
@@ -456,17 +458,29 @@ class _RideBookedScreenState extends State<RideBookedScreen>
       case Status.LOADING:
         return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
-        if (response?.rideStatus == "ride_start") {
-          setState(() {
-            isRideStarted = true;
-          });
-        } else {
+        if(response?.rideStatus == "completed"){
+          Navigator.pushReplacementNamed(context, "/RideBookedDetailScreen",arguments:response );
+        }else {
           driverLocation = LatLng(
               double.parse("${acceptedRide.driverCurrentLat}"),
               double.parse("${acceptedRide.driverCurrentLong}"));
-          _fetchRoute(driverLocation, pickupLocation);
-          await Future.delayed(Duration(seconds: 10));
+          await Future.delayed(Duration(seconds: 5));
+          if (response?.rideStatus == "ride_start") {
+            setState(() {
+              isRideStarted = true;
+              isDriverReached = false;
+            });
+            _fetchRoute(driverLocation, finalLocation);
+          } else if (response?.rideStatus == "reached_at_pickup") {
+            setState(() {
+              isDriverReached = true;
+            });
+            _fetchRoute(driverLocation, pickupLocation);
+          }else{
+            _fetchRoute(driverLocation, pickupLocation);
+          }
           rideStatusApi();
+
         }
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
@@ -598,8 +612,8 @@ class _RideBookedScreenState extends State<RideBookedScreen>
     LatLng center = bounds.center;
 
     // Adjust the latitude to move the map view slightly upwards
-    double adjustedLatitude = center.latitude - 0.02;
-    LatLng adjustedCenter = LatLng(center.latitude, center.longitude);
+    double adjustedLatitude = center.latitude - 0.001;
+    LatLng adjustedCenter = LatLng(adjustedLatitude, center.longitude);
 
     // Adjust zoom to fit the bounds
     double fitZoomLevel = 15;
