@@ -90,6 +90,7 @@ dependencies:
   maps_launcher: ^2.2.1
   geocoding: ^2.0.4
   flutter_location_search: ^1.2.0
+  video_compress: ^3.1.3
 
 dev_dependencies:
   flutter_test:
@@ -156,6 +157,15 @@ flutter:
       - assets/category_image.png
       - assets/milk_image.png
       - assets/phone_globe.svg
+      - assets/imagesss.jpg
+      - assets/license.png
+      - assets/passport.png
+      - assets/back_3.png
+      - assets/id_card.png
+      - assets/india_flag_icon.png
+      - assets/video-recording.png
+      - assets/document_back_side.svg
+      - assets/documet_front_side.svg
 
   fonts:
     - family: CustomFont

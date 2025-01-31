@@ -88,10 +88,10 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
   void initState() {
     super.initState();
     imageUrl = "";
-    receiver.start();
-    receiver.messages.listen((message) {
+    //receiver.start();
+    /*receiver.messages.listen((message) {
       print("BroadCast");
-    });
+    });*/
 
     Helper.getProfileDetails().then((profile) {
       setState(() {
@@ -128,7 +128,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
 
   @override
   void dispose() {
-    receiver.stop();
+    //receiver.stop();
     _timer.cancel();
     super.dispose();
   }
@@ -154,33 +154,9 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
         if (didPop) {
           return;
         }
-        if (kDebugMode) {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            _showExitDialog();
-          } else {
-            SystemNavigator.pop();
-          }
-          // return Future.value(true);
-        } else {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            _showExitDialog();
-          } else {
-            SystemNavigator.pop();
-          }
-        }
+        Navigator.pushReplacementNamed(
+            context, '/BottomNav',
+            arguments: 0);
       },
       child: Scaffold(
         body: RefreshIndicator(
@@ -320,7 +296,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
       if (mounted) {
         //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
+            .dashboardData();
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         getDashboardData(context, apiResponse);

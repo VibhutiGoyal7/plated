@@ -59,8 +59,8 @@ class _ProductComponentState extends State<ProductComponent> {
             padding: const EdgeInsets.only(bottom: 18.0),
             child: ImageViewComponent(
               height: 85,
-              width: 65,
-              borderRadius: BorderRadius.all(Radius.circular(0)),
+              width: 120,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               imageUrl: subCategory?.itemImage,
               isDarkMode: false,
               placeholderImage: "assets/milk_image.png",

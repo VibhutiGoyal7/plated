@@ -380,7 +380,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       if (mounted) {
         //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
+            .dashboardData();
         ApiResponse apiResponse =
             Provider
                 .of<MainViewModel>(context, listen: false)

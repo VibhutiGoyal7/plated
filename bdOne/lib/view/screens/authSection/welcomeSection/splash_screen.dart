@@ -136,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigation() {
     print("token:::${widget.data}");
     //ToastComponent.showToast(context: context, message: "token:::${notificationOtpResponse?.otp}");
-   /* if (token == null || token?.isEmpty == true) {
+    if (token == null || token?.isEmpty == true) {
       Navigator.pushReplacementNamed(context, "/WelcomeScreen");
     } else {
       if (isUserAuthenticated != true) {
@@ -149,9 +149,9 @@ class _SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacementNamed(context, "/BottomNav");
         }
       }
-    }*/
+    }
 
-    if(email.isNotEmpty && phone.isNotEmpty && name.isNotEmpty && pin.isNotEmpty ){
+  /*  if(email.isNotEmpty && phone.isNotEmpty && name.isNotEmpty && pin.isNotEmpty ){
       if (isUserAuthenticated != true) {
         print("isUserAuthenticated :: $isUserAuthenticated");
         _initializeBiometrics();
@@ -160,6 +160,6 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }else{
       Navigator.pushReplacementNamed(context, "/SignInScreen");
-    }
+    }*/
   }
 }

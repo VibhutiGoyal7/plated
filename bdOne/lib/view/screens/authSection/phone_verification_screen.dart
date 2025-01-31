@@ -336,10 +336,10 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   Widget _buildFooter(BuildContext context) {
     return Container(
       width: screenWidth * 0.8,
+      height: 45,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color:
-            phoneNumberValid ? AppColor.PRIMARY_ACCENT : Colors.grey.shade300,
+        color: phoneNumberValid ? AppColor.PRIMARY_ACCENT : Colors.grey[400],
         borderRadius: BorderRadius.all(Radius.circular(6)),
         boxShadow: [
           BoxShadow(

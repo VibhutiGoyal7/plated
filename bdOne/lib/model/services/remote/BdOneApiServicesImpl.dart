@@ -1,4 +1,5 @@
 import 'package:BDOne/model/request/productListRequest.dart';
+import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/countryListResponse.dart';
 import 'package:BDOne/model/response/productsListReponse.dart';
 import 'package:BDOne/model/services/remote/BdOneApiServices.dart';
@@ -7,11 +8,16 @@ import '../../request/exustingUserRequest.dart';
 import '../../request/setUpAccountRequest.dart';
 import '../../request/signInRequest.dart';
 import '../../request/signInWithPhoneNumber.dart';
+import '../../request/updateCartRequest.dart';
+import '../../response/dashboardResponse.dart';
 import '../../response/existingUserResponse.dart';
+import '../../response/fetchKycDocResponse.dart';
+import '../../response/kycStatusResponse.dart';
 import '../../response/otpVerifyResponse.dart';
 import '../../response/phoneVerifyResponse.dart';
 import '../../response/setUpAccountResponse.dart';
 import '../../response/signInResponse.dart';
+import '../../response/updateCartListReponse.dart';
 import '../api/bd_one_api_service.dart';
 
 class BdOneApiServicesImpl implements BdOneApiServices {
@@ -133,6 +139,15 @@ class BdOneApiServicesImpl implements BdOneApiServices {
   }
 
   @override
+  Future<FetchKycDocResponse> fetchKycDocDataApi() {
+    return _fetchData<FetchKycDocResponse>(
+      'api/v1/app/customers/customer_uploaded_documents',
+      method: GET,
+      fromJson: (json) => FetchKycDocResponse.fromJson(json),
+    );
+  }
+
+  @override
   Future<ProductsListResponse> getProductsFromCategoryApi(
       ProductListRequest request) async {
     return _fetchData<ProductsListResponse>(
@@ -140,6 +155,45 @@ class BdOneApiServicesImpl implements BdOneApiServices {
       method: POST,
       requestBody: request,
       fromJson: (json) => ProductsListResponse.fromJson(json),
+    );
+  }
+
+  @override
+  Future<UpdateCartListResponse> updateCartDataApi(
+      UpdateCartRequest request) async {
+    return _fetchData<UpdateCartListResponse>(
+      'api/v1/app/food_carts/update_cart',
+      method: PUT,
+      requestBody: request,
+      fromJson: (json) => UpdateCartListResponse.fromJson(json),
+    );
+  }
+
+  @override
+  Future<KycStatusResponse> kycStatusDataApi() async {
+    return _fetchData<KycStatusResponse>(
+      'api/v1/app/customers/check_customer_kyc_status',
+      method: GET,
+      fromJson: (json) => KycStatusResponse.fromJson(json),
+    );
+  }
+
+  @override
+  Future<CartListResponse> getCartDataListApi() async {
+    return _fetchData<CartListResponse>(
+      'api/v1/app/food_carts/show_cart',
+      method: GET,
+      fromJson: (json) => CartListResponse.fromJson(json),
+    );
+  }
+
+
+  @override
+  Future<DashboardResponse> dashboardDataApi() {
+    return _fetchData<DashboardResponse>(
+      'api/v1/app/customers/dashboard_data',
+      method: GET,
+      fromJson: (json) => DashboardResponse.fromJson(json),
     );
   }
 

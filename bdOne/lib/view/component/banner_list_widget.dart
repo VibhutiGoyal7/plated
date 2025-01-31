@@ -134,6 +134,8 @@ class _BannerListWidgetState extends State<BannerListWidget> {
                                                 width: screenWidth * 0.85,
                                                 height: screenHeight * 0.2,
                                                 fit: BoxFit.none,
+                                                opacity:
+                                                    AlwaysStoppedAnimation(2.0),
                                               ),
                                             );
                                           },

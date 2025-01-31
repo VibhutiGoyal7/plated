@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:BDOne/model/db/BDOneDatabase.dart';
-import 'package:BDOne/model/response/dashboardResponse.dart';
+import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/utils/Util.dart';
+import 'package:BDOne/view/component/shimmerComponents/ShimmerList.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
@@ -35,6 +34,7 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
   String? country;
   String calledShortCut = "";
   String? name = "";
+  String? grandTotal = "";
   late PageController _pageController;
   int _currentPage = 0;
   int itemCount = 0;
@@ -56,56 +56,25 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
   late double screenWidth;
   final ConnectivityService _connectivityService = ConnectivityService();
   TextEditingController _searchController = TextEditingController();
-  ServiceTypeResponse selectedItem = ServiceTypeResponse(
-      serviceName: 'Fruits',
-      icon: '',
-      iconBgColor: Colors.red.shade50);
-  List<ServiceTypeResponse?> categories = [
-    ServiceTypeResponse(
-        serviceName: 'Fruits',
-        icon: '',
-        iconBgColor: Colors.red.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Vegetables',
-        icon: '',
-        iconBgColor: Colors.yellow.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Dairy',
-        icon: '',
-        iconBgColor: Colors.green.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Spices',
-        icon: '',
-        iconBgColor: Colors.blue.shade50),
-    ServiceTypeResponse(
-        serviceName: 'Pulses',
-        icon: '',
-        iconBgColor: Colors.black12),
-    ServiceTypeResponse(
-        serviceName: 'Seeds',
-        icon: '',
-        iconBgColor: Colors.black12),
-  ];
+  CartItem selectedItem = CartItem(
+      foodItemId: 0,
+      quantity: 0,
+      price: '0',
+      foodCartItemId: 0,
+      foodItemName: "",
+      totalPrice: '0');
+  List<CartItem?> cartItemsList = [];
   List<String> bannerList = ["", "", "", ""];
   List<String> brandsList = ["Kellogs", "Amul", "Amul", "Kellogs"];
-  BroadcastReceiver receiver = BroadcastReceiver(
-    names: <String>[
-      "de.kevlatus.flutter_broadcasts_example.demo_action",
-    ],
-  );
 
   @override
   void initState() {
     super.initState();
     imageUrl = "";
-    receiver.start();
-    receiver.messages.listen((message) {
-      print("BroadCast");
-    });
     //ServiceTypeResponse
-
-    selectedItem = (widget.data ?? categories.first)!;
-    print("SelectedItem :: ${selectedItem?.serviceName}");
+    getCartDataListDataApi();
+    //selectedItem = (widget.data ?? cartItemsList.first)!;
+    print("SelectedItem :: ${selectedItem.foodItemName}");
     Helper.getProfileDetails().then((profile) {
       setState(() {
         name = profile?.firstName;
@@ -141,8 +110,6 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
 
   @override
   void dispose() {
-    receiver.stop();
-    _timer.cancel();
     super.dispose();
   }
 
@@ -154,20 +121,21 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
     DateTime? lastBackPressed;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 55,
-        shape: Border(
-            bottom: BorderSide(width: 0.5, color: Theme.of(context).cardColor)),
-        title: Text(
-          "My Cart",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+          toolbarHeight: 55,
+          shape: Border(
+              bottom:
+                  BorderSide(width: 0.5, color: Theme.of(context).cardColor)),
+          title: Text(
+            "My Cart",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        centerTitle: true,
-        leading: SizedBox(),
-        backgroundColor: isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR
-      ),
+          centerTitle: true,
+          leading: SizedBox(),
+          backgroundColor:
+              isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -176,83 +144,86 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                 padding: EdgeInsets.only(bottom: 15.0, top: 0),
                 child: Column(
                   children: [
-                    AnimatedContainer(
-                        width: screenWidth,
-                        height: screenHeight * 0.6,
-                        alignment: Alignment.center,
-                        duration: Duration(milliseconds: 300),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 0.2,
-                                  color: AppColor.GREY_TEXT_COLOR)),
-                        ),
-                        curve: Curves.easeInCirc,
-                        child: ListView.builder(
-                            itemCount: categories.length,
-                            scrollDirection: Axis.vertical,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 9, vertical: 2),
-                            itemBuilder: (context, index) {
-                              final currentCategory = categories[index];
-                              return Container(
-                                height: 100,
-                                alignment: Alignment.center,
-                                width: screenWidth / 2.3,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          width:
-                                              categories.last == selectedItem
+                    cartItemsList.length != 0
+                        ? AnimatedContainer(
+                            width: screenWidth,
+                            height: screenHeight * 0.6,
+                            alignment: Alignment.center,
+                            duration: Duration(milliseconds: 300),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 0.2,
+                                      color: AppColor.GREY_TEXT_COLOR)),
+                            ),
+                            curve: Curves.easeInCirc,
+                            child: ListView.builder(
+                                itemCount: cartItemsList.length,
+                                scrollDirection: Axis.vertical,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 9, vertical: 2),
+                                itemBuilder: (context, index) {
+                                  final currentCategory = cartItemsList[index];
+                                  return Container(
+                                    height: 80,
+                                    alignment: Alignment.center,
+                                    width: screenWidth / 2.3,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).cardColor,
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              width: cartItemsList.last ==
+                                                      selectedItem
                                                   ? 0
                                                   : 0.2,
-                                          color: categories.length ==
-                                                  categories.last
-                                              ? Colors.transparent
-                                              : AppColor.GREY_TEXT_COLOR)),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 5),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 6),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
+                                              color: cartItemsList.length ==
+                                                      cartItemsList.last
+                                                  ? Colors.transparent
+                                                  : AppColor.GREY_TEXT_COLOR)),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 5),
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 4, vertical: 6),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0),
-                                          child: ImageViewComponent(
-                                            height: 55,
-                                            width: 45,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(0)),
-                                            imageUrl: currentCategory?.icon,
-                                            isDarkMode: false,
-                                            placeholderImage:
-                                                "assets/milk_image.png",
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  "${selectedItem.serviceName}", style: TextStyle(
-                                                fontSize: 15
-                                              ),),
-                                              Row(
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 10.0),
+                                              child: ImageViewComponent(
+                                                height: 55,
+                                                width: 45,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(0)),
+                                                imageUrl: currentCategory
+                                                    ?.foodItemName,
+                                                isDarkMode: false,
+                                                placeholderImage:
+                                                    "assets/milk_image.png",
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  GestureDetector(
+                                                  Text(
+                                                    "${currentCategory?.foodItemName}",
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      /*      GestureDetector(
                                                     onTap: () => decrement(),
                                                     child: Container(
                                                       decoration: BoxDecoration(
@@ -260,8 +231,7 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                                               width: 0.1),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(
-                                                                      8)),
+                                                                  .circular(8)),
                                                       padding:
                                                           EdgeInsets.all(2),
                                                       child: Icon(
@@ -269,30 +239,31 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                                         size: 22,
                                                         color: itemCount == 0
                                                             ? Colors.grey
-                                                            : Theme.of(context).focusColor,
+                                                            : Theme.of(context)
+                                                                .focusColor,
                                                       ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    height: 40,
-                                                    width: 30,
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 3),
-                                                    alignment:
-                                                        Alignment.center,
-                                                    child: Text(
-                                                      "$itemCount",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontSize: 15),
-                                                    ),
-                                                  ),
-                                                  GestureDetector(
+                                                  ),*/
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 3),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          "Items : ${currentCategory?.quantity} * ${currentCategory?.price}",
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1,
+                                                          style: TextStyle(
+                                                              fontSize: 13,
+                                                              color: AppColor
+                                                                  .GREY_TEXT_COLOR),
+                                                        ),
+                                                      ),
+                                                      /*  GestureDetector(
                                                     onTap: () => increment(),
                                                     child: Container(
                                                       child: Icon(
@@ -306,50 +277,73 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                                               width: 0.1),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(
-                                                                      8)),
+                                                                  .circular(8)),
                                                       padding:
                                                           EdgeInsets.all(2),
                                                     ),
-                                                  )
+                                                  )*/
+                                                    ],
+                                                  ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                          margin: EdgeInsets.only(left: 20),
-                                        )
-                                      ],
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          " ৳480",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: AppColor.BLACK,
-                                              fontWeight: FontWeight.bold),
+                                              margin: EdgeInsets.only(left: 20),
+                                            )
+                                          ],
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                         ),
-                                        SizedBox(
-                                          width: 5,
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Icon(
+                                              Icons.close,
+                                              size: 18,
+                                              color:
+                                                  Theme.of(context).focusColor,
+                                            ),
+                                            Text(
+                                              " ৳${currentCategory?.totalPrice}",
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: AppColor.BLACK,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                          ],
                                         ),
-                                        Icon(
-                                          Icons.close,
-                                          size: 18,
-                                          color: Theme.of(context).focusColor,
-                                        )
                                       ],
                                     ),
-                                  ],
+                                  );
+                                }))
+                        : isLoading
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 25),
+                                  ShimmerList(
+                                    itemCount: 3,
+                                  ),
+                                ],
+                              )
+                            : Container(
+                                height: screenHeight * 0.8,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "No Product Available",
+                                    style: TextStyle(
+                                        color: AppColor.GREY_TEXT_COLOR),
+                                  ),
                                 ),
-                              );
-                            })),
-                    Container(
+                              ),
+                    cartItemsList.length != 0
+                        ?Container(
                       margin:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Column(
@@ -360,8 +354,7 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Align(
                                   child: Padding(
@@ -370,15 +363,16 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                     child: Text(
                                       "Total",
                                       style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).focusColor,),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).focusColor,
+                                      ),
                                     ),
                                   ),
                                   alignment: Alignment.topLeft,
                                 ),
                                 Text(
-                                  "৳500",
+                                  "৳${grandTotal}",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -389,13 +383,14 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                           ),
                         ],
                       ),
-                    ),
+                    ) : SizedBox(),
                   ],
                 ),
               ),
             ),
           ),
-          Align(
+          cartItemsList.length != 0
+              ? Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               width: screenWidth * 0.8,
@@ -413,13 +408,12 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-          ),
+          ) : SizedBox(),
           isApiLoading
               ? Stack(
                   children: [
                     // Block interaction
-                    ModalBarrier(
-                        dismissible: false, color: Colors.transparent),
+                    ModalBarrier(dismissible: false, color: Colors.transparent),
                     // Loader indicator
                     Center(
                       child: CustomCircularProgress(),
@@ -498,58 +492,16 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
     );
   }
 
-  Widget _brandYouLoveCard(String currentCategoryName) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 0.3),
-              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-          width: screenWidth * 0.3,
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
-                  child: Image.asset(
-                "assets/pizza_image.jpg",
-                height: screenHeight * 0.1,
-                fit: BoxFit.cover,
-              )),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text(
-                  capitalizeFirstLetter("${currentCategoryName}"),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void getDashBoardDataFromApi() async {
+  void getCartDataListDataApi() async {
+    setState(() {
+      isLoading = true;
+    });
     bool isConnected = await _connectivityService.isConnected();
     print(("isConnected - ${isConnected}"));
     if (!isConnected) {
       setState(() {
         isLoading = false;
         isInternetConnected = false;
-        receiver.stop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(Languages.of(context)!.labelNoInternetConnection),
@@ -561,93 +513,12 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
       if (mounted) {
         //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
+            .getCartDataListApi();
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
-        getDashboardData(context, apiResponse);
+        getCartDataListData(context, apiResponse);
       }
     }
-  }
-
-  Future<void> _showExitDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: Border.all(),
-          title: Center(
-              child: Text(
-            "${Languages.of(context)?.labelExit}",
-            style: TextStyle(fontSize: 20),
-          )),
-          content: Container(
-            height: screenHeight * 0.3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: AppColor.PRIMARY),
-                        child: Icon(
-                          Icons.logout_outlined,
-                          size: 55,
-                          color: Colors.white,
-                        )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                        child: Text(
-                      Languages.of(context)!.labelPressBackToExit,
-                      textAlign: TextAlign.center,
-                    )),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      width: screenWidth * 0.6,
-                      child: TextButton(
-                        child: Text('Naah, Just kidding'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: screenWidth * 0.6,
-                      child: TextButton(
-                        child: Text('${Languages.of(context)?.labelYes}'),
-                        onPressed: () async {
-                          /*Helper.clearAllSharedPreferences();
-                          database.personDao.clearAllCustomerDetails();
-                          database.dashboardTransactionDao
-                              .clearAllTransactions();*/
-                          Navigator.of(context).pop();
-                          await Future.delayed(Duration(milliseconds: 6));
-                          SystemNavigator.pop();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[],
-        );
-      },
-    );
   }
 
   Future<void> intializeDatabase() async {
@@ -659,27 +530,31 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
     customerDataDao = database.personDao;
   }
 
-  Future<Widget> getDashboardData(
+  Future<Widget> getCartDataListData(
       BuildContext context, ApiResponse apiResponse) async {
-    DashboardResponse? dashboardResponse =
-        apiResponse.data as DashboardResponse?;
+    setState(() {
+      isLoading = false;
+    });
+    CartListResponse? response = apiResponse.data as CartListResponse?;
     var message = apiResponse.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
-        print("GetDashboardData : ${dashboardResponse?.customerData?.email}");
-
+        print("GetDashboardData : ${response?.data?.items?.length}");
+        setState(() {
+          grandTotal = response?.data?.grandTotal ?? "0";
+          response?.data?.items?.forEach((value) {
+            cartItemsList.add(value);
+          });
+        });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") ==
             nonCapitalizeString(
                 "${Languages.of(context)?.labelInvalidAccessToken}")) {
           print(apiResponse.message);
-          if (receiver.isListening) {
-            receiver.stop();
-          }
           SessionExpiredDialog.showDialogBox(context: context);
         } else {
           Helper.getProfileDetails().then((userDetails) {

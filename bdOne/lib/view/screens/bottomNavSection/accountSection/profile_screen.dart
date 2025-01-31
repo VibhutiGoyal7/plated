@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../../languageSection/Languages.dart';
 import '../../../../model/apis/api_response.dart';
@@ -203,6 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Scaffold(
           body: Stack(children: [
             SafeArea(
+              minimum: EdgeInsets.symmetric(horizontal: 5),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -220,16 +220,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: TextStyle(
                                 fontSize: 26, fontWeight: FontWeight.bold),
                           ),
-                          _buildSearch(),
+                          //_buildSearch(),
                           SizedBox(
                             height: 8,
                           ),
                           GestureDetector(
-                            onTap: (){
-                              Navigator.pushNamed(context, "/PersonalDetailsScreen");
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, "/EditInformationScreen");
                             },
                             child: Card(
+                              shape: RoundedRectangleBorder(),
                               child: Container(
+                                height: 100,
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 12),
                                 child: Row(
@@ -238,6 +241,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         CircularProfileImage(
                                           size: 50,
@@ -252,9 +259,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Akash Singh",
+                                              "$customerName",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 15),
@@ -264,7 +273,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 11,
-                                                  color:isDarkMode? Colors.grey :  Colors.black54),
+                                                  color: isDarkMode
+                                                      ? Colors.grey
+                                                      : Colors.black54),
                                             )
                                           ],
                                         ),
@@ -283,6 +294,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Container(
+                      margin: EdgeInsets.symmetric(horizontal: 4),
                       child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: isTablet ? 0 : 1.0),
@@ -294,12 +306,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: isTablet ? 0 : 5.0),
+                                      /*    SizedBox(height: isTablet ? 0 : 5.0),
                                       Text(
                                           "${Languages.of(context)?.labelAccount}",
                                           style: TextStyle(
-                                              fontWeight: FontWeight.normal)),
-                                      SizedBox(height: isTablet ? 0 : 5.0),
+                                              fontWeight: FontWeight.normal)),*/
+                                      /*   SizedBox(height: isTablet ? 0 : 5.0),
                                       GestureDetector(
                                           onTap: () {
                                             Navigator.pushNamed(
@@ -311,8 +323,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 "${Languages.of(context)?.labelChangePIN}",
                                             icon: Icons.key,
                                             headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
+                                          )),*/
+                                      /*         GestureDetector(
                                           onTap: () {
                                             Navigator.pushNamed(context,
                                                 '/ManageDevicesScreen',
@@ -323,8 +335,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 "${Languages.of(context)?.labelManageDevices}",
                                             icon: Icons.phone_iphone,
                                             headingTextSize: 14,
-                                          )),
-                                      Platform.isAndroid
+                                          )),*/
+                                      /*     Platform.isAndroid
                                           ? GestureDetector(
                                               onTap: () {
                                                 Navigator.pushNamed(context,
@@ -338,8 +350,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 icon: Icons.password,
                                                 headingTextSize: 14,
                                               ))
-                                          : SizedBox(),
-                                      Padding(
+                                          : SizedBox(),*/
+                                      /*   Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 1.0),
                                         child: Card(
@@ -495,82 +507,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 "${Languages.of(context)?.labelAccessibility}",
                                             icon: Icons.accessibility,
                                             headingTextSize: 14,
-                                          )),
+                                          )),*/
                                       Text(
                                           "${Languages.of(context)?.labelMore}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold)),
                                       GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context,
-                                                '/AboutBDOneScreen',
-                                                arguments: "");
-                                          },
-                                          child: DetailBox(
-                                            heading:
-                                                "${Languages.of(context)?.labelAboutBDOne}",
-                                            icon: Icons.fingerprint,
-                                            headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                                context, '/SettingScreen',
-                                                arguments: "");
-                                          },
-                                          child: DetailBox(
-                                            heading:
-                                                "${Languages.of(context)?.labelWalkthrough}",
-                                            icon: Icons.play_arrow_rounded,
-                                            headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
-                                          onTap: () {
                                             ToastComponent.showToast(
                                                 context: context,
-                                                message:
-                                                    "Kiosks Nearby Clicked");
-                                            //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
-                                          },
-                                          child: DetailBox(
-                                            heading: "Kiosks Nearby",
-                                            icon: Icons.near_me_outlined,
-                                            headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context, '/PrivacyPolicyScreen', arguments: "");
-                                          },
-                                          child: DetailBox(
-                                            heading: "Privacy Policy",
-                                            icon: Icons.privacy_tip_outlined,
-                                            headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context, '/FaqScreen', arguments: "");
-                                          },
-                                          child: DetailBox(
-                                            heading: "FAQS",
-                                            icon:
-                                                Icons.question_mark_outlined,
-                                            headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
-                                          onTap: () {
-                                            Navigator.pushNamed(context, '/SupportScreen', arguments: "");
-                                          },
-                                          child: DetailBox(
-                                            heading: "Support",
-                                            icon: Icons.support,
-                                            headingTextSize: 14,
-                                          )),
-                                      GestureDetector(
-                                          onTap: () {
-                                            ToastComponent.showToast(
-                                                context: context,
-                                                message:
-                                                    "Contact Us Clicked");
+                                                message: "Contact Us Clicked");
                                             //Navigator.pushNamed(context, '/SettingScreen', arguments: "");
                                           },
                                           child: DetailBox(
@@ -579,36 +525,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             headingTextSize: 14,
                                           )),
                                       GestureDetector(
-                                        onTap: () {
-                                          Helper.saveName("");
-                                          Helper.savePin("");
-                                          Helper.saveEmail("");
-                                          Helper.savePhoneNo("");
-                                          Navigator.pushNamed(
-                                              context, "/WelcomeScreen");
-                                        },
-                                        child: _buildCard(
-                                            context,
-                                            "Clear Data",
-                                            isDarkMode,
-                                            Icon(
-                                              Icons.logout,
-                                              size: 22,
-                                            )),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          _showLogOutDialog();
-                                        },
-                                        child: _buildCard(
-                                            context,
-                                            "${Languages.of(context)?.labelLogout}",
-                                            isDarkMode,
-                                            Icon(
-                                              Icons.logout,
-                                              size: 22,
-                                            )),
-                                      ),
+                                          onTap: () {
+                                            _showLogOutDialog();
+                                          },
+                                          child: DetailBox(
+                                            heading:
+                                                "${Languages.of(context)?.labelLogout}",
+                                            icon: Icons.fingerprint,
+                                            headingTextSize: 14,
+                                          )),
                                     ]),
                               ],
                             ),

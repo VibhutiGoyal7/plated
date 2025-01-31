@@ -3,6 +3,8 @@ import 'package:BDOne/theme/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../languageSection/Languages.dart';
+import '../../utils/Helper.dart';
 import '../../utils/Util.dart';
 
 class DashboardCategoryComponent extends StatefulWidget {
@@ -28,6 +30,15 @@ class DashboardCategoryComponent extends StatefulWidget {
 class _DashboardCategoryState extends State<DashboardCategoryComponent> {
   bool _isExpanded = false;
   int initialItemCount = 5;
+  String? dashBoardKycStatus;
+
+  @override
+  void initState() {
+    Helper.getKycStatus().then((status) {
+      dashBoardKycStatus = status;
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,30 +134,6 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
         ),
       ],
     );
-
-    /*IntrinsicHeight(
-      child: Column(
-        children: [
-          Container(
-            width: screenWidth,
-            alignment: Alignment.center,
-            child: Wrap(
-              spacing: 5,
-              alignment: WrapAlignment.start,
-              runSpacing: 8,
-              children: widget.categories.map((result) {
-                var currentItem = result;
-                var currentCategoryName = currentItem?.serviceName;
-                var currentIcon = currentItem?.icon;
-                var currentIconBdColor = currentItem?.iconBgColor;
-                return _buildServiceItem(
-                    currentCategoryName, currentIcon, currentIconBdColor);
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );*/
   }
 
   Widget _buildServiceItem(String? currentCategoryName, String? currentIcon,
@@ -158,7 +145,16 @@ class _DashboardCategoryState extends State<DashboardCategoryComponent> {
             _isExpanded = !_isExpanded;
           });
         } else if (currentCategoryName == "Cab Booking") {
-          Navigator.pushNamed(context, "/RideBottomNav");
+          if (dashBoardKycStatus != "" &&
+              dashBoardKycStatus !=
+                  Languages.of(context)!.statusVerified &&
+              dashBoardKycStatus != null)
+          {
+            Navigator.pushNamed(context, '/ChooseDocScreen');
+          }
+          else
+          {Navigator.pushNamed(context, "/RideBottomNav");}
+
         } else if (currentCategoryName == "Foods") {
           Navigator.pushNamed(context, "/RestaurantBottomNav");
         }

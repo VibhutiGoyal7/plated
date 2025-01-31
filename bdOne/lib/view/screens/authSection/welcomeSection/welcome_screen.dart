@@ -49,7 +49,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
-                          color: AppColor.BG_COLOR,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(28),
                               bottomRight: Radius.circular(28))),
@@ -96,9 +96,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           text: Languages.of(context)!.labelContinue,
                           width: screenWidth,
                           isDarkMode: isDarkMode,
-                          buttonColor: Colors.white,
-                          textColor: AppColor.PRIMARY,
-                          verticalPadding: 10,
+                          buttonColor: Theme.of(context).cardColor,
+                          textColor: Theme.of(context).focusColor,
+                          verticalPadding: 12,
                           onTap: () {
                             Navigator.pushNamed(context, '/SliderScreen');
                           }),

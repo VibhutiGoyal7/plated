@@ -15,9 +15,12 @@ class ProductsListResponse {
 
   factory ProductsListResponse.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
-    List<ProductDetails>? productDetailsList =
-        list.map((i) => ProductDetails.fromJson(i)).toList();
-
+    List<ProductDetails>? productDetailsList;
+    if (list is List) {
+      productDetailsList = list.map((i) => ProductDetails.fromJson(i)).toList();
+    } else {
+      productDetailsList = []; // or handle it another way if needed
+    }
     return ProductsListResponse(
       message: json['message'] as String?,
       status: json['status'] as int?,

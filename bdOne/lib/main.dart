@@ -30,6 +30,12 @@ import 'package:BDOne/view/screens/bottomNavSection/select_location_screen.dart'
 import 'package:BDOne/view/screens/bottomNavSection/select_service_screen.dart';
 import 'package:BDOne/view/screens/change_password_screen.dart';
 import 'package:BDOne/view/screens/coming_soon_screen.dart';
+import 'package:BDOne/view/screens/kycSection/camera_access_screen.dart';
+import 'package:BDOne/view/screens/kycSection/camera_screen.dart';
+import 'package:BDOne/view/screens/kycSection/chooose_doc_screen.dart';
+import 'package:BDOne/view/screens/kycSection/select_country_screen.dart';
+import 'package:BDOne/view/screens/kycSection/video_kyc_screen.dart';
+import 'package:BDOne/view/screens/profile/edit_info_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_bottom_nav.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_cart_screen.dart';
 import 'package:BDOne/view/screens/retaurantSection/restaurant_favourite_screen.dart';
@@ -63,6 +69,7 @@ import 'package:provider/provider.dart';
 
 import 'languageSection/AppLocalizationsDelegate.dart';
 import 'languageSection/L10n.dart';
+import 'model/request/documentData.dart';
 import 'model/response/ServiceTypeResponse.dart';
 import 'model/response/driverStatusResponse.dart';
 import 'model/response/notificationOtpResponse.dart';
@@ -384,6 +391,32 @@ class _MyAppState extends State<MyApp> {
               final args = ModalRoute.of(context)!.settings.arguments
                   as ProductDetails?;
               return RestaurantItemViewScreen(
+                data: args,
+              );
+            },
+            '/ChooseDocScreen': (context) {
+              return ChooseDocScreen();
+            },
+            '/SelectCountryScreen': (context) {
+              return SelectCountryScreen();
+            },
+            '/EditInformationScreen': (context) {
+              return EditInformationScreen();
+            },
+            '/CameraAccessScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return CameraAccessScreen(data: args);
+            },
+            '/DocImageScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as String?;
+              return DocImageScreen(data: args);
+            },
+            '/VideoKycScreen': (context) {
+              final args =
+              ModalRoute.of(context)!.settings.arguments as DocumentData?;
+              return VideoKycScreen(
                 data: args,
               );
             },

@@ -11,8 +11,10 @@ import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInRequest.dart';
 import 'package:BDOne/model/request/signInWithPhoneNumber.dart';
 import 'package:BDOne/model/request/signUpRequest.dart';
+import 'package:BDOne/model/request/updateCartRequest.dart';
 import 'package:BDOne/model/request/vehicleListRequest.dart';
 import 'package:BDOne/model/request/verifyOtpChangePass.dart';
+import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/countryListResponse.dart';
 import 'package:BDOne/model/response/createOtpChangePassResponse.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
@@ -29,6 +31,8 @@ import 'package:BDOne/model/response/profileResponse.dart';
 import 'package:BDOne/model/response/setUpAccountResponse.dart';
 import 'package:BDOne/model/response/signInResponse.dart';
 import 'package:BDOne/model/response/signUpResponse.dart';
+import 'package:BDOne/model/response/updateCartListReponse.dart';
+import 'package:BDOne/model/response/uploadKycResponse.dart';
 import 'package:BDOne/model/response/vehicleListResponse.dart';
 import 'package:BDOne/model/services/api/base_service.dart';
 import 'package:BDOne/model/services/api/bd_one_api_service.dart';
@@ -72,6 +76,14 @@ class MainRepository {
     print("Api: TransactionListData");
     dynamic response =
     await _ApiServices.getProductsFromCategoryApi(productListRequest);
+    return response;
+  }
+
+  //UpdateCartDataApi
+  Future<UpdateCartListResponse> updateCartDataApi(UpdateCartRequest request) async {
+    print("Api: UpdateCartDataApi");
+    dynamic response =
+    await _ApiServices.updateCartDataApi(request);
     return response;
   }
 
@@ -198,13 +210,11 @@ class MainRepository {
     return response;
   }
 
-  Future<FetchKycDocResponse> fetchKycDocData(String value) async {
-    dynamic response = await _BDOneService.getResponse(value);
-    print(value);
-    final jsonData = response;
-    print(jsonData);
-    FetchKycDocResponse mediaList = FetchKycDocResponse.fromJson(jsonData);
-    return mediaList;
+  //FetchKycDocData
+  Future<FetchKycDocResponse> fetchKycDocData() async {
+    print("Api: FetchKycDocData");
+    dynamic response = await _ApiServices.fetchKycDocDataApi();
+    return response;
   }
 
   //FetchCountryList
@@ -214,13 +224,37 @@ class MainRepository {
     return response;
   }
 
-  Future<DashboardResponse> dashboardData(String value) async {
-    dynamic response = await _BDOneService.getResponse(value);
+  //DashboardData
+  Future<DashboardResponse> dashboardData() async {
+    print("Api: DashboardData");
+    dynamic response = await _ApiServices.dashboardDataApi();
+    return response;
+  }
+
+  Future<UploadKycDocResponse> postMultiFormResponse(
+      String value, File imageFile, String docType, File videoFile) async {
+    dynamic response = await _BDOneService.postMultiFormResponse(
+        value, imageFile, docType, videoFile);
     print(value);
     final jsonData = response;
-    //print("jsonData $jsonData");
-    DashboardResponse mediaList = DashboardResponse.fromJson(jsonData);
-    //print("object ${mediaList.message}");
+    print(jsonData);
+    UploadKycDocResponse mediaList = UploadKycDocResponse.fromJson(jsonData);
     return mediaList;
   }
+
+
+  //KycStatusData
+  Future<KycStatusResponse> kycStatusData() async {
+    print("Api: KycStatusData");
+    dynamic response = await _ApiServices.kycStatusDataApi();
+    return response;
+  }
+
+  //GetCartDataListApi
+  Future<CartListResponse> getCartDataListApi() async {
+    print("Api: KycStatusData");
+    dynamic response = await _ApiServices.getCartDataListApi();
+    return response;
+  }
+
 }

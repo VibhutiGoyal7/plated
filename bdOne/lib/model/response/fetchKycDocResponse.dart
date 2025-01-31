@@ -8,47 +8,44 @@ class FetchKycDocResponse {
   String? message;
 
   FetchKycDocResponse({
-     this.drivingLicenseImage,
-     this.nationalIdImage,
-     this.passportImage,
-     this.addressKycData,
-     this.bankStatement,
-     this.geolocation,
+    this.drivingLicenseImage,
+    this.nationalIdImage,
+    this.passportImage,
+    this.addressKycData,
+    this.bankStatement,
+    this.geolocation,
     this.message,
-
   });
+
   factory FetchKycDocResponse.fromJson(Map<String, dynamic> json) {
     return FetchKycDocResponse(
-
-      nationalIdImage : json["data"]?['national_id'] != null
-            ? new DocumentData.fromJson(json["data"]?['national_id'])
-            : null,
-
-      passportImage : json["data"]?['passport'] != null
-            ? new DocumentData.fromJson(json["data"]?['passport'])
-            : null,
-      drivingLicenseImage : json["data"]?['driving_licence'] != null
-          ? new DocumentData.fromJson(json["data"]?['driving_licence'])
+      nationalIdImage: json["data"]?["national_id"] != null
+          ? DocumentData.fromJson(json["data"]["national_id"])
           : null,
-      addressKycData : json["data"]?['address_kyc'] != null
-          ? new DocumentData.fromJson(json["data"]?['address_kyc'])
+      passportImage: json["data"]?["passport"] != null
+          ? DocumentData.fromJson(json["data"]["passport"])
           : null,
-      bankStatement : json["data"]?['bank_statement'] != null
-          ? new DocumentData.fromJson(json["data"]?['bank_statement'])
+      drivingLicenseImage: json["data"]?["driving_license"] != null
+          ? DocumentData.fromJson(json["data"]["driving_license"])
           : null,
-      geolocation : json["data"]?['geolocation_kyc'] != null
-          ? new DocumentData.fromJson(json["data"]?['geolocation_kyc'])
+      addressKycData: json["data"]?["address_kyc"] != null
+          ? DocumentData.fromJson(json["data"]["address_kyc"])
           : null,
-      message : json["message"] as String?,
+      bankStatement: json["data"]?["bank_statement"] != null
+          ? DocumentData.fromJson(json["data"]["bank_statement"])
+          : null,
+      geolocation: json["data"]?["geolocation_kyc"] != null
+          ? DocumentData.fromJson(json["data"]["geolocation_kyc"])
+          : null,
+      message: json["message"] as String?,
     );
-
   }
 }
 
 class DocumentData {
   final int? customerId;
   final String? documentType;
-  final int? userId;
+  final int? documentId;
   final String? verificationStatus;
   final String? rejectionReason;
   final String? idNumber;
@@ -56,12 +53,12 @@ class DocumentData {
   final String? kycVideoUrl;
   final String? pendingReason;
   final String? displayName;
-  final bool? availableInCountry;
+  final bool? availableForYourOrganization;
 
   DocumentData({
     this.customerId,
     this.documentType,
-    this.userId,
+    this.documentId,
     this.verificationStatus,
     this.rejectionReason,
     this.idNumber,
@@ -69,22 +66,22 @@ class DocumentData {
     this.kycVideoUrl,
     this.pendingReason,
     this.displayName,
-    this.availableInCountry
+    this.availableForYourOrganization,
   });
 
   factory DocumentData.fromJson(Map<String, dynamic> json) {
     return DocumentData(
       customerId: json['customer_id'] as int?,
       documentType: json['document_type'] as String?,
-      userId: json['id'] as int?,
+      documentId: json['id'] as int?,
       verificationStatus: json['verification_status'] as String?,
       rejectionReason: json['rejection_reason'] as String?,
       idNumber: json['id_number'] as String?,
-        pendingReason: json['pending_reason'] as String?,
-        availableInCountry: json['available_in_your_country'] as bool?,
-        kycVideoUrl : json['kyc_video_url'] as String?,
+      pendingReason: json['pending_reason'] as String?,
+      availableForYourOrganization: json['available_for_your_organization'] as bool?,
+      kycVideoUrl: json['kyc_video_url'] as String?,
       kycDocsImageUrl: json['kyc_file_url'] as String?,
-      displayName: json['display_name'] as String?
+      displayName: json['display_name'] as String?,
     );
   }
 }
