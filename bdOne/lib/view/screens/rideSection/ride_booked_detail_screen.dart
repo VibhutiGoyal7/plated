@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:BDOne/theme/AppColor.dart';
 import 'package:BDOne/utils/Util.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,14 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../model/response/driverStatusResponse.dart';
 import '../../component/location_stop_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class RideBookedDetailScreen extends StatefulWidget {
+
+  final DriverStatusResponse? data;
+
+  RideBookedDetailScreen({Key? key, this.data}) : super(key: key);
   @override
   _RideBookedDetailScreenState createState() => _RideBookedDetailScreenState();
 }
@@ -24,30 +32,13 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
   DriverStatusResponse acceptedRide = DriverStatusResponse();
   final MapController _mapController = MapController();
   List<LatLng> routePoints = [];
+  String _locationMessage = "Fetching Route...";
   late bool isDarkMode;
 
   void initState() {
     super.initState();
     setState(() {
-      acceptedRide = DriverStatusResponse(
-        status: 0,
-        message: "",
-        uniqueId: "585565",
-        phoneNumber: "6283252696",
-        lastName: "hello",
-        firstName: "Hi",
-        destination_address: "Near Kharar",
-        destination_latitude: "${currentLocation?.longitude}",
-        destination_longitude: "${currentLocation?.latitude}",
-        driverCurrentLat: "${driverLocation.latitude}",
-        driverCurrentLong: "${driverLocation.longitude}",
-        estimatedDistance: "5Km",
-        estimatedFare: "500",
-        pickup_address: "Near Mohali",
-        pickup_latitude: "${pickupLocation.latitude}",
-        pickup_longitude: "${pickupLocation.longitude}",
-        rideStatus: "accepted"
-      );
+      acceptedRide = widget.data ?? DriverStatusResponse();
       pickupLocation = LatLng(double.parse("${acceptedRide.pickup_latitude}"),
           double.parse("${acceptedRide.pickup_longitude}"));
       finalLocation = LatLng(
@@ -59,6 +50,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
             double.parse("${acceptedRide.driverCurrentLong}"));
       }
     });
+    _fetchRoute(pickupLocation, finalLocation);
   }
 
   @override
@@ -141,12 +133,12 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                                     color: Colors.blue,
                                   ),
                                   // Line from pickup location to drop location
-                                  Polyline(
+                                  /*Polyline(
                                       points: [pickupLocation, finalLocation],
                                       strokeWidth: 1,
                                       color: Colors.black,
                                       pattern: StrokePattern.dashed(
-                                          segments: [5, 3])),
+                                          segments: [5, 3])),*/
                                 ],
                               ),
                               MarkerLayer(
@@ -212,11 +204,11 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Babar Azam",
+                                "${acceptedRide.firstName ?? ""} ${acceptedRide.lastName ?? ""}",
                                 style: TextStyle(fontSize: 15),
                               ),
                               Text(
-                                "5.0 (235 ratings)",
+                                "${acceptedRide.phoneNumber ?? ""}",
                                 style:
                                     TextStyle(fontSize: 13, color: Colors.grey),
                               )
@@ -224,18 +216,25 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                           ),
                         ],
                       ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(width: 0.5)),
-                        child: Text(
-                          "Contact",
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black),
+                      GestureDetector(
+                        onTap: ()
+                        {
+                          _launchPhoneDialer(
+                              acceptedRide.phoneNumber ?? "");
+                        },
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(width: 0.5)),
+                          child: Text(
+                            "Contact",
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
                         ),
                       )
                     ],
@@ -246,7 +245,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                     child: GestureDetector(
                       onTap: () => {
                         Navigator.of(context)
-                            .pushNamed("/RideDriverDetailScreen")
+                            .pushNamed("/RideBottomNav")
                       },
                       child: Container(
                         width: screenWidth * 0.8,
@@ -259,7 +258,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                         child: Column(
                           children: [
                             Text(
-                              "Ride Complete",
+                              "Complete",
                               style: TextStyle(
                                   color: AppColor.WHITE,
                                   fontSize: 15,
@@ -283,7 +282,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(vertical: 10),
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        constraints: BoxConstraints(minHeight: screenHeight * 0.28),
+        constraints: BoxConstraints(minHeight: screenHeight * 0.26),
         decoration: BoxDecoration(
           color: AppColor.WHITE,
           borderRadius: BorderRadius.circular(10),
@@ -298,11 +297,11 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
         child: Column(
           children: [
             LocationStopWidget(
-              location: "Basundhara Road, NSU Main Campus Rd, Dhaka",
+              location: "${acceptedRide.pickup_address ?? ""}",
               isPickUp: true,
             ),
             LocationStopWidget(
-              location: "RC9C+HM5, Kajibari, Kuril, Vatara, Dhaka ",
+              location: "${acceptedRide.destination_address ?? ""}",
               isPickUp: false,
             ),
             Container(
@@ -312,9 +311,9 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
               margin: EdgeInsets.only(top: 5, bottom: 15),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
+               /* Row(
                   children: [
                     Icon(Icons.directions_car_filled),
                     SizedBox(
@@ -325,7 +324,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "America Airlines",
+                          "${acceptedRide. ?? ""}",
                           style: TextStyle(fontSize: 15),
                         ),
                         Text(
@@ -335,9 +334,9 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                       ],
                     ),
                   ],
-                ),
+                ),*/
                 Text(
-                  "৳25",
+                  "৳${acceptedRide.estimatedFare ?? ""}",
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -351,9 +350,59 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
     );
   }
 
+  // Fetch route data from OpenRouteService
+  Future<void> _fetchRoute(LatLng initialLoc, LatLng finalLoc) async {
+    final String apiKey =
+        '5b3ce3597851110001cf6248cf8b20620dbd42cdb89fb5d4c3639b99';
+    final String url =
+        'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$apiKey&start=${initialLoc.longitude},${initialLoc.latitude}&end=${finalLoc.longitude},${finalLoc.latitude}';
+
+    try {
+      print(url);
+      final response = await http.get(Uri.parse(url));
+      print("response.status :: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final coordinates =
+        data['features'][0]['geometry']['coordinates'] as List;
+
+        List<LatLng> route =
+        coordinates.map<LatLng>((e) => LatLng(e[1], e[0])).toList();
+
+        setState(() {
+          routePoints = route;
+          _locationMessage = "Route fetched successfully!";
+          print(_locationMessage);
+        });
+      } else {
+        setState(() {
+          _locationMessage = "Failed to fetch route!";
+        });
+        print(_locationMessage);
+      }
+    } catch (e) {
+      setState(() {
+        _locationMessage = "Error: $e";
+      });
+      print(_locationMessage);
+    }
+  }
+
+  void _launchPhoneDialer(String phoneNumber) async {
+    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+    if (phoneNumber.isNotEmpty) {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        throw 'Could not launch $uri';
+      }
+    }
+  }
+
   void adjustMapView() {
     // Create bounds for the points
-    LatLngBounds bounds = LatLngBounds(driverLocation, pickupLocation);
+    LatLngBounds bounds = LatLngBounds(pickupLocation, finalLocation);
     //bounds.extend(currentLocation!);
 
     LatLng center = bounds.center;
@@ -363,7 +412,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
     LatLng adjustedCenter = LatLng(center.latitude, center.longitude);
 
     // Adjust zoom to fit the bounds
-    double fitZoomLevel = 15;
+    double fitZoomLevel = 13;
 
     // Move the map to the adjusted center
     _mapController.move(adjustedCenter, fitZoomLevel);

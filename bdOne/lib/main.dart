@@ -375,7 +375,9 @@ class _MyAppState extends State<MyApp> {
               return RideAccountScreen();
             },
             '/RideBookedDetailScreen': (context) {
-              return RideBookedDetailScreen();
+              final args = ModalRoute.of(context)!.settings.arguments
+              as DriverStatusResponse?;
+              return RideBookedDetailScreen(data: args);
             },
             '/RideDriverDetailScreen': (context) {
               return RideDriverDetailScreen();
