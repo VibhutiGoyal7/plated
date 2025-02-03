@@ -21,6 +21,7 @@ import '../model/request/createOtpChangePass.dart';
 import '../model/request/driverCurrentLocRequest.dart';
 import '../model/request/exustingUserRequest.dart';
 import '../model/request/generateTpinRequest.dart';
+import '../model/request/requestHistoryListRequest.dart';
 import '../model/request/rideRequest.dart';
 import '../model/request/signInRequest.dart';
 import '../model/request/signUpRequest.dart';
@@ -35,6 +36,7 @@ import '../model/response/generateTpinResponse.dart';
 import '../model/response/initiateRideResponse.dart';
 import '../model/response/otpVerifyResponse.dart';
 import '../model/response/productsListReponse.dart';
+import '../model/response/requestListResponse.dart';
 import '../model/response/signInResponse.dart';
 import '../model/response/updateCartListReponse.dart';
 import '../model/response/uploadKycResponse.dart';
@@ -188,6 +190,28 @@ class MainViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  Future<void> getRequestHistoryListData(String value,RequestHistoryListRequest requestHistoryListRequest) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      RequestListResponse requestListResponse =
+      await MainRepository().getRequestHistoryListData(value,requestHistoryListRequest);
+      print("Yess ${requestListResponse.message}");
+      if (requestListResponse.status == 200 || requestListResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(requestListResponse);
+      } else {
+        _apiResponse = ApiResponse.error(requestListResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Catch $e");
+    }
+    notifyListeners();
+  }
+
+
 
   Future<void> getDriverStatus(
       String value, DriverCurrentLocRequest driverCurrentLocRequest) async {

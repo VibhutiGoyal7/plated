@@ -1,5 +1,6 @@
 import 'package:BDOne/languageSection/Languages.dart';
 import 'package:BDOne/theme/AppColor.dart';
+import 'package:BDOne/view/screens/rideSection/RequestSection/request_history_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_account_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_history_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
@@ -24,7 +25,7 @@ class _RideBottomNavState extends State<RideBottomNav>
   static List<Widget> _widgetOptions = <Widget>[
     RideHomeScreen(),
     RideServicesScreen(),
-    RideHistoryScreen(),
+    RequestHistoryScreen(),
     RideAccountScreen(),
   ];
 
