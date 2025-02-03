@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:BDOne/model/db/BDOneDatabase.dart';
 import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/deleteCartResponse.dart';
-import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/utils/Util.dart';
 import 'package:BDOne/view/component/shimmerComponents/ShimmerList.dart';
-import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -137,9 +135,7 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
           leading: SizedBox(),
           actions: [
             GestureDetector(
-              onTap: ()=>{
-                clearCartApi()
-              },
+              onTap: () => {clearCartApi()},
               child: Container(
                 margin: EdgeInsets.only(right: 10),
                 child: Text(
@@ -220,8 +216,8 @@ class _RestaurantCartScreenState extends State<RestaurantCartScreen> {
                                                 width: 45,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(10)),
-                                                imageUrl: currentCategory
-                                                    ?.itemImage,
+                                                imageUrl:
+                                                    currentCategory?.itemImage,
                                                 isDarkMode: false,
                                                 placeholderImage:
                                                     "assets/milk_image.png",

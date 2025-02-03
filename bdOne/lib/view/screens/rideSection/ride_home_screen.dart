@@ -154,9 +154,33 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
         if (didPop) {
           return;
         }
-        Navigator.pushReplacementNamed(
-            context, '/BottomNav',
-            arguments: 0);
+        if (kDebugMode) {
+          print("$didPop");
+          final now = DateTime.now();
+          const maxDuration = Duration(seconds: 2);
+          final isWarning = lastBackPressed == null ||
+              now.difference(lastBackPressed!) > maxDuration;
+
+          if (isWarning) {
+            lastBackPressed = DateTime.now();
+            _showExitDialog();
+          } else {
+            SystemNavigator.pop();
+          }
+          // return Future.value(true);
+        } else {
+          print("$didPop");
+          final now = DateTime.now();
+          const maxDuration = Duration(seconds: 2);
+          final isWarning = lastBackPressed == null ||
+              now.difference(lastBackPressed!) > maxDuration;
+          if (isWarning) {
+            lastBackPressed = DateTime.now();
+            _showExitDialog();
+          } else {
+            SystemNavigator.pop();
+          }
+        }
       },
       child: Scaffold(
         body: RefreshIndicator(
@@ -183,7 +207,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Row(
+                                   /* Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
@@ -200,9 +224,9 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                           },
                                         ),
                                       ],
-                                    ),
+                                    ),*/
                                     SizedBox(
-                                      height: 2,
+                                      height: 20,
                                     ),
                                     DashboardSearchComponent(
                                       onTap: (value) => {
