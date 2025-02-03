@@ -114,13 +114,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           Navigator.pushNamed(context, "/PhoneVerifyScreen");
                         })),
                 Center(
-                  child: _buildExistingAccFooter(
+                  child: CustomButtonComponent(
+                      text: "${Languages.of(context)?.labelHaveAnExistingAccount}",
+                      width: screenWidth,
                       isDarkMode: isDarkMode,
-                      context: context,
-                      text:
-                          "${Languages.of(context)?.labelHaveAnExistingAccount}",
+                      buttonColor: AppColor.PRIMARY,
+                      textColor: Colors.white,
+                      verticalPadding: 12,
                       onTap: () {
-                        // Navigator.pushNamed(context, '/AccountRegisteredScreen');
+                        Navigator.pushNamed(context, "/SignInScreen");
                       }),
                 ),
                 SizedBox(
@@ -159,7 +161,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
             border: Border.all(
-                color: isDarkMode ? Colors.white : Colors.black, width: 0.8),
+                color: isDarkMode ? Colors.white : Colors.black, width: 0.08),
             borderRadius: BorderRadius.circular(8)),
         child: Center(
           child: Text(

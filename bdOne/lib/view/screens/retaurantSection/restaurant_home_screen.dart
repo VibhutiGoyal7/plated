@@ -162,33 +162,9 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
         if (didPop) {
           return;
         }
-        if (kDebugMode) {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            _showExitDialog();
-          } else {
-            SystemNavigator.pop();
-          }
-          // return Future.value(true);
-        } else {
-          print("$didPop");
-          final now = DateTime.now();
-          const maxDuration = Duration(seconds: 2);
-          final isWarning = lastBackPressed == null ||
-              now.difference(lastBackPressed!) > maxDuration;
-          if (isWarning) {
-            lastBackPressed = DateTime.now();
-            _showExitDialog();
-          } else {
-            SystemNavigator.pop();
-          }
-        }
+        Navigator.pushReplacementNamed(
+            context, '/BottomNav',
+            arguments: 0);
       },
       child: Scaffold(
         body: RefreshIndicator(
@@ -206,15 +182,6 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                       children: [
                         Stack(
                           children: [
-                            /*Container(
-                              height: screenHeight * 0.28,
-                              alignment: AlignmentDirectional.center,
-                              decoration: BoxDecoration(
-                                  color: AppColor.PRIMARY,
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(25.0),
-                                      bottomRight: Radius.circular(25.0))),
-                            ),*/
                             Container(
                               margin: EdgeInsets.only(top: 10),
                               child: Padding(
@@ -240,15 +207,15 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                 arguments: 0)
                                           },
                                         ),
-                                        DashboardSearchComponent(
+                                      /*  DashboardSearchComponent(
                                           onTap: (value) => {},
                                           screenHeight: 50,
                                           primaryColor: AppColor.PRIMARY_ACCENT,
                                           hintText: "What are u looking for?",
                                           queryController: _searchController,
-                                          screenWidth: screenWidth * 0.65,
-                                        ),
-                                        IconButton(
+                                          screenWidth: screenWidth * 0.75,
+                                        ),*/
+                                      /*  IconButton(
                                           icon: Icon(
                                             Icons.shopping_cart,
                                             size: 26,
@@ -259,7 +226,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                 context, '/RestaurantBottomNav',
                                                 arguments: 2)
                                           },
-                                        ),
+                                        ),*/
                                       ],
                                     ),
                                     SizedBox(
@@ -371,11 +338,9 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
                                                       return GestureDetector(
                                                         onTap: () {
                                                           setState(() {
-                                                            showSnackBar(
-                                                              context,
-                                                              "${subCategory?.name}",
-                                                              screenWidth * 0.5,
-                                                            );
+                                                            Navigator.pushNamed(context,
+                                                                "/RestaurantItemViewScreen",
+                                                                arguments: subCategory);
                                                           });
                                                         },
                                                         child: ProductComponent(
@@ -586,7 +551,7 @@ class _RestaurantHomeScreenState extends State<RestaurantHomeScreen> {
       if (mounted) {
         //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
+            .dashboardData();
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         getDashboardData(context, apiResponse);

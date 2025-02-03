@@ -45,15 +45,18 @@ class _SliderScreenState extends State<SliderScreen> {
               SizedBox(
                 height: 80,
               ),
-              Image(
-                height: screenHeight * 0.055,
-                image: AssetImage(isDarkMode
-                    ? "assets/app_logo_dark.png"
-                    : "assets/app_logo.png"),
-                fit: BoxFit.cover,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image(
+                  height: screenHeight * 0.06,
+                  image: AssetImage(isDarkMode
+                      ? "assets/app_logo_dark.png"
+                      : "assets/app_logo.png"),
+                  fit: BoxFit.cover,
+                ),
               ),
               SizedBox(
-                height: 20,
+                height: 5,
               ),
               Container(
                 height: screenHeight * 0.45,
@@ -123,11 +126,11 @@ class _SliderScreenState extends State<SliderScreen> {
   Widget firstSlide() {
     return Column(
       children: [
-     /*   Image(
+        Image(
           width: screenWidth * 0.9,
           height: screenHeight * 0.33,
-          image: AssetImage("assets/slide_1.png"),
-        ),*/
+          image: AssetImage("assets/slide_3.png"),
+        ),
         SizedBox(
           height: 6,
         ),

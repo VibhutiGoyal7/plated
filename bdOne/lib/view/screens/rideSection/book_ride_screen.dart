@@ -411,7 +411,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
       child: MaterialButton(
         minWidth: screenWidth * 0.75,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        color: inputValid ? AppColor.PRIMARY_ACCENT : Colors.grey.shade400,
+        color: inputValid ? AppColor.PRIMARY_ACCENT : Colors.grey.shade200,
         height: 42,
         onPressed: () async {
           hideKeyBoard();
@@ -984,7 +984,8 @@ class _BookRideScreenState extends State<BookRideScreen> {
   }
 
   Future<Widget> getVehicleFareListResponse(
-      BuildContext context, ApiResponse apiResponse) async {
+      BuildContext context, ApiResponse apiResponse) async
+  {
     VehicleListResponse? response = apiResponse.data as VehicleListResponse?;
     var message = apiResponse.message.toString();
     print("message ${response?.message}");

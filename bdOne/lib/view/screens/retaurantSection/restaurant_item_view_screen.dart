@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:BDOne/model/db/BDOneDatabase.dart';
-import 'package:BDOne/model/response/dashboardResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/model/response/productsListReponse.dart';
+import 'package:BDOne/model/response/updateCartListReponse.dart';
 import 'package:BDOne/utils/Util.dart';
+import 'package:BDOne/view/component/custom_button_component.dart';
 import 'package:BDOne/view/component/toastMessage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../languageSection/Languages.dart';
 import '../../../model/apis/api_response.dart';
 import '../../../model/db/dao.dart';
+import '../../../model/request/updateCartRequest.dart';
 import '../../../theme/AppColor.dart';
 import '../../../utils/Helper.dart';
 import '../../../view_model/main_view_model.dart';
@@ -143,7 +143,7 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
                                 ),
                                 onPressed: () => {Navigator.pop(context)},
                               ),
-                              IconButton(
+                              /*IconButton(
                                 icon: Icon(
                                   Icons.favorite_border,
                                   size: 26,
@@ -154,14 +154,20 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
                                       context, '/BottomNav',
                                       arguments: 0)
                                 },
-                              ),
+                              ),*/
                             ],
                           ),
-                          Image.asset(
-                            "assets/milk_image.png",
-                            width: screenWidth * 0.3,
-                            height: screenHeight * 0.27,
-                            fit: BoxFit.contain,
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 18.0),
+                            child: ImageViewComponent(
+                              height: screenHeight * 0.25,
+                              width: screenWidth * 0.7,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              imageUrl: widget.data?.itemImage,
+                              isDarkMode: false,
+                              placeholderImage: "assets/milk_image.png",
+                            ),
                           ),
                         ],
                       ),
@@ -205,15 +211,16 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
                                     ),
                                     Container(
                                       height: 40,
-                                      width: 40,
+                                      width: 30,
                                       margin:
-                                          EdgeInsets.symmetric(horizontal: 10),
+                                          EdgeInsets.symmetric(horizontal: 5),
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                           color: Theme.of(context).cardColor,
                                           border: Border.all(
-                                              width: 0.2,
-                                              color: Theme.of(context).cardColor,),
+                                            width: 0.2,
+                                            color: Theme.of(context).cardColor,
+                                          ),
                                           borderRadius:
                                               BorderRadius.circular(15)),
                                       child: Text(
@@ -231,13 +238,13 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
                                         size: 26,
                                         color: AppColor.PRIMARY_ACCENT,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                                 Text(
                                   "৳${widget.data?.price}",
                                   style: TextStyle(
-                                      fontSize: 24,
+                                      fontSize: 22,
                                       color: AppColor.TEXT_RED,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -262,7 +269,8 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
                                   Text(
                                     "Product Detail",
                                     style: TextStyle(
-                                        fontSize: 15, color: Theme.of(context).focusColor),
+                                        fontSize: 15,
+                                        color: Theme.of(context).focusColor),
                                   ),
                                   SizedBox(height: 5),
                                   Text(
@@ -345,7 +353,8 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(0)),
-                                                  imageUrl: subCategory?.itemImage,
+                                                  imageUrl:
+                                                      subCategory?.itemImage,
                                                   isDarkMode: false,
                                                   placeholderImage:
                                                       "assets/milk_image.png",
@@ -464,25 +473,25 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
               ),
             ),
           ),
+          itemCount != 0 ?
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              width: screenWidth * 0.8,
-              decoration: BoxDecoration(
-                  color:  AppColor.PRIMARY_ACCENT.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(15)),
-              padding: EdgeInsets.symmetric(vertical: 12),
-              margin: EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                "Add To Basket",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: AppColor.WHITE,
-                    fontWeight: FontWeight.bold),
+            child:
+            Container(
+              height: 55,
+              child: CustomButtonComponent(
+                width: screenWidth /2,
+                onTap: () => {updateCartDataFromApi()},
+                isDarkMode: isDarkMode,
+                verticalPadding: 10,
+                buttonColor: AppColor.PRIMARY_ACCENT,
+                text: "Add to Basket",
+                textColor: AppColor.WHITE,
+                borderRadius: 20,
+                isClickable: true,
               ),
-            ),
-          ),
+            )
+          ) : SizedBox(),
           isApiLoading
               ? Stack(
                   children: [
@@ -512,105 +521,7 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
     });
   }
 
-  Widget _brandOfferCard(String currentCategoryName) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 0.3),
-              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-          width: screenWidth * 0.48,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4)),
-                  child: Image.asset(
-                    "assets/pizza_image.jpg",
-                    height: screenHeight * 0.23,
-                    width: screenWidth * 0.48,
-                    fit: BoxFit.cover,
-                  )),
-              Container(
-                width: screenWidth * 0.48,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(4),
-                        bottomLeft: Radius.circular(4))),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                  child: Center(
-                    child: Text(
-                      capitalizeFirstLetter("${currentCategoryName}"),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _brandYouLoveCard(String currentCategoryName) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(context, "/MenuScreen", arguments: data);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey, width: 0.3),
-              color: isDarkMode ? AppColor.DARK_CARD_COLOR : Colors.white),
-          width: screenWidth * 0.3,
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                  // borderRadius: BorderRadius.only(topLeft: Radius.circular(10) , topRight: Radius.circular(10)),
-                  child: Image.asset(
-                "assets/pizza_image.jpg",
-                height: screenHeight * 0.1,
-                fit: BoxFit.cover,
-              )),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text(
-                  capitalizeFirstLetter("${currentCategoryName}"),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void getDashBoardDataFromApi() async {
+  void updateCartDataFromApi() async {
     bool isConnected = await _connectivityService.isConnected();
     print(("isConnected - ${isConnected}"));
     if (!isConnected) {
@@ -628,93 +539,15 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
       if (mounted) {
         //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
+            .updateCartDataApi(UpdateCartRequest(
+                quantity: itemCount ?? 0,
+                foodItemId: widget.data?.id ?? 0,
+                type: "add"));
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
-        getDashboardData(context, apiResponse);
+        getCartDataApi(context, apiResponse);
       }
     }
-  }
-
-  Future<void> _showExitDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: Border.all(),
-          title: Center(
-              child: Text(
-            "${Languages.of(context)?.labelExit}",
-            style: TextStyle(fontSize: 20),
-          )),
-          content: Container(
-            height: screenHeight * 0.3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: AppColor.PRIMARY),
-                        child: Icon(
-                          Icons.logout_outlined,
-                          size: 55,
-                          color: Colors.white,
-                        )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                        child: Text(
-                      Languages.of(context)!.labelPressBackToExit,
-                      textAlign: TextAlign.center,
-                    )),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      width: screenWidth * 0.6,
-                      child: TextButton(
-                        child: Text('Naah, Just kidding'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: screenWidth * 0.6,
-                      child: TextButton(
-                        child: Text('${Languages.of(context)?.labelYes}'),
-                        onPressed: () async {
-                          /*Helper.clearAllSharedPreferences();
-                          database.personDao.clearAllCustomerDetails();
-                          database.dashboardTransactionDao
-                              .clearAllTransactions();*/
-                          Navigator.of(context).pop();
-                          await Future.delayed(Duration(milliseconds: 6));
-                          SystemNavigator.pop();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[],
-        );
-      },
-    );
   }
 
   Future<void> intializeDatabase() async {
@@ -726,18 +559,21 @@ class _RestaurantItemViewScreenState extends State<RestaurantItemViewScreen> {
     customerDataDao = database.personDao;
   }
 
-  Future<Widget> getDashboardData(
+  Future<Widget> getCartDataApi(
       BuildContext context, ApiResponse apiResponse) async {
-    DashboardResponse? dashboardResponse =
-        apiResponse.data as DashboardResponse?;
+    UpdateCartListResponse? response =
+        apiResponse.data as UpdateCartListResponse?;
     var message = apiResponse.message.toString();
     print("message ${message}");
     switch (apiResponse.status) {
       case Status.LOADING:
         return Center(child: CustomCircularProgress());
       case Status.COMPLETED:
-        print("GetDashboardData : ${dashboardResponse?.customerData?.email}");
-
+        print("GetDashboardData : ${response?.data?.customerId}");
+        showSnackBar(context, "Added",screenWidth /2.5);
+        setState(() {
+          itemCount = 0;
+        });
         return Container(); // Return an empty container as you'll navigate away
       case Status.ERROR:
         if (nonCapitalizeString("${apiResponse.message}") ==

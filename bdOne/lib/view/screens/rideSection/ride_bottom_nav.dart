@@ -6,11 +6,9 @@ import 'package:BDOne/view/screens/rideSection/ride_history_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_home_screen.dart';
 import 'package:BDOne/view/screens/rideSection/ride_services_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/Helper.dart';
-import '../bottomNavSection/accountSection/profile_screen.dart';
 
 class RideBottomNav extends StatefulWidget {
   @override
@@ -21,13 +19,8 @@ class _RideBottomNavState extends State<RideBottomNav>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _selectedIndex = 0;
   final LocalAuthentication auth = LocalAuthentication();
-  bool _canCheckBiometric = false;
-  bool _isAuthenticated = false;
-  bool _authenticationAttempted = false; // Add this flag
-  String _authorized = 'Not Authorized';
   late AnimationController _animationController;
   late Animation<double> _animation;
-  bool _authOnResume = false;
   bool? isUserAuthenticated;
   static List<Widget> _widgetOptions = <Widget>[
     RideHomeScreen(),
@@ -38,7 +31,6 @@ class _RideBottomNavState extends State<RideBottomNav>
 
   @override
   void initState() {
-    //_initializeBiometrics();
     super.initState();
     Helper.getUserAuthenticated().then((onValue) {
       isUserAuthenticated = onValue;
@@ -52,21 +44,6 @@ class _RideBottomNavState extends State<RideBottomNav>
       curve: Curves.bounceIn,
     );
     WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      if (!_authOnResume) {
-        setState(() {
-          _authenticationAttempted = false;
-        });
-
-        _initializeBiometrics();
-      }
-    }
   }
 
   @override
@@ -112,8 +89,6 @@ class _RideBottomNavState extends State<RideBottomNav>
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: 54,
             color: Theme.of(context).cardColor,
-            /* shape: const CircularNotchedRectangle(),
-            notchMargin: 6,*/
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -280,77 +255,5 @@ class _RideBottomNavState extends State<RideBottomNav>
         ),
       ),
     );
-  }
-
-  Future<void> _initializeBiometrics() async {
-    bool? retrievedBiometric = await Helper.getBiometric();
-
-    bool? canCheckBiometric = retrievedBiometric;
-    // print('Can CheckBiometric: $canCheckBiometric');
-    if (isUserAuthenticated != true) {
-      if (canCheckBiometric != null && canCheckBiometric == true) {
-        List<BiometricType> availableBiometric = [];
-        try {
-          canCheckBiometric = await auth.canCheckBiometrics;
-          if (canCheckBiometric) {
-            availableBiometric = await auth.getAvailableBiometrics();
-          }
-        } on PlatformException catch (e) {
-          print(e);
-        }
-
-        if (!mounted) return;
-
-        setState(() {
-          _canCheckBiometric =
-              canCheckBiometric! && availableBiometric.isNotEmpty;
-        });
-        print("_authenticationAttempted $_authenticationAttempted");
-
-        if (_canCheckBiometric && !_authenticationAttempted) {
-          print("Checking Number of times");
-          /* Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CustomBiometricScreen()),
-          );*/
-          //_authenticate(); // Only call authenticate if not attempted before
-        }
-      }
-    }
-  }
-
-  Future<void> _authenticate() async {
-    print("Called _authenticate()");
-    bool authenticated = false;
-    try {
-      authenticated = await auth.authenticate(
-        localizedReason: 'Scan your fingerprint to authenticate',
-        //useErrorDialogs: true,
-        //stickyAuth: true,
-      );
-      print("authenticated $authenticated");
-    } on PlatformException catch (e) {
-      print('Error authenticating: $e');
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      _isAuthenticated = authenticated;
-
-      _authOnResume = authenticated;
-      print("_authOnResume $_authOnResume");
-      _authorized = authenticated ? 'Authorized' : 'Failed to authenticate';
-      _authenticationAttempted = true; // Mark authentication attempted
-    });
-
-    if (authenticated) {
-      await Helper.saveUserAuthenticated(true);
-      print("User authenticated successfully.");
-    } else {
-      await Helper.saveUserAuthenticated(false);
-      // User cancelled authentication
-      print("User cancelled authentication.");
-    }
   }
 }

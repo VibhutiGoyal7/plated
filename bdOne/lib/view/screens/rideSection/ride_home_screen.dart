@@ -88,10 +88,10 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
   void initState() {
     super.initState();
     imageUrl = "";
-    receiver.start();
-    receiver.messages.listen((message) {
+    //receiver.start();
+    /*receiver.messages.listen((message) {
       print("BroadCast");
-    });
+    });*/
 
     Helper.getProfileDetails().then((profile) {
       setState(() {
@@ -128,7 +128,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
 
   @override
   void dispose() {
-    receiver.stop();
+    //receiver.stop();
     _timer.cancel();
     super.dispose();
   }
@@ -207,7 +207,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Row(
+                                   /* Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
@@ -224,9 +224,9 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
                                           },
                                         ),
                                       ],
-                                    ),
+                                    ),*/
                                     SizedBox(
-                                      height: 2,
+                                      height: 20,
                                     ),
                                     DashboardSearchComponent(
                                       onTap: (value) => {
@@ -320,7 +320,7 @@ class _RideHomeScreenState extends State<RideHomeScreen> {
       if (mounted) {
         //await Future.delayed(Duration(milliseconds: 1));
         await Provider.of<MainViewModel>(context, listen: false)
-            .dashboardData("/api/v1/app/customers/dashboard_data");
+            .dashboardData();
         ApiResponse apiResponse =
             Provider.of<MainViewModel>(context, listen: false).response;
         getDashboardData(context, apiResponse);

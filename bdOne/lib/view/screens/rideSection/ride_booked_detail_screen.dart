@@ -144,14 +144,6 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
                               MarkerLayer(
                                 markers: [
                                   Marker(
-                                    point: currentLocation ?? LatLng(0, 0),
-                                    child: Icon(
-                                      Icons.local_taxi_rounded,
-                                      color: Colors.blue,
-                                      size: 25.0,
-                                    ),
-                                  ),
-                                  Marker(
                                       point: pickupLocation,
                                       child: Icon(
                                         Icons.location_on_outlined,

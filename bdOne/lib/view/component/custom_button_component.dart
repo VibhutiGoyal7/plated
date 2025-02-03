@@ -23,8 +23,7 @@ class CustomButtonComponent extends StatefulWidget {
       required this.onTap});
 
   @override
-  _CustomButtonComponentState createState() =>
-      _CustomButtonComponentState();
+  _CustomButtonComponentState createState() => _CustomButtonComponentState();
 }
 
 class _CustomButtonComponentState extends State<CustomButtonComponent> {
@@ -41,22 +40,15 @@ class _CustomButtonComponentState extends State<CustomButtonComponent> {
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: widget.verticalPadding),
+        padding: EdgeInsets.symmetric(
+            horizontal: 14, vertical: widget.verticalPadding),
         width: widget.width,
         decoration: BoxDecoration(
-            border: Border.all(
-                color: isDarkMode
-                    ? widget.isClickable
-                        ? Colors.white
-                        : Colors.grey
-                    : widget.isClickable
-                        ? Colors.black
-                        : Colors.grey,
-                width: 0.8),
+            border: Border.all(color: Theme.of(context).focusColor, width: 0.08),
             borderRadius: BorderRadius.circular(widget.borderRadius),
             color: isDarkMode
                 ? widget.isClickable
-                    ? Colors.white
+                    ? widget.buttonColor
                     : Colors.grey
                 : widget.isClickable
                     ? widget.buttonColor
@@ -67,7 +59,7 @@ class _CustomButtonComponentState extends State<CustomButtonComponent> {
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
-                color: isDarkMode ? Colors.white : widget.textColor),
+                color: widget.textColor),
           ),
         ),
       ),

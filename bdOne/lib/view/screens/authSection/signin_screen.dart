@@ -196,21 +196,28 @@ class _SigninScreenState extends State<SigninScreen> {
                             "${Languages.of(context)?.labelLogin}",
                             26,
                             true,
-                            false),
+                            false,
+                            isKeyboardOpen(context)
+                                ? Colors.white
+                                : Theme.of(context).focusColor),
                         SizedBox(height: 6),
                         _buildLabelText(
                             context,
                             "${Languages.of(context)?.labelAccessToAccount}",
                             14,
                             false,
-                            true),
-                        SizedBox(height: 25),
+                            true,
+                            isKeyboardOpen(context)
+                                ? Colors.white
+                                : Theme.of(context).focusColor),
+                        SizedBox(height: 40),
                         _buildLabelText(
                             context,
                             "${Languages.of(context)?.labelPhoneNumber}",
                             12,
                             true,
-                            true),
+                            true,
+                            Theme.of(context).focusColor),
                         _buildPhoneInput(
                           context,
                           "${Languages.of(context)?.labelPhoneNumber}",
@@ -227,7 +234,8 @@ class _SigninScreenState extends State<SigninScreen> {
                             "${Languages.of(context)?.labelPassword}",
                             12,
                             true,
-                            true),
+                            true,
+                            Theme.of(context).focusColor),
                         _buildPasswordInput(
                             context,
                             Languages.of(context)!.labelPassword,
@@ -261,7 +269,6 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                         SizedBox(height: 25),
                         _buildFooter(context),
-                        SizedBox(height: 8),
                       ],
                     ),
                   ),
@@ -271,8 +278,7 @@ class _SigninScreenState extends State<SigninScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                margin: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -318,7 +324,7 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   _buildLabelText(BuildContext context, String text, double size, bool isBold,
-      bool isSubHeading) {
+      bool isSubHeading, Color color) {
     return Align(
       alignment: Alignment.topLeft,
       child: Text(
@@ -326,13 +332,7 @@ class _SigninScreenState extends State<SigninScreen> {
         style: TextStyle(
             fontSize: size,
             fontWeight: isBold ? FontWeight.w400 : FontWeight.normal,
-            color: isSubHeading
-                ? isKeyboardOpen(context)
-                    ? Colors.white
-                    : Theme.of(context).focusColor
-                : isKeyboardOpen(context)
-                    ? Colors.white
-                    : Theme.of(context).focusColor),
+            color: color),
       ),
     );
   }
@@ -360,7 +360,7 @@ class _SigninScreenState extends State<SigninScreen> {
       ),
       child: TextField(
         style: TextStyle(
-          fontSize: 16.0,
+          fontSize: 14.0,
         ),
         //obscureText: false,
         controller: nameController,
@@ -378,6 +378,10 @@ class _SigninScreenState extends State<SigninScreen> {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: "Enter ${text}",
+          hintStyle: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).highlightColor
+          ),
           //alignLabelWithHint: true,
           counterText: "",
           //icon: icon,
@@ -413,7 +417,7 @@ class _SigninScreenState extends State<SigninScreen> {
       ),
       child: TextField(
         textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(fontSize: 16.0),
+        style: TextStyle(fontSize: 14.0),
         obscureText: passwordVisibles,
         obscuringCharacter: "*",
         controller: nameController,
@@ -427,6 +431,10 @@ class _SigninScreenState extends State<SigninScreen> {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: "Enter ${text}",
+          hintStyle: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).highlightColor
+          ),
           //alignLabelWithHint: true,
           //icon: icon,
           suffixIcon: IconButton(

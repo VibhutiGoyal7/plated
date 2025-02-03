@@ -131,9 +131,6 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
           color: isDarkMode ? AppColor.WHITE : Colors.red,
         ));
       case Status.COMPLETED:
-        print("rwrwr ${phoneVerifyResponse?.mobileOtp}");
-        //Call Toast
-
         // Navigate to the new screen after receiving the response
         Navigator.pushNamed(
           context,
@@ -225,7 +222,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                                         child: _buildLabelText(
                                           context,
                                           "${Languages.of(context)?.labelEnterPhoneNo}",
-                                          20,
+                                          18,
                                           true,
                                         )),
                                     SizedBox(height: 8),
@@ -234,7 +231,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                                         child: _buildLabelText(
                                           context,
                                           "${Languages.of(context)?.labelSendConfirmationCode}",
-                                          12,
+                                          11,
                                           false,
                                         )),
                                     SizedBox(height: 16),
@@ -288,7 +285,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                     shape: BoxShape.rectangle,
                     border: Border.all(
                         width: 0.2,
-                        color: Theme.of(context).cardColor,),
+                        color: Colors.grey,),
                     color:
                         isDarkMode ? AppColor.DARK_BG_COLOR : AppColor.BG_COLOR,
                     borderRadius: BorderRadius.circular(6.0),
@@ -298,7 +295,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                       SizedBox(width: 6),
                       Expanded(
                         child: TextField(
-                          style: TextStyle(fontSize: 16.0),
+                          style: TextStyle(fontSize: 14.0),
                           controller: _inputController,
                           onChanged: _isValidPhoneNumber,
                           maxLength: 11,
@@ -334,62 +331,48 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   }
 
   Widget _buildFooter(BuildContext context) {
-    return Container(
-      width: screenWidth * 0.8,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color:
-            phoneNumberValid ? AppColor.PRIMARY_ACCENT : Colors.grey.shade300,
-        borderRadius: BorderRadius.all(Radius.circular(6)),
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.1),
-            offset: Offset(0, 1),
-            blurRadius: 3,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-      child: MaterialButton(
-        onPressed: () async {
-          setState(() {
-            isLoading = true;
-          });
-          hideKeyBoard();
-          if (phoneNumberValid) {
-            bool isConnected = await _connectivityService.isConnected();
-            if (!isConnected) {
-              setState(() {
-                isLoading = false;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        '${Languages.of(context)?.labelNoInternetConnection}'),
-                    duration: maxDuration,
-                  ),
-                );
-              });
-            } else {
-              ExistingUserRequest request = ExistingUserRequest(
-                  customer:
-                      ExistingCustomer(phoneNumber: _inputController.text));
-              await _viewModel.existingUserData(request);
-              apiResponse = _viewModel.response;
-              existingUserWidget(context);
-            }
+    return MaterialButton(
+      onPressed: () async {
+        setState(() {
+          isLoading = true;
+        });
+        hideKeyBoard();
+        if (phoneNumberValid) {
+          bool isConnected = await _connectivityService.isConnected();
+          if (!isConnected) {
+            setState(() {
+              isLoading = false;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      '${Languages.of(context)?.labelNoInternetConnection}'),
+                  duration: maxDuration,
+                ),
+              );
+            });
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(Languages.of(context)!.labelEnterValidPhone),
-            ));
+            ExistingUserRequest request = ExistingUserRequest(
+                customer:
+                    ExistingCustomer(phoneNumber: _inputController.text));
+            await _viewModel.existingUserData(request);
+            apiResponse = _viewModel.response;
+            existingUserWidget(context);
           }
-        },
-        child: Text(
-          Languages.of(context)!.labelSubmit,
-          style: TextStyle(
-              color: phoneNumberValid ? Colors.white : AppColor.PRIMARY,
-              fontSize: 15),
-        ),
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(Languages.of(context)!.labelEnterValidPhone),
+          ));
+        }
+      },
+      color: phoneNumberValid ? AppColor.PRIMARY_ACCENT : Colors.grey[400],
+      minWidth: screenWidth * 0.75,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Text(
+        Languages.of(context)!.labelSubmit,
+        style: TextStyle(
+            color: phoneNumberValid ? Colors.white : AppColor.PRIMARY,
+            fontSize: 15),
       ),
     );
   }

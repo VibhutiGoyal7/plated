@@ -5,7 +5,9 @@ import 'package:BDOne/model/main_repository.dart';
 import 'package:BDOne/model/request/productListRequest.dart';
 import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInWithPhoneNumber.dart';
+import 'package:BDOne/model/response/cartListReponse.dart';
 import 'package:BDOne/model/response/dashboardResponse.dart';
+import 'package:BDOne/model/response/deleteCartResponse.dart';
 import 'package:BDOne/model/response/fetchKycDocResponse.dart';
 import 'package:BDOne/model/response/kycStatusResponse.dart';
 import 'package:BDOne/model/response/phoneVerifyResponse.dart';
@@ -23,6 +25,7 @@ import '../model/request/requestHistoryListRequest.dart';
 import '../model/request/rideRequest.dart';
 import '../model/request/signInRequest.dart';
 import '../model/request/signUpRequest.dart';
+import '../model/request/updateCartRequest.dart';
 import '../model/request/vehicleListRequest.dart';
 import '../model/request/verifyOtpChangePass.dart';
 import '../model/response/countryListResponse.dart';
@@ -35,7 +38,8 @@ import '../model/response/otpVerifyResponse.dart';
 import '../model/response/productsListReponse.dart';
 import '../model/response/requestListResponse.dart';
 import '../model/response/signInResponse.dart';
-import '../model/response/transactionListReponse.dart';
+import '../model/response/updateCartListReponse.dart';
+import '../model/response/uploadKycResponse.dart';
 import '../model/response/vehicleListResponse.dart';
 
 class MainViewModel with ChangeNotifier {
@@ -304,6 +308,27 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clearCartApi() async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      //print(setUpAccountRequest.customer.email);
+      DeleteCartResponse response = await MainRepository().clearCartApi();
+      print("Yess" + response.data.toString());
+      //_apiResponse = ApiResponse.completed(setUpAccountResponse);
+      if (response.status == 200 || response.status == 201) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        print("viewmodel ${response.message}");
+        _apiResponse = ApiResponse.error(response.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
   Future<void> putMultiFormResponse(String value, File file, String firstName,
       String lastName, String dob) async {
     _apiResponse = ApiResponse.loading('Loading');
@@ -392,16 +417,16 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchKycDocData(String value) async {
+  Future<void> fetchKycDocData() async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
       FetchKycDocResponse fetchKycDocResponse =
-          await MainRepository().fetchKycDocData(value);
-      print("Yess" + fetchKycDocResponse.message.toString());
+          await MainRepository().fetchKycDocData();
+      print("FetchKycDocData" + fetchKycDocResponse.message.toString());
 
       // _apiResponse = ApiResponse.completed(fetchKycDocResponse);
-      if (fetchKycDocResponse.passportImage?.userId != null) {
+      if (fetchKycDocResponse.passportImage?.customerId != null) {
         _apiResponse = ApiResponse.completed(fetchKycDocResponse);
       } else {
         _apiResponse = ApiResponse.error(fetchKycDocResponse.message);
@@ -414,7 +439,6 @@ class MainViewModel with ChangeNotifier {
   }
 
   Future<void> fetchCategoryListApi() async {
-
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
@@ -436,13 +460,13 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> dashboardData(String value) async {
+  Future<void> dashboardData() async {
     _apiResponse = ApiResponse.loading('Loading');
     notifyListeners();
     try {
       DashboardResponse dashboardResponse =
-          await MainRepository().dashboardData(value);
-      print("Yess ${dashboardResponse.message}");
+          await MainRepository().dashboardData();
+      print("DashboardData ${dashboardResponse.message}");
       if (dashboardResponse.status == 200 || dashboardResponse.status == 201) {
         _apiResponse = ApiResponse.completed(dashboardResponse);
       } else {
@@ -455,15 +479,14 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getProductsFromCategoryApi(
       String value, ProductListRequest request) async {
     _apiResponse = ApiResponse.loading('Loading');
     print("TransactionListData ${request.foodCategoryId}");
     notifyListeners();
     try {
-      ProductsListResponse transactionListResponse = await MainRepository()
-          .getProductsFromCategoryApi(value, request);
+      ProductsListResponse transactionListResponse =
+          await MainRepository().getProductsFromCategoryApi(value, request);
       if (transactionListResponse.status == 200 ||
           transactionListResponse.status == 201) {
         _apiResponse = ApiResponse.completed(transactionListResponse);
@@ -477,8 +500,88 @@ class MainViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateCartDataApi(UpdateCartRequest request) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    print("TransactionListData ${request.type}");
+    notifyListeners();
+    try {
+      UpdateCartListResponse response =
+          await MainRepository().updateCartDataApi(request);
+      if (response.status == 200 || response.status == 201) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print("Transaction List : $e");
+    }
+    notifyListeners();
+  }
+
   void setSelectedMedia(PhoneVerifyResponse? media) {
     _media = media;
+    notifyListeners();
+  }
+
+  Future<void> postMultiFormResponse(
+      String value, File imgFile, String docType, File videoFile) async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      UploadKycDocResponse uploadKycDocResponse = await MainRepository()
+          .postMultiFormResponse(value, imgFile, docType, videoFile);
+      print("Yess" + uploadKycDocResponse.message.toString());
+      if (uploadKycDocResponse.userId != null) {
+        _apiResponse = ApiResponse.completed(uploadKycDocResponse);
+      } else {
+        _apiResponse = ApiResponse.error(uploadKycDocResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> kycStatusData() async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      KycStatusResponse kycStatusResponse =
+          await MainRepository().kycStatusData();
+      print("KycStatusData" + kycStatusResponse.message.toString());
+
+      //_apiResponse = ApiResponse.completed(kycStatusResponse);
+      if (kycStatusResponse.status == 200 || kycStatusResponse.status == 201) {
+        _apiResponse = ApiResponse.completed(kycStatusResponse);
+      } else {
+        _apiResponse = ApiResponse.error(kycStatusResponse.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getCartDataListApi() async {
+    _apiResponse = ApiResponse.loading('Loading');
+    notifyListeners();
+    try {
+      CartListResponse response = await MainRepository().getCartDataListApi();
+      print("KycStatusData" + response.message.toString());
+
+      //_apiResponse = ApiResponse.completed(kycStatusResponse);
+      if (response.status == 200 || response.status == 201) {
+        _apiResponse = ApiResponse.completed(response);
+      } else {
+        _apiResponse = ApiResponse.error(response.message);
+      }
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+      print(e);
+    }
     notifyListeners();
   }
 }

@@ -27,6 +27,7 @@ class _BottomNavState extends State<BottomNav>
   late Animation<double> _animation;
   bool _authOnResume = false;
   bool? isUserAuthenticated;
+  String? dashBoardKycStatus;
   static List<Widget> _widgetOptions = <Widget>[
     DashboardHomeScreen(),
     DocumentsScreen(),
@@ -43,6 +44,9 @@ class _BottomNavState extends State<BottomNav>
     super.initState();
     Helper.getUserAuthenticated().then((onValue) {
       isUserAuthenticated = onValue;
+    });
+    Helper.getKycStatus().then((status) {
+      dashBoardKycStatus = status;
     });
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -145,8 +149,9 @@ class _BottomNavState extends State<BottomNav>
                                   Text(
                                     "${Languages.of(context)?.labelHome}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
-                                    fontWeight: FontWeight.w600),
+                                        color: AppColor.PRIMARY_ACCENT,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600),
                                   )
                                 ],
                               ),
@@ -181,7 +186,8 @@ class _BottomNavState extends State<BottomNav>
                               Text(
                                 "Cart",
                                 style: TextStyle(
-                                    color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                    color: AppColor.PRIMARY_ACCENT,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w600),
                               )
                             ],
@@ -194,7 +200,17 @@ class _BottomNavState extends State<BottomNav>
                         ),
                 ),
                 GestureDetector(
-                  onTap: () => {_onItemTapped(2)},
+                  onTap: () => {
+                    if (dashBoardKycStatus != "" &&
+                        dashBoardKycStatus !=
+                            Languages.of(context)!.statusVerified &&
+                        dashBoardKycStatus != null)
+                      {
+                        Navigator.pushNamed(context, '/ChooseDocScreen')
+                      }
+                    else
+                      {_onItemTapped(2)}
+                  },
                   child: Row(
                     children: [
                       _selectedIndex == 2
@@ -217,7 +233,8 @@ class _BottomNavState extends State<BottomNav>
                                   Text(
                                     "${Languages.of(context)?.labelWallet}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                        color: AppColor.PRIMARY_ACCENT,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ],
@@ -256,7 +273,8 @@ class _BottomNavState extends State<BottomNav>
                                   Text(
                                     "${Languages.of(context)?.labelProfile}",
                                     style: TextStyle(
-                                        color: AppColor.PRIMARY_ACCENT, fontSize: 10,
+                                        color: AppColor.PRIMARY_ACCENT,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ],

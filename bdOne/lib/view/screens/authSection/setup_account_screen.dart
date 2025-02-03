@@ -559,7 +559,7 @@ class _SetUpAccountScreenState extends State<SetUpAccountScreen> {
               }
             }
           },
-          color: inputValid ? AppColor.PRIMARY_ACCENT : Colors.grey[400],
+          color: inputValid ? AppColor.PRIMARY_ACCENT : Colors.grey[300],
           minWidth: screenWidth * 0.8,
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
