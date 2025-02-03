@@ -412,7 +412,7 @@ class _RideBookedDetailScreenState extends State<RideBookedDetailScreen> {
     LatLng adjustedCenter = LatLng(center.latitude, center.longitude);
 
     // Adjust zoom to fit the bounds
-    double fitZoomLevel = 13;
+    double fitZoomLevel = 10;
 
     // Move the map to the adjusted center
     _mapController.move(adjustedCenter, fitZoomLevel);

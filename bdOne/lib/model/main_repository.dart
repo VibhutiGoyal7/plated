@@ -6,6 +6,7 @@ import 'package:BDOne/model/request/driverCurrentLocRequest.dart';
 import 'package:BDOne/model/request/exustingUserRequest.dart';
 import 'package:BDOne/model/request/generateTpinRequest.dart';
 import 'package:BDOne/model/request/productListRequest.dart';
+import 'package:BDOne/model/request/requestHistoryListRequest.dart';
 import 'package:BDOne/model/request/rideRequest.dart';
 import 'package:BDOne/model/request/setUpAccountRequest.dart';
 import 'package:BDOne/model/request/signInRequest.dart';
@@ -26,6 +27,7 @@ import 'package:BDOne/model/response/otpVerifyResponse.dart';
 import 'package:BDOne/model/response/phoneVerifyResponse.dart';
 import 'package:BDOne/model/response/productsListReponse.dart';
 import 'package:BDOne/model/response/profileResponse.dart';
+import 'package:BDOne/model/response/requestListResponse.dart';
 import 'package:BDOne/model/response/setUpAccountResponse.dart';
 import 'package:BDOne/model/response/signInResponse.dart';
 import 'package:BDOne/model/response/signUpResponse.dart';
@@ -96,6 +98,14 @@ class MainRepository {
     print(jsonData);
     InitiateRideResponse mediaList = InitiateRideResponse.fromJson(jsonData);
     return mediaList;
+  }
+
+
+  //getRequestHistoryListData
+  Future<RequestListResponse> getRequestHistoryListData(String value,RequestHistoryListRequest requestHistoryListRequest) async {
+    print("Api: getRequestHistoryListData");
+    dynamic response = await _BDOneService.postResponse(value, RequestHistoryListRequest);
+    return response;
   }
 
   Future<DriverStatusResponse> getDriverStatus(
