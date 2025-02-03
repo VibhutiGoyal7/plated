@@ -82,14 +82,20 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
   );
+  static const platform = MethodChannel('broadcast_channel');
 
   @override
   void initState() {
     super.initState();
     imageUrl = "";
-    receiver.start();
+   /* receiver.start();
     receiver.messages.listen((message) {
       print("BroadCast");
+    });*/
+    platform.setMethodCallHandler((call) async {
+      if (call.method == "onNotificationReceived") {
+        print("broadcast received on dashboard");
+      }
     });
 
     Helper.getProfileDetails().then((profile) {

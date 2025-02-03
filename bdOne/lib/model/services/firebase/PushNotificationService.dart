@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -12,6 +13,8 @@ import '../../response/notificationOtpResponse.dart';
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class PushNotificationService {
+  static const MethodChannel _channel = MethodChannel('broadcast_channel');
+
   FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   Future<void> setupInteractedMessage() async {
@@ -20,11 +23,15 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage message) {
         print("PushNotificationService:: ${message.toString()}");
-        sendBroadcast(
+        /*sendBroadcast(
           BroadcastMessage(
             name: "de.kevlatus.flutter_broadcasts_example.demo_action",
           ),
-        );
+        );*/
+        _channel.invokeMethod("sendBroadcast", {
+          "title": message.notification?.title ?? "",
+          "body": message.notification?.body ?? "",
+        });
         _handleMessage(message.data);
       },
     );
@@ -33,6 +40,11 @@ class PushNotificationService {
       print("message?.data :: ${message?.data}");
       Map<String, dynamic> jsonData =
           message?.data ?? {}; // Assuming message?.data is the JSON data
+
+      _channel.invokeMethod("sendBroadcast", {
+        "title": message?.notification?.title ?? "",
+        "body": message?.notification?.body ?? "",
+      });
 
       final notificationResponse = NotificationOtpResponse.fromJson(jsonData);
 
@@ -64,11 +76,11 @@ class PushNotificationService {
         }
       }
 
-      //_showNotification(message);
+      _showNotification(message);
     });
-    //enableIOSNotifications();
-    //await getToken();
-    //await registerNotificationListeners();
+    enableIOSNotifications();
+    await getToken();
+    await registerNotificationListeners();
   }
 
   Future<void> getToken() async {
