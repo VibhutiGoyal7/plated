@@ -323,6 +323,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen> {
             ],
           ),
         ),
+      )
     );
   }
 
