@@ -9,14 +9,13 @@ Future<void> scheduleNotification() async {
   final now = tz.TZDateTime.now(tz.local);
   final scheduledTime = now.add(Duration(seconds: 10)); // 10s delay for quick testing
 
-  print("📆 Current time: $now");
-  print("✅ Scheduling notification at: $scheduledTime");
+  print("Scheduling notification at: $scheduledTime");
 
   try {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       'Scheduled Notification',
-      'This should trigger in 10 seconds',
+      'Scheduled Notification - 10 secs',
       scheduledTime,
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -30,9 +29,9 @@ Future<void> scheduleNotification() async {
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
 
-    print("🚀 Notification scheduled successfully!");
+    print("Notification scheduled successfully!");
   } catch (e) {
-    print("❌ Error scheduling notification: $e");
+    print("Error scheduling notification: $e");
   }
 }
 
@@ -41,7 +40,7 @@ Future<void> testInstantNotification() async {
   await flutterLocalNotificationsPlugin.show(
     0,
     'Test Notification',
-    'If you see this, local notifications are working!',
+    'local notifications!',
     const NotificationDetails(
       android: AndroidNotificationDetails(
         'channel_id',
