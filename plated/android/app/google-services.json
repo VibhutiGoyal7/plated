@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "410289384992",
+    "project_id": "plated-d2c96",
+    "storage_bucket": "plated-d2c96.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410289384992:android:099e9cba88a6a9515c1645",
+        "android_client_info": {
+          "package_name": "com.plated"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6-ORs5WFNU74Mui3litkxK6LfKY2Sd2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
