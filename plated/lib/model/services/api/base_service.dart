@@ -3,7 +3,7 @@ import 'dart:io';
 
 abstract class BaseService {
   //final String BaseUrl = "https://trnsapi.bd-one.net/";
-  final String BaseUrl = "https://swiceapi.bd-one.net/";
+  final String BaseUrl = "";
 
   String getFullUrl(String endpoint) {
     return "$BaseUrl$endpoint";
